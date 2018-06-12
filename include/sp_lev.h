@@ -139,7 +139,7 @@ typedef struct {
     xchar x, y, class, appear;
     schar peaceful, asleep;
     short female, invis, cancelled, revived, avenge, fleeing, blinded,
-        paralyzed, stunned, confused;
+        paralyzed, stunned, confused, dead;
     long seentraps;
     short has_invent;
 } monster;
@@ -213,3 +213,4 @@ struct mapfragment {
     }
 
 #endif /* SP_LEV_H */
+

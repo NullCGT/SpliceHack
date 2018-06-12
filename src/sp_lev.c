@@ -2078,6 +2078,12 @@ struct mkroom *croom;
             discard_minvent(mtmp, TRUE);
             invent_carrying_monster = mtmp;
         }
+        if (m->dead) {
+            mondied(mtmp);
+            /* kludge for this: it didn't actually die while the player was
+             * around, so revert mondead() incrementing this */
+            mvitals[monsndx(mtmp->data)].died--;
+        }
     }
 }
 
@@ -3110,6 +3116,7 @@ lua_State *L;
     tmpmons.confused = 0;
     tmpmons.seentraps = 0;
     tmpmons.has_invent = 0;
+    tmpmons.dead = 0;
 
     if (argc == 1 && lua_type(L, 1) == LUA_TSTRING) {
         const char *paramstr = luaL_checkstring(L, 1);
@@ -3168,6 +3175,7 @@ lua_State *L;
         tmpmons.stunned = get_table_int_opt(L, "stunned", 0);
         tmpmons.confused = get_table_int_opt(L, "confused", 0);
         tmpmons.seentraps = 0; /* TODO: list of trap names to bitfield */
+	tmpmons.dead = get_table_int_opt(L, "dead", 0);
         tmpmons.has_invent = 0;
 
         mappear = get_table_str_opt(L, "appear_as", NULL);

@@ -1141,7 +1141,7 @@ is_ok_location(xchar x, xchar y, int humidity)
     if (humidity & DRY) {
         typ = levl[x][y].typ;
         if (typ == ROOM || typ == AIR || typ == CLOUD || typ == ICE
-            || typ == CORR || typ == BRIDGE)
+            || typ == CORR || typ == BRIDGE || typ == GRASS)
             return TRUE;
     }
     if ((humidity & SPACELOC) && SPACE_POS(levl[x][y].typ))

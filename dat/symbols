@@ -79,6 +79,7 @@ start: NHAccess
 	S_pool: \042
 	S_ice: \042
 	S_bridge: \042
+	S_grass: \042
 	S_lava: \035
 	S_vodbridge: \035
 	S_hodbridge: \032
@@ -220,6 +221,7 @@ start: Blank
         S_hwall: \032
         S_ice: \032
 		S_bridge: \032
+		S_grass: \032
         S_imp: \032
         S_invisible: \032
         S_jabberwock: \032
@@ -351,8 +353,9 @@ start: IBMgraphics
 	S_litcorr: \xb1			# meta-1, medium shading
 	S_fountain: \xf4		# meta-t, integral top half
 	S_pool: \xf7			# meta-w, approx. equals
-	S_ice: \xfa			# meta-z, centered dot
-	S_bridge: \xfa		# meta-z, centered dot
+	S_ice: \xfa				# meta-z, centered dot
+	S_bridge: \xfa			# meta-z, centered dot
+	S_grass: \xfa			# meta-z, centered dot
 	S_lava: \xf7			# meta-w, approx. equals
 	S_vodbridge: \xfa		# meta-z, centered dot
 	S_hodbridge: \xfa		# meta-z, centered dot
@@ -567,8 +570,9 @@ start: curses
 	S_room: \xfe			# meta-z, centered dot
 	S_corr: \xe1			# meta-a, solid block
 	S_litcorr: \xe1			# meta-a, solid block
-	S_ice: \xfe			# meta-z, centered dot
-	S_bridge: \xfe		# meta-z, centered dot
+	S_ice: \xfe				# meta-z, centered dot
+	S_bridge: \xfe			# meta-z, centered dot
+	S_grass: \xfe			# meta-z, entered dot
 	S_vodbridge: \xfe		# meta-z, centered dot
 	S_hodbridge: \xfe		# meta-z, centered dot
 	S_vbeam: \xf8			# meta-3, vertical rule
@@ -604,8 +608,9 @@ start: DECgraphics
 	S_dnladder: \xfa		# meta-z, greater-than-or-equals
 	S_altar: \xfb			# meta-{, pi (used to default to '_')
 	S_pool: \xe0			# meta-\, diamond
-	S_ice: \xfe			# meta-~, centered dot
-	S_bridge: \xfe      # meta-~, centered dot
+	S_ice: \xfe				# meta-~, centered dot
+	S_bridge: \xfe      	# meta-~, centered dot
+	S_grass: \xfe      		# meta-~, centered dot
 	S_lava: \xe0			# meta-\, diamond
 	S_vodbridge: \xfe		# meta-~, centered dot
 	S_hodbridge: \xfe		# meta-~, centered dot

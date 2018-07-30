@@ -72,12 +72,13 @@ enum levl_typ_types {
     ALTAR     = 33,
     ICE       = 34,
     BRIDGE    = 35,
-    DRAWBRIDGE_DOWN = 36,
-    AIR       = 37,
-    CLOUD     = 38,
+    GRASS     = 36,
+    DRAWBRIDGE_DOWN = 37,
+    AIR       = 38,
+    CLOUD     = 39,
 
-    MAX_TYPE  = 39,
-    MATCH_WALL = 40,
+    MAX_TYPE  = 40,
+    MATCH_WALL = 41,
     INVALID_TYPE = 127
 };
 
@@ -108,6 +109,7 @@ enum levl_typ_types {
 #define IS_DRAWBRIDGE(typ) \
     ((typ) == DRAWBRIDGE_UP || (typ) == DRAWBRIDGE_DOWN)
 #define IS_FURNITURE(typ) ((typ) >= STAIRS && (typ) <= ALTAR)
+#define IS_GRASS(typ) ((typ) == GRASS)
 #define IS_AIR(typ) ((typ) == AIR || (typ) == CLOUD)
 #define IS_SOFT(typ) ((typ) == AIR || (typ) == CLOUD || IS_POOL(typ))
 
@@ -157,85 +159,86 @@ enum screen_symbols {
     S_pool      = 34,
     S_ice       = 35,
     S_bridge    = 36,
-    S_lava      = 37,
-    S_vodbridge = 38,
-    S_hodbridge = 39,
-    S_vcdbridge = 40, /* closed drawbridge, vertical wall */
-    S_hcdbridge = 41, /* closed drawbridge, horizontal wall */
-    S_air       = 42,
-    S_cloud     = 43,
-    S_water     = 44,
+    S_grass     = 37,
+    S_lava      = 38,
+    S_vodbridge = 39,
+    S_hodbridge = 40,
+    S_vcdbridge = 41, /* closed drawbridge, vertical wall */
+    S_hcdbridge = 42, /* closed drawbridge, horizontal wall */
+    S_air       = 43,
+    S_cloud     = 44,
+    S_water     = 45,
 
 /* end dungeon characters, begin traps */
 
-    S_arrow_trap           = 45,
-    S_dart_trap            = 46,
-    S_falling_rock_trap    = 47,
-    S_squeaky_board        = 48,
-    S_bear_trap            = 49,
-    S_land_mine            = 50,
-    S_rolling_boulder_trap = 51,
-    S_sleeping_gas_trap    = 52,
-    S_rust_trap            = 53,
-    S_fire_trap            = 54,
-    S_buzzsaw_trap         = 55,
-    S_ice_block_trap       = 56,
-    S_whirlwind_trap       = 57,
-    S_pit                  = 58,
-    S_spiked_pit           = 59,
-    S_hole                 = 60,
-    S_trap_door            = 61,
-    S_teleportation_trap   = 62,
-    S_level_teleporter     = 63,
-    S_magic_portal         = 64,
-    S_web                  = 65,
-    S_statue_trap          = 66,
-    S_magic_trap           = 67,
-    S_anti_magic_trap      = 68,
-    S_polymorph_trap       = 69,
-    S_vibrating_square     = 70, /* for display rather than any trap effect */
+    S_arrow_trap           = 46,
+    S_dart_trap            = 47,
+    S_falling_rock_trap    = 48,
+    S_squeaky_board        = 49,
+    S_bear_trap            = 50,
+    S_land_mine            = 51,
+    S_rolling_boulder_trap = 52,
+    S_sleeping_gas_trap    = 53,
+    S_rust_trap            = 54,
+    S_fire_trap            = 55,
+    S_buzzsaw_trap         = 56,
+    S_ice_block_trap       = 57,
+    S_whirlwind_trap       = 58,
+    S_pit                  = 59,
+    S_spiked_pit           = 60,
+    S_hole                 = 61,
+    S_trap_door            = 62,
+    S_teleportation_trap   = 63,
+    S_level_teleporter     = 64,
+    S_magic_portal         = 65,
+    S_web                  = 66,
+    S_statue_trap          = 67,
+    S_magic_trap           = 68,
+    S_anti_magic_trap      = 69,
+    S_polymorph_trap       = 70,
+    S_vibrating_square     = 71, /* for display rather than any trap effect */
 
 /* end traps, begin special effects */
 
-    S_vbeam     = 71, /* The 4 zap beam symbols.  Do NOT separate. */
-    S_hbeam     = 72, /* To change order or add, see function      */
-    S_lslant    = 73, /* zapdir_to_glyph() in display.c.           */
-    S_rslant    = 74,
-    S_digbeam   = 75, /* dig beam symbol */
-    S_flashbeam = 76, /* camera flash symbol */
-    S_boomleft  = 77, /* thrown boomerang, open left, e.g ')'    */
-    S_boomright = 78, /* thrown boomerang, open right, e.g. '('  */
-    S_ss1       = 79, /* 4 magic shield ("resistance sparkle") glyphs */
-    S_ss2       = 80,
-    S_ss3       = 81,
-    S_ss4       = 82,
-    S_poisoncloud = 83,
-    S_goodpos   = 84, /* valid position for targeting via getpos() */
+    S_vbeam     = 72, /* The 4 zap beam symbols.  Do NOT separate. */
+    S_hbeam     = 73, /* To change order or add, see function      */
+    S_lslant    = 74, /* zapdir_to_glyph() in display.c.           */
+    S_rslant    = 75,
+    S_digbeam   = 76, /* dig beam symbol */
+    S_flashbeam = 77, /* camera flash symbol */
+    S_boomleft  = 78, /* thrown boomerang, open left, e.g ')'    */
+    S_boomright = 79, /* thrown boomerang, open right, e.g. '('  */
+    S_ss1       = 80, /* 4 magic shield ("resistance sparkle") glyphs */
+    S_ss2       = 81,
+    S_ss3       = 82,
+    S_ss4       = 83,
+    S_poisoncloud = 84,
+    S_goodpos   = 85, /* valid position for targeting via getpos() */
 
 /* The 8 swallow symbols.  Do NOT separate.  To change order or add, */
 /* see the function swallow_to_glyph() in display.c.                 */
-    S_sw_tl     = 85, /* swallow top left [1]             */
-    S_sw_tc     = 86, /* swallow top center [2]    Order: */
-    S_sw_tr     = 87, /* swallow top right [3]            */
-    S_sw_ml     = 88, /* swallow middle left [4]   1 2 3  */
-    S_sw_mr     = 89, /* swallow middle right [6]  4 5 6  */
-    S_sw_bl     = 90, /* swallow bottom left [7]   7 8 9  */
-    S_sw_bc     = 91, /* swallow bottom center [8]        */
-    S_sw_br     = 92, /* swallow bottom right [9]         */
+    S_sw_tl     = 86, /* swallow top left [1]             */
+    S_sw_tc     = 87, /* swallow top center [2]    Order: */
+    S_sw_tr     = 88, /* swallow top right [3]            */
+    S_sw_ml     = 89, /* swallow middle left [4]   1 2 3  */
+    S_sw_mr     = 90, /* swallow middle right [6]  4 5 6  */
+    S_sw_bl     = 91, /* swallow bottom left [7]   7 8 9  */
+    S_sw_bc     = 92, /* swallow bottom center [8]        */
+    S_sw_br     = 93, /* swallow bottom right [9]         */
 
-    S_explode1  = 93, /* explosion top left               */
-    S_explode2  = 94, /* explosion top center             */
-    S_explode3  = 95, /* explosion top right        Ex.   */
-    S_explode4  = 96, /* explosion middle left            */
-    S_explode5  = 97, /* explosion middle center    /-\   */
-    S_explode6  = 98, /* explosion middle right     |@|   */
-    S_explode7  = 99, /* explosion bottom left      \-/   */
-    S_explode8  = 100, /* explosion bottom center          */
-    S_explode9  = 101, /* explosion bottom right           */
+    S_explode1  = 94, /* explosion top left               */
+    S_explode2  = 95, /* explosion top center             */
+    S_explode3  = 96, /* explosion top right        Ex.   */
+    S_explode4  = 97, /* explosion middle left            */
+    S_explode5  = 98, /* explosion middle center    /-\   */
+    S_explode6  = 99, /* explosion middle right     |@|   */
+    S_explode7  = 100, /* explosion bottom left      \-/   */
+    S_explode8  = 101, /* explosion bottom center          */
+    S_explode9  = 102, /* explosion bottom right           */
 
 /* end effects */
 
-    MAXPCHARS   = 102  /* maximum number of mapped characters */
+    MAXPCHARS   = 103  /* maximum number of mapped characters */
 };
 
 #define MAXDCHARS (S_water - S_stone + 1) /* mapped dungeon characters */

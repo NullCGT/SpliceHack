@@ -1844,7 +1844,8 @@ just_an(char *outbuf, const char *str)
         /* single letter; might be used for named fruit or a musical note */
         Strcpy(outbuf, index("aefhilmnosx", c0) ? "an " : "a ");
     } else if (!strncmpi(str, "the ", 4) || !strcmpi(str, "molten lava")
-               || !strcmpi(str, "iron bars") || !strcmpi(str, "ice")) {
+               || !strcmpi(str, "iron bars") || !strcmpi(str, "ice")
+               || !strcmpi(str, "grass")) {
         ; /* no article */
     } else if (!strcmpi(str, "cheese")) {
         Strcpy(outbuf, "some ");

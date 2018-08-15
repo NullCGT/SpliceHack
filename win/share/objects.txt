@@ -1794,6 +1794,44 @@ Z = (195, 195, 195)
   ................
   ................
 }
+# tile 89 (filth dragon scale mail)
+{
+  ................
+  ................
+  ...N.NNNOOO.O...
+  .N.NNNNNOOOOO.O.
+  .N.NJJKJJJKJOAOA
+  .N.NJKJJJKJJOAOA
+  ..ANKJJJKJJJOA.A
+  ...NJJJKJJJKOA..
+  ...NJJKJJJKJOA..
+  ....NKJJJKJOAA..
+  ...N.NJJKJOAOA..
+  ..NNNANKJOAOOOA.
+  .NNNOA.NOAAOOOOA
+  ..NOAA......OOA.
+  ................
+  ................
+}
+# tile 88 (void dragon scale mail)
+{
+  ................
+  ................
+  ...N.NNNOOO.O...
+  .N.NNNNNOOOOO.O.
+  .N.NAA.AAAAAOAOA
+  .N.NAAAAAAAAOAOA
+  ..ANAAAAAAAAOA.A
+  ...NAAAAAAAAOA..
+  ...NAA.AAAAAOA..
+  ....NAAAAAAOAA..
+  ...NANAAAAOAOA..
+  ..NNNANAAOAOOOA.
+  .NNNOAANOAAOOOOA
+  ..NOAA......OOA.
+  ................
+  ................
+}
 # tile 91 (yellow dragon scale mail)
 {
   ................

@@ -53,7 +53,7 @@ const struct Role roles[] = {
       S_MUMMY,
       ART_ORB_OF_DETECTION,
       MH_HUMAN | MH_DWARF | MH_GNOME | MH_DEMON | ROLE_MALE | ROLE_FEMALE
-          | ROLE_LAWFUL | ROLE_NEUTRAL,
+          | ROLE_NEUTER | ROLE_LAWFUL | ROLE_NEUTRAL,
       /* Str Int Wis Dex Con Cha */
       { 7, 10, 10, 7, 7, 7 },
       { 20, 20, 20, 10, 20, 10 },
@@ -94,8 +94,8 @@ const struct Role roles[] = {
       S_OGRE,
       S_TROLL,
       ART_HEART_OF_AHRIMAN,
-      MH_HUMAN | MH_ORC | MH_DEMON | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL
-          | ROLE_CHAOTIC,
+      MH_HUMAN | MH_ORC | MH_DEMON | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER
+          | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
       { 16, 7, 7, 15, 16, 6 },
       { 30, 6, 7, 20, 30, 7 },
@@ -136,7 +136,7 @@ const struct Role roles[] = {
       S_HUMANOID,
       S_GIANT,
       ART_SCEPTRE_OF_MIGHT,
-      MH_HUMAN | MH_DWARF | MH_GNOME | ROLE_MALE | ROLE_FEMALE
+      MH_HUMAN | MH_DWARF | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER
           | ROLE_LAWFUL | ROLE_NEUTRAL,
       /* Str Int Wis Dex Con Cha */
       { 10, 7, 7, 7, 8, 6 },
@@ -178,7 +178,7 @@ const struct Role roles[] = {
       S_SNAKE,
       S_NAGA,
       ART_HOLOGRAPHIC_VOID_LILY,
-      MH_HUMAN | MH_ELF | MH_GNOME | ROLE_MALE | ROLE_FEMALE
+      MH_HUMAN | MH_ELF | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER
           | ROLE_LAWFUL | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
       { 7, 10, 7, 7, 7, 7 },
@@ -220,7 +220,8 @@ const struct Role roles[] = {
       S_BAT,
       S_QUADRUPED,
       ART_SHARUR,
-      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL,
+      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_LAWFUL
+          | ROLE_NEUTRAL,
       /* Str Int Wis Dex Con Cha */
       { 13, 17, 14, 8, 8, 8 },
       { 30, 15, 15, 10, 20, 10 },
@@ -261,7 +262,7 @@ const struct Role roles[] = {
       S_RODENT,
       S_YETI,
       ART_STAFF_OF_AESCULAPIUS,
-      MH_HUMAN | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL,
+      MH_HUMAN | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_NEUTRAL,
       /* Str Int Wis Dex Con Cha */
       { 7, 7, 13, 7, 11, 16 },
       { 15, 20, 20, 15, 25, 5 },
@@ -302,7 +303,7 @@ const struct Role roles[] = {
       S_IMP,
       S_JELLY,
       ART_MAGIC_MIRROR_OF_MERLIN,
-      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL,
+      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_LAWFUL,
       /* Str Int Wis Dex Con Cha */
       { 13, 7, 14, 8, 10, 17 },
       { 30, 15, 15, 10, 20, 10 },
@@ -343,8 +344,8 @@ const struct Role roles[] = {
       S_ELEMENTAL,
       S_XORN,
       ART_EYES_OF_THE_OVERWORLD,
-      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL
-          | ROLE_CHAOTIC,
+      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER |
+          ROLE_LAWFUL | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
       { 10, 7, 8, 8, 7, 7 },
       { 25, 10, 20, 20, 15, 10 },
@@ -385,8 +386,8 @@ const struct Role roles[] = {
       S_ZOMBIE,
       S_WRAITH,
       ART_MITRE_OF_HOLINESS,
-      MH_HUMAN | MH_ELF | MH_DEMON | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL
-          | ROLE_NEUTRAL | ROLE_CHAOTIC,
+      MH_HUMAN | MH_ELF | MH_DEMON | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER
+          | ROLE_LAWFUL | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
       { 7, 7, 10, 7, 7, 7 },
       { 15, 10, 30, 15, 20, 10 },
@@ -427,7 +428,7 @@ const struct Role roles[] = {
       S_RODENT,
       S_ELEMENTAL, /* Ghost pirates, soldiers, rats in the food stores, and the occasional storm*/
      	ART_TREASURY_OF_PROTEUS,
-     	MH_HUMAN | MH_DEMON | ROLE_MALE | ROLE_FEMALE | ROLE_CHAOTIC
+     	MH_HUMAN | MH_DEMON | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_CHAOTIC
       | ROLE_NEUTRAL,
      	/* Str Int Wis Dex Con Cha */
      	{   8,  7, 7,  8,  8,  7 },
@@ -464,7 +465,8 @@ const struct Role roles[] = {
       S_NYMPH,
       S_NAGA,
       ART_MASTER_KEY_OF_THIEVERY,
-      MH_HUMAN | MH_DEMON | MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_CHAOTIC,
+      MH_HUMAN | MH_DEMON | MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER
+          | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
       { 7, 7, 7, 10, 7, 6 },
       { 20, 10, 10, 30, 20, 10 },
@@ -520,7 +522,7 @@ const struct Role roles[] = {
       S_SPIDER,
       ART_LONGBOW_OF_DIANA,
       MH_HUMAN | MH_ELF | MH_GNOME | MH_ORC | ROLE_MALE | ROLE_FEMALE
-          | ROLE_NEUTRAL | ROLE_CHAOTIC,
+          | ROLE_NEUTER | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
       { 13, 13, 13, 9, 13, 7 },
       { 30, 10, 10, 20, 20, 10 },
@@ -561,7 +563,7 @@ const struct Role roles[] = {
       S_DOG,
       S_ELEMENTAL,
       ART_TSURUGI_OF_MURAMASA,
-      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL,
+      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_LAWFUL,
       /* Str Int Wis Dex Con Cha */
       { 10, 8, 7, 10, 17, 6 },
       { 30, 10, 8, 30, 14, 8 },
@@ -602,7 +604,7 @@ const struct Role roles[] = {
       S_SPIDER,
       S_CENTAUR,
       ART_YENDORIAN_EXPRESS_CARD,
-      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL,
+      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_NEUTRAL,
       /* Str Int Wis Dex Con Cha */
       { 7, 10, 6, 7, 7, 10 },
       { 15, 10, 10, 15, 30, 20 },
@@ -643,7 +645,8 @@ const struct Role roles[] = {
       S_ANT,
       S_GIANT,
       ART_ORB_OF_FATE,
-      MH_HUMAN | MH_DWARF | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL,
+      MH_HUMAN | MH_DWARF | ROLE_FEMALE | ROLE_NEUTER |
+      ROLE_LAWFUL | ROLE_NEUTRAL,
       /* Str Int Wis Dex Con Cha */
       { 10, 7, 7, 7, 10, 7 },
       { 30, 6, 7, 20, 30, 7 },
@@ -685,7 +688,7 @@ const struct Role roles[] = {
       S_WRAITH,
       ART_EYE_OF_THE_AETHIOPICA,
       MH_HUMAN | MH_ELF | MH_GNOME | MH_ORC | MH_DEMON | ROLE_MALE
-          | ROLE_FEMALE | ROLE_NEUTRAL | ROLE_CHAOTIC,
+          | ROLE_FEMALE | ROLE_NEUTER | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
       { 7, 10, 7, 7, 7, 7 },
       { 10, 30, 10, 20, 20, 10 },
@@ -745,8 +748,8 @@ const struct Race races[] = {
         NON_PM,
         PM_HUMAN_MUMMY,
         PM_HUMAN_ZOMBIE,
-        MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL
-            | ROLE_CHAOTIC,
+        MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER
+            | ROLE_LAWFUL | ROLE_NEUTRAL | ROLE_CHAOTIC,
         MH_HUMAN,
         0,
         MH_GNOME | MH_ORC,
@@ -767,7 +770,7 @@ const struct Race races[] = {
         NON_PM,
         PM_HUMAN_MUMMY,
         PM_HUMAN_ZOMBIE,
-        MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL,
+        MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_LAWFUL,
         MH_HUMAN,
         0,
         MH_DEMON,
@@ -788,7 +791,7 @@ const struct Race races[] = {
         NON_PM,
         PM_ELF_MUMMY,
         PM_ELF_ZOMBIE,
-        MH_ELF | ROLE_MALE | ROLE_FEMALE | ROLE_CHAOTIC,
+        MH_ELF | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_CHAOTIC,
         MH_ELF,
         MH_ELF,
         MH_ORC,
@@ -809,7 +812,8 @@ const struct Race races[] = {
         NON_PM,
         NON_PM,
         NON_PM,
-        MH_DEMON | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL | ROLE_CHAOTIC,
+        MH_DEMON | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER
+            | ROLE_LAWFUL | ROLE_CHAOTIC,
         MH_DEMON,
         0,
         MH_GNOME | MH_ORC | MH_DWARF | MH_ELF,
@@ -830,7 +834,8 @@ const struct Race races[] = {
         NON_PM,
         PM_HUMAN_MUMMY,
         PM_HUMAN_ZOMBIE,
-        MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL | ROLE_LAWFUL,
+        MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER
+            | ROLE_NEUTRAL | ROLE_LAWFUL,
         MH_HUMAN,
         MH_HUMAN,
         MH_ORC,
@@ -851,7 +856,7 @@ const struct Race races[] = {
         NON_PM,
         PM_DWARF_MUMMY,
         PM_DWARF_ZOMBIE,
-        MH_DWARF | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL,
+        MH_DWARF | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_LAWFUL,
         MH_DWARF,
         MH_DWARF | MH_GNOME,
         MH_ORC,
@@ -872,7 +877,7 @@ const struct Race races[] = {
         NON_PM,
         PM_GNOME_MUMMY,
         PM_GNOME_ZOMBIE,
-        MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL,
+        MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_NEUTRAL,
         MH_GNOME,
         MH_DWARF | MH_GNOME,
         MH_HUMAN,
@@ -893,7 +898,7 @@ const struct Race races[] = {
         NON_PM,
         PM_ORC_MUMMY,
         PM_ORC_ZOMBIE,
-        MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_CHAOTIC,
+        MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_CHAOTIC,
         MH_ORC,
         0,
         MH_HUMAN | MH_ELF | MH_DWARF,
@@ -914,7 +919,8 @@ const struct Race races[] = {
         NON_PM,
         PM_HUMAN_MUMMY,
         PM_HUMAN_ZOMBIE,
-        MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_CHAOTIC | ROLE_NEUTRAL,
+        MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER
+            | ROLE_CHAOTIC | ROLE_NEUTRAL,
         MH_WERE,
         0,
         MH_GNOME | MH_ORC | MH_ELF,
@@ -958,7 +964,7 @@ struct Race urace = {
 const struct Gender genders[] = {
     { "male", "he", "him", "his", "Mal", ROLE_MALE },
     { "female", "she", "her", "her", "Fem", ROLE_FEMALE },
-    { "neuter", "it", "it", "its", "Ntr", ROLE_NEUTER }
+    { "nonbinary", "they", "them", "their", "NB", ROLE_NEUTER },
 };
 
 /* Table of all alignments */
@@ -1648,6 +1654,8 @@ int rolenum;
             ++gendcount;
         if (roles[rolenum].allow & ROLE_NEUTER)
             ++gendcount;
+        if (roles[rolenum].allow & ROLE_NEUTER)
+            ++gendcount;
     }
     return gendcount;
 }
@@ -2104,6 +2112,8 @@ boolean preselect;
                 g = 0; /* genders[male] */
             else if (allowmask == ROLE_FEMALE)
                 g = 1; /* genders[female] */
+            else if (allowmask == ROLE_NEUTER)
+                g = 3; /* genders[nonbinary] */
             if (g >= 0) {
                 constrainer = "role";
                 forcedvalue = genders[g].adj;
@@ -2230,6 +2240,10 @@ role_init()
 
     /* Check for a valid gender.  If new game, check both initgend
      * and female.  On restore, assume flags.female is correct. */
+    flags.female = flags.initgend;
+    pline("pre in%d", flags.initgend);
+    pline("pre fem%d", flags.female);
+
     if (flags.pantheon == -1) { /* new game */
         if (!validgend(flags.initrole, flags.initrace, flags.female))
             flags.female = !flags.female;
@@ -2237,6 +2251,9 @@ role_init()
     if (!validgend(flags.initrole, flags.initrace, flags.initgend))
         /* Note that there is no way to check for an unspecified gender. */
         flags.initgend = flags.female;
+
+    pline("post in%d", flags.initgend);
+    pline("post fem%d", flags.female);
 
     /* Check for a valid alignment */
     if (!validalign(flags.initrole, flags.initrace, flags.initalign))

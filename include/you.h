@@ -236,20 +236,20 @@ extern struct Race urace;
 
 /*** Unified structure specifying gender information ***/
 struct Gender {
-    const char *adj;      /* male/female/neuter */
+    const char *adj;      /* male/female/nonbinary */
     const char *he;       /* he/she/it */
     const char *him;      /* him/her/it */
     const char *his;      /* his/her/its */
     const char *filecode; /* file code */
     short allow;          /* equivalent ROLE_ mask */
 };
-#define ROLE_GENDERS 2    /* number of permitted player genders
+#define ROLE_GENDERS 3    /* number of permitted player genders
                              increment to 3 if you allow neuter roles */
 
 extern const struct Gender genders[]; /* table of available genders */
-#define uhe()      (genders[flags.female ? 1 : 0].he)
-#define uhim()     (genders[flags.female ? 1 : 0].him)
-#define uhis()     (genders[flags.female ? 1 : 0].his)
+#define uhe()      (genders[flags.female].he)
+#define uhim()     (genders[flags.female].him)
+#define uhis()     (genders[flags.female].his)
 #define mhe(mtmp)  (genders[pronoun_gender(mtmp)].he)
 #define mhim(mtmp) (genders[pronoun_gender(mtmp)].him)
 #define mhis(mtmp) (genders[pronoun_gender(mtmp)].his)

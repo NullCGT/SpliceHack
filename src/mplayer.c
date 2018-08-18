@@ -396,7 +396,8 @@ register struct monst *mtmp;
     }
 
     pline("Talk? -- %s", (mtmp->data == &mons[urole.malenum]
-                          || mtmp->data == &mons[urole.femalenum])
+                          || mtmp->data == &mons[urole.femalenum]
+                          || mtmp->data == &mons[urole.nbnum])
                              ? same_class_msg[rn2(3)]
                              : other_class_msg[rn2(3)]);
 }

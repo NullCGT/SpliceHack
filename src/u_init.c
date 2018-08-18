@@ -743,9 +743,12 @@ u_init()
     u.ukinghill = 0;
     u.protean = 0;
 
-    u.umonnum = u.umonster = (flags.female && urole.femalenum != NON_PM)
+    u.umonnum = u.umonster = (flags.female == 1 && urole.femalenum != NON_PM)
                                  ? urole.femalenum
-                                 : urole.malenum;
+                                 : (flags.female == 2 && urole.nbnum != NON_PM)
+                                    ? urole.nbnum
+                                    : urole.malenum;
+    pline("%d", u.umonnum);
     u.ulycn = NON_PM;
     set_uasmon();
 

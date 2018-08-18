@@ -275,7 +275,8 @@ boolean female;
 
     /* Find the role */
     for (role = roles; role->name.m; role++)
-        if (monnum == role->malenum || monnum == role->femalenum)
+        if (monnum == role->malenum || monnum == role->femalenum
+            || monnum == role->nbnum)
             break;
     if (!role->name.m)
         role = &urole;
@@ -293,6 +294,8 @@ boolean female;
         return role->name.f;
     else if (role->name.m)
         return role->name.m;
+    else if (role->name.n)
+        return role->name.n;
     return "Player";
 }
 
@@ -329,7 +332,9 @@ int *rank_indx, *title_length;
                 if (title_length)
                     *title_length = strlen(roles[i].rank[j].f);
                 return (roles[i].femalenum != NON_PM) ? roles[i].femalenum
-                                                      : roles[i].malenum;
+                                                      : (roles[i].nbnum != NON_PM)
+                                                        ? roles[i].nbnum
+                                                        : roles[i].malenum;
             }
         }
     return NON_PM;

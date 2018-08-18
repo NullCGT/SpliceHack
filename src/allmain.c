@@ -734,7 +734,11 @@ boolean new_game; /* false => restoring an old game */
     pline(new_game ? "%s %s, welcome to SpliceHack!  You are a%s %s %s %s."
                    : "%s %s, the%s %s %s %s, welcome back to SpliceHack!",
           Hello((struct monst *) 0), plname, buf, genders[currentgend].adj, urace.adj,
-              (currentgend && urole.name.f) ? urole.name.f : urole.name.m);
+              (currentgend == 1 && urole.name.f)
+                ? urole.name.f
+                : (currentgend == 2 && urole.name.n)
+                ? urole.name.n
+                : urole.name.m);
     if (flags.tips) {
         get_rnd_text(SPLICETIPSFILE, tipbuf);
         pline("Splicehack Tip of the Day: %s", tipbuf);

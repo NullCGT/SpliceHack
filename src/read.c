@@ -9,7 +9,8 @@
 
 #define Your_Own_Role(mndx)  \
     ((mndx) == urole.malenum \
-     || (urole.femalenum != NON_PM && (mndx) == urole.femalenum))
+     || (urole.femalenum != NON_PM && (mndx) == urole.femalenum) \
+     || (urole.nbnum != NON_PM && (mndx) == urole.nbnum))
 #define Your_Own_Race(mndx)  \
     ((mndx) == urace.malenum \
      || (urace.femalenum != NON_PM && (mndx) == urace.femalenum))
@@ -2553,6 +2554,8 @@ int how;
                 mvitals[urole.femalenum].mvflags |= (G_GENOD | G_NOCORPSE);
             if (urole.femalenum != NON_PM && mndx == urole.femalenum)
                 mvitals[urole.malenum].mvflags |= (G_GENOD | G_NOCORPSE);
+            if (urole.femalenum != NON_PM && mndx == urole.nbnum)
+                mvitals[urole.nbnum].mvflags |= (G_GENOD | G_NOCORPSE);
             if (urace.femalenum != NON_PM && mndx == urace.malenum)
                 mvitals[urace.femalenum].mvflags |= (G_GENOD | G_NOCORPSE);
             if (urace.femalenum != NON_PM && mndx == urace.femalenum)

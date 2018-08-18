@@ -5132,6 +5132,13 @@ zap_over_floor(xchar x, xchar y, int type, boolean *shopdamage,
             rangemod -= 1;
             dryup(x, y, type > 0);
         }
+        else if (IS_GRASS(lev->typ)) {
+            lev->typ = ROOM;
+            if (see_it) {
+                pline("The grass is scorched away!");
+                newsym(x, y);
+            }
+        }
         break; /* ZT_FIRE */
 
     case ZT_COLD:

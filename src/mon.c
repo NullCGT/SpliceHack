@@ -4243,7 +4243,8 @@ restore_cham(struct monst* mon)
     }
 }
 
-/* unwatched hiders may hide again; if so, returns True */
+/* unwatched hiders may hide again; if so, returns True.
+ * Only applies to is_hider monsters, *not* hides_under monsters. */
 static boolean
 restrap(struct monst* mtmp)
 {
@@ -4280,7 +4281,8 @@ maybe_unhide_at(xchar x, xchar y)
         (void) hideunder(mtmp);
 }
 
-/* monster/hero tries to hide under something at the current location */
+/* monster/hero tries to hide under something at the current location.
+ * Only applies to hides_under monsters, *not* is_hider monsters. */
 boolean
 hideunder(struct monst* mtmp)
 {
@@ -4296,14 +4298,21 @@ hideunder(struct monst* mtmp)
         ; /* can't hide while stuck in a non-pit trap */
     } else if (mtmp->data->mlet == S_EEL) {
         undetected = (is_pool(x, y) && !Is_waterlevel(&u.uz));
-    } else if (hides_under(mtmp->data) && OBJ_AT(x, y)) {
-        struct obj *otmp = g.level.objects[x][y];
+    } else if (hides_under(mtmp->data)) {
+        int concealment = concealed_spot(x, y);
 
-        /* most monsters won't hide under cockatrice corpse */
-        if (otmp->nexthere || otmp->otyp != CORPSE
-            || (mtmp == &g.youmonst ? Stone_resistance : resists_ston(mtmp))
-            || !touch_petrifies(&mons[otmp->corpsenm]))
+        if (concealment == 2) { /* object cover */
+            struct obj *otmp = g.level.objects[x][y];
+
+            /* most monsters won't hide under cockatrice corpse */
+            if (otmp->nexthere || otmp->otyp != CORPSE
+                || (mtmp == &g.youmonst ? Stone_resistance : resists_ston(mtmp))
+                || !touch_petrifies(&mons[otmp->corpsenm]))
+                undetected = TRUE;
+        }
+        else if (concealment == 1) { /* terrain cover, no objects */
             undetected = TRUE;
+        }
     }
 
     if (is_u)

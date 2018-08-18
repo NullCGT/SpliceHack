@@ -2007,6 +2007,13 @@ glyphinfo_at(xchar x, xchar y, int glyph)
 }
 #endif
 
+const char *
+explain_terrain(int x, int y)
+{
+    char fbuf[QBUFSZ];
+    return dfeature_at(x, y, fbuf);
+}
+
 /*
  * This will be used to get the glyph for the background so that
  * it can potentially be merged into graphical window ports to

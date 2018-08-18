@@ -3324,6 +3324,8 @@ dfeature_at(int x, int y, char *buf)
         cmap = S_bridge;
     else if (is_ice(x, y))
         cmap = S_ice; /* "ice" */
+    else if (ltyp == GRASS)
+        cmap = S_grass;
     else if (is_pool(x, y))
         dfeature = "pool of water";
     else if (IS_GRASS(ltyp))

@@ -300,7 +300,8 @@ register struct monst *magr, *mdef;
         strike = 0, /* hit this attack */
         attk,       /* attack attempted this time */
         struck = 0, /* hit at least once */
-        res[NATTK]; /* results of all attacks */
+        res[NATTK], /* results of all attacks */
+        k;          /* hydra head counter */
     struct attack *mattk, alt_attk;
     struct permonst *pa, *pd;
 
@@ -357,6 +358,11 @@ register struct monst *magr, *mdef;
      * and it shouldn't move again.
      */
     magr->mlstmv = monstermoves;
+
+    /* handle multiple hydra attacks */
+    if (magr->data == &mons[PM_HYDRA]) {
+        k = min(magr->m_lev - magr->data->mlevel + 1, 10);
+    }
 
     /* Now perform all attacks for the monster. */
     for (i = 0; i < NATTK; i++) {
@@ -539,6 +545,12 @@ register struct monst *magr, *mdef;
             return res[i];
         if (res[i] & MM_HIT)
             struck = 1; /* at least one hit */
+
+        /* handle multiple hydra attacks */
+        if (magr->data == &mons[PM_HYDRA] && mattk->aatyp == AT_BITE && k > 0) {
+            i -= 1;
+            k -= 1;
+        }
     }
 
     return (struck ? MM_HIT : MM_MISS);
@@ -1746,6 +1758,16 @@ int mdead;
     /* These affect the enemy only if defender is still alive */
     if (rn2(3))
         switch (mddat->mattk[i].adtyp) {
+        case AD_HYDR: /* grow additional heads (hydra) */
+            if (mhit && !mdef->mcan && MON_WEP(magr) && rn2(3)) {
+                if ((is_blade(MON_WEP(magr)) || is_axe(MON_WEP(magr)))
+                      && MON_WEP(magr)->oartifact != ART_FIRE_BRAND) {
+                    pline("%s decapitates %s, but two more heads spring forth!",
+                      Monnam(magr), mon_nam(mdef));
+                    grow_up(mdef, (struct monst *) 0);
+                }
+            }
+            break;
         case AD_PLYS: /* Floating eye */
             if (tmp > 127)
                 tmp = 127;

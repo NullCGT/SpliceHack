@@ -1405,6 +1405,14 @@ NEARDATA struct permonst mons[] = {
      * As reptiles, dragons are cold-blooded and thus aren't seen
      * with infravision.  Red dragons are the exception.
      */
+    MON("hydra", S_DRAGON, LVL(20, 9, -2, 5, 7), (G_GENO | 1),
+       	A(ATTK(AT_NONE, AD_HYDR, 0, 0), ATTK(AT_BITE, AD_PHYS, 2, 8),
+            NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(WT_DRAGON, 500, MS_ROAR, MZ_GIGANTIC),
+        MR_POISON | MR_STONE, MR_POISON,
+       	M1_THICK_HIDE | M1_NOHANDS | M1_SEE_INVIS | M1_CARNIVORE | M1_REGEN,
+       	M2_HOSTILE | M2_STRONG | M2_NASTY | M2_GREEDY | M2_JEWELS | M2_MAGIC,
+       	0, CLR_BRIGHT_GREEN),
     MON("baby gray dragon", S_DRAGON, LVL(12, 9, 2, 10, 0), G_GENO,
         A(ATTK(AT_BITE, AD_PHYS, 2, 6), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
           NO_ATTK),

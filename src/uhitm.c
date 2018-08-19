@@ -2791,6 +2791,15 @@ boolean wep_was_destroyed;
      */
     if (malive && !mon->mcan && rn2(3)) {
         switch (ptr->mattk[i].adtyp) {
+        case AD_HYDR: /* grow additional heads (hydra) */
+            if (mhit && !mon->mcan && weapon && rn2(3)) {
+                if ((is_blade(weapon) || is_axe(weapon))
+                      && weapon->oartifact != ART_FIRE_BRAND) {
+                    pline("You decapitate the hydra, but two more heads spring forth!");
+                    grow_up(mon, (struct monst *) 0);
+                }
+            }
+            break;
         case AD_PLYS:
             if (ptr == &mons[PM_FLOATING_EYE]) {
                 if (!canseemon(mon)) {

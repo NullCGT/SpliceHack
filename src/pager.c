@@ -586,6 +586,7 @@ static const char * damagetypes[] = {
     "wind",
     "calming",
     "unluck",
+    "head regrowth",
     "clerical",
     "arcane",
     "random breath",

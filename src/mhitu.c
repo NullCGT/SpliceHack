@@ -2551,6 +2551,16 @@ struct attack *mattk;
             }
         }
         break;
+    case AD_LUCK:
+        if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee
+            && !mtmp->mspec_used && !rn2(13) && !cancelled) {
+            change_luck(-1);
+            mtmp->mspec_used = mtmp->mspec_used + 5 + rn2(13);
+            pline("The %s catches your eye, and you feel deeply uneasy.",
+                mon_nam(mtmp));
+            stop_occupation();
+        }
+        break;
 #ifdef PM_BEHOLDER /* work in progress */
     case AD_SLEE:
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee

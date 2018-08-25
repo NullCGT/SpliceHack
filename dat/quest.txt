@@ -4172,9 +4172,107 @@ essential in locating the Amulet of Yendor."
 "Why search for the Amulet?  Thou wouldst but lose it, cretin."
 %E
 #
-#	Banishment message (for converted hero)
+# Demon lord appearance messages
 #
 %Cc - 00060
+A massive pillar of slime towers above you, larger than you would believe to
+be possible. It hisses, spits, and bubbles, filling the air around it with
+noxious vapours. Most striking of all is the burning hatred that emanates from
+it, so intense that it feels almost like a physical force and you have to
+struggle not to let it push you back.
+
+Juiblex, the Faceless Lord, has arrived.
+%E
+%Cc - 00061
+Before you is a bizarre creature. Most of its body is the head of an enormous
+lion, from which five limbs radiate like the arms of some sort of bizarre
+starfish. Its eyes blaze with crimson light, and saliva drips from its
+serrated teeth.
+
+Buer has come out to hunt.
+%E
+%Cc - 00062
+The hulking humanoid that stands before you is covered nearly three meters tall
+and has the head of a hyena. In one hand it grips a  flail, and the other hand
+crackles with magical energy. When it opens its mouth, the unholy din that
+emerges could charitably be called a laugh.
+
+Yeenoghu has come to call.
+%E
+%Cc - 00063
+Blackness cloaks the being in front of you. All you can see of them is a
+muscular form, two burning yellow eyes, and a pair of claws. One of the claws
+clutches a skull-topped wand, about which a miasma of dark magic gathers.
+
+"I am Orcus, Lord of the Dead. Goodbye."
+%E
+%Cc - 00064
+The monster you now face is nothing short of horrifying. The upper body seems to
+be a combination of three separate humanoids that have been forcibly merged.
+The lower body is serpentine and distended, tapering off into an enormous
+stinger. The hands of the monster end in wicked claws.
+
+"Greetings, Mortal. I am Geryon."
+%E
+%Cc - 00065
+The being in front of you sniffs in disdain and tosses his ram's horns. He is
+dressed in fine clothing, and his skin is covered in bony protrusions. A
+flickering gray aura surrounds him, which occasionally curls into a bestial
+shape.
+
+"Is this the one who seeks the Amulet of Yendor? How utterly pathetic. I,
+Geryon, shall dispatch you."
+%E
+%Cc - 00066
+A soft voice whispers in your ear.
+
+"Think you could take some time off from your search for the amulet, mortal?
+I could use some exercise."
+
+A humanoid shimmers into existence in front of you. Their form constantly shifts
+from female, to male, to neither. The only constant is their breathtaking beauty
+and the cloud of writhing tendrils protruding from their back.
+
+Malcanthet is here.
+%E
+%Cc - 00067
+A maddening buzz fills your ears. Thousands of flies appear from everywhere,
+swarming through the air to coalesce into a horrible, pulsating mass, which
+continually spews torrents of insects as it expands.
+
+Baalzebub, Lord of the Flies approaches.
+%E
+%Cc - 00068
+The area in front of you is suddenly consumed in a roaring wave of hellfire.
+Out of the flames steps a demon, power radiating off him. You recognize him on
+sight. Mephisto.
+
+"So, you are the latest pawn sent forth by %d. I hope you prove more
+entertaining than the previous guests I have entertained."
+%E
+%Cc - 00069
+The air around you is filled with a momentary hissing, before a figure appears
+in a flash of frost. He grins at you, displaying a mouth full of fangs.
+
+"I am Asmodeus. Come to me, %r."
+%E
+%CC - 00070
+A great beast drags itself from the earth in a shower of stone, roaring loudly
+enough that the world shakes around it. You cannot wrap your mind around the
+entirety of its form, and instead must process bits and pieces of it at a time.
+
+Four lashing tentacles, thick with rot.
+Thick, scaly legs ending in knifelike claws.
+The cloying smell of mildew mixed with blood.
+A pair of rabid mandrill heads, their eyes trained on you.
+Prince of Demons.
+
+Demogorgon.
+%E
+#
+#	Banishment message (for converted hero)
+#
+%Cc - 00080
 "You have betrayed all those who hold allegiance to %d, as you once did.
 My allegiance to %d holds fast and I cannot condone or accept what you
 have done.

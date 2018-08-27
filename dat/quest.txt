@@ -4221,7 +4221,7 @@ flickering gray aura surrounds him, which occasionally curls into a bestial
 shape.
 
 "Is this the one who seeks the Amulet of Yendor? How utterly pathetic. I,
-Geryon, shall dispatch you."
+Dispater, shall dispatch you."
 %E
 %Cc - 00066
 A soft voice whispers in your ear.

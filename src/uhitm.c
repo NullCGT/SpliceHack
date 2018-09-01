@@ -16,7 +16,7 @@ STATIC_DCL boolean FDECL(hitum, (struct monst *, struct attack *));
 STATIC_DCL boolean FDECL(hmon_hitmon, (struct monst *, struct obj *, int,
                                        int));
 STATIC_DCL int FDECL(joust, (struct monst *, struct obj *));
-STATIC_DCL void NDECL(demonpet);
+void NDECL(demonpet);
 STATIC_DCL boolean FDECL(m_slips_free, (struct monst *, struct attack *));
 STATIC_DCL int FDECL(explum, (struct monst *, struct attack *));
 STATIC_DCL void FDECL(start_engulf, (struct monst *));
@@ -1469,7 +1469,7 @@ struct obj *obj;   /* weapon */
  * Complex."
  * Pulling it out makes it work.
  */
-STATIC_OVL void
+void
 demonpet()
 {
     int i;
@@ -2614,6 +2614,8 @@ register struct monst *mon;
                  || youmonst.data->mlet == S_ORC
                  || youmonst.data->mlet == S_GNOME) && !weapon_used)
                 goto use_weapon;
+            sum[i] = castum(mon, mattk);
+             		continue;
             /*FALLTHRU*/
 
         case AT_NONE:

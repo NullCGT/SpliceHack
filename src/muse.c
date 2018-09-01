@@ -30,7 +30,7 @@ STATIC_PTR int FDECL(mbhitm, (struct monst *, struct obj *));
 STATIC_DCL void FDECL(mbhit, (struct monst *, int,
                               int FDECL((*), (MONST_P, OBJ_P)),
                               int FDECL((*), (OBJ_P, OBJ_P)), struct obj *));
-STATIC_DCL void FDECL(you_aggravate, (struct monst *));
+void FDECL(you_aggravate, (struct monst *));
 STATIC_DCL void FDECL(mon_consume_unstone, (struct monst *, struct obj *,
                                             BOOLEAN_P, BOOLEAN_P));
 STATIC_DCL boolean FDECL(cures_stoning, (struct monst *, struct obj *,
@@ -1391,8 +1391,8 @@ struct obj *obj;                     /* 2nd arg to fhitm/fhito */
 
     bhitpos.x = mon->mx;
     bhitpos.y = mon->my;
-    ddx = sgn(mon->mux - mon->mx);
-    ddy = sgn(mon->muy - mon->my);
+    ddx = sgn(tbx);
+    ddy = sgn(tby);
 
     while (range-- > 0) {
         int x, y;
@@ -1499,7 +1499,7 @@ struct monst *mtmp;
         m_using = TRUE;
         buzz((int) (-30 - (otmp->otyp - WAN_MAGIC_MISSILE)),
              (otmp->otyp == WAN_MAGIC_MISSILE) ? 2 : 6, mtmp->mx, mtmp->my,
-             sgn(mtmp->mux - mtmp->mx), sgn(mtmp->muy - mtmp->my));
+             sgn(tbx), sgn(tby));
         m_using = FALSE;
         return (mtmp->mhp <= 0) ? 1 : 2;
     case MUSE_FIRE_HORN:
@@ -1512,8 +1512,8 @@ struct monst *mtmp;
         otmp->spe--;
         m_using = TRUE;
         buzz(-30 - ((otmp->otyp == FROST_HORN) ? AD_COLD - 1 : AD_FIRE - 1),
-             rn1(6, 6), mtmp->mx, mtmp->my, sgn(mtmp->mux - mtmp->mx),
-             sgn(mtmp->muy - mtmp->my));
+             rn1(6, 6), mtmp->mx, mtmp->my, sgn(tbx),
+             sgn(tby));
         m_using = FALSE;
         return (mtmp->mhp <= 0) ? 1 : 2;
     case MUSE_MGC_FLUTE:
@@ -1672,7 +1672,7 @@ struct monst *mtmp;
         }
         m_throw(mtmp, mtmp->mx, mtmp->my, sgn(mtmp->mux - mtmp->mx),
                 sgn(mtmp->muy - mtmp->my),
-                distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy), otmp);
+                distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy), otmp, TRUE);
         return 2;
     case 0:
         return 0; /* i.e. an exploded wand */
@@ -1743,6 +1743,7 @@ struct monst *mtmp;
 #define MUSE_POT_POLYMORPH 9
 #define MUSE_FIGURINE 10
 #define MUSE_POT_REFLECT 11
+#define MUSE_SCR_REMOVE_CURSE 12
 
 boolean
 find_misc(mtmp)
@@ -1880,6 +1881,22 @@ struct monst *mtmp;
             m.misc = obj;
             m.has_misc = MUSE_POT_POLYMORPH;
         }
+     		nomore(MUSE_SCR_REMOVE_CURSE);
+     		if(obj->otyp == SCR_REMOVE_CURSE)
+     		{
+            register struct obj *otmp;
+       			for (otmp = mtmp->minvent;
+       			     otmp; otmp = otmp->nobj)
+       			{
+       			    if (otmp->cursed &&
+       			        (otmp->otyp == LOADSTONE ||
+       				 otmp->owornmask))
+       			    {
+       			        m.misc = obj;
+       			        m.has_misc = MUSE_SCR_REMOVE_CURSE;
+       			    }
+       			}
+     		}
     }
     return (boolean) !!m.has_misc;
 #undef nomore
@@ -2053,6 +2070,34 @@ struct monst *mtmp;
             makeknown(POT_POLYMORPH);
         m_useup(mtmp, otmp);
         return 2;
+    case MUSE_SCR_REMOVE_CURSE:
+     		mreadmsg(mtmp, otmp);
+     		if (canseemon(mtmp)) {
+     		    if (mtmp->mconf)
+     		        You("feel as though %s needs some help.",
+     			    mon_nam(mtmp));
+     		    else
+     		        You("feel like someone is helping %s.", mon_nam(mtmp));
+     		    if(!objects[SCR_REMOVE_CURSE].oc_name_known
+     		      && !objects[SCR_REMOVE_CURSE].oc_uname)
+     		        docall(otmp);
+     		}
+     		{
+     		    register struct obj *obj;
+     		    for (obj = mtmp->minvent; obj; obj = obj->nobj)
+     		    {
+     			/* gold isn't subject to cursing and blessing */
+     			if (obj->oclass == COIN_CLASS)
+              continue;
+     			if (otmp->blessed || otmp->owornmask ||
+     			     obj->otyp == LOADSTONE) {
+     			    if(mtmp->mconf) blessorcurse(obj, 2);
+     			    else uncurse(obj);
+     			}
+     		    }
+     		}
+     		m_useup(mtmp, otmp);
+     	  return 0;
     case MUSE_POLY_TRAP:
         if (vismon) {
             const char *Mnam = Monnam(mtmp);
@@ -2149,7 +2194,7 @@ struct monst *mtmp;
     return 0;
 }
 
-STATIC_OVL void
+void
 you_aggravate(mtmp)
 struct monst *mtmp;
 {
@@ -2256,7 +2301,7 @@ struct obj *obj;
         break;
     case SCROLL_CLASS:
         if (typ == SCR_TELEPORTATION || typ == SCR_CREATE_MONSTER
-            || typ == SCR_EARTH || typ == SCR_FIRE)
+            || typ == SCR_EARTH || typ == SCR_FIRE || typ == SCR_REMOVE_CURSE)
             return TRUE;
         break;
     case AMULET_CLASS:

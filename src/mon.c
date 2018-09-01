@@ -19,7 +19,6 @@ STATIC_VAR boolean vamp_rise_msg, disintegested;
 STATIC_DCL void FDECL(sanity_check_single_mon, (struct monst *, BOOLEAN_P,
                                                 const char *));
 STATIC_DCL boolean FDECL(restrap, (struct monst *));
-STATIC_DCL long FDECL(mm_aggression, (struct monst *, struct monst *));
 STATIC_DCL long FDECL(mm_displacement, (struct monst *, struct monst *));
 STATIC_DCL int NDECL(pick_animal);
 STATIC_DCL void FDECL(kill_eggs, (struct obj *));
@@ -1547,7 +1546,7 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
    in the absence of Conflict.  There is no provision for targetting
    other monsters; just hand to hand fighting when they happen to be
    next to each other. */
-STATIC_OVL long
+long
 mm_aggression(magr, mdef)
 struct monst *magr, /* monster that is currently deciding where to move */
              *mdef; /* another monster which is next to it */
@@ -1622,7 +1621,12 @@ struct monst *magr, /* monster that is currently deciding where to move */
    	else if (magr->data == &mons[PM_PLANAR_PIRATE] &&
    		u.ukinghill)
    	    return ALLOW_M|ALLOW_TM;
-
+    /* pets attack hostile monsters */
+    else if (magr->mtame && !mdef->mpeaceful)
+     	    return ALLOW_M|ALLOW_TM;
+             /* and vice versa */
+    else if (mdef->mtame && !magr->mpeaceful)
+     	    return ALLOW_M|ALLOW_TM;
     /* Endgame amulet theft / fleeing */
     if(mon_has_amulet(magr) && In_endgame(&u.uz)) {
         return ALLOW_M|ALLOW_TM;

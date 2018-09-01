@@ -606,6 +606,7 @@ int x, y;
             dmg = rnd(2 + *range);
             losehp(Maybe_Half_Phys(dmg), s, KILLED_BY);
             wake_nearto(x,y, 10);
+            unmul((char *) 0);
             return FALSE;
         }
         if (levl[x][y].typ == IRONBARS) {
@@ -614,6 +615,7 @@ int x, y;
             losehp(Maybe_Half_Phys(dmg), "crashing into iron bars",
                    KILLED_BY);
             wake_nearto(x,y, 20);
+            unmul((char *) 0);
             return FALSE;
         }
         if ((obj = sobj_at(BOULDER, x, y)) != 0) {
@@ -621,6 +623,7 @@ int x, y;
             dmg = rnd(2 + *range);
             losehp(Maybe_Half_Phys(dmg), "bumping into a boulder", KILLED_BY);
             wake_nearto(x,y, 10);
+            unmul((char *) 0);
             return FALSE;
         }
         if (!may_pass) {
@@ -630,6 +633,7 @@ int x, y;
             losehp(Maybe_Half_Phys(dmg), "touching the edge of the universe",
                    KILLED_BY);
             wake_nearto(x,y, 10);
+            unmul((char *) 0);
             return FALSE;
         }
         if ((u.ux - x) && (u.uy - y) && bad_rock(youmonst.data, u.ux, y)
@@ -644,6 +648,7 @@ int x, y;
                 losehp(Maybe_Half_Phys(dmg), "wedging into a narrow crevice",
                        KILLED_BY);
                 wake_nearto(x,y, 10);
+                unmul((char *) 0);
                 return FALSE;
             }
         }
@@ -681,6 +686,7 @@ int x, y;
             map_invisible(mon->mx, mon->my);
         setmangry(mon, FALSE);
         wake_nearto(x, y, 10);
+        unmul((char *) 0);
         return FALSE;
     }
 
@@ -690,6 +696,7 @@ int x, y;
         /* Move at a diagonal. */
         if (Sokoban) {
             You("come to an abrupt halt!");
+            unmul((char *) 0);
             return FALSE;
         }
     }

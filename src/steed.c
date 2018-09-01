@@ -41,6 +41,16 @@ int pm;
     /* small hack here: make it in a random spot to avoid failures due to there
        not being enough room. */
     mount = makemon(&mons[pm], 0, 0, MM_ADJACENTOK);
+    /* riding covetous monsters is BAD */
+    if (mount->data->mflags3 & M3_WANTSAMUL)
+        mount->data->mflags3 &= ~M3_WANTSAMUL;
+    if (mount->data->mflags3 & M3_WANTSARTI)
+        mount->data->mflags3 &= ~M3_WANTSARTI;
+    if (mount->data->mflags3 & ~M3_WANTSBOOK)
+        mount->data->mflags3 &= ~M3_WANTSBOOK;
+    if (mount->data->mflags3 & M3_WAITFORU)
+        mount->data->mflags3 &= ~M3_WAITFORU;
+    /* set up structs */
     ERID(mtmp)->m1 = mount;
     ERID(mtmp)->mid = mount->m_id;
     remove_monster(ERID(mtmp)->m1->mx, ERID(mtmp)->m1->my);

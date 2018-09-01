@@ -1486,6 +1486,11 @@ int mmflags;
             mtmp->minvis = TRUE;
         }
         break;
+    case S_HUMAN:
+        if (mndx == PM_SLIPSCALE_THE_BETRAYER) {
+            mount_monster(mtmp, PM_VOANAIRRUTH);
+        }
+        break;
     case S_DEMON:
         if (mndx == PM_KING_IN_YELLOW) {
             mtmp->perminvis = TRUE;

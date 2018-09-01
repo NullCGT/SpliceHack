@@ -1149,7 +1149,9 @@ Go forth, and return when you have thought hard on what you must do."
 %E ["You have wandered from the path of the %a.  Come back when you are ready."]
 %Cc Dra 00021
 "You have probably already guessed what has happened, %p.
-Our old nemesis %n attacked our nests and destroyed our eggs.
+Your once companion %n appeared, leading a flock of chimeras toward us. %nh was
+mounted on his draconic companion, Voanairruth. The group attacked our nests and
+destroyed our eggs, then escaped.
 The fiend also had the gall to steal the greatest treasure of our horde,
 the mighty %o.
 
@@ -1159,10 +1161,10 @@ the mighty %o.
 "Go forth, %p, and be our champion."
 %E ["Find %n, defeat %ni, and return %o to us."]
 %Cp Dra 00025
-"%nC was raised as you were, and knows all of the secret arts you do."
+"%nC was raised as you were, and knows as much about dragons as you."
 %E
 %Cp Dra 00026
-"%nC will no doubt be accompanied by their draconic companion."
+"%nC will no doubt be accompanied by Voanairruth, a white dragon."
 %E
 %Cp Dra 00027
 "You must take revenge for the loss of our children."
@@ -1184,7 +1186,7 @@ the mighty %o.
 %E
 %Cp Dra 00033
 "Do not lose yourself in vengance. We value you more than we do the
-death of %n."
+death of %n and Voanairruth."
 %E
 %Cp Dra 00034
 "I am sure you will do great things one day, %p."
@@ -1198,8 +1200,9 @@ You have returned again to %i.
 %E
 %Cc Dra 00040
 Sweat prickles across your body, although the air grows even colder. You have
-reached the deepest part of %i.  This is where %n must be hiding.
-%E [You have found the hiding place of %n.]
+reached the deepest part of %i.  This is where %n and Voanairruth must be
+hiding.
+%E [You have found the hiding place of %n and %nj dragon.]
 %Cp Dra 00041
 You feel a chill again.
 %E
@@ -1207,7 +1210,7 @@ You feel a chill again.
 "So, this is who %l sent to fight me. It seems that the dragons
 are not merely content with losing their eggs, but their %R
 as well.
-I am glad that unlike you, I saw the benefits to leaving them.
+I am glad that unlike you I saw the benefits to leaving them, old friend.
 
 "Let us duel, %p."
 %E [%nC challenges you."]
@@ -1215,7 +1218,7 @@ I am glad that unlike you, I saw the benefits to leaving them.
 "I was raised by the dragons just as you were, %p. Yet I am far stronger"
 %E
 %Cp Dra 00052
-"Once I defeat you, I will allow my dragon to feed on your body!"
+"Once Voanairruth I defeat you, I will allow my dragon to feed on your body!"
 %E
 %Cp Dra 00053
 "You call yourself %ca, yet this is all you can muster?"
@@ -1242,7 +1245,7 @@ I am glad that unlike you, I saw the benefits to leaving them.
 "This boneyard shall be your grave as well."
 %E
 %Cp Dra 00067
-"Pathetic, pathetic, pathetic!"
+"Voanairruth! Tear out their heart!"
 %E
 %Cp Dra 00068
 "Are you afraid, %p?"
@@ -1257,7 +1260,7 @@ You feel that if you asked it to, it would fight at your side.
 %Cc Dra 00080
 %nC collapses, their body spent. Your vengance over the loss
 of your siblings is complete. You cannot help but feel slightly sad, however.
-In different circumstances, %n could have been your friend,
+In different circumstances, %n could have remained your friend,
 and you could have grown up together under the watchful eye of %l.
 %E [%nC has been slain.]
 %Cc Dra 00081

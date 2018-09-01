@@ -3925,7 +3925,7 @@ struct permonst _mons2[] = {
             | M2_NASTY | M2_MALE | M2_COLLECT | M2_MAGIC,
         M3_WANTSARTI | M3_WAITFORU | M3_INFRAVISIBLE, HI_LORD),
     /* not a nemesis, but a pet of one */
-    MON("dragon of the Betrayer", S_DRAGON, LVL(15, 9, -1, 20, -5),
+    MON("Voanairruth", S_DRAGON, LVL(15, 9, -1, 20, -5),
         (G_NOGEN | G_UNIQ),
         A(ATTK(AT_BREA, AD_COLD, 4, 6), ATTK(AT_BITE, AD_PHYS, 3, 8),
           ATTK(AT_CLAW, AD_SAMU, 1, 4), ATTK(AT_CLAW, AD_SAMU, 1, 4), NO_ATTK,
@@ -3933,8 +3933,8 @@ struct permonst _mons2[] = {
         SIZ(WT_DRAGON, 1500, MS_ROAR, MZ_GIGANTIC), MR_COLD, MR_COLD,
         M1_FLY | M1_THICK_HIDE | M1_NOHANDS | M1_SEE_INVIS | M1_OVIPAROUS
             | M1_CARNIVORE,
-        M2_HOSTILE | M2_STRONG | M2_NASTY | M2_GREEDY | M2_JEWELS | M2_MAGIC,
-        M3_WANTSARTI | M3_WAITFORU, CLR_WHITE),
+        M2_HOSTILE | M2_STRONG | M2_PNAME | M2_NASTY | M2_GREEDY | M2_JEWELS |
+        M2_MAGIC, 0, CLR_WHITE),
     MON("Master Kaen", S_HUMAN, LVL(25, 12, -10, 10, -20), (G_NOGEN | G_UNIQ),
         A(ATTK(AT_CLAW, AD_PHYS, 16, 2), ATTK(AT_CLAW, AD_PHYS, 16, 2),
           ATTK(AT_MAGC, AD_CLRC, 0, 0), ATTK(AT_CLAW, AD_SAMU, 1, 4), NO_ATTK,

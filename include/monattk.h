@@ -87,6 +87,8 @@
 #define AD_DSRM 48  /* disarm the player */
 #define AD_WIND 49  /* cause the defender to hurtle */
 #define AD_CALM 50  /* calms down the defender (koala) */
+#define AD_LUCK 51  /* damage the luck of the player (barghest) */
+#define AD_HYDR 52  /* regrow heads (hydra) */
 
 #define AD_CLRC 51 /* random clerical spell */
 #define AD_SPEL 52 /* random magic spell */

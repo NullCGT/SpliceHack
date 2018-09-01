@@ -55,6 +55,7 @@
 #define MS_PIRATE 44    /* pirates */
 #define MS_ONEEYEDSAM 45 /* One-Eyed Sam */
 #define MS_MAD 46       /* cheshire cats */
+#define MS_GNOLL 47     /* gnolls */
 
 #define MR_FIRE 0x00000001L      /* resists fire */
 #define MR_COLD 0x00000002L      /* resists cold */

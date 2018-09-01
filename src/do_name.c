@@ -1874,6 +1874,10 @@ boolean called;
             Sprintf(eos(buf), "merged %s%s",
               EAMA(mtmp)->m1->mname, EAMA(mtmp)->m2->mname);
         name_at_start = FALSE;
+    } else if (mdat == &mons[PM_HYDRA] && mtmp->m_lev - mtmp->data->mlevel > -1) {
+        Sprintf(eos(buf), "%d-headed hydra",
+            mtmp->m_lev - mtmp->data->mlevel + 2);
+        name_at_start = FALSE;
     } else if (is_mplayer(mdat) && !In_endgame(&u.uz)) {
         char pbuf[BUFSZ];
 

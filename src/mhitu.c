@@ -455,7 +455,7 @@ mattacku(mtmp)
 register struct monst *mtmp;
 {
     struct attack *mattk, alt_attk;
-    int i, j = 0, tmp, sum[NATTK];
+    int i, j, k = 0, tmp, sum[NATTK];
     struct permonst *mdat = mtmp->data;
     boolean ranged = (distu(mtmp->mx, mtmp->my) > 3);
     /* Is it near you?  Affects your actions */
@@ -753,6 +753,11 @@ register struct monst *mtmp;
             return (foo == 1);
     }
 
+    /* handle multiple hydra attacks */
+    if (mtmp->data == &mons[PM_HYDRA]) {
+        k = min(mtmp->m_lev - mtmp->data->mlevel + 1, 10);
+    }
+
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
         mon_currwep = (struct obj *)0;
@@ -901,6 +906,12 @@ register struct monst *mtmp;
         if (sum[i] == 3)
             break; /* attacker teleported, no more attacks */
         /* sum[i] == 0: unsuccessful attack */
+
+        /* handle multiple hydra attacks */
+        if (mtmp->data == &mons[PM_HYDRA] && mattk->aatyp == AT_BITE && k > 0) {
+            i -= 1;
+            k -= 1;
+        }
     }
     return 0;
 }
@@ -2549,6 +2560,16 @@ struct attack *mattk;
                 if (dmg)
                     mdamageu(mtmp, dmg);
             }
+        }
+        break;
+    case AD_LUCK:
+        if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee
+            && !mtmp->mspec_used && !rn2(13) && !cancelled) {
+            change_luck(-1);
+            mtmp->mspec_used = mtmp->mspec_used + 5 + rn2(13);
+            pline("The %s catches your eye, and you feel deeply uneasy.",
+                mon_nam(mtmp));
+            stop_occupation();
         }
         break;
 #ifdef PM_BEHOLDER /* work in progress */

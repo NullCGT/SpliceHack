@@ -450,7 +450,7 @@ register struct monst *mtmp;
             (void) mpickobj(mtmp, otmp);
         }
         break;
-    case S_GNOME:
+    case S_GNOLL:
         switch (mm) {
             case PM_GNOLL:
                 if(!rn2(3)) (void) mongets(mtmp, ORCISH_HELM);

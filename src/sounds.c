@@ -960,6 +960,13 @@ register struct monst *mtmp;
         else
             cuss(mtmp);
         break;
+    case MS_GNOLL:
+        if (mtmp->mpeaceful)
+            pline("%s cackles conspiratorially.", Monnam(mtmp));
+        else {
+            pline("%s cackles at you.", Monnam(mtmp));
+        }
+        break;
     case MS_BRIBE:
         if (mtmp->mpeaceful && !mtmp->mtame) {
             (void) demon_talk(mtmp);

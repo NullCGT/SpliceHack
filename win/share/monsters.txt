@@ -9337,7 +9337,7 @@ Z = (195, 195, 195)
   ....NOAA...OOJA.
   ........OOOOJA..
 }
-# tile 000 (dragon of the Betrayer)
+# tile 000 (Voanairruth)
 {
   ......NNNOA.....
   .....DODOOO.....

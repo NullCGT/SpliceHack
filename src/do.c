@@ -1163,7 +1163,11 @@ dodown()
     }
     if (on_level(&valley_level, &u.uz) && !u.uevent.gehennom_entered) {
         You("are standing at the gate to Gehennom.");
-        pline("Unspeakable cruelty and harm lurk down there.");
+        if (Role_if(PM_PIRATE)) {
+            pline("There, there be monsters.");
+        } else {
+            pline("Unspeakable cruelty and harm lurk down there.");
+        }
         if (yn("Are you sure you want to enter?") != 'y')
             return 0;
         else

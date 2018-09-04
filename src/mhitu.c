@@ -2701,7 +2701,7 @@ struct attack *mattk;
             || (SYSOPT_SEDUCE && mattk && mattk->adtyp != AD_SSEX)))
         return 0;
 
-    if (genagr == 1 - gendef)
+    if (genagr == 1 - gendef || pagr == &mons[PM_MALCANTHET])
         return 1;
     else
         return (pagr->mlet == S_NYMPH) ? 2 : 0;
@@ -3231,7 +3231,8 @@ mintroduce(mtmp)
 struct monst *mtmp;
 {
     char *Monst_name = Monnam(mtmp);
-    if (!has_mname(mtmp) && !is_animal(mtmp->data)) {
+    if (!has_mname(mtmp) && !is_animal(mtmp->data) &&
+        !unique_corpstat(mtmp->data)) {
         if (!Deaf) {
             pline("%s introduces themselves to you as %s.", Monst_name,
                   noit_mon_nam(christen_monst(mtmp, rndhumname(mtmp->female))));

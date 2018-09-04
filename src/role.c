@@ -377,8 +377,8 @@ const struct Role roles[] = {
         { "Curate", 0, 0 },
         { "Canon", "Canoness", "Canonite" },
         { "Lama", 0, 0 },
-        { "Patriarch", "Matriarch", "Zatriarch" }, /* this is a placeholder */
-        { "High Priest", "High Priestess", "Head Minister" } },
+        { "Patriarch", "Matriarch", "Family Head" },
+        { "High Priest", "High Priestess", "High Minister" } },
       0, 0, 0, /* deities from a randomly chosen other role will be used */
       "Pri",
       "the Great Temple",

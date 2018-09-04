@@ -78,8 +78,8 @@ const struct Role roles[] = {
         { "Raider", 0, 0 },
         { "Reaver", 0, 0 },
         { "Slayer", 0, 0 },
-        { "Chieftain", "Chieftainess", 0 },
-        { "Conqueror", "Conqueress", 0 } },
+        { "Chieftain", "Chieftainess", "Chief" },
+        { "Conqueror", "Conqueress", 0} },
       "Mitra", "Crom", "Set", /* Hyborian */
       "Bar",
       "the Camp of the Duali Tribe",

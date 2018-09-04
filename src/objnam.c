@@ -71,7 +71,6 @@ STATIC_OVL struct Jitem Cartomancer_items[] = {
   { LARGE_BOX, "deck box" },
   { LOCK_PICK, "worthless card" },
   { SHURIKEN, "razor card" },
-  { SCR_GENOCIDE, "forbidden card" },
   { HAWAIIAN_SHIRT, "graphic tee" },
   { EXPENSIVE_CAMERA, "holographic card" },
   { CREDIT_CARD, "banned card" },
@@ -79,6 +78,7 @@ STATIC_OVL struct Jitem Cartomancer_items[] = {
   { 0, "" } };
 
 STATIC_DCL const char *FDECL(Alternate_item_name,(int i, struct Jitem * ));
+STATIC_DCL const char *FDECL(Cartomancer_rarity,(int otyp));
 
 STATIC_OVL char *
 strprepend(s, pref)
@@ -659,9 +659,13 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         }
         break;
     case SCROLL_CLASS:
-        if (Role_if(PM_CARTOMANCER))
-            Strcpy(buf, "spell card");
-        else
+        if (Role_if(PM_CARTOMANCER)) {
+            if (!nn && dknown) {
+                Strcpy(buf, Cartomancer_rarity(typ));
+                break;
+            } else
+                Strcpy(buf, "spell card");
+        } else
             Strcpy(buf, "scroll");
         if (!dknown)
             break;
@@ -4169,6 +4173,22 @@ int first, last;
         if (objects[i].oc_prob && (x -= objects[i].oc_prob) <= 0)
             return i;
     return 0;
+}
+
+STATIC_OVL const char*
+Cartomancer_rarity(otyp) {
+    int price = objects[otyp].oc_cost;
+    if (price < 60) {
+        return "common spell card";
+    } else if (price < 100) {
+        return "uncommon spell card";
+    } else if (price < 200) {
+        return "rare spell card";
+    } else if (price < 300) {
+        return "super rare spell card";
+    } else {
+        return "legendary spell card";
+    }
 }
 
 STATIC_OVL const char *

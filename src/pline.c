@@ -90,7 +90,7 @@ const char *orig;
 {
 		orig = replace(orig,"read the scroll","play the spell card");
     orig = replace(orig,"scroll","spell card");
-    orig = replace(orig,"zorkmid","victory chips");
+    orig = replace(orig,"zorkmid","victory chip");
 		orig = replace(orig,"Zorkmid","Victory chip");
     orig = replace(orig,"gold coins","victory tokens");
 		orig = replace(orig,"Gold coins","Victory tokens");

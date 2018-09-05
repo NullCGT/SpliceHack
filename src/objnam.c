@@ -74,6 +74,7 @@ STATIC_OVL struct Jitem Cartomancer_items[] = {
   { HAWAIIAN_SHIRT, "graphic tee" },
   { EXPENSIVE_CAMERA, "holographic card" },
   { CREDIT_CARD, "banned card" },
+  { GOLD_PIECE, "victory token" },
   { SACK, "card bag" },
   { 0, "" } };
 

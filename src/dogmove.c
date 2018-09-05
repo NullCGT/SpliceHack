@@ -1306,7 +1306,7 @@ int after; /* this is extra fast monster movement */
    	    if (ret == 1) return 2; /* died */
    	    if (ret == 2) return 1; /* did something */
  	  }
-   	else if (find_defensive(mtmp))
+   	else if (find_defensive(mtmp, FALSE))
    	{
    	    int ret = use_defensive(mtmp);
    	    if (ret == 1) return 2; /* died */

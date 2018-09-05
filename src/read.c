@@ -458,6 +458,16 @@ doread()
         if (scroll->otyp != SCR_BLANK_PAPER  && !scroll->oartifact)
             useup(scroll);
     }
+    /* */
+    if (Role_if(PM_CARTOMANCER)) {
+        struct monst *mtmp, *mtmp2;
+        for (mtmp = fmon; mtmp; mtmp = mtmp2) {
+            mtmp2 = mtmp->nmon;
+            if (mtmp->mpeaceful || mtmp->mtame)
+                continue;
+            card_response(mtmp);
+        }
+    }
     return 1;
 }
 

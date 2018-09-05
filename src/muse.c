@@ -308,11 +308,28 @@ struct monst *mtmp;
     return FALSE;
 }
 
+void
+card_response(mtmp)
+struct monst *mtmp;
+{
+    if (find_defensive(mtmp, TRUE) && m.defensive->oclass == SCROLL_CLASS) {
+        pline("%s responds!", Monnam(mtmp));
+        use_defensive(mtmp);
+    } else if (find_offensive(mtmp) && m.defensive->oclass == SCROLL_CLASS) {
+        pline("%s responds!", Monnam(mtmp));
+        use_offensive(mtmp);
+    } else if (find_misc(mtmp) && m.defensive->oclass == SCROLL_CLASS) {
+        pline("%s responds!", Monnam(mtmp));
+        use_misc(mtmp);
+    }
+}
+
 /* Select a defensive item/action for a monster.  Returns TRUE iff one is
    found. */
 boolean
-find_defensive(mtmp)
+find_defensive(mtmp, force)
 struct monst *mtmp;
+boolean force;
 {
     register struct obj *obj = 0;
     struct trap *t;
@@ -384,8 +401,8 @@ struct monst *mtmp;
     }
 
     fraction = u.ulevel < 10 ? 5 : u.ulevel < 14 ? 4 : 3;
-    if (mtmp->mhp >= mtmp->mhpmax
-        || (mtmp->mhp >= 10 && mtmp->mhp * fraction >= mtmp->mhpmax))
+    if (!force && (mtmp->mhp >= mtmp->mhpmax
+        || (mtmp->mhp >= 10 && mtmp->mhp * fraction >= mtmp->mhpmax)))
         return FALSE;
 
     if (mtmp->mpeaceful) {

@@ -1108,6 +1108,7 @@ try_again:
 #define MUSE_WAN_PSIONICS 24
 #define MUSE_MGC_FLUTE 25
 #define MUSE_MGC_DRUM 26
+#define MUSE_SCR_WEB 27
 
 /* Select an offensive item/action for a monster.  Returns TRUE iff one is
  * found.
@@ -1297,6 +1298,12 @@ struct monst *mtmp;
             && mtmp->mcansee && haseyes(mtmp->data)) {
             m.offensive = obj;
             m.has_offense = MUSE_SCR_FIRE;
+        }
+        nomore(MUSE_SCR_WEB);
+        if (obj->otyp == SCR_WEB && !mtmp->mpeaceful && !mtmp->mtame &&
+            canseemon(mtmp)) {
+            m.offensive = obj;
+            m.has_offense = MUSE_SCR_WEB;
         }
         nomore(MUSE_MGC_DRUM);
         if (obj->otyp == DRUM_OF_EARTHQUAKE && !rn2(10)
@@ -1670,6 +1677,26 @@ struct monst *mtmp;
             }
         }
         return 2;
+    }
+    case MUSE_SCR_WEB: {
+        register struct trap *trtmp;
+        boolean vis = cansee(mtmp->mx, mtmp->my);
+
+        mreadmsg(mtmp, otmp);
+        if (!otmp->cursed) {
+            trtmp = maketrap(u.ux, u.uy, WEB);
+            if (trtmp)
+                dotrap(trtmp, FORCETRAP);
+        }
+        else {
+            trtmp = maketrap(mtmp->mx, mtmp->my, WEB);
+            if (trtmp)
+                mintrap(m_at(mtmp->mx, mtmp->my));
+        }
+        if (vis)
+            makeknown(otmp->otyp);
+        m_useup(mtmp, otmp);
+        return 1;
     }
     case MUSE_POT_PARALYSIS:
     case MUSE_POT_BLINDNESS:
@@ -2318,7 +2345,8 @@ struct obj *obj;
         break;
     case SCROLL_CLASS:
         if (typ == SCR_TELEPORTATION || typ == SCR_CREATE_MONSTER
-            || typ == SCR_EARTH || typ == SCR_FIRE || typ == SCR_REMOVE_CURSE)
+            || typ == SCR_EARTH || typ == SCR_FIRE || typ == SCR_REMOVE_CURSE
+            || typ == SCR_WEB)
             return TRUE;
         break;
     case AMULET_CLASS:

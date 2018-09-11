@@ -2899,7 +2899,7 @@ struct monst *mtmp;
         } else if (!Deaf) {
             You_hear("a loud roar!");
         }
-        wake_nearto(mtmp->mx, mtmp->my, 5);
+        wake_nearto(mtmp->mx, mtmp->my, 5 * 5);
     }
     if (mtmp->data == &mons[PM_MEDUSA]) {
         register int i;

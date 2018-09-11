@@ -2466,6 +2466,7 @@ E void FDECL(formatkiller, (char *, unsigned, int, BOOLEAN_P));
 E void FDECL(topten, (int, time_t));
 E void FDECL(prscore, (int, char **));
 E struct toptenentry *NDECL(get_rnd_toptenentry);
+E const char *NDECL(tt_name);
 E struct obj *FDECL(tt_oname, (struct obj *));
 
 /* ### track.c ### */

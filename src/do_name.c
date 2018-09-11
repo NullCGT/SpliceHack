@@ -1308,17 +1308,10 @@ struct obj * wpn;
         "Orphan Maker",   "Monster Slayer"
         "Astral Caller"
     };
-    const char* bane_wpn_names[] = {
-        "%s slayer", "%s eater", "%s destroyer", "%sbane"
-    };
-    /* Only happen rarely or during hallucination due to being very silly. */
-    if (Hallucination || !rn2(10)) {
-        char rnamecode;
-        const char* name = bane_wpn_names[rn2(SIZE(bane_wpn_names))];
-        char rname[BUFSZ];
-        Strcpy(rname, rndmonnam(&rnamecode));
+    if (!rn2(20)) {
+        const char* name = tt_name();
         char buf[BUFSZ];
-        Sprintf(buf, name, upstart(rname));
+        Sprintf(buf, "%s of %s", upstart(basename), name);
         return oname(wpn, buf);
     }
     const char* name = wpn_names[rn2(SIZE(wpn_names))];

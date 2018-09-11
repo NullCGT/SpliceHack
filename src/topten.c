@@ -132,7 +132,9 @@ boolean incl_helpless;
      */
     while (--siz > 0) {
         c = *kname++;
-        if (c == ',')
+        if (!c)
+            break;
+        else if (c == ',')
             c = ';';
         /* 'xlogfile' doesn't really need protection for '=', but
            fixrecord.awk for corrupted 3.6.0 'record' does (only

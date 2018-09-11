@@ -1715,6 +1715,17 @@ int mdead;
         if (!rn2(6))
             acid_damage(MON_WEP(magr));
         goto assess_dmg;
+    case AD_QUIL:
+        if (mhit && !rn2(2)) {
+            Strcpy(buf, Monnam(magr));
+            if (canseemon(magr)) {
+                pline("%s is jabbed by %s quills!", buf,
+                      s_suffix(mon_nam(mdef)));
+                golemeffects(magr, AD_PHYS, tmp);
+            }
+            goto assess_dmg;
+        }
+        break;
     /* Nephi's Grudge patch. */
     case AD_MAGM:
       /* wrath of gods for attacking Oracle */
@@ -1776,15 +1787,6 @@ int mdead;
                 return (mdead | mhit);
             }
             return 1;
-        case AD_QUIL:
-            Strcpy(buf, Monnam(magr));
-            if (canseemon(magr)) {
-                pline("%s is jabbed by %s quills!", buf,
-                      s_suffix(mon_nam(mdef)));
-            }
-            golemeffects(magr, AD_PHYS, tmp);
-            tmp = 0;
-            break;
         case AD_COLD:
             if (resists_cold(magr)) {
                 if (canseemon(magr)) {

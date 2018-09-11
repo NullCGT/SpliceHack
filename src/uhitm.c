@@ -2691,6 +2691,16 @@ boolean wep_was_destroyed;
                 passive_obj(mon, weapon, &(ptr->mattk[i]));
         }
         break;
+    case AD_QUIL:
+        if (monnear(mon, u.ux, u.uy) && mhit && !rn2(2)) {
+            if (Blind || !flags.verbose) {
+                You("are jabbed by something sharp!");
+            } else {
+                You("are jabbed by %s quills!", s_suffix(mon_nam(mon)));
+            }
+            mdamageu(mon, tmp);
+        }
+        break;
     case AD_ACID:
         if (mhit && rn2(2)) {
             if (Blind || !flags.verbose)
@@ -2851,16 +2861,6 @@ boolean wep_was_destroyed;
         case AD_STUN: /* specifically yellow mold */
             if (!Stunned)
                 make_stunned((long) tmp, TRUE);
-            break;
-        case AD_QUIL:
-            if (monnear(mon, u.ux, u.uy) && mhit) {
-                if (Blind || !flags.verbose) {
-                    You("are jabbed by something sharp!");
-                } else {
-                    You("are jabbed by %s quills!", s_suffix(mon_nam(mon)));
-                    mdamageu(mon, tmp);
-                }
-            }
             break;
         case AD_FIRE:
             if (monnear(mon, u.ux, u.uy)) {

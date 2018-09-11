@@ -1593,7 +1593,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 pline1(Never_mind);
                 break;
             }
-            if (!is_valid_stinking_cloud_pos(cc.x, cc.y, TRUE))
+            if (!is_valid_stinking_cloud_pos(cc.x, cc.y, FALSE))
                 break;
             trtmp = maketrap(cc.x, cc.y, WEB);
             if (sblessed && trtmp) {

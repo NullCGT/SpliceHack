@@ -1631,6 +1631,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             if (sblessed)
                 specified_id();
         }
+        You("feel more knowledgeable.");
         if (!already_known)
             (void) learnscrolltyp(SCR_KNOWLEDGE);
         break;
@@ -1953,14 +1954,15 @@ specified_id()
     static char buf[BUFSZ] = DUMMY;
     char promptbuf[BUFSZ];
     char bufcpy[BUFSZ];
+    char answerbuf[BUFSZ];
     short otyp;
     int tries = 0;
 
     promptbuf[0] = '\0';
     if (flags.verbose)
-        You("may identify any object.");
+        You("may learn about any object.");
   retry:
-    Strcpy(promptbuf, "What type of non-artifact object do you wish to learn the history of");
+    Strcpy(promptbuf, "What non-artifact do you want to learn the appearance of");
     Strcat(promptbuf, "?");
     getlin(promptbuf, buf);
     (void) mungspaces(buf);
@@ -1970,15 +1972,25 @@ specified_id()
     strcpy(bufcpy, buf);
     otyp = name_to_otyp(buf);
     if (otyp == STRANGE_OBJECT) {
-            pline("No specific object of that name exists.");
+        pline("No specific object of that name exists.");
         if (++tries < 5)
             goto retry;
         pline1(thats_enough_tries);
         if (!otyp)
             return; /* for safety; should never happen */
     }
+    if (objects[otyp].oc_name_known) {
+        pline("You already know what that object looks like.");
+        if (++tries < 5)
+            goto retry;
+        pline1(thats_enough_tries);
+        if (!otyp)
+            return;
+    }
+    Sprintf(answerbuf, "%s -", obj_typename(otyp));
     (void) makeknown(otyp);
-    You("feel more knowledgeable.");
+    Sprintf(eos(answerbuf), " %s.", simple_typename(otyp));
+    pline("%s", answerbuf);
     update_inventory();
 }
 

@@ -1241,7 +1241,7 @@ boolean atme;
     case SPE_FREEZE_SPHERE:
     case SPE_FLAME_SPHERE:
         pline("You conjure some energy from thin air!");
-        for (n = 0; n < role_skill; n++) {
+        for (n = 0; n < max(role_skill - 1, 1); n++) {
             mtmp = makemon(otyp == SPE_FREEZE_SPHERE ?
                 &mons[PM_FREEZING_SPHERE] :
                 &mons[PM_FLAMING_SPHERE],

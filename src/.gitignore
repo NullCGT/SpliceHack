@@ -7,3 +7,7 @@ Sysunix
 splicehack
 *.o
 tiles.bmp
+*.moc
+graphicschk
+nhdat
+o

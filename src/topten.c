@@ -132,7 +132,9 @@ boolean incl_helpless;
      */
     while (--siz > 0) {
         c = *kname++;
-        if (c == ',')
+        if (!c)
+            break;
+        else if (c == ',')
             c = ';';
         /* 'xlogfile' doesn't really need protection for '=', but
            fixrecord.awk for corrupted 3.6.0 'record' does (only
@@ -1232,6 +1234,18 @@ pickentry:
     return tt;
 }
 
+/* get a random high score name */
+const char*
+tt_name()
+{
+    struct toptenentry *tt;
+    tt = get_rnd_toptenentry();
+    if (!tt)
+        return (const char *) plname;
+    else
+        return tt->name;
+
+}
 
 /*
  * Attach random player name and class from high score list

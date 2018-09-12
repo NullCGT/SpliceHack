@@ -164,7 +164,7 @@ struct obj *obj;
         }
         m_useup(mon, obj);
         mon->mhp -= dam;
-        if (mon->mhp <= 0) {
+        if (DEADMONSTER(mon)) {
             monkilled(mon, "", AD_RBRE);
             return 1;
         }
@@ -1388,7 +1388,7 @@ register struct obj *otmp;
         break;
     }
     if (reveal_invis) {
-        if (mtmp->mhp > 0 && cansee(bhitpos.x, bhitpos.y)
+        if (!DEADMONSTER(mtmp) && cansee(bhitpos.x, bhitpos.y)
             && !canspotmon(mtmp))
             map_invisible(bhitpos.x, bhitpos.y);
     }
@@ -1525,7 +1525,7 @@ struct monst *mtmp;
              (otmp->otyp == WAN_MAGIC_MISSILE) ? 2 : 6, mtmp->mx, mtmp->my,
              sgn(tbx), sgn(tby));
         m_using = FALSE;
-        return (mtmp->mhp <= 0) ? 1 : 2;
+        return (DEADMONSTER(mtmp)) ? 1 : 2;
     case MUSE_FIRE_HORN:
     case MUSE_FROST_HORN:
         if (oseen) {
@@ -1539,7 +1539,7 @@ struct monst *mtmp;
              rn1(6, 6), mtmp->mx, mtmp->my, sgn(tbx),
              sgn(tby));
         m_using = FALSE;
-        return (mtmp->mhp <= 0) ? 1 : 2;
+        return (DEADMONSTER(mtmp)) ? 1 : 2;
     case MUSE_MGC_FLUTE:
         if (oseen) {
             makeknown(otmp->otyp);
@@ -1575,7 +1575,7 @@ struct monst *mtmp;
         /* shake up monsters in a much larger radius... */
         awaken_monsters(ROWNO * COLNO);
         m_using = FALSE;
-        return (mtmp->mhp <= 0) ? 1 : 2;
+        return (DEADMONSTER(mtmp)) ? 1 : 2;
     case MUSE_WAN_TELEPORTATION:
     case MUSE_WAN_STRIKING:
     case MUSE_WAN_CANCELLATION:
@@ -1630,7 +1630,7 @@ struct monst *mtmp;
             drop_boulder_on_player(confused, !is_cursed, FALSE, TRUE);
         }
 
-        return (mtmp->mhp <= 0) ? 1 : 2;
+        return (DEADMONSTER(mtmp)) ? 1 : 2;
     }
     case MUSE_SCR_FIRE: {
         boolean vis = cansee(mtmp->mx, mtmp->my);
@@ -1669,7 +1669,7 @@ struct monst *mtmp;
                     mtmp2->mhp -= num;
                     if (resists_cold(mtmp2))
                         mtmp2->mhp -= 3 * num;
-                    if (mtmp2->mhp < 1) {
+                    if (DEADMONSTER(mtmp2)) {
                         mondied(mtmp2);
                         break;
                     }
@@ -2569,7 +2569,7 @@ boolean stoning; /* True: stop petrification, False: cure stun && confusion */
         mon->mhp -= rnd(15);
         if (vis)
             pline("%s has a very bad case of stomach acid.", Monnam(mon));
-        if (mon->mhp <= 0) {
+        if (DEADMONSTER(mon)) {
             pline("%s dies!", Monnam(mon));
             if (by_you)
                 /* hero gets credit (experience) and blame (possible loss
@@ -2811,7 +2811,7 @@ boolean by_you; /* true: if mon kills itself, hero gets credit/blame */
            for fire breath, dmg is going to be 0 (fire breathers are
            immune to fire damage) but for wand of fire or fire horn,
            'mon' could have taken damage so might die */
-        if (mon->mhp <= 0) {
+        if (DEADMONSTER(mon)) {
             if (by_you) {
                 /* mon killed self but hero gets credit and blame (except
                    for pacifist conduct); xkilled()'s message would say
@@ -2829,7 +2829,7 @@ boolean by_you; /* true: if mon kills itself, hero gets credit/blame */
         }
     }
     if (vis) {
-        if (res && mon->mhp > 0)
+        if (res && !DEADMONSTER(mon))
             pline("%s slime is burned away!", s_suffix(Monnam(mon)));
         if (otyp != STRANGE_OBJECT)
             makeknown(otyp);

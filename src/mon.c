@@ -1245,7 +1245,7 @@ struct obj *otmp;
         return 0;
     if (otyp == CORPSE && is_rider(&mons[otmp->corpsenm]))
         return 0;
-    if (objects[otyp].oc_material == SILVER && mon_hates_silver(mtmp)
+    if (mon_hates_material(mtmp, otmp->material)
         && (otyp != BELL_OF_OPENING || !is_covetous(mdat)))
         return 0;
 

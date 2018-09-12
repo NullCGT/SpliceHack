@@ -666,7 +666,6 @@ int dieroll;
 {
     int tmp;
     struct permonst *mdat = mon->data;
-    int barehand_silver_rings = 0;
     /* The basic reason we need all these booleans is that we don't want
      * a "hit" message when a monster dies, so we have to know how much
      * damage it did _before_ outputting a hit message, but any messages
@@ -677,7 +676,8 @@ int dieroll;
     boolean get_dmg_bonus = TRUE;
     boolean ispoisoned = FALSE, needpoismsg = FALSE, poiskilled = FALSE,
             unpoisonmsg = FALSE;
-    boolean silvermsg = FALSE, silverobj = FALSE;
+    boolean harm_obj = FALSE;
+    int harm_material = 0;
     boolean valid_weapon_attack = FALSE;
     boolean unarmed = !uwep && !uarm && !uarms;
     boolean not_melee_weapon = FALSE;
@@ -706,28 +706,24 @@ int dieroll;
         if (uarmg && uarmg->blessed
             && (is_undead(mdat) || is_demon(mdat) || is_vampshifter(mon)))
             tmp += rnd(4);
-        /* So do silver rings.  Note: rings are worn under gloves, so you
-         * don't get both bonuses.
-         */
+        /* Note: rings are worn under gloves, so you don't get both bonuses. */
         if (uarmg) {
-            if (uarmg->material == SILVER && mon_hates_silver(mon)) {
-                Strcpy(saved_oname, "silver gauntlets");
-                tmp += rnd(20);
-                silvermsg = TRUE;
-                silverobj = TRUE;
+            if (mon_hates_material(mon, uarmg->material)) {
+                Strcpy(saved_oname, "gauntlets");
+                harm_material = uarmg->material;
+                tmp += rnd(sear_damage(uarmg->material));
             }
         }
         else {
-            if (uleft && uleft->material == SILVER)
-                barehand_silver_rings++;
-            if (uright && uright->material == SILVER)
-                barehand_silver_rings++;
-            if (barehand_silver_rings && mon_hates_silver(mon)) {
-                tmp += rnd(20);
-                silvermsg = TRUE;
-            } else if (is_silver(youmonst.data)) {
-                tmp += rnd(20);
-                silvermsg = TRUE;
+            /* Rings are a bit weird: what if an enemy hates two kinds of
+             * materials and you're wearing one of each?
+             * The most appropriate flavor is that you're only hitting with one
+             * hand at a time, so take one or the other hand randomly. */
+            struct obj* ring = (rn2(2) ? uleft : uright);
+            if (ring && mon_hates_material(mon, ring->material)) {
+                harm_material = ring->material;
+                Strcpy(saved_oname, "ring");
+                tmp += rnd(sear_damage(ring->material));
             }
         }
     } else {
@@ -750,12 +746,10 @@ int dieroll;
                     tmp = 0;
                 else
                     tmp = rnd(2);
-                if (obj->material == SILVER
-                    && mon_hates_silver(mon)) {
-                    silvermsg = TRUE;
-                    silverobj = TRUE;
-                    /* if it will already inflict dmg, make it worse */
-                    tmp += rnd((tmp) ? 20 : 10);
+                if (mon_hates_material(mon, obj->material)) {
+                    harm_obj = TRUE;
+                    harm_material = obj->material;
+                    tmp += rnd(sear_damage(obj->material));
                 }
                 if (!thrown && obj == uwep && obj->otyp == BOOMERANG
                     && rnl(4) == 4 - 1) {
@@ -845,10 +839,9 @@ int dieroll;
                     tmp += phase_of_the_moon();
                 }
 
-                if (obj->material == SILVER
-                    && mon_hates_silver(mon)) {
-                    silvermsg = TRUE;
-                    silverobj = TRUE;
+                if (mon_hates_material(mon, obj->material)) {
+                    harm_obj = TRUE;
+                    harm_material = obj->material;
                 }
                 if (u.usteed && !thrown && tmp > 0
                     && weapon_type(obj) == P_LANCE && mon != u.ustuck) {
@@ -1128,14 +1121,12 @@ int dieroll;
                     if (tmp > 6)
                         tmp = 6;
                     /*
-                     * Things like silver wands can arrive here so
-                     * so we need another silver check.
+                     * Things like wands made of harmful materials can arrive here so
+                     * so we need another check for that.
                      */
-                    if (objects[obj->otyp].oc_material == SILVER
-                        && mon_hates_silver(mon)) {
-                        tmp += rnd(20);
-                        silvermsg = TRUE;
-                        silverobj = TRUE;
+                    if (mon_hates_material(mon, obj->material)) {
+                        harm_obj = TRUE;
+                        harm_material = obj->material;
                     }
                 }
             }
@@ -1302,34 +1293,53 @@ int dieroll;
                 mon_nam(mon), canseemon(mon) ? exclam(tmp) : ".");
     }
 
-    if (silvermsg) {
+    if (harm_material > 0) {
         const char *fmt;
         char *whom = mon_nam(mon);
-        char silverobjbuf[BUFSZ];
-
-        if (canspotmon(mon)) {
-            if (barehand_silver_rings == 1)
-                fmt = "Your silver ring sears %s!";
-            else if (barehand_silver_rings == 2)
-                fmt = "Your silver rings sear %s!";
-            else if (silverobj && saved_oname[0]) {
-                /* guard constructed format string against '%' in
-                   saved_oname[] from xname(via cxname()) */
-                Sprintf(silverobjbuf, "Your %s%s %s",
-                        strstri(saved_oname, "silver") ? "" : "silver ",
-                        saved_oname, vtense(saved_oname, "sear"));
-                (void) strNsubst(silverobjbuf, "%", "%%", 0);
-                Strcat(silverobjbuf, " %s!");
-                fmt = silverobjbuf;
-            } else
-                fmt = "The silver sears %s!";
-        } else {
-            *whom = highc(*whom); /* "it" -> "It" */
-            fmt = "%s is seared!";
+        char onamebuf[BUFSZ];
+        char harmbuf[BUFSZ];
+        const char* matname = materialnm[harm_material];
+        /* Make it explicit to the player that this effect is from the
+         * material. If saved_oname doesn't already contain the material name,
+         * add it. */
+        if (saved_oname[0]) {
+            boolean alreadyin = (strstri(saved_oname, matname) != NULL);
+            Sprintf(onamebuf, "your %s%s%s",
+                    alreadyin ? "" : matname, alreadyin ? "" : " ",
+                    saved_oname);
+            /* guard constructed format string against '%' in saved_oname[]
+             * from xname(via cxname()) */
+            strNsubst(onamebuf, "%", "%%", 0);
         }
-        /* note: s_suffix returns a modifiable buffer */
-        if (!noncorporeal(mdat) && !amorphous(mdat))
-            whom = strcat(s_suffix(whom), " flesh");
+        else {
+            Sprintf(onamebuf, "the %s", matname);
+        }
+        /* silver has more dramatic effects than other materials */
+        if (harm_material == SILVER) {
+            if (canspotmon(mon)) {
+                Sprintf(harmbuf, "%s %s %%s!", upstart(onamebuf),
+                        vtense(saved_oname, "sear"));
+                fmt = harmbuf;
+            }
+            else {
+                *whom = highc(*whom); /* "it" -> "It" */
+                fmt = "%s is seared!";
+            }
+            /* note: s_suffix returns a modifiable buffer */
+            if (!noncorporeal(mdat) && !amorphous(mdat))
+                whom = strcat(s_suffix(whom), " flesh");
+        }
+        else {
+            if (canspotmon(mon)) {
+                Sprintf(harmbuf, "%%s flinches from %s!", onamebuf);
+                fmt = harmbuf;
+                *whom = highc(*whom); /* "the elf" -> "The elf" */
+            }
+            else {
+                *whom = highc(*whom); /* "it" -> "It" */
+                fmt = "%s flinches!";
+            }
+        }
         pline(fmt, whom);
     }
     /* if a "no longer poisoned" message is coming, it will be last;

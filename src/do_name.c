@@ -1371,12 +1371,14 @@ const char *name;
         }
         /* set up specific materials for the artifact */
         switch(obj->oartifact) {
+        case ART_SHARUR:
         case ART_SUNSWORD:
             obj->material = GOLD;
             break;
         case ART_WEREBANE:
         case ART_DEMONBANE:
         case ART_GRAYSWANDIR:
+        case ART_MITRE_OF_HOLINESS:
             obj->material = SILVER;
             break;
         case ART_YENDORIAN_EXPRESS_CARD:

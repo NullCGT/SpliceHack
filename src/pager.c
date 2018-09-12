@@ -1053,7 +1053,7 @@ add_obj_info(winid datawin, short otyp)
             break;
         case TALLOW_CANDLE:
         case WAX_CANDLE:
-        case BRASS_LANTERN:
+        case LANTERN:
         case OIL_LAMP:
         case MAGIC_LAMP:
             subclass = "light source";
@@ -1062,7 +1062,7 @@ add_obj_info(winid datawin, short otyp)
         case BEARTRAP:
             subclass = "trap which can be set";
             break;
-        case TIN_WHISTLE:
+        case PEA_WHISTLE:
         case MAGIC_WHISTLE:
         case BELL:
         case LEATHER_DRUM:
@@ -1071,11 +1071,11 @@ add_obj_info(winid datawin, short otyp)
             break;
         case BUGLE:
         case MAGIC_FLUTE:
-        case WOODEN_FLUTE:
+        case FLUTE:
         case TOOLED_HORN:
         case FIRE_HORN:
         case FROST_HORN:
-        case WOODEN_HARP:
+        case HARP:
         case MAGIC_HARP:
             subclass = "tonal instrument";
             break;

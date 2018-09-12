@@ -383,7 +383,11 @@
    redundant but allows the function calls to be skipped most of the time */
 #define Unaware (multi < 0 && (unconscious() || is_fainted()))
 
-#define Hate_silver (u.ulycn >= LOW_PM || hates_silver(youmonst.data) || \
-                     Race_if(PM_INFERNAL))
+/* Whether the hero is in a form that dislikes a certain material */
+#define Hate_material(material) \
+    (hates_material(youmonst.data, material) \
+     || (material == SILVER && u.ulycn >= LOW_PM) \
+     || (material == SILVER && !Upolyd && Race_if(PM_INFERNAL)) \
+     || (material == IRON && !Upolyd && Race_if(PM_ELF)))
 
 #endif /* YOUPROP_H */

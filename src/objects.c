@@ -161,7 +161,7 @@ WEAPON("sacrificial knife", None,
 WEAPON("orcish dagger", "crude dagger",
        0, 1, 0, 12,  10,   4,  3,  3, 2, P,   P_DAGGER, IRON, CLR_BLACK),
 WEAPON("athame", None,
-       1, 1, 0,  0,  10,   4,  4,  3, 2, S,   P_DAGGER, IRON, HI_METAL),
+       1, 1, 0,  0,  10,   4,  4,  3, 2, S,   P_DAGGER, METAL, HI_METAL),
 WEAPON("scalpel", None,
        1, 1, 0,  0,   5,   6,  3,  3, 2, S,   P_KNIFE, METAL, HI_METAL),
 WEAPON("knife", None,
@@ -647,7 +647,7 @@ RING("protection from shape changers", "shiny",
 /* amulets ... - THE Amulet comes last because it is special */
 #define AMULET(name,desc,power,prob) \
     OBJECT(OBJ(name, desc),                                            \
-           BITS(0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, P_NONE, IRON),        \
+           BITS(0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, P_NONE, METAL),        \
            power, AMULET_CLASS, prob, 0, 20, 150, 0, 0, 0, 0, 20, HI_METAL)
 AMULET("amulet of ESP",                "circular", TELEPAT, 100),
 AMULET("amulet of drain resistance",     "convex", DRAIN_RES, 75),
@@ -706,7 +706,7 @@ TOOL("credit card",         None, 1, 0, 0, 0, 15,  1, 10, PLASTIC, CLR_WHITE),
 /* light sources */
 TOOL("tallow candle",   "candle", 0, 1, 0, 0, 20,  2, 10, WAX, CLR_WHITE),
 TOOL("wax candle",      "candle", 0, 1, 0, 0,  5,  2, 20, WAX, CLR_WHITE),
-TOOL("brass lantern",       None, 1, 0, 0, 0, 30, 30, 12, COPPER, CLR_YELLOW),
+TOOL("lantern",       None, 1, 0, 0, 0, 30, 30, 12, COPPER, CLR_YELLOW),
 TOOL("oil lamp",          "lamp", 0, 0, 0, 0, 45, 20, 10, COPPER, CLR_YELLOW),
 TOOL("magic lamp",        "lamp", 0, 0, 1, 0, 15, 20, 50, COPPER, CLR_YELLOW),
 /* other tools */
@@ -737,18 +737,16 @@ TOOL("magic marker",        None, 1, 0, 1, 1, 15,  2, 50, PLASTIC, CLR_RED),
 /* made beartraps and land mines generate randomly to add some variety */
 TOOL("land mine",           None, 1, 0, 0, 0, 3, 300,180, IRON, CLR_RED),
 TOOL("beartrap",            None, 1, 0, 0, 0, 2, 200, 60, IRON, HI_METAL),
-/* instruments;
-   "If tin whistles are made out of tin, what do they make foghorns out of?" */
-TOOL("tin whistle",    "whistle", 0, 0, 0, 0,100, 3, 10, METAL, HI_METAL),
+TOOL("pea whistle",    "whistle", 0, 0, 0, 0,100, 3, 10, METAL, HI_METAL),
 TOOL("magic whistle",  "whistle", 0, 0, 1, 0, 30, 3, 10, METAL, HI_METAL),
-TOOL("wooden flute",     "flute", 0, 0, 0, 0,  4, 5, 12, WOOD, HI_WOOD),
+TOOL("flute",               None, 0, 0, 0, 0,  4, 5, 12, WOOD, HI_WOOD),
 TOOL("magic flute",      "flute", 0, 0, 1, 1,  2, 5, 36, WOOD, HI_WOOD),
 TOOL("tooled horn",       "horn", 0, 0, 0, 0,  5, 18, 15, BONE, CLR_WHITE),
 TOOL("frost horn",        "horn", 0, 0, 1, 1,  2, 18, 50, BONE, CLR_WHITE),
 TOOL("fire horn",         "horn", 0, 0, 1, 1,  2, 18, 50, BONE, CLR_WHITE),
 TOOL("horn of plenty",    "horn", 0, 0, 1, 1,  2, 18, 50, BONE, CLR_WHITE),
         /* horn, but not an instrument */
-TOOL("wooden harp",       "harp", 0, 0, 0, 0,  4, 30, 50, WOOD, HI_WOOD),
+TOOL("harp",                None, 0, 0, 0, 0,  4, 30, 50, WOOD, HI_WOOD),
 TOOL("magic harp",        "harp", 0, 0, 1, 1,  2, 30, 50, WOOD, HI_WOOD),
 TOOL("bell",                None, 1, 0, 0, 0,  2, 30, 50, COPPER, HI_COPPER),
 TOOL("bugle",               None, 1, 0, 0, 0,  4, 10, 15, COPPER, HI_COPPER),
@@ -769,7 +767,7 @@ WEPTOOL("unicorn horn", None,
 OBJECT(OBJ("Candelabrum of Invocation", "candelabrum"),
        BITS(0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, P_NONE, GOLD),
        0, TOOL_CLASS, 0, 0, 10, 5000, 0, 0, 0, 0, 200, HI_GOLD),
-OBJECT(OBJ("Bell of Opening", "platinum bell"),
+OBJECT(OBJ("Bell of Opening", "engraved platinum bell"),
        BITS(0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, P_NONE, PLATINUM),
        0, TOOL_CLASS, 0, 0, 10, 5000, 0, 0, 0, 0, 50, HI_METAL),
 #undef TOOL

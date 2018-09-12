@@ -129,12 +129,12 @@ struct obj *obj;
             k = 1; /* regular container or unknown bag of tricks */
         else
             switch (otyp) {
-            case WOODEN_FLUTE:
+            case FLUTE:
             case MAGIC_FLUTE:
             case TOOLED_HORN:
             case FROST_HORN:
             case FIRE_HORN:
-            case WOODEN_HARP:
+            case HARP:
             case MAGIC_HARP:
             case BUGLE:
             case LEATHER_DRUM:
@@ -1524,7 +1524,7 @@ register const char *let, *word;
                  && (otyp != CORPSE || !tinnable(otmp)))
              || (!strcmp(word, "rub")
                  && ((otmp->oclass == TOOL_CLASS && otyp != OIL_LAMP
-                      && otyp != MAGIC_LAMP && otyp != BRASS_LANTERN)
+                      && otyp != MAGIC_LAMP && otyp != LANTERN)
                      || (otmp->oclass == GEM_CLASS && !is_graystone(otmp))))
              || (!strcmp(word, "use or apply")
                  /* Picks, axes, pole-weapons, bullwhips */
@@ -2622,7 +2622,7 @@ long *out_cnt;
         int unid_cnt;
         char prompt[QBUFSZ];
 
-        unid_cnt = count_unidentified(invent); 
+        unid_cnt = count_unidentified(invent);
         add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
                      "Debug Identify",
                      MENU_UNSELECTED);

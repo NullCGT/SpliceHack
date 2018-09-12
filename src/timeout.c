@@ -1096,14 +1096,14 @@ long timeout;
         obj = (struct obj *) 0;
         break;
 
-    case BRASS_LANTERN:
+    case LANTERN:
     case OIL_LAMP:
         switch ((int) obj->age) {
         case 150:
         case 100:
         case 50:
             if (canseeit) {
-                if (obj->otyp == BRASS_LANTERN)
+                if (obj->otyp == LANTERN)
                     lantern_message(obj);
                 else
                     see_lamp_flicker(obj,
@@ -1113,7 +1113,7 @@ long timeout;
 
         case 25:
             if (canseeit) {
-                if (obj->otyp == BRASS_LANTERN)
+                if (obj->otyp == LANTERN)
                     lantern_message(obj);
                 else {
                     switch (obj->where) {
@@ -1137,13 +1137,13 @@ long timeout;
                     need_invupdate = TRUE;
                     /*FALLTHRU*/
                 case OBJ_MINVENT:
-                    if (obj->otyp == BRASS_LANTERN)
+                    if (obj->otyp == LANTERN)
                         pline("%slantern has run out of power.", whose);
                     else
                         pline("%s has gone out.", Yname2(obj));
                     break;
                 case OBJ_FLOOR:
-                    if (obj->otyp == BRASS_LANTERN)
+                    if (obj->otyp == LANTERN)
                         You_see("a lantern run out of power.");
                     else
                         You_see("%s go out.", an(xname(obj)));
@@ -1347,7 +1347,7 @@ boolean already_lit;
         radius = 1; /* very dim light */
         break;
 
-    case BRASS_LANTERN:
+    case LANTERN:
     case OIL_LAMP:
         /* magic times are 150, 100, 50, 25, and 0 */
         if (obj->age > 150L)

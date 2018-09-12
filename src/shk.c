@@ -4436,6 +4436,9 @@ struct monst *shkp;
     } else if (is_izchak(shkp, FALSE)) {
         if (!Deaf && !muteshk(shkp))
             pline(Izchak_speaks[rn2(SIZE(Izchak_speaks))], shkname(shkp));
+    } else if (ESHK(shkp)->shoptype == MASKSHOP) {
+        pline("%s surmises that you might meet a terrible fate in this dungeon.",
+              shkname(shkp));
     } else {
         if (!Deaf && !muteshk(shkp))
             pline("%s talks about the problem of shoplifters.", shkname(shkp));

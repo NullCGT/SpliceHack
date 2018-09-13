@@ -2269,8 +2269,6 @@ role_init()
     /* Check for a valid gender.  If new game, check both initgend
      * and female.  On restore, assume flags.female is correct. */
     flags.female = flags.initgend;
-    pline("pre in%d", flags.initgend);
-    pline("pre fem%d", flags.female);
 
     if (flags.pantheon == -1) { /* new game */
         if (!validgend(flags.initrole, flags.initrace, flags.female))
@@ -2279,9 +2277,6 @@ role_init()
     if (!validgend(flags.initrole, flags.initrace, flags.initgend))
         /* Note that there is no way to check for an unspecified gender. */
         flags.initgend = flags.female;
-
-    pline("post in%d", flags.initgend);
-    pline("post fem%d", flags.female);
 
     /* Check for a valid alignment */
     if (!validalign(flags.initrole, flags.initrace, flags.initalign))

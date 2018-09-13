@@ -59,7 +59,10 @@ struct monst *mon, *other_mon;
             Strcpy(outbuf, "herself");
             break;
         default:
-            Strcpy(outbuf, "itself");
+            if (!mindless(mon->data) && humanoid(mon->data))
+                Strcpy(outbuf, "themself");
+            else
+                Strcpy(outbuf, "itself");
             break;
         }
     return outbuf;

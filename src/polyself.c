@@ -460,7 +460,8 @@ int psflags;
             } else if (!polyok(&mons[mntmp])
                        && !(mntmp == PM_HUMAN || your_race(&mons[mntmp])
                             || mntmp == urole.malenum
-                            || mntmp == urole.femalenum)) {
+                            || mntmp == urole.femalenum
+                            || mntmp == urole.nbnum)) {
                 const char *pm_name;
 
                 /* mkclass_poly() can pick a !polyok()

@@ -863,6 +863,7 @@ makepicks:
         Sprintf(pbuf, "%s, %s%s %s %s", plname, aligns[ALGN].adj, plbuf,
                 races[RACE].adj,
                 (GEND == 1 && roles[ROLE].name.f) ? roles[ROLE].name.f
+                  : (GEND == 2 && roles[ROLE].name.n) ? roles[ROLE].name.n
                                                   : roles[ROLE].name.m);
         add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, pbuf,
                  MENU_UNSELECTED);
@@ -1031,6 +1032,17 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
                 /* not chosen yet; append slash+female name */
                 Strcat(rolenamebuf, "/");
                 Strcat(rolenamebuf, roles[i].name.f);
+            }
+        }
+        if (roles[i].name.n) {
+            /* role has distinct name for female (C,P) */
+            if (gend == 2) {
+                /* female already chosen; replace male name */
+                Strcpy(rolenamebuf, roles[i].name.n);
+            } else if (gend < 0) {
+                /* not chosen yet; append slash+female name */
+                Strcat(rolenamebuf, "/");
+                Strcat(rolenamebuf, roles[i].name.n);
             }
         }
         /* !filtering implies reset_role_filtering() where we want to

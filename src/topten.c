@@ -1184,6 +1184,8 @@ boolean fem;
                 return roles[i].femalenum;
             else if (roles[i].malenum != NON_PM)
                 return roles[i].malenum;
+            else if (roles[i].nbnum != NON_PM)
+                return roles[i].nbnum;
             else
                 return PM_HUMAN;
         }

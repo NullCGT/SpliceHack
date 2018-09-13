@@ -325,7 +325,7 @@ static struct Comp_Opt {
     { "font_text", "the font to use in text windows", 40,
       DISP_IN_GAME }, /*WC*/
     { "fruit", "the name of a fruit you enjoy eating", PL_FSIZ, SET_IN_GAME },
-    { "gender", "your starting gender (male or female)", 8, DISP_IN_GAME },
+    { "gender", "your starting gender (male, female, or nonbinary)", 8, DISP_IN_GAME },
     { "horsename", "the name of your (first) horse (e.g., horsename:Silver)",
       PL_PSIZ, DISP_IN_GAME },
     { "map_mode", "map display mode under Windows", 20, DISP_IN_GAME }, /*WC*/

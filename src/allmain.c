@@ -696,7 +696,7 @@ boolean new_game; /* false => restoring an old game */
     char buf[BUFSZ];
     char tipbuf[BUFSZ];
     char ebuf[BUFSZ];
-    boolean currentgend = Upolyd ? u.mfemale : flags.female;
+    int currentgend = Upolyd ? u.mfemale : flags.female;
 
     /* skip "welcome back" if restoring a doomed character */
     if (!new_game && Upolyd && ugenocided()) {
@@ -731,10 +731,14 @@ boolean new_game; /* false => restoring an old game */
                 : currentgend != flags.initgend))
         Sprintf(eos(buf), " %s", genders[currentgend].adj);
 
-    pline(new_game ? "%s %s, welcome to SpliceHack!  You are a%s %s %s."
-                   : "%s %s, the%s %s %s, welcome back to SpliceHack!",
-          Hello((struct monst *) 0), plname, buf, urace.adj,
-          (currentgend && urole.name.f) ? urole.name.f : urole.name.m);
+    pline(new_game ? "%s %s, welcome to SpliceHack!  You are a%s %s %s %s."
+                   : "%s %s, the%s %s %s %s, welcome back to SpliceHack!",
+          Hello((struct monst *) 0), plname, buf, genders[currentgend].adj, urace.adj,
+              (currentgend == 1 && urole.name.f)
+                ? urole.name.f
+                : (currentgend == 2 && urole.name.n)
+                ? urole.name.n
+                : urole.name.m);
     if (flags.tips) {
         get_rnd_text(SPLICETIPSFILE, tipbuf);
         pline("Splicehack Tip of the Day: %s", tipbuf);

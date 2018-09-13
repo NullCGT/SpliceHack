@@ -170,11 +170,7 @@ char *buf;
         "Livelog THIS!"
     };
 
-    if (!rn2(50)) {
-        Sprintf(buf, "I <3 %s", tt_name());
-    } else {
-        Strcpy(buf, shirt_msgs[tshirt->o_id % SIZE(shirt_msgs)]);
-    }
+    Strcpy(buf, shirt_msgs[tshirt->o_id % SIZE(shirt_msgs)]);
     return erode_obj_text(tshirt, buf);
 }
 

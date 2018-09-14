@@ -20,6 +20,7 @@ Balance
 Balance
 - From xNetHack: It is no longer possible to gain see invisible intrinsically. All sources
   of intrinsic see invisible eventually time out.
+- From xNetHack: Melee combat wakes up nearby monsters.
 
 Miscelaneous
 - War's sword displays a message if a species goes extinct while it is held.

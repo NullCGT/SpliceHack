@@ -229,4 +229,6 @@ struct monst {
 #define montoostrong(monindx, lev) (mons[monindx].difficulty > lev)
 #define montooweak(monindx, lev) (mons[monindx].difficulty < lev)
 
+#define helpless(mon) ((mon)->msleeping || !(mon)->mcanmove)
+
 #endif /* MONST_H */

@@ -1742,7 +1742,7 @@ domove()
         * this is such a marginal case that it may not be worth fixing. */
         if (context.nopick) {
             /* moving with 'm' */
-            if (is_pool(x, y) && !known_wwalking) {
+            if (is_pool(x, y) && !known_wwalking && !Swimming) {
                 if (ParanoidSwim && yn("Really enter the water?") != 'y') {
                     context.move = 0;
                     nomul(0);
@@ -1759,7 +1759,7 @@ domove()
         } else {
             /* not moving with 'm'; if not known safe, simply prevent from
              * moving at all */
-            if ((is_pool(x, y) && !known_wwalking)
+            if ((is_pool(x, y) && !known_wwalking && !Swimming)
                 || (is_lava(x, y) && !known_lwalking)) {
                 context.move = 0;
                 nomul(0);

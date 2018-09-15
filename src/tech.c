@@ -80,6 +80,9 @@ STATIC_OVL NEARDATA const char *tech_names[] = {
 	"power surge",
 	"spirit bomb",
 	"draw blood",
+	"dragon call",
+	"dragon blitz",
+	"undertow",
 	""
 };
 
@@ -90,6 +93,10 @@ static const struct innate_tech
 	bar_tech[] = { {   1, T_BERSERK, 1},
 		       {   0, 0, 0} },
 	cav_tech[] = { {   1, T_PRIMAL_ROAR, 1},
+		       {   0, 0, 0} },
+  dra_tech[] = {
+					 {   1, T_DRAGON_BLITZ, 1},
+					 {   7, T_DRAGON_CALL, 1},
 		       {   0, 0, 0} },
 	fla_tech[] = { {   1, T_REINFORCE, 1},
 		       {   3, T_POWER_SURGE, 1},
@@ -166,6 +173,8 @@ static const struct innate_tech
 		       {   0, 0, 0} },
 	lyc_tech[] = { {   1, T_EVISCERATE, 1},
 		       {  10, T_BERSERK, 1},
+		       {   0, 0, 0} },
+  mer_tech[] = { {   1, T_PULL_UNDER, 1},
 		       {   0, 0, 0} },
 	vam_tech[] = { {   1, T_DAZZLE, 1},
 		       {   1, T_DRAW_BLOOD, 1},
@@ -424,7 +433,7 @@ dotechmenu(how, tech_no)
 	    if (techid(i) == NO_TECH)
 		continue;
 	    tlevel = techlev(i);
-	    if ((wizard || !techtout(i)) && tlevel > 0) {
+	    if (!techtout(i) && tlevel > 0) {
 		/* Ready to use */
 		techs_useable++;
 		prefix = "";
@@ -567,8 +576,9 @@ int tech_no;
 	/* These variables are used in various techs */
 	struct obj *obj, *otmp;
 	const char *str;
-	struct monst *mtmp;
+	struct monst *mtmp, *nextmon;;
 	int num;
+	int omx, omy;
 	char Your_buf[BUFSZ];
 	char allowall[2];
 	int i, j, t_timeout = 0;
@@ -1468,9 +1478,103 @@ tamedog(mtmp, (struct obj *) 0);
 			(const char *)0);
 		t_timeout = rn1(1000, 500);
 		break;
-	    default:
+		case T_DRAGON_CALL:
+				if (!rn2(13))
+						mtmp = makemon(mkclass(S_DRAGON, 0), 0, 0, NO_MM_FLAGS);
+				else
+						mtmp = makemon(&mons[PM_BABY_RED_DRAGON], 0, 0, NO_MM_FLAGS);
+				mtmp->mpeaceful = 1;
+				pline("You let loose a mighty roar, calling all nearby dragons to your location!");
+				for (mtmp = fmon; mtmp; mtmp = nextmon) {
+						nextmon = mtmp->nmon; /* trap might kill mon */
+						if (DEADMONSTER(mtmp) || !is_dragon(mtmp->data))
+								continue;
+						/* steed is already at your location, so not affected;
+							 this avoids trap issues if you're on a trap location */
+						if (mtmp == u.usteed)
+								continue;
+						if (mtmp->mtrapped) {
+								/* no longer in previous trap (affects mintrap) */
+								mtmp->mtrapped = 0;
+								fill_pit(mtmp->mx, mtmp->my);
+						}
+						/* mimic must be revealed before we know whether it
+							 actually moves because line-of-sight may change */
+						if (mtmp->m_ap_type)
+								seemimic(mtmp);
+						omx = mtmp->mx, omy = mtmp->my;
+						mnexto(mtmp);
+						if (mtmp->mx != omx || mtmp->my != omy) {
+								mtmp->mundetected = 0; /* reveal non-mimic hider */
+						}
+				}
+				t_timeout = rn1(1000, 500);
+				break;
+		case T_DRAGON_BLITZ:
+				/* This functions across the entire level, just for fun. */
+				i = 0;
+				pline("You draw upon your bond with your dragons to grant them impossible speed!");
+				for (mtmp = fmon; mtmp; mtmp = nextmon) {
+						nextmon = mtmp->nmon; /* trap might kill mon */
+
+						if (DEADMONSTER(mtmp) || !is_dragon(mtmp->data) || !mtmp->mtame)
+								continue;
+						else {
+								if (canseemon(mtmp)) {
+										pline("%s becomes a blur!", Monnam(mtmp));
+								}
+								i++;
+								mtmp->movement += (75 + (2 * techlev(tech_no)));
+						}
+
+				}
+				if (i > 0) {
+						t_timeout = rn1(1000, 500);
+				}
+				else
+						pline("...but then you realize you do not have any tame dragons.");
+				break;
+		case T_PULL_UNDER:
+				if (!getdir((char *)0)) return 0;
+				if (u.uswallow || (!is_pool(u.ux, u.uy)
+							&& !IS_FOUNTAIN(levl[u.ux][u.uy].typ))) {
+						pline("You can't drown someone here!");
+						return (0);
+				}
+				if (!u.dx && !u.dy) {
+						/* Hopefully a mistake... */
+						pline("There is another way!");
+						return 0;
+				}
+				mtmp = m_at(u.ux + u.dx, u.uy + u.dy);
+				if (!mtmp) {
+					You("grasp at nothing.");
+					return (0);
+				}
+				if (!sticks(mtmp->data)) {
+						/* It works! */
+						u.ustuck = mtmp;
+						if (IS_FOUNTAIN(levl[u.ux][u.uy].typ))
+								pline("You wrap up %s with your tail and pull them into the fountain!",
+										Monnam(mtmp));
+						else
+								pline("You wrap up %s with your tail and pull them into the depths with you!",
+										Monnam(mtmp));
+						/* Monsters don't wear amulets of magical breathing */
+						if (!is_swimmer(mtmp->data) && !amphibious(mtmp->data)) {
+								You("drown %s...", mon_nam(mtmp));
+								hurtmon(mtmp, mtmp->mhp);
+						} else {
+								pline("%s does not drown!", Monnam(mtmp));
+						}
+				} else {
+						You("cannot get a grip on %s!", mon_nam(mtmp));
+				}
+				t_timeout = rn1(1000, 500);
+				break;
+	  default:
 	    	pline ("Error!  No such effect (%i)", tech_no);
-		break;
+				break;
         }
         if (!can_limitbreak())
 	    techtout(tech_no) = (t_timeout * (100 - techlev(tech_no))/100);
@@ -1613,6 +1717,7 @@ role_tech()
 		case PM_ARCHEOLOGIST:	return (arc_tech);
 		case PM_BARBARIAN:	return (bar_tech);
 		case PM_CAVEMAN:	return (cav_tech);
+		case PM_DRAGONMASTER: return (dra_tech);
     #if 0
 		case PM_FLAME_MAGE:	return (fla_tech);
     case PM_ICE_MAGE:	return (ice_tech);
@@ -1646,6 +1751,7 @@ race_tech()
 		case PM_DROW:		return (elf_tech);
     case PM_VAMPIRE:	return (vam_tech);
     #endif
+		case PM_MERFOLK:	return (mer_tech);
 		case PM_GNOME:		return (gno_tech);
 		case PM_HOBBIT:		return (hob_tech);
 		case PM_HUMAN_WEREWOLF:	return (lyc_tech);

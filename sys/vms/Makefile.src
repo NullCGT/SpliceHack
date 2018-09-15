@@ -142,7 +142,7 @@ HACKINCL = align.h amiconf.h artifact.h artilist.h attrib.h beconf.h color.h \
 	   objclass.h os2conf.h patchlevel.h pcconf.h permonst.h prop.h rect.h \
 	   region.h rm.h sp_lev.h spell.h sys.h system.h tcap.h timeout.h \
 	   tosconf.h tradstdc.h trampoli.h trap.h unixconf.h vision.h \
-	   vmsconf.h wintty.h winX.h winprocs.h wintype.h you.h youprop.h
+	   vmsconf.h wintty.h winX.h winprocs.h wintype.h you.h youprop.h tech.h
 
 #HSOURCES = $(HACKINCL) date.h onames.h pm.h vis_tab.h\
 #		lev_comp.h dgn_comp.h dgn_file.h

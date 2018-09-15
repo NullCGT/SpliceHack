@@ -28,6 +28,7 @@ STATIC_DCL int FDECL(stone_to_flesh_obj, (struct obj *));
 STATIC_DCL boolean FDECL(zap_updown, (struct obj *));
 STATIC_DCL void FDECL(zhitu, (int, int, const char *, XCHAR_P, XCHAR_P));
 STATIC_DCL void FDECL(revive_egg, (struct obj *));
+STATIC_DCL void FDECL(throwstorm, (struct obj *, int, int, int));
 STATIC_DCL boolean FDECL(zap_steed, (struct obj *));
 STATIC_DCL void FDECL(skiprange, (int, int *, int *));
 
@@ -36,26 +37,14 @@ STATIC_OVL void FDECL(disintegrate_mon, (struct monst *, int, const char *));
 STATIC_DCL void FDECL(backfire, (struct obj *));
 STATIC_DCL int FDECL(spell_hit_bonus, (int));
 
-#define ZT_MAGIC_MISSILE (AD_MAGM - 1)
-#define ZT_FIRE (AD_FIRE - 1)
-#define ZT_COLD (AD_COLD - 1)
-#define ZT_SLEEP (AD_SLEE - 1)
-#define ZT_DEATH (AD_DISN - 1) /* or disintegration */
-#define ZT_LIGHTNING (AD_ELEC - 1)
-#define ZT_POISON_GAS (AD_DRST - 1)
-#define ZT_ACID (AD_ACID - 1)
-#define ZT_SONIC (AD_LOUD - 1)
-#define ZT_PSYCHIC (AD_PSYC - 1)
-/* 8 and 9 are now assigned to sonic and psychic */
-
-#define ZT_WAND(x) (x)
-#define ZT_SPELL(x) (10 + (x))
-#define ZT_BREATH(x) (20 + (x))
-
-#define is_hero_spell(type) ((type) >= 10 && (type) < 20)
-
 #define M_IN_WATER(ptr) \
     ((ptr)->mlet == S_EEL || amphibious(ptr) || is_swimmer(ptr))
+
+/* WAC -- ZT_foo #defines moved to spell.h, since explode uses these types */
+
+#define is_hero_spell(type)	((type) >= 10 && (type) < 20)
+#define is_mega_spell(type)	(type >= ZT_MEGA(ZT_FIRST) && \
+				 type <= ZT_MEGA(ZT_LAST))
 
 STATIC_VAR const char are_blinded_by_the_flash[] =
     "are blinded by the flash!";
@@ -76,7 +65,43 @@ const char *const flash_types[] =       /* also used in buzzmu(mcastu.c) */
         "blast of fire", "blast of frost", "blast of sleep gas",
         "blast of disintegration", "blast of lightning",
         "blast of poison gas", "blast of acid", "sonic beam",
-        "beam of psychic energy"
+        "beam of psychic energy",
+
+        "magical blast",        /* Megaspell equivalents must be 30-39 */
+      	"fireball",             /*Should be same as explosion names*/
+      	"ball of cold",
+      	"",
+      	"",
+      	"ball lightning",
+      	"poison gas cloud",
+      	"splash of acid",
+      	"sonicboom",
+      	"psionic explosion"
+    };
+
+    /* Yells for Megaspells*/
+    const char *yell_types[] = {    /*10 different beam types*/
+    	"With the wisdom of Merlin!",  /* Magic */
+    		/* Merlin was the wizard who advised King Arthur */
+    	"The rage of Huitzilopochtli!", /* Fire */
+    		/* Huitzilopochtli is the god of the Sun of Aztec myth */
+    	"The sorrow of Demeter!", /* Frost */
+    		/* Demeter - when she is without her daughter Persephone
+    		 * 	she caused winter
+    		 */
+    	"The rest of Hypnos", /* Sleep */
+    		/* Hypnos - Greek god of sleep */
+    	"The wrath of Kali", /* Disint */
+    		/* Kali is the Hindu god of dissolution and destruction */
+    	"From the forge of Vulcan!", /* Lightning*/
+    		/* Vulcan forged Zeus' lightning bolts [Greek] */
+    	"From the Fangs of Jormungand", /* Poison gas */
+    		/* Serpent of Viking Mythology.  Poisons the skies/seas during
+    		 * Ragnarok
+    		 */
+    	"The anger of the Mad Chemist!", /* Acid */
+    	"The power of Thor", /* Sonic */
+    	"The mind of Morpheus"  /* Psionic */
     };
 
 /*
@@ -156,6 +181,12 @@ struct obj *otmp;
 
     notonhead = (mtmp->mx != bhitpos.x || mtmp->my != bhitpos.y);
     skilled_spell = (otmp && otmp->oclass == SPBOOK_CLASS && otmp->blessed);
+    int skilldmg = 0;
+
+    if (objects[otyp].oc_class == SPBOOK_CLASS) {
+  	    /* Is a spell */
+  	    skilldmg = spell_damage_bonus(otyp);
+    }
 
     switch (otyp) {
     case WAN_STRIKING:
@@ -2273,6 +2304,83 @@ dozap()
     return 1;
 }
 
+STATIC_OVL void
+throwstorm(obj, skilldmg, min, range)
+register struct obj	*obj;
+int min, range, skilldmg;
+{
+  	boolean didblast = FALSE;
+  	int failcheck;
+  	int sx, sy;
+  	int type = ZT_SPELL(obj->otyp - SPE_MAGIC_MISSILE);
+  	int expl_type;
+  	int num = 2 + rn2(3);
+
+
+  	if (tech_inuse(T_SIGIL_CONTROL)) {
+  	    throwspell();
+  	    sx = u.dx; sy = u.dy;
+  	} else {
+  	    sx = u.ux; sy = u.uy;
+  	}
+
+
+  	if (sx != u.ux || sy != u.uy) min = 0;
+  	if (tech_inuse(T_SIGIL_DISCHARGE)) num *= 2;
+
+  /*WAC Based off code that used to be the wizard patch mega fireball */
+  	if (u.uinwater) {
+  	    pline("You joking! In this weather?");
+  	    return;
+  	} else if (Is_waterlevel(&u.uz)) {
+  	    You("better wait for the sun to come out.");
+  	    return;
+  	}
+  	switch (abs(type) % 10)
+  	{
+  	case ZT_MAGIC_MISSILE:
+  	case ZT_DEATH:
+  	    expl_type = EXPL_MAGICAL;
+  	    break;
+  	case ZT_FIRE:
+  	case ZT_LIGHTNING:
+  	    expl_type = EXPL_FIERY;
+  	    break;
+  	case ZT_COLD:
+  	    expl_type = EXPL_FROSTY;
+  	    break;
+  	case ZT_SLEEP:
+  	case ZT_POISON_GAS:
+  	case ZT_ACID:
+  	    expl_type = EXPL_NOXIOUS;
+  	    break;
+  	}
+  	while(num--) {
+  	    failcheck = 0;
+  	    do {
+  		confdir(); /* Random Dir */
+  		u.dx *= (rn2(range) + min);
+  		u.dx += sx;
+  		u.dy *= (rn2(range) + min);
+  		u.dy += sy;
+  		failcheck++;
+  	    } while (failcheck < 3 &&
+  		    (!cansee(u.dx, u.dy) || IS_STWALL(levl[u.dx][u.dy].typ)));
+  	    if (failcheck >= 3)
+  		continue;
+  	    if (abs(type) % 10 == ZT_LIGHTNING)
+  		  shieldeff(u.ux, u.uy);
+  	    explode(u.dx, u.dy, type, u.ulevel/4 + 1 + skilldmg, 0, expl_type);
+  	    delay_output();
+  	    didblast = TRUE;
+  	}
+  	if (!didblast) {
+  	    explode(u.dx, u.dy, type, u.ulevel/2 + 1 + skilldmg, 0, expl_type);
+  	    delay_output();
+  	}
+  	return;
+}
+
 int
 zapyourself(obj, ordinary)
 struct obj *obj;
@@ -3085,6 +3193,7 @@ struct obj *obj;
 {
     int otyp = obj->otyp;
     int wondertemp;
+    int skilldmg = 0;
     boolean disclose = FALSE, was_unkn = !objects[otyp].oc_name_known;
     boolean wonder = FALSE;
 
@@ -3100,6 +3209,9 @@ struct obj *obj;
         otyp = wondertemp;
         wonder = TRUE;
     }
+
+    if (otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_CONE_OF_COLD)
+  		  skilldmg = spell_damage_bonus(obj->otyp);
 
     exercise(A_WIS, TRUE);
     if (u.usteed && (objects[otyp].oc_dir != NODIR) && !u.dx && !u.dy
@@ -3126,6 +3238,19 @@ struct obj *obj;
 
         if (otyp == WAN_DIGGING || otyp == SPE_DIG)
             zap_dig();
+        else if ((otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_CONE_OF_COLD)
+  		            && (tech_inuse(T_SIGIL_TEMPEST))) {
+  				/* sigil of tempest */
+  				throwstorm(obj, skilldmg, 2 , 2);
+  			} else if ((otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_CONE_OF_COLD)
+  					/*WAC - use sigil of discharge */
+  		            && (tech_inuse(T_SIGIL_DISCHARGE))) {
+  				You("yell \"%s\"",yell_types[otyp - SPE_MAGIC_MISSILE]);
+  				display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
+  				buzz(ZT_MEGA(otyp - SPE_MAGIC_MISSILE),
+  						u.ulevel/2 + 1 + skilldmg,
+  						u.ux, u.uy, u.dx, u.dy);
+  			}
         else if (otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_FINGER_OF_DEATH)
             buzz(otyp - SPE_MAGIC_MISSILE + 10, u.ulevel / 2 + 1, u.ux, u.uy,
                  u.dx, u.dy);
@@ -3662,7 +3787,8 @@ struct obj **ootmp; /* to return worn armor for caller to disintegrate */
     register int tmp = 0;
     register int abstype = abs(type) % 10;
     boolean sho_shieldeff = FALSE;
-    boolean spellcaster = is_hero_spell(type); /* maybe get a bonus! */
+    boolean spellcaster = (is_hero_spell(type) || is_mega_spell(type));
+      /* maybe get a bonus! */
 
     *ootmp = (struct obj *) 0;
     switch (abstype) {
@@ -4164,9 +4290,13 @@ boolean say; /* Announce out of sight hit/miss events if true */
     const char *fltxt;
     struct obj *otmp;
     int spell_type;
+    int away = 0;
 
     /* if its a Hero Spell then get its SPE_TYPE */
-    spell_type = is_hero_spell(type) ? SPE_MAGIC_MISSILE + abstype : 0;
+    if (is_hero_spell(type)  || is_mega_spell(type))
+        spell_type = SPE_MAGIC_MISSILE + abstype;
+    else
+        spell_type = 0;
 
     fltxt = flash_types[(type <= -30) ? abstype : abs(type)];
     if (u.uswallow) {
@@ -4194,8 +4324,23 @@ boolean say; /* Announce out of sight hit/miss events if true */
         range = 1;
     save_bhitpos = bhitpos;
 
+    if (!is_mega_spell(type)) {
+	      tmp_at(DISP_BEAM, zapdir_to_glyph(dx, dy, abstype));
+    }
     tmp_at(DISP_BEAM, zapdir_to_glyph(dx, dy, abstype));
     while (range-- > 0) {
+        /*hack to keep mega spells from blowing up in your face WAC*/
+        away++;
+
+        /* Control sigil */
+      	if ((away > 4 && !rn2(4)) && tech_inuse(T_SIGIL_CONTROL)) {
+      		getdir((char *)0);
+      		if(u.dx || u.dy) {
+      			/* Change dir! */
+      			dx = u.dx; dy = u.dy;
+      		}
+      	}
+
         lsx = sx;
         sx += dx;
         lsy = sy;
@@ -4203,8 +4348,19 @@ boolean say; /* Announce out of sight hit/miss events if true */
         if (!isok(sx, sy) || levl[sx][sy].typ == STONE)
             goto make_bounce;
 
+
+        /*Actual Megablast:right now only mag missile to cone of cold WAC*/
+  	    if (is_mega_spell(type) && away != 1) {
+        		/*explode takes care of vision stuff*/
+        		int expl_type;
+        		expl_type = abstype == ZT_FIRE ? EXPL_FIERY :
+        			abstype == ZT_COLD ? EXPL_FROSTY : EXPL_MAGICAL;
+        		explode(sx, sy, type, nd, 0, expl_type);
+        		delay_output(); /* wait a little */
+  	    }
+
         mon = m_at(sx, sy);
-        if (cansee(sx, sy)) {
+        if (!is_mega_spell(type) && cansee(sx, sy)) {
             /* reveal/unreveal invisible monsters before tmp_at() */
             if (mon && !canspotmon(mon))
                 map_invisible(sx, sy);
@@ -4241,6 +4397,12 @@ boolean say; /* Announce out of sight hit/miss events if true */
                     }
                     dx = -dx;
                     dy = -dy;
+                    /* WAC clear the beam so you can see it bounce back ;B */
+            		    if (!is_mega_spell(type)) {
+                                	tmp_at(DISP_END,0);
+                                	tmp_at(DISP_BEAM, zapdir_to_glyph(dx, dy, abstype));
+            		    }
+                    delay_output();
                 } else {
                     boolean mon_could_move = mon->mcanmove;
                     int tmp = zhitm(mon, type, nd, &otmp);
@@ -4329,6 +4491,10 @@ boolean say; /* Announce out of sight hit/miss events if true */
                         pline("For some reason you are not affected.");
                     dx = -dx;
                     dy = -dy;
+                    if (!is_mega_spell(type)) {
+                  			tmp_at(DISP_END,0);
+                  			tmp_at(DISP_BEAM, zapdir_to_glyph(dx, dy, abstype));
+            		    }
                     shieldeff(sx, sy);
                 } else {
                     zhitu(type, nd, fltxt, sx, sy);
@@ -4373,6 +4539,12 @@ boolean say; /* Announce out of sight hit/miss events if true */
             if (!dx || !dy || !rn2(bchance)) {
                 dx = -dx;
                 dy = -dy;
+                /* WAC clear the beam so you can see it bounce back ;B */
+            		if (!is_mega_spell(type)) {
+            		    tmp_at(DISP_END,0);
+            		    tmp_at(DISP_BEAM, zapdir_to_glyph(dx, dy, abstype));
+                }
+                delay_output();
             } else {
                 if (isok(sx, lsy) && ZAP_POS(rmn = levl[sx][lsy].typ)
                     && !closed_door(sx, lsy)
@@ -4392,16 +4564,24 @@ boolean say; /* Announce out of sight hit/miss events if true */
                     /*FALLTHRU*/
                 case 1:
                     dy = -dy;
+                    /* WAC clear the beam so you can see it bounce back ;B */
+              			if (!is_mega_spell(type)) {
+              			    tmp_at(DISP_END,0);
+              			    tmp_at(DISP_BEAM, zapdir_to_glyph(dx, dy, abstype));
+              			}
+                    delay_output();
                     break;
                 case 2:
                     dx = -dx;
                     break;
                 }
-                tmp_at(DISP_CHANGE, zapdir_to_glyph(dx, dy, abstype));
+                if (!is_mega_spell(type))
+		                tmp_at(DISP_CHANGE, zapdir_to_glyph(dx,dy,abstype));
             }
         }
     }
-    tmp_at(DISP_END, 0);
+    if (!is_mega_spell(type))
+        tmp_at(DISP_END,0);
     if (type == ZT_SPELL(ZT_FIRE))
         explode(sx, sy, type, d(12, 6), 0, EXPL_FIERY);
     if (shopdamage)

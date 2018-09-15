@@ -1070,6 +1070,8 @@ Enter the explore mode.
 Fire ammunition from quiver. Default key is 'f'.
 .lp #force
 Force a lock. Autocompletes. Default key is 'M-f'.
+.lp #give
+Give a monster an item.
 .lp #glance
 Show what type of thing a map symbol corresponds to. Default key is ';'.
 .lp #help
@@ -1234,6 +1236,9 @@ Show the weapon currently wielded. Default key is ')'.
 Do a shell escape. Default key is '!'.
 .lp "#sit "
 Sit down. Autocompletes. Default key is 'M-s'.
+.lp #technique
+Perform a role or race specific technique. A menu showing the techniques
+available to your character will be displayed. Default key is 'M-x'.
 .lp #stats
 Show memory statistics.
 Autocompletes.
@@ -1414,6 +1419,8 @@ option is enabled)
 #dip
 .lp M-e
 #enhance
+.lp M-g
+#give
 .lp M-f
 #force
 .lp M-i
@@ -1440,6 +1447,8 @@ option is enabled)
 #ride
 .lp M-s
 #sit
+.lp M-x
+#technique
 .lp M-t
 #turn
 .lp M-T

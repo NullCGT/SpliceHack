@@ -1636,6 +1636,10 @@ register struct attack *mattk;
         tmp = 0;
         break;
     }
+    /* WAC -- Caveman Primal Roar ability */
+  	if (magr->mtame != 0 && tech_inuse(T_PRIMAL_ROAR)) {
+  		tmp *= 2; /* Double Damage! */
+  	}
     if (!tmp)
         return res;
 

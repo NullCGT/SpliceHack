@@ -289,6 +289,10 @@ int *attk_count, *role_roll_penalty;
         && maybe_polyd(is_elf(youmonst.data), Race_if(PM_ELF)))
         tmp++;
 
+    /* special class effect uses... */
+  	if (tech_inuse(T_KIII)) tmp += 4;
+  	if (tech_inuse(T_BERSERK)) tmp += 2;
+
     /* encumbrance: with a lot of luggage, your agility diminishes */
     if ((tmp2 = near_capacity()) != 0)
         tmp -= (tmp2 * 2) - 1;
@@ -407,6 +411,8 @@ register struct monst *mtmp;
         if (flags.verbose) {
             if (uwep)
                 You("begin bashing monsters with %s.", yname(uwep));
+            else if (tech_inuse(T_EVISCERATE))
+        		    You("begin slashing monsters with your claws.");
             else if (!cantwield(youmonst.data))
                 You("begin %s monsters with your %s %s.",
                     ing_suffix(Role_if(PM_MONK) ? "strike" : "bash"),
@@ -437,6 +443,10 @@ register struct monst *mtmp;
         (void) hmonas(mtmp);
     else
         (void) hitum(mtmp, youmonst.data->mattk);
+
+    /* berserk lycanthropes calm down after the enemy is dead */
+  	if (mtmp->mhp <= 0) repeat_hit = 0;
+
     mtmp->mstrategy &= ~STRAT_WAITMASK;
 
 atk_done:
@@ -506,6 +516,40 @@ int dieroll;
             if (mon->wormno && *mhit)
                 cutworm(mon, x, y, weapon);
         }
+
+        /* Lycanthropes sometimes go a little berserk!
+  	     * If special is on,  they will multihit and stun!
+  	     */
+  	    if ((Race_if(PM_HUMAN_WEREWOLF) && (mon->mhp > 0)) ||
+  				tech_inuse(T_EVISCERATE)) {
+        		if (tech_inuse(T_EVISCERATE)) {
+        		    /*make slashing message elsewhere*/
+        		    if (repeat_hit == 0) {
+          			/* [max] limit to 4 (0-3) */
+          			repeat_hit = (tech_inuse(T_EVISCERATE) > 5) ?
+          						4 : (tech_inuse(T_EVISCERATE) - 2);
+          			/* [max] limit to 4 */
+          			mon->mfrozen = (tech_inuse(T_EVISCERATE) > 5) ?
+          						4 : (tech_inuse(T_EVISCERATE) - 2);
+    		           }
+        		    mon->mstun = 1;
+        		    mon->mcanmove = 0;
+        		} else if (!rn2(24)) {
+        		    repeat_hit += rn2(4)+1;
+        		    /* Length of growl depends on how angry you get */
+        		    switch (repeat_hit) {
+        		    	case 0: /* This shouldn't be possible, but... */
+            			case 1: pline("Grrrrr!"); break;
+            			case 2: pline("Rarrrgh!"); break;
+            			case 3: pline("Grrarrgh!"); break;
+            			case 4: pline("Rarggrrgh!"); break;
+            			case 5: pline("Raaarrrrrr!"); break;
+            			case 6:
+            			default:pline("Grrrrrrarrrrg!"); break;
+        		    }
+    		    }
+  	    }
+
         if(u.uconduct.weaphit && !oldweaphit)
             livelog_write_string(LL_CONDUCT,
                     "hit with a wielded weapon for the first time");
@@ -689,6 +733,7 @@ int dieroll;
     struct obj *monwep;
     char unconventional[BUFSZ]; /* substituted for word "attack" in msg */
     char saved_oname[BUFSZ];
+    boolean noeffect = FALSE;
 
     unconventional[0] = '\0';
     saved_oname[0] = '\0';
@@ -726,6 +771,84 @@ int dieroll;
                 tmp += rnd(sear_damage(ring->material));
             }
         }
+
+        /* WAC - Hand-to-Hand Combat Techniques */
+
+  	    if ((tech_inuse(T_CHI_STRIKE))  && (u.uen > 0)) {
+        		You("feel a surge of force.");
+        		tmp += (u.uen > (10 + (u.ulevel / 5)) ?
+        			 (10 + (u.ulevel / 5)) : u.uen);
+        		u.uen -= (10 + (u.ulevel / 5));
+        		if (u.uen < 0) u.uen = 0;
+  	    }
+
+  	    if (tech_inuse(T_E_FIST)) {
+  	    	  int dmgbonus = 0;
+        		hittxt = TRUE;
+        		dmgbonus = noeffect ? 0 : d(2,4);
+        		switch (rn2(4)) {
+    		    case 0: /* Fire */
+          			if (!Blind) pline("%s is on fire!", Monnam(mon));
+          			dmgbonus += destroy_mitem(mon, SCROLL_CLASS, AD_FIRE);
+          			dmgbonus += destroy_mitem(mon, SPBOOK_CLASS, AD_FIRE);
+          			if (noeffect || resists_fire(mon)) {
+          			    if (!noeffect)
+          				shieldeff(mon->mx, mon->my);
+          			    if (!Blind)
+          				pline_The("fire doesn't heat %s!", mon_nam(mon));
+          			    golemeffects(mon, AD_FIRE, dmgbonus);
+          			    if (!noeffect)
+          				dmgbonus = 0;
+          			    else
+          				noeffect = 0;
+          			}
+          			/* only potions damage resistant players in destroy_item */
+          			dmgbonus += destroy_mitem(mon, POTION_CLASS, AD_FIRE);
+          			break;
+  		      case 1: /* Cold */
+      		    	if (!Blind) pline("%s is covered in frost!", Monnam(mon));
+          			if (noeffect || resists_cold(mon)) {
+          			    if (!noeffect)
+          				shieldeff(mon->mx, mon->my);
+          			    if (!Blind)
+          				pline_The("frost doesn't chill %s!", mon_nam(mon));
+          			    golemeffects(mon, AD_COLD, dmgbonus);
+          			    dmgbonus = 0;
+          			    noeffect = 0;
+          			}
+          			dmgbonus += destroy_mitem(mon, POTION_CLASS, AD_COLD);
+          			break;
+  		      case 2: /* Elec */
+          			if (!Blind) pline("%s is zapped!", Monnam(mon));
+          			dmgbonus += destroy_mitem(mon, WAND_CLASS, AD_ELEC);
+          			if (noeffect || resists_elec(mon)) {
+          			    if (!noeffect)
+                				shieldeff(mon->mx, mon->my);
+          			    if (!Blind)
+                				pline_The("zap doesn't shock %s!", mon_nam(mon));
+          			    golemeffects(mon, AD_ELEC, dmgbonus);
+          			    if (!noeffect)
+                				dmgbonus = 0;
+                		else
+                				noeffect = 0;
+          			}
+          			/* only rings damage resistant players in destroy_item */
+          			dmgbonus += destroy_mitem(mon, RING_CLASS, AD_ELEC);
+          			break;
+  		      case 3: /* Acid */
+          			if (!Blind)
+          			    pline("%s is covered in acid!", Monnam(mon));
+          			if (noeffect || resists_acid(mon)) {
+          			    if (!Blind)
+          				pline_The("acid doesn't burn %s!", Monnam(mon));
+          			    dmgbonus = 0;
+          			    noeffect = 0;
+          			}
+          			break;
+  		      }
+        		if (dmgbonus > 0)
+        		    tmp += dmgbonus;
+        	  } /* Techinuse Elemental Fist */
     } else {
         Strcpy(saved_oname, cxname(obj));
         if (obj->oclass == WEAPON_CLASS || is_weptool(obj)
@@ -860,8 +983,14 @@ int dieroll;
                             && uwep->otyp == YUMI)
                             tmp++;
                         else if (Race_if(PM_ELF) && obj->otyp == ELVEN_ARROW
-                                 && uwep->otyp == ELVEN_BOW)
+                                 && uwep->otyp == ELVEN_BOW) {
                             tmp++;
+                            /* WAC Extra damage if in special ability*/
+                    				if (tech_inuse(T_FLURRY)) tmp += 2;
+                				} else if (objects[obj->otyp].oc_skill == P_BOW
+                					&& tech_inuse(T_FLURRY)) {
+                    				tmp++;
+                    		}
                     }
                     if (obj->opoisoned && is_poisonable(obj))
                         ispoisoned = TRUE;
@@ -1146,6 +1275,23 @@ int dieroll;
             tmp += dbon();
     }
 
+    /*
+  	 * Ki special ability, see cmd.c in function special_ability.
+  	 * In this case, we do twice damage! Wow!
+  	 *
+  	 * Berserk special ability only does +4 damage. - SW
+  	 */
+  	/*Lycanthrope claws do +level bare hands dmg
+                  (multi-hit, stun/freeze)..- WAC*/
+
+  	if (tech_inuse(T_KIII)) tmp *= 2;
+  	if (tech_inuse(T_BERSERK)) tmp += 4;
+  	if (tech_inuse(T_EVISCERATE)) {
+    		tmp += rnd((int) (u.ulevel/2 + 1)) + (u.ulevel/2); /* [max] was only + u.ulevel */
+                    You("slash %s!", mon_nam(mon));
+    		hittxt = TRUE;
+  	}
+
     if (valid_weapon_attack) {
         struct obj *wep;
 
@@ -1240,6 +1386,12 @@ int dieroll;
             hittxt = TRUE;
         }
     }
+
+    if (tmp && noeffect) {
+    		Your("attack doesn't seem to harm %s.", mon_nam(mon));
+    		hittxt = TRUE;
+    		tmp = 0;
+  	}
 
     if (!already_killed)
         mon->mhp -= tmp;

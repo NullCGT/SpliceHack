@@ -731,6 +731,7 @@ E void FDECL(make_grave, (int, int, const char *));
 
 /* ### exper.c ### */
 
+E long FDECL(newuexp, (int));
 E int NDECL(newpw);
 E int FDECL(experience, (struct monst *, int));
 E void FDECL(more_experienced, (int, int));
@@ -1404,6 +1405,7 @@ E int FDECL(pm_to_cham, (int));
 E int FDECL(minliquid, (struct monst *));
 E int NDECL(movemon);
 E int FDECL(meatmetal, (struct monst *));
+E void FDECL(meatcorpse, (struct monst *));
 E int FDECL(meatobj, (struct monst *));
 E void FDECL(mpickgold, (struct monst *));
 E boolean FDECL(mpickstuff, (struct monst *, const char *));
@@ -1873,6 +1875,7 @@ E boolean FDECL(allow_all, (struct obj *));
 E boolean FDECL(allow_category, (struct obj *));
 E boolean FDECL(is_worn_by_type, (struct obj *));
 E int FDECL(ck_bag, (struct obj *));
+E boolean FDECL(mbag_explodes, (struct obj *, int));
 #ifdef USE_TRAMPOLI
 E int FDECL(in_container, (struct obj *));
 E int FDECL(out_container, (struct obj *));
@@ -1966,6 +1969,8 @@ E void FDECL(potionbreathe, (struct obj *));
 E int NDECL(dodip);
 E void FDECL(mongrantswish, (struct monst **));
 E void FDECL(djinni_from_bottle, (struct obj *));
+/* KMH, balance patch -- new function */
+E int FDECL(upgrade_obj, (struct obj *));
 E struct monst *FDECL(split_mon, (struct monst *, struct monst *));
 E const char *NDECL(bottlename);
 
@@ -1983,6 +1988,7 @@ E int NDECL(dopray);
 E boolean FDECL(moffer, (struct monst *));
 E const char *NDECL(u_gname);
 E int NDECL(doturn);
+E int NDECL(turn_undead);
 E const char *NDECL(a_gname);
 E const char *FDECL(a_gname_at, (XCHAR_P x, XCHAR_P y));
 E const char *FDECL(align_gname, (ALIGNTYP_P));
@@ -2365,6 +2371,8 @@ E int FDECL(spelleffects, (int, BOOLEAN_P));
 E void NDECL(losespells);
 E int NDECL(dovspell);
 E void FDECL(initialspell, (struct obj *));
+E boolean NDECL(studyspell);
+E int NDECL(throwspell);
 
 /* ### steal.c ### */
 
@@ -2402,6 +2410,16 @@ E void FDECL(dismount_steed, (int));
 E void FDECL(place_monster, (struct monst *, int, int));
 E boolean FDECL(stucksteed, (BOOLEAN_P));
 
+/* ### tech.c ### */
+
+E void FDECL(adjtech, (int,int));
+E int NDECL(dotech);
+E void NDECL(docalm);
+E int FDECL(tech_inuse, (int));
+E void NDECL(tech_timeout);
+E boolean FDECL(tech_known, (SHORT_P));
+E void FDECL(learntech, (SHORT_P,long,int));
+
 /* ### teleport.c ### */
 
 E boolean FDECL(goodpos, (int, int, struct monst *, unsigned));
@@ -2436,6 +2454,9 @@ E void FDECL(substitute_tiles, (d_level *));
 
 /* ### timeout.c ### */
 
+E int FDECL(mon_spec_poly, (struct monst *, struct permonst *, long,
+			    BOOLEAN_P, BOOLEAN_P, BOOLEAN_P, BOOLEAN_P));
+E void FDECL(unpoly_mon, (genericptr_t, long));
 E void NDECL(burn_away_slime);
 E void NDECL(nh_timeout);
 E void FDECL(fall_asleep, (int, BOOLEAN_P));
@@ -2790,6 +2811,7 @@ E int NDECL(uwep_skill_type);
 E int FDECL(weapon_hit_bonus, (struct obj *));
 E int FDECL(weapon_dam_bonus, (struct obj *));
 E void FDECL(skill_init, (const struct def_skill *));
+E void NDECL(practice_weapon);
 
 /* ### were.c ### */
 

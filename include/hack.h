@@ -520,6 +520,9 @@ enum bodypart_types {
 #define STATIC_PTR static
 #endif
 
+/* For those tough guys who get carried away... */
+extern int repeat_hit;
+
 /* The function argument to qsort() requires a particular
  * calling convention under WINCE which is not the default
  * in that environment.

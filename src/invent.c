@@ -1558,6 +1558,9 @@ register const char *let, *word;
                             be offered as a choice when already discovered */
                          && (otyp != POT_OIL || !otmp->dknown
                              || !objects[POT_OIL].oc_name_known))))
+             || ((!strcmp(word, "draw blood with") ||
+         			!strcmp(word, "bandage your wounds with")) &&
+         		    (otmp->oclass == TOOL_CLASS && otyp != MEDICAL_KIT))
              || (!strcmp(word, "tip") && !Is_container(otmp)
                  /* include horn of plenty if sufficiently discovered */
                  && (otmp->otyp != HORN_OF_PLENTY || !otmp->dknown

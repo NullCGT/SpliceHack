@@ -30,7 +30,6 @@ STATIC_DCL long FDECL(carry_count, (struct obj *, struct obj *, long,
                                     BOOLEAN_P, int *, int *));
 STATIC_DCL int FDECL(lift_object, (struct obj *, struct obj *, long *,
                                    BOOLEAN_P));
-STATIC_DCL boolean FDECL(mbag_explodes, (struct obj *, int));
 STATIC_DCL long FDECL(boh_loss, (struct obj *container, int));
 STATIC_PTR int FDECL(in_container, (struct obj *));
 STATIC_PTR int FDECL(out_container, (struct obj *));
@@ -2037,7 +2036,7 @@ boolean *prev_loot;
  * Decide whether an object being placed into a magic bag will cause
  * it to explode.  If the object is a bag itself, check recursively.
  */
-STATIC_OVL boolean
+boolean
 mbag_explodes(obj, depthin)
 struct obj *obj;
 int depthin;
@@ -2495,6 +2494,13 @@ boolean more_containers; /* True iff #loot multiple and this isn't last one */
         You("owe %ld %s for lost merchandise.", loss, currency(loss));
         current_container->owt = weight(current_container);
     }
+    if (current_container->otyp == MEDICAL_KIT) {
+  	    if (!Has_contents(current_container))
+  		      pline("%s", emptymsg);
+  	    else
+  		      (void) display_cinventory(current_container);
+  	    return 0;
+  	}
     inokay = (invent != 0
               && !(invent == current_container && !current_container->nobj));
     outokay = Has_contents(current_container);
@@ -3138,7 +3144,8 @@ struct obj *box; /* or bag */
 
             if (box->otyp == ICE_BOX) {
                 removed_from_icebox(otmp); /* resume rotting for corpse */
-            } else if (cursed_mbag && !rn2(13)) {
+            } else if ((cursed_mbag && !rn2(13)) ||
+              (otmp->otyp == PILL && box->otyp == MEDICAL_KIT)) {
                 loss += mbag_item_gone(held, otmp);
                 /* abbreviated drop format is no longer appropriate */
                 terse = FALSE;

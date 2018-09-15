@@ -3788,6 +3788,7 @@ doapply()
     struct obj *obj;
     register int res = 1;
     char class_list[MAXOCLASSES + 2];
+    register boolean can_use = FALSE;
 
     if (check_capacity((char *) 0))
         return 0;
@@ -3951,6 +3952,70 @@ doapply()
     case DRUM_OF_EARTHQUAKE:
         res = do_play_instrument(obj);
         break;
+    case MEDICAL_KIT:
+    		if (Role_if(PM_HEALER)) can_use = TRUE;
+    		else if ((Role_if(PM_PRIEST) || Role_if(PM_MONK) ||
+          Role_if(PM_SAMURAI)) &&
+    			!rn2(2)) can_use = TRUE;
+    		else if(!rn2(4)) can_use = TRUE;
+
+    		if (obj->cursed && rn2(3)) can_use = FALSE;
+    		if (obj->blessed && rn2(3)) can_use = TRUE;
+
+    		makeknown(MEDICAL_KIT);
+    		if (obj->cobj) {
+    		    struct obj *otmp;
+    		    for (otmp = obj->cobj; otmp; otmp = otmp->nobj)
+    			  if (otmp->otyp == PILL)
+    			      break;
+    		    if (!otmp)
+    			      You_cant("find any more pills in %s.", yname(obj));
+    		    else if (!is_edible(otmp))
+    			      You("find, but cannot eat, a white pill in %s.",
+    			        yname(obj));
+    		    else {
+          			check_unpaid(obj);
+          			if (otmp->quan > 1L) {
+          			    otmp->quan--;
+          			    obj->owt = weight(obj);
+          			} else {
+          			    obj_extract_self(otmp);
+          			    obfree(otmp, (struct obj *)0);
+          			}
+          			/*
+          			 * Note that while white and pink pills share the
+          			 * same otyp value, they are quite different.
+          			 */
+          			You("take a white pill from %s and swallow it.",
+          				  yname(obj));
+          			if (can_use) {
+          			    if (Sick) make_sick(0L, (char *) 0,TRUE ,SICK_ALL);
+          			    else if (Blinded > (long)(u.ucreamed+1))
+          				      make_blinded(u.ucreamed ?
+          					        (long)(u.ucreamed+1) : 0L, TRUE);
+          			    else if (HHallucination)
+          				      make_hallucinated(0L, TRUE, 0L);
+          			    else if (Vomiting) make_vomiting(0L, TRUE);
+          			    else if (HConfusion) make_confused(0L, TRUE);
+          			    else if (HStun) make_stunned(0L, TRUE);
+          			    else if (u.uhp < u.uhpmax) {
+                				u.uhp += rn1(10,10);
+                				if (u.uhp > u.uhpmax) u.uhp = u.uhpmax;
+                				You_feel("better.");
+                				context.botl = TRUE;
+          			    } else pline1(nothing_happens);
+          			} else if (!rn2(3))
+          			    pline("Nothing seems to happen.");
+          			else if (!Sick)
+          			    make_sick(rn1(10,10), "bad pill", TRUE,
+          			      SICK_VOMITABLE);
+          			else {
+          			    You("seem to have made your condition worse!");
+          			    losehp(rn1(10,10), "a drug overdose", KILLED_BY);
+          			}
+    		    }
+    		} else You("seem to be out of medical supplies.");
+    		break;
     case HORN_OF_PLENTY: /* not a musical instrument */
         (void) hornoplenty(obj, FALSE);
         break;

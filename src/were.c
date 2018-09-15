@@ -213,8 +213,28 @@ void
 you_unwere(purify)
 boolean purify;
 {
+
+    boolean in_wereform = (u.umonnum == u.ulycn);
     boolean controllable_poly = Polymorph_control && !(Stunned || Unaware);
-    if (purify && !Race_if(PM_HUMAN_WEREWOLF)) {
+    if (purify) {
+        if (Race_if(PM_HUMAN_WEREWOLF)) {
+            /* An attempt to purify you has been made! */
+            if (in_wereform && Unchanging) {
+                killer.format = NO_KILLER_PREFIX;
+                Sprintf(killer.name, "purified while stuck in creature form");
+                pline_The("purification was deadly...");
+                done(DIED);
+            } else {
+                You_feel("very bad!");
+                if (in_wereform)
+              rehumanize();
+                (void) adjattrib(A_STR, -rn1(3,3), 2);
+                (void) adjattrib(A_CON, -rn1(3,3), 1);
+                losehp(u.uhp - (u.uhp > 10 ? rnd(5) : 1), "purification",
+                  KILLED_BY);
+            }
+            return;
+        }
         You_feel("purified.");
         set_ulycn(NON_PM); /* cure lycanthropy */
     }

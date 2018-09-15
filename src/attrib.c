@@ -125,6 +125,11 @@ static const struct innate {
                  { 1, &HPoison_resistance, "", "" },
                  { 0, 0, 0, 0 } },
 
+  lyc_abil[] = { {   1, &(HPoison_resistance), "", "" },
+		             /* {   1, &(HRegeneration), "", "" }, */
+                 /* {   7, &(HStealth), "stealthy", "" },*/
+		             {   0, 0, 0, 0 } },
+
   hum_abil[] = { { 0, 0, 0, 0 } };
 
 STATIC_DCL void NDECL(exerper);
@@ -761,6 +766,8 @@ long frommask;
             abil = orc_abil;
             break;
         case PM_HUMAN_WEREWOLF:
+            abil = lyc_abil;
+            break;
         case PM_HUMAN:
             abil = hum_abil;
             break;
@@ -769,6 +776,7 @@ long frommask;
             break;
         case PM_INFERNAL:
             abil = inf_abil;
+            break;
         case PM_MINOR_ANGEL:
             abil = ang_abil;
         default:
@@ -1010,6 +1018,9 @@ int oldlevel, newlevel;
         else
             lose_weapon_skill(oldlevel - newlevel);
     }
+
+    /* WAC -- adjust techniques */
+  	adjtech(oldlevel, newlevel);
 }
 
 int

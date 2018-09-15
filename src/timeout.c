@@ -395,6 +395,10 @@ nh_timeout()
         else if (u.uluck < baseluck && (nostone || time_luck > 0))
             u.uluck++;
     }
+
+    /* WAC -- check for timeout of specials */
+  	tech_timeout();
+
     if (u.uinvulnerable)
         return; /* things past this point could kill you */
     if (Stoned)

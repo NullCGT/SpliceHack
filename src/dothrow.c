@@ -188,6 +188,16 @@ int shotlimit;
                 break; /* No bonus */
             }
 
+        /* Tech: Flurry */
+  	    if (objects[obj->otyp].oc_skill == -P_BOW && tech_inuse(T_FLURRY)) {
+  		      multishot += 1; /* Let'em rip! */
+
+            /* more than usual == volley */
+        		if (((shotlimit <= 0) || (shotlimit >= multishot)) &&
+        			(obj->quan >= multishot))
+        		    You("let fly a volley of %s!", xname(obj));
+    	  }
+
         /* crossbows are slow to load and probably shouldn't allow multiple
            shots at all, but that would result in players never using them;
            instead, high strength is necessary to load and shoot quickly */

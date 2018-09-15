@@ -692,6 +692,9 @@ xchar x, y;
                       && x == inv_pos.x && y == inv_pos.y);
 }
 
+/* For those tough guys who get carried away... */
+int repeat_hit = 0;
+
 /* return TRUE if (dx,dy) is an OK place to move
  * mode is one of DO_MOVE, TEST_MOVE, TEST_TRAV, or TEST_TRAP
  */

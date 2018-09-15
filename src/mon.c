@@ -373,6 +373,12 @@ unsigned corpseflags;
         obj = mkcorpstat(CORPSE, mtmp, &mons[num], x, y, corpstatflags);
         obj->age -= 100; /* this is an *OLD* corpse */
         break;
+    case PM_GHOUL:
+    case PM_GHAST:
+        corpstatflags |= CORPSTAT_INIT;
+        obj = mkcorpstat(CORPSE, mtmp, &mons[mndx], x, y, corpstatflags);
+        obj->age -= 100; /* this is an *OLD* corpse */
+        break;
     case PM_SILVER_GOLEM:
         num = d(1, 2);
         while (num--) {
@@ -957,6 +963,33 @@ register struct monst *mtmp;
     return 0;
 }
 
+void
+meatcorpse(mtmp)
+register struct monst *mtmp;
+{
+register struct obj *otmp;
+
+  	/* If a pet, eating is handled separately, in dog.c */
+  	if (mtmp->mtame) return;
+
+  	/* Eats topmost corpse if it is there */
+  	for (otmp = level.objects[mtmp->mx][mtmp->my];
+  						    otmp; otmp = otmp->nexthere)
+        if (otmp->otyp == CORPSE &&
+  		      otmp->age+50 <= monstermoves) {
+  		      if (cansee(mtmp->mx,mtmp->my) && flags.verbose)
+          			pline("%s eats %s!", Monnam(mtmp),
+          				distant_name(otmp,doname));
+    		    else if (!Deaf && flags.verbose)
+          			You("hear an awful gobbling noise!");
+  		      mtmp->meating = 2;
+            dogintr(mtmp, &mons[otmp->corpsenm]);
+  		      delobj(otmp);
+  		      break; /* only eat one at a time... */
+  		  }
+        newsym(mtmp->mx, mtmp->my);
+}
+
 /* monster eats a pile of objects */
 int
 meatobj(mtmp) /* for gelatinous cubes */
@@ -1047,6 +1080,8 @@ struct monst *mtmp;
                 if (mtmp->mhp > mtmp->mhpmax)
                     mtmp->mhp = mtmp->mhpmax;
             }
+            if (otmp->otyp == MEDICAL_KIT)
+        		    delete_contents(otmp);
             if (Has_contents(otmp)) {
                 register struct obj *otmp3;
 

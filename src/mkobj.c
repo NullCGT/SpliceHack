@@ -263,10 +263,15 @@ struct obj *box;
 {
     register int n;
     register struct obj *otmp;
+    int minn = 0;
 
     box->cobj = (struct obj *) 0;
 
     switch (box->otyp) {
+    case MEDICAL_KIT:	n = 60;
+  				/* Initial inventory, no empty medical kits */
+  				if (moves <= 1 && !in_mklev) minn = 1;
+  				break;
     case ICE_BOX:
         n = 20;
         break;
@@ -292,8 +297,12 @@ struct obj *box;
         break;
     }
 
-    for (n = rn2(n + 1); n > 0; n--) {
-        if (box->otyp == ICE_BOX) {
+    for (n = max(minn, rn2(n + 1)); n > 0; n--) {
+      if (box->otyp == MEDICAL_KIT) {
+          int supplies[] = { PHIAL, BANDAGE, PILL };
+          if (!(otmp = mksobj(supplies[rn2(SIZE(supplies))], TRUE, TRUE)))
+              continue;
+      } else if (box->otyp == ICE_BOX) {
             if (!(otmp = mksobj(CORPSE, TRUE, TRUE)))
                 continue;
             /* Note: setting age to 0 is correct.  Age has a different
@@ -900,6 +909,7 @@ boolean artif;
             case SACK:
             case OILSKIN_SACK:
             case BAG_OF_HOLDING:
+            case MEDICAL_KIT:
                 mkbox_cnts(otmp);
                 break;
             case EXPENSIVE_CAMERA:

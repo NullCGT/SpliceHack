@@ -205,7 +205,7 @@ in_trouble()
         return TROUBLE_REGION;
     if (critically_low_hp(FALSE))
         return TROUBLE_HIT;
-    if (u.ulycn >= LOW_PM)
+    if (u.ulycn >= LOW_PM && !Race_if(PM_HUMAN_WEREWOLF))
         return TROUBLE_LYCANTHROPE;
     if (near_capacity() >= EXT_ENCUMBER && AMAX(A_STR) - ABASE(A_STR) > 3)
         return TROUBLE_COLLAPSING;
@@ -1473,7 +1473,7 @@ dosacrifice()
 
         if (your_race(ptr) || (uwep &&
             uwep->otyp == SACRIFICIAL_KNIFE && uwep->cursed)) {
-            if (is_demon(youmonst.data)) {
+            if (is_demon(youmonst.data) || Race_if(PM_HUMAN_WEREWOLF)) {
                 You("find the idea very satisfying.");
                 exercise(A_WIS, TRUE);
             } else if (u.ualign.type != A_CHAOTIC) {
@@ -2077,11 +2077,9 @@ prayer_done() /* M. Stephenson (1.0.3b) */
 int
 doturn()
 {
-    /* Knights & Priest(esse)s only please */
-    struct monst *mtmp, *mtmp2;
-    int once, range, xlev;
-
-    if (!Role_if(PM_PRIEST) && !Role_if(PM_KNIGHT)) {
+    /* WAC doturn is now a technique */
+  	/* Try to use turn undead spell if you don't know the tech. */
+    if (!tech_known(T_TURN_UNDEAD)) {
         /* Try to use the "turn undead" spell.
          *
          * This used to be based on whether hero knows the name of the
@@ -2100,6 +2098,14 @@ doturn()
         You("don't know how to turn undead!");
         return 0;
     }
+    return turn_undead();
+}
+
+int
+turn_undead() {
+struct monst *mtmp, *mtmp2;
+int once, range, xlev;
+
     if(!u.uconduct.gnostic++)
         livelog_write_string(LL_CONDUCT, "rejected atheism by turning undead");
 

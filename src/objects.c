@@ -697,6 +697,8 @@ CONTAINER("sack",           "bag", 0, 0, 0, 35,  15,   2, CLOTH, HI_CLOTH),
 CONTAINER("oilskin sack",   "bag", 0, 0, 0,  5,  15, 100, CLOTH, HI_CLOTH),
 CONTAINER("bag of holding", "bag", 0, 1, 0, 20,  15, 100, CLOTH, HI_CLOTH),
 CONTAINER("bag of tricks",  "bag", 0, 1, 1, 20,  15, 100, CLOTH, HI_CLOTH),
+CONTAINER("medical kit",    "leather bag",
+				0, 0, 0, 10, 25, 500, LEATHER, HI_LEATHER),
 #undef CONTAINER
 
 /* lock opening tools */
@@ -726,7 +728,7 @@ TOOL("saddle",              None, 1, 0, 0, 0,  5,200,150, LEATHER, HI_LEATHER),
 TOOL("leash",               None, 1, 0, 0, 0, 35, 12, 20, LEATHER, HI_LEATHER),
 TOOL("stethoscope",         None, 1, 0, 0, 0, 25,  4, 75, IRON, HI_METAL),
 TOOL("tinning kit",         None, 1, 0, 0, 1, 15,100, 30, IRON, HI_METAL),
-TOOL("tin opener",          None, 1, 0, 0, 0, 35,  4, 30, IRON, HI_METAL),
+TOOL("tin opener",          None, 1, 0, 0, 0, 25,  4, 30, IRON, HI_METAL),
 TOOL("can of grease",       None, 1, 0, 0, 1, 15, 15, 20, IRON, HI_METAL),
 TOOL("figurine",            None, 1, 0, 1, 0, 15, 50, 80, MINERAL, HI_MINERAL),
         /* monster type specified by obj->corpsenm */
@@ -760,6 +762,15 @@ WEPTOOL("grappling hook", "iron hook",
 WEPTOOL("unicorn horn", None,
         1, 1, 1,  0,  20, 100, 12, 12, PIERCE, P_UNICORN_HORN,
                                                            BONE, CLR_WHITE),
+
+/* Two pseudo tools. These can never exist outside of medical kits. */
+OBJECT(OBJ("bandage", (char *)0),
+		BITS(1,1,0,0,0,0,0,1,0,0,0,P_NONE,CLOTH), 0,
+		TOOL_CLASS, 0, 0, 1, 1, 0, 0, 0, 0, 0, CLR_WHITE),
+OBJECT(OBJ("phial", (char *)0),
+		BITS(1,1,0,0,0,0,0,1,0,0,0,P_NONE,GLASS), 0,
+		TOOL_CLASS, 0, 0, 2, 1, 0, 0, 0, 0, 1, HI_GLASS),
+
         /* 3.4.1: unicorn horn left classified as "magic" */
 /* two unique tools;
  * not artifacts, despite the comment which used to be here
@@ -826,8 +837,9 @@ FOOD("slime mold",           75,  1,  5, 0, VEGGY, 250, HI_ORGANIC),
 FOOD("lump of royal jelly",   0,  1,  2, 0, VEGGY, 200, CLR_YELLOW),
 FOOD("cream pie",            25,  1, 10, 0, VEGGY, 100, CLR_WHITE),
 FOOD("candy bar",            13,  1,  2, 0, VEGGY, 100, CLR_BROWN),
+FOOD("pill",                  1,  1,  1, 0, VEGGY,   0, CLR_BRIGHT_MAGENTA),
 FOOD("fortune cookie",       55,  1,  1, 0, VEGGY,  40, CLR_YELLOW),
-FOOD("pancake",              25,  2,  2, 0, VEGGY, 200, CLR_YELLOW),
+FOOD("pancake",              24,  2,  2, 0, VEGGY, 200, CLR_YELLOW),
 FOOD("lembas wafer",         20,  2,  5, 0, VEGGY, 800, CLR_WHITE),
 FOOD("cram ration",          20,  3, 15, 0, VEGGY, 600, HI_ORGANIC),
 FOOD("food ration",         380,  5, 20, 0, VEGGY, 800, HI_ORGANIC),

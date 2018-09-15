@@ -160,6 +160,11 @@ struct obj *wep;
         /* don't retouch and take material damage if it's a non-artifact object
          * and you're wearing gloves */
         res++; /* takes a turn even though it doesn't get wielded */
+    } else if (tech_inuse(T_EVISCERATE)) {
+  		/* WAC - if you have 'L' has claws out and wields weapon,
+  		 * can't retract claws
+  		 */
+  		You("can't retract your claws!");
     } else {
         /* Weapon WILL be wielded after this point */
         res++;

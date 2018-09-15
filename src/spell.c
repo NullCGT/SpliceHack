@@ -41,7 +41,6 @@ STATIC_DCL boolean NDECL(spellsortmenu);
 STATIC_DCL boolean FDECL(dospellmenu, (const char *, int, int *));
 STATIC_DCL int FDECL(percent_success, (int));
 STATIC_DCL char *FDECL(spellretention, (int, char *));
-STATIC_DCL int NDECL(throwspell);
 STATIC_DCL void NDECL(cast_protection);
 STATIC_DCL void FDECL(spell_backfire, (int));
 STATIC_DCL boolean FDECL(spell_aim_step, (genericptr_t, int, int));
@@ -1100,6 +1099,10 @@ boolean atme;
      */
     case SPE_FIREBALL:
     case SPE_CONE_OF_COLD:
+        if (tech_inuse(T_SIGIL_TEMPEST)) {
+            weffects(pseudo);
+            break;
+        }
         if (role_skill >= P_SKILLED) {
             if (throwspell()) {
                 cc.x = u.dx;
@@ -1139,8 +1142,12 @@ boolean atme;
     case SPE_FORCE_BOLT:
         physical_damage = TRUE;
     /*FALLTHRU*/
-    case SPE_SLEEP:
     case SPE_MAGIC_MISSILE:
+        if (tech_inuse(T_SIGIL_TEMPEST)) {
+            weffects(pseudo);
+            break;
+        } /* else fall through... */
+    case SPE_SLEEP:
     case SPE_KNOCK:
     case SPE_SLOW_MONSTER:
     case SPE_WIZARD_LOCK:
@@ -1298,7 +1305,7 @@ int x, y;
 }
 
 /* Choose location where spell takes effect. */
-STATIC_OVL int
+int
 throwspell()
 {
     coord cc, uc;
@@ -1910,6 +1917,27 @@ struct obj *obj;
         incrnknow(i, 0);
     }
     return;
+}
+
+boolean
+studyspell()
+{
+	/*Vars are for studying spells 'W', 'F', 'I', 'N'*/
+	int spell_no;
+
+	if (getspell(&spell_no)) {
+		if (spellknow(spell_no) <= 0) {
+			You("are unable to focus your memory of the spell.");
+			return (FALSE);
+		} else if (spellknow(spell_no) <= 1000) {
+			Your("focus and reinforce your memory of the spell.");
+			incrnknow(spell_no, 1);
+			exercise(A_WIS, TRUE);      /* extra study */
+			return (TRUE);
+		} else /* 1000 < spellknow(spell_no) <= 5000 */
+			You("know that spell quite well already.");
+	}
+	return (FALSE);
 }
 
 /*spell.c*/

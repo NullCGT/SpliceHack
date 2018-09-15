@@ -31,6 +31,11 @@
 #define PN_MATTER_SPELL (-14)
 
 STATIC_DCL void FDECL(give_may_advance_msg, (int));
+STATIC_PTR int NDECL(practice);
+STATIC_DCL boolean FDECL(can_practice, (int)); /* WAC for Practicing */
+
+/*WAC practicing needs a delay counter*/
+static NEARDATA schar delay;            /* moves left for practice */
 
 STATIC_VAR NEARDATA const short skill_names_indices[P_NUM_SKILLS] = {
     0, DAGGER, KNIFE, AXE, PICK_AXE, SHORT_SWORD, BROADSWORD, LONG_SWORD,
@@ -1084,6 +1089,16 @@ boolean speedy;
                       && u.weapon_slots >= slots_required(skill));
 }
 
+/* WAC return true if skill can be practiced */
+STATIC_OVL boolean
+can_practice(skill)
+int skill;
+{
+    return !P_RESTRICTED(skill)
+            && P_SKILL(skill) < P_MAX_SKILL(skill)
+            && u.skills_advanced < P_SKILL_LIMIT;
+}
+
 /* return true if this skill could be advanced if more slots were available */
 STATIC_OVL boolean
 could_advance(skill)
@@ -1123,6 +1138,12 @@ int skill;
     You("are now %s skilled in %s.",
         P_SKILL(skill) >= P_MAX_SKILL(skill) ? "most" : "more",
         P_NAME(skill));
+    /* learn to disarm once skilled with a weapon */
+    if (!tech_known(T_DISARM) && (P_SKILL(skill) == P_SKILLED) &&
+    		skill <= P_LAST_WEAPON && skill != P_WHIP) {
+    	learntech(T_DISARM, FROMOUTSIDE, 1);
+    	You("learn how to perform disarm!");
+    }
 }
 
 static const struct skill_range {
@@ -1641,6 +1662,47 @@ const struct def_skill *class_skill;
     /* each role has a special spell; allow at least basic for its type
        (despite the function name, this works for spell skills too) */
     unrestrict_weapon_skill(spell_skilltype(urole.spelspec));
+}
+
+/*WAC  weapon practice code*/
+STATIC_PTR int
+practice()
+{
+	if (delay) {    /* not if (delay++), so at end delay == 0 */
+		delay++;
+		use_skill(weapon_type(uwep), 1);
+		/*WAC a bit of practice so even if you're interrupted
+		  you won't be wasting your time ;B*/
+		return(1); /* still busy */
+    }
+	You("finish your practice session.");
+	use_skill(weapon_type(uwep),
+	    practice_needed_to_advance(P_SKILL(weapon_type(uwep))),weapon_type(uwep)/3);
+	return(0);
+}
+
+void
+practice_weapon()
+{
+	if (can_practice(weapon_type(uwep))
+#ifdef WIZARD
+	    || (wizard && (yn("Skill at normal max. Practice?") == 'y'))
+#endif
+	    ) {
+		if (uwep)
+		    You("start practicing intensely with %s",doname(uwep));
+		else
+		    You("start practicing intensely with your %s %s.",
+		            uarmg ? "gloved" : "bare",      /* Del Lamb */
+		makeplural(body_part(HAND)));
+
+		delay=-10;
+		set_occupation(practice, "practicing", 0);
+	} else if (P_SKILL(weapon_type(uwep)) >= P_MAX_SKILL(weapon_type(uwep)))
+		You("cannot increase your skill in %s.", P_NAME(weapon_type(uwep)));
+	else You("cannot learn much about %s right now.",
+                P_NAME(weapon_type(uwep)));
+
 }
 
 void

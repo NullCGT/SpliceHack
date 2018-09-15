@@ -77,6 +77,7 @@ static struct trobj Healer[] = {
     { SCALPEL, 0, WEAPON_CLASS, 1, UNDEF_BLESS },
     { GLOVES, 1, ARMOR_CLASS, 1, UNDEF_BLESS },
     { STETHOSCOPE, 0, TOOL_CLASS, 1, 0 },
+    { MEDICAL_KIT, 0, TOOL_CLASS, 1, 0 },  
     { POT_HEALING, 0, POTION_CLASS, 4, UNDEF_BLESS },
     { POT_EXTRA_HEALING, 0, POTION_CLASS, 4, UNDEF_BLESS },
     { WAN_SLEEP, UNDEF_SPE, WAND_CLASS, 1, UNDEF_BLESS },
@@ -702,6 +703,9 @@ u_init()
 
     flags.female = flags.initgend;
     flags.beginner = 1;
+
+    /* WAC -- Clear Tech List since adjabil will init the 1st level techs*/
+  	for (i = 0; i <= MAXTECH; i++) tech_list[i].t_id = NO_TECH;
 
     /* zero u, including pointer values --
      * necessary when aborting from a failed restore */

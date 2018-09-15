@@ -107,6 +107,7 @@ extern int NDECL(dodip);              /**/
 extern int NDECL(dosacrifice);        /**/
 extern int NDECL(dopray);             /**/
 extern int NDECL(dotip);              /**/
+extern int NDECL(dotech);             /**/
 extern int NDECL(doturn);             /**/
 extern int NDECL(doredraw);           /**/
 extern int NDECL(doread);             /**/
@@ -3076,6 +3077,7 @@ struct ext_func_tab extcmdlist[] = {
     { 'T', "takeoff", "take off one piece of armor", dotakeoff },
     { 'A', "takeoffall", "remove all armor", doddoremarm },
     { C('t'), "teleport", "teleport around the level", dotele, IFBURIED },
+    { M('x'), "technique", "use special techniques", dotech, AUTOCOMPLETE },
     { '\0', "terrain", "show map without obstructions",
             doterrain, IFBURIED | AUTOCOMPLETE },
     { '\0', "therecmdmenu",
@@ -5212,12 +5214,28 @@ parse()
     static char in_line[COLNO];
 #endif
     register int foo;
+    static char repeat_char;
     boolean prezero = FALSE;
 
     iflags.in_parse = TRUE;
     multi = 0;
     context.move = 1;
     flush_screen(1); /* Flush screen buffer. Put the cursor on the hero. */
+
+    /* [Tom] for those who occasionally go insane... */
+  	if (repeat_hit) {
+    		/* Sanity checks for repeat_hit */
+    		if (repeat_hit < 0) repeat_hit = 0;
+    		else {
+      			/* Don't want things to get too out of hand */
+      			if (repeat_hit > 10) repeat_hit = 10;
+
+      			repeat_hit--;
+      			in_line[0] = repeat_char;
+      			in_line[1] = 0;
+      			return (in_line);
+    		}
+  	}
 
 #ifdef ALTMETA
     alt_esc = iflags.altmeta; /* readchar() hack */
@@ -5283,6 +5301,7 @@ parse()
         in_line[0] = Cmd.spkeys[NHKF_ESC];
 
     iflags.in_parse = FALSE;
+    repeat_char = in_line[0];
     return in_line;
 }
 

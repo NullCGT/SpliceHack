@@ -4496,7 +4496,8 @@ boolean altusage; /* some items have an "alternate" use with different cost */
          */
         tmp /= 2L;
     } else if (otmp->otyp == BAG_OF_TRICKS /* 1 - 20 */
-               || otmp->otyp == HORN_OF_PLENTY) {
+               || otmp->otyp == HORN_OF_PLENTY
+               || otmp->otyp == MEDICAL_KIT) {
         /* altusage: emptying of all the contents at once */
         if (!altusage)
             tmp /= 5L;

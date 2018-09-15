@@ -863,21 +863,34 @@ STATIC_OVL void
 break_armor()
 {
     register struct obj *otmp;
+    boolean controlled_change = (Race_if(PM_DOPPELGANGER) ||
+    		(Race_if(PM_HUMAN_WEREWOLF) && u.umonnum == PM_WEREWOLF));
 
     if (breakarm(youmonst.data)) {
         if ((otmp = uarm) != 0) {
             if (donning(otmp))
                 cancel_don();
-            You("break out of your armor!");
-            exercise(A_STR, FALSE);
-            (void) Armor_gone();
-            useup(otmp);
+            if (controlled_change && !otmp->cursed) {
+                You("quickly remove your armor as you start to change.");
+                (void) Armor_gone();
+                dropx(otmp); /*WAC Drop instead of destroy*/
+            } else {
+                You("break out of your armor!");
+                exercise(A_STR, FALSE);
+                (void) Armor_gone();
+                useup(otmp);
+            }
         }
         if ((otmp = uarmc) != 0) {
             if (otmp->oartifact) {
                 Your("%s falls off!", cloak_simple_name(otmp));
                 (void) Cloak_off();
                 dropx(otmp);
+            } else if (controlled_change && !otmp->cursed) {
+            		You("remove your %s before you transform.",
+            		    cloak_simple_name(otmp));
+            		(void) Cloak_off();
+            		dropx(otmp);
             } else {
                 Your("%s tears apart!", cloak_simple_name(otmp));
                 (void) Cloak_off();

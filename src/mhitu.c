@@ -2658,6 +2658,12 @@ mdamageu(mtmp, n)
 struct monst *mtmp;
 int n;
 {
+  
+    /* WAC For consistency...DO be careful using techniques ;B */
+    if (mtmp->mtame != 0 && tech_inuse(T_PRIMAL_ROAR)) {
+      n *= 2; /* Double Damage! */
+    }
+
     context.botl = 1;
     if (Upolyd) {
         u.mh -= n;

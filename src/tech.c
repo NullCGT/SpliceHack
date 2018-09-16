@@ -1494,10 +1494,7 @@ tamedog(mtmp, (struct obj *) 0);
 		losexp("drawing blood");
 		if (u.uexp > 0)
 		    u.uexp = newuexp(u.ulevel - 1);
-		#if 0
 		otmp = mksobj(POT_VAMPIRE_BLOOD, FALSE, FALSE);
-		#endif
-		otmp = mksobj(POT_REFLECTION, FALSE, FALSE);
 		otmp->cursed = obj->cursed;
 		otmp->blessed = obj->blessed;
 		(void) hold_another_object(otmp,

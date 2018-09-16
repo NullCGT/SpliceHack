@@ -885,6 +885,8 @@ POTION("oil",                   "murky",  0, 0, 20, 250, CLR_BROWN),
 /* fixed description
  */
 POTION("water",                 "clear",  0, 0, 92, 100, CLR_CYAN),
+POTION("blood",             "blood-red",  0, 0, 0,   50, CLR_RED),
+POTION("vampire blood",     "blood-red",  1, 0, 0,  350, CLR_RED),
 #undef POTION
 
 /* scrolls ... */

@@ -934,6 +934,14 @@ register struct monst *mtmp;
             (void) mongets(mtmp, EXPENSIVE_CAMERA);
         }
         break;
+    case S_VAMPIRE:
+        if (rn2(2)) {
+            if ((int) mtmp->m_lev > rn2(30))
+                (void)mongets(mtmp, POT_VAMPIRE_BLOOD);
+            else
+                (void)mongets(mtmp, POT_BLOOD);
+        }
+        break;
     case S_NYMPH:
         if (!rn2(2))
             (void) mongets(mtmp, MIRROR);

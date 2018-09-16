@@ -272,6 +272,7 @@ struct obj *otmp;
 #define MUSE_POT_FULL_HEALING 18
 #define MUSE_LIZARD_CORPSE 19
 #define MUSE_WAN_HEALING 20
+#define MUSE_POT_VAMPIRE_BLOOD 21
 /*
 #define MUSE_INNATE_TPT 9999
  * We cannot use this.  Since monsters get unlimited teleportation, if they
@@ -305,6 +306,12 @@ struct monst *mtmp;
         m.has_defense = MUSE_WAN_HEALING;
         return TRUE;
     }
+    if (is_vampire(mtmp->data) &&
+		  (obj = m_carrying(mtmp, POT_VAMPIRE_BLOOD)) !=0) {
+		    m.defensive = obj;
+		    m.has_defense = MUSE_POT_VAMPIRE_BLOOD;
+		    return TRUE;
+		}
     return FALSE;
 }
 
@@ -607,6 +614,11 @@ boolean force;
                 m.defensive = obj;
                 m.has_defense = MUSE_WAN_HEALING;
             }
+            nomore(MUSE_POT_VAMPIRE_BLOOD);
+        		if(is_vampire(mtmp->data) && obj->otyp == POT_VAMPIRE_BLOOD) {
+        			m.defensive = obj;
+        			m.has_defense = MUSE_POT_VAMPIRE_BLOOD;
+        		}
         } else { /* Pestilence */
             nomore(MUSE_POT_FULL_HEALING);
             if (obj->otyp == POT_SICKNESS) {
@@ -1024,6 +1036,19 @@ struct monst *mtmp;
         /* not actually called for its unstoning effect */
         mon_consume_unstone(mtmp, otmp, FALSE, FALSE);
         return 2;
+    case MUSE_POT_VAMPIRE_BLOOD:
+    		mquaffmsg(mtmp, otmp);
+    		if (!otmp->cursed) {
+    		    i = rnd(8) + rnd(2);
+    		    mtmp->mhp += i;
+    		    mtmp->mhpmax += i;
+    		    if (vismon) pline("%s looks full of life.", Monnam(mtmp));
+    		}
+    		else if (vismon)
+    		    pline("%s discards the congealed blood in disgust.", Monnam(mtmp));
+    		if (oseen) makeknown(POT_VAMPIRE_BLOOD);
+    		m_useup(mtmp, otmp);
+    		return 2;
     case 0:
         return 0; /* i.e. an exploded wand */
     default:
@@ -2334,6 +2359,8 @@ struct obj *obj;
             return TRUE;
         break;
     case POTION_CLASS:
+        if (typ == POT_VAMPIRE_BLOOD)
+            return is_vampire(mon->data);
         if (typ == POT_HEALING || typ == POT_EXTRA_HEALING
             || typ == POT_FULL_HEALING || typ == POT_POLYMORPH
             || typ == POT_GAIN_LEVEL || typ == POT_PARALYSIS

@@ -2658,7 +2658,7 @@ mdamageu(mtmp, n)
 struct monst *mtmp;
 int n;
 {
-  
+
     /* WAC For consistency...DO be careful using techniques ;B */
     if (mtmp->mtame != 0 && tech_inuse(T_PRIMAL_ROAR)) {
       n *= 2; /* Double Damage! */
@@ -2879,9 +2879,14 @@ struct monst *mon;
         return 1;
 
     if (uarm || uarmc) {
-        if (!Deaf)
-            verbalize("You're such a %s; I wish...",
-                      flags.female ? "sweet lady" : "nice guy");
+        if (!Deaf) {
+            if (flags.female == 0)
+                verbalize("You're such a nice guy; I wish...");
+            else if (flags.female == 1)
+                verbalize("You're such a sweet lady; I wish...");
+            else if (flags.female == 2)
+                verbalize("You're such a wonderful person; I wish...");
+        }
         else if (seewho)
             pline("%s appears to sigh.", Monnam(mon));
         /* else no regret message if can't see or hear seducer */

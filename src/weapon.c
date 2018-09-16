@@ -1676,8 +1676,7 @@ practice()
 		return(1); /* still busy */
     }
 	You("finish your practice session.");
-	use_skill(weapon_type(uwep),
-	    practice_needed_to_advance(P_SKILL(weapon_type(uwep))),weapon_type(uwep)/3);
+	use_skill(weapon_type(uwep), 10);
 	return(0);
 }
 

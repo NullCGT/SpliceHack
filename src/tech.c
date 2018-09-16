@@ -83,6 +83,7 @@ STATIC_OVL NEARDATA const char *tech_names[] = {
 	"dragon call",
 	"dragon blitz",
 	"undertow",
+	"soul of the cards",
 	""
 };
 
@@ -91,6 +92,8 @@ static const struct innate_tech
 	arc_tech[] = { {   1, T_RESEARCH, 1},
 		       {   0, 0, 0} },
 	bar_tech[] = { {   1, T_BERSERK, 1},
+		       {   0, 0, 0} },
+  car_tech[] = { {   1, T_HEART_CARDS, 1},
 		       {   0, 0, 0} },
 	cav_tech[] = { {   1, T_PRIMAL_ROAR, 1},
 		       {   0, 0, 0} },
@@ -1572,6 +1575,24 @@ tamedog(mtmp, (struct obj *) 0);
 				}
 				t_timeout = rn1(1000, 500);
 				break;
+		case T_HEART_CARDS:
+				for (i = 0, obj = invent; obj; obj = obj->nobj) {
+						if (obj->oclass == SCROLL_CLASS) {
+								otmp = poly_obj(obj, STRANGE_OBJECT);
+								bless(otmp);
+								i++;
+								break;
+						}
+				}
+				if (i == 0) {
+						You("practice some card tricks.");
+						return 0;
+				}
+				pline("With a flourish, you exchange your first card for one from beyond!");
+				You("know with all your heart that this card is the one!");
+				u.uconduct.polypiles++;
+				t_timeout = rn1(1000, 500);
+				break;
 	  default:
 	    	pline ("Error!  No such effect (%i)", tech_no);
 				break;
@@ -1716,6 +1737,7 @@ role_tech()
 	switch (Role_switch) {
 		case PM_ARCHEOLOGIST:	return (arc_tech);
 		case PM_BARBARIAN:	return (bar_tech);
+		case PM_CARTOMANCER: return (car_tech);
 		case PM_CAVEMAN:	return (cav_tech);
 		case PM_DRAGONMASTER: return (dra_tech);
     #if 0

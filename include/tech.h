@@ -91,8 +91,9 @@ struct blitz_tab {
 #define T_DRAGON_CALL 42
 #define T_DRAGON_BLITZ 43
 #define T_PULL_UNDER 44
+#define T_HEART_CARDS 45
 
-#define MAXTECH 44
+#define MAXTECH 45
 
 
 #endif /* TECH_H */

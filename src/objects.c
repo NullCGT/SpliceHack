@@ -1246,6 +1246,7 @@ OBJECT(OBJ("acid venom", "splash of sizzling venom"),
        BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, LIQUID), 0,
        VENOM_CLASS, 500, 0, 1, 0, 6, 6, 0, 0, 0, CLR_YELLOW),
         /* +d6 small or large */
+#if 0
 /* other colors of venom to be shuffled in. */
 OBJECT(OBJ(None, "splash of smelly venom"),
       BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, LIQUID), 0,
@@ -1259,6 +1260,7 @@ OBJECT(OBJ(None, "splash of clear venom"),
 OBJECT(OBJ(None, "splash of steaming venom"),
       BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, LIQUID), 0,
       VENOM_CLASS, 0, 0, 1, 0, 0, 0, 0, 0, 0, CLR_ORANGE),
+#endif
 /* manticore quills */
 OBJECT(OBJ("quill", "bony quill"),
       BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, BONE), 0,

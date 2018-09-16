@@ -105,21 +105,25 @@ static const struct innate_tech
 					 {   1, T_DRAGON_BLITZ, 1},
 					 {   7, T_DRAGON_CALL, 1},
 		       {   0, 0, 0} },
+	#if 0
 	fla_tech[] = { {   1, T_REINFORCE, 1},
 		       {   3, T_POWER_SURGE, 1},
 		       {   5, T_DRAW_ENERGY, 1},
 		       {  10, T_SIGIL_TEMPEST, 1},
 		       {  20, T_SIGIL_DISCHARGE, 1},
 		       {   0, 0, 0} },
+	#endif
 	hea_tech[] = { {   1, T_SURGERY, 1},
 		       {  20, T_REVIVE, 1},
 		       {   0, 0, 0} },
+	#if 0
 	ice_tech[] = { {   1, T_REINFORCE, 1},
 		       {   5, T_DRAW_ENERGY, 1},
 		       {  10, T_SIGIL_TEMPEST, 1},
 		       {  12, T_POWER_SURGE, 1},
 		       {  20, T_SIGIL_DISCHARGE, 1},
 		       {   0, 0, 0} },
+	#endif
 	kni_tech[] = { {   1, T_TURN_UNDEAD, 1},
 		       {   1, T_HEAL_HANDS, 1},
 		       {   0, 0, 0} },
@@ -134,11 +138,13 @@ static const struct innate_tech
 		       {  17, T_SPIRIT_BOMB, 1},
 		       {  20, T_POWER_SURGE, 1},
 		       {   0, 0, 0} },
+	#if 0
 	nec_tech[] = { {   1, T_REINFORCE, 1},
 		       {   1, T_RAISE_ZOMBIES, 1},
 		       {  10, T_POWER_SURGE, 1},
 		       {  15, T_SIGIL_TEMPEST, 1},
 		       {   0, 0, 0} },
+	#endif
   pir_tech[] = { {   1, T_BOOTY, 1},
 		       {   15, T_CUTTHROAT, 1},
 		       {   0, 0, 0} },
@@ -154,13 +160,12 @@ static const struct innate_tech
 		       {   0, 0, 0} },
 	tou_tech[] = { /* Put Tech here */
 		       {   0, 0, 0} },
+	#if 0
 	und_tech[] = { {   1, T_TURN_UNDEAD, 1},
 		       {   1, T_PRACTICE, 1},
 		       {   0, 0, 0} },
+	#endif
 	val_tech[] = { {   1, T_PRACTICE, 1},
-		       {   0, 0, 0} },
-	yeo_tech[] = {
-		       {   1, T_CALM_STEED, 1},
 		       {   0, 0, 0} },
 	wiz_tech[] = { {   1, T_REINFORCE, 1},
 		       {   3, T_DRAW_ENERGY, 1},
@@ -170,25 +175,33 @@ static const struct innate_tech
 		       {  20, T_SIGIL_DISCHARGE, 1},
 		       {   0, 0, 0} },
 	/* Races */
+	#if 0
 	dop_tech[] = { {   1, T_LIQUID_LEAP, 1},
 		       {   0, 0, 0} },
+	#endif
 	dwa_tech[] = { {   1, T_RAGE, 1},
 		       {   0, 0, 0} },
+	#if 0
 	elf_tech[] = { /* Put Tech here */
 		       {   0, 0, 0} },
+	#endif
 	gno_tech[] = { {   1, T_VANISH, 1},
 		       {   7, T_TINKER, 1},
 		       {   0, 0, 0} },
+	#if 0
 	hob_tech[] = { {   1, T_BLINK, 1},
 		       {   0, 0, 0} },
+	#endif
 	lyc_tech[] = { {   1, T_EVISCERATE, 1},
 		       {  10, T_BERSERK, 1},
 		       {   0, 0, 0} },
   mer_tech[] = { {   1, T_PULL_UNDER, 1},
-		       {   0, 0, 0} },
+		       {   0, 0, 0} };
+	#if 0
 	vam_tech[] = { {   1, T_DAZZLE, 1},
 		       {   1, T_DRAW_BLOOD, 1},
 		       {   0, 0, 0} };
+	#endif
 	/* Orc */
 
 /* Local Macros
@@ -1795,16 +1808,15 @@ static const struct     innate_tech *
 race_tech()
 {
 	switch (Race_switch) {
-		case PM_DOPPELGANGER:	return (dop_tech);
 		case PM_DWARF:		return (dwa_tech);
-		case PM_ELF:
     #if 0
+		case PM_DOPPELGANGER:	return (dop_tech);
 		case PM_DROW:		return (elf_tech);
+		case PM_HOBBIT:		return (hob_tech);
     case PM_VAMPIRE:	return (vam_tech);
     #endif
 		case PM_MERFOLK:	return (mer_tech);
 		case PM_GNOME:		return (gno_tech);
-		case PM_HOBBIT:		return (hob_tech);
 		case PM_HUMAN_WEREWOLF:	return (lyc_tech);
 		default: 		return ((struct innate_tech *) 0);
 	}

@@ -84,6 +84,8 @@ STATIC_OVL NEARDATA const char *tech_names[] = {
 	"dragon blitz",
 	"undertow",
 	"soul of the cards",
+	"treasure hunt",
+	"card combo"
 	""
 };
 
@@ -93,7 +95,9 @@ static const struct innate_tech
 		       {   0, 0, 0} },
 	bar_tech[] = { {   1, T_BERSERK, 1},
 		       {   0, 0, 0} },
-  car_tech[] = { {   1, T_HEART_CARDS, 1},
+  car_tech[] = {
+					 {   1, T_HEART_CARDS, 1},
+					 {   5, T_CARD_COMBO, 1},
 		       {   0, 0, 0} },
 	cav_tech[] = { {   1, T_PRIMAL_ROAR, 1},
 		       {   0, 0, 0} },
@@ -134,6 +138,9 @@ static const struct innate_tech
 		       {   1, T_RAISE_ZOMBIES, 1},
 		       {  10, T_POWER_SURGE, 1},
 		       {  15, T_SIGIL_TEMPEST, 1},
+		       {   0, 0, 0} },
+  pir_tech[] = { {   1, T_BOOTY, 1},
+		       {   15, T_CUTTHROAT, 1},
 		       {   0, 0, 0} },
 	pri_tech[] = { {   1, T_TURN_UNDEAD, 1},
 		       {   1, T_BLESSING, 1},
@@ -578,6 +585,7 @@ int tech_no;
 {
 	/* These variables are used in various techs */
 	struct obj *obj, *otmp;
+	struct obj pseudo;
 	const char *str;
 	struct monst *mtmp, *nextmon;;
 	int num;
@@ -831,7 +839,10 @@ int tech_no;
 			    int tmp = 0;
 
 			    if (rn2(5) < (techlev(tech_no)/10 + 1)) {
-				You("sever %s head!", s_suffix(mon_nam(mtmp)));
+						if (Role_if(PM_PIRATE))
+								You("send %s to Davy Jones' Locker!", mon_nam(mtmp));
+						else
+								You("sever %s head!", s_suffix(mon_nam(mtmp)));
 				tmp = mtmp->mhp;
 			    } else {
 				You("hurt %s badly!", s_suffix(mon_nam(mtmp)));
@@ -1593,6 +1604,23 @@ tamedog(mtmp, (struct obj *) 0);
 				u.uconduct.polypiles++;
 				t_timeout = rn1(1000, 500);
 				break;
+		case T_BOOTY:
+				pline("Arrrr! It be time to look for booty!");
+				pseudo = zeroobj; /* neither cursed nor blessed,
+														 and zero out oextra */
+				pseudo.otyp = SCR_GOLD_DETECTION;
+				HConfusion = 0L;
+				(void) seffects(&pseudo);
+				t_timeout = rn1(1000, 500);
+				break;
+		case T_CARD_COMBO:
+				pline("You unleash a wicked combo of cards!");
+				for (i = 0; i <= max(5, techlev(tech_no)); i++) {
+						doread();
+				}
+				pline("Your combo ends.");
+				t_timeout = rn1(1000, 500);
+				break;
 	  default:
 	    	pline ("Error!  No such effect (%i)", tech_no);
 				break;
@@ -1750,6 +1778,7 @@ role_tech()
 		case PM_HEALER:		return (hea_tech);
 		case PM_KNIGHT:		return (kni_tech);
 		case PM_MONK: 		return (mon_tech);
+		case PM_PIRATE:		return (pir_tech);
 		case PM_PRIEST:		return (pri_tech);
 		case PM_RANGER:		return (ran_tech);
 		case PM_ROGUE:		return (rog_tech);

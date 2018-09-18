@@ -2177,6 +2177,7 @@ register struct attack *mattk;
             tmp = 0;
         }
         break;
+    case AD_MTRL:
     case AD_ENCH: /* KMH -- remove enchantment (disenchanter) */
         /* there's no msomearmor() function, so just do damage */
         /* if (negated) break; */
@@ -2950,6 +2951,7 @@ boolean wep_was_destroyed;
             mdamageu(mon, tmp);
         }
         break;
+    case AD_MTRL:
     case AD_ENCH: /* KMH -- remove enchantment (disenchanter) */
         if (mhit) {
             if (aatyp == AT_KICK) {
@@ -3086,7 +3088,7 @@ struct attack *mattk;     /* null means we find one internally */
     /* if caller hasn't specified an object, use uwep, uswapwep or uarmg */
     if (!obj) {
         obj = (u.twoweap && uswapwep && !rn2(2)) ? uswapwep : uwep;
-        if (!obj && mattk->adtyp == AD_ENCH)
+        if (!obj && (mattk->adtyp == AD_ENCH || mattk->adtyp == AD_MTRL))
             obj = uarmg; /* no weapon? then must be gloves */
         if (!obj)
             return; /* no object to affect */
@@ -3126,6 +3128,14 @@ struct attack *mattk;     /* null means we find one internally */
             (void) erode_obj(obj, (char *) 0, ERODE_CORRODE, EF_GREASE);
         }
         break;
+    case AD_MTRL:
+        if (!mon->mcan) {
+            if (warp_material(obj, TRUE) && carried(obj)
+                && (obj->oclass == ARMOR_CLASS)) {
+                pline("%s seems different than you remember.", Yobjnam2(obj, "seem"));
+            }
+            break;
+        }
     case AD_ENCH:
         if (!mon->mcan) {
             if (drain_item(obj, TRUE) && carried(obj)

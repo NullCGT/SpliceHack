@@ -663,7 +663,7 @@ register struct obj *otmp;
 static const char *const alteration_verbs[] = {
     "cancel", "drain", "uncharge", "unbless", "uncurse", "disenchant",
     "degrade", "dilute", "erase", "burn", "neutralize", "destroy", "splatter",
-    "bite", "open", "break the lock on", "rust", "rot", "tarnish"
+    "bite", "open", "break the lock on", "rust", "rot", "tarnish", "warp",
 };
 
 /* possibly bill for an object which the player has just modified */
@@ -3025,6 +3025,28 @@ static const struct icp bow_materials[] = {
     { 1, GOLD}
 };
 
+static const struct icp warp_materials[] = {
+    /* Not good. */
+    {5, GLASS},
+    {5, WAX},
+    {5, PAPER},
+    {5, CLOTH},
+    {5, LEATHER},
+    {10, WOOD},
+    {15, PLASTIC},
+    /* Decent */
+    {5, IRON},
+    {5, METAL},
+    {5, PLATINUM},
+    {5, GEMSTONE},
+    {5, MINERAL},
+    {5, BONE},
+    {5, COPPER},
+    {5, MITHRIL},
+    {5, SILVER},
+    {5, GOLD}
+};
+
 /* TODO: Orcish? */
 
 /* Return the appropriate above list for a given object, or NULL if there isn't
@@ -3112,6 +3134,41 @@ struct obj* obj;
         }
     }
     return NULL;
+}
+
+/* Based on init_obj_material by aosdict. */
+boolean
+warp_material(obj,by_you)
+struct obj* obj;
+boolean by_you;
+{
+    int origmat = obj->material;
+    const struct icp* materials =  warp_materials;
+
+    int i = rnd(100);
+    while (i > 0) {
+        if (i <= materials->iprob)
+            break;
+        i -= materials->iprob;
+        materials++;
+    }
+    if (materials->iclass)
+        obj->material = materials->iclass;
+    else
+        /* can use a 0 in the list to default to the base material */
+        obj->material = objects[obj->otyp].oc_material;
+    /* Turning things into silver would be too cruel to infernals */
+    if (Race_switch == PM_INFERNAL && valid_obj_material(obj, SILVER)
+        && !rn2(35)) {
+          obj->material = PLASTIC;
+    }
+    if (origmat != obj->material) {
+        /* Charge for the cost of the object */
+        if (by_you)
+            costly_alteration(obj, COST_DRAIN);
+        return TRUE;
+    }
+    return FALSE;
 }
 
 /* Initialize the material field of an object, possibly randomizing it from the

@@ -111,7 +111,8 @@ enum cost_alteration_types {
     COST_BRKLCK,   /* break box/chest's lock */
     COST_RUST,     /* rust damage */
     COST_ROT,      /* rotting attack */
-    COST_CORRODE   /* acid damage */
+    COST_CORRODE,   /* acid damage */
+    COST_CHMAT     /* change material */
 };
 
 /* bitmask flags for corpse_xname();

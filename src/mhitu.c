@@ -1836,6 +1836,35 @@ register struct attack *mattk;
         } else
             pline("Yuck!");
         break;
+    case AD_MTRL:
+        hitmsg(mtmp, mattk);
+        if (uncancelled) {
+            struct obj *obj = some_armor(&youmonst);
+            if (!obj) {
+                /* some rings are susceptible;
+                   amulets and blindfolds aren't (at present) */
+                switch (rn2(5)) {
+                case 0:
+                    break;
+                case 1:
+                    obj = uright;
+                    break;
+                case 2:
+                    obj = uleft;
+                    break;
+                case 3:
+                    obj = uamul;
+                    break;
+                case 4:
+                    obj = ublindf;
+                    break;
+                }
+            }
+            if (obj && warp_material(obj, FALSE)) {
+                pline("That's odd, you don't remember putting on %s...", an(xname(obj)));
+            }
+        }
+        break;
     case AD_ENCH: /* KMH -- remove enchantment (disenchanter) */
         hitmsg(mtmp, mattk);
         /* uncancelled is sufficient enough; please
@@ -3160,6 +3189,14 @@ struct attack *mattk;
             /* by_you==True: passive counterattack to hero's action
                is hero's fault */
             (void) drain_item(mon_currwep, TRUE);
+            /* No message */
+        }
+        return 1;
+    case AD_MTRL: /* change material (substance warper) */
+        if (mon_currwep) {
+            /* by_you==True: passive counterattack to hero's action
+               is hero's fault */
+            (void) warp_material(mon_currwep, TRUE);
             /* No message */
         }
         return 1;

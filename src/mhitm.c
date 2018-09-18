@@ -1581,6 +1581,7 @@ register struct attack *mattk;
         if (magr->mcan)
             tmp = 0;
         break;
+    case AD_MTRL:
     case AD_ENCH:
         /* there's no msomearmor() function, so just do damage */
         /* if (cancelled) break; */
@@ -1840,6 +1841,12 @@ int mdead;
                     Monnam(magr));
             goto assess_dmg;
         } break;
+    case AD_MTRL:
+        if (mhit && !mdef->mcan && otmp) {
+            (void) warp_material(otmp, FALSE);
+            /* No message */
+        }
+        break;
     case AD_ENCH: /* KMH -- remove enchantment (disenchanter) */
         if (mhit && !mdef->mcan && otmp) {
             (void) drain_item(otmp, FALSE);

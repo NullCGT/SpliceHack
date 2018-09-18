@@ -2280,6 +2280,12 @@ struct permonst _mons2[] = {
         SIZ(1000, 250, MS_SILENT, MZ_MEDIUM), 0, 0,
         M1_SWIM | M1_ANIMAL | M1_NOHANDS | M1_METALLIVORE, M2_HOSTILE,
         M3_INFRAVISIBLE, CLR_BROWN),
+    MON("substance warper", S_RUSTMONST, LVL(12, 12, 2, 0, 3),
+        (G_GENO | 1),
+        A(ATTK(AT_CLAW, AD_MTRL, 2, 2), ATTK(AT_NONE, AD_MTRL, 0, 0), NO_ATTK,
+          NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(750, 200, MS_GROWL, MZ_LARGE), 0, 0, M1_ANIMAL | M1_METALLIVORE
+        | M1_OMNIVORE, M2_HOSTILE, M3_INFRAVISIBLE, CLR_BRIGHT_CYAN),
     MON("disenchanter", S_RUSTMONST, LVL(12, 12, -10, 0, -3),
         (G_HELL | G_GENO | 2),
         A(ATTK(AT_CLAW, AD_ENCH, 4, 4), ATTK(AT_NONE, AD_ENCH, 0, 0), NO_ATTK,

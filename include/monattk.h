@@ -90,13 +90,14 @@
 #define AD_LUCK 51  /* damage the luck of the player (barghest) */
 #define AD_HYDR 52  /* regrow heads (hydra) */
 #define AD_MTRL 53  /* change material (substance warper) */
+#define AD_LOST 55  /* get lost (yuki-onna) */
 
-#define AD_CLRC 51 /* random clerical spell */
-#define AD_SPEL 52 /* random magic spell */
-#define AD_RBRE 53 /* random breath weapon */
+#define AD_CLRC 56 /* random clerical spell */
+#define AD_SPEL 57 /* random magic spell */
+#define AD_RBRE 58 /* random breath weapon */
 
-#define AD_SAMU 54 /* hits, may steal Amulet (Wizard) */
-#define AD_CURS 55 /* random curse (ex. gremlin) */
+#define AD_SAMU 59 /* hits, may steal Amulet (Wizard) */
+#define AD_CURS 60 /* random curse (ex. gremlin) */
 #define LAST_AD AD_CURS
 
 /*

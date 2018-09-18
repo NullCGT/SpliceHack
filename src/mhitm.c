@@ -986,6 +986,7 @@ register struct attack *mattk;
             break;
         }
         goto physical;
+    case AD_LOST:
     case AD_WERE:
     case AD_HEAL:
     case AD_DSRM:

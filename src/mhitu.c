@@ -1607,7 +1607,16 @@ register struct attack *mattk;
             }
         }
         break;
-
+    case AD_LOST:
+        hitmsg(mtmp, mattk);
+        if (uncancelled) {
+            if (flags.verbose)
+                You("suddenly have no idea where you are!");
+            forget_map(ALL_MAP);
+            forget_traps();
+            tele();
+        }
+        break;
     case AD_TLPT:
         hitmsg(mtmp, mattk);
         if (uncancelled) {

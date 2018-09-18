@@ -1787,6 +1787,7 @@ register struct attack *mattk;
         }
 #endif
         goto physical;
+    case AD_LOST:
     case AD_WERE: /* no special effect on monsters */
     case AD_HEAL: /* likewise */
     case AD_DSRM:

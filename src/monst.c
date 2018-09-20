@@ -2195,6 +2195,35 @@ struct permonst _mons2[] = {
         M2_STRONG | M2_PRINCE | M2_MALE | M2_GREEDY | M2_JEWELS | M2_COLLECT,
         M3_INFRAVISIBLE | M3_INFRAVISION, HI_LORD),
     /*
+     *
+     * Fantastical plants
+     *
+     */
+    MON("walking oak", S_PLANT, LVL(7, 3, 2, 40, 7),
+        (G_NOCORPSE | G_GENO | G_SGROUP | 1),
+        A(ATTK(AT_CLAW, AD_PHYS, 3, 4), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
+          NO_ATTK),
+        SIZ(1200, 0, MS_SILENT, MZ_LARGE), MR_COLD, 0,
+        M1_BREATHLESS | M1_HUMANOID | M1_THICK_HIDE, M2_STRONG, 0, HI_WOOD),
+    MON("walking birch", S_PLANT, LVL(9, 5, 0, 20, -3),
+        (G_NOCORPSE | G_GENO | G_SGROUP | 1),
+        A(ATTK(AT_CLAW, AD_PHYS, 4, 4), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
+          NO_ATTK),
+        SIZ(1200, 0, MS_SILENT, MZ_LARGE), MR_COLD, 0,
+        M1_BREATHLESS | M1_HUMANOID | M1_THICK_HIDE, M2_STRONG, 0, CLR_WHITE),
+    MON("walking willow", S_PLANT, LVL(14, 7, -2, 60, 0),
+        (G_NOCORPSE | G_GENO | 1),
+        A(ATTK(AT_CLAW, AD_PHYS, 5, 4), ATTK(AT_TUCH, AD_WIND, 3, 3), NO_ATTK,
+          NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(1200, 0, MS_SILENT, MZ_LARGE), MR_COLD, 0,
+        M1_BREATHLESS | M1_HUMANOID | M1_THICK_HIDE, M2_STRONG, 0, CLR_YELLOW),
+    MON("giant sundew", S_PLANT, LVL(11, 9, 3, 20, 0), (G_NOCORPSE | G_GENO | 1),
+        A(ATTK(AT_NONE, AD_STCK, 0, 0), ATTK(AT_TUCH, AD_ACID, 2, 4),
+          ATTK(AT_TUCH, AD_ACID, 2, 6), NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(800, 0, MS_SILENT, MZ_LARGE), MR_COLD | MR_ACID, 0,
+        M1_BREATHLESS | M1_MINDLESS | M1_NOLIMBS | M1_ACID | M1_BREATHLESS
+            | M1_HIDE | M1_CARNIVORE | M1_NOTAKE, M2_HOSTILE, 0, CLR_RED),
+    /*
      * Puddings
      *
      * must be in the same order as the pudding globs in objects.c

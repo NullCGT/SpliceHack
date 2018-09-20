@@ -86,7 +86,7 @@
 #define humanoid(ptr) (((ptr)->mflags1 & M1_HUMANOID) != 0L)
 #define is_animal(ptr) (((ptr)->mflags1 & M1_ANIMAL) != 0L)
 #define slithy(ptr) (((ptr)->mflags1 & M1_SLITHY) != 0L)
-#define is_wooden(ptr) ((ptr) == &mons[PM_WOOD_GOLEM])
+#define is_wooden(ptr) ((ptr) == &mons[PM_WOOD_GOLEM] || (ptr->mlet) == S_PLANT)
 #define thick_skinned(ptr) (((ptr)->mflags1 & M1_THICK_HIDE) != 0L)
 #define slimeproof(ptr) \
     ((ptr) == &mons[PM_GREEN_SLIME] || flaming(ptr) || noncorporeal(ptr))

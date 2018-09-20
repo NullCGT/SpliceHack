@@ -1187,7 +1187,7 @@ register struct attack *mattk;
     case AD_DCAY:
         if (magr->mcan)
             break;
-        if (pd == &mons[PM_WOOD_GOLEM] || pd == &mons[PM_LEATHER_GOLEM]) {
+        if (is_wooden(pd) || pd == &mons[PM_LEATHER_GOLEM]) {
             if (vis && canseemon(mdef))
                 pline("%s falls to pieces!", Monnam(mdef));
             mondied(mdef);
@@ -1872,6 +1872,10 @@ int mdead;
                     grow_up(mdef, (struct monst *) 0);
                 }
             }
+            break;
+        case AD_STCK:
+            if (!mdef->mcan)
+                tmp = 0;
             break;
         case AD_PLYS: /* Floating eye */
             if (tmp > 127)

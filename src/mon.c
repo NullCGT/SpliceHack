@@ -430,6 +430,9 @@ unsigned corpseflags;
         obj =
             mkcorpstat(STATUE, (struct monst *) 0, mdat, x, y, corpstatflags);
         break;
+    case PM_WALKING_OAK:
+    case PM_WALKING_BIRCH:
+    case PM_WALKING_WILLOW:
     case PM_WOOD_GOLEM:
         num = d(2, 4);
         while (num--) {

@@ -2050,7 +2050,7 @@ register struct attack *mattk;
         tmp = 0;
         break;
     case AD_DCAY:
-        if (pd == &mons[PM_WOOD_GOLEM] || pd == &mons[PM_LEATHER_GOLEM]) {
+        if (is_wooden(pd) || pd == &mons[PM_LEATHER_GOLEM]) {
             pline("%s falls to pieces!", Monnam(mdef));
             xkilled(mdef, XKILL_NOMSG);
         }
@@ -2980,6 +2980,12 @@ boolean wep_was_destroyed;
                     pline("You decapitate the hydra, but two more heads spring forth!");
                     grow_up(mon, (struct monst *) 0);
                 }
+            }
+            break;
+        case AD_STCK:
+            if (!mon->mcan && !u.ustuck && !sticks(youmonst.data)) {
+                pline("You stick to %s!", mon_nam(mon));
+                u.ustuck = mon;
             }
             break;
         case AD_PLYS:

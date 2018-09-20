@@ -1647,7 +1647,7 @@ register struct attack *mattk;
         hitmsg(mtmp, mattk);
         if (mtmp->mcan)
             break;
-        if (u.umonnum == PM_WOOD_GOLEM || u.umonnum == PM_LEATHER_GOLEM) {
+        if (is_wooden(youmonst.data) || u.umonnum == PM_LEATHER_GOLEM) {
             You("rot!");
             /* KMH -- this is okay with unchanging */
             rehumanize();
@@ -3236,6 +3236,10 @@ struct attack *mattk;
                     tmp = 0;
                 goto assess_dmg;
             }
+            break;
+        case AD_STCK:
+            if (!sticks(mtmp->data))
+                u.ustuck = mtmp; /* it's now stuck to you */
             break;
         case AD_PLYS: /* Floating eye */
             if (tmp > 127)

@@ -2517,6 +2517,9 @@ register struct monst *mtmp;
                 case PM_STRAW_GOLEM:
                     alt = mtmp->mhpmax / 2;
                     break;
+                case PM_WALKING_OAK:
+                case PM_WALKING_BIRCH:
+                case PM_WALKING_WILLOW:
                 case PM_WOOD_GOLEM:
                     alt = mtmp->mhpmax / 4;
                     break;
@@ -3234,6 +3237,7 @@ struct obj *box; /* null for floor trap */
         case PM_STRAW_GOLEM:
             alt = u.mhmax / 2;
             break;
+        case PM_WALKING_OAK:
         case PM_WOOD_GOLEM:
             alt = u.mhmax / 4;
             break;

@@ -1820,6 +1820,7 @@ struct monst *mtmp;
 #define MUSE_FIGURINE 10
 #define MUSE_POT_REFLECT 11
 #define MUSE_SCR_REMOVE_CURSE 12
+#define MUSE_POT_BOOZE 13
 
 boolean
 find_misc(mtmp)
@@ -1937,6 +1938,11 @@ struct monst *mtmp;
         if (obj->otyp == POT_SPEED && mtmp->mspeed != MFAST && !mtmp->isgd) {
             m.misc = obj;
             m.has_misc = MUSE_POT_SPEED;
+        }
+        nomore(MUSE_POT_BOOZE);
+        if (obj->otyp == POT_BOOZE && is_pirate(mtmp->data) && !mtmp->mconf) {
+            m.misc = obj;
+            m.has_misc = MUSE_POT_BOOZE;
         }
         nomore(MUSE_POT_REFLECT);
         if (obj->otyp == POT_REFLECTION && !mtmp->mreflect &&
@@ -2120,6 +2126,14 @@ struct monst *mtmp;
            monster becomes "one stage faster" permanently */
         mon_adjust_speed(mtmp, 1, otmp);
         m_useup(mtmp, otmp);
+        return 2;
+    case MUSE_POT_BOOZE:
+        mquaffmsg(mtmp, otmp);
+        mtmp->mconf = 1;
+        m_useup(mtmp, otmp);
+        if (mtmp->data == &mons[PM_SKELETAL_PIRATE] && canseemon(mtmp))
+            pline("%s splatters out of the ribcage of %s.",
+                The(xname(otmp)), mon_nam(mtmp));
         return 2;
     case MUSE_POT_REFLECT:
         mquaffmsg(mtmp, otmp);
@@ -2368,6 +2382,8 @@ struct obj *obj;
     case POTION_CLASS:
         if (typ == POT_VAMPIRE_BLOOD)
             return is_vampire(mon->data);
+        if (typ == POT_BOOZE)
+            return is_pirate(mon->data);
         if (typ == POT_HEALING || typ == POT_EXTRA_HEALING
             || typ == POT_FULL_HEALING || typ == POT_POLYMORPH
             || typ == POT_GAIN_LEVEL || typ == POT_PARALYSIS

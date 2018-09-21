@@ -1134,6 +1134,7 @@ try_again:
 #define MUSE_MGC_FLUTE 25
 #define MUSE_MGC_DRUM 26
 #define MUSE_SCR_WEB 27
+#define MUSE_POT_BLOOD_THROW 28
 
 /* Select an offensive item/action for a monster.  Returns TRUE iff one is
  * found.
@@ -1299,6 +1300,11 @@ struct monst *mtmp;
         if (obj->otyp == POT_ACID) {
             m.offensive = obj;
             m.has_offense = MUSE_POT_ACID;
+        }
+        nomore(MUSE_POT_BLOOD_THROW);
+        if (obj->otyp == POT_BLOOD && !is_vampire(mtmp->data)) {
+            m.offensive = obj;
+            m.has_offense = MUSE_POT_BLOOD_THROW;
         }
         /* we can safely put this scroll here since the locations that
          * are in a 1 square radius are a subset of the locations that
@@ -1728,6 +1734,7 @@ struct monst *mtmp;
     case MUSE_POT_CONFUSION:
     case MUSE_POT_SLEEPING:
     case MUSE_POT_ACID:
+    case MUSE_POT_BLOOD_THROW:
     /* case MUSE_POT_POLYMORPH_THROW: */
     case MUSE_POT_HALLUCINATION:
         /* Note: this setting of dknown doesn't suffice.  A monster
@@ -2365,7 +2372,7 @@ struct obj *obj;
             || typ == POT_FULL_HEALING || typ == POT_POLYMORPH
             || typ == POT_GAIN_LEVEL || typ == POT_PARALYSIS
             || typ == POT_SLEEPING || typ == POT_ACID || typ == POT_CONFUSION
-            || typ == POT_HALLUCINATION)
+            || typ == POT_HALLUCINATION || typ == POT_BLOOD)
             return TRUE;
         if (typ == POT_BLINDNESS && !attacktype(mon->data, AT_GAZE))
             return TRUE;

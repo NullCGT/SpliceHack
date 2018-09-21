@@ -535,7 +535,7 @@ static NEARDATA const char *const exertext[A_MAX][2] = {
     { "very observant", "paying attention" },                     /* Wis */
     { "working on your reflexes", "working on reflexes lately" }, /* Dex */
     { "leading a healthy life-style", "watching your health" },   /* Con */
-    { 0, 0 },                                                     /* Cha */
+    { "paying attention to others", "ignoring others" },          /* Cha */
 };
 
 void

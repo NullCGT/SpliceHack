@@ -1840,6 +1840,20 @@ int how;
             if (!Unchanging && !Antimagic)
                 polyself(0);
             break;
+        case POT_BLOOD:
+        case POT_VAMPIRE_BLOOD:
+            if (Blind)
+                You_feel("sticky!");
+            else if (Race_if(PM_INFERNAL)) {
+                pline("Blood drips down your form.");
+                exercise(A_CHA, TRUE);
+            }
+            else {
+                You("are covered in blood! How disgusting!");
+                exercise(A_CHA, FALSE);
+            }
+
+            break;
         case POT_ACID:
             if (!Acid_resistance) {
                 int dmg;
@@ -1951,6 +1965,12 @@ int how;
                  */
                 paralyze_monst(mon, rnd(25));
             }
+            break;
+        case POT_BLOOD:
+        case POT_VAMPIRE_BLOOD:
+            pline("%s is covered in blood!", Monnam(mon));
+            if (is_vampire(mon->data))
+                pline("%s seems to enjoy the blood bath.", Monnam(mon));
             break;
         case POT_SPEED:
             angermon = FALSE;

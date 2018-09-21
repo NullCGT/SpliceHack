@@ -7,7 +7,6 @@
 #include "hack.h"
 #include "mfndpos.h"
 #include "artifact.h"
-#include "qtext.h"
 
 extern boolean notonhead;
 
@@ -482,6 +481,12 @@ register struct monst *mtmp;
     /* check distance and scariness of attacks */
     distfleeck(mtmp, &inrange, &nearby, &scared);
 
+    /* Dramatic entrance messages if it's a boss */
+    if (canseemon(mtmp)) {
+        boss_entrance(mtmp);
+        mtmp->mstrategy &= ~STRAT_APPEARMSG;
+    }
+
     if (find_defensive(mtmp, FALSE)) {
         if (use_defensive(mtmp) != 0)
             return 1;
@@ -490,12 +495,6 @@ register struct monst *mtmp;
             return 1;
     }
 
-    /* Dramatic entrances */
-    if (nearby && mtmp->mspeech == 0 && cansee(mtmp->mux, mtmp->muy) &&
-          (is_dprince(mdat) || is_dlord(mdat))) {
-        com_pager(QT_DLORD + monsndx(mdat) - PM_JUIBLEX);
-        mtmp->mspeech = 1;
-    }
     /* Demonic Blackmail! */
     if (nearby && mdat->msound == MS_BRIBE && mtmp->mpeaceful && !mtmp->mtame
         && !u.uswallow) {

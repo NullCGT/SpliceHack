@@ -168,7 +168,8 @@ struct monst {
 #define is_starting_pet(mon) ((mon)->m_id == context.startingpet_mid)
 #define is_vampshifter(mon)                                      \
     ((mon)->cham == PM_VAMPIRE || (mon)->cham == PM_VAMPIRE_LORD \
-     || (mon)->cham == PM_VLAD_THE_IMPALER)
+     || (mon)->cham == PM_VLAD_THE_IMPALER || (mon)->cham == PM_ALUCARD \
+     || (mon)->cham == PM_VAMPIRE_MAGE)
 
 /* mimic appearances that block vision/light */
 #define is_lightblocker_mappear(mon)                       \

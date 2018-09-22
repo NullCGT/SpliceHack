@@ -603,6 +603,10 @@ register struct monst *mtmp;
                                          : SCIMITAR);
         }
         break;
+    case S_VAMPIRE:
+        if (ptr == &mons[PM_ALUCARD])
+            (void) mongets(mtmp, KATANA);
+        break;
     case S_OGRE:
         if (!rn2(mm == PM_OGRE_KING ? 3 : mm == PM_OGRE_LORD ? 6 : 12))
             (void) mongets(mtmp, BATTLE_AXE);
@@ -935,11 +939,17 @@ register struct monst *mtmp;
         }
         break;
     case S_VAMPIRE:
+        if (ptr == &mons[PM_ALUCARD]) {
+            for (cnt = rn2(2); cnt < 4; cnt++) {
+                (void) mongets(mtmp, POT_VAMPIRE_BLOOD);
+            }
+            break;
+        }
         if (rn2(2)) {
             if ((int) mtmp->m_lev > rn2(30))
-                (void)mongets(mtmp, POT_VAMPIRE_BLOOD);
+                (void) mongets(mtmp, POT_VAMPIRE_BLOOD);
             else
-                (void)mongets(mtmp, POT_BLOOD);
+                (void) mongets(mtmp, POT_BLOOD);
         }
         break;
     case S_NYMPH:

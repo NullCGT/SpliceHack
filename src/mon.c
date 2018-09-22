@@ -344,6 +344,7 @@ unsigned corpseflags;
         goto default_1;
     case PM_VAMPIRE:
     case PM_VAMPIRE_LORD:
+    case PM_VAMPIRE_MAGE:
         /* include mtmp in the mkcorpstat() call */
         num = undead_to_corpse(mndx);
         corpstatflags |= CORPSTAT_INIT;
@@ -2252,7 +2253,8 @@ boolean was_swallowed; /* digestion */
             return FALSE;
         }
     }
-    if (mdat == &mons[PM_VLAD_THE_IMPALER] || mdat->mlet == S_LICH) {
+    if (mdat == &mons[PM_VLAD_THE_IMPALER] || mdat == &mons[PM_ALUCARD]
+          || mdat->mlet == S_LICH) {
         if (cansee(mon->mx, mon->my) && !was_swallowed)
             pline("%s body crumbles into dust.", s_suffix(Monnam(mon)));
         return FALSE;
@@ -3470,6 +3472,12 @@ struct monst *mon;
             break; /* leave mndx as is */
         wolfchance = 3;
     /*FALLTHRU*/
+    case PM_ALUCARD:
+        if (!rn2(wolfchance) && !uppercase_only) {
+            mndx = PM_BARGHEST;
+            break;
+        }
+    case PM_VAMPIRE_MAGE:
     case PM_VAMPIRE_LORD: /* vampire lord or Vlad can become wolf */
         if (!rn2(wolfchance) && !uppercase_only) {
             mndx = PM_WOLF;
@@ -3529,7 +3537,7 @@ int *mndx_p, monclass;
         return validspecmon(mon, *mndx_p);
 
     if (*mndx_p == PM_VAMPIRE || *mndx_p == PM_VAMPIRE_LORD
-        || *mndx_p == PM_VLAD_THE_IMPALER) {
+        || *mndx_p == PM_VLAD_THE_IMPALER || *mndx_p == PM_ALUCARD) {
         /* player picked some type of vampire; use mon's self */
         *mndx_p = mon->cham;
         return TRUE;
@@ -3606,8 +3614,10 @@ struct monst *mon;
         if (!rn2(3))
             mndx = pick_animal();
         break;
+    case PM_ALUCARD:
     case PM_VLAD_THE_IMPALER:
     case PM_VAMPIRE_LORD:
+    case PM_VAMPIRE_MAGE:
     case PM_VAMPIRE:
         mndx = pickvampshape(mon);
         break;

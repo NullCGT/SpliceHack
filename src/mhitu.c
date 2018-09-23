@@ -1339,7 +1339,7 @@ register struct attack *mattk;
         if (u_slip_free(mtmp, mattk))
             break;
 
-        if (uarmh && rn2(8)) {
+        if (uarmh && (rn2(8) || uarmh->otyp == HELM_OF_OPAQUE_THOUGHTS)) {
             /* not body_part(HEAD) */
             Your("%s blocks the attack to your head.",
                  helm_simple_name(uarmh));

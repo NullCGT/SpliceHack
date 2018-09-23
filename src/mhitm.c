@@ -1468,7 +1468,8 @@ register struct attack *mattk;
             tmp = 0;
             break;
         }
-        if ((mdef->misc_worn_check & W_ARMH) && rn2(8)) {
+        if ((mdef->misc_worn_check & W_ARMH) && (rn2(8) ||
+                which_armor(mdef, W_ARMH)->otyp == HELM_OF_OPAQUE_THOUGHTS)) {
             if (vis && canspotmon(magr) && canseemon(mdef)) {
                 Strcpy(buf, s_suffix(Monnam(mdef)));
                 pline("%s helmet blocks %s attack to %s head.", buf,

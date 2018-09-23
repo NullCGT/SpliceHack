@@ -1289,6 +1289,13 @@ register struct attack *mattk;
         if (uncancelled && !rn2(4) && uwep) {
             pline("%s disarms you!", Monnam(mtmp));
             dropx(uwep);
+            /* Being disarmed can rarely cause you to learn how to disarm. */
+            if (!tech_known(T_DISARM) && (!rn2(5) || Role_if(PM_MONK))) {
+                pline("As you are disarmed, you realize if you could replicate what %s just did...",
+                    mon_nam(mtmp));
+                pline("You learn how to disarm your enemies!");
+                learntech(T_DISARM, FROMOUTSIDE, 1);
+            }
         }
         break;
     case AD_SLEE:

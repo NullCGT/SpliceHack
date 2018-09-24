@@ -2059,7 +2059,12 @@ struct monst *mtmp;
             return 0;
         m_useup(mtmp, otmp);
         mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
-        mon->mpeaceful = 0;
+        if (otmp->blessed)
+            mon->mpeaceful = 0;
+        else if (otmp->cursed)
+            initedog(mon);
+        else
+            mon->mpeaceful = 1;
         set_malign(mon);
         return 2;
     }

@@ -51,10 +51,10 @@ ink_cost(short otyp)
     case SCR_STINKING_CLOUD:
     case SCR_TAMING:
     case SCR_CLONING:
+    case SCR_AIR:
     case SCR_TELEPORTATION:
         return 20;
     case SCR_GENOCIDE:
-    case SCR_PURE_LAW:
     case SCR_TRUE_NEUTRALITY:
     case SCR_RAW_CHAOS:
         return 30;

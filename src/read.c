@@ -1683,15 +1683,32 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             pline("You're not carrying anything to be identified.");
         }
         break;
-    case SCR_PURE_LAW:
-        if (u.ualign.type == A_LAWFUL) {
-            You_feel("very devout!");
-            known = TRUE;
-            scrollpray();
-        } else {
-            summon_minion(A_LAWFUL, TRUE);
+    case SCR_AIR: {
+        int i;
+        struct monst *mtmp, *mtmp2;
+        if (scursed) {
+            if (!breathless(youmonst.data)) {
+                known = TRUE;
+                The("air is sucked from your lungs!");
+                losehp(d(3, 4), "scroll of air", KILLED_BY_AN);
+            } else {
+                strange_feeling(sobj, "You feel oddly breathless.");
+            }
+            break;
+        } else if (sblessed)
+            i = 4;
+        else
+            i = 2;
+        /* Ideally this should remove poison gas as well. */
+        pline("A tornado whips up around you!");
+        known = TRUE;
+        for (mtmp = fmon; mtmp; mtmp = mtmp2) {
+            mtmp2 = mtmp->nmon;
+            if (distu(mtmp->mx, mtmp->my) <= 2)
+                mhurtle(mtmp, mtmp->mx - u.ux, mtmp->my - u.uy, i + rn2(4));
         }
         break;
+    }
     case SCR_TRUE_NEUTRALITY:
         if (u.ualign.type == A_NEUTRAL) {
             You_feel("very devout!");

@@ -912,7 +912,7 @@ SCROLL("gold detection",                 "THARR",  1,  33, 100),
 SCROLL("food detection",               "YUM YUM",  1,  25, 100),
 SCROLL("knowledge",                   "POTESTAS",  1,  20,  20), /* power */
 SCROLL("identify",                  "KERNOD WEL",  1, 160,  20),
-SCROLL("pure law",                   "TRATS ARL",  1,   5, 200), /* LRA START */
+SCROLL("air",                        "TRATS ARL",  1,   5, 200), /* LRA START */
 SCROLL("true neutrality",         "TWAS BRILLIG",  1,   5, 200), /* Jabberwocky */
 SCROLL("raw chaos",                 "TLON UQBAR",  1,   5, 200), /* Tlon Uqbar */
 SCROLL("magic mapping",              "ELAM EBOW",  1,  45, 100),

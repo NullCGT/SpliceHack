@@ -1135,6 +1135,7 @@ try_again:
 #define MUSE_MGC_DRUM 26
 #define MUSE_SCR_WEB 27
 #define MUSE_POT_BLOOD_THROW 28
+#define MUSE_CAMERA 29
 
 /* Select an offensive item/action for a monster.  Returns TRUE iff one is
  * found.
@@ -1329,6 +1330,13 @@ struct monst *mtmp;
             && mtmp->mcansee && haseyes(mtmp->data)) {
             m.offensive = obj;
             m.has_offense = MUSE_SCR_FIRE;
+        }
+        nomore(MUSE_CAMERA);
+        if (obj->otyp == EXPENSIVE_CAMERA && !Blind && !rn2(10)
+            && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 2
+            && obj->spe > 0) {
+            m.offensive = obj;
+            m.has_offense = MUSE_CAMERA;
         }
         nomore(MUSE_SCR_WEB);
         if (obj->otyp == SCR_WEB && !mtmp->mpeaceful && !mtmp->mtame &&
@@ -1662,6 +1670,20 @@ struct monst *mtmp;
         }
 
         return (DEADMONSTER(mtmp)) ? 1 : 2;
+    }
+    case MUSE_CAMERA: {
+        if (Hallucination)
+            verbalize("Say cheese!");
+        else
+            pline("%s takes a picture of you with %s!", Monnam(mtmp), an(xname(otmp)));
+        m_using = TRUE;
+        if (!Blind) {
+            You("are blinded by the flash of light!");
+            make_blinded(Blinded + (long) rnd(1 + 50), FALSE);
+        }
+        m_using = FALSE;
+        otmp->spe--;
+        return 1;
     }
     case MUSE_SCR_FIRE: {
         boolean vis = cansee(mtmp->mx, mtmp->my);
@@ -2412,7 +2434,8 @@ struct obj *obj;
             return (boolean) (!obj->cursed && !is_unicorn(mon->data));
         if (typ == FROST_HORN || typ == FIRE_HORN || typ == MAGIC_FLUTE)
             return (obj->spe > 0 && can_blow(mon));
-        if (typ == FIGURINE || typ == DRUM_OF_EARTHQUAKE)
+        if (typ == FIGURINE || typ == DRUM_OF_EARTHQUAKE
+              || typ == EXPENSIVE_CAMERA)
             return TRUE;
         break;
     case FOOD_CLASS:

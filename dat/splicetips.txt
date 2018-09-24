@@ -83,7 +83,7 @@ SpliceHack supports curses! Try editing your config file.
 The Master of Cats must be killed nine times before truly dying.
 Extra wishes? Try wishing for Vladsbane.
 Extra wishes and itching for YASD? Try wishing for the King in Yellow.
-Extra whishes and feeling lucky? Try wishing for Luckless Folly.
+Extra wishes and feeling lucky? Try wishing for Luckless Folly.
 Silver golems are especially deadly to infernal players.
 Tips of the day sometimes are not very helpful.
 Stairs hidden under some items? Try using #terrain.

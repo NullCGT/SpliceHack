@@ -627,7 +627,7 @@ register struct monst *priest;
             } else
                 u.ublessed++;
         } else if (!tech_known(T_BLESSING) && offer > (u.ulevel * 900)) {
-            verbalize("Thou art a true devotee! I shall teach thou a holy art.");
+            verbalize("Thou art a true devotee! I shall teach thee a holy art.");
             pline("%s teaches you how to perform a blessing.", mon_nam(priest));
             learntech(T_BLESSING, FROMOUTSIDE, 1);
         } else {

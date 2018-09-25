@@ -3152,16 +3152,12 @@ boolean by_you;
         i -= materials->iprob;
         materials++;
     }
-    if (materials->iclass)
+    if (materials->iclass && valid_obj_material(obj, materials->iclass) &&
+          !mon_hates_material(&youmonst, materials->iclass))
         obj->material = materials->iclass;
     else
         /* can use a 0 in the list to default to the base material */
         obj->material = objects[obj->otyp].oc_material;
-    /* Turning things into silver would be too cruel to infernals */
-    if (Race_switch == PM_INFERNAL && valid_obj_material(obj, SILVER)
-        && !rn2(35)) {
-          obj->material = PLASTIC;
-    }
     if (origmat != obj->material) {
         /* Charge for the cost of the object */
         if (by_you)

@@ -573,6 +573,8 @@ domonability(VOID_ARGS)
                 dryup(u.ux, u.uy, TRUE);
         } else
             There("is no fountain here.");
+    } else if (u.umonnum == PM_CREEPING_KUDZU) {
+        split_mon(&youmonst, (struct monst *) 0);
     } else if (is_unicorn(youmonst.data)) {
         use_unicorn_horn((struct obj *) 0);
         return 1;

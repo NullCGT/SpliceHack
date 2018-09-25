@@ -2199,6 +2199,14 @@ struct permonst _mons2[] = {
      * Fantastical plants
      *
      */
+    /* creeping kudzu is vaugely dnethack-inspired */
+    MON("creeping kudzu", S_PLANT, LVL(5, 3, 2, 10, 0),
+        (G_NOCORPSE | G_GENO | 1),
+        A(ATTK(AT_CLAW, AD_PHYS, 1, 2), ATTK(AT_CLAW, AD_PHYS, 1, 2),
+          ATTK(AT_HUGS, AD_PHYS, 2, 2), NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(100, 0, MS_SILENT, MZ_SMALL), 0, 0,
+        M1_BREATHLESS | M1_HUMANOID | M1_CONCEAL | M1_NOHANDS | M1_MINDLESS,
+        0, 0, CLR_GREEN),
     MON("walking oak", S_PLANT, LVL(7, 3, 2, 40, 7),
         (G_NOCORPSE | G_GENO | G_SGROUP | 1),
         A(ATTK(AT_CLAW, AD_PHYS, 3, 4), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,

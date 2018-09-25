@@ -29,6 +29,7 @@ STATIC_DCL struct permonst *FDECL(accept_newcham_form, (int));
 STATIC_DCL struct obj *FDECL(make_corpse, (struct monst *, unsigned));
 STATIC_DCL void FDECL(m_detach, (struct monst *, struct permonst *));
 STATIC_DCL void FDECL(lifesaved_monster, (struct monst *));
+STATIC_DCL void FDECL(mon_multiply, (struct monst *));
 
 #define LEVEL_SPECIFIC_NOCORPSE(mdat) \
     (Is_rogue_level(&u.uz)            \
@@ -723,6 +724,9 @@ mcalcdistress()
                 continue;
         }
 
+        /* multiplication of kudzu and such */
+        mon_multiply(mtmp);
+
         /* regenerate hit points */
         mon_regen(mtmp, FALSE);
 
@@ -743,6 +747,14 @@ mcalcdistress()
 
         /* FIXME: mtmp->mlstmv ought to be updated here */
     }
+}
+
+STATIC_OVL void
+mon_multiply(mtmp)
+register struct monst *mtmp;
+{
+    if (mtmp->data == &mons[PM_CREEPING_KUDZU] && !rn2(15))
+        split_mon(mtmp, (struct monst *) 0);
 }
 
 int

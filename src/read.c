@@ -1710,22 +1710,49 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         }
         break;
     }
-    case SCR_TRUE_NEUTRALITY:
-        if (u.ualign.type == A_NEUTRAL) {
-            You_feel("very devout!");
-            known = TRUE;
-            scrollpray();
+    case SCR_WARP_WEAPON:
+        if (!uwep)
+            sobj = 0; /* nothing enchanted: strange_feeling -> useup */
+        else if (confused || scursed) {
+            pline("%s with a sickly green light!", Yobjnam2(uwep, "glow"));
+            curse(uwep);
+            uwep->oerodeproof = 0;
+            if (valid_obj_material(uwep, PLASTIC)) {
+                uwep->material = PLASTIC;
+                costly_alteration(uwep, COST_DRAIN);
+            } else
+                warp_material(uwep, TRUE);
         } else {
-            summon_minion(A_NEUTRAL, TRUE);
+            if (sblessed)
+                bless(uwep);
+            pline("%s with a strange yellow light!", Yobjnam2(uwep, "glow"));
+            warp_material(uwep, TRUE);
         }
         break;
-    case SCR_RAW_CHAOS:
-        if (u.ualign.type == A_CHAOTIC) {
-            You_feel("very devout!");
-            known = TRUE;
-            scrollpray();
+    case SCR_WARP_ARMOR:
+        otmp = some_armor(&youmonst);
+        if (!otmp) {
+            strange_feeling(sobj, "Your skin scrawls for a moment.");
+            sobj = 0; /* useup() in strange_feeling() */
+            exercise(A_CON, !scursed);
+            exercise(A_STR, !scursed);
+            break;
+        }
+        if (confused || scursed) {
+            pline("%s with a sickly green light!", Yobjnam2(otmp, "glow"));
+            curse(otmp);
+            otmp->oerodeproof = 0;
+            if (valid_obj_material(otmp, PLASTIC)) {
+                otmp->material = PLASTIC;
+                costly_alteration(otmp, COST_DRAIN);
+            } else
+                warp_material(otmp, TRUE);
+            break;
         } else {
-            summon_minion(A_CHAOTIC, TRUE);
+            if (sblessed)
+                bless(otmp);
+            pline("%s with a strange yellow light!", Yobjnam2(otmp, "glow"));
+            warp_material(otmp, TRUE);
         }
         break;
     case SCR_CHARGING:

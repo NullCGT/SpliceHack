@@ -41,8 +41,10 @@ ink_cost(short otyp)
     case SCR_WARDING_WORDS:
         return 14;
     case SCR_ENCHANT_ARMOR:
+    case SCR_WARP_ARMOR:
     case SCR_REMOVE_CURSE:
     case SCR_ENCHANT_WEAPON:
+    case SCR_WARP_WEAPON:
     case SCR_CHARGING:
         return 16;
     case SCR_SCARE_MONSTER:
@@ -55,8 +57,6 @@ ink_cost(short otyp)
     case SCR_TIME:
     case SCR_KNOWLEDGE:
     case SCR_GENOCIDE:
-    case SCR_TRUE_NEUTRALITY:
-    case SCR_RAW_CHAOS:
         return 30;
     case SCR_BLANK_PAPER:
     default:

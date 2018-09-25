@@ -12,3 +12,7 @@ Martial arts attacks now always include skill damage bonuses, instead of
  The titan on one Medusa level has been replaced with two golden nagas.
 
  Hallucination protects you against all gaze attacks made by monsters.
+
+
+All wands that print an unambiguous message clue to their identity now
+  automatically type-identify when engraved with.

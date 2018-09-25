@@ -10,3 +10,7 @@ Martial arts attacks now always include skill damage bonuses, instead of
  Pets won't fight each other even if they grudge each other.
 
  Hallucination protects you against all gaze attacks made by monsters.
+
+
+All wands that print an unambiguous message clue to their identity now
+  automatically type-identify when engraved with.

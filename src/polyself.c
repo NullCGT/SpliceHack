@@ -781,7 +781,7 @@ int mntmp;
         if (u.umonnum == PM_GREMLIN)
             pline(use_thec, monsterc, "multiply in a fountain");
         if (u.umonnum == PM_CREEPING_KUDZU)
-            pline(use_thec, monsterc, "propogate");
+            pline(use_thec, monsterc, "propagate");
         if (is_unicorn(youmonst.data))
             pline(use_thec, monsterc, "use your horn");
         if (is_mind_flayer(youmonst.data))

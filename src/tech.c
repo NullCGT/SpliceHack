@@ -2222,6 +2222,11 @@ blitz_pummel()
 		You("strike nothing.");
 		return (0);
 	}
+	if (mtmp->data == &mons[PM_MASTER_KAEN] && !mtmp->mfrozen) {
+			pline("%s blocks your barrage of blows!", Monnam(mtmp));
+			verbalize("Fool! I can easily block such a primitive technique!");
+			return 0;
+	}
 	if (!attack(mtmp)) return (0);
 
 	/* Perform the extra attacks

@@ -1707,6 +1707,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             mtmp2 = mtmp->nmon;
             if (distu(mtmp->mx, mtmp->my) <= 2)
                 mhurtle(mtmp, mtmp->mx - u.ux, mtmp->my - u.uy, i + rn2(4));
+                setmangry(mtmp, TRUE);
         }
         break;
     }

@@ -2292,8 +2292,8 @@ struct permonst _mons2[] = {
      *
      */
     /* creeping kudzu is vaugely dnethack-inspired */
-    MON("creeping kudzu", S_PLANT, LVL(5, 3, 2, 10, 0),
-        (G_NOCORPSE | G_GENO | 1),
+    MON("creeping kudzu", S_PLANT, LVL(2, 3, 2, 10, 0),
+        (G_NOCORPSE | G_GENO | G_HELL | 1),
         A(ATTK(AT_CLAW, AD_PHYS, 1, 2), ATTK(AT_CLAW, AD_PHYS, 1, 2),
           ATTK(AT_HUGS, AD_PHYS, 2, 2), NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(100, 0, MS_SILENT, MZ_SMALL), 0, 0,

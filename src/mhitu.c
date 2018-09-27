@@ -1375,6 +1375,14 @@ register struct attack *mattk;
         if (uncancelled)
             You_feel("much calmer.");
         break;
+    case AD_POLY:
+        hitmsg(mtmp, mattk);
+        if (uncancelled && !Unchanging && !Antimagic) {
+            if (flags.verbose)
+          You("undergo a freakish metamorphosis!");
+            polyself(0);
+        }
+        break;
     case AD_MEMR:
         hitmsg(mtmp, mattk);
         if (uncancelled) {
@@ -1400,6 +1408,21 @@ register struct attack *mattk;
                 nomul(-rnd(10));
                 multi_reason = "paralyzed by a monster";
                 exercise(A_DEX, FALSE);
+            }
+        }
+        break;
+    case AD_TCKL:
+        hitmsg(mtmp, mattk);
+        if (uncancelled && multi >= 0 && !rn2(3)) {
+            if (Free_action)
+                You_feel("horrible tentacles probing your flesh!");
+            else {
+                if (Blind) You("are mercilessly tickled!");
+                else You("are mercilessly tickled by %s!", mon_nam(mtmp));
+                nomovemsg = 0;	/* default: "you can move again" */
+                nomul(-rnd(10));
+                exercise(A_DEX, FALSE);
+                exercise(A_CON, FALSE);
             }
         }
         break;
@@ -2624,6 +2647,15 @@ struct attack *mattk;
             pline("The %s catches your eye, and you feel deeply uneasy.",
                 mon_nam(mtmp));
             stop_occupation();
+        }
+        break;
+    case AD_TLPT:
+        if(!mtmp->mcan && canseemon(mtmp) && mtmp->mcansee && !
+            mtmp->mspec_used && rn2(5)) {
+                pline("%s stares blinkingly at you!", Monnam(mtmp));
+                if (flags.verbose)
+                        Your("position suddenly seems very uncertain!");
+                tele();
         }
         break;
 #ifdef PM_BEHOLDER /* work in progress */

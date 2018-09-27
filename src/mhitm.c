@@ -1260,6 +1260,17 @@ register struct attack *mattk;
             paralyze_monst(mdef, rnd(10));
         }
         break;
+    case AD_TCKL:
+        if (!cancelled && mdef->mcanmove) {
+            if (vis) {
+                Strcpy(buf, Monnam(magr));
+                pline("%s mercilessly tickles %s.", buf, mon_nam(mdef));
+            }
+            mdef->mcanmove = 0;
+            mdef->mfrozen = rnd(10);
+            mdef->mstrategy &= ~STRAT_WAITFORU;
+        }
+        break;
     case AD_SLOW:
         if (!cancelled && mdef->mspeed != MSLOW) {
             unsigned int oldspeed = mdef->mspeed;
@@ -1587,6 +1598,18 @@ register struct attack *mattk;
     case AD_ENCH:
         /* there's no msomearmor() function, so just do damage */
         /* if (cancelled) break; */
+        break;
+    case AD_POLY:
+        if (!magr->mcan && tmp < mdef->mhp) {
+            if (resists_magm(mdef)) {
+                /* magic resistance protects from polymorph traps, so
+                 * make it guard against involuntary polymorph attacks
+                 * too... */
+                if (vis) shieldeff(mdef->mx, mdef->my);
+                break;
+            }
+            newcham(mdef, (struct permonst *) 0, FALSE, TRUE);
+        }
         break;
     case AD_VOID:
         if (cancelled)

@@ -485,6 +485,19 @@ unsigned corpseflags;
         }
         free_mname(mtmp);
         break;
+    case PM_WAX_GOLEM:
+    		num = d(2,4);
+        num = rnd(4);
+        while (num--) {
+            obj = mkobj_at(RANDOM_CLASS, x, y, FALSE);
+            if (!valid_obj_material(obj, WAX)) {
+                delobj(obj);
+                obj = mksobj_at(WAX_CANDLE, x, y, TRUE, FALSE);
+            }
+            obj->material = WAX;
+        }
+        free_mname(mtmp);
+    		break;
     /* expired puddings will congeal into a large blob;
        like dragons, relies on the order remaining consistent */
     case PM_GRAY_OOZE:

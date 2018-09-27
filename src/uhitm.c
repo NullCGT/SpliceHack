@@ -2095,7 +2095,7 @@ register struct attack *mattk;
         if (m_slips_free(mdef, mattk))
             break;
 
-        if ((helmet = which_armor(mdef, W_ARMH)) != 0 && (rn2(8) || 
+        if ((helmet = which_armor(mdef, W_ARMH)) != 0 && (rn2(8) ||
                 which_armor(mdef, W_ARMH)->otyp == HELM_OF_OPAQUE_THOUGHTS)) {
             pline("%s %s blocks your attack to %s head.",
                   s_suffix(Monnam(mdef)), helm_simple_name(helmet),
@@ -2148,6 +2148,13 @@ register struct attack *mattk;
         } else
             tmp = 0;
         break;
+    case AD_TCKL:
+        if (!negated && mdef->mcanmove && !rn2(3) && tmp < mdef->mhp) {
+            if (!Blind) You("mercilessly tickle %s!", mon_nam(mdef));
+            mdef->mcanmove = 0;
+            mdef->mfrozen = rnd(10);
+        }
+        break;
     case AD_PLYS:
         if (!negated && mdef->mcanmove && !rn2(3) && tmp < mdef->mhp) {
             if (!Blind)
@@ -2183,6 +2190,21 @@ register struct attack *mattk;
     case AD_ENCH: /* KMH -- remove enchantment (disenchanter) */
         /* there's no msomearmor() function, so just do damage */
         /* if (negated) break; */
+        break;
+    case AD_POLY:
+        if (tmp < mdef->mhp) {
+            if (resists_magm(mdef)) {
+                /* magic resistance protects from polymorph traps,
+                 * so make it guard against involuntary polymorph
+                 * attacks too... */
+                shieldeff(mdef->mx, mdef->my);
+            } else {
+              newcham(mdef, (struct permonst *) 0, FALSE, TRUE);
+              /* prevent killing the monster again -
+               * could be killed in mon_poly */
+               tmp = 0;
+            }
+        }
         break;
     case AD_SLOW:
         if (!negated && mdef->mspeed != MSLOW) {

@@ -892,7 +892,10 @@ register struct permonst *ptr;
         chance = 10;
         break;
     case TELEPORT_CONTROL:
-        chance = 12;
+        if (ptr == &mons[PM_BLINKING_EYE])
+            chance = 80;
+        else
+            chance = 12;
         break;
     case TELEPAT:
         chance = 1;
@@ -1124,6 +1127,12 @@ register int pm;
             polyself(0);
         }
         break;
+    case PM_GENETIC_ENGINEER: /* Robin Johnson -- special msg */
+        if (!Unchanging) {
+            You("undergo a freakish metamorphosis!");
+            polyself(0);
+        }
+        break;
     case PM_DISENCHANTER:
         /* picks an intrinsic at random and removes it; there's
            no feedback if hero already lacks the chosen ability */
@@ -1160,7 +1169,7 @@ register int pm;
         int i, count;
 
         if (dmgtype(ptr, AD_STUN) || dmgtype(ptr, AD_HALU)
-            || pm == PM_VIOLET_FUNGUS) {
+            || pm == PM_VIOLET_FUNGUS || pm == PM_BLOODSHOT_EYE) {
             pline("Oh wow!  Great stuff!");
             (void) make_hallucinated((HHallucination & TIMEOUT) + 200L, FALSE,
                                      0L);

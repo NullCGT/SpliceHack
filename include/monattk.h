@@ -91,13 +91,15 @@
 #define AD_HYDR 52  /* regrow heads (hydra) */
 #define AD_MTRL 53  /* change material (substance warper) */
 #define AD_LOST 55  /* get lost (yuki-onna) */
+#define AD_TCKL 56	/* Tickle (Nightgaunts) */
+#define AD_POLY 57  /* Polymorph (Genetic Engineer) */
 
-#define AD_CLRC 56 /* random clerical spell */
-#define AD_SPEL 57 /* random magic spell */
-#define AD_RBRE 58 /* random breath weapon */
+#define AD_CLRC 58 /* random clerical spell */
+#define AD_SPEL 59 /* random magic spell */
+#define AD_RBRE 60 /* random breath weapon */
 
-#define AD_SAMU 59 /* hits, may steal Amulet (Wizard) */
-#define AD_CURS 60 /* random curse (ex. gremlin) */
+#define AD_SAMU 61 /* hits, may steal Amulet (Wizard) */
+#define AD_CURS 62 /* random curse (ex. gremlin) */
 #define LAST_AD AD_CURS
 
 /*

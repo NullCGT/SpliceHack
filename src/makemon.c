@@ -1517,7 +1517,8 @@ int mmflags;
         break;
     case S_LIGHT:
     case S_ELEMENTAL:
-        if (mndx == PM_STALKER || mndx == PM_BLACK_LIGHT) {
+        if (mndx == PM_STALKER || mndx == PM_BLACK_LIGHT
+              || mndx == PM_HELLCAT) {
             mtmp->perminvis = TRUE;
             mtmp->minvis = TRUE;
         }
@@ -2256,6 +2257,8 @@ int type;
     case PM_LEATHER_GOLEM:
         return 40;
     case PM_GOLD_GOLEM:
+        return 40;
+    case PM_WAX_GOLEM:
         return 40;
     case PM_WOOD_GOLEM:
         return 50;

@@ -2160,6 +2160,8 @@ struct obj *obj;
         && !(u.uswallow
              && attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND)))
         prop_trouble(BLINDED);
+    if (TimedTrouble(LarvaCarrier))
+        prop_trouble(LARVACARRIER);
     if (TimedTrouble(HHallucination))
         prop_trouble(HALLUC);
     if (TimedTrouble(Vomiting))
@@ -2227,6 +2229,10 @@ struct obj *obj;
         switch (idx) {
         case prop2trbl(SICK):
             make_sick(0L, (char *) 0, TRUE, SICK_ALL);
+            did_prop++;
+            break;
+        case prop2trbl(LARVACARRIER):
+            make_carrier(0L, TRUE);
             did_prop++;
             break;
         case prop2trbl(BLINDED):

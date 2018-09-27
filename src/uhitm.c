@@ -2169,6 +2169,19 @@ register struct attack *mattk;
             slept_monst(mdef);
         }
         break;
+    case AD_LARV: {
+        struct monst* mtmp;
+        if (!negated && !thick_skinned(mdef->data) && mdef->mhp < 5 && !rn2(4)) {
+            tmp = mdef->mhp;
+            pline("%s burst out of %s!",
+                Hallucination ? rndmonnam(NULL) : "Insects",
+                mon_nam(mdef));
+            mtmp = makemon(&mons[PM_BABY_BROOD_WASP],
+                u.ux, u.uy, MM_EDOG);
+            initedog(mtmp);
+        }
+        break;
+    }
     case AD_SLIM:
         if (negated)
             break; /* physical damage only */

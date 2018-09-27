@@ -1251,6 +1251,17 @@ register struct attack *mattk;
             slept_monst(mdef);
         }
         break;
+    case AD_LARV:
+        if (!cancelled && !thick_skinned(mdef->data)
+            && mdef->mhp < 5 && !rn2(4)) {
+            tmp = mdef->mhp;
+            pline("%s burst out of %s and immediately fly off!",
+                Hallucination ? rndmonnam(NULL) : "Insects",
+                mon_nam(mdef));
+            if (DEADMONSTER(mdef))
+                res |= MM_DEF_DIED;
+        }
+        break;
     case AD_PLYS:
         if (!cancelled && mdef->mcanmove) {
             if (vis && canspotmon(mdef)) {

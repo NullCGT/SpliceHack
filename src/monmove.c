@@ -1211,7 +1211,8 @@ not_special:
     if (is_minion(ptr) || is_rider(ptr))
         flag |= ALLOW_SANCT;
     /* unicorn may not be able to avoid hero on a noteleport level */
-    if (is_unicorn(ptr) && !level.flags.noteleport)
+    if ((is_unicorn(ptr) || ptr == &mons[PM_MAD_ALCHEMIST])
+          && !level.flags.noteleport)
         flag |= NOTONL;
     if (passes_walls(ptr))
         flag |= (ALLOW_WALL | ALLOW_ROCK);
@@ -1247,7 +1248,8 @@ not_special:
         if (!mtmp->mpeaceful && level.flags.shortsighted
             && nidist > (couldsee(nix, niy) ? 144 : 36) && appr == 1)
             appr = 0;
-        if (is_unicorn(ptr) && level.flags.noteleport) {
+        if ((is_unicorn(ptr) || ptr == &mons[PM_MAD_ALCHEMIST])
+              && level.flags.noteleport) {
             /* on noteleport levels, perhaps we cannot avoid hero */
             for (i = 0; i < cnt; i++)
                 if (!(info[i] & NOTONL))

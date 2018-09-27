@@ -66,12 +66,13 @@ static int p_type; /* (-1)-3: (-1)=really naughty, 3=really good */
  * order to have the values be meaningful.
  */
 
-#define TROUBLE_STONED 14
-#define TROUBLE_SLIMED 13
-#define TROUBLE_STRANGLED 12
-#define TROUBLE_LAVA 11
-#define TROUBLE_SICK 10
-#define TROUBLE_STARVING 9
+#define TROUBLE_STONED 15
+#define TROUBLE_SLIMED 14
+#define TROUBLE_STRANGLED 13
+#define TROUBLE_LAVA 12
+#define TROUBLE_SICK 11
+#define TROUBLE_STARVING 10
+#define TROUBLE_CARRIER 9
 #define TROUBLE_REGION 8 /* stinking cloud */
 #define TROUBLE_HIT 7
 #define TROUBLE_LYCANTHROPE 6
@@ -201,6 +202,8 @@ in_trouble()
         return TROUBLE_SICK;
     if (u.uhs >= WEAK)
         return TROUBLE_STARVING;
+    if (LarvaCarrier)
+        return TROUBLE_CARRIER;
     if (region_danger())
         return TROUBLE_REGION;
     if (critically_low_hp(FALSE))
@@ -369,6 +372,10 @@ int trouble;
     case TROUBLE_SICK:
         You_feel("better.");
         make_sick(0L, (char *) 0, FALSE, SICK_ALL);
+        break;
+    case TROUBLE_CARRIER:
+        You_feel("the things infesting you vanish.");
+        make_carrier(0L, TRUE);
         break;
     case TROUBLE_REGION:
         /* stinking cloud, with hero vulnerable to HP loss */

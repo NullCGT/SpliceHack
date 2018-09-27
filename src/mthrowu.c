@@ -197,6 +197,8 @@ struct obj *otmp, *mwep;
             multishot++;
         else if (monsndx(mtmp->data) == PM_HUNDRED_HANDED_ONE)
             multishot += 5;
+        else if (monsndx(mtmp->data) == PM_AVENGER_ARCHON)
+            multishot += 3;
 
         /* this portion is different from hero multishot; from slash'em?
          */

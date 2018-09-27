@@ -54,6 +54,7 @@ Role and Race Changes
 - Merfolk are a much stronger race than before, since they get access to one of
   the most powerful techniques in the game.
 - The role selection for infernals and merfolk has changed.
+- The lycanthrope race function very similarly to SLASH'EM's werewolf race now.
 
 Dungeon Changes
 - Gehennom is now extremely compact, and the second fake wizard's tower has
@@ -65,17 +66,42 @@ Dungeon Changes
 
 New Monsters
 - Various Fantastical Plants (characterized by high magic resistance, low speed,
-  and vulnerability to drain).
+  and vulnerability to drain):
   - Walking Oak
   - Walking Birch
   - Walking Willow
   - Creeping Kudzu
   - Giant Sundew
-- Yuki-Onna
-- Substance Warper
-- Alucard
-- Anubite
-- Nonbinary Player Monsters (various)
+- Ported a large number of monsters from SLASH'EM:
+  - Spitting Beetle
+  - Glowing Eye
+  - Bloodshot Eye
+  - Blinking Eye
+  - Deep One
+  - Deeper One
+  - Deepest One
+  - Acid Worm
+  - Ogre Mage
+  - Wax Golem
+  - Quickling
+  - Genetic Engineer
+  - Hellbat
+  - Hellrat
+  - Hellcat
+- Many all-new miscellaneous monsters
+  - Yuki-Onna
+  - Substance Warper
+  - Alucard
+  - Anubite
+  - Bear
+  - Drop Bear
+  - Hellbear
+  - Mad Alchemist
+  - Herald Archon
+  - Avenger Archon
+  - Brood Wasp
+  - Baby Brood Wasp
+  - Nonbinary player monsters (various)
 
 New Objects
 - Aligned scrolls have been replaced with scrolls of air, warp weapon, and warp
@@ -97,6 +123,8 @@ Miscellaneous Changes
 - Monsters that eat objects can now gain intrinsics. This makes Tasmanian devils
   potentially very dangerous, if they get their hands on the right corpses.
 - Added various monster sounds.
+- Tourist player monsters spawn with expensive cameras, and knights are
+  automatically mounted on ponies.
 
 Bug Fixes
 - Quilled monsters actually work. Apparently they have been bugged since the

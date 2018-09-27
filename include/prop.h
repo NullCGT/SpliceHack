@@ -39,6 +39,7 @@ enum prop_types {
     STRANGLED,
     VOMITING,
     GLIB,
+    LARVACARRIER,
     SLIMED,
     HALLUC,
     HALLUC_RES,

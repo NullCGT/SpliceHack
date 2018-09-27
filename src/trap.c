@@ -2404,6 +2404,8 @@ register struct monst *mtmp;
                     seetrap(trap);
                 } else {
                     if (mptr == &mons[PM_OWLBEAR]
+                        || mptr == &mons[PM_BUGBEAR]
+                        || mptr == &mons[PM_BEAR]
                         || mptr == &mons[PM_BUGBEAR])
                         You_hear("the roaring of an angry bear!");
                 }

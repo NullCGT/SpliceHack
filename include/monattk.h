@@ -93,13 +93,14 @@
 #define AD_LOST 55  /* get lost (yuki-onna) */
 #define AD_TCKL 56	/* Tickle (Nightgaunts) */
 #define AD_POLY 57  /* Polymorph (Genetic Engineer) */
+#define AD_LARV 58  /* Inject Larva (Brood Wasp) */
 
-#define AD_CLRC 58 /* random clerical spell */
-#define AD_SPEL 59 /* random magic spell */
-#define AD_RBRE 60 /* random breath weapon */
+#define AD_CLRC 59 /* random clerical spell */
+#define AD_SPEL 60 /* random magic spell */
+#define AD_RBRE 61 /* random breath weapon */
 
-#define AD_SAMU 61 /* hits, may steal Amulet (Wizard) */
-#define AD_CURS 62 /* random curse (ex. gremlin) */
+#define AD_SAMU 62 /* hits, may steal Amulet (Wizard) */
+#define AD_CURS 63 /* random curse (ex. gremlin) */
 #define LAST_AD AD_CURS
 
 /*

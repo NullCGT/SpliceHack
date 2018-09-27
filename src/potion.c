@@ -176,6 +176,23 @@ int type;
 }
 
 void
+make_carrier(xtime, talk)
+long xtime;
+boolean talk;
+{
+    long old = Vomiting;
+
+    if (Unaware)
+        talk = FALSE;
+
+    set_itimeout(&LarvaCarrier, xtime);
+    context.botl = TRUE;
+    if (!xtime && old)
+        if (talk)
+            You_feel("much more yourself.");
+}
+
+void
 make_slimed(xtime, msg)
 long xtime;
 const char *msg;

@@ -551,7 +551,8 @@ register struct monst *mtmp;
             set_apparxy(mtmp);
             newsym(u.ux, u.uy);
 
-            if (youmonst.data->mlet != S_PIERCER)
+            if (youmonst.data->mlet != S_PIERCER
+                  && youmonst.data != &mons[PM_DROP_BEAR])
                 return 0; /* lurkers don't attack */
 
             obj = which_armor(mtmp, WORN_HELMET);
@@ -560,12 +561,12 @@ register struct monst *mtmp;
                      helm_simple_name(obj));
             } else {
                 if (3 + find_mac(mtmp) <= rnd(20)) {
-                    pline("%s is hit by a falling piercer (you)!",
+                    pline("%s is hit by a falling monster (you)!",
                           Monnam(mtmp));
                     if ((mtmp->mhp -= d(3, 6)) < 1)
                         killed(mtmp);
                 } else
-                    pline("%s is almost hit by a falling piercer (you)!",
+                    pline("%s is almost hit by a falling monster (you)!",
                           Monnam(mtmp));
             }
 
@@ -1308,6 +1309,14 @@ register struct attack *mattk;
                 You("are put to sleep!");
             else
                 You("are put to sleep by %s!", mon_nam(mtmp));
+        }
+        break;
+    case AD_LARV:
+        hitmsg(mtmp, mattk);
+        if (uncancelled && !thick_skinned(youmonst.data)
+              && !LarvaCarrier && !rn2(4)) {
+            pline("%s injects something into you!", Monnam(mtmp));
+            make_carrier((long) 100 + rn2(200), TRUE);
         }
         break;
     case AD_BLND:

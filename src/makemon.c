@@ -1489,6 +1489,9 @@ int mmflags;
     /* mounting */
     if (!(mmflags & MM_REVIVE)) {
         switch (mndx) {
+            case PM_KNIGHT:
+                mount_monster(mtmp, PM_PONY);
+                break;
             case PM_HEADLESS_HORSEMAN:
                 mount_monster(mtmp, PM_NIGHTMARE);
                 break;

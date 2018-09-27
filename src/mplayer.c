@@ -241,7 +241,7 @@ register boolean special;
                 weapon = KATANA;
             break;
         case PM_TOURIST:
-            /* Defaults are just fine */
+            (void) mongets(mtmp, EXPENSIVE_CAMERA);
             break;
         case PM_VALKYRIE:
             if (rn2(2))

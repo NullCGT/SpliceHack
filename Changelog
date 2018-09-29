@@ -65,6 +65,8 @@ Dungeon Changes
   Alucard.
 
 New Monsters
+- Ported shambling horrors from Unnethack. Given the numerous damage types in
+  SpliceHack, they can end up being absolutely ridiculous.
 - Various Fantastical Plants (characterized by high magic resistance, low speed,
   and vulnerability to drain):
   - Walking Oak

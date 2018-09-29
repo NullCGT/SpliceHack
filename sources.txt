@@ -49,6 +49,7 @@
 
 #UnNetHack
 - Black Market Code
+- Shambling Horror
 
 #FIQHack
 - XP Curve Code

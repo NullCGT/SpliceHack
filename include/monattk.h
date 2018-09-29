@@ -90,18 +90,18 @@
 #define AD_LUCK 51  /* damage the luck of the player (barghest) */
 #define AD_HYDR 52  /* regrow heads (hydra) */
 #define AD_MTRL 53  /* change material (substance warper) */
-#define AD_LOST 55  /* get lost (yuki-onna) */
-#define AD_TCKL 56	/* Tickle (Nightgaunts) */
-#define AD_POLY 57  /* Polymorph (Genetic Engineer) */
-#define AD_LARV 58  /* Inject Larvae (Brood Wasp) */
-#define AD_HNGY 59 /* a mini version of FAMN, should fake a higher
+#define AD_LOST 54  /* get lost (yuki-onna) */
+#define AD_TCKL 55	/* Tickle (Nightgaunts) */
+#define AD_POLY 56  /* Polymorph (Genetic Engineer) */
+#define AD_LARV 57  /* Inject Larvae (Brood Wasp) */
+#define AD_HNGY 58 /* a mini version of FAMN, should fake a higher
                            hunger rating instead  */
-#define AD_CLRC 60 /* random clerical spell */
-#define AD_SPEL 61 /* random magic spell */
-#define AD_RBRE 62 /* random breath weapon */
+#define AD_CLRC 59 /* random clerical spell */
+#define AD_SPEL 60 /* random magic spell */
+#define AD_RBRE 61 /* random breath weapon */
 
-#define AD_SAMU 63 /* hits, may steal Amulet (Wizard) */
-#define AD_CURS 64 /* random curse (ex. gremlin) */
+#define AD_SAMU 62 /* hits, may steal Amulet (Wizard) */
+#define AD_CURS 63 /* random curse (ex. gremlin) */
 #define LAST_AD AD_CURS
 
 /*

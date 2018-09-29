@@ -592,7 +592,7 @@ static const char * damagetypes[] = {
     "tickling",
     "polymorph",
     "inject larvae",
-    "hunger"
+    "hunger",
     "clerical",
     "arcane",
     "random breath",
@@ -746,6 +746,7 @@ struct permonst * pm;
     APPENDC(is_floater(pm), "floating");
     APPENDC(pm_invisible(pm), "invisible");
     APPENDC(is_undead(pm), "undead");
+    APPENDC(is_demon(pm), "demonic");
     if (!is_undead(pm))
         APPENDC(nonliving(pm), "nonliving");
     if (*buf) {

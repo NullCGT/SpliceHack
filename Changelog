@@ -25,7 +25,8 @@ Balance Changes
   scrolls of knowledge and time. Previous strategies with a magic marker
   involved writing a half-dozen scrolls of knowledge, identifying everything
   one would need for the rest of the game, and then writing a ton of time
-  scrolls to breeze through Astral.
+  scrolls to breeze through Astral. Scrolls of time are as expensive to write
+  as genocide, while scrolls of knowledge cannot be written at all.
 - Ported FIQHack's XP Curve, which mean leveling up happens more often in the
   endgame.
 - Monster application of figurines now functions more similarly to how the
@@ -40,6 +41,9 @@ Balance Changes
 - Ancient Brain is now more useful to eat.
 - Spectres only generate when the player is level 15 or above now.
 - Reflective monsters do not chug potions of reflection.
+- Hurtling into a wall no longer paralyzes you for the duration of your would-be
+  hurtle. This prevents wind monsters from being able to stunlock enemies
+  against walls.
 
 Role and Race Changes
 - Cartomancers play completely differently now. They can identify the rarity of
@@ -54,7 +58,7 @@ Role and Race Changes
 - Merfolk are a much stronger race than before, since they get access to one of
   the most powerful techniques in the game.
 - The role selection for infernals and merfolk has changed.
-- The lycanthrope race function very similarly to SLASH'EM's werewolf race now.
+- The lycanthrope race functions very similarly to SLASH'EM's werewolf race now.
 
 Dungeon Changes
 - Gehennom is now extremely compact, and the second fake wizard's tower has
@@ -63,6 +67,10 @@ Dungeon Changes
   big room up to three times.
 - The first level of Vlad's tower includes a massive courtyard and is guarded by
   Alucard.
+- The void has been reinstated and completely reworked. It still contains a void
+  dragon and dangerous monsters, but now holds portals to many different points
+  across the dungeon. You cannot use this in order to bypass the ascension run,
+  so don't even think about it.
 
 New Monsters
 - Ported shambling horrors from Unnethack. Given the numerous damage types in
@@ -112,7 +120,8 @@ New Monsters
 New Objects
 - Aligned scrolls have been replaced with scrolls of air, warp weapon, and warp
   material, all of which are infinitely more interesting and more useful.
-- Medical Kits and associated items from SLASH'EM. Pills cannot grant wishes.
+- Medical Kits and associated items from SLASH'EM. Pills cannot grant wishes, so
+  don't even think about it.
 - Potions of blood and vampire blood from SLASH'EM. Non-vampires can chuck blood
   at you, if they somehow manage to get ahold of it.
 
@@ -131,6 +140,7 @@ Miscellaneous Changes
 - Added various monster sounds.
 - Tourist player monsters spawn with expensive cameras, and knights are
   automatically mounted on ponies.
+- Drinking alcohol is tracked throughout the game.
 
 Bug Fixes
 - Quilled monsters actually work. Apparently they have been bugged since the

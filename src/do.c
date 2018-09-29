@@ -1363,6 +1363,13 @@ boolean at_stairs, falling, portal;
             livelog_write_string(LL_ACHIEVE, "entered the Planes");
         }
     }
+
+    /* No being cute and trying to skip the ascension run :P - AntiGulp */
+    if (Is_void(newlevel) && u.uhave.amulet) {
+        pline("You glimpse the Void for a moment, but the Amulet of Yendor pulls you back to reality!");
+        return;
+    }
+
     new_ledger = ledger_no(newlevel);
     if (new_ledger <= 0)
         done(ESCAPED); /* in fact < 0 is impossible */

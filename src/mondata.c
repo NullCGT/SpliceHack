@@ -1049,6 +1049,7 @@ static const short grownups[][2] = {
     {PM_DEEP_ONE, PM_DEEPER_ONE},
     {PM_DEEPER_ONE, PM_DEEPEST_ONE},
     {PM_BABY_BROOD_WASP, PM_BROOD_WASP},
+    {PM_WANDERING_CACTUS, PM_CRAZY_CACTUS},
     { NON_PM, NON_PM }
 };
 

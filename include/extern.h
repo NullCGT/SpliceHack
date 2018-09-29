@@ -1408,6 +1408,7 @@ E int FDECL(minliquid, (struct monst *));
 E int NDECL(movemon);
 E int FDECL(meatmetal, (struct monst *));
 E void FDECL(meatcorpse, (struct monst *));
+E void FDECL(minfestcorpse, (struct monst *));
 E int FDECL(meatobj, (struct monst *));
 E void FDECL(mpickgold, (struct monst *));
 E boolean FDECL(mpickstuff, (struct monst *, const char *));

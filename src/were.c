@@ -23,21 +23,24 @@ register struct monst *mon;
                 const char *howler;
 
                 switch (monsndx(mon->data)) {
+                case PM_WEREBEAR:
+                    howler = "bear roaring";
+                    break;
                 case PM_ALPHA_WEREWOLF:
-                    howler = "pack of wolves";
+                    howler = "pack of wolves howling";
                     break;
                 case PM_WEREWOLF:
-                    howler = "wolf";
+                    howler = "wolf howling";
                     break;
                 case PM_WEREJACKAL:
-                    howler = "jackal";
+                    howler = "jackal howling";
                     break;
                 default:
                     howler = (char *) 0;
                     break;
                 }
                 if (howler)
-                    You_hear("a %s howling at the moon.", howler);
+                    You_hear("a %s at the moon.", howler);
             }
         }
     } else if (!rn2(30) || Protection_from_shape_changers) {
@@ -60,6 +63,10 @@ int pm;
         return PM_HUMAN_WEREWOLF;
     case PM_HUMAN_WEREWOLF:
         return PM_WEREWOLF;
+    case PM_WEREBEAR:
+        return PM_HUMAN_WEREBEAR;
+    case PM_HUMAN_WEREBEAR:
+        return PM_WEREBEAR;
     case PM_WEREJACKAL:
         return PM_HUMAN_WEREJACKAL;
     case PM_HUMAN_WEREJACKAL:
@@ -79,6 +86,10 @@ were_beastie(pm)
 int pm;
 {
     switch (pm) {
+    case PM_WEREBEAR:
+    case PM_BEAR:
+    case PM_DROP_BEAR:
+        return PM_WEREBEAR;
     case PM_WERERAT:
     case PM_SEWER_RAT:
     case PM_GIANT_RAT:
@@ -160,6 +171,11 @@ char *genbuf;
             typ = rn2(7) ? PM_JACKAL : rn2(3) ? PM_COYOTE : PM_FOX;
             if (genbuf)
                 Strcpy(genbuf, "jackal");
+            break;
+        case PM_WEREBEAR:
+            typ = rn2(15) ? PM_BEAR : PM_HELLBEAR;
+            if (genbuf)
+                Strcpy(genbuf, "bear");
             break;
         case PM_WEREWOLF:
         case PM_HUMAN_WEREWOLF:

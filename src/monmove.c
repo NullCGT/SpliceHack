@@ -1572,6 +1572,12 @@ postmov:
 
             if (ptr == &mons[PM_GHOUL] || ptr == &mons[PM_GHAST]) meatcorpse(mtmp);
 
+            if (ptr == &mons[PM_BROWN_MOLD_WARRIOR] ||
+                ptr == &mons[PM_GREEN_MOLD_WARRIOR] ||
+                ptr == &mons[PM_YELLOW_MOLD_WARRIOR] ||
+                ptr == &mons[PM_RED_MOLD_WARRIOR])
+                minfestcorpse(mtmp);
+
             if (!*in_rooms(mtmp->mx, mtmp->my, SHOPBASE) || !rn2(25)) {
                 boolean picked = FALSE;
 

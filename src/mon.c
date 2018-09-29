@@ -517,6 +517,11 @@ unsigned corpseflags;
         }
         free_mname(mtmp);
         return obj;
+    case PM_BLOOD_PUDDING:
+        obj = mksobj_at(POT_BLOOD, x, y, TRUE, FALSE);
+        obj->quan = (long) (rn2(3));
+        free_mname(mtmp);
+        return obj;
     default_1:
     default:
         if (mvitals[mndx].mvflags & G_NOCORPSE) {
@@ -1008,6 +1013,15 @@ register struct obj *otmp;
   						    otmp; otmp = otmp->nexthere)
         if (otmp->otyp == CORPSE &&
   		      otmp->age+50 <= monstermoves) {
+            /* touch sensitive items */
+            if (otmp->otyp == CORPSE && is_rider(&mons[otmp->corpsenm])) {
+                /* Rider corpse isn't just inedible; can't engulf it either */
+                if (cansee(mtmp->mx, mtmp->my) && flags.verbose)
+                    pline("%s attempts to devour %s!", Monnam(mtmp),
+                      distant_name(otmp,doname));
+                (void) revive_corpse(otmp);
+                return;
+            }
   		      if (cansee(mtmp->mx,mtmp->my) && flags.verbose)
           			pline("%s eats %s!", Monnam(mtmp),
           				distant_name(otmp,doname));
@@ -1018,7 +1032,42 @@ register struct obj *otmp;
   		      delobj(otmp);
   		      break; /* only eat one at a time... */
   		  }
-        newsym(mtmp->mx, mtmp->my);
+    newsym(mtmp->mx, mtmp->my);
+}
+
+/* Based on meatcorpse */
+void
+minfestcorpse(mtmp)
+register struct monst *mtmp;
+{
+register struct obj *otmp;
+    /* If a pet, eating is handled separately, in dog.c */
+    if (mtmp->mtame) return;
+
+    /* Infest topmost corpse if it is there */
+    for (otmp = level.objects[mtmp->mx][mtmp->my];
+                  otmp; otmp = otmp->nexthere)
+        if (otmp->otyp == CORPSE) {
+            /* touch sensitive items */
+            if (otmp->otyp == CORPSE && is_rider(&mons[otmp->corpsenm])) {
+                /* Rider corpse isn't just inedible; can't engulf it either */
+                if (cansee(mtmp->mx, mtmp->my) && flags.verbose)
+                    pline("%s attempts to infest %s!", Monnam(mtmp),
+                      distant_name(otmp,doname));
+                (void) revive_corpse(otmp);
+                return;
+            }
+            if (cansee(mtmp->mx,mtmp->my) && flags.verbose)
+                pline("%s infests %s!", Monnam(mtmp),
+                  distant_name(otmp,doname));
+            else if (!Deaf && flags.verbose)
+                You("hear an unsettling writhing noise.");
+            dogintr(mtmp, &mons[otmp->corpsenm]);
+            clone_mon(mtmp, 0, 0);
+            delobj(otmp);
+            break; /* only eat one at a time... */
+        }
+    newsym(mtmp->mx, mtmp->my);
 }
 
 /* monster eats a pile of objects */
@@ -2148,6 +2197,8 @@ register struct monst *mtmp;
         mtmp->cham = NON_PM;
     } else if (mtmp->data == &mons[PM_WEREJACKAL])
         set_mon_data(mtmp, &mons[PM_HUMAN_WEREJACKAL], -1);
+    else if (mtmp->data == &mons[PM_WEREBEAR])
+        set_mon_data(mtmp, &mons[PM_HUMAN_WEREBEAR], -1);
     else if (mtmp->data == &mons[PM_WEREWOLF])
         set_mon_data(mtmp, &mons[PM_HUMAN_WEREWOLF], -1);
     else if (mtmp->data == &mons[PM_ALPHA_WEREWOLF])
@@ -4280,11 +4331,13 @@ struct permonst *mdat;
         case PM_MALCANTHET:
             break;
         case PM_HUMAN_WEREJACKAL:
+        case PM_HUMAN_WEREBEAR:
         case PM_HUMAN_WERERAT:
         case PM_HUMAN_WEREWOLF:
         case PM_PACK_LORD:
         case PM_ALPHA_WEREWOLF:
         case PM_WEREJACKAL:
+        case PM_WEREBEAR:
         case PM_WERERAT:
         case PM_WEREWOLF:
         case PM_OWLBEAR:

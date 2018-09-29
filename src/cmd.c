@@ -2852,6 +2852,9 @@ int final;
     else if (!u.uconduct.unvegetarian)
         you_have_been("vegetarian");
 
+    if (!u.uconduct.alcohol)
+        you_have_been("teetotaler");
+
     if (!u.uconduct.gnostic)
         you_have_been("an atheist");
 

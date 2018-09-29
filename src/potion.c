@@ -1118,6 +1118,7 @@ register struct obj *otmp;
         }
         break;
     case POT_BOOZE:
+        u.uconduct.alcohol++;
         unkn++;
         pline("Ooph!  This tastes like %s%s!",
               otmp->odiluted ? "watered down " : "",

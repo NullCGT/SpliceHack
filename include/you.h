@@ -90,6 +90,7 @@ struct u_conduct {     /* number of times... */
     long unvegetarian; /* eaten any animal */
     long unvegan;      /* ... or any animal byproduct */
     long food;         /* ... or any comestible */
+    long alcohol;      /* drank alcohol */
     long gnostic;      /* used prayer, priest, or altar */
     long weaphit;      /* hit a monster with a weapon */
     long killer;       /* killed a monster yourself */

@@ -429,6 +429,8 @@ encodeconduct()
         e |= 1L << 11;
     if (!u.uconduct.elbereth)
         e |= 1L << 12;
+    if (!u.uconduct.alcohol)
+        e |= 1L << 13;
 
     return e;
 }

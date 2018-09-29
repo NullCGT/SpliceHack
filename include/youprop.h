@@ -207,6 +207,10 @@
 #define EAggravate_monster u.uprops[AGGRAVATE_MONSTER].extrinsic
 #define Aggravate_monster (HAggravate_monster || EAggravate_monster)
 
+#define BloodMagic u.uprops[BLOODMAGIC].extrinsic
+
+#define GoodMemory u.uprops[GOODMEMORY].extrinsic
+
 #define HConflict u.uprops[CONFLICT].intrinsic
 #define EConflict u.uprops[CONFLICT].extrinsic
 #define Conflict (HConflict || EConflict)
@@ -371,10 +375,6 @@
 #define Fixed_abil u.uprops[FIXED_ABIL].extrinsic /* KMH */
 
 #define Lifesaved u.uprops[LIFESAVED].extrinsic
-
-#define BloodMagic u.uprops[BLOODMAGIC].extrinsic
-
-#define GoodMemory u.uprops[GOODMEMORY].extrinsic
 
 /*
  * Some pseudo-properties.

@@ -63,6 +63,8 @@ enum prop_types {
     DISPLACED,
     STEALTH,
     AGGRAVATE_MONSTER,
+    BLOODMAGIC,
+    GOODMEMORY,
     CONFLICT,
     /* Transportation */
     JUMPING,
@@ -89,8 +91,6 @@ enum prop_types {
     REFLECTING,
     FREE_ACTION,
     FIXED_ABIL,
-    BLOODMAGIC,
-    GOODMEMORY,
     LIFESAVED
 };
 #define LAST_PROP (LIFESAVED)

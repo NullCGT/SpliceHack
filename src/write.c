@@ -55,9 +55,10 @@ ink_cost(short otyp)
     case SCR_TELEPORTATION:
         return 20;
     case SCR_TIME:
-    case SCR_KNOWLEDGE:
     case SCR_GENOCIDE:
         return 30;
+    case SCR_KNOWLEDGE:
+        return 1000;
     case SCR_BLANK_PAPER:
     default:
         impossible("You can't write such a weird scroll!");

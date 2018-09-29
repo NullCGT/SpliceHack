@@ -645,7 +645,7 @@ STATIC_OVL void
 mkrivers()
 {
     int nriv = rn2(3) + 1;
-    boolean lava = rn2(100) < depth(&u.uz);
+    boolean lava = (rn2(100) < depth(&u.uz)) && !Race_if(PM_MERFOLK);
     while (nriv--) {
       	if (rn2(2)) makeriver(0, rn2(ROWNO), COLNO-1, rn2(ROWNO), lava);
       	else makeriver(rn2(COLNO), 0, rn2(COLNO), ROWNO-1, lava);
@@ -840,6 +840,9 @@ makelevel()
 
     {
         register int u_depth = depth(&u.uz);
+        if (Race_if(PM_MERFOLK) && !rn2(3)) {
+            mkrivers();
+        }
         if (wizard && nh_getenv("SHOPTYPE"))
             mkroom(SHOPBASE);
         else if (u_depth > 1 && u_depth < depth(&medusa_level)

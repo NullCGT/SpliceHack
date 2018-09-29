@@ -1573,7 +1573,6 @@ register struct attack *mattk;
         if (!mtmp->mcan)
             stealgold(mtmp);
         break;
-
     case AD_SSEX:
         if (SYSOPT_SEDUCE) {
             if (could_seduce(mtmp, &youmonst, mattk) == 1 && !mtmp->mcan) {
@@ -2556,6 +2555,46 @@ struct attack *mattk;
             done(STONING);
         }
         break;
+        case AD_PLYS:
+            if (!mtmp->mcan && mtmp->mcansee && !mtmp->mspec_used && rn2(4) &&
+                multi>=0 && !((is_undead(youmonst.data)
+                || is_demon(youmonst.data)) && is_undead(mtmp->data))) {
+                pline("%s aberrant stare frightens you to the core!",
+                    s_suffix(Monnam(mtmp)));
+                if(Free_action){
+                    pline("But you quickly regain composure.");
+                }
+                else {
+          		      int prlys = d((int)mattk->damn, (int)mattk->damd);
+                    int numhelp, numseen;
+                    nomul(-prlys);
+                    nomovemsg = 0;	/* default: "you can move again" */
+
+                    if(!mtmp->cham && mtmp->data == &mons[PM_NOSFERATU] &&
+                        !mtmp->mcan && !rn2(3)){
+                        numhelp = were_summon(mtmp->data, FALSE, &numseen, 0);
+                        pline("%s summons help!", Monnam(mtmp));
+                        if (numhelp > 0) {
+                            if (numseen == 0)
+                                You_feel("hemmed in.");
+                        } else pline("But none comes.");
+                    }
+                    mtmp->mspec_used += prlys*3/2 + rn2(prlys);
+                }
+            }
+            break;
+    case AD_HNGY:
+      if(!mtmp->mcan && canseemon(mtmp) &&
+          couldsee(mtmp->mx, mtmp->my) && !is_fainted() &&
+          mtmp->mcansee && !mtmp->mspec_used && rn2(5)) {
+          int hunger = 20 + d(3,4);
+
+          mtmp->mspec_used = mtmp->mspec_used + (hunger + rn2(6));
+          pline("%s gaze reminds you of delicious %s.",
+              s_suffix(Monnam(mtmp)), fruitname(FALSE));
+          morehungry(hunger);
+      }
+      break;
     case AD_CONF:
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee
             && !mtmp->mspec_used && rn2(5)) {
@@ -2592,6 +2631,16 @@ struct attack *mattk;
         }
         break;
     case AD_BLND:
+        if (mtmp->data == &mons[PM_UMBRAL_HULK]){
+            if (!mtmp->mspec_used && !Blind && couldsee(mtmp->mx, mtmp->my) &&
+                    can_blnd(mtmp, &youmonst, mattk->aatyp, (struct obj*)0)) {
+                pline("You meet %s gaze! The shadows merge into utter darkness!",
+                      s_suffix(mon_nam(mtmp)) );
+                make_blinded(Blinded + d((int)mattk->damn, (int)mattk->damd), FALSE);
+                if (!Blind) Your1(vision_clears);
+            }
+            break;
+        }
         if (canseemon(mtmp) && !resists_blnd(&youmonst)
             && distu(mtmp->mx, mtmp->my) <= BOLT_LIM * BOLT_LIM) {
             if (cancelled) {

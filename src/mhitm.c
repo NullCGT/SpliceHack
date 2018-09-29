@@ -1305,7 +1305,8 @@ register struct attack *mattk;
         }
         break;
     case AD_BLND:
-        if (can_blnd(magr, mdef, mattk->aatyp, (struct obj *) 0)) {
+        if (can_blnd(magr, mdef, mattk->aatyp, (struct obj *) 0)
+            && (magr->data != &mons[PM_UMBRAL_HULK] || !magr->mspec_used)) {
             register unsigned rnd_tmp;
 
             if (vis && mdef->mcansee && canspotmon(mdef))
@@ -1399,6 +1400,17 @@ register struct attack *mattk;
                 mdef->m_lev--;
             /* Automatic kill if drained past level 0 */
         }
+        break;
+    case AD_HNGY:
+        tmp = 0;
+        if (cancelled || !mdef->mtame) break;
+        if (mdef->mtame && !mdef->isminion)
+            EDOG(mdef)->hungrytime -= 50;
+
+        magr->mspec_used = magr->mspec_used + 50;
+        if (canseemon(mdef))
+            pline("%s %s rumbles.",
+                s_suffix(Monnam(mdef)), mbodypart(mdef,STOMACH));
         break;
     case AD_SSEX:
     case AD_SITM: /* for now these are the same */

@@ -28,6 +28,7 @@ STATIC_DCL void FDECL(stripspe, (struct obj *));
 STATIC_DCL void FDECL(p_glow1, (struct obj *));
 STATIC_DCL void FDECL(p_glow2, (struct obj *, const char *));
 STATIC_DCL void FDECL(forget_single_object, (int));
+STATIC_PTR void FDECL(set_dark, (int,int,genericptr_t));
 #if 0 /* not used */
 STATIC_DCL void FDECL(forget_objclass, (int));
 #endif
@@ -794,6 +795,45 @@ int obj_id;
     undiscover_object(obj_id); /* after clearing oc_name_known */
 
     /* clear & free object names from matching inventory items too? */
+}
+
+STATIC_PTR void
+set_dark(x,y,val)
+int x, y;
+genericptr_t val;
+/* *val comes in as 0 if blind, -1, 1, or 2 otherwise
+ *val leaves as 0 if blind
+               -1 if darkness hit you at sometime
+                2 if you saw darkness, but it hasn't
+                1 if you haven't seen darkness yet
+                     yet hit you */
+{
+    char * nblind = (char *) val;
+    register struct obj *otmp;
+    if (u.ux == x && u.uy == y) {
+        if (* nblind) {
+            *nblind = -1;
+            if (uwep && artifact_light(uwep) && uwep->lamplit)
+                pline("Suddenly, the only light left comes from %s!",
+                    the(xname(uwep)));
+        else
+            You("are surrounded by darkness!");
+        }
+        /* the magic douses lamps, et al, too */
+        for(otmp = invent; otmp; otmp = otmp->nobj)
+            if (otmp->lamplit)
+                (void) snuff_lit(otmp);
+    } else {
+        struct monst * mlit = m_at(x,y);
+        if (*nblind == 1 && levl[x][y].lit && cansee(x,y))
+            *nblind = 2;
+        if (mlit)
+            for(otmp = mlit->minvent; otmp; otmp = otmp->nobj)
+                if (otmp->lamplit)
+                    (void) snuff_lit(otmp);
+    }
+    levl[x][y].lit = 0;
+    snuff_light_source(x, y);
 }
 
 #if 0 /* here if anyone wants it.... */
@@ -2360,6 +2400,53 @@ struct obj *obj;
             free((genericptr_t) gremlin);
         } while (gremlins);
     }
+}
+
+/* can be used even if no mon is at xx, yy */
+void
+litroom_mon(on,obj, xx, yy)
+register boolean on;
+struct obj *obj;
+int xx, yy;
+{
+    struct monst * mlit = m_at(xx,yy);
+    char u_see_effects = !Blind;
+
+    /*
+     *  If we are darkening the room and the hero is punished but not
+     *  blind, then we have to pick up and replace the ball and chain so
+     *  that we don't remember them if they are out of sight.
+     */
+    if (Punished && !on && !Blind)
+        move_bc(1, 0, uball->ox, uball->oy, uchain->ox, uchain->oy);
+
+
+    do_clear_area(xx,yy,
+        (obj && obj->oclass==SCROLL_CLASS && obj->blessed) ? 5 : 3,
+        (on)?set_lit:set_dark, (genericptr_t)&u_see_effects );
+
+    /*
+     *  If we are not blind, then force a redraw on all positions in sight
+     *  by temporarily blinding the hero.  The vision recalculation will
+     *  correctly update all previously seen positions *and* correctly
+     *  set the waslit bit [could be messed up from above].
+     */
+    if (!Blind) {
+        vision_recalc(2);
+
+      /* replace ball&chain */
+      if (Punished && !on)
+          move_bc(0, 0, uball->ox, uball->oy, uchain->ox, uchain->oy);
+    }
+    if (on && canseemon(mlit)){
+        pline("A lit field surrounds %s!", mon_nam(mlit));
+    }
+    if (!on && u_see_effects==2){
+        pline("A shroud of darkness settles %s!",
+            (distu(xx,yy) > 15)?"in the distance":"nearby");
+    }
+
+    vision_full_recalc = 1;	/* delayed vision recalculation */
 }
 
 STATIC_OVL void

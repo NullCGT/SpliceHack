@@ -659,11 +659,20 @@ toofar:
                 }
             }
         }
+
         if (mtmp->monmount != 1)
             tmp = m_move(mtmp, 0);
         else
             tmp = 0;
         update_monsteed(mtmp);
+
+        if (mtmp->data == &mons[PM_UMBRAL_HULK] &&
+                 !mtmp->mcan && !mtmp->mspec_used &&
+                 levl[mtmp->mx][mtmp->my].lit) {
+            litroom_mon(0, 0, mtmp->mx, mtmp->my);
+            mtmp->mspec_used = 5 + rn2(11);
+        }
+
         if (tmp != 2)
             distfleeck(mtmp, &inrange, &nearby, &scared); /* recalc */
 

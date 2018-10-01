@@ -1157,7 +1157,8 @@ boolean ranged;
 		 mtmp->mcansee && haseyes(mtmp->data) && mtmp2->mcansee
 		 && (perceives(mtmp->data) || !mtmp2->minvis)) ||
 		(!ranged &&
-		 mtmp2->data==&mons[PM_GELATINOUS_CUBE] && rn2(10)) ||
+		 (mtmp2->data==&mons[PM_GELATINOUS_CUBE]
+        || mtmp2->data==&mons[PM_PORCUPINE]) && rn2(10)) ||
 		(!ranged &&
 		 max_passive_dmg(mtmp2, mtmp) >= mtmp->mhp) ||
 		((mtmp->mhp*4 < mtmp->mhpmax

@@ -406,6 +406,9 @@ register struct monst *mtmp;
     case MS_NEIGH:
         ret = "neigh";
         break;
+    case MS_PIG:
+        ret = "squeal";
+        break;
     case MS_WAIL:
         ret = "wail";
         break;
@@ -674,6 +677,9 @@ register struct monst *mtmp;
                 /* These first two (0 and 1) are specially handled below */
                 "I vant to suck your %s!",
                 "I vill come after %s without regret!",
+                "Vat is an adventurer? A miserable little pile of secrets!", /* Castlevania */
+                "Tremble before my true form!", /* Castlevania */
+                "Don't open it.", /* VTM:B */
                 /* other famous vampire quotes can follow here if desired */
             };
             if (kindred)
@@ -802,6 +808,9 @@ register struct monst *mtmp;
         else
             pline_msg = "whickers.";
         break;
+    case MS_PIG:
+        pline_msg = mtmp->mpeaceful ? "oinks." : "squeals angrily.";
+        break;
     case MS_WAIL:
         pline_msg = "wails mournfully.";
         break;
@@ -918,6 +927,9 @@ register struct monst *mtmp;
                         ? "complains about unpleasant dungeon conditions."
                         : "asks you about the One Ring.";
                 break;
+            case PM_GENETIC_ENGINEER:
+                pline_msg = "talks about the theory of evolution.";
+                break;
             case PM_ARCHEOLOGIST:
                 pline_msg =
                 "describes a recent article in \"Spelunker Today\" magazine.";
@@ -925,6 +937,17 @@ register struct monst *mtmp;
             case PM_TOURIST:
                 verbl_msg = "Aloha.";
                 break;
+            case PM_CARTOMANCER:
+                pline_msg = "Tells you that their deck lacks cards which could be considered pathetic.";
+                break;
+            case PM_DRAGONMASTER:
+                verbl_msg = "The only authority I answer to is that of the wyrm.";
+                break;
+            case PM_WALKING_OAK:
+            case PM_WALKING_BIRCH:
+            case PM_WALKING_WILLOW:
+                verbl_msg = rn2(2) ?
+                    "Compared to me, you are but a sapling." : "Hoom!";
             default:
                 pline_msg = "discusses dungeon exploration.";
                 break;
@@ -956,6 +979,8 @@ register struct monst *mtmp;
     case MS_ARREST:
         if (mtmp->mpeaceful)
             verbalize("Just the facts, %s.", flags.female ? "Ma'am" : "Sir");
+        else if (mtmp->data == &mons[PM_KORRUPT_KOP])
+            verbalize("Stop resisting arrest!");
         else {
             static const char *const arrest_msg[3] = {
                 "Anything you say can be used against you.",

@@ -24,7 +24,8 @@
 #define MS_MOO 14       /* cow */
 #define MS_CHIMERA 15   /* chimera */
 #define MS_ANT 16       /* ants */
-#define MS_ANIMAL 16    /* up to here are animal noises */
+#define MS_PIG 17          /* boars */
+#define MS_ANIMAL 17    /* up to here are animal noises */
 #define MS_SHRIEK 18    /* wakes up others */
 #define MS_BONES 19     /* rattles bones (skeleton) */
 #define MS_LAUGH 20     /* grins, smiles, giggles, and laughs */

@@ -699,7 +699,10 @@ struct monst *mtmp;
         if (vismon)
             pline("%s plays %s!", Monnam(mtmp), doname(otmp));
         else if (!Deaf && mtmp->data == &mons[PM_HERALD_ARCHON])
-            You_hear("a piercing series of trumpet blasts!");
+            if (Hallucination)
+                pline("Hark, the herald archon sings!");
+            else
+                You_hear("a piercing series of trumpet blasts!");
         else if (!Deaf)
             You_hear("a bugle playing reveille!");
 

@@ -153,6 +153,8 @@ Miscellaneous Changes
 - Tourist player monsters spawn with expensive cameras, and knights are
   automatically mounted on ponies.
 - Drinking alcohol is tracked throughout the game.
+- Pets avoid eating chameleons.
+- Pets avoid attacking porcupines.
 
 Bug Fixes
 - Quilled monsters actually work. Apparently they have been bugged since the

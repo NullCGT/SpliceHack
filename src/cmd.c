@@ -2853,7 +2853,7 @@ int final;
         you_have_been("vegetarian");
 
     if (!u.uconduct.alcohol)
-        you_have_been("teetotaler");
+        you_have_been("a teetotaler");
 
     if (!u.uconduct.gnostic)
         you_have_been("an atheist");

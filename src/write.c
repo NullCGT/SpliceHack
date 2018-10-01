@@ -57,8 +57,6 @@ ink_cost(short otyp)
     case SCR_TIME:
     case SCR_GENOCIDE:
         return 30;
-    case SCR_KNOWLEDGE:
-        return 1000;
     case SCR_BLANK_PAPER:
     default:
         impossible("You can't write such a weird scroll!");
@@ -244,6 +242,10 @@ found:
 
     /* see if there's enough ink */
     basecost = ink_cost(new_obj->otyp);
+    if (new_obj->otyp == SCR_KNOWLEDGE) {
+        You("cannot write something you do not know!");
+        return 1;
+    }
     if (pen->spe < basecost / 2) {
         Your("marker is too dry to write that!");
         obfree(new_obj, (struct obj *) 0);

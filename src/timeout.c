@@ -493,7 +493,7 @@ nh_timeout()
             case LARVACARRIER:
                 /* must be in this order for bones files. */
                 create_critters(2 + rn2(3), &mons[PM_BABY_BROOD_WASP], TRUE);
-                losehp(d(5, 3), "being eaten from the inside by insects", KILLED_BY);
+                losehp(d(10, 4), "being eaten from the inside by insects", KILLED_BY);
                 break;
             case SLIMED:
                 if (kptr && kptr->name[0]) {

@@ -2556,9 +2556,11 @@ struct attack *mattk;
         }
         break;
         case AD_PLYS:
-            if (!mtmp->mcan && mtmp->mcansee && !mtmp->mspec_used && rn2(4) &&
-                multi>=0 && !((is_undead(youmonst.data)
-                || is_demon(youmonst.data)) && is_undead(mtmp->data))) {
+            if (!mtmp->mcan && canseemon(mtmp)
+                && couldsee(mtmp->mx, mtmp->my) && !is_fainted()
+                && !mtmp->mspec_used && rn2(4)
+                && multi>=0 && !((is_undead(youmonst.data)
+                  || is_demon(youmonst.data)) && is_undead(mtmp->data))) {
                 pline("%s aberrant stare frightens you to the core!",
                     s_suffix(Monnam(mtmp)));
                 if(Free_action){

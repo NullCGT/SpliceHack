@@ -463,7 +463,7 @@ doread()
             useup(scroll);
     }
     /* */
-    if (Role_if(PM_CARTOMANCER)) {
+    if (Role_if(PM_CARTOMANCER) && scroll->otyp != SCR_TIME) {
         struct monst *mtmp, *mtmp2;
         for (mtmp = fmon; mtmp; mtmp = mtmp2) {
             mtmp2 = mtmp->nmon;

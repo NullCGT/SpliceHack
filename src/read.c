@@ -467,7 +467,7 @@ doread()
         struct monst *mtmp, *mtmp2;
         for (mtmp = fmon; mtmp; mtmp = mtmp2) {
             mtmp2 = mtmp->nmon;
-            if (mtmp->mpeaceful || mtmp->mtame
+            if (DEADMONSTER(mtmp) || mtmp->mpeaceful || mtmp->mtame
                 || distu(mtmp->mx, mtmp->my) > 16)
                 continue;
             card_response(mtmp);

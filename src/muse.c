@@ -301,7 +301,7 @@ struct monst *mtmp;
         m.has_defense = MUSE_POT_HEALING;
         return TRUE;
     }
-    if ((obj = m_carrying(mtmp, WAN_HEALING)) != 0) {
+    if (obj->otyp == WAN_HEALING && obj->spe > 0) {
         m.defensive = obj;
         m.has_defense = MUSE_WAN_HEALING;
         return TRUE;
@@ -1022,6 +1022,7 @@ struct monst *mtmp;
             pline("%s looks better.", Monnam(mtmp));
         if (oseen)
             makeknown(WAN_HEALING);
+        otmp->spe--;
         return 2;
     case MUSE_POT_EXTRA_HEALING:
         mquaffmsg(mtmp, otmp);

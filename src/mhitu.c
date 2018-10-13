@@ -3340,6 +3340,12 @@ struct attack *mattk;
             if (!sticks(mtmp->data))
                 u.ustuck = mtmp; /* it's now stuck to you */
             break;
+        case AD_BLND:
+            You("spray %s!", mon_nam(mtmp));
+            mtmp->mcansee = 0;
+            mtmp->mblinded = 1 + rn2(3);
+            tmp = 0;
+            break;
         case AD_PLYS: /* Floating eye */
             if (tmp > 127)
                 tmp = 127;

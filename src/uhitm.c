@@ -3018,6 +3018,13 @@ boolean wep_was_destroyed;
                 }
             }
             break;
+        case AD_BLND:
+            if (!mon->mcan && !rn2(2)) {
+                pline("%s sprays you! Ugh!", Monnam(mon));
+                make_blinded(Blinded + 1 + rn2(3), FALSE);
+                exercise(A_CHA, FALSE);
+            }
+            break;
         case AD_STCK:
             if (!mon->mcan && !u.ustuck && !sticks(youmonst.data)) {
                 pline("You stick to %s!", mon_nam(mon));

@@ -1919,6 +1919,15 @@ int mdead;
                     grow_up(mdef, (struct monst *) 0);
                 }
             }
+            tmp = 0;
+            break;
+        case AD_BLND:
+            if (!mdef->mcan && !rn2(2)) {
+                pline("%s sprays %s!", Monnam(mdef), mon_nam(magr));
+                mdef->mcansee = 0;
+                mdef->mblinded = 1 + rn2(3);
+            }
+            tmp = 0;
             break;
         case AD_STCK:
             if (!mdef->mcan)

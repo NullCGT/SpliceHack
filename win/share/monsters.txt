@@ -2534,6 +2534,25 @@ Z = (195, 195, 195)
   ..........JJA...
   ................
 }
+# tile 113 (skunk)
+{
+  ................
+  ............AAA.
+  ...........AANNA
+  ...........AANNA
+  ...........AANNA
+  ...........AANNA
+  ..A..A.RAAAAANNA
+  ..AAAARAAARAAANA
+  ..RAAAARARRAAARA
+  ..KAKAARARRAAAAA
+  ..AAAARAAAAAAAAA
+  .AARRRRAARAAAAAA
+  ..RRAAAAARRARAA.
+  ..AA.AAAA..RAA..
+  ................
+  ................
+}
 # tile 114 (rabid rat)
 {
   ................
@@ -2684,6 +2703,25 @@ Z = (195, 195, 195)
   .NKJNAKCAJJA.KA.
   .OAAOKKAA....JA.
   ............JA..
+  ................
+}
+# tile 113 (giant skunk)
+{
+  ................
+  ..F...F..F..AAA.
+  ..F...F..F.AANNA
+  .....F..F..AANNA
+  .AA..F..F..AANNA
+  AAIA.......AANNA
+  AAAAAA.RAAAAANNA
+  AAAAAARAAARAAANA
+  .AAAAAARARRAAARA
+  ..AAAAARARRAAAAA
+  ..AAAARAAAAAAAAA
+  ..AARRRAARAAAAAA
+  ..RRAAAAARRARAA.
+  ..AA.AAAA..RAA..
+  ................
   ................
 }
 # tile 121 (cave spider)

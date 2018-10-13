@@ -1000,6 +1000,12 @@ NEARDATA struct permonst mons[] = {
         SIZ(30, 30, MS_SQEEK, MZ_TINY), 0, 0,
         M1_ANIMAL | M1_NOHANDS | M1_CARNIVORE, M2_HOSTILE, M3_INFRAVISIBLE,
         CLR_BROWN),
+    MON("skunk", S_RODENT, LVL(1, 10, 8, 0, 0), (G_GENO | 1),
+        A(ATTK(AT_BITE, AD_PHYS, 1, 3), ATTK(AT_NONE, AD_BLND, 0, 0),
+          NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(30, 30, MS_GROWL, MZ_TINY), 0, 0,
+        M1_ANIMAL | M1_NOHANDS | M1_HERBIVORE, M2_WANDER, M3_INFRAVISIBLE,
+        CLR_BLACK),
     MON("rabid rat", S_RODENT, LVL(2, 12, 6, 0, 0), (G_GENO | 1),
         A(ATTK(AT_BITE, AD_DRCO, 2, 4), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
           NO_ATTK),
@@ -1055,6 +1061,13 @@ NEARDATA struct permonst mons[] = {
       	SIZ(20, 12, MS_SQEEK, MZ_TINY), MR_FIRE, MR_FIRE,
       	M1_ANIMAL | M1_NOHANDS | M1_CARNIVORE,
       	M2_HOSTILE, M3_INFRAVISIBLE, CLR_RED),
+    MON("giant skunk", S_RODENT, LVL(10, 12, 5, 0, 0), (G_GENO | 1),
+        A(ATTK(AT_BITE, AD_PHYS, 3, 8), ATTK(AT_NONE, AD_BLND, 0, 0),
+          NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(800, 200, MS_GROWL, MZ_LARGE), MR_POISON, 0,
+        M1_ANIMAL | M1_NOHANDS | M1_HERBIVORE,
+        M2_HOSTILE | M2_WANDER, M3_INFRAVISIBLE,
+        CLR_MAGENTA),
     /*
      * spiders & scorpions (keep webmaker() in sync if new critters are added)
      */

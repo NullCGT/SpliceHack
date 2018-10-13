@@ -2949,11 +2949,13 @@ gethungry()
 
     if (moves % 2) { /* odd turns */
         /* Regeneration uses up food, unless due to an artifact */
-        if ((HRegeneration & ~FROMFORM)
-            || (ERegeneration & ~(W_ARTI | W_WEP)))
-            u.uhunger--;
-        if (near_capacity() > SLT_ENCUMBER)
-            u.uhunger--;
+        if (Regeneration && !Race_if(PM_INFERNAL)) {
+            if ((HRegeneration & ~FROMFORM)
+                || (ERegeneration & ~(W_ARTI | W_WEP)))
+                u.uhunger--;
+            if (near_capacity() > SLT_ENCUMBER)
+                u.uhunger--;
+        }
     } else { /* even turns */
         if (Hunger)
             u.uhunger--;

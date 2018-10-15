@@ -301,10 +301,12 @@ struct monst *mtmp;
         m.has_defense = MUSE_POT_HEALING;
         return TRUE;
     }
-    if (obj->otyp == WAN_HEALING && obj->spe > 0) {
-        m.defensive = obj;
-        m.has_defense = MUSE_WAN_HEALING;
-        return TRUE;
+    if ((obj = m_carrying(mtmp, WAN_HEALING)) != 0) {
+        if (obj->spe > 0) {
+            m.defensive = obj;
+            m.has_defense = MUSE_WAN_HEALING;
+            return TRUE;
+        }
     }
     if (is_vampire(mtmp->data) &&
 		  (obj = m_carrying(mtmp, POT_VAMPIRE_BLOOD)) !=0) {

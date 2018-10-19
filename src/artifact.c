@@ -2471,6 +2471,8 @@ struct obj *obj;
     struct obj *otmp;
    	You_hear("%s.",random_seasound[rn2(SIZE(random_seasound))]);
    	for (otmp = obj->cobj; otmp; otmp = otmp->nobj){
+        if (!otmp->unpaid)
+            otmp->no_charge = 1;
      		if (dobj) {
      			  delobj(dobj);
      			    dobj = 0;

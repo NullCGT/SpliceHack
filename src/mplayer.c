@@ -180,6 +180,7 @@ register boolean special;
             break;
         case PM_CAVEMAN:
         case PM_CAVEWOMAN:
+        case PM_CAVEPERSON:
             if (rn2(4))
                 weapon = MACE;
             else if (rn2(2))
@@ -217,6 +218,7 @@ register boolean special;
             break;
         case PM_PRIEST:
         case PM_PRIESTESS:
+        case PM_MINISTER:
             if (rn2(2))
                 weapon = MACE;
             if (rn2(2))

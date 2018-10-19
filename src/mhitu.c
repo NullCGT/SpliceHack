@@ -2129,7 +2129,7 @@ struct attack *mattk;
 
         if (!engulf_target(mtmp, &youmonst))
             return 0;
-        if ((t && ((t->ttyp == PIT) || (t->ttyp == SPIKED_PIT)))
+        if ((t && is_pit(t->ttyp))
             && sobj_at(BOULDER, u.ux, u.uy))
             return 0;
 
@@ -2164,7 +2164,7 @@ struct attack *mattk;
         if (u.utrap) {
             You("are released from the %s!",
                 u.utraptype == TT_WEB ? "web" : "trap");
-            u.utrap = 0;
+            reset_utrap(FALSE);
         }
 
         i = number_leashed();
@@ -3129,7 +3129,7 @@ struct monst *mon;
         ;
     } else if (rn2(20) < ACURR(A_CHA)) {
         pline("%s demands that you pay %s, but you refuse...",
-              noit_Monnam(mon), Blind ? (fem ? "her" : "him") : mhim(mon));
+              noit_Monnam(mon), noit_mhim(mon));
     } else if (u.umonnum == PM_LEPRECHAUN) {
         pline("%s tries to take your money, but fails...", noit_Monnam(mon));
     } else {

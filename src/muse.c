@@ -301,10 +301,12 @@ struct monst *mtmp;
         m.has_defense = MUSE_POT_HEALING;
         return TRUE;
     }
-    if (obj->otyp == WAN_HEALING && obj->spe > 0) {
-        m.defensive = obj;
-        m.has_defense = MUSE_WAN_HEALING;
-        return TRUE;
+    if ((obj = m_carrying(mtmp, WAN_HEALING)) != 0) {
+        if (obj->spe > 0) {
+            m.defensive = obj;
+            m.has_defense = MUSE_WAN_HEALING;
+            return TRUE;
+        }
     }
     if (is_vampire(mtmp->data) &&
 		  (obj = m_carrying(mtmp, POT_VAMPIRE_BLOOD)) !=0) {
@@ -482,7 +484,7 @@ boolean force;
                 || onscary(xx, yy, mtmp))
                 continue;
             /* use trap if it's the correct type */
-            if ((t->ttyp == TRAPDOOR || t->ttyp == HOLE)
+            if (is_hole(t->ttyp)
                 && !is_floater(mtmp->data)
                 && !mtmp->isshk && !mtmp->isgd && !mtmp->ispriest
                 && Can_fall_thru(&u.uz)) {
@@ -538,7 +540,7 @@ boolean force;
 
     /* kludge to cut down on trap destruction (particularly portals) */
     t = t_at(x, y);
-    if (t && (t->ttyp == PIT || t->ttyp == SPIKED_PIT || t->ttyp == WEB
+    if (t && (is_pit(t->ttyp) || t->ttyp == WEB
               || t->ttyp == BEAR_TRAP))
         t = 0; /* ok for monster to dig here */
 

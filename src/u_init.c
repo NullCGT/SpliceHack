@@ -755,7 +755,6 @@ u_init()
                                  : (flags.female == 2 && urole.nbnum != NON_PM)
                                     ? urole.nbnum
                                     : urole.malenum;
-    pline("%d", u.umonnum);
     u.ulycn = NON_PM;
     set_uasmon();
 

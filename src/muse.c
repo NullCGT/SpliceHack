@@ -3031,9 +3031,11 @@ struct monst *mon;
             /* This is fine for dragons, because an artifact would be a good
                addition to their hoard. */
             otmp = mk_artifact((struct obj *)0, mon->malign);
-            bless(otmp);
-            (void) mpickobj(mon, otmp);
-            wearable = TRUE;
+            if (otmp) {
+                bless(otmp);
+                (void) mpickobj(mon, otmp);
+                wearable = TRUE;
+            }
             break;
         case 4:
             if (mon->mreflect == 1 || monsndx(mon->data) == PM_SILVER_DRAGON) {

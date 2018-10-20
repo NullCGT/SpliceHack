@@ -1983,7 +1983,8 @@ struct monst *mtmp;
             m.has_misc = MUSE_POT_SPEED;
         }
         nomore(MUSE_POT_BOOZE);
-        if (obj->otyp == POT_BOOZE && is_pirate(mtmp->data) && !mtmp->mconf) {
+        if (obj->otyp == POT_BOOZE &&
+          ((is_pirate(mtmp->data) && !mtmp->mconf) || mtmp->mflee)) {
             m.misc = obj;
             m.has_misc = MUSE_POT_BOOZE;
         }
@@ -2178,6 +2179,17 @@ struct monst *mtmp;
     case MUSE_POT_BOOZE:
         mquaffmsg(mtmp, otmp);
         mtmp->mconf = 1;
+        mtmp->mflee = 0;
+        mtmp->mfleetim = 0;
+        if (!otmp->odiluted) {
+            mtmp->mhp += 1;
+            if (mtmp->mhp > mtmp->mhpmax)
+                mtmp->mhp = mtmp->mhpmax;
+        }
+        if (otmp->cursed) {
+            sleep_monst(mtmp, rnd(15), -1);
+            pline("%s passes out!", Monnam(mtmp));
+        }
         m_useup(mtmp, otmp);
         if (mtmp->data == &mons[PM_SKELETAL_PIRATE] && canseemon(mtmp))
             pline("%s splatters out of the ribcage of %s.",
@@ -3019,9 +3031,11 @@ struct monst *mon;
             /* This is fine for dragons, because an artifact would be a good
                addition to their hoard. */
             otmp = mk_artifact((struct obj *)0, mon->malign);
-            bless(otmp);
-            (void) mpickobj(mon, otmp);
-            wearable = TRUE;
+            if (otmp) {
+                bless(otmp);
+                (void) mpickobj(mon, otmp);
+                wearable = TRUE;
+            }
             break;
         case 4:
             if (mon->mreflect == 1 || monsndx(mon->data) == PM_SILVER_DRAGON) {

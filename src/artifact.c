@@ -1281,6 +1281,11 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             destroy_item(TOOL_CLASS, AD_LOUD);
         if (!rn2(7))
             destroy_item(WAND_CLASS, AD_LOUD);
+        if (mdef->data == &mons[PM_GLASS_GOLEM]) {
+            pline("%s shatters into a million pieces!", Monnam(mdef));
+            *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
+            return TRUE;
+        }
         return realizes_damage;
     }
     if (attacks(AD_ELEC, otmp)) {
@@ -2471,6 +2476,8 @@ struct obj *obj;
     struct obj *otmp;
    	You_hear("%s.",random_seasound[rn2(SIZE(random_seasound))]);
    	for (otmp = obj->cobj; otmp; otmp = otmp->nobj){
+        if (!otmp->unpaid)
+            otmp->no_charge = 1;
      		if (dobj) {
      			  delobj(dobj);
      			    dobj = 0;

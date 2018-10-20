@@ -3913,14 +3913,17 @@ drown()
     }
 
     if (!u.uinwater) {
-        You("%s into the %s%c", Is_waterlevel(&u.uz) ? "plunge" : "fall",
+        You("%s into the %s%c", Is_waterlevel(&u.uz) ? "plunge" :
+            Race_if(PM_MERFOLK) ? "dive" : "fall",
             hliquid("water"),
             Amphibious || Swimming ? '.' : '!');
         if (!Swimming && !Is_waterlevel(&u.uz))
             You("sink like %s.", Hallucination ? "the Titanic" : "a rock");
     }
 
-    water_damage_chain(invent, FALSE);
+    /* Merfolk can protect their items while underwater */
+    if (!Race_if(PM_MERFOLK))
+        water_damage_chain(invent, FALSE);
 
     if (u.umonnum == PM_GREMLIN && rn2(3))
         (void) split_mon(&youmonst, (struct monst *) 0);

@@ -1973,7 +1973,7 @@ register struct attack *mattk;
             u.ugrave_arise = NON_PM;
             killer.format = KILLED_BY_AN;
             Strcpy(killer.name, mtmp->data->mname);
-            done(DIED);
+            done(MURDERED);
         }
         break;
     case AD_PITS:
@@ -2807,7 +2807,7 @@ int n;
     } else {
         u.uhp -= n;
         if (u.uhp < 1)
-            done_in_by(mtmp, DIED);
+            done_in_by(mtmp, MURDERED);
     }
 }
 

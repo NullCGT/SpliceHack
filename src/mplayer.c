@@ -203,6 +203,13 @@ register boolean special;
                 weapon = BROADSWORD;
             armor = rnd_class(PLATE_MAIL, CHAIN_MAIL);
             break;
+        case PM_PIRATE:
+            if (rn2(4))
+                weapon = SCIMITAR;
+            if (rn2(3))
+                armor = JACKET;
+            (void) mongets(mtmp, POT_BOOZE);
+            break;
         case PM_KNIGHT:
             if (rn2(4))
                 weapon = LONG_SWORD;

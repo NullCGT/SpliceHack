@@ -270,7 +270,8 @@
        : (is_domestic(ptr) && (obj)->oclass == FOOD_CLASS                \
           && ((ptr)->mlet != S_UNICORN                                   \
               || obj->material == VEGGY               \
-              || ((obj)->otyp == CORPSE && (obj)->corpsenm == PM_LICHEN))))
+              || ((obj)->otyp == CORPSE && ((obj)->corpsenm == PM_LICHEN \
+                    || (obj)->corpsenm == PM_LEGENDARY_LICHEN)))))
 
 #define is_blkmktstaff(ptr)	(Is_blackmarket(&u.uz) && \
 				  (ptr) == &mons[PM_ARMS_DEALER])

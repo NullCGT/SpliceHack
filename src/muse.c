@@ -1983,7 +1983,8 @@ struct monst *mtmp;
             m.has_misc = MUSE_POT_SPEED;
         }
         nomore(MUSE_POT_BOOZE);
-        if (obj->otyp == POT_BOOZE && is_pirate(mtmp->data) && !mtmp->mconf) {
+        if (obj->otyp == POT_BOOZE &&
+          ((is_pirate(mtmp->data) && !mtmp->mconf) || mtmp->mflee)) {
             m.misc = obj;
             m.has_misc = MUSE_POT_BOOZE;
         }
@@ -2178,6 +2179,8 @@ struct monst *mtmp;
     case MUSE_POT_BOOZE:
         mquaffmsg(mtmp, otmp);
         mtmp->mconf = 1;
+        mtmp->mflee = 0;
+        mtmp->mfleetim = 0;
         m_useup(mtmp, otmp);
         if (mtmp->data == &mons[PM_SKELETAL_PIRATE] && canseemon(mtmp))
             pline("%s splatters out of the ribcage of %s.",

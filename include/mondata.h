@@ -229,7 +229,8 @@
       || (ptr) == &mons[PM_DAMNED_PIRATE] || (ptr) == &mons[PM_PLANAR_PIRATE] \
       || (ptr) == &mons[PM_MAYOR_CUMMERBUND] || (ptr) == &mons[PM_PIRATE_BROTHER])
 
-#define hates_light(ptr) ((ptr) == &mons[PM_GREMLIN])
+#define hates_light(ptr) ((ptr) == &mons[PM_GREMLIN] \
+      || (ptr) == &mons[PM_NOSFERATU])
 
 /* used to vary a few messages */
 #define weirdnonliving(ptr) (is_golem(ptr) || (ptr)->mlet == S_VORTEX)

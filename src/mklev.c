@@ -583,6 +583,7 @@ boolean lava;
     int dx, dy;
     int chance;
     int count = 0;
+    int monstcount = rn2(4);
 
     cx = x1;
     cy = y1;
@@ -600,7 +601,7 @@ boolean lava;
             		levl[cx][cy].typ = LAVAPOOL;
             		levl[cx][cy].lit = 1;
       	    } else
-      		  levl[cx][cy].typ = !rn2(3) ? POOL : MOAT;
+      		      levl[cx][cy].typ = !rn2(3) ? POOL : MOAT;
       	}
 
       	if (cx == x2 && cy == y2) break;
@@ -637,6 +638,18 @@ boolean lava;
       	else if (cx >= COLNO) cx = COLNO-1;
       	if (cy < 0) cy = 0;
       	else if (cy >= ROWNO) cy = ROWNO-1;
+    }
+    /* loop through and spawn some monsters */
+    count = 0;
+    while (count++ < 2000 && monstcount > 0 && level_difficulty() >= 7) {
+        cx = 1 + rn2(COLNO - 2);
+        cy = 1 + rn2(ROWNO - 2);
+        if (levl[cx][cy].typ == POOL || levl[cx][cy].typ == MOAT) {
+            (void) makemon(&mons[PM_JELLYFISH +
+                rn2(PM_ELECTRIC_EEL - PM_JELLYFISH)],
+                           cx, cy, NO_MM_FLAGS);
+              monstcount--;
+        }
     }
 }
 

@@ -2181,6 +2181,15 @@ struct monst *mtmp;
         mtmp->mconf = 1;
         mtmp->mflee = 0;
         mtmp->mfleetim = 0;
+        if (!otmp->odiluted) {
+            mtmp->mhp += 1;
+            if (mtmp->mhp > mtmp->mhpmax)
+                mtmp->mhp = mtmp->mhpmax;
+        }
+        if (otmp->cursed) {
+            sleep_monst(mtmp, rnd(15), -1);
+            pline("%s passes out!", Monnam(mtmp));
+        }
         m_useup(mtmp, otmp);
         if (mtmp->data == &mons[PM_SKELETAL_PIRATE] && canseemon(mtmp))
             pline("%s splatters out of the ribcage of %s.",

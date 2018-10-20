@@ -139,6 +139,7 @@ enum getpos_retval {
  */
 enum game_end_types {
     DIED = 0,
+    MURDERED,
     CHOKING,
     POISONING,
     STARVING,

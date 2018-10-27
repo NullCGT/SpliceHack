@@ -1819,7 +1819,7 @@ register struct attack *mattk;
         break;
     case AD_DETH:
         pline("%s reaches out with its deadly touch.", Monnam(mtmp));
-        if (is_undead(youmonst.data)) {
+        if (is_undead(youmonst.data) || Race_if(PM_GHOUL)) {
             /* Still does normal damage */
             pline("Was that the touch of death?");
             break;
@@ -2559,7 +2559,7 @@ struct attack *mattk;
             if (!mtmp->mcan && canseemon(mtmp)
                 && couldsee(mtmp->mx, mtmp->my) && !is_fainted()
                 && !mtmp->mspec_used && rn2(4)
-                && multi>=0 && !((is_undead(youmonst.data)
+                && multi>=0 && !((is_undead(youmonst.data) || Race_if(PM_GHOUL)
                   || is_demon(youmonst.data)) && is_undead(mtmp->data))) {
                 pline("%s aberrant stare frightens you to the core!",
                     s_suffix(Monnam(mtmp)));

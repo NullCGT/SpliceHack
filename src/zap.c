@@ -2682,7 +2682,7 @@ boolean ordinary;
     case SPE_TURN_UNDEAD:
         learn_it = TRUE;
         (void) unturn_dead(&youmonst);
-        if (is_undead(youmonst.data)) {
+        if (is_undead(youmonst.data) || Race_if(PM_GHOUL)) {
             You_feel("frightened and %sstunned.",
                      Stunned ? "even more " : "");
             make_stunned((HStun & TIMEOUT) + (long) rnd(30), FALSE);

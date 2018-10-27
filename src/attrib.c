@@ -108,6 +108,10 @@ static const struct innate {
                  { 4, &HSleep_resistance, "awake", "tired" },
                  { 0, 0, 0, 0 } },
 
+  ghu_abil[] = { { 1, &HDrain_resistance, "", "" },
+                 { 1, &HPoison_resistance, "", "" },
+                 { 0, 0, 0, 0 } },
+
   gno_abil[] = { { 1, &HInfravision, "", "" },
                  { 0, 0, 0, 0 } },
 
@@ -758,6 +762,9 @@ long frommask;
             break;
         case PM_ELF:
             abil = elf_abil;
+            break;
+        case PM_GHOUL:
+            abil = ghu_abil;
             break;
         case PM_GNOME:
             abil = gno_abil;

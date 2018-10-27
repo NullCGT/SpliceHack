@@ -1075,7 +1075,7 @@ register struct obj *otmp;
         }
         unkn++;
         if (is_undead(youmonst.data) || is_demon(youmonst.data)
-            || u.ualign.type == A_CHAOTIC) {
+            || Race_if(PM_GHOUL) || u.ualign.type == A_CHAOTIC) {
             if (otmp->blessed) {
                 pline("This burns like %s!", hliquid("acid"));
                 exercise(A_CON, FALSE);

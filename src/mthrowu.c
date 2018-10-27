@@ -319,8 +319,6 @@ struct obj *otmp, *mwep;
      	/* nomul(0); NOT SURE WHAT THIS DOES */
      }
 
-     extern int monstr[];
-
      /* Find a target for a ranged attack. */
      struct monst *
      mfind_target(mtmp)
@@ -415,8 +413,8 @@ struct obj *otmp, *mwep;
      	        if (mtmp->mtame && !mat->mtame &&
      		    acceptable_pet_target(mtmp, mat, TRUE) && i > 0) {
      		    if ((!oldmret) ||
-     		        (monstr[monsndx(mat->data)] >
-     			 monstr[monsndx(oldmret->data)]))
+     		        (mons[monsndx(mat->data)].difficulty >
+     			 mons[monsndx(oldmret->data)].difficulty))
      		    	mret = mat;
      		}
      		else if ((mm_aggression(mtmp, mat) & ALLOW_M)
@@ -435,8 +433,8 @@ struct obj *otmp, *mwep;
      		        (!(mtmp->mtame && mat->mtame) || !rn2(5))) &&
      			i > 0) {
      		    	if ((!oldmret) ||
-     		            (monstr[monsndx(mat->data)] >
-     			     monstr[monsndx(oldmret->data)]))
+     		            (mons[monsndx(mat->data)].difficulty >
+     			     mons[monsndx(oldmret->data)].difficulty))
      		        	mret = mat;
      		    }
      		}

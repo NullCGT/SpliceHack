@@ -7,7 +7,6 @@
 
 #include "hack.h"
 
-extern const int monstr[];
 extern void demonpet();
 
 /* monster mage spells */
@@ -1449,7 +1448,8 @@ int spellnum;
      	            do {
      	                makeindex = pick_nasty();
      	            } while (attacktype(&mons[makeindex], AT_MAGC) &&
-     	                     monstr[makeindex] >= monstr[u.umonnum]);
+     	                     mons[makeindex].difficulty
+                              >= mons[u.umonnum].difficulty);
                          if (yours &&
      		        !enexto(&bypos, u.ux, u.uy, &mons[makeindex]))
      		        continue;

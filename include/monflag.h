@@ -192,6 +192,7 @@
 #define MH_MERFOLK M2_MERFOLK
 #define MH_WERE M2_WERE
 #define MH_DEMON M2_DEMON
+#define MH_UNDEAD M2_UNDEAD
 
 /* for mons[].geno (constant during game) */
 #define G_UNIQ 0x1000     /* generated only once */

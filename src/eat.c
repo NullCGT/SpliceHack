@@ -98,7 +98,7 @@ register struct obj *obj;
         return TRUE;
 
     /* Ghouls and ghasts only eat non-veggy corpses or eggs (see dogfood()) */
-    if (u.umonnum == PM_GHOUL || u.umonnum == PM_GHAST)
+    if (Race_if(PM_GHOUL) || is_ghoul(youmonst.data))
         return (boolean)((obj->otyp == CORPSE
                           && !vegan(&mons[obj->corpsenm]))
                          || (obj->otyp == EGG));
@@ -1696,7 +1696,7 @@ struct obj *otmp;
     if (mnum != PM_ACID_BLOB && !stoneable && !slimeable && rotted > 5L) {
         boolean cannibal = maybe_cannibal(mnum, FALSE);
 
-        if (u.umonnum == PM_GHOUL || u.umonnum == PM_GHAST) {
+        if (Race_if(PM_GHOUL) || is_ghoul(youmonst.data)) {
     	    	pline("Yum - that %s was well aged%s!",
     		      mons[mnum].mlet == S_FUNGUS ? "fungoid vegetation" :
     		      !vegetarian(&mons[mnum]) ? "meat" : "protoplasm",
@@ -1728,10 +1728,6 @@ struct obj *otmp;
                 useupf(otmp, 1L);
             return 2;
         }
-    } else if (youmonst.data == &mons[PM_GHOUL] ||
-  		   youmonst.data == &mons[PM_GHAST]) {
-    		pline ("This corpse is too fresh!");
-    		return 3;
     } else if (acidic(&mons[mnum]) && !Acid_resistance) {
         tp++;
         You("have a very bad case of stomach acid.");   /* not body_part() */
@@ -2618,6 +2614,11 @@ doeat()
     if (!is_edible(otmp)) {
         You("cannot eat that!");
         return 0;
+    } else if ((Race_if(PM_GHOUL) || is_ghoul(youmonst.data))
+        && (((monstermoves - peek_at_iced_corpse_age(otmp))
+            / 10L) <= 5L && !nonrotting_corpse(otmp->corpsenm))) {
+    		pline ("This corpse is too fresh!");
+    		return 0;
     } else if ((otmp->owornmask & (W_ARMOR | W_TOOL | W_AMUL | W_SADDLE))
                != 0) {
         /* let them eat rings */

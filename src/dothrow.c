@@ -673,8 +673,8 @@ int x, y;
          * and also that the next spot doesn't contain an obstacle */
         && !(mon->mundetected && hides_under(mon) && (Flying || Levitation))
         && !(mon->mundetected &&
-          (mon->data->mlet == S_EEL || mon->data == &mons[PM_EARTHSHARK])
-             && (Flying || Levitation || Wwalking))
+          mon->data->mlet == S_EEL && (Flying || Levitation || Wwalking))
+        && !(mon->data == &mons[PM_EARTHSHARK])
 #endif
         ) {
         const char *mnam, *pronoun;

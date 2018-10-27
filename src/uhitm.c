@@ -1396,6 +1396,16 @@ int dieroll;
         }
     }
 
+    /* ghoulish players can freeze opponents */
+    int armpro = magic_negation(mon);
+    boolean negated = !(rn2(10) >= 3 * armpro);
+    if (!negated && !uarmg && unarmed && Race_if(PM_GHOUL)
+        && mon->mcanmove && !rn2(3)) {
+        if (!Blind)
+            pline("%s is frozen by you!", Monnam(mon));
+        paralyze_monst(mon, rnd(10));
+    }
+
     if (tmp && noeffect) {
     		Your("attack doesn't seem to harm %s.", mon_nam(mon));
     		hittxt = TRUE;

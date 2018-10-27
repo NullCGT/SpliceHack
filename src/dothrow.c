@@ -672,7 +672,8 @@ int x, y;
          * for that, we need to know that the range is not exhausted
          * and also that the next spot doesn't contain an obstacle */
         && !(mon->mundetected && hides_under(mon) && (Flying || Levitation))
-        && !(mon->mundetected && mon->data->mlet == S_EEL
+        && !(mon->mundetected &&
+          (mon->data->mlet == S_EEL || mon->data == &mons[PM_EARTHSHARK])
              && (Flying || Levitation || Wwalking))
 #endif
         ) {
@@ -1314,7 +1315,7 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
             (void) encumber_msg();
             if (thrownobj->owornmask & W_QUIVER) /* in case addinv() autoquivered */
                 setuqwep((struct obj *) 0);
-            setuwep(thrownobj);            
+            setuwep(thrownobj);
         } else {
             /* ball is not picked up by monster */
             if (obj != uball)

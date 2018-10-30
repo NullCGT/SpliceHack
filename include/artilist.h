@@ -240,6 +240,14 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       CLR_MAGENTA),
 
     /*
+    *         Drow artifact, ported from SLASHEM
+    */
+    A("Plague", DARK_ELVEN_BOW,	/* KMH */
+    	(SPFX_RESTR | SPFX_DEFN), 0, 0, PHYS(5,7), DFNS(AD_DRST), NO_CARY, 0,
+      A_CHAOTIC, PM_DROW, NON_PM, 6000L, CLR_BRIGHT_GREEN),
+    	/* Auto-poison code in dothrow.c */
+
+    /*
     *        Summons a superboss.
     */
     A("The King in Yellow", SPE_FINGER_OF_DEATH,

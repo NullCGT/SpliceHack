@@ -428,8 +428,9 @@ int x;
 static NEARDATA const int rwep[] = {
     ORB_OF_PERMAFROST, DWARVISH_SPEAR, ELVEN_SPEAR, SPEAR,
     ORCISH_SPEAR, JAVELIN, THROWING_AXE,
-    SHURIKEN, YA, ELVEN_ARROW, ARROW, ORCISH_ARROW,
-    CROSSBOW_BOLT, ELVEN_DAGGER, DAGGER, ORCISH_DAGGER, KNIFE,
+    SHURIKEN, YA, ELVEN_ARROW, DARK_ELVEN_ARROW, ARROW, ORCISH_ARROW,
+    CROSSBOW_BOLT, ELVEN_DAGGER, DARK_ELVEN_DAGGER,
+    DAGGER, ORCISH_DAGGER, KNIFE,
     FLINT, ROCK, LOADSTONE, LUCKSTONE, DART,
     /* BOOMERANG, */ CREAM_PIE
 };
@@ -577,6 +578,9 @@ register struct monst *mtmp;
                 propellor = (oselect(mtmp, YUMI));
                 if (!propellor)
                     propellor = (oselect(mtmp, ELVEN_BOW));
+                /* WAC added dark elven bow */
+          		  if (!propellor)
+                    propellor = (oselect(mtmp, DARK_ELVEN_BOW));
                 if (!propellor)
                     propellor = (oselect(mtmp, BOW));
                 if (!propellor)
@@ -626,6 +630,7 @@ static const NEARDATA short hwep[] = {
     TSURUGI, RUNESWORD, ORNATE_MACE, DWARVISH_MATTOCK, TWO_HANDED_SWORD,
     BATTLE_AXE, KATANA, UNICORN_HORN, CRYSKNIFE, TRIDENT, LONG_SWORD,
     ELVEN_BROADSWORD, BROADSWORD, SABER, SCIMITAR, MORNING_STAR,
+    DARK_ELVEN_SHORT_SWORD,
     ELVEN_SHORT_SWORD, DWARVISH_SHORT_SWORD, SHORT_SWORD, ORCISH_SHORT_SWORD,
     MACE, AXE, DWARVISH_SPEAR, ELVEN_SPEAR, RAZOR_WHIP, SPEAR,
     ORCISH_SPEAR, FLAIL, BULLWHIP, QUARTERSTAFF, JAVELIN, AKLYS, CLUB, PICK_AXE,

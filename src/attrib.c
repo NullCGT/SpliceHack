@@ -760,6 +760,7 @@ long frommask;
         case PM_DWARF:
             abil = dwa_abil;
             break;
+        case PM_DROW:
         case PM_ELF:
             abil = elf_abil;
             break;
@@ -964,6 +965,7 @@ int oldlevel, newlevel;
     case PM_MERFOLK:
         rabil = mer_abil;
         break;
+    case PM_DROW:
     case PM_ELF:
         rabil = elf_abil;
         break;

@@ -864,6 +864,27 @@ const struct Race races[] = {
         { 2, 0, 3, 0, 3, 0 }  /* Energy */
     },
     {
+        "drow",
+        "droven",
+        "drovenkind",
+        "Dro",
+    	  {0, 0, 0},
+    	  PM_DROW,
+        NON_PM,
+        PM_ELF_MUMMY,
+        PM_ELF_ZOMBIE,
+    	  MH_ELF | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_CHAOTIC,
+    	  MH_ELF,
+        MH_ELF,
+        MH_ORC,
+      	/*  Str    Int Wis Dex Con Cha */
+      	{    3,     3,  3,  3,  3,  3 },
+      	{   18,    20, 20, 18, 16, 18 },
+      	/* Init   Lower  Higher */
+      	{  1, 0,  0, 1,  1, 0 },	/* Hit points */
+      	{  2, 0,  3, 0,  3, 0 }		/* Energy */
+    },
+    {
         "dwarf",
         "dwarven",
         "dwarvenkind",

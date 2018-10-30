@@ -1151,6 +1151,11 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
         u.dz = 1;
     }
 
+    /* KMH -- Handle Plague here */
+  	if (uwep && uwep->oartifact == ART_PLAGUE &&
+  			ammo_and_launcher(obj, uwep) && is_poisonable(obj))
+  		  obj->opoisoned = 1;
+
     thrownobj = obj;
     thrownobj->was_thrown = 1;
 
@@ -1672,12 +1677,14 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                  * especially their own special types of bow.
                  * Polymorphing won't make you a bow expert.
                  */
-                if ((Race_if(PM_ELF) || Role_if(PM_SAMURAI))
+                if ((Race_if(PM_ELF) || Race_if(PM_DROW) || Role_if(PM_SAMURAI))
                     && (!Upolyd || your_race(youmonst.data))
                     && objects[uwep->otyp].oc_skill == P_BOW) {
                     tmp++;
                     if (Race_if(PM_ELF) && uwep->otyp == ELVEN_BOW)
                         tmp++;
+                    else if (Race_if(PM_DROW) && uwep->otyp == DARK_ELVEN_BOW)
+              			    tmp++;
                     else if (Role_if(PM_SAMURAI) && uwep->otyp == YUMI)
                         tmp++;
                 }

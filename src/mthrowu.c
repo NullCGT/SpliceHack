@@ -249,7 +249,9 @@ struct obj *otmp, *mwep;
             || (is_orc(mtmp->data) && otmp->otyp == ORCISH_ARROW
                 && mwep->otyp == ORCISH_BOW)
             || (is_gnome(mtmp->data) && otmp->otyp == CROSSBOW_BOLT
-                && mwep->otyp == CROSSBOW))
+                && mwep->otyp == CROSSBOW)
+            || (mtmp->data == &mons[PM_DROW] && otmp->otyp == DARK_ELVEN_ARROW
+                && mwep->otyp == DARK_ELVEN_BOW))
             multishot++;
     }
 
@@ -653,7 +655,7 @@ struct obj *obj;         /* missile (or stack providing it) */
 register boolean verbose;
 {
     struct monst *mtmp;
-    struct obj *singleobj;
+    struct obj *singleobj, *mwep;
     char sym = obj->oclass;
     int hitu = 0, oldumort, blindinc = 0;
 
@@ -685,6 +687,15 @@ register boolean verbose;
     }
 
     singleobj->owornmask = 0; /* threw one of multiple weapons in hand? */
+
+    if (mon) mwep = MON_WEP(mon);
+  	else mwep = (struct obj *) 0;
+
+    /* D: Special launcher effects */
+  	if (mwep && is_ammo(singleobj) && ammo_and_launcher(singleobj, mwep)) {
+  	    if (mwep->oartifact == ART_PLAGUE && is_poisonable(singleobj))
+  			singleobj->opoisoned = 1;
+  	}
 
     if ((singleobj->cursed || singleobj->greased) && (dx || dy) && !rn2(7)) {
         if (canseemon(mon) && flags.verbose) {

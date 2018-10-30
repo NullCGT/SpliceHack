@@ -500,8 +500,9 @@ register struct obj *obj;
 			obj->otyp = DAGGER;
 			break;
 		case DAGGER:
-			obj->otyp = ELVEN_DAGGER;
-			break;
+        if (!rn2(2)) obj->otyp = ELVEN_DAGGER;
+        else obj->otyp = DARK_ELVEN_DAGGER;
+        break;
 		case KNIFE:
 			obj->otyp = STILETTO;
 			break;
@@ -524,12 +525,14 @@ register struct obj *obj;
 			obj->otyp = SHORT_SWORD;
 			break;
 		case ELVEN_SHORT_SWORD:
+    case DARK_ELVEN_SHORT_SWORD:
 		case SHORT_SWORD:
 			obj->otyp = DWARVISH_SHORT_SWORD;
 			break;
 		case DWARVISH_SHORT_SWORD:
-			obj->otyp = ELVEN_SHORT_SWORD;
-			break;
+        if (!rn2(2)) obj->otyp = ELVEN_SHORT_SWORD;
+        else obj->otyp = DARK_ELVEN_SHORT_SWORD;
+        break;
 		case BROADSWORD:
 			obj->otyp = ELVEN_BROADSWORD;
 			break;
@@ -543,28 +546,38 @@ register struct obj *obj;
 			obj->otyp = CLUB;
 			break;
 		case ELVEN_BOW:
+    case DARK_ELVEN_BOW:
 		case YUMI:
 		case ORCISH_BOW:
 			obj->otyp = BOW;
 			break;
 		case BOW:
-			switch (rn2(2)) {
-				case 0: obj->otyp = ELVEN_BOW; break;
-				case 2: obj->otyp = YUMI; break;
-			}
-			break;
+      switch (rn2(3)) {
+        case 0: obj->otyp = ELVEN_BOW; break;
+        case 1: obj->otyp = DARK_ELVEN_BOW; break;
+        case 2: obj->otyp = YUMI; break;
+      }
+      break;
 		case ELVEN_ARROW:
+    case DARK_ELVEN_ARROW:
 		case YA:
 		case ORCISH_ARROW:
 			obj->otyp = ARROW;
 			break;
 		case ARROW:
-			switch (rn2(2)) {
-				case 0: obj->otyp = ELVEN_ARROW; break;
-				case 1: obj->otyp = YA; break;
-			}
+      switch (rn2(3)) {
+        case 0: obj->otyp = ELVEN_ARROW; break;
+        case 1: obj->otyp = DARK_ELVEN_ARROW; break;
+        case 2: obj->otyp = YA; break;
+      }
 			break;
 		/* armour */
+    case ELVEN_RING_MAIL:
+      obj->otyp = DARK_ELVEN_RING_MAIL;
+      break;
+    case DARK_ELVEN_RING_MAIL:
+			obj->otyp = ELVEN_RING_MAIL;
+			break;
 		case ORCISH_RING_MAIL:
 			obj->otyp = RING_MAIL;
 			break;

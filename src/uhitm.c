@@ -999,7 +999,17 @@ int dieroll;
                 				} else if (objects[obj->otyp].oc_skill == P_BOW
                 					&& tech_inuse(T_FLURRY)) {
                     				tmp++;
-                    		}
+                    		} else if (Race_if(PM_DROW)) {
+                    				if (obj->otyp == DARK_ELVEN_ARROW &&
+                    					uwep->otyp == DARK_ELVEN_BOW) {
+                    				    tmp += 2;
+                    				    /* WAC Mucho damage if in special ability*/
+                    				    if (tech_inuse(T_FLURRY)) tmp *= 2;
+                    				} else if (objects[obj->otyp].oc_skill == P_BOW
+                    					&& tech_inuse(T_FLURRY)) {
+                    				    tmp++;
+                    				}
+              			    }
                     }
                     if (obj->opoisoned && is_poisonable(obj))
                         ispoisoned = TRUE;
@@ -1399,11 +1409,17 @@ int dieroll;
     /* ghoulish players can freeze opponents */
     int armpro = magic_negation(mon);
     boolean negated = !(rn2(10) >= 3 * armpro);
-    if (!negated && !uarmg && unarmed && Race_if(PM_GHOUL)
-        && mon->mcanmove && !rn2(3)) {
-        if (!Blind)
-            pline("%s is frozen by you!", Monnam(mon));
-        paralyze_monst(mon, rnd(10));
+    if (!negated && !uarmg && unarmed) {
+        if (Race_if(PM_GHOUL) && mon->mcanmove && !rn2(3)) {
+            if (!Blind)
+                pline("%s is frozen by you!", Monnam(mon));
+            paralyze_monst(mon, rnd(10));
+        } else if (Race_if(PM_DROW) && !mon->msleeping
+            && sleep_monst(mon, rnd(10), -1)) {
+            if (!Blind)
+                pline("%s is put to sleep by you!", Monnam(mon));
+            slept_monst(mon);
+        }
     }
 
     if (tmp && noeffect) {

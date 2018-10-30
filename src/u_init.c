@@ -266,6 +266,10 @@ static struct inv_sub {
     { PM_DWARF, LEMBAS_WAFER, CRAM_RATION },
     { PM_GNOME, BOW, CROSSBOW },
     { PM_GNOME, ARROW, CROSSBOW_BOLT },
+    { PM_DROW, DAGGER, DARK_ELVEN_DAGGER },
+    { PM_DROW, SHORT_SWORD, DARK_ELVEN_SHORT_SWORD },
+    { PM_DROW, BOW, DARK_ELVEN_BOW },
+    { PM_DROW, ARROW, DARK_ELVEN_ARROW },
     { NON_PM, STRANGE_OBJECT, STRANGE_OBJECT }
 };
 
@@ -983,6 +987,14 @@ u_init()
         knows_object(ELVEN_BOOTS);
         knows_object(ELVEN_CLOAK);
         break;
+    case PM_DROW:
+  	    /* Drows can recognize all droven objects */
+  	    knows_object(DARK_ELVEN_SHORT_SWORD);
+  	    knows_object(DARK_ELVEN_ARROW);
+  	    knows_object(DARK_ELVEN_BOW);
+  	    knows_object(DARK_ELVEN_DAGGER);
+  	    knows_object(DARK_ELVEN_RING_MAIL);
+  	    break;
 
     case PM_DWARF:
         /* Dwarves can recognize all dwarvish objects */

@@ -277,41 +277,48 @@ register struct monst *mtmp;
             if (w2)
                 (void) mongets(mtmp, w2);
         } else if (is_elf(ptr)) {
-            if (rn2(2))
-                (void) mongets(mtmp,
-                               rn2(2) ? ELVEN_RING_MAIL : ELVEN_CLOAK);
-            if (rn2(2))
-                (void) mongets(mtmp, ELVEN_HELM);
-            else if (!rn2(4))
-                (void) mongets(mtmp, ELVEN_BOOTS);
-            if (rn2(2))
-                (void) mongets(mtmp, ELVEN_DAGGER);
-            switch (rn2(3)) {
-            case 0:
-                if (!rn2(4))
-                    (void) mongets(mtmp, ELVEN_SHIELD);
-                if (rn2(3))
-                    (void) mongets(mtmp, ELVEN_SHORT_SWORD);
-                (void) mongets(mtmp, ELVEN_BOW);
-                m_initthrow(mtmp, ELVEN_ARROW, 12);
-                break;
-            case 1:
-                (void) mongets(mtmp, ELVEN_BROADSWORD);
+            if (mm == PM_DROW) {
+                (void) mongets(mtmp, DARK_ELVEN_RING_MAIL);
+                (void) mongets(mtmp, DARK_ELVEN_SHORT_SWORD);
+                (void) mongets(mtmp, DARK_ELVEN_BOW);
+                m_initthrow(mtmp, DARK_ELVEN_ARROW, 12);
+            } else {
                 if (rn2(2))
-                    (void) mongets(mtmp, ELVEN_SHIELD);
-                break;
-            case 2:
-                if (rn2(2)) {
-                    (void) mongets(mtmp, ELVEN_SPEAR);
-                    (void) mongets(mtmp, ELVEN_SHIELD);
+                    (void) mongets(mtmp,
+                                   rn2(2) ? ELVEN_RING_MAIL : ELVEN_CLOAK);
+                if (rn2(2))
+                    (void) mongets(mtmp, ELVEN_HELM);
+                else if (!rn2(4))
+                    (void) mongets(mtmp, ELVEN_BOOTS);
+                if (rn2(2))
+                    (void) mongets(mtmp, ELVEN_DAGGER);
+                switch (rn2(3)) {
+                case 0:
+                    if (!rn2(4))
+                        (void) mongets(mtmp, ELVEN_SHIELD);
+                    if (rn2(3))
+                        (void) mongets(mtmp, ELVEN_SHORT_SWORD);
+                    (void) mongets(mtmp, ELVEN_BOW);
+                    m_initthrow(mtmp, ELVEN_ARROW, 12);
+                    break;
+                case 1:
+                    (void) mongets(mtmp, ELVEN_BROADSWORD);
+                    if (rn2(2))
+                        (void) mongets(mtmp, ELVEN_SHIELD);
+                    break;
+                case 2:
+                    if (rn2(2)) {
+                        (void) mongets(mtmp, ELVEN_SPEAR);
+                        (void) mongets(mtmp, ELVEN_SHIELD);
+                    }
+                    break;
                 }
-                break;
-            }
-            if (mm == PM_ELVENKING) {
-                if (rn2(3) || (in_mklev && Is_earthlevel(&u.uz)))
-                    (void) mongets(mtmp, PICK_AXE);
-                if (!rn2(50))
-                    (void) mongets(mtmp, CRYSTAL_BALL);
+                if (mm == PM_ELVENKING) {
+                    if (rn2(3) || (in_mklev && Is_earthlevel(&u.uz)))
+                        (void) mongets(mtmp, PICK_AXE);
+                    if (!rn2(50))
+                        (void) mongets(mtmp, CRYSTAL_BALL);
+                }
             }
         } else if (ptr->msound == MS_PRIEST
                    || quest_mon_represents_role(ptr, PM_PRIEST)) {

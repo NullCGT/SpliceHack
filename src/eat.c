@@ -1567,6 +1567,7 @@ struct obj *otmp;
         case STILETTO:
         case CRYSKNIFE:
         case SACRIFICIAL_KNIFE:
+        case DARK_ELVEN_DAGGER:
             tmp = 3;
             break;
         case PICK_AXE:

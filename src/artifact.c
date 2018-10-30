@@ -551,6 +551,13 @@ long wp_mask;
             EConflict &= ~wp_mask;
         }
     }
+    if (otmp->oartifact == ART_ORIGIN) {
+        if (on) {
+            pline("Your mind is flooded with magical knowledge.");
+        } else {
+            pline("You feel less in touch with your magical abilities.");
+        }
+    }
     if (spfx & SPFX_HALRES) {
         /* make_hallucinated must (re)set the mask itself to get
          * the display right */
@@ -1266,6 +1273,20 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                       !spec_dbon_applies ? '.' : '!');
         return realizes_damage;
     }
+    if (attacks(AD_WIND, otmp)) {
+        if (realizes_damage) {
+            if (rn2(3))
+                pline_The("humming glaive buffets %s with a massive blast of wind!", hittee);
+            else {
+                pline_The("humming glaive strikes %s with a tornado!", hittee);
+                if (youdefend)
+                    hurtle(u.ux - magr->mx, u.uy - magr->my, 5 + rn2(7), TRUE);
+                else
+                    mhurtle(mdef, mdef->mx - u.ux, mdef->my - u.uy, 5 + rn2(7));
+            }
+        }
+        return realizes_damage;
+    }
     if (attacks(AD_LOUD, otmp)) {
         if (realizes_damage)
             pline_The("thunderous morningstar %s %s%c",
@@ -1321,7 +1342,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             return FALSE;
         }
     }
-    if (otmp->oartifact == ART_DISMOUNTER) {
+    if (otmp->oartifact == ART_BRADAMANTE_S_FURY) {
         if (youdefend) {
             if (u.usteed) {
                 dismount_steed(DISMOUNT_THROWN);

@@ -1569,7 +1569,10 @@ int dieroll;
             xkilled(mon, XKILL_NOMSG);
         destroyed = TRUE; /* return FALSE; */
     } else if (destroyed) {
-        if (!already_killed)
+        if (!already_killed && uwep && uwep->oartifact == ART_FINAL) {
+            pline_The("unyielding whip blasts %s apart!", mon_nam(mon));
+            xkilled(mon, XKILL_NOMSG | XKILL_NOCORPSE);
+        } else if (!already_killed)
             killed(mon); /* takes care of most messages */
     } else if (u.umconf && hand_to_hand) {
         nohandglow(mon);

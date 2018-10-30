@@ -33,6 +33,8 @@ static const char *artifact_names[] = {
 #define     FIRE(a,b)   {0,AD_FIRE,a,b}
 #define     ELEC(a,b)   {0,AD_ELEC,a,b}         /* electrical shock */
 #define     STUN(a,b)   {0,AD_STUN,a,b}         /* magical attack */
+#define     WIND(a,b)   {0,AD_WIND,a,b}         /* wind blast */
+#define     VOID(a,b)   {0,AD_VOID,a,b}
 /* clang-format on */
 
 STATIC_OVL NEARDATA struct artifact artilist[] = {
@@ -123,12 +125,18 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 1500L, NO_COLOR),
 
     /*
-    *       Based on Sumerian legends. Extremely powerful.
+    *       Based on Sumerian legends.
     */
     A("Sharur", ORNATE_MACE,
       (SPFX_NOGEN | SPFX_RESTR | SPFX_INTEL | SPFX_SPEAK | SPFX_WARN),
       0, 0, PHYS(5, 5), DFNS(AD_MAGM), NO_CARY, LION, A_LAWFUL, PM_DRAGONMASTER,
       NON_PM, 4000L, NO_COLOR),
+
+    /*
+    *       Mesopatamian in origin.
+    */
+    A("Imhullu", GLAIVE, (SPFX_RESTR), 0, 0, WIND(4, 5), NO_DFNS, NO_CARY, 0,
+      A_NEUTRAL, NON_PM, NON_PM, 2000L, NO_COLOR),
 
     /*
     *       May or may not be an obscure reference. Gains strength based
@@ -156,19 +164,20 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       NO_COLOR),
 
     /*
-    *       A fairly standard bane.
+    *       This lance does a lot of damage, and also automatically unseats any
+    *       mounted person it hits.
     */
-    A("Dismounter", LANCE, (SPFX_RESTR), 0, 0,
-      PHYS(5, 5), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 200L,
+    A("Bradamante\'s Fury", LANCE, (SPFX_RESTR), 0, 0,
+      PHYS(5, 10), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 800L,
       NO_COLOR),
 
     /*
     *       Also a fairly standard bane.
     */
-    A("Final Death", BULLWHIP, (SPFX_RESTR | SPFX_DFLAG2 | SPFX_DEFN),
+    A("Final", BULLWHIP, (SPFX_NOGEN | SPFX_RESTR | SPFX_WARN | SPFX_DFLAG2),
       0, M2_UNDEAD,
-      PHYS(5, 0), DRLI(0,0), NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 200L,
-      NO_COLOR),
+      PHYS(3, 4), DRLI(0,0), NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 200L,
+      CLR_BLACK),
 
     /*
     *       If not granted through sacrifice, the Grim Reaper is generated
@@ -216,11 +225,12 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       CLR_MAGENTA),
 
     /*
-    *      Shield of King Arthur.
+    *      Quarterstaff that grants teleport control, and also greatly increases
+    *      spellcasting ability (as a robe).
     */
-    A("Balance", QUARTERSTAFF,
+    A("Origin", QUARTERSTAFF,
       (SPFX_RESTR | SPFX_TCTRL), 0, 0,
-      PHYS(2, 6), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 500L,
+      PHYS(2, 4), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 500L,
       CLR_MAGENTA),
 
     /*
@@ -257,6 +267,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     A("The Marauder's Map", SCR_MAGIC_MAPPING, SPFX_RESTR, 0, 0, NO_ATTK,
       NO_DFNS,	NO_CARY, OBJECT_DET,	A_CHAOTIC, PM_PIRATE, NON_PM, 2000L,
       NO_COLOR),
+
     A("Cleaver", BATTLE_AXE, SPFX_RESTR, 0, 0, PHYS(3, 6), NO_DFNS, NO_CARY,
       0, A_NEUTRAL, PM_BARBARIAN, NON_PM, 1500L, NO_COLOR),
 

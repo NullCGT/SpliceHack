@@ -1212,6 +1212,7 @@ register struct trobj *trop;
 {
     struct obj *obj;
     int otyp, i;
+    int corpses = 0;
 
     while (trop->trclass) {
         otyp = (int) trop->trotyp;
@@ -1315,6 +1316,21 @@ register struct trobj *trop;
                     obj->material = objects[obj->otyp].oc_material;
                     break;
                 }
+        }
+
+        /* Create ghoul corpses */
+        if (urace.malenum == PM_GHOUL && obj->oclass == FOOD_CLASS) {
+            dealloc_obj(obj);
+            if (corpses <= 2) {
+                obj = mksobj(CORPSE, TRUE, FALSE);
+                if (obj->corpsenm == PM_LICHEN)
+                    obj->corpsenm = PM_DEATH_MAGGOT;
+                obj->age = -100;
+                corpses++;
+            } else {
+                trop++;
+                continue;
+            }
         }
 
         /* nudist gets no armor */

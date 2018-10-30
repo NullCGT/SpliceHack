@@ -53,7 +53,8 @@ char msgbuf[BUFSZ];
    will be sure to reach the stage of eating where that meal is fatal */
 #define nonrotting_corpse(mnum) \
     ((mnum) == PM_LIZARD || (mnum) == PM_LICHEN || \
-     (mnum) == PM_LEGENDARY_LICHEN || is_rider(&mons[mnum]))
+     (mnum) == PM_LEGENDARY_LICHEN || \
+     (mnum) == PM_DEATH_MAGGOT || is_rider(&mons[mnum]))
 
 /* non-rotting non-corpses; unlike lizard corpses, these items will behave
    as if rotten if they are cursed (fortune cookies handled elsewhere) */
@@ -1784,11 +1785,12 @@ struct obj *otmp;
         You("peck the eyeball with delight.");
     } else {
         /* yummy is always False for omnivores, palatable always True */
-        boolean yummy = (vegan(&mons[mnum])
+        boolean yummy = ((vegan(&mons[mnum])
                             ? (!carnivorous(youmonst.data)
                                && herbivorous(youmonst.data))
                             : (carnivorous(youmonst.data)
-                               && !herbivorous(youmonst.data))),
+                               && !herbivorous(youmonst.data)))
+                                  || Race_if(PM_GHOUL)),
             palatable = ((vegetarian(&mons[mnum])
                           ? herbivorous(youmonst.data)
                           : carnivorous(youmonst.data))

@@ -2050,7 +2050,8 @@ struct monst *mon;
     if (!nonliving(mon->data) || is_vampshifter(mon)) {
         struct obj *otmp = which_armor(mon, W_AMUL);
 
-        if (otmp && otmp->otyp == AMULET_OF_LIFE_SAVING)
+        if (otmp && (otmp->otyp == AMULET_OF_LIFE_SAVING
+              || otmp->otyp == AMULET_OF_REINCARNATION))
             return otmp;
     }
     return (struct obj *) 0;
@@ -2083,7 +2084,7 @@ struct monst *mtmp;
         } else if (cansee(mtmp->mx, mtmp->my)) {
             pline("But wait...");
             pline("%s medallion begins to glow!", s_suffix(Monnam(mtmp)));
-            makeknown(AMULET_OF_LIFE_SAVING);
+            makeknown(lifesave->otyp);
             /* amulet is visible, but monster might not be */
             if (canseemon(mtmp)) {
                 if (attacktype(mtmp->data, AT_EXPL)
@@ -2092,6 +2093,8 @@ struct monst *mtmp;
                 else
                     pline("%s looks much better!", Monnam(mtmp));
             }
+            if (lifesave->otyp == AMULET_OF_REINCARNATION)
+                newcham(mtmp, (struct permonst *) 0, FALSE, TRUE);
             pline_The("medallion crumbles to dust!");
         }
         m_useup(mtmp, lifesave);

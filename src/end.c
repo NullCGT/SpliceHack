@@ -1049,7 +1049,23 @@ int how;
 
     if (how < PANICKED)
         u.umortality++;
-    if (Lifesaved && (how <= GENOCIDED)) {
+    if (Lifesaved && uamul && uamul->otyp == AMULET_OF_REINCARNATION) {
+        pline("But wait...");
+        makeknown(AMULET_OF_REINCARNATION);
+        Your("medallion %s!", !Hallucination ? "begins to blaze with energy" : "feels hot");
+        You("are given another chance at life!");
+        if (uamul)
+            useup(uamul);
+        HUnchanging = 0L;
+        polyself(3);
+        savelife(how);
+        HUnchanging |= FROMOUTSIDE;
+        killer.name[0] = 0;
+        killer.format = 0;
+        livelog_printf(LL_LIFESAVE, "was reincarnated as a %s",
+            youmonst.data->mname);
+        return;
+    } else if (Lifesaved && (how <= GENOCIDED)) {
         pline("But wait...");
         makeknown(AMULET_OF_LIFE_SAVING);
         Your("medallion %s!", !Blind ? "begins to glow" : "feels warm");

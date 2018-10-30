@@ -1312,6 +1312,7 @@ register struct trobj *trop;
                                 (trop->trotyp == UNDEF_TYP) ? "random " : "",
                                 OBJ_NAME(objects[otyp]));
                     otyp = obj->otyp = inv_subs[i].subs_otyp;
+                    obj->material = objects[obj->otyp].oc_material;
                     break;
                 }
         }

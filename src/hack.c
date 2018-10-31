@@ -17,6 +17,7 @@ STATIC_DCL boolean FDECL(findtravelpath, (int));
 STATIC_DCL boolean FDECL(trapmove, (int, int, struct trap *));
 STATIC_DCL void NDECL(switch_terrain);
 STATIC_DCL struct monst *FDECL(monstinroom, (struct permonst *, int));
+STATIC_DCL void NDECL(interesting_room);
 STATIC_DCL boolean FDECL(doorless_door, (int, int));
 STATIC_DCL void FDECL(move_update, (BOOLEAN_P));
 
@@ -2544,6 +2545,12 @@ register boolean newlev;
                     verbalize("Please have a look around, but don't even think about stealing anything.");
             }
             break;
+        case ARTROOM:
+            if (Blind)
+                msg_given = FALSE;
+            else
+                interesting_room();
+            break;
         case TEMPLE:
             intemple(roomno + ROOMOFFSET);
         /*FALLTHRU*/
@@ -2597,6 +2604,61 @@ register boolean newlev;
     }
 
     return;
+}
+
+void interesting_room()
+{
+
+    static const char *const adjectives[] = {
+        "furious",          "wrathful",  "mysterious",  "ugly",
+        "beautiful",        "fearful",   "horrified",   "sinister",
+        "poorly-rendered",  "large",     "lifelike",    "unnerving",
+        "peaceful",         "covetous",  "subservient", "lovely",
+        "misshapen"
+    };
+
+    static const char *const art[] = {
+        "painting",   "carving",   "tapestry",  "bas-relief"
+    };
+
+    int name, name2;
+    /* Modified version of rndmonnam */
+    do {
+        name = rn2(NUMMONS);
+    } while ((type_is_pname(&mons[name]) || (mons[name].geno & G_UNIQ)));
+    do {
+        name2 = rn2(NUMMONS);
+    } while ((type_is_pname(&mons[name2]) || (mons[name2].geno & G_UNIQ)));
+    const char* carvemon = mons[name].mname;
+    const char* carvemon2 = mons[name2].mname;
+    /* Carving message */
+    switch(rn2(5)) {
+    case 0:
+        pline("%s on a wall of this room depicts %s %s.",
+            An(art[rn2(SIZE(art))]),
+            an(adjectives[rn2(SIZE(adjectives))]), carvemon);
+        break;
+    case 1:
+        pline("There is %s of %s in this room.",
+        an(art[rn2(SIZE(art))]), u_gname());
+        break;
+    case 2:
+        pline("%s on a wall of this room depict a large number of %s.",
+            An(art[rn2(SIZE(art))]), makeplural(carvemon));
+        break;
+    case 3:
+        pline("%s in this room contains a partial map of the dungeon!",
+            An(art[rn2(SIZE(art))]));
+            HConfusion = 1;
+            do_mapping();
+            HConfusion = 0;
+        break;
+    default:
+        pline("%s of this room depict a battle between %s and %s. The %s are winning.",
+            An(art[rn2(SIZE(art))]),
+            makeplural(carvemon), makeplural(carvemon2),
+            makeplural(rn2(2) ? carvemon : carvemon2));
+    }
 }
 
 /* returns

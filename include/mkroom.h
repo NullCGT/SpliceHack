@@ -70,6 +70,7 @@ enum roomtype_types {
     COCKNEST,   /* cockatrice nest (Tom Proudfoot) */
     ANTHOLE,    /* ants (Tom Proudfoot) */
     BLACKFOYER, /* black market */
+    ARTROOM,    /* interesting walls */
     SHOPBASE,   /* everything above this is a shop */
     ARMORSHOP,  /* specific shop defines for level compiler */
     SCROLLSHOP,

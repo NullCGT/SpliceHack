@@ -971,6 +971,9 @@ skip0:
             }
         }
 
+        if (croom->rtype == OROOM && depth(&u.uz) > 2 && !rn2(15))
+            croom->rtype = ARTROOM;
+
     skip_nonrogue:
         if (!rn2(3)) {
             (void) mkobj_at(0, somex(croom), somey(croom), TRUE);

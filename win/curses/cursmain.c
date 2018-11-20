@@ -586,6 +586,8 @@ curses_print_glyph(winid wid, XCHAR_P x, XCHAR_P y, int glyph, int bkglyph)
             color = 16 + (color * 2);
         } else if ((special & MG_OBJPILE) && iflags.hilite_pile) {
             color = 16 + (color * 2) + 1;
+        } else if ((special & MG_RIDDEN)) {
+            color = 16 + (color * 2) + 1;
         }
     }
 

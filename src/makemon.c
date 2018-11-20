@@ -748,7 +748,7 @@ register struct monst *mtmp;
             break;
         case PM_GRIM_REAPER:
             otmp = mksobj(GRAIN_SCYTHE, FALSE, FALSE);
-            otmp = oname(otmp, artiname(ART_REAPER));
+            otmp = oname(otmp, artiname(ART_END));
             curse(otmp);
             otmp->oerodeproof = TRUE;
             mpickobj(mtmp, otmp);

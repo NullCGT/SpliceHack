@@ -1253,7 +1253,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     }
     if (attacks(AD_COLD, otmp)) {
         if (realizes_damage) {
-          if (otmp->oartifact == ART_REAPER)
+          if (otmp->oartifact == ART_END)
               pline_The("deathly cold scythe %s %s%c",
                         !spec_dbon_applies ? "hits" : "chills", hittee,
                         !spec_dbon_applies ? '.' : '!');
@@ -1583,6 +1583,16 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             make_blinded(Blinded + 17, FALSE);
             return TRUE;
         }
+    }
+    if (otmp->oartifact == ART_DOOMBLADE && dieroll < 6) {
+      if (youattack)
+          You("plunge the Doomblade deeply into %s!",
+          mon_nam(mdef));
+      else
+          pline("%s plunges the Doomblade deeply into %s!",
+          Monnam(magr), hittee);
+      *dmgptr += rnd(4) * 5;
+      return TRUE;
     }
     if (spec_ability(otmp, SPFX_DRLI)) {
         /* some non-living creatures (golems, vortices) are

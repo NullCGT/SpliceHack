@@ -42,6 +42,10 @@
     - Drow
   #Items
     - Plague Artifact
+    - Doomblade Artifact
+    - Luck Blade Artifact
+    - Sword of Balance Artifact
+    - Sword of Justice Artifact
     - Drow Items
     - Medical Kit and associated items
     - Potions of blood and vampire blood

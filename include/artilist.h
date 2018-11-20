@@ -50,34 +50,8 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     A("", STRANGE_OBJECT, 0, 0, 0, NO_ATTK, NO_DFNS, NO_CARY, 0, A_NONE,
       NON_PM, NON_PM, 0L, NO_COLOR),
 
-    A("Excalibur", LONG_SWORD, (SPFX_NOGEN | SPFX_RESTR | SPFX_SEEK
-                                | SPFX_DEFN | SPFX_INTEL | SPFX_SEARCH),
-      0, 0, PHYS(5, 10), DRLI(0, 0), NO_CARY, 0, A_LAWFUL, PM_KNIGHT, NON_PM,
-      4000L, NO_COLOR),
-    /*
-     *      Stormbringer only has a 2 because it can drain a level,
-     *      providing 8 more.
-     */
-    A("Stormbringer", RUNESWORD,
-      (SPFX_RESTR | SPFX_ATTK | SPFX_DEFN | SPFX_INTEL | SPFX_DRLI), 0, 0,
-      DRLI(5, 2), DRLI(0, 0), NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM, 8000L,
-      NO_COLOR),
+    /* SPLICE ARTIFACTS */
 
-    A("Thiefbane", TWO_HANDED_SWORD,
-  	(SPFX_NOGEN|SPFX_RESTR|SPFX_BEHEAD|SPFX_DCLAS|SPFX_DRLI), 0, S_HUMAN,
-  	DRLI(5,1), NO_DFNS,	NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM, 1500L,
-    NO_COLOR ),
-
-    A("Reaver",	SCIMITAR, (SPFX_NOGEN | SPFX_RESTR | SPFX_INTEL), 0, 0,
-     	PHYS(5,8), NO_DFNS,	NO_CARY, 0, A_CHAOTIC, PM_PIRATE, NON_PM, 6000L,
-      NO_COLOR),
-    /*
-     *      Mjollnir will return to the hand of the wielder when thrown
-     *      if the wielder is a Valkyrie wearing Gauntlets of Power.
-     */
-    A("Mjollnir", WAR_HAMMER, /* Mjo:llnir */
-      (SPFX_RESTR | SPFX_ATTK), 0, 0, ELEC(5, 24), NO_DFNS, NO_CARY, 0,
-      A_NEUTRAL, PM_VALKYRIE, NON_PM, 4000L, NO_COLOR),
     /*
     *      Gugnir also returns to the hand of the wielder when thrown if
     *      the wielder is a Valkyrie, but there is no strength requirement.
@@ -100,14 +74,14 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     *      should cancel their armor? This occurs 1/3 of the time.
     */
     A("Gae Dearg", ELVEN_SPEAR, (SPFX_RESTR | SPFX_ATTK | SPFX_CANC), 0, 0,
-      DRLI(2, 2), NO_DFNS, NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM,
+      DRLI(2, 2), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM,
       7000L, NO_COLOR),
 
     /*
     *      Gae Buidhe inflicts cursed wounds (drains levels).
     */
     A("Gae Buidhe", ELVEN_SPEAR, (SPFX_RESTR | SPFX_ATTK | SPFX_DRLI), 0, 0,
-      DRLI(3, 3), NO_DFNS, NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM,
+      DRLI(3, 3), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM,
       7000L, NO_COLOR),
 
     /*
@@ -125,14 +99,6 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 1500L, NO_COLOR),
 
     /*
-    *       Based on Sumerian legends.
-    */
-    A("Sharur", ORNATE_MACE,
-      (SPFX_NOGEN | SPFX_RESTR | SPFX_INTEL | SPFX_SPEAK | SPFX_WARN),
-      0, 0, PHYS(5, 5), DFNS(AD_MAGM), NO_CARY, LION, A_LAWFUL, PM_DRAGONMASTER,
-      NON_PM, 4000L, NO_COLOR),
-
-    /*
     *       Mesopatamian in origin.
     */
     A("Imhullu", GLAIVE, (SPFX_RESTR), 0, 0, WIND(4, 5), NO_DFNS, NO_CARY, 0,
@@ -145,6 +111,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     */
     A("Unlimited Moon", FLAIL, SPFX_RESTR, 0, 0, PHYS(2, 2), COLD(0, 0),
       NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 1500L, NO_COLOR),
+
     /*
     *       Based on the bindings used to trap Fenrir. This hook can grapple
     *       things regardless of size, and has a massive range.
@@ -172,7 +139,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       NO_COLOR),
 
     /*
-    *       Also a fairly standard bane.
+    *       Destroys the corpses of monsters.
     */
     A("Final", BULLWHIP, (SPFX_NOGEN | SPFX_RESTR | SPFX_WARN | SPFX_DFLAG2),
       0, M2_UNDEAD,
@@ -183,7 +150,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     *       If not granted through sacrifice, the Grim Reaper is generated
     *       with this.
     */
-    A("Reaper", GRAIN_SCYTHE, (SPFX_RESTR | SPFX_DEFN), 0, 0, COLD(3, 20),
+    A("The End", GRAIN_SCYTHE, (SPFX_RESTR | SPFX_DEFN), 0, 0, COLD(3, 20),
       DRLI(0, 0), NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 6000L, NO_COLOR),
 
     /*
@@ -234,14 +201,6 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       CLR_MAGENTA),
 
     /*
-    *      Self-explanatory.
-    */
-    /*A("Seven-League Boots", SPEED_BOOTS,
-      (SPFX_RESTR | SPFX_JUMP), 0, 0,
-      NO_ATTK, NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 1000L,
-      CLR_MAGENTA), */
-
-    /*
     *        Just for fun.
     */
     A("Vladsbane", FOOD_RATION,
@@ -250,23 +209,72 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       CLR_MAGENTA),
 
     /*
-    *         Drow artifact, ported from SLASHEM
-    */
-    A("Plague", DARK_ELVEN_BOW,	/* KMH */
-    	(SPFX_RESTR | SPFX_DEFN), 0, 0, PHYS(5,7), DFNS(AD_DRST), NO_CARY, 0,
-      A_CHAOTIC, PM_DROW, NON_PM, 6000L, CLR_BRIGHT_GREEN),
-    	/* Auto-poison code in dothrow.c */
-
-    /*
     *        Summons a superboss.
     */
     A("The King in Yellow", SPE_FINGER_OF_DEATH,
       (SPFX_NOGEN | SPFX_HALRES), 0, 0, NO_ATTK, NO_DFNS, NO_CARY,
       KING, A_NONE, NON_PM, NON_PM, 30L, NO_COLOR),
 
+    /* PIRATE ARTIFACTS */
+    A("Reaver",	SCIMITAR, (SPFX_NOGEN | SPFX_RESTR | SPFX_INTEL), 0, 0,
+     	PHYS(5,8), NO_DFNS,	NO_CARY, 0, A_CHAOTIC, PM_PIRATE, NON_PM, 6000L,
+      NO_COLOR),
+
     A("The Marauder's Map", SCR_MAGIC_MAPPING, SPFX_RESTR, 0, 0, NO_ATTK,
       NO_DFNS,	NO_CARY, OBJECT_DET,	A_CHAOTIC, PM_PIRATE, NON_PM, 2000L,
       NO_COLOR),
+
+    /* UNNETHACK ARTIFACTS */
+
+    A("Thiefbane", TWO_HANDED_SWORD,
+  	(SPFX_NOGEN|SPFX_RESTR|SPFX_BEHEAD|SPFX_DCLAS|SPFX_DRLI), 0, S_HUMAN,
+  	DRLI(5,1), NO_DFNS,	NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM, 1500L,
+    NO_COLOR ),
+
+    /* SLASHEM ARTIFACTS */
+
+    A("Doomblade", ORCISH_SHORT_SWORD, SPFX_RESTR, 0, 0, PHYS(0, 10), NO_DFNS,
+      NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM, 1000L, NO_COLOR),
+
+    A("Luck Blade", SHORT_SWORD, (SPFX_RESTR | SPFX_LUCK), 0, 0, PHYS(5, 5),
+      NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 1000L, CLR_YELLOW),
+
+    A("Sword of Balance", SHORT_SWORD, (SPFX_RESTR | SPFX_DALIGN), 0, 0,
+    	PHYS(2, 5), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 5000L,
+      NO_COLOR),
+
+    /* Changed to broadsword */
+    A("Sword of Justice", BROADSWORD, (SPFX_RESTR | SPFX_DALIGN), 0, 0,
+    	PHYS(5,12), NO_DFNS, NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 1500L,
+      NO_COLOR),
+
+    A("Plague", DARK_ELVEN_BOW,	/* KMH */
+    	(SPFX_RESTR | SPFX_DEFN), 0, 0, PHYS(5,7), DFNS(AD_DRST), NO_CARY, 0,
+      A_CHAOTIC, PM_DROW, NON_PM, 6000L, CLR_BRIGHT_GREEN),
+    	/* Auto-poison code in dothrow.c */
+
+    /* VANILLA ARTIFACTS */
+
+    A("Excalibur", LONG_SWORD, (SPFX_NOGEN | SPFX_RESTR | SPFX_SEEK
+                                | SPFX_DEFN | SPFX_INTEL | SPFX_SEARCH),
+      0, 0, PHYS(5, 10), DRLI(0, 0), NO_CARY, 0, A_LAWFUL, PM_KNIGHT, NON_PM,
+      4000L, NO_COLOR),
+    /*
+     *      Stormbringer only has a 2 because it can drain a level,
+     *      providing 8 more.
+     */
+    A("Stormbringer", RUNESWORD,
+      (SPFX_RESTR | SPFX_ATTK | SPFX_DEFN | SPFX_INTEL | SPFX_DRLI), 0, 0,
+      DRLI(5, 2), DRLI(0, 0), NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM, 8000L,
+      NO_COLOR),
+
+    /*
+     *      Mjollnir will return to the hand of the wielder when thrown
+     *      if the wielder is a Valkyrie wearing Gauntlets of Power.
+     */
+    A("Mjollnir", WAR_HAMMER, /* Mjo:llnir */
+      (SPFX_RESTR | SPFX_ATTK), 0, 0, ELEC(5, 24), NO_DFNS, NO_CARY, 0,
+      A_NEUTRAL, PM_VALKYRIE, NON_PM, 4000L, NO_COLOR),
 
     A("Cleaver", BATTLE_AXE, SPFX_RESTR, 0, 0, PHYS(3, 6), NO_DFNS, NO_CARY,
       0, A_NEUTRAL, PM_BARBARIAN, NON_PM, 1500L, NO_COLOR),
@@ -383,6 +391,11 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       (SPFX_NOGEN | SPFX_RESTR | SPFX_INTEL | SPFX_DEFN),
       (SPFX_EREGEN | SPFX_HSPDAM), 0, NO_ATTK, NO_DFNS, CARY(AD_CURS),
       SUMMONING, A_CHAOTIC, PM_CARTOMANCER, NON_PM, 7000L, NO_COLOR),
+
+    A("Sharur", ORNATE_MACE,
+      (SPFX_NOGEN | SPFX_RESTR | SPFX_INTEL | SPFX_SPEAK | SPFX_WARN),
+      0, 0, PHYS(5, 5), DFNS(AD_MAGM), NO_CARY, LION, A_LAWFUL, PM_DRAGONMASTER,
+      NON_PM, 4000L, NO_COLOR),
 
 #if 0 /* OBSOLETE */
 A("The Palantir of Westernesse",        CRYSTAL_BALL,

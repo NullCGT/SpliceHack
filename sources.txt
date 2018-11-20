@@ -67,6 +67,9 @@
 #GruntHack
 - Intelligent Pets Patch
 
+#EvilHack
+- Updated Nazgul
+
 #ChrisANG
 - Pirate Patch
 

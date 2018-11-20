@@ -25,9 +25,10 @@
 #define AT_BOOM 12  /* explodes when killed */
 #define AT_GAZE 13  /* gaze - ranged */
 #define AT_TENT 14  /* tentacles */
+#define AT_SCRE 15  /* scream - sonic attack */
 
-#define AT_WEAP 15 /* uses weapon */
-#define AT_MAGC 16 /* uses magic spell(s) */
+#define AT_WEAP 16 /* uses weapon */
+#define AT_MAGC 17 /* uses magic spell(s) */
 #define LAST_AT AT_MAGC
 
 /*	Add new damage types below.

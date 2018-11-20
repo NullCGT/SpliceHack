@@ -1588,6 +1588,19 @@ NEARDATA struct permonst mons[] = {
      * As reptiles, dragons are cold-blooded and thus aren't seen
      * with infravision.  Red dragons are the exception.
      */
+
+    /* From J.R.R. Tolkien, the nine Nazgul had steeds known as 'fell beasts'
+     * which the rode/flew into battle. Fearsome in their own right.
+     * Not exactly dragons, but dragon-like.
+     */
+   MON("fell beast", S_DRAGON, LVL(14, 12, -2, 20, -17), (G_NOGEN | 1),
+       A(ATTK(AT_CLAW, AD_PHYS, 4, 5), ATTK(AT_CLAW, AD_PHYS, 4, 5),
+         ATTK(AT_BITE, AD_PHYS, 2, 6), NO_ATTK, NO_ATTK, NO_ATTK),
+       SIZ(1200, 800, MS_SHRIEK, MZ_LARGE), MR_COLD | MR_SLEEP | MR_POISON, 0,
+       M1_FLY | M1_POIS | M1_THICK_HIDE | M1_NOHANDS | M1_SEE_INVIS
+                     | M1_CARNIVORE,
+       M2_NOPOLY | M2_HOSTILE | M2_STRONG | M2_NASTY, M3_INFRAVISION,
+       16, HI_LORD),
     MON("hydra", S_DRAGON, LVL(20, 9, -2, 5, 7), (G_GENO | 1),
        	A(ATTK(AT_NONE, AD_HYDR, 0, 0), ATTK(AT_BITE, AD_PHYS, 2, 8),
             NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
@@ -2807,15 +2820,15 @@ struct permonst _mons2[] = {
         MR_COLD | MR_SLEEP | MR_POISON | MR_STONE, 0,
         M1_BREATHLESS | M1_FLY | M1_HUMANOID | M1_UNSOLID,
         M2_UNDEAD | M2_STALK | M2_HOSTILE, 0, 8, CLR_BLACK),
-    MON("Nazgul", S_WRAITH, LVL(13, 12, 0, 25, -17),
+    MON("Nazgul", S_WRAITH, LVL(17, 12, -2, 35, -17),
         (G_GENO | G_NOCORPSE | 1),
-        A(ATTK(AT_WEAP, AD_DRLI, 1, 4), ATTK(AT_BREA, AD_SLEE, 2, 25),
-          NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
+        A(ATTK(AT_WEAP, AD_DRLI, 1, 10), ATTK(AT_BREA, AD_SLEE, 2, 25),
+          ATTK(AT_SCRE, AD_STUN, 2, 8), NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(WT_HUMAN, 0, MS_SPELL, MZ_HUMAN), MR_COLD | MR_SLEEP | MR_POISON,
-        0, M1_BREATHLESS | M1_HUMANOID,
+        0, M1_BREATHLESS | M1_HUMANOID | M1_SEE_INVIS,
         M2_NOPOLY | M2_UNDEAD | M2_STALK | M2_STRONG | M2_HOSTILE | M2_MALE
             | M2_COLLECT,
-        0, 17, HI_LORD),
+        M3_INFRAVISIBLE, 19, HI_LORD),
     MON("banshee", S_WRAITH, LVL(15, 10, 10, 0, 5), (G_GENO | G_NOCORPSE | 1),
         A(ATTK(AT_TUCH, AD_PHYS, 2, 6), ATTK(AT_TUCH, AD_PHYS, 2, 6), NO_ATTK,
           NO_ATTK, NO_ATTK, NO_ATTK),

@@ -73,6 +73,7 @@
 #define has_horns(ptr) (num_horns(ptr) > 0)
 #define has_beak(ptr)          (is_bird(ptr) || \
                                (ptr) == &mons[PM_TENGU] || \
+                               (ptr) == &mons[PM_FELL_BEAST] || \
                                (ptr) == &mons[PM_VROCK])
 #define is_whirly(ptr) \
     ((ptr)->mlet == S_VORTEX || (ptr) == &mons[PM_AIR_ELEMENTAL] || \

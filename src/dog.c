@@ -9,6 +9,11 @@
 
 STATIC_DCL int NDECL(pet_type);
 
+/* cloned from mon.c; used here if mon_arrive() can't place mon */
+#define LEVEL_SPECIFIC_NOCORPSE(mdat) \
+    (Is_rogue_level(&u.uz)            \
+     || (level.flags.graveyard && is_undead(mdat) && rn2(3)))
+
 void
 newedog(mtmp)
 struct monst *mtmp;
@@ -97,6 +102,7 @@ boolean quietly;
     do {
         if (otmp) { /* figurine; otherwise spell */
             int mndx = otmp->corpsenm;
+
             pm = &mons[mndx];
             /* activating a figurine provides one way to exceed the
                maximum number of the target critter created--unless
@@ -322,6 +328,7 @@ struct monst *mtmp;
 boolean with_you;
 {
     struct trap *t;
+    struct obj *obj;
     xchar xlocale, ylocale, xyloc, xyflags, wander;
     int num_segs;
 
@@ -446,8 +453,10 @@ boolean with_you;
         /* monster moved a bit; pick a nearby location */
         /* mnearto() deals w/stone, et al */
         char *r = in_rooms(xlocale, ylocale, 0);
+
         if (r && *r) {
             coord c;
+
             /* somexy() handles irregular rooms */
             if (somexy(&rooms[*r - ROOMOFFSET], &c))
                 xlocale = c.x, ylocale = c.y;
@@ -455,6 +464,7 @@ boolean with_you;
                 xlocale = ylocale = 0;
         } else { /* not in a room */
             int i, j;
+
             i = max(1, xlocale - wander);
             j = min(COLNO - 1, xlocale + wander);
             xlocale = rn1(j - i, i);
@@ -475,8 +485,11 @@ boolean with_you;
              * Failed to place migrating monster,
              * probably because the level is full.
              * Dump the monster's cargo and leave the monster dead.
+             *
+             * TODO?  Put back on migrating_mons list instead so
+             * that if hero leaves this level and then returns,
+             * monster will have another chance to arrive.
              */
-            struct obj *obj;
 fail_mon_placement:
             while ((obj = mtmp->minvent) != 0) {
                 obj_extract_self(obj);
@@ -491,8 +504,16 @@ fail_mon_placement:
                         impossible("Can't find relocated object.");
                 }
             }
-            (void) mkcorpstat(CORPSE, (struct monst *) 0, mtmp->data, xlocale,
-                              ylocale, CORPSTAT_NONE);
+            /*
+             * TODO?  Maybe switch to make_corpse() [won't be needed if
+             * we re-migrate as suggested above], probably with new
+             * CORPSTAT_NOOBJS flag to suppress dragon scales and such.
+             */
+            if (!(mvitals[monsndx(mtmp->data)].mvflags & G_NOCORPSE)
+                && !LEVEL_SPECIFIC_NOCORPSE(mtmp->data))
+                (void) mkcorpstat(CORPSE, mtmp, mtmp->data,
+                                  xlocale, ylocale, CORPSTAT_NONE);
+            mtmp->mx = mtmp->my = 0; /* for mongone, mon is not anywhere */
             mongone(mtmp);
         }
     }
@@ -688,6 +709,7 @@ boolean stairs;
                 cnt = count_wsegs(mtmp);
                 num_segs = min(cnt, MAX_NUM_WORMS - 1);
                 wormgone(mtmp);
+                place_monster(mtmp, mtmp->mx, mtmp->my);
             } else
                 num_segs = 0;
 
@@ -750,6 +772,7 @@ coord *cc;   /* optional destination coordinates */
         cnt = count_wsegs(mtmp);
         num_segs = min(cnt, MAX_NUM_WORMS - 1);
         wormgone(mtmp);
+        place_monster(mtmp, mtmp->mx, mtmp->my);
     }
 
     /* set minvent's obj->no_charge to 0 */

@@ -1,4 +1,4 @@
-/* NetHack 3.6	steed.c	$NHDT-Date: 1445906867 2015/10/27 00:47:47 $  $NHDT-Branch: master $:$NHDT-Revision: 1.47 $ */
+/* NetHack 3.6	steed.c	$NHDT-Date: 1542765364 2018/11/21 01:56:04 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.57 $ */
 /* Copyright (c) Kevin Hugo, 1998-1999. */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -297,7 +297,7 @@ boolean force;      /* Quietly force this animal */
     if (Wounded_legs) {
         Your("%s are in no shape for riding.", makeplural(body_part(LEG)));
         if (force && wizard && yn("Heal your legs?") == 'y')
-            HWounded_legs = EWounded_legs = 0;
+            HWounded_legs = EWounded_legs = 0L;
         else
             return (FALSE);
     }
@@ -318,6 +318,16 @@ boolean force;      /* Quietly force this animal */
                              || mtmp->m_ap_type == M_AP_OBJECT))) {
         pline("I see nobody there.");
         return (FALSE);
+    }
+    if (mtmp->data == &mons[PM_LONG_WORM]
+        && (u.ux + u.dx != mtmp->mx || u.uy + u.dy != mtmp->my)) {
+        /* 3.6.2:  test_move(below) is used to check for trying to mount
+           diagonally into or out of a doorway or through a tight squeeze;
+           attempting to mount a tail segment when hero was not adjacent
+           to worm's head could trigger an impossible() in worm_cross()
+           called from test_move(), so handle not-on-head before that */
+        You("couldn't ride %s, let alone its tail.", a_monnam(mtmp));
+        return FALSE;
     }
     if (u.uswallow || u.ustuck || u.utrap || Punished
         || !test_move(u.ux, u.uy, mtmp->mx - u.ux, mtmp->my - u.uy,
@@ -596,7 +606,7 @@ int reason; /* Player was thrown off etc. */
             return;
         }
         if (!have_spot) {
-            You("can't. There isn't anywhere for you to stand.");
+            You("can't.  There isn't anywhere for you to stand.");
             return;
         }
         if (!has_mname(mtmp)) {
@@ -609,12 +619,8 @@ int reason; /* Player was thrown off etc. */
     }
     /* While riding, Wounded_legs refers to the steed's legs;
        after dismounting, it reverts to the hero's legs. */
-    if (repair_leg_damage) {
-        /* [TODO: make heal_legs() take a parameter to handle this] */
-        in_steed_dismounting = TRUE;
-        heal_legs();
-        in_steed_dismounting = FALSE;
-    }
+    if (repair_leg_damage)
+        heal_legs(1);
 
     /* Release the steed and saddle */
     u.usteed = 0;
@@ -775,6 +781,8 @@ int x, y;
                    (mon == u.usteed) ? "steed" : "defunct monster");
         return;
     }
+    if (level.monsters[x][y])
+        impossible("placing monster over another?");
     mon->mx = x, mon->my = y;
     level.monsters[x][y] = mon;
 }

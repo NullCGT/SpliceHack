@@ -3358,6 +3358,9 @@ tty_nhgetch()
      */
     if (WIN_MESSAGE != WIN_ERR && wins[WIN_MESSAGE])
         wins[WIN_MESSAGE]->flags &= ~WIN_STOP;
+    if (iflags.debug_fuzzer) {
+	i = randomkey();
+    } else {
 #ifdef UNIX
     i = (++nesting == 1) ? tgetch()
                          : (read(fileno(stdin), (genericptr_t) &nestbuf, 1)
@@ -3366,6 +3369,7 @@ tty_nhgetch()
 #else
     i = tgetch();
 #endif
+    }
     if (!i)
         i = '\033'; /* map NUL to ESC since nethack doesn't expect NUL */
     else if (i == EOF)
@@ -3877,7 +3881,7 @@ boolean forcefields;
 int *topsz, *bottomsz;
 {
     int c, i, row, col, trackx, idx;
-    boolean valid = TRUE, matchprev = FALSE, update_right, disregard;
+    boolean valid = TRUE, matchprev = FALSE, update_right, disregard = FALSE;
 
     if (!windowdata_init && !check_windowdata())
         return FALSE;
@@ -3886,6 +3890,7 @@ int *topsz, *bottomsz;
         col = 1;
         trackx = 1;
         update_right = FALSE;
+        idx = -1;
         for (i = 0; fieldorder[row][i] != BL_FLUSH; ++i) {
             idx = fieldorder[row][i];
             if (!status_activefields[idx])
@@ -3951,10 +3956,12 @@ int *topsz, *bottomsz;
                 tty_status[NOW][idx].redraw = TRUE;
             col += tty_status[NOW][idx].lth;
         }
-        if (row && bottomsz)
-            *bottomsz = col + tty_status[NOW][idx].lth;
-        else if (topsz)
-            *topsz = col + tty_status[NOW][idx].lth;
+        if (idx != -1) {
+            if (row && bottomsz)
+                *bottomsz = col + tty_status[NOW][idx].lth;
+            else if (topsz)
+                *topsz = col + tty_status[NOW][idx].lth;
+        }
     }
     return valid;
 }
@@ -3970,7 +3977,7 @@ struct tty_status_fields *fld;
 const char *val;
 int x, y;
 {
-    int i, n, ncols, lth;
+    int i, n, ncols, lth = 0;
     struct WinDesc *cw = 0;
     const char *text = (char *)0;
 
@@ -4283,7 +4290,7 @@ render_status(VOID_ARGS)
                     /* hitpointbar using hp percent calculation */
                     int bar_pos, bar_len;
                     char *bar2 = (char *)0;
-                    char bar[MAXCO], savedch;
+                    char bar[MAXCO], savedch = 0;
                     boolean twoparts = FALSE;
 
                     bar_len = strlen(text);

@@ -4549,7 +4549,7 @@ For example, the following line in your config file will cause
 the hitpoints field to display in the color red if your hitpoints
 drop to or below a threshold of 30%:
 \begin{verbatim}
-    OPTION=hilite_status: hitpoints/<30%/red/normal
+    OPTION=hilite_status: hitpoints/<=30%/red/normal
 \end{verbatim}
 %.pg
 For another example, the following line in your config file will cause
@@ -4599,7 +4599,7 @@ percentage or absolute number threshold, or text to match against.
 ``{\tt always}'' will set the default attributes for that field.
 %.lp "*"
 \item{\bb{}}
-``{\tt up}'' and ``(\tt down}'' set the field attributes for when the field
+``{\tt up}'' and ``{\tt down}'' set the field attributes for when the field
 value changes upwards or downwards. This attribute times out after
 {\tt statushilites} turns.
 %.lp "*"
@@ -5519,7 +5519,7 @@ maintained the port of  {\it NetHack\/} 3.6 for Microsoft Windows.
 %.pg
 \medskip
 {\it Pat Rankin} attempted to keep the VMS port running for NetHack 3.6.1,
-hindered by limited access.  {it Kevin Smolkowski} has updated and tested it
+hindered by limited access.  {\it Kevin Smolkowski} has updated and tested it
 for the most recent version of OpenVMS (V8.4 as of this writing) on Alpha
 and Integrity (aka Itanium aka IA64) but not VAX.
 

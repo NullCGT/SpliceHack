@@ -22,7 +22,8 @@ STATIC_DCL void FDECL(add_obj_info, (winid, short));
 STATIC_DCL void FDECL(checkfile, (char *, struct permonst *,
                                   BOOLEAN_P, BOOLEAN_P, char *));
 STATIC_DCL void FDECL(look_all, (BOOLEAN_P,BOOLEAN_P));
-STATIC_DCL void FDECL(do_supplemental_info, (char *, struct permonst *,BOOLEAN_P));
+STATIC_DCL void FDECL(do_supplemental_info, (char *, struct permonst *,
+                                             BOOLEAN_P));
 STATIC_DCL void NDECL(whatdoes_help);
 STATIC_DCL void NDECL(docontact);
 STATIC_DCL void NDECL(dispfile_help);
@@ -1660,12 +1661,17 @@ struct permonst **for_supplement;
     }
 
     if (sym == DEF_INVISIBLE) {
+        extern const char altinvisexplain[]; /* drawing.c */
+        /* for active clairvoyance, use alternate "unseen creature" */
+        boolean usealt = (EDetect_monsters & I_SPECIAL) != 0L;
+        const char *unseen_explain = !usealt ? invisexplain : altinvisexplain;
+
         if (!found) {
-            Sprintf(out_str, "%s%s", prefix, an(invisexplain));
-            *firstmatch = invisexplain;
+            Sprintf(out_str, "%s%s", prefix, an(unseen_explain));
+            *firstmatch = unseen_explain;
             found++;
         } else {
-            found += append_str(out_str, an(invisexplain));
+            found += append_str(out_str, an(unseen_explain));
         }
     }
 
@@ -1824,6 +1830,9 @@ coord *click_cc;
     coord cc;             /* screen pos of unknown glyph */
     boolean save_verbose; /* saved value of flags.verbose */
     boolean from_screen;  /* question from the screen */
+
+    cc.x = 0;
+    cc.y = 0;
 
     if (!clicklook) {
         if (quick) {
@@ -2112,9 +2121,8 @@ boolean without_asking;
      * meant to support in-game mythology, and not
      * available from data.base or other sources.
      */
-    if (name && pm && is_orc(pm) &&
-                (strlen(name) < (BUFSZ - 1)) &&
-                (bp = strstri(name, " of ")) != 0) {
+    if (name && pm && is_orc(pm) && (strlen(name) < (BUFSZ - 1))
+        && (bp = strstri(name, " of ")) != 0) {
         char fullname[BUFSZ];
 
         Strcpy(fullname, name);
@@ -2540,7 +2548,7 @@ dowhatdoes()
 }
 
 STATIC_OVL void
-docontact()
+docontact(VOID_ARGS)
 {
     winid cwin = create_nhwindow(NHW_TEXT);
     char buf[BUFSZ];
@@ -2570,67 +2578,67 @@ docontact()
 }
 
 void
-dispfile_help()
+dispfile_help(VOID_ARGS)
 {
     display_file(HELP, TRUE);
 }
 
 void
-dispfile_shelp()
+dispfile_shelp(VOID_ARGS)
 {
     display_file(SHELP, TRUE);
 }
 
 void
-dispfile_optionfile()
+dispfile_optionfile(VOID_ARGS)
 {
     display_file(OPTIONFILE, TRUE);
 }
 
 void
-dispfile_license()
+dispfile_license(VOID_ARGS)
 {
     display_file(LICENSE, TRUE);
 }
 
 void
-dispfile_debughelp()
+dispfile_debughelp(VOID_ARGS)
 {
     display_file(DEBUGHELP, TRUE);
 }
 
 void
-hmenu_doextversion()
+hmenu_doextversion(VOID_ARGS)
 {
     (void) doextversion();
 }
 
 void
-hmenu_dohistory()
+hmenu_dohistory(VOID_ARGS)
 {
     (void) dohistory();
 }
 
 void
-hmenu_dowhatis()
+hmenu_dowhatis(VOID_ARGS)
 {
     (void) dowhatis();
 }
 
 void
-hmenu_dowhatdoes()
+hmenu_dowhatdoes(VOID_ARGS)
 {
     (void) dowhatdoes();
 }
 
 void
-hmenu_doextlist()
+hmenu_doextlist(VOID_ARGS)
 {
     (void) doextlist();
 }
 
 void
-domenucontrols()
+domenucontrols(VOID_ARGS)
 {
     winid cwin = create_nhwindow(NHW_TEXT);
     show_menu_controls(cwin, FALSE);
@@ -2640,7 +2648,7 @@ domenucontrols()
 
 /* data for dohelp() */
 static struct {
-    void (*f)();
+    void NDECL((*f));
     const char *text;
 } help_menu_items[] = {
     { hmenu_doextversion, "About NetHack (version information)." },
@@ -2660,7 +2668,7 @@ static struct {
     { port_help, "%s-specific help and commands." },
 #endif
     { dispfile_debughelp, "List of wizard-mode commands." },
-    { NULL, (char *) 0 }
+    { (void NDECL((*))) 0, (char *) 0 }
 };
 
 /* the '?' command */
@@ -2673,7 +2681,6 @@ dohelp()
     menu_item *selected;
     anything any;
     int sel;
-    char *bufptr;
 
     any = zeroany; /* zero all bits */
     start_menu(tmpwin);
@@ -2683,13 +2690,12 @@ dohelp()
             continue;
         if (help_menu_items[i].text[0] == '%') {
             Sprintf(helpbuf, help_menu_items[i].text, PORT_ID);
-            bufptr = helpbuf;
         } else {
-            bufptr = (char *)help_menu_items[i].text;
+            Strcpy(helpbuf, help_menu_items[i].text);
         }
         any.a_int = i + 1;
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                 bufptr, MENU_UNSELECTED);
+                 helpbuf, MENU_UNSELECTED);
     }
     end_menu(tmpwin, "Select one item:");
     n = select_menu(tmpwin, PICK_ONE, &selected);
@@ -2697,7 +2703,7 @@ dohelp()
     if (n > 0) {
         sel = selected[0].item.a_int - 1;
         free((genericptr_t) selected);
-        (void)(*help_menu_items[sel].f)();
+        (void) (*help_menu_items[sel].f)();
     }
     return 0;
 }

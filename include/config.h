@@ -48,6 +48,7 @@
 #define TTY_GRAPHICS /* good old tty based graphics */
 #define CURSES_GRAPHICS
 #endif
+/* #define CURSES_GRAPHICS *//* Curses interface - Karl Garrison*/
 /* #define X11_GRAPHICS */   /* X11 interface */
 /* #define QT_GRAPHICS */    /* Qt interface */
 /* #define GNOME_GRAPHICS */ /* Gnome interface */
@@ -119,6 +120,12 @@
 
 #ifndef DEFAULT_WINDOW_SYS
 #define DEFAULT_WINDOW_SYS "tty"
+#endif
+
+#ifdef CURSES_GRAPHICS
+#ifndef DEFAULT_WINDOW_SYS
+#define DEFAULT_WINDOW_SYS "curses"
+#endif
 #endif
 
 #ifdef X11_GRAPHICS

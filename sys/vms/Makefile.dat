@@ -1,5 +1,5 @@
 #	NetHack Makefile (VMS) - data files: special levels and other data.
-#	NetHack 3.6	Makefile.dat	$NHDT-Date: 1524689428 2018/04/25 20:50:28 $	$NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.9 $
+#	NetHack 3.6	Makefile.dat	$NHDT-Date: 1542388601 2018/11/16 17:16:41 $	$NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.10 $
 # Copyright (c) 2015 by Mike Stephenson
 # NetHack may be freely redistributed.  See license for details.
 
@@ -57,6 +57,12 @@ quest.dat :	quest.dat;
       @ $(NOOP)
 oracles :	oracles.;
       @ $(NOOP)
+engrave :	engrave.;
+      @ $(NOOP)
+epitaph :	epitaph.;
+      @ $(NOOP)
+bogusmon :	bogusmon.;
+      @ $(NOOP)
 options :	options.;
       @ $(NOOP)
 x11tiles :	$(X11TILES)
@@ -104,6 +110,9 @@ data.; :	data.base $(MAKEDEFS)
 
 rumors.; :	rumors.tru rumors.fal $(MAKEDEFS)
 	$(RUN) $(MAKEDEFS) -r
+
+engrave.; epitaph.; bogusmon.; : engrave.txt epitaph.txt bogusmon.txt
+	$(RUN) $(MAKEDEFS) -s
 
 quest.dat; :	quest.txt $(MAKEDEFS)
 	$(RUN) $(MAKEDEFS) -q

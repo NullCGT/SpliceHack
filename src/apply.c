@@ -3610,6 +3610,7 @@ struct obj *obj;
         pline("A wall of force smashes down around you!");
         dmg = d(1 + obj->spe, 6); /* normally 2d12 */
         /*FALLTHRU*/
+    case WAN_WINDSTORM:
     case WAN_CANCELLATION:
     case WAN_POLYMORPH:
     case WAN_TELEPORTATION:

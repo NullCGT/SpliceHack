@@ -49,6 +49,7 @@
     - Drow Items
     - Medical Kit and associated items
     - Potions of blood and vampire blood
+    - Wand of create horde
   #Other
     - Drow Race
     - Techniques Code

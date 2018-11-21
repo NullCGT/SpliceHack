@@ -795,6 +795,8 @@ struct obj *obj; /* only scatter this obj        */
         free((genericptr_t) stmp);
         newsym(x, y);
     }
+    if (total > 0)
+        newsym(sx, sy);
 
     return total;
 }

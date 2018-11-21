@@ -271,6 +271,7 @@ struct obj *otmp;
 #define MUSE_LIZARD_CORPSE 19
 #define MUSE_WAN_HEALING 20
 #define MUSE_POT_VAMPIRE_BLOOD 21
+#define MUSE_WAN_CREATE_HORDE 22
 /*
 #define MUSE_INNATE_TPT 9999
  * We cannot use this.  Since monsters get unlimited teleportation, if they
@@ -613,6 +614,11 @@ boolean force;
                 m.defensive = obj;
                 m.has_defense = MUSE_WAN_CREATE_MONSTER;
             }
+            nomore(MUSE_WAN_CREATE_HORDE);
+        		if (obj->otyp == WAN_CREATE_HORDE && obj->spe > 0) {
+          			m.defensive = obj;
+          			m.has_defense = MUSE_WAN_CREATE_HORDE;
+        		}
             nomore(MUSE_POT_HEALING);
             if (obj->otyp == POT_HEALING) {
                 m.defensive = obj;
@@ -820,6 +826,23 @@ struct monst *mtmp;
                          (coord *) 0);
         return 2;
     }
+    case MUSE_WAN_CREATE_HORDE: {
+        coord cc;
+    		struct permonst *pm=rndmonst();
+    		int cnt = 1;
+    		if (!enexto(&cc, mtmp->mx, mtmp->my, pm)) return 0;
+    		mzapmsg(mtmp, otmp, FALSE);
+    		otmp->spe--;
+    		if (oseen) makeknown(WAN_CREATE_HORDE);
+    		cnt = rnd(4) + 6;
+    		while(cnt--) {
+      			struct monst *mon;
+      			if (!enexto(&cc, mtmp->mx, mtmp->my, pm)) continue;
+      			mon = makemon(rndmonst(), cc.x, cc.y, NO_MM_FLAGS);
+      			if (mon) newsym(mon->mx,mon->my);
+    		}
+    		return 2;
+  	}
     case MUSE_WAN_CREATE_MONSTER: {
         coord cc;
         /* pm: 0 => random, eel => aquatic, croc => amphibious */
@@ -2434,6 +2457,7 @@ struct obj *obj;
         if (objects[typ].oc_dir == RAY || typ == WAN_STRIKING
             || typ == WAN_TELEPORTATION || typ == WAN_CREATE_MONSTER
             || typ == WAN_CANCELLATION
+            || typ == WAN_CREATE_HORDE
             || typ == WAN_HEALING)
             return TRUE;
         break;

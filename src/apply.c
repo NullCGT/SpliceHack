@@ -3670,7 +3670,8 @@ struct obj *obj;
                                                       : HOLE);
             }
             continue;
-        } else if (obj->otyp == WAN_CREATE_MONSTER) {
+        } else if (obj->otyp == WAN_CREATE_MONSTER ||
+                    obj->otyp == WAN_CREATE_HORDE) {
             /* u.ux,u.uy creates it near you--x,y might create it in rock */
             (void) makemon((struct permonst *) 0, u.ux, u.uy, NO_MM_FLAGS);
             continue;

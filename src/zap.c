@@ -2230,6 +2230,9 @@ register struct obj *obj;
         known = create_critters(rn2(23) ? 1 : rn1(7, 2),
                                 (struct permonst *) 0, FALSE);
         break;
+    case WAN_CREATE_HORDE:
+  			known = create_critters(rn1(7,4), (struct permonst *) 0, FALSE);
+  			break;
     case WAN_WISHING:
         known = TRUE;
         if (Luck + rn2(5) < 0) {

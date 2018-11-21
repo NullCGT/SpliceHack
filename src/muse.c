@@ -1178,6 +1178,7 @@ try_again:
 #define MUSE_SCR_WEB 27
 #define MUSE_POT_BLOOD_THROW 28
 #define MUSE_CAMERA 29
+#define MUSE_WAN_WINDSTORM 30
 
 /* Select an offensive item/action for a monster.  Returns TRUE iff one is
  * found.
@@ -1283,6 +1284,11 @@ struct monst *mtmp;
         if (obj->otyp == WAN_STRIKING && obj->spe > 0) {
             m.offensive = obj;
             m.has_offense = MUSE_WAN_STRIKING;
+        }
+        nomore(MUSE_WAN_WINDSTORM);
+        if (obj->otyp == WAN_WINDSTORM && obj->spe > 0) {
+            m.offensive = obj;
+            m.has_offense = MUSE_WAN_WINDSTORM;
         }
 #if 0   /* use_offensive() has had some code to support wand of teleportation
          * for a long time, but find_offensive() never selected one;
@@ -1444,6 +1450,10 @@ register struct obj *otmp;
             if (cansee(mtmp->mx, mtmp->my) && zap_oseen)
                 makeknown(WAN_STRIKING);
         }
+        break;
+    case WAN_WINDSTORM:
+        You("get blasted by hurricane-force winds!");
+        hurtle(u.ux - mtmp->mx, u.uy - mtmp->my, 5 + rn2(5), TRUE);
         break;
 #if 0   /* disabled because find_offensive() never picks WAN_TELEPORTATION */
     case WAN_TELEPORTATION:
@@ -1660,6 +1670,7 @@ struct monst *mtmp;
     case MUSE_WAN_TELEPORTATION:
     case MUSE_WAN_STRIKING:
     case MUSE_WAN_CANCELLATION:
+    case MUSE_WAN_WINDSTORM:
         zap_oseen = oseen;
         mzapmsg(mtmp, otmp, FALSE);
         otmp->spe--;
@@ -2458,6 +2469,7 @@ struct obj *obj;
             || typ == WAN_TELEPORTATION || typ == WAN_CREATE_MONSTER
             || typ == WAN_CANCELLATION
             || typ == WAN_CREATE_HORDE
+            || typ == WAN_WINDSTORM
             || typ == WAN_HEALING)
             return TRUE;
         break;

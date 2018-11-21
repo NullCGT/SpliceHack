@@ -2495,6 +2495,7 @@ boolean ordinary;
                 losehp(Maybe_Half_Phys(d(5,6)), "blast of wind", KILLED_BY_AN);
             }
         }
+        break;
     case WAN_LIGHTNING:
         learn_it = TRUE;
         if (!Shock_resistance) {

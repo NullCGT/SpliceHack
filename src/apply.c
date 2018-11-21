@@ -3611,6 +3611,9 @@ struct obj *obj;
         dmg = d(1 + obj->spe, 6); /* normally 2d12 */
         /*FALLTHRU*/
     case WAN_WINDSTORM:
+        pline("A tornado surrounds you!");
+        affects_objects = TRUE;
+        break;
     case WAN_CANCELLATION:
     case WAN_POLYMORPH:
     case WAN_TELEPORTATION:
@@ -3626,8 +3629,9 @@ struct obj *obj;
     /* [TODO?  This really ought to prevent the explosion from being
        fatal so that we never leave a bones file where none of the
        surrounding targets (or underlying objects) got affected yet.] */
-    explode(obj->ox, obj->oy, -(obj->otyp), rnd(dmg), WAND_CLASS,
-            EXPL_MAGICAL);
+    if (obj->otyp != WAN_WINDSTORM)
+        explode(obj->ox, obj->oy, -(obj->otyp), rnd(dmg), WAND_CLASS,
+                EXPL_MAGICAL);
 
     /* prepare for potential feedback from polymorph... */
     zapsetup();

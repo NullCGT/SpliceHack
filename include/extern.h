@@ -2044,6 +2044,7 @@ E void NDECL(ustatusline);
 
 E void NDECL(onquest);
 E void NDECL(nemdead);
+E void NDECL(leaddead);
 E void FDECL(artitouch, (struct obj *));
 E boolean NDECL(ok_to_quest);
 E void FDECL(leader_speaks, (struct monst *));

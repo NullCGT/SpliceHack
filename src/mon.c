@@ -2275,6 +2275,8 @@ register struct monst *mtmp;
         wizdead();
     if (mtmp->data->msound == MS_NEMESIS)
         nemdead();
+    if (mtmp->data->msound == MS_LEADER)
+        leaddead();
 
     /* Medusa falls into two livelog categories,
      * we log one message flagged for both categories.

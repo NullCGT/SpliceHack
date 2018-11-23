@@ -329,9 +329,20 @@ register struct monst *mtmp;
                     curse(otmp);
                 (void) mpickobj(mtmp, otmp);
             }
-        } else if (mm == PM_NINJA) { /* extra quest villains */
+        } else if (mm == PM_NINJA) { /* extra quest characters */
             (void) mongets(mtmp, rn2(4) ? SHURIKEN : DART);
             (void) mongets(mtmp, rn2(4) ? SHORT_SWORD : AXE);
+        } else if (mm == PM_KING_ARTHUR) {
+            /* If it has not yet been generate, of course
+               Arthur gets Excalibur */
+            otmp = mksobj(LONG_SWORD, FALSE, FALSE);
+            otmp = oname(otmp, artiname(ART_EXCALIBUR));
+            bless(otmp);
+            otmp->oerodeproof = TRUE;
+            spe2 = rn2(4);
+            otmp->spe = max(otmp->spe, spe2);
+            (void) mpickobj(mtmp, otmp);
+            (void)mongets(mtmp, TOWER_SHIELD);
      		} else if (mm == PM_PIRATE_BROTHER){
      			  (void)mongets(mtmp, SCIMITAR);
      			  (void)mongets(mtmp, LIGHT_ARMOR);

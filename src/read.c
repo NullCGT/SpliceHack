@@ -1614,7 +1614,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             nomovemsg = "Your natural flow of time reasserts itself.";
         } else {
             if (Hallucination)
-                pline("The world is moving through pudding!");
+                pline("ZA WARUDO!");
             else
                 pline("Time slows down to a crawl around you!");
             youmonst.movement = 50 + bcsign(sobj) * 50;

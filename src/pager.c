@@ -530,6 +530,7 @@ static const char * attacktypes[] = {
     "explode on death",
     "gaze",
     "tentacle",
+    "scream",
     "weapon",
     "spellcast"
 };

@@ -57,6 +57,7 @@
 
 #DNetHack
 - Inspiration for Creeping Kudzu
+- Code for race fields and expanded races
 
 #UnNetHack
 - Black Market Code

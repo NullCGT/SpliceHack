@@ -139,8 +139,8 @@ struct Role {
     short questarti; /* index (ART_) of quest artifact (questpgr.c) */
 
     /*** Bitmasks ***/
+    long mhrace;
     short allow;                  /* bit mask of allowed variations */
-#define ROLE_RACEMASK  0x0ff8     /* allowable races */
 #define ROLE_GENDMASK  0xf000     /* allowable genders */
 #define ROLE_MALE      0x1000
 #define ROLE_FEMALE    0x2000

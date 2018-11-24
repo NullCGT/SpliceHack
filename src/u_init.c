@@ -1130,7 +1130,7 @@ u_init()
   	}
   	shambler->mflags2 &= ~M2_MERC;				/* no guards */
   	shambler->mflags2 &= ~M2_PEACEFUL;			/* no peacefuls */
-  	shambler->mflags2 &= ~M2_WERE;				/* no lycanthropes */
+  	/* shambler->mflags2 &= ~M2_WERE; */
   	shambler->mflags2 &= ~M2_PNAME;				/* not a proper name */
 
     return;

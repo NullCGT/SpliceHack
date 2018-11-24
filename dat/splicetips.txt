@@ -132,3 +132,7 @@ Packrats will pick up just about anything.
 Keep your pets far away from porcupines.
 A helm of opaque thoughts will make your head flayer-proof!
 Use #technique to use special role and race-specific powers.
+If you are a dwarf or gnome, giants may be hostile.
+Ghouls can paralyze opponents by way of touch.
+The touch of a drow can put even the hardiest of monsters to sleep.
+A ghoulish monk is going to have a tough time staying fed.

@@ -38,13 +38,6 @@
 
 #define is_lminion(mon) \
     (is_minion((mon)->data) && mon_aligntyp(mon) == A_LAWFUL)
-/* This definitely needs to become a flag, once reflagging takes place. */
-#define is_jumper(ptr) ((ptr) == &mons[PM_JUMPING_SPIDER] || \
-                        (ptr) == &mons[PM_EARTHSHARK] || \
-                        (ptr) == &mons[PM_WALLABY] || \
-                        (ptr) == &mons[PM_WALLAROO] || \
-                        (ptr) == &mons[PM_KANGAROO] || \
-                        (ptr) == &mons[PM_ANUBITE])
 #define is_flyer(ptr) (((ptr)->mflags1 & M1_FLY) != 0L)
 #define is_floater(ptr) ((ptr)->mlet == S_EYE || (ptr)->mlet == S_LIGHT)
 #define is_clinger(ptr) (((ptr)->mflags1 & M1_CLING) != 0L)
@@ -109,29 +102,30 @@
 #define metallivorous(ptr) (((ptr)->mflags1 & M1_METALLIVORE) != 0L)
 #define polyok(ptr) (((ptr)->mflags2 & M2_NOPOLY) == 0L)
 #define is_shapeshifter(ptr) (((ptr)->mflags2 & M2_SHAPESHIFTER) != 0L)
-#define is_undead(ptr) (((ptr)->mflags2 & M2_UNDEAD) != 0L)
-#define is_were(ptr) (((ptr)->mflags2 & M2_WERE) != 0L)
-#define is_elf(ptr) (((ptr)->mflags2 & M2_ELF) != 0L)
-#define is_dwarf(ptr) (((ptr)->mflags2 & M2_DWARF) != 0L)
-#define is_gnome(ptr) (((ptr)->mflags2 & M2_GNOME) != 0L)
-#define is_orc(ptr) (((ptr)->mflags2 & M2_ORC) != 0L)
-#define is_human(ptr) (((ptr)->mflags2 & M2_HUMAN) != 0L)
-#define your_race(ptr) (((ptr)->mflags2 & urace.selfmask) != 0L)
+#define is_undead(ptr) (((ptr)->mflags2 & MH_UNDEAD) != 0L)
+#define is_were(ptr) (((ptr)->mflags2 & MH_WERE) != 0L)
+#define is_elf(ptr) (((ptr)->mhflags & MH_ELF) != 0L)
+#define is_dwarf(ptr) (((ptr)->mhflags & MH_DWARF) != 0L)
+#define is_gnome(ptr) (((ptr)->mhflags & MH_GNOME) != 0L)
+#define is_orc(ptr) (((ptr)->mhflags & MH_ORC) != 0L)
+#define is_human(ptr) (((ptr)->mhflags & MH_HUMAN) != 0L)
+#define your_race(ptr) (((ptr)->mhflags & urace.selfmask) != 0L)
 #define is_bat(ptr)                                         \
     ((ptr) == &mons[PM_BAT] || (ptr) == &mons[PM_GIANT_BAT] \
      || (ptr) == &mons[PM_VAMPIRE_BAT])
 #define is_bird(ptr) ((ptr)->mlet == S_BAT && !is_bat(ptr))
-#define is_giant(ptr) (((ptr)->mflags2 & M2_GIANT) != 0L)
+#define is_giant(ptr) (((ptr)->mhflags & MH_GIANT) != 0L)
 #define is_marsupial(ptr) ((ptr) == &mons[PM_WALLABY] || \
                           (ptr) == &mons[PM_WALLAROO] || \
                           (ptr) == &mons[PM_KANGAROO])
 #define is_golem(ptr) ((ptr)->mlet == S_GOLEM)
+#define is_jumper(ptr) (((ptr)->mflags2 & M2_JUMPER) != 0L)
 #define is_domestic(ptr) (((ptr)->mflags2 & M2_DOMESTIC) != 0L) \
      || (Role_if(PM_DRAGONMASTER) && (((ptr) >= &mons[PM_BABY_GRAY_DRAGON] && \
                              (ptr) <= &mons[PM_GREEN_DRAGON]) || \
                              (ptr) == &mons[PM_YELLOW_DRAGON]))
 #define is_ghoul(ptr) ((ptr) == &mons[PM_GHOUL] || (ptr) == &mons[PM_GHAST])
-#define is_demon(ptr) (((ptr)->mflags2 & M2_DEMON) != 0L)
+#define is_demon(ptr) (((ptr)->mhflags & MH_DEMON) != 0L)
 #define is_mercenary(ptr) (((ptr)->mflags2 & M2_MERC) != 0L)
 #define is_male(ptr) (((ptr)->mflags2 & M2_MALE) != 0L)
 #define is_female(ptr) (((ptr)->mflags2 & M2_FEMALE) != 0L)
@@ -139,8 +133,8 @@
 #define is_wanderer(ptr) (((ptr)->mflags2 & M2_WANDER) != 0L)
 #define always_hostile(ptr) (((ptr)->mflags2 & M2_HOSTILE) != 0L)
 #define always_peaceful(ptr) (((ptr)->mflags2 & M2_PEACEFUL) != 0L)
-#define race_hostile(ptr) (((ptr)->mflags2 & urace.hatemask) != 0L)
-#define race_peaceful(ptr) (((ptr)->mflags2 & urace.lovemask) != 0L)
+#define race_hostile(ptr) (((ptr)->mhflags & urace.hatemask) != 0L)
+#define race_peaceful(ptr) (((ptr)->mhflags & urace.lovemask) != 0L)
 #define extra_nasty(ptr) (((ptr)->mflags2 & M2_NASTY) != 0L)
 #define strongmonst(ptr) (((ptr)->mflags2 & M2_STRONG) != 0L)
 #define can_breathe(ptr) attacktype(ptr, AT_BREA)
@@ -187,7 +181,8 @@
     ((ptr) == &mons[PM_SILVER_GOLEM])
 #define is_placeholder(ptr)                             \
     ((ptr) == &mons[PM_ORC] || (ptr) == &mons[PM_GIANT] \
-     || (ptr) == &mons[PM_ELF] || (ptr) == &mons[PM_HUMAN])
+     || (ptr) == &mons[PM_ELF] || (ptr) == &mons[PM_HUMAN] \
+     || (ptr) == &mons[PM_MINOR_ANGEL] || (ptr) == &mons[PM_INFERNAL])
 /* return TRUE if the monster tends to revive */
 #define is_reviver(ptr) (is_rider(ptr) || (ptr)->mlet == S_TROLL)
 /* monsters whose corpses and statues need special handling;

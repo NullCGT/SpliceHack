@@ -91,9 +91,7 @@
 #define can_teleport(ptr) (((ptr)->mflags1 & M1_TPORT) != 0L)
 #define control_teleport(ptr) (((ptr)->mflags1 & M1_TPORT_CNTRL) != 0L)
 #define telepathic(ptr)                                                \
-    ((ptr) == &mons[PM_FLOATING_EYE] || (ptr) == &mons[PM_MIND_FLAYER] \
-     || (ptr) == &mons[PM_MASTER_MIND_FLAYER] \
-     || (ptr) == &mons[PM_ANCIENT_BRAIN])
+    ((ptr) == &mons[PM_FLOATING_EYE] || is_mind_flayer(ptr))
 #define is_armed(ptr) attacktype(ptr, AT_WEAP)
 #define acidic(ptr) (((ptr)->mflags1 & M1_ACID) != 0L)
 #define poisonous(ptr) (((ptr)->mflags1 & M1_POIS) != 0L)
@@ -124,7 +122,8 @@
      || (Role_if(PM_DRAGONMASTER) && (((ptr) >= &mons[PM_BABY_GRAY_DRAGON] && \
                              (ptr) <= &mons[PM_GREEN_DRAGON]) || \
                              (ptr) == &mons[PM_YELLOW_DRAGON]))
-#define is_ghoul(ptr) ((ptr) == &mons[PM_GHOUL] || (ptr) == &mons[PM_GHAST])
+#define is_mind_flayer(ptr) (((ptr)->mhflags & MH_FLAYER) != 0L)
+#define is_ghoul(ptr) (((ptr)->mhflags & MH_GHOUL) != 0L)
 #define is_demon(ptr) (((ptr)->mhflags & MH_DEMON) != 0L)
 #define is_mercenary(ptr) (((ptr)->mflags2 & M2_MERC) != 0L)
 #define is_male(ptr) (((ptr)->mflags2 & M2_MALE) != 0L)
@@ -214,11 +213,6 @@
 
 #define touch_petrifies(ptr) \
     ((ptr) == &mons[PM_COCKATRICE] || (ptr) == &mons[PM_CHICKATRICE])
-
-#define is_mind_flayer(ptr) \
-    ((ptr) == &mons[PM_MIND_FLAYER] || (ptr) == &mons[PM_MASTER_MIND_FLAYER] \
-      || (ptr) == &mons[PM_MIND_FLAYER_TELEPATH] \
-      || (ptr) == &mons[PM_ANCIENT_BRAIN])
 
 #define is_vampire(ptr) ((ptr)->mlet == S_VAMPIRE)
 #define is_pirate(ptr) \

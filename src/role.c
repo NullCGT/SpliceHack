@@ -884,8 +884,8 @@ const struct Race races[] = {
         PM_ELF_ZOMBIE,
     	  MH_ELF | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_CHAOTIC,
     	  MH_ELF,
-        MH_ELF,
-        MH_ORC,
+        0,
+        MH_ORC | MH_DWARF | MH_GNOME,
       	/*  Str    Int Wis Dex Con Cha */
       	{    3,     3,  3,  3,  3,  3 },
       	{   18,    20, 20, 18, 16, 18 },

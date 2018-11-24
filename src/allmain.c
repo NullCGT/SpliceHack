@@ -707,7 +707,10 @@ boolean new_game; /* false => restoring an old game */
 {
     char buf[BUFSZ];
     char tipbuf[BUFSZ];
+    char tiptxt[BUFSZ];
     char ebuf[BUFSZ];
+    char racebuf[BUFSZ];
+    char rolebuf[BUFSZ];
     int currentgend = Upolyd ? u.mfemale : flags.female;
 
     /* skip "welcome back" if restoring a doomed character */
@@ -752,8 +755,19 @@ boolean new_game; /* false => restoring an old game */
                 ? urole.name.n
                 : urole.name.m);
     if (flags.tips) {
+        /* display race info */
+        Sprintf(racebuf, "race %s", urace.noun);
+        checkfile(racebuf, 0, TRUE, TRUE, (char *) 0);
+        /* display role info */
+        Sprintf(rolebuf, "role %s", urole.name.m);
+        checkfile(rolebuf, 0, TRUE, TRUE, (char *) 0);
+        /* Display tip of the day */
         get_rnd_text(SPLICETIPSFILE, tipbuf);
-        pline("Splicehack Tip of the Day: %s", tipbuf);
+        Sprintf(tiptxt, "Splicehack Tip of the Day: %s", tipbuf);
+        winid datawin = create_nhwindow(NHW_TEXT);
+        putstr(datawin, 0, tiptxt);
+        display_nhwindow(datawin, TRUE);
+        destroy_nhwindow(datawin);
     }
 }
 

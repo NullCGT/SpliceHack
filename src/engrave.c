@@ -752,7 +752,7 @@ doengrave()
                     Sprintf(post_engr_text, "The bugs on the %s are blown away!",
                             surface(u.ux, u.uy));
                 }
-                scatter(u.ux, u.ux, 4, MAY_DESTROY | MAY_HIT | VIS_EFFECTS,
+                scatter(u.ux, u.uy, 4, MAY_DESTROY | MAY_HIT | VIS_EFFECTS,
                     (struct obj *) 0);
                 break;
             /* can't tell sleep from death - Eric Backus */

@@ -1942,7 +1942,7 @@ boolean praying; /* false means no messages should be given */
             p_type = 3;
     }
 
-    if ((is_undead(youmonst.data) || (Race_if(PM_GHOUL) && !rn2(3))) && !Inhell
+    if (is_undead(youmonst.data) && !Inhell
         && (p_aligntyp == A_LAWFUL || (p_aligntyp == A_NEUTRAL && !rn2(10))))
         p_type = -1;
     /* Note:  when !praying, the random factor for neutrals makes the
@@ -2092,8 +2092,7 @@ int once, range, xlev;
         livelog_write_string(LL_CONDUCT, "rejected atheism by turning undead");
 
     if ((u.ualign.type != A_CHAOTIC
-         && (is_demon(youmonst.data) || is_undead(youmonst.data)
-              || Race_if(PM_GHOUL)))
+         && (is_demon(youmonst.data) || is_undead(youmonst.data)))
         || u.ugangr > 6) { /* "Die, mortal!" */
         pline("For some reason, %s seems to ignore you.", u_gname());
         aggravate();

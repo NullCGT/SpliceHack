@@ -1033,7 +1033,7 @@ struct Race urace = {
 const struct Gender genders[] = {
     { "male", "he", "him", "his", "Mal", ROLE_MALE },
     { "female", "she", "her", "her", "Fem", ROLE_FEMALE },
-    { "nonbinary", "they", "them", "their", "NB", ROLE_NEUTER },
+    { "nonbinary", "they", "them", "their", "Nbn", ROLE_NEUTER },
 };
 
 /* Table of all alignments */

@@ -4333,8 +4333,10 @@ around his mouth.  His lips curl into a sneer, revealing long white fangs.
  %c:	return(pl_character);
  %r:	return((char *)rank_of(u.ulevel));
  %R:	return((char *)rank_of(MIN_QUEST_LEVEL));
- %s:	return((flags.female) ? "sister" : "brother" );
- %S:	return((flags.female) ? "daughter" : "son" );
+ %s:	return ((flags.female == 1) ? "sister" :
+    (flags.female == 2) ? "sibling" : "brother");
+ %S:	return((flags.female == 1) ? "daughter" :
+    (flags.female == 2) ? "child" : "son");
  %l:	return((char *)ldrname());
  %i:	return(intermed());
  %o:	return(artiname());

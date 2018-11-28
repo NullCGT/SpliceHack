@@ -86,6 +86,7 @@ struct permonst *ptr;
         case PM_STORM_ELEMENTAL:
         case PM_AIR_ELEMENTAL:
             return Is_airlevel(&u.uz);
+        case PM_MAGMA_ELEMENTAL:
         case PM_FIRE_ELEMENTAL:
             return Is_firelevel(&u.uz);
         case PM_EARTH_ELEMENTAL:
@@ -1338,6 +1339,7 @@ newmextra()
     mextra->edog = 0;
     mextra->eama = 0;
     mextra->erid = 0;
+    mextra->eqst = 0;
     mextra->mcorpsenm = NON_PM;
     return mextra;
 }

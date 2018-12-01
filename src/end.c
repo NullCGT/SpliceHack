@@ -1414,7 +1414,9 @@ int how;
                     : (flags.female == 2)
                       ? urole.name.n
                       : urole.name.m)
-                : (const char *) (flags.female ? "Demigoddess" : "Demigod"));
+                : (const char *) (flags.female == 1 ? "Demigoddess" :
+                                    flags.female == 2 ? "Demideity" :
+                                      "Demigod"));
     dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
     dump_forward_putstr(endwin, 0, "", done_stopprint);
 

@@ -1339,7 +1339,6 @@ newmextra()
     mextra->edog = 0;
     mextra->eama = 0;
     mextra->erid = 0;
-    mextra->eqst = 0;
     mextra->mcorpsenm = NON_PM;
     return mextra;
 }

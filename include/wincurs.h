@@ -1,18 +1,17 @@
+/* NetHack 3.6 wincurs.h */
+/* Copyright (c) Karl Garrison, 2010. */
+/* NetHack may be freely redistributed.  See license for details. */
+
 #ifndef WINCURS_H
 #define WINCURS_H
 
 /* Global declarations for curses interface */
 
-int term_rows, term_cols; /* size of underlying terminal */
-
-WINDOW *base_term;    /* underlying terminal window */
-
-WINDOW *mapwin, *statuswin, *messagewin;    /* Main windows */
-
-int orig_cursor;	/* Preserve initial cursor state */
-
-boolean counting;   /* Count window is active */
-
+extern int term_rows, term_cols;   /* size of underlying terminal   */
+extern int orig_cursor; 	   /* Preserve initial cursor state */
+extern WINDOW *base_term;          /* underlying terminal window    */
+extern boolean counting;           /* Count window is active        */
+extern WINDOW *mapwin, *statuswin, *messagewin;    /* Main windows  */
 
 #define TEXTCOLOR   /* Allow color */
 #define NHW_END 19

@@ -1,3 +1,6 @@
+/* NetHack 3.6 cursmesg.c */
+/* Copyright (c) Karl Garrison, 2010. */
+/* NetHack may be freely redistributed.  See license for details. */
 /* vim:set cin ft=c sw=4 sts=4 ts=8 et ai cino=Ls\:0t0(0 : -*- mode:c;fill-column:80;tab-width:8;c-basic-offset:4;indent-tabs-mode:nil;c-file-style:"k&r" -*-*/
 
 #include "curses.h"
@@ -368,12 +371,12 @@ curses_message_win_getline(const char *prompt, char *answer, int buffer)
     char *tmpstr; /* for free() */
     int maxy, maxx; /* linewrap / scroll */
     int ch;
-
     WINDOW *win = curses_get_nhwin(MESSAGE_WIN);
     int border_space = 0;
     int len = 0; /* of answer string */
     boolean border = curses_window_has_border(MESSAGE_WIN);
-    int orig_cursor = curs_set(0);
+
+    orig_cursor = curs_set(0);
 
     curses_get_window_size(MESSAGE_WIN, &height, &width);
     if (border) {

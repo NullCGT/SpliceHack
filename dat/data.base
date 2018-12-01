@@ -19,6 +19,146 @@
 # following keys for that entry.  For instance, `~orc ??m*' preceding `orc*'
 # prevents "orc mummy" and "orc zombie" from matching.
 #
+
+
+### The following are used to provide the player information about roles ###
+race angel
+	As an angel, you walk a dangerous path. Monsters are drawn to your presence,
+	and demons will not bother to negotiate before trying to destroy you. Most
+	living beings, however, will see you as an ally, and your wings will allow you
+	to escape from many a deadly situation.
+
+	You are an angel, forceful yet gentle.
+race drow
+	As a drow (or dark elf), you have many of the same traits as an elf, but also
+	have the ability to put enemies to sleep with your unarmed strikes.
+	Unfortunately, drow are not well-liked by many races, and even other elves
+	may view you as an enemy.
+
+	You are a drow, crafty and deadly.
+race dwarf
+	As a dwarf, you are very strong and hardy. You have access to a dangerous
+	technique that allows you to erupt with rage and lay waste to your enemies,
+	and you are very good at digging tunnels.
+
+	You are a dwarf, industrious and indomitable.
+race elf
+	As an elf, you are generally dextrous and intelligent, but somewhat frail.
+	The touch of iron is uncomfortable for you, and should be avoided when
+	possible. As you gain experience, you will quickly become immune to
+	artificially induced sleep.
+	Other elves will generally view you as an ally, while orcs will attack you on
+	sight.
+
+	You are an elf, noble and fair.
+race ghoul
+	As a ghoul, you have many natural advantages. You are immune to level drain
+	and poison, and can paralyze others with an unarmed attack.
+	However, you can only consume rotting corpses, and only other ghouls are
+	likely to keep you company.
+
+	You are a ghoul, ageless and immortal.
+race gnome
+	As a gnome, your brain and wits are your greatest assets. You have access to
+	a technique that allows you to vanish without a trace, and eventually learn
+	how to upgrade your items. Sadly, humans do not tend to take very kindly to
+	your creativity, but you can always find a welcoming gnomish community in the
+	local mines.
+
+	You are a gnome, inventive and flexible.
+race human
+	As a human, you are extremely well-rounded, and can excel at anything you
+	choose to focus on. With hard work, you are capable of increasing your
+	strength to incredible levels, and have few weaknesses.
+
+	You are a human, adaptable and resourceful.
+race infernal
+	As an infernal, you are extremely physically powerful. You are completely
+	immune to fire, and as you gain experience you will learn to quickly
+	regenerate from even the most deadly of injuries. These powers come with a
+	price, however. The touch of silver is incredibly deadly, and many monsters
+	have prepared for your presence in the dungeon.
+
+	You are an infernal, unstoppable and ruthless.
+race merfolk
+	As a merfolk, water is your home. You are an incredible swimmer, and
+	eventually will learn to breathe water. When you swim, your possessions are
+	protected from harm. This is particularly useful, since a large portion of the
+	dungeon has been flooded. You also have access to a powerful technique that
+	allows you to drown your enemies.
+
+	You are a merfolk, wily and willful.
+race orc
+	As an orc, you are quite strong, but lacking in intelligence and charisma.
+	You are decently hardy, and never have to fear being poisoned.
+	Other orcs will generally view you as an ally, but many races do not take
+	kindly to your presence, elves in particular.
+
+	You are an orc, powerful and proud.
+
+race werewolf
+	As a werewolf, you live a cursed life. You are unable to control your form,
+	and civilized humans are terrified of you. Physically, however, you are
+	unmatched, and have access to techniques which allow you to grow claws and
+	fly into a berserk rage.
+
+	You are a werewolf, full of primal fury.
+role arc
+	You are an archaeologist. You begin your adventure well-equipped for dungeon
+	delving, and are capable of using many unique weapons.
+role bar
+	You are a barbarian. You are a powerful physical combatant, and are capable
+	of flying into a mindless rage.
+role cav
+	You are a neanderthal. You are strong and tough, and suffer no penalty for
+	cannibalism. Your primal roar makes both you and your allies more powerful.
+role car
+	You are a cartomancer. You gain power from spell cards, and know many
+	techniques that rely on the manipulation of them. Your enemies may try to
+	play cards against you, however.
+role dra
+	You are a dragonmaster. You are capable of taming dragons, but the thought of
+	wearing their scales fills you with shame.
+role hea
+	You are a healer. Violence does not come easily to you, and your abilities are
+	generally more suited to helping others.
+role kni
+	You are a knight. Your faithful steed accompanies you through the dungeon, and
+	you carry a lance with which to joust people. You have access to several
+	honorable techniques that will allow you to help the innocent and destroy the
+	wicked.
+role mon
+	You are a monk. Your fists are your most powerful weapons, but you are also a
+	skilled spellcaster. You have access to an enormous number of techniques
+	which can be chained together for massive damage.
+role pri
+	You are a representative of your deity. You can tell at a glance whether an
+	item is cursed, and your deity has granted you the power to drive back the
+	living dead wherever they may lurk.
+role pir
+	Ye are a pirate, out searching for precious booty. Ye ave a good nose fer
+	doubloons, and ye can do even more when ye find yer treasure map.
+role ran
+	You are a ranger. Although powerful in melee, you are at your best when
+	fighting enemies from long distances. Your hail of arrows can take down even
+	the strongest of opponents.
+role rog
+	You are a rogue. You are very sneaky, and can deal out massive damage by
+	backstabbing monsters.
+role sam
+	You are a samurai, an honorable warrior out to reclaim the amulet. Your
+	Kiii technique allows you to temporarily boost your combat ability.
+role tou
+	You are a tourist, out to explore the Dungeons of Doom. This should be fun!
+role val
+	You are a valkyrie. The cold does not affect you, and you are an unstoppable
+	force in melee combat.
+role wiz
+	You are a wizard. You are capable of learning and casting many types of magic
+	spells, and do best when fighting from a distance.
+### End of race information ###
+
+
 abbot
 	For it had been long apparent to Count Landulf that nothing
 	could be done with his seventh son Thomas, except to make him
@@ -3699,6 +3839,7 @@ mol?ch
 	him, to commit whoredom with Molech, from among their people.
 		[ Leviticus 20:1-5 ]
 monk
+* monk
 grand master
 martial artist
 martial master
@@ -4607,142 +4748,6 @@ quit*
 	          be cast into the Flaming Pit of Death.
 		[ Snow Day, directed by Chris Koch,
 		  written by Will McRobb and Chris Viscardi ]
-### The following are used to provide the player information about roles ###
-race angel
-	As an angel, you walk a dangerous path. Monsters are drawn to your presence,
-	and demons will not bother to negotiate before trying to destroy you. Most
-	living beings, however, will see you as an ally, and your wings will allow you
-	to escape from many a deadly situation.
-
-	You are an angel, forceful yet gentle.
-race drow
-	As a drow (or dark elf), you have many of the same traits as an elf, but also
-	have the ability to put enemies to sleep with your unarmed strikes.
-	Unfortunately, drow are not well-liked by many races, and even other elves
-	may view you as an enemy.
-
-	You are a drow, crafty and deadly.
-race dwarf
-	As a dwarf, you are very strong and hardy. You have access to a dangerous
-	technique that allows you to erupt with rage and lay waste to your enemies,
-	and you are very good at digging tunnels.
-
-	You are a dwarf, industrious and indomitable.
-race elf
-	As an elf, you are generally dextrous and intelligent, but somewhat frail.
-	The touch of iron is uncomfortable for you, and should be avoided when
-	possible. As you gain experience, you will quickly become immune to
-	artificially induced sleep.
-	Other elves will generally view you as an ally, while orcs will attack you on
-	sight.
-
-	You are an elf, noble and fair.
-race ghoul
-	As a ghoul, you have many natural advantages. You are immune to level drain
-	and poison, and can paralyze others with an unarmed attack.
-	However, you can only consume rotting corpses, and only other ghouls are
-	likely to keep you company.
-
-	You are a ghoul, ageless and immortal.
-race gnome
-	As a gnome, your brain and wits are your greatest assets. You have access to
-	a technique that allows you to vanish without a trace, and eventually learn
-	how to upgrade your items. Sadly, humans do not tend to take very kindly to
-	your creativity, but you can always find a welcoming gnomish community in the
-	local mines.
-
-	You are a gnome, inventive and flexible.
-race human
-	As a human, you are extremely well-rounded, and can excel at anything you
-	choose to focus on. With hard work, you are capable of increasing your
-	strength to incredible levels, and have few weaknesses.
-
-	You are a human, adaptable and resourceful.
-race infernal
-	As an infernal, you are extremely physically powerful. You are completely
-	immune to fire, and as you gain experience you will learn to quickly
-	regenerate from even the most deadly of injuries. These powers come with a
-	price, however. The touch of silver is incredibly deadly, and many monsters
-	have prepared for your presence in the dungeon.
-
-	You are an infernal, unstoppable and ruthless.
-race merfolk
-	As a merfolk, water is your home. You are an incredible swimmer, and
-	eventually will learn to breathe water. When you swim, your possessions are
-	protected from harm. This is particularly useful, since a large portion of the
-	dungeon has been flooded. You also have access to a powerful technique that
-	allows you to drown your enemies.
-
-	You are a merfolk, wily and willful.
-race orc
-	As an orc, you are quite strong, but lacking in intelligence and charisma.
-	You are decently hardy, and never have to fear being poisoned.
-	Other orcs will generally view you as an ally, but many races do not take
-	kindly to your presence, elves in particular.
-
-	You are an orc, powerful and proud.
-
-race werewolf
-	As a werewolf, you live a cursed life. You are unable to control your form,
-	and civilized humans are terrified of you. Physically, however, you are
-	unmatched, and have access to techniques which allow you to grow claws and
-	fly into a berserk rage.
-
-	You are a werewolf, full of primal fury.
-role archaeologist
-	You are an archaeologist. You begin your adventure well-equipped for dungeon
-	delving, and are capable of using many unique weapons.
-role barbarian
-	You are a barbarian. You are a powerful physical combatant, and are capable
-	of flying into a mindless rage.
-role cave*
-	You are a neanderthal. You are strong and tough, and suffer no penalty for
-	cannibalism. Your primal roar makes both you and your allies more powerful.
-role cartomancer
-	You are a cartomancer. You gain power from spell cards, and know many
-	techniques that rely on the manipulation of them. Your enemies may try to
-	play cards against you, however.
-role dragonmaster
-	You are a dragonmaster. You are capable of taming dragons, but the thought of
-	wearing their scales fills you with shame.
-role healer
-	You are a healer. Violence does not come easily to you, and your abilities are
-	generally more suited to helping others.
-role knight
-	You are a knight. Your faithful steed accompanies you through the dungeon, and
-	you carry a lance with which to joust people. You have access to several
-	honorable techniques that will allow you to help the innocent and destroy the
-	wicked.
-role monk
-	You are a monk. Your fists are your most powerful weapons, but you are also a
-	skilled spellcaster. You have access to an enormous number of techniques
-	which can be chained together for massive damage.
-role priest*
-	You are a representative of your deity. You can tell at a glance whether an
-	item is cursed, and your deity has granted you the power to drive back the
-	living dead wherever they may lurk.
-role pirate
-	Ye are a pirate, out searching for precious booty. Ye ave a good nose fer
-	doubloons, and ye can do even more when ye find yer treasure map.
-role ranger
-	You are a ranger. Although powerful in melee, you are at your best when
-	fighting enemies from long distances. Your hail of arrows can take down even
-	the strongest of opponents.
-role rogue
-	You are a rogue. You are very sneaky, and can deal out massive damage by
-	backstabbing monsters.
-role samurai
-	You are a samurai, an honorable warrior out to reclaim the amulet. Your
-	Kiii technique allows you to temporarily boost your combat ability.
-role tourist
-	You are a tourist, out to explore the Dungeons of Doom. This should be fun!
-role valkyrie
-	You are a valkyrie. The cold does not affect you, and you are an unstoppable
-	force in melee combat.
-role wizard
-	You are a wizard. You are capable of learning and casting many types of magic
-	spells, and do best when fighting from a distance.
-### End of race information ###
 raijin
 raiden
 	The Japanese god of thunder (rai) and lightning (den).  He

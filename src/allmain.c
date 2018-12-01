@@ -759,7 +759,7 @@ boolean new_game; /* false => restoring an old game */
         Sprintf(racebuf, "race %s", urace.noun);
         checkfile(racebuf, 0, TRUE, TRUE, (char *) 0);
         /* display role info */
-        Sprintf(rolebuf, "role %s", urole.name.m);
+        Sprintf(rolebuf, "role %s", urole.filecode);
         checkfile(rolebuf, 0, TRUE, TRUE, (char *) 0);
         /* Display tip of the day */
         get_rnd_text(SPLICETIPSFILE, tipbuf);

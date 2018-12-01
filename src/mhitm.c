@@ -227,8 +227,8 @@ boolean quietly;
     if (!rn2(7))
         return MM_MISS;
 
-    /* Grid bugs and rooks cannot displace at an angle. */
-    if ((pa == &mons[PM_GRID_BUG] || pa == &mons[PM_ROOK])
+    /* Grid bugs cannot displace at an angle. */
+    if ((pa == &mons[PM_GRID_BUG])
         && magr->mx != mdef->mx
         && magr->my != mdef->my)
         return MM_MISS;
@@ -323,8 +323,8 @@ register struct monst *magr, *mdef;
     pa = magr->data;
     pd = mdef->data;
 
-    /* Grid bugs and rooks cannot attack at an angle. */
-    if ((pa == &mons[PM_GRID_BUG] || pa == &mons[PM_ROOK])
+    /* Grid bugs cannot attack at an angle. */
+    if ((pa == &mons[PM_GRID_BUG])
         && magr->mx != mdef->mx
         && magr->my != mdef->my)
         return MM_MISS;

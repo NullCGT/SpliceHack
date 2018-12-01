@@ -2574,7 +2574,10 @@ const char *str;
         if (str)
             pline(str, s_suffix(mon_nam(mon)), "scales");
         return TRUE;
-    } else if (mon->data == &mons[PM_SILVER_GOLEM] || mon->mreflect) {
+    } else if (mon->data == &mons[PM_SILVER_GOLEM]
+            || mon->data == &mons[PM_CRYSTAL_GOLEM]
+            || mon->data == &mons[PM_SAPPHIRE_GOLEM]
+            || mon->mreflect) {
         if (str)
             pline(str, s_suffix(mon_nam(mon)), "body");
         return TRUE;

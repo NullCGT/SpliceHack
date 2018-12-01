@@ -2354,10 +2354,16 @@ int type;
         return 100;
     case PM_SLUDGE_GOLEM:
         return 120;
-    case PM_ROOK:
-        return 120;
     case PM_IRON_GOLEM:
         return 80;
+    case PM_RUBY_GOLEM:
+        return 90;
+    case PM_SAPPHIRE_GOLEM:
+        return 130;
+    case PM_STEEL_GOLEM:
+        return 140;
+    case PM_CRYSTAL_GOLEM:
+        return 150;
     default:
         return 0;
     }

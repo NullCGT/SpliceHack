@@ -21,9 +21,14 @@
 
 #SLASH'EM
   #Monsters
-    - Zouthern Animals
-    - Gnolls
+    - Zouthern Animals (damage output reduced)
     - Hydra (heavily modified)
+    - Hellcat (permanently invisible)
+    - Ruby Golem (hp reduced)
+    - Sapphire Golem (hp reduced)
+    - Steel Golem (hp reduced)
+    - Crystal Golem (hp reduced)
+    - Gnolls
     - Spitting Beetle
     - Glowing Eye
     - Bloodshot Eye
@@ -38,7 +43,6 @@
     - Genetic Engineer
     - Hellbat
     - Hellrat
-    - Hellcat
     - Drow
   #Items
     - Plague Artifact
@@ -49,7 +53,7 @@
     - Drow Items
     - Medical Kit and associated items
     - Potions of blood and vampire blood
-    - Wand of create horde
+    - Wand of create horde (nerfed)
   #Other
     - Drow Race
     - Techniques Code

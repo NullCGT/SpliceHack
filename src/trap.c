@@ -2733,6 +2733,7 @@ register struct monst *mtmp;
             case PM_JABBERWOCK:
             case PM_IRON_GOLEM:
             case PM_SILVER_GOLEM:
+            case PM_CRYSTAL_GOLEM:
             case PM_BALROG:
             case PM_KRAKEN:
             case PM_MASTODON:

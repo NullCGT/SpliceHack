@@ -1207,7 +1207,6 @@ struct attack *mattk;
         what = "melting";
         break;
     case PM_STONE_GOLEM:
-    case PM_ROOK:
     case PM_CLAY_GOLEM:
     case PM_GOLD_GOLEM:
     case PM_AIR_ELEMENTAL:

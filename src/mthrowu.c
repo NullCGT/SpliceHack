@@ -24,7 +24,7 @@ STATIC_DCL int FDECL(drop_throw, (struct obj *, BOOLEAN_P, int, int));
 STATIC_OVL NEARDATA const char *breathwep[] = {
     "fragments", "fire", "frost", "sleep gas", "a disintegration blast",
     "lightning", "poison gas", "acid", "sonic",
-    "psychic beam"
+    "a psychic beam"
 };
 
 extern boolean notonhead; /* for long worms */

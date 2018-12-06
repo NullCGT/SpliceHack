@@ -1447,15 +1447,16 @@ register struct attack *mattk;
         break;
     case AD_POTN:
         You("%s splashes liquid at you!", Monnam(mtmp));
-        do {
         i = POT_GAIN_ABILITY +
             (mtmp->m_id % (POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY));
-        } while (i == POT_GAIN_LEVEL ||
-                 i == POT_EXTRA_HEALING ||
-                 i == POT_HEALING ||
-                 i == POT_FULL_HEALING ||
-                 i == POT_GAIN_ABILITY ||
-                 i == POT_GAIN_ENERGY);
+        if (i == POT_GAIN_LEVEL ||
+             i == POT_EXTRA_HEALING ||
+             i == POT_HEALING ||
+             i == POT_FULL_HEALING ||
+             i == POT_GAIN_ABILITY ||
+             i == POT_GAIN_ENERGY) {
+            i = POT_ACID;
+        }
         pseudo = mksobj(i, FALSE, FALSE);
         pseudo->blessed = 0;
         pseudo->cursed = rn2(2);
@@ -2288,15 +2289,16 @@ struct attack *mattk;
         break;
     case AD_POTN:
         You("get some of %s in your mouth!", mon_nam(mtmp));
-        do {
         i = POT_GAIN_ABILITY +
             (mtmp->m_id % (POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY));
-        } while (i == POT_GAIN_LEVEL ||
-                 i == POT_EXTRA_HEALING ||
-                 i == POT_HEALING ||
-                 i == POT_FULL_HEALING ||
-                 i == POT_GAIN_ABILITY ||
-                 i == POT_GAIN_ENERGY);
+        if (i == POT_GAIN_LEVEL ||
+             i == POT_EXTRA_HEALING ||
+             i == POT_HEALING ||
+             i == POT_FULL_HEALING ||
+             i == POT_GAIN_ABILITY ||
+             i == POT_GAIN_ENERGY) {
+            i = POT_ACID;
+        }
         pseudo = mksobj(i, FALSE, FALSE);
         pseudo->blessed = 0;
         pseudo->cursed = rn2(2);

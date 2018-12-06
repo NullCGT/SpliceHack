@@ -592,6 +592,7 @@ static const char * damagetypes[] = {
     "tickling",
     "polymorph",
     "inject larvae",
+    "spawn skeletons",
     "hunger",
     "clerical",
     "arcane",

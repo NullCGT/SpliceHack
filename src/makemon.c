@@ -701,24 +701,33 @@ register struct monst *mtmp;
         (void) mongets(mtmp, LONG_SWORD);
         break;
     case S_ZOMBIE:
-        if (mm == PM_SKELETON) {
-            if (!rn2(4))
-                (void) mongets(mtmp, LIGHT_ARMOR);
-            if (!rn2(4))
-                (void) mongets(mtmp, (rn2(3) ? KNIFE : SHORT_SWORD));
+        switch(mm) {
+            case PM_SHAMBLING_SKELETON:
+                otmp = rn2(2) ? mksobj(SHORT_SWORD, FALSE, FALSE) :
+                    mksobj(DAGGER, FALSE, FALSE);
+                otmp->material = BONE;
+                break;
+            case PM_SKELETON:
+                if (!rn2(4))
+                    (void) mongets(mtmp, LIGHT_ARMOR);
+                if (!rn2(4))
+                    (void) mongets(mtmp, (rn2(3) ? KNIFE : SHORT_SWORD));
+                break;
+            case PM_SKELETAL_PIRATE:
+            	  otmp = rn2(2) ? mksobj(SCIMITAR, FALSE, FALSE) :
+                    mksobj(KNIFE, FALSE, FALSE);
+            	  curse(otmp);
+             		otmp->oeroded = 1;
+             		(void) mpickobj(mtmp, otmp);
+             		otmp = rn2(2) ? mksobj(HIGH_BOOTS, FALSE, FALSE) :
+                    mksobj(JACKET, FALSE, FALSE);
+             		curse(otmp);
+             		otmp->oeroded2 = 1;
+             		(void) mpickobj(mtmp, otmp);
+                break;
+            default:
+                break;
         }
-        if (mm == PM_SKELETAL_PIRATE) {
-        	  otmp = rn2(2) ? mksobj(SCIMITAR, FALSE, FALSE) :
-                mksobj(KNIFE, FALSE, FALSE);
-        	  curse(otmp);
-         		otmp->oeroded = 1;
-         		(void) mpickobj(mtmp, otmp);
-         		otmp = rn2(2) ? mksobj(HIGH_BOOTS, FALSE, FALSE) :
-                mksobj(JACKET, FALSE, FALSE);
-         		curse(otmp);
-         		otmp->oeroded2 = 1;
-         		(void) mpickobj(mtmp, otmp);
-         }
         break;
     case S_LIZARD:
         if (mm == PM_SALAMANDER)

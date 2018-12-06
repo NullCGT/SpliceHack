@@ -3077,9 +3077,16 @@ boolean wep_was_destroyed;
             if (mhit && !mon->mcan && weapon && rn2(3)) {
                 if ((is_blade(weapon) || is_axe(weapon))
                       && weapon->oartifact != ART_FIRE_BRAND) {
-                    pline("You decapitate the hydra, but two more heads spring forth!");
+                    pline("You decapitate %s, but two more heads spring forth!",
+                        mon_nam(mtmp));
                     grow_up(mon, (struct monst *) 0);
                 }
+            }
+            break;
+        case AD_SKEL: /* generate skeletons (bone beast) */
+            if (mhit && !mon->mcan && rn2(3)) {
+                pline("Bits of %s assemble into a skeleton!", mon_nam(mtmp));
+                makemon(&mons[PM_SHAMBLING_SKELETON], u.ux, u.uy, NO_MM_FLAGS);
             }
             break;
         case AD_BLND:

@@ -2962,6 +2962,16 @@ struct permonst _mons2[] = {
         MR_COLD | MR_SLEEP | MR_POISON, 0,
         M1_BREATHLESS | M1_MINDLESS | M1_HUMANOID,
         M2_STALK | M2_HOSTILE, M3_INFRAVISION, MH_UNDEAD, 5, HI_DOMESTIC),
+    MON("shambling skeleton", S_ZOMBIE, LVL(4, 8, 4, 0, 0),
+        (G_NOCORPSE | G_NOGEN),
+        A(ATTK(AT_WEAP, AD_PHYS, 1, 10), NO_ATTK, NO_ATTK,
+          NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(300, 5, MS_BONES, MZ_HUMAN),
+        MR_COLD | MR_SLEEP | MR_POISON | MR_STONE, 0,
+        M1_BREATHLESS | M1_MINDLESS | M1_HUMANOID | M1_THICK_HIDE,
+        M2_WANDER | M2_HOSTILE | M2_STRONG | M2_COLLECT
+            | M2_NASTY,
+        M3_INFRAVISION, MH_UNDEAD, 14, CLR_WHITE),
     MON("draugr", S_ZOMBIE, LVL(5, 6, 8, 0, -3),
         (G_GENO | G_SGROUP | G_NOCORPSE | 2),
         A(ATTK(AT_WEAP, AD_PHYS, 1, 8), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
@@ -3042,6 +3052,16 @@ struct permonst _mons2[] = {
         M1_MINDLESS,
         M2_HOSTILE | M2_STRONG | M2_NASTY | M2_MAGIC,
         M3_INFRAVISIBLE, MH_UNDEAD, 17, CLR_ORANGE),
+    MON("bone beast", S_ZOMBIE, LVL(20, 15, 4, 0, 0),
+        (G_NOCORPSE | G_NOGEN | G_GENO),
+        A(ATTK(AT_CLAW, AD_PHYS, 4, 6), ATTK(AT_CLAW, AD_PHYS, 4, 6),
+          ATTK(AT_TUCH, AD_SLOW, 1, 6), ATTK(AT_NONE, AD_SKEL, 0, 0),
+          NO_ATTK, NO_ATTK),
+        SIZ(WT_DRAGON, 2000, MS_BONES, MZ_GIGANTIC),
+        MR_COLD | MR_SLEEP | MR_POISON | MR_STONE, 0,
+        M1_BREATHLESS | M1_MINDLESS | M1_THICK_HIDE,
+        M2_WANDER | M2_HOSTILE | M2_STRONG | M2_COLLECT | M2_NASTY,
+        M3_INFRAVISION, MH_UNDEAD, 24, CLR_WHITE),
     /*
      * golems
      */

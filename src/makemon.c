@@ -701,10 +701,12 @@ register struct monst *mtmp;
         (void) mongets(mtmp, LONG_SWORD);
         break;
     case S_ZOMBIE:
-        if (!rn2(4))
-            (void) mongets(mtmp, LIGHT_ARMOR);
-        if (!rn2(4))
-            (void) mongets(mtmp, (rn2(3) ? KNIFE : SHORT_SWORD));
+        if (mm == PM_SKELETON) {
+            if (!rn2(4))
+                (void) mongets(mtmp, LIGHT_ARMOR);
+            if (!rn2(4))
+                (void) mongets(mtmp, (rn2(3) ? KNIFE : SHORT_SWORD));
+        }
         if (mm == PM_SKELETAL_PIRATE) {
         	  otmp = rn2(2) ? mksobj(SCIMITAR, FALSE, FALSE) :
                 mksobj(KNIFE, FALSE, FALSE);

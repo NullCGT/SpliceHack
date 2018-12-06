@@ -1041,6 +1041,8 @@ register struct monst *mtmp;
 register struct attack *mattk;
 {
     struct permonst *mdat = mtmp->data;
+    struct obj *pseudo;
+    int i;
     int uncancelled, ptmp;
     int dmg, armpro, permdmg;
     char buf[BUFSZ];
@@ -1443,6 +1445,23 @@ register struct attack *mattk;
             }
         }
         break;
+    case AD_POTN:
+        You("%s splashes liquid at you!", Monnam(mtmp));
+        do {
+        i = POT_GAIN_ABILITY +
+            (mtmp->m_id % (POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY));
+        } while (i == POT_GAIN_LEVEL ||
+                 i == POT_EXTRA_HEALING ||
+                 i == POT_HEALING ||
+                 i == POT_FULL_HEALING ||
+                 i == POT_GAIN_ABILITY ||
+                 i == POT_GAIN_ENERGY);
+        pseudo = mksobj(i, FALSE, FALSE);
+        pseudo->blessed = 0;
+        pseudo->cursed = rn2(2);
+        (void) peffects(pseudo);
+        obfree(pseudo, (struct obj *) 0); /* now, get rid of it */
+        /*FALLTHRU*/
     case AD_DRLI:
         hitmsg(mtmp, mattk);
         if (uncancelled && !rn2(3) && !Drain_resistance) {
@@ -2126,6 +2145,7 @@ struct monst *mtmp;
 struct attack *mattk;
 {
     struct trap *t = t_at(u.ux, u.uy);
+    struct obj *pseudo;
     int tmp = d((int) mattk->damn, (int) mattk->damd);
     int tim_tmp;
     struct obj *otmp2;
@@ -2266,6 +2286,23 @@ struct attack *mattk;
             exercise(A_STR, FALSE);
         }
         break;
+    case AD_POTN:
+        You("get some of %s in your mouth!", mon_nam(mtmp));
+        do {
+        i = POT_GAIN_ABILITY +
+            (mtmp->m_id % (POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY));
+        } while (i == POT_GAIN_LEVEL ||
+                 i == POT_EXTRA_HEALING ||
+                 i == POT_HEALING ||
+                 i == POT_FULL_HEALING ||
+                 i == POT_GAIN_ABILITY ||
+                 i == POT_GAIN_ENERGY);
+        pseudo = mksobj(i, FALSE, FALSE);
+        pseudo->blessed = 0;
+        pseudo->cursed = rn2(2);
+        (void) peffects(pseudo);
+        obfree(pseudo, (struct obj *) 0); /* now, get rid of it */
+        /*FALLTHRU*/
     case AD_ACID:
         if (Acid_resistance) {
             You("are covered with a seemingly harmless goo.");

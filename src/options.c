@@ -755,7 +755,6 @@ initoptions_init()
 #endif
     iflags.menu_headings = ATR_INVERSE;
     iflags.getpos_coords = GPCOORDS_NONE;
-    iflags.msg_is_alert = FALSE;
 
     /* hero's role, race, &c haven't been chosen yet */
     flags.initrole = flags.initrace = flags.initgend = flags.initalign

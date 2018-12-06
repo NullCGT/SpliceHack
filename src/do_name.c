@@ -1751,6 +1751,7 @@ boolean called;
     boolean do_hallu, do_invis, do_it, do_saddle, do_name;
     boolean name_at_start, has_adjectives;
     char *bp;
+    int i;
 
     if (program_state.gameover)
         suppress |= SUPPRESS_HALLUCINATION;
@@ -1877,6 +1878,11 @@ boolean called;
     } else if (mdat == &mons[PM_HYDRA] && mtmp->m_lev - mtmp->data->mlevel > -1) {
         Sprintf(eos(buf), "%d-headed hydra",
             mtmp->m_lev - mtmp->data->mlevel + 2);
+        name_at_start = FALSE;
+    } else if (mdat == &mons[PM_GEL]) {
+        i = POT_GAIN_ABILITY +
+              (mtmp->m_id % (POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY));
+        Sprintf(eos(buf), "%s gel", OBJ_DESCR(objects[i]));
         name_at_start = FALSE;
     } else if (is_mplayer(mdat) && !In_endgame(&u.uz)) {
         char pbuf[BUFSZ];

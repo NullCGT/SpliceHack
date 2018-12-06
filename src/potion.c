@@ -1403,9 +1403,9 @@ register struct obj *otmp;
         } else {
             pline("You are covered in a mirror-like sheen!");
             if (otmp->blessed) {
-                incr_itimeout(&HReflecting, rn1(50, 250));
+                set_itimeout(&HReflecting, rn1(50, 250));
             } else {
-                incr_itimeout(&HReflecting, rn1(10, 20));
+                set_itimeout(&HReflecting, rn1(10, 20));
             }
         }
         break;

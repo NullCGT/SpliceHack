@@ -98,12 +98,13 @@
 #define AD_SKEL 58  /* Generate skeletons (Bone Beast) */
 #define AD_HNGY 59 /* a mini version of FAMN, should fake a higher
                            hunger rating instead  */
-#define AD_CLRC 59 /* random clerical spell */
-#define AD_SPEL 60 /* random magic spell */
-#define AD_RBRE 61 /* random breath weapon */
+#define AD_POTN 60 /* potion effect (gel) */
+#define AD_CLRC 61 /* random clerical spell */
+#define AD_SPEL 62 /* random magic spell */
+#define AD_RBRE 63 /* random breath weapon */
 
-#define AD_SAMU 62 /* hits, may steal Amulet (Wizard) */
-#define AD_CURS 63 /* random curse (ex. gremlin) */
+#define AD_SAMU 64 /* hits, may steal Amulet (Wizard) */
+#define AD_CURS 65 /* random curse (ex. gremlin) */
 #define LAST_AD AD_CURS
 
 /*

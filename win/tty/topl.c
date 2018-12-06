@@ -197,15 +197,9 @@ more()
 
     if (flags.standout)
         standoutbeg();
-    if (iflags.msg_is_alert) {
-        term_start_color(CLR_ORANGE);
-        putsyms("<TAB>");
-        term_end_color();
-        xwaitforspace("\t");
-    } else {
-        putsyms(defmorestr);
-        xwaitforspace("\033 ");
-    }
+
+    putsyms(defmorestr);
+    xwaitforspace("\033 ");
     if (flags.standout)
         standoutend();
 

@@ -118,7 +118,7 @@ const char *line;
     unsigned indx = saved_pline_index; /* next slot to use */
     char *oldest = saved_plines[indx]; /* current content of that slot */
 
-    
+
 
     if (!strncmp(line, "Unknown command", 15))
         return;
@@ -279,14 +279,10 @@ VA_DECL(const char *, line)
     iflags.last_msg = PLNMSG_UNKNOWN;
     (void) strncpy(prevmsg, line, BUFSZ), prevmsg[BUFSZ - 1] = '\0';
     switch (msgtyp) {
-    case MSGTYP_ALERT:
-        iflags.msg_is_alert = TRUE; /* <TAB> */
-        /* FT */
     case MSGTYP_STOP:
         display_nhwindow(WIN_MESSAGE, TRUE); /* --more-- */
         break;
     }
-    iflags.msg_is_alert = FALSE;
 
  pline_done:
     --in_pline;

@@ -1625,6 +1625,10 @@ int mmflags;
         if (rn2(5) && !u.uhave.amulet)
             mtmp->msleeping = 1;
         break;
+    case S_ZOMBIE:
+        if (Race_if(PM_GHOUL) && ptr->mhflags & MH_GHOUL)
+            mtmp->mpeaceful = TRUE;
+        break;
     case S_ORC:
         if (Race_if(PM_ELF))
             mtmp->mpeaceful = FALSE;

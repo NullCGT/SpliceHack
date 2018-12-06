@@ -44,6 +44,8 @@
     - Hellbat
     - Hellrat
     - Drow
+    - ghoul mage
+    - ghast
   #Items
     - Plague Artifact
     - Doomblade Artifact

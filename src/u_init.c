@@ -1323,8 +1323,7 @@ register struct trobj *trop;
             dealloc_obj(obj);
             if (corpses <= 2) {
                 obj = mksobj(CORPSE, TRUE, FALSE);
-                if (obj->corpsenm == PM_LICHEN)
-                    obj->corpsenm = PM_DEATH_MAGGOT;
+                obj->corpsenm = PM_DEATH_MAGGOT;
                 obj->age = -100;
                 corpses++;
             } else {

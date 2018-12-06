@@ -87,9 +87,12 @@ unsigned _stklen = STKSIZ;
  * to help MinGW decide which entry point to choose. If both main and
  * WinMain exist, the resulting executable won't work correctly.
  */
-#ifndef __MINGW32__
 int
+#ifndef __MINGW32__ 
 main(argc, argv)
+#else
+mingw_main(argc, argv)
+#endif
 int argc;
 char *argv[];
 {
@@ -115,7 +118,6 @@ char *argv[];
     /*NOTREACHED*/
     return 0;
 }
-#endif
 
 boolean
 pcmain(argc, argv)
@@ -497,12 +499,12 @@ _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);*/
 
 #ifdef WIN32
     /*
-        if (!strncmpi(windowprocs.name, "mswin", 5))
+        if (WINDOWPORT("mswin"))
             NHWinMainInit();
         else
     */
 #ifdef TTY_GRAPHICS
-    if (!strncmpi(windowprocs.name, "tty", 3)) {
+    if (WINDOWPORT("tty")) {
         iflags.use_background_glyph = FALSE;
         nttty_open(1);
     } else {

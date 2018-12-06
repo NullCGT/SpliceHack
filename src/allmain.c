@@ -755,12 +755,14 @@ boolean new_game; /* false => restoring an old game */
                 ? urole.name.n
                 : urole.name.m);
     if (flags.tips) {
-        /* display race info */
-        Sprintf(racebuf, "race %s", urace.noun);
-        checkfile(racebuf, 0, TRUE, TRUE, (char *) 0);
-        /* display role info */
-        Sprintf(rolebuf, "role %s", urole.filecode);
-        checkfile(rolebuf, 0, TRUE, TRUE, (char *) 0);
+        if (new_game) {
+            /* display race info */
+            Sprintf(racebuf, "race %s", urace.noun);
+            checkfile(racebuf, 0, TRUE, TRUE, (char *) 0);
+            /* display role info */
+            Sprintf(rolebuf, "role %s", urole.filecode);
+            checkfile(rolebuf, 0, TRUE, TRUE, (char *) 0);
+        }
         /* Display tip of the day */
         get_rnd_text(SPLICETIPSFILE, tipbuf);
         Sprintf(tiptxt, "Splicehack Tip of the Day: %s", tipbuf);

@@ -1173,6 +1173,7 @@ not_special:
                          || (likemagic && index(magical, otmp->oclass))
                          || (uses_items && searches_for_item(mtmp, otmp))
                          || (likerock && otmp->otyp == BOULDER)
+                         || (ptr == &mons[PM_AVATAR_OF_AKASHA] && otmp->otyp == CORPSE)
                          || (likegems && otmp->oclass == GEM_CLASS
                              && otmp->material != MINERAL)
                          || (conceals && !cansee(otmp->ox, otmp->oy))

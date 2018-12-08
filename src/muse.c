@@ -1896,6 +1896,7 @@ struct monst *mtmp;
 #define MUSE_POT_REFLECT 11
 #define MUSE_SCR_REMOVE_CURSE 12
 #define MUSE_POT_BOOZE 13
+#define MUSE_CORPSE 14
 
 boolean
 find_misc(mtmp)
@@ -2019,6 +2020,11 @@ struct monst *mtmp;
           ((is_pirate(mtmp->data) && !mtmp->mconf) || mtmp->mflee)) {
             m.misc = obj;
             m.has_misc = MUSE_POT_BOOZE;
+        }
+        nomore(MUSE_CORPSE);
+        if (obj->otyp == CORPSE && mtmp->data == &mons[PM_AVATAR_OF_AKASHA]) {
+            m.misc = obj;
+            m.has_misc = MUSE_CORPSE;
         }
         nomore(MUSE_POT_REFLECT);
         if (obj->otyp == POT_REFLECTION && !mtmp->mreflect &&
@@ -2226,6 +2232,14 @@ struct monst *mtmp;
         if (mtmp->data == &mons[PM_SKELETAL_PIRATE] && canseemon(mtmp))
             pline("%s splatters out of the ribcage of %s.",
                 The(xname(otmp)), mon_nam(mtmp));
+        return 2;
+    case MUSE_CORPSE:
+        if (canspotmon(mtmp) && !Blind) {
+            pline("%s raises %s corpse over their head.", Monnam(mtmp),
+                the(corpse_xname(otmp, (const char *) 0, CXN_SINGULAR)));
+            pline("A beam of pure energy from the heavens strikes %s!", the(xname(otmp)));
+            (void) revive_corpse(otmp);
+        }
         return 2;
     case MUSE_POT_REFLECT:
         mquaffmsg(mtmp, otmp);
@@ -2515,7 +2529,8 @@ struct obj *obj;
             return (boolean) (((mon->misc_worn_check & W_ARMG) != 0L
                                && touch_petrifies(&mons[obj->corpsenm]))
                               || (!resists_ston(mon)
-                                  && cures_stoning(mon, obj, FALSE)));
+                                  && cures_stoning(mon, obj, FALSE))
+                              || mon->data == &mons[PM_AVATAR_OF_AKASHA]);
         if (typ == TIN)
             return (boolean) (mcould_eat_tin(mon)
                               && (!resists_ston(mon)

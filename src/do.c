@@ -1902,10 +1902,14 @@ struct obj *corpse;
 
         case OBJ_MINVENT: /* probably a nymph's */
             if (cansee(mtmp->mx, mtmp->my)) {
-                if (canseemon(mcarry))
-                    pline("Startled, %s drops %s as it revives!",
-                          mon_nam(mcarry), an(cname));
-                else
+                if (canseemon(mcarry)) {
+                    if (mcarry->data == &mons[PM_AVATAR_OF_AKASHA])
+                        pline("%s gently sets %s down and it revives!",
+                              Monnam(mcarry), an(cname));
+                    else
+                        pline("Startled, %s drops %s as it revives!",
+                              mon_nam(mcarry), an(cname));
+                } else
                     pline("%s suddenly appears!",
                           chewed ? Adjmonnam(mtmp, "bite-covered")
                                  : Monnam(mtmp));

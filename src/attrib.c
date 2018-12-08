@@ -1094,7 +1094,8 @@ int x;
     register int tmp = (u.abon.a[x] + u.atemp.a[x] + u.acurr.a[x]);
 
     if (x == A_STR) {
-        if (tmp >= 125 || (uarmg && uarmg->otyp == GAUNTLETS_OF_POWER))
+        if (tmp >= 125 || (uarmg && uarmg->otyp == GAUNTLETS_OF_POWER) ||
+              u.umonnum == PM_AVATAR_OF_AKASHA)
             return (schar) 125;
         else
 #ifdef WIN32_BUG

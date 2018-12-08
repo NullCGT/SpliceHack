@@ -1,4 +1,4 @@
-/* NetHack 3.6	artifact.c	$NHDT-Date: 1509836679 2017/11/04 23:04:39 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.106 $ */
+/* NetHack 3.6	artifact.c	$NHDT-Date: 1543745353 2018/12/02 10:09:13 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.127 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -28,6 +28,7 @@ STATIC_DCL boolean FDECL(Mb_hit, (struct monst * magr, struct monst *mdef,
                                 struct obj *, int *, int, BOOLEAN_P, char *));
 STATIC_DCL unsigned long FDECL(abil_to_spfx, (long *));
 STATIC_DCL uchar FDECL(abil_to_adtyp, (long *));
+STATIC_DCL int FDECL(glow_strength, (int));
 STATIC_DCL boolean FDECL(untouchable, (struct obj *, BOOLEAN_P));
 STATIC_DCL int FDECL(count_surround_traps, (int, int));
 
@@ -345,7 +346,7 @@ struct obj *obj;
         return TRUE;
     /* non-silver artifacts with bonus against undead also are effective */
     arti = get_artifact(obj);
-    if (arti && (arti->spfx & SPFX_DFLAG2) && arti->mtype == M2_UNDEAD)
+    if (arti && (arti->spfx & SPFX_DFLAGH) && arti->mtype == MH_UNDEAD)
         return TRUE;
     /* [if there was anything with special bonus against noncorporeals,
        it would be effective too] */
@@ -549,6 +550,13 @@ long wp_mask;
         } else {
             You("Reluctantly relinquish the sword.");
             EConflict &= ~wp_mask;
+        }
+    }
+    if (otmp->oartifact == ART_ORIGIN) {
+        if (on) {
+            pline("Your mind is flooded with magical knowledge.");
+        } else {
+            pline("You feel less in touch with your magical abilities.");
         }
     }
     if (spfx & SPFX_HALRES) {
@@ -808,11 +816,11 @@ struct monst *mtmp;
         return (weap->mtype == (unsigned long) ptr->mlet);
     } else if (weap->spfx & SPFX_DFLAG1) {
         return ((ptr->mflags1 & weap->mtype) != 0L);
-    } else if (weap->spfx & SPFX_DFLAG2) {
-        return ((ptr->mflags2 & weap->mtype)
+    } else if (weap->spfx & SPFX_DFLAGH) {
+        return ((ptr->mhflags & weap->mtype)
                 || (yours
                     && ((!Upolyd && (urace.selfmask & weap->mtype))
-                        || ((weap->mtype & M2_WERE) && u.ulycn >= LOW_PM))));
+                        || ((weap->mtype & MH_WERE) && u.ulycn >= LOW_PM))));
     } else if (weap->spfx & SPFX_DALIGN) {
         return yours ? (u.ualign.type != weap->alignment)
                      : (ptr->maligntyp == A_NONE
@@ -1246,7 +1254,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     }
     if (attacks(AD_COLD, otmp)) {
         if (realizes_damage) {
-          if (otmp->oartifact == ART_REAPER)
+          if (otmp->oartifact == ART_END)
               pline_The("deathly cold scythe %s %s%c",
                         !spec_dbon_applies ? "hits" : "chills", hittee,
                         !spec_dbon_applies ? '.' : '!');
@@ -1266,6 +1274,20 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                       !spec_dbon_applies ? '.' : '!');
         return realizes_damage;
     }
+    if (attacks(AD_WIND, otmp)) {
+        if (realizes_damage) {
+            if (rn2(3))
+                pline_The("humming glaive buffets %s with a massive blast of wind!", hittee);
+            else {
+                pline_The("humming glaive strikes %s with a tornado!", hittee);
+                if (youdefend)
+                    hurtle(u.ux - magr->mx, u.uy - magr->my, 5 + rn2(7), TRUE);
+                else
+                    mhurtle(mdef, mdef->mx - u.ux, mdef->my - u.uy, 5 + rn2(7));
+            }
+        }
+        return realizes_damage;
+    }
     if (attacks(AD_LOUD, otmp)) {
         if (realizes_damage)
             pline_The("thunderous morningstar %s %s%c",
@@ -1280,7 +1302,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
         if (!rn2(7))
             destroy_mitem(mdef, TOOL_CLASS, AD_LOUD);
         if (!rn2(7))
-            destroy_item(mdef, WAND_CLASS, AD_LOUD);
+            destroy_mitem(mdef, WAND_CLASS, AD_LOUD);
         if (mdef->data == &mons[PM_GLASS_GOLEM]) {
             pline("%s shatters into a million pieces!", Monnam(mdef));
             *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
@@ -1293,6 +1315,8 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             pline_The("godly weapon hits%s %s%c",
                       !spec_dbon_applies ? "" : "!  Lightning strikes",
                       hittee, !spec_dbon_applies ? '.' : '!');
+        if (spec_dbon_applies)
+            wake_nearto(mdef->mx, mdef->my, 4 * 4);
         if (!rn2(5))
             (void) destroy_mitem(mdef, RING_CLASS, AD_ELEC);
         if (!rn2(5))
@@ -1321,7 +1345,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             return FALSE;
         }
     }
-    if (otmp->oartifact == ART_DISMOUNTER) {
+    if (otmp->oartifact == ART_BRADAMANTE_S_FURY) {
         if (youdefend) {
             if (u.usteed) {
                 dismount_steed(DISMOUNT_THROWN);
@@ -1562,6 +1586,16 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             make_blinded(Blinded + 17, FALSE);
             return TRUE;
         }
+    }
+    if (otmp->oartifact == ART_DOOMBLADE && dieroll < 6) {
+      if (youattack)
+          You("plunge the Doomblade deeply into %s!",
+          mon_nam(mdef));
+      else
+          pline("%s plunges the Doomblade deeply into %s!",
+          Monnam(magr), hittee);
+      *dmgptr += rnd(4) * 5;
+      return TRUE;
     }
     if (spec_ability(otmp, SPFX_DRLI)) {
         /* some non-living creatures (golems, vortices) are
@@ -2119,6 +2153,37 @@ int arti_indx;
     return hcolor(colorstr);
 }
 
+/* glow verb; [0] holds the value used when blind */
+static const char *glow_verbs[] = {
+    "quiver", "flicker", "glimmer", "gleam"
+};
+
+/* relative strength that Sting is glowing (0..3), to select verb */
+STATIC_OVL int
+glow_strength(count)
+int count;
+{
+    /* glow strength should also be proportional to proximity and
+       probably difficulty, but we don't have that information and
+       gathering it is more trouble than this would be worth */
+    return (count > 12) ? 3 : (count > 4) ? 2 : (count > 0);
+}
+
+const char *
+glow_verb(count, ingsfx)
+int count; /* 0 means blind rather than no applicable creatures */
+boolean ingsfx;
+{
+    static char resbuf[20];
+
+    Strcpy(resbuf, glow_verbs[glow_strength(count)]);
+    /* ing_suffix() will double the last consonant for all the words
+       we're using and none of them should have that, so bypass it */
+    if (ingsfx)
+        Strcat(resbuf, "ing");
+    return resbuf;
+}
+
 /* use for warning "glow" for Sting, Orcrist, and Grimtooth */
 void
 Sting_effects(orc_count)
@@ -2128,23 +2193,30 @@ int orc_count; /* new count (warn_obj_cnt is old count); -1 is a flag value */
         && (uwep->oartifact == ART_STING
             || uwep->oartifact == ART_ORCRIST
             || uwep->oartifact == ART_GRIMTOOTH
-            || uwep->oartifact == ART_VLADSBANE)) {
+            || uwep->oartifact == ART_VLADSBANE
+            || uwep->oartifact == ART_GRIMTOOTH)) {
+        int oldstr = glow_strength(warn_obj_cnt),
+            newstr = glow_strength(orc_count);
+
         if (orc_count == -1 && warn_obj_cnt > 0) {
             /* -1 means that blindness has just been toggled; give a
                'continue' message that eventual 'stop' message will match */
             pline("%s is %s.", bare_artifactname(uwep),
-                  !Blind ? "glowing" : "quivering");
-        } else if (orc_count > 0 && warn_obj_cnt == 0) {
+                  glow_verb(Blind ? 0 : warn_obj_cnt, TRUE));
+        } else if (newstr > 0 && newstr != oldstr) {
             /* 'start' message */
             if (!Blind)
-                pline("%s %s %s!", bare_artifactname(uwep),
-                      otense(uwep, "glow"), glow_color(uwep->oartifact));
-            else
-                pline("%s quivers slightly.", bare_artifactname(uwep));
+                pline("%s %s %s%c", bare_artifactname(uwep),
+                      otense(uwep, glow_verb(orc_count, FALSE)),
+                      glow_color(uwep->oartifact),
+                      (newstr > oldstr) ? '!' : '.');
+            else if (oldstr == 0) /* quivers */
+                pline("%s %s slightly.", bare_artifactname(uwep),
+                      otense(uwep, glow_verb(0, FALSE)));
         } else if (orc_count == 0 && warn_obj_cnt > 0) {
             /* 'stop' message */
             pline("%s stops %s.", bare_artifactname(uwep),
-                  !Blind ? "glowing" : "quivering");
+                  glow_verb(Blind ? 0 : warn_obj_cnt, TRUE));
         }
     }
 }

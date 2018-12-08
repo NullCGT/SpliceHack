@@ -1614,7 +1614,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             nomovemsg = "Your natural flow of time reasserts itself.";
         } else {
             if (Hallucination)
-                pline("The world is moving through pudding!");
+                pline("ZA WARUDO!");
             else
                 pline("Time slows down to a crawl around you!");
             youmonst.movement = 50 + bcsign(sobj) * 50;
@@ -2808,8 +2808,8 @@ struct obj *sobj;
     uball->spe = 1; /* special ball (see save) */
 
     /*
-     *  Place ball & chain if not swallowed.  If swallowed, the ball &
-     *  chain variables will be set at the next call to placebc().
+     *  Place ball & chain if not swallowed.  If swallowed, the ball & chain
+     *  variables will be set at the next call to placebc().
      */
     if (!u.uswallow) {
         placebc();

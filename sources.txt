@@ -20,32 +20,50 @@
 - Nosferatu
 
 #SLASH'EM
-- Techniques Code
-- Tiles for Various Monsters
-- Zouthern Animals
-- Gnolls
-- Hydra (heavily modified)
-- Spitting Beetle
-- Glowing Eye
-- Bloodshot Eye
-- Blinking Eye
-- Deep One
-- Deeper One
-- Deepest One
-- Acid Worm
-- Ogre Mage
-- Wax Golem
-- Quickling
-- Genetic Engineer
-- Hellbat
-- Hellrat
-- Hellcat
-- Various tiles
-- Medical Kit and associated items
-- Potions of blood and vampire blood
+  #Monsters
+    - Zouthern Animals (damage output reduced)
+    - Hydra (heavily modified)
+    - Hellcat (permanently invisible)
+    - Ruby Golem (hp reduced)
+    - Sapphire Golem (hp reduced)
+    - Steel Golem (hp reduced)
+    - Crystal Golem (hp reduced)
+    - Gnolls
+    - Spitting Beetle
+    - Glowing Eye
+    - Bloodshot Eye
+    - Blinking Eye
+    - Deep One
+    - Deeper One
+    - Deepest One
+    - Acid Worm
+    - Ogre Mage
+    - Wax Golem
+    - Quickling
+    - Genetic Engineer
+    - Hellbat
+    - Hellrat
+    - Drow
+    - ghoul mage
+    - ghast
+  #Items
+    - Plague Artifact
+    - Doomblade Artifact
+    - Luck Blade Artifact
+    - Sword of Balance Artifact
+    - Sword of Justice Artifact
+    - Drow Items
+    - Medical Kit and associated items
+    - Potions of blood and vampire blood
+    - Wand of create horde (nerfed)
+  #Other
+    - Drow Race
+    - Techniques Code
+    - Various tiles
 
 #DNetHack
 - Inspiration for Creeping Kudzu
+- Code for race fields and expanded races
 
 #UnNetHack
 - Black Market Code
@@ -57,7 +75,10 @@
 #GruntHack
 - Intelligent Pets Patch
 
-#Chris
+#EvilHack
+- Updated Nazgul
+
+#ChrisANG
 - Pirate Patch
 
 #Nephi

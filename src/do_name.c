@@ -1,4 +1,4 @@
-/* NetHack 3.6	do_name.c	$NHDT-Date: 1537477563 2018/09/20 21:06:03 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.132 $ */
+/* NetHack 3.6	do_name.c	$NHDT-Date: 1543185069 2018/11/25 22:31:09 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.136 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Pasi Kallinen, 2018. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -59,7 +59,9 @@ static const char *const gloc_descr[NUM_GLOCS][4] = {
     { "any unexplored areas", "unexplored area", "unexplored location",
       "unexplored locations" },
     { "anything interesting", "interesting thing", "anything interesting",
-      "anything interesting" }
+      "anything interesting" },
+    { "any valid locations", "valid location", "valid location",
+      "valid locations" }
 };
 
 static const char *const gloc_filtertxt[NUM_GFILTER] = {
@@ -380,6 +382,10 @@ int x, y, gloc;
                     || IS_UNEXPLORED_LOC(x - 1, y)
                     || IS_UNEXPLORED_LOC(x, y + 1)
                     || IS_UNEXPLORED_LOC(x, y - 1)));
+    case GLOC_VALID:
+        if (getpos_getvalid)
+            return (getpos_getvalid(x,y));
+        /*FALLTHRU*/
     case GLOC_INTERESTING:
         return gather_locs_interesting(x,y, GLOC_DOOR)
             || !(glyph_is_cmap(glyph)
@@ -397,8 +403,6 @@ int x, y, gloc;
                      || glyph_to_cmap(glyph) == S_darkroom
                      || glyph_to_cmap(glyph) == S_corr
                      || glyph_to_cmap(glyph) == S_litcorr));
-    case GLOC_VALID:
-        return (getpos_getvalid && getpos_getvalid(x,y));
     }
     /*NOTREACHED*/
     return FALSE;
@@ -1381,6 +1385,7 @@ const char *name;
         case ART_WEREBANE:
         case ART_DEMONBANE:
         case ART_GRAYSWANDIR:
+        case ART_SWORD_OF_BALANCE:
         case ART_MITRE_OF_HOLINESS:
             obj->material = SILVER;
             break;
@@ -1746,6 +1751,7 @@ boolean called;
     boolean do_hallu, do_invis, do_it, do_saddle, do_name;
     boolean name_at_start, has_adjectives;
     char *bp;
+    int i;
 
     if (program_state.gameover)
         suppress |= SUPPRESS_HALLUCINATION;
@@ -1872,6 +1878,11 @@ boolean called;
     } else if (mdat == &mons[PM_HYDRA] && mtmp->m_lev - mtmp->data->mlevel > -1) {
         Sprintf(eos(buf), "%d-headed hydra",
             mtmp->m_lev - mtmp->data->mlevel + 2);
+        name_at_start = FALSE;
+    } else if (mdat == &mons[PM_GEL]) {
+        i = POT_GAIN_ABILITY +
+              (mtmp->m_id % (POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY));
+        Sprintf(eos(buf), "%s gel", OBJ_DESCR(objects[i]));
         name_at_start = FALSE;
     } else if (is_mplayer(mdat) && !In_endgame(&u.uz)) {
         char pbuf[BUFSZ];
@@ -2224,18 +2235,34 @@ char *s;
 }
 
 struct monst *
-christen_orc(mtmp, gang)
+christen_orc(mtmp, gang, other)
 struct monst *mtmp;
-char *gang;
+const char *gang, *other;
 {
     int sz = 0;
     char buf[BUFSZ], buf2[BUFSZ], *orcname;
 
     orcname = rndorcname(buf2);
-    sz = (int) (strlen(gang) + strlen(orcname) + sizeof " of " - sizeof "");
-    if (gang && orcname && sz < BUFSZ) {
-        Sprintf(buf, "%s of %s", upstart(orcname), upstart(gang));
-        mtmp = christen_monst(mtmp, buf);
+    sz = (int) strlen(orcname);
+    if (gang)
+        sz += (int) (strlen(gang) + sizeof " of " - sizeof "");
+    else if (other)
+        sz += (int) strlen(other);
+
+    if (sz < BUFSZ) {
+        char gbuf[BUFSZ];
+        boolean nameit = FALSE;
+
+        if (gang && orcname) {
+            Sprintf(buf, "%s of %s", upstart(orcname),
+                    upstart(strcpy(gbuf, gang)));
+            nameit = TRUE;
+        } else if (other && orcname) {
+            Sprintf(buf, "%s%s", upstart(orcname), other);
+            nameit = TRUE;
+        }
+        if (nameit)
+            mtmp = christen_monst(mtmp, buf);
     }
     return mtmp;
 }

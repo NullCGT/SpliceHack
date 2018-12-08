@@ -227,8 +227,8 @@ boolean quietly;
     if (!rn2(7))
         return MM_MISS;
 
-    /* Grid bugs and rooks cannot displace at an angle. */
-    if ((pa == &mons[PM_GRID_BUG] || pa == &mons[PM_ROOK])
+    /* Grid bugs cannot displace at an angle. */
+    if ((pa == &mons[PM_GRID_BUG])
         && magr->mx != mdef->mx
         && magr->my != mdef->my)
         return MM_MISS;
@@ -323,8 +323,8 @@ register struct monst *magr, *mdef;
     pa = magr->data;
     pd = mdef->data;
 
-    /* Grid bugs and rooks cannot attack at an angle. */
-    if ((pa == &mons[PM_GRID_BUG] || pa == &mons[PM_ROOK])
+    /* Grid bugs cannot attack at an angle. */
+    if ((pa == &mons[PM_GRID_BUG])
         && magr->mx != mdef->mx
         && magr->my != mdef->my)
         return MM_MISS;
@@ -788,6 +788,7 @@ register struct attack *mattk;
      *  but don't leave it on the screen.  Move the aggressor to the
      *  defender's position.
      */
+    remove_monster(dx, dy);
     remove_monster(ax, ay);
     place_monster(magr, dx, dy);
     newsym(ax, ay); /* erase old position */
@@ -1918,6 +1919,15 @@ int mdead;
                     grow_up(mdef, (struct monst *) 0);
                 }
             }
+            tmp = 0;
+            break;
+        case AD_BLND:
+            if (!mdef->mcan && !rn2(2)) {
+                pline("%s sprays %s!", Monnam(mdef), mon_nam(magr));
+                mdef->mcansee = 0;
+                mdef->mblinded = 1 + rn2(3);
+            }
+            tmp = 0;
             break;
         case AD_STCK:
             if (!mdef->mcan)

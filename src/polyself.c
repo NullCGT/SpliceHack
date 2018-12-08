@@ -403,7 +403,8 @@ int psflags;
     boolean forcecontrol = (psflags == 1), monsterpoly = (psflags == 2),
             draconian = (uarm && Is_dragon_armor(uarm)),
             iswere = (u.ulycn >= LOW_PM), isvamp = is_vampire(youmonst.data),
-            controllable_poly = Polymorph_control && !(Stunned || Unaware);
+            controllable_poly = Polymorph_control && !(Stunned || Unaware),
+            verysafe = (psflags == 3);
 
     if (Unchanging) {
         pline("You fail to transform!");
@@ -416,7 +417,7 @@ int psflags;
     }
     /* being Stunned|Unaware doesn't negate this aspect of Poly_control */
     if (!Polymorph_control && !forcecontrol && !draconian && !iswere
-        && !isvamp) {
+        && !isvamp && !verysafe) {
         if (rn2(20) > ACURR(A_CON)) {
             You1(shudder_for_moment);
             losehp(rnd(30), "system shock", KILLED_BY_AN);
@@ -1886,7 +1887,7 @@ polysense()
         break;
     case PM_VAMPIRE:
     case PM_VAMPIRE_LORD:
-        context.warntype.polyd = M2_HUMAN | M2_ELF;
+        context.warntype.polyd = MH_HUMAN | MH_ELF;
         HWarn_of_mon |= FROMRACE;
         return;
     }

@@ -1,4 +1,4 @@
-/* NetHack 3.6	trap.c	$NHDT-Date: 1524312044 2018/04/21 12:00:44 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.290 $ */
+/* NetHack 3.6	trap.c	$NHDT-Date: 1543515862 2018/11/29 18:24:22 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.312 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1347,6 +1347,7 @@ unsigned trflags;
         if (!Sokoban) {
             char verbbuf[BUFSZ];
 
+            *verbbuf = '\0';
             if (u.usteed) {
                 if ((trflags & RECURSIVETRAP) != 0)
                     Sprintf(verbbuf, "and %s fall",
@@ -1364,8 +1365,9 @@ unsigned trflags;
             } else {
                 Strcpy(verbbuf,
                        !plunged ? "fall" : (Flying ? "dive" : "plunge"));
-                You("%s into %s pit!", verbbuf, a_your[trap->madeby_u]);
             }
+            if (*verbbuf)
+                You("%s into %s pit!", verbbuf, a_your[trap->madeby_u]);
         }
         /* wumpus reference */
         if (Role_if(PM_RANGER) && !trap->madeby_u && !trap->once
@@ -1685,7 +1687,7 @@ unsigned trflags;
         int style = ROLL | (trap->tseen ? LAUNCH_KNOWN : 0);
 
         feeltrap(trap);
-        pline("Click! You trigger a rolling boulder trap!");
+        pline("Click!  You trigger a rolling boulder trap!");
         if (!launch_obj(BOULDER, trap->launch.x, trap->launch.y,
                         trap->launch2.x, trap->launch2.y, style)) {
             deltrap(trap);
@@ -2731,6 +2733,7 @@ register struct monst *mtmp;
             case PM_JABBERWOCK:
             case PM_IRON_GOLEM:
             case PM_SILVER_GOLEM:
+            case PM_CRYSTAL_GOLEM:
             case PM_BALROG:
             case PM_KRAKEN:
             case PM_MASTODON:
@@ -2866,7 +2869,7 @@ register struct monst *mtmp;
 
                 newsym(mtmp->mx, mtmp->my);
                 if (in_sight)
-                    pline("Click! %s triggers %s.", Monnam(mtmp),
+                    pline("Click!  %s triggers %s.", Monnam(mtmp),
                           trap->tseen ? "a rolling boulder trap" : something);
                 if (launch_obj(BOULDER, trap->launch.x, trap->launch.y,
                                trap->launch2.x, trap->launch2.y, style)) {
@@ -3358,7 +3361,7 @@ domagictrap()
 
     if (fate < 10) {
         /* Most of the time, it creates some monsters. */
-        register int cnt = rnd(4);
+        int cnt = rnd(4);
 
         /* blindness effects */
         if (!resists_blnd(&youmonst)) {
@@ -3383,6 +3386,9 @@ domagictrap()
         }
         while (cnt--)
             (void) makemon((struct permonst *) 0, u.ux, u.uy, NO_MM_FLAGS);
+        /* roar: wake monsters in vicinity, after placing trap-created ones */
+        wake_nearto(u.ux, u.uy, 7 * 7);
+        /* [flash: should probably also hit nearby gremlins with light] */
     } else
         switch (fate) {
         case 10:
@@ -4235,7 +4241,7 @@ boolean force_failure;
         }
     }
     /* untrappable traps are located on the ground. */
-    if (!can_reach_floor(TRUE)) {
+    if (!can_reach_floor(under_u)) {
         if (u.usteed && P_SKILL(P_RIDING) < P_BASIC)
             rider_cant_reach();
         else
@@ -4261,7 +4267,7 @@ boolean force_failure;
 
                         if (ttmp2) {
                             pline_The(
-                                "webbing sticks to you. You're caught too!");
+                                "webbing sticks to you.  You're caught too!");
                             dotrap(ttmp2, NOWEBMSG);
                             if (u.usteed && u.utrap) {
                                 /* you, not steed, are trapped */
@@ -4599,7 +4605,7 @@ boolean force;
                     deal_with_floor_trap = FALSE;
                 } else {
                     Sprintf(
-                        qbuf, "There %s and %s here. %s %s?",
+                        qbuf, "There %s and %s here.  %s %s?",
                         (boxcnt == 1) ? "is a container" : "are containers",
                         an(trapdescr),
                         (ttmp->ttyp == WEB) ? "Remove" : "Disarm", the_trap);
@@ -5230,10 +5236,10 @@ struct trap *adjtrap;
 {
     struct trap *trap_with_u = t_at(u.ux0, u.uy0);
 
-    if (trap_with_u && adjtrap && u.utrap && u.utraptype == TT_PIT &&
-        is_pit(trap_with_u->ttyp) &&
-        is_pit(adjtrap->ttyp)) {
+    if (trap_with_u && adjtrap && u.utrap && u.utraptype == TT_PIT
+        && is_pit(trap_with_u->ttyp) && is_pit(adjtrap->ttyp)) {
         int idx;
+
         for (idx = 0; idx < 8; idx++) {
             if (xdir[idx] == u.dx && ydir[idx] == u.dy)
                 return TRUE;
@@ -5260,8 +5266,7 @@ struct trap *trap;
         x = trap->tx + xdir[diridx];
         y = trap->ty + ydir[diridx];
         if (isok(x, y)) {
-            if ((t = t_at(x, y)) != 0
-                && is_pit(t->ttyp)) {
+            if ((t = t_at(x, y)) != 0 && is_pit(t->ttyp)) {
                 trap->conjoined |= (1 << diridx);
                 join_adjacent_pits(t);
             } else

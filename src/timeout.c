@@ -1,4 +1,4 @@
-/* NetHack 3.6	timeout.c	$NHDT-Date: 1505214876 2017/09/12 11:14:36 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.75 $ */
+/* NetHack 3.6	timeout.c	$NHDT-Date: 1544003111 2018/12/05 09:45:11 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.87 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2018. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -14,6 +14,7 @@ STATIC_DCL void NDECL(choke_dialogue);
 STATIC_DCL void NDECL(levitation_dialogue);
 STATIC_DCL void NDECL(larva_dialogue);
 STATIC_DCL void NDECL(slime_dialogue);
+STATIC_DCL void FDECL(slimed_to_death, (struct kinfo *));
 STATIC_DCL void NDECL(slip_or_trip);
 STATIC_DCL void FDECL(see_lamp_flicker, (struct obj *, const char *));
 STATIC_DCL void FDECL(lantern_message, (struct obj *));
@@ -49,7 +50,7 @@ const struct propname {
     { SEE_INVIS, "see invisible" },
     { INVIS, "invisible" },
     /* properties beyond here don't have timed values during normal play,
-       so there's no much point in trying to order them sensibly;
+       so there's not much point in trying to order them sensibly;
        they're either on or off based on equipment, role, actions, &c */
     { FIRE_RES, "fire resistance" },
     { COLD_RES, "cold resistance" },
@@ -144,10 +145,19 @@ stoned_dialogue()
         nomul(-3); /* can't move anymore */
         multi_reason = "getting stoned";
         nomovemsg = You_can_move_again; /* not unconscious */
+        /* "your limbs have turned to stone" so terminate wounded legs */
+        if (Wounded_legs && !u.usteed)
+            heal_legs(2);
         break;
-    case 2:
+    case 2: /* turned to stone */
         if ((HDeaf & TIMEOUT) > 0L && (HDeaf & TIMEOUT) < 5L)
             set_itimeout(&HDeaf, 5L); /* avoid Hear_again at tail end */
+        /* if also vomiting or turning into slime, stop those (no messages) */
+        if (Vomiting)
+            make_vomiting(0L, FALSE);
+        if (Slimed)
+            make_slimed(0L, (char *) 0);
+        break;
     default:
         break;
     }
@@ -354,15 +364,25 @@ slime_dialogue()
         } else
             pline1(buf);
     }
-    if (i == 3L) {  /* limbs becoming oozy */
+
+    switch (i) {
+    case 3L:  /* limbs becoming oozy */
         HFast = 0L; /* lose intrinsic speed */
         if (!Popeye(SLIMED))
             stop_occupation();
         if (multi > 0)
             nomul(0);
+        break;
+    case 2L: /* skin begins to peel */
+        if ((HDeaf & TIMEOUT) > 0L && (HDeaf & TIMEOUT) < 5L)
+            set_itimeout(&HDeaf, 5L); /* avoid Hear_again at tail end */
+        break;
+    case 1L: /* turning into slime */
+        /* if also turning to stone, stop doing that (no message) */
+        if (Stoned)
+            make_stoned(0L, (char *) 0, KILLED_BY_AN, (char *) 0);
+        break;
     }
-    if (i == 2L && (HDeaf & TIMEOUT) > 0L && (HDeaf & TIMEOUT) < 5L)
-        set_itimeout(&HDeaf, 5L); /* avoid Hear_again at tail end */
     exercise(A_DEX, FALSE);
 }
 
@@ -372,6 +392,57 @@ burn_away_slime()
     if (Slimed) {
         make_slimed(0L, "The slime that covers you is burned away!");
     }
+}
+
+/* countdown timer for turning into green slime has run out; kill our hero */
+STATIC_OVL void
+slimed_to_death(kptr)
+struct kinfo *kptr;
+{
+    /* redundant: polymon() cures sliming when polying into green slime */
+    if (Upolyd && youmonst.data == &mons[PM_GREEN_SLIME]) {
+        dealloc_killer(kptr);
+        return;
+    }
+    /* more sure killer reason is set up */
+    if (kptr && kptr->name[0]) {
+        killer.format = kptr->format;
+        Strcpy(killer.name, kptr->name);
+    } else {
+        killer.format = NO_KILLER_PREFIX;
+        Strcpy(killer.name, "turned into green slime");
+    }
+    dealloc_killer(kptr);
+    /* involuntarily break "never changed form" conduct */
+    u.uconduct.polyselfs++;
+    done(TURNED_SLIME);
+
+    /* life-saved; even so, hero still has turned into green slime;
+       player may have genocided green slimes after being infected */
+    if ((mvitals[PM_GREEN_SLIME].mvflags & G_GENOD) != 0) {
+        killer.format = KILLED_BY;
+        Strcpy(killer.name, "slimicide");
+        /* immediately follows "OK, so you don't die." */
+        pline("Yes, you do.  Green slime has been genocided...");
+        done(GENOCIDED);
+        /* could be life-saved again (only in explore or wizard mode)
+           but green slimes are gone; just stay in current form */
+
+    /* not geno'd; survive as a green slime */
+    } else {
+        /* this part of polyself() isn't in polymon();
+           we assume that green slimes don't emit light */
+        if (emits_light(youmonst.data))
+            del_light_source(LS_MONSTER, monst_to_any(&youmonst));
+        /* undo the 'involuntarily break "never changed form"'
+           increment so that this change isn't counted twice */
+        u.uconduct.polyselfs--;
+        /* can't be Unchanging even if life-saving wasn't due to amulet;
+           hero infected with slime wouldn't have turned into green slime
+           to get here if Unchanging */
+        (void) polymon(PM_GREEN_SLIME);
+    }
+    return;
 }
 
 /* Intrinsic Passes_walls is temporary when your god is trying to fix
@@ -403,6 +474,7 @@ nh_timeout()
 {
     register struct prop *upp;
     struct kinfo *kptr;
+    boolean was_flying;
     int sleeptime;
     int m_idx;
     int baseluck = (flags.moonphase == FULL_MOON) ? 1 : 0;
@@ -474,6 +546,7 @@ nh_timeout()
             pline("%s stops galloping.", Monnam(u.usteed));
     }
 
+    was_flying = Flying;
     for (upp = u.uprops; upp < u.uprops + SIZE(u.uprops); upp++)
         if ((upp->intrinsic & TIMEOUT) && !(--upp->intrinsic & TIMEOUT)) {
             kptr = find_delayed_killer((int) (upp - u.uprops));
@@ -496,19 +569,7 @@ nh_timeout()
                 losehp(d(10, 4), "being eaten from the inside by insects", KILLED_BY);
                 break;
             case SLIMED:
-                if (kptr && kptr->name[0]) {
-                    killer.format = kptr->format;
-                    Strcpy(killer.name, kptr->name);
-                } else {
-                    killer.format = NO_KILLER_PREFIX;
-                    Strcpy(killer.name, "turned into green slime");
-                }
-                dealloc_killer(kptr);
-                /* involuntarily break "never changed form" conduct */
-                if(!u.uconduct.polyselfs++)
-                    livelog_write_string(LL_CONDUCT,
-                            "changed form for the first time by turning to slime");
-                done(TURNED_SLIME);
+                slimed_to_death(kptr); /* done(TURNED_SLIME) */
                 break;
             case VOMITING:
                 if (uamul && uamul->otyp == AMULET_OF_NAUSEA) {
@@ -588,7 +649,7 @@ nh_timeout()
                 stop_occupation();
                 break;
             case WOUNDED_LEGS:
-                heal_legs();
+                heal_legs(0);
                 stop_occupation();
                 break;
             case HALLUC:
@@ -609,6 +670,25 @@ nh_timeout()
                 break;
             case LEVITATION:
                 (void) float_down(I_SPECIAL | TIMEOUT, 0L);
+                break;
+            case FLYING:
+                /* timed Flying is via #wizintrinsic only */
+                if (was_flying && !Flying) {
+                    context.botl = 1;
+                    You("land.");
+                    spoteffects(TRUE);
+                }
+                break;
+            case WARN_OF_MON:
+                /* timed Warn_of_mon is via #wizintrinsic only */
+                if (!Warn_of_mon) {
+                    context.warntype.speciesidx = NON_PM;
+                    if (context.warntype.species) {
+                        You("are no longer warned about %s.",
+                            makeplural(context.warntype.species->mname));
+                        context.warntype.species = (struct permonst *) 0;
+                    }
+                }
                 break;
             case PASSES_WALLS:
                 if (!Passes_walls) {
@@ -1776,7 +1856,7 @@ timer_sanity_check()
             struct obj *obj = curr->arg.a_obj;
 
             if (obj->timed == 0) {
-                pline("timer sanity: untimed obj %s, timer %ld",
+                impossible("timer sanity: untimed obj %s, timer %ld",
                       fmt_ptr((genericptr_t) obj), curr->tid);
             }
         }

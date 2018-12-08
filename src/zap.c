@@ -1,4 +1,4 @@
-/* NetHack 3.6	zap.c	$NHDT-Date: 1537234123 2018/09/18 01:28:43 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.287 $ */
+/* NetHack 3.6	zap.c	$NHDT-Date: 1543744276 2018/12/02 09:51:16 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.299 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -226,6 +226,19 @@ struct obj *otmp;
             }
         }
         break;
+    case WAN_WINDSTORM:
+        if (u.uswallow && (mtmp == u.ustuck)) {
+            if (is_whirly(mtmp->data)) {
+                You("blast a hole in %s!", mon_nam(mtmp));
+                expels(mtmp, mtmp->data, TRUE);
+            } else {
+                pline("%s burps.", Monnam(mtmp));
+            }
+        } else {
+            pline("%s gets blasted by hurricane-force winds!", Monnam(mtmp));
+            mhurtle(mtmp, mtmp->mx - u.ux, mtmp->my - u.uy, 5 + rn2(5));
+        }
+        break;
     case WAN_SPEED_MONSTER:
         if (!resist(mtmp, otmp->oclass, 0, NOTELL)) {
             if (disguised_mimic)
@@ -449,8 +462,7 @@ struct obj *otmp;
             learn_it = TRUE;
         break;
     case SPE_STONE_TO_FLESH:
-        if (monsndx(mtmp->data) == PM_STONE_GOLEM ||
-            monsndx(mtmp->data) == PM_ROOK) {
+        if (monsndx(mtmp->data) == PM_STONE_GOLEM) {
             char *name = Monnam(mtmp);
 
             /* turn into flesh golem */
@@ -474,7 +486,8 @@ struct obj *otmp;
             dmg = spell_damage_bonus(dmg);
         if (resists_drli(mtmp)) {
             shieldeff(mtmp->mx, mtmp->my);
-        } else if (!resist(mtmp, otmp->oclass, dmg, NOTELL) && !DEADMONSTER(mtmp)) {
+        } else if (!resist(mtmp, otmp->oclass, dmg, NOTELL)
+                   && !DEADMONSTER(mtmp)) {
             mtmp->mhp -= dmg;
             mtmp->mhpmax -= dmg;
             /* die if already level 0, regardless of hit points */
@@ -829,7 +842,7 @@ boolean by_hero;
     if ((mons[montype].mlet == S_EEL && !IS_POOL(levl[x][y].typ))
         || (mons[montype].mlet == S_TROLL
             && uwep && uwep->oartifact == ART_TROLLSBANE)) {
-        if (by_hero && cansee(x,y))
+        if (by_hero && cansee(x, y))
             pline("%s twitches feebly.",
                 upstart(corpse_xname(corpse, (const char *) 0, CXN_PFX_THE)));
         return (struct monst *) 0;
@@ -1907,10 +1920,9 @@ struct obj *obj, *otmp;
          *             from its inventory as a result of the change.
          *             If the items fall to the floor, they are not
          *             subject to direct subsequent polymorphing
-         *             themselves on that same zap. This makes it
-         *             consistent with items that remain in the
-         *             monster's inventory. They are not polymorphed
-         *             either.
+         *             themselves on that same zap.  This makes it
+         *             consistent with items that remain in the monster's
+         *             inventory.  They are not polymorphed either.
          * UNDEAD_TURNING - When an undead creature gets killed via
          *             undead turning, prevent its corpse from being
          *             immediately revived by the same effect.
@@ -1993,14 +2005,17 @@ struct obj *obj, *otmp;
             if (Is_container(obj) || obj->otyp == STATUE) {
                 obj->cknown = obj->lknown = 1;
                 if (!obj->cobj) {
-                    boolean catbox = SchroedingersBox(obj);
-
+                    pline("%s empty.", Tobjnam(obj, "are"));
+                } else if (SchroedingersBox(obj)) {
                     /* we don't want to force alive vs dead
                        determination for Schroedinger's Cat here,
                        so just make probing be inconclusive for it */
-                    if (catbox)
-                        obj->cknown = 0;
-                    pline("%s empty.", Tobjnam(obj, catbox ? "seem" : "are"));
+                    You("aren't sure whether %s has %s or its corpse inside.",
+                        the(xname(obj)),
+                        /* unfortunately, we can't tell whether rndmonnam()
+                           picks a form which can't leave a corpse */
+                        an(Hallucination ? rndmonnam((char *) 0) : "cat"));
+                    obj->cknown = 0;
                 } else {
                     struct obj *o;
                     /* view contents (not recursively) */
@@ -2048,6 +2063,10 @@ struct obj *obj, *otmp;
             }
             if (maybelearnit)
                 learn_it = TRUE;
+            break;
+        case WAN_WINDSTORM:
+            scatter(obj->ox, obj->oy, 4, MAY_HIT | MAY_DESTROY | VIS_EFFECTS,
+                obj);
             break;
         case WAN_CANCELLATION:
         case SPE_CANCELLATION:
@@ -2147,6 +2166,12 @@ schar zz;
             learnwand(obj);
     }
 
+    if (obj->otyp == WAN_WINDSTORM) {
+        scatter(tx, ty, 4, MAY_DESTROY | MAY_HIT | VIS_EFFECTS,
+            (struct obj *) 0);
+        learnwand(obj);
+    }
+
     poly_zapped = -1;
     for (otmp = level.objects[tx][ty]; otmp; otmp = next_obj) {
         next_obj = otmp->nexthere;
@@ -2230,6 +2255,9 @@ register struct obj *obj;
         known = create_critters(rn2(23) ? 1 : rn1(7, 2),
                                 (struct permonst *) 0, FALSE);
         break;
+    case WAN_CREATE_HORDE:
+  			known = create_critters(rn1(7,4), (struct permonst *) 0, FALSE);
+  			break;
     case WAN_WISHING:
         known = TRUE;
         if (Luck + rn2(5) < 0) {
@@ -2457,7 +2485,19 @@ boolean ordinary;
             exercise(A_STR, FALSE);
         }
         break;
-
+    case WAN_WINDSTORM:
+        learn_it = TRUE;
+        pline("Whoosh!");
+        if (is_whirly(youmonst.data)) {
+            exercise(A_CON, FALSE);
+            if (!Unchanging) {
+                pline("The wind blasts you apart!");
+                rehumanize();
+            } else {
+                losehp(Maybe_Half_Phys(d(5,6)), "blast of wind", KILLED_BY_AN);
+            }
+        }
+        break;
     case WAN_LIGHTNING:
         learn_it = TRUE;
         if (!Shock_resistance) {
@@ -2682,7 +2722,7 @@ boolean ordinary;
     case SPE_TURN_UNDEAD:
         learn_it = TRUE;
         (void) unturn_dead(&youmonst);
-        if (is_undead(youmonst.data)) {
+        if (is_undead(youmonst.data) || Race_if(PM_GHOUL)) {
             You_feel("frightened and %sstunned.",
                      Stunned ? "even more " : "");
             make_stunned((HStun & TIMEOUT) + (long) rnd(30), FALSE);
@@ -2916,6 +2956,7 @@ struct obj *obj; /* wand or spell */
     case SPE_DRAIN_LIFE:
     case WAN_OPENING:
     case SPE_KNOCK:
+    case WAN_WINDSTORM:
         (void) bhitm(u.usteed, obj);
         steedhit = TRUE;
         break;
@@ -3043,6 +3084,13 @@ struct obj *obj; /* wand or spell */
         if (!ptmp)
             Your("probe reveals nothing.");
         return TRUE; /* we've done our own bhitpile */
+    case WAN_WINDSTORM:
+        if (u.dz > 0) {
+            You("stir up a whirlwind above you!");
+        } else {
+            You("scour the floor with wind!");
+        }
+        break;
     case WAN_OPENING:
     case SPE_KNOCK:
         /* up or down, but at closed portcullis only */
@@ -3187,6 +3235,7 @@ struct obj *obj; /* wand or spell */
                 break;
             case WAN_STRIKING:
             case SPE_FORCE_BOLT:
+            case WAN_WINDSTORM:
                 wipe_engr_at(x, y, d(2, 4), TRUE);
                 break;
             default:
@@ -3557,6 +3606,11 @@ struct obj **pobj; /* object tossed/used, set to NULL
                     destroy_drawbridge(x, y);
                 learn_it = TRUE;
                 break;
+            case WAN_WINDSTORM:
+                if (typ != DRAWBRIDGE_UP)
+                    pline("For all your huffing and puffing, you cannot blow this drawbridge down.");
+                learn_it = TRUE;
+                break;
             }
             if (learn_it)
                 learnwand(obj);
@@ -3632,6 +3686,15 @@ struct obj **pobj; /* object tossed/used, set to NULL
                 /* ZAPPED_WAND */
                 (*fhitm)(mtmp, obj);
                 range -= 3;
+                /* While this code works for all wands,
+                   it causes massive problems if the
+                   mount dies before the rider... */
+
+                if (obj->otyp == WAN_PROBING &&
+                      has_erid(mtmp) && ERID(mtmp)->m1) {
+                    (*fhitm)(ERID(mtmp)->m1, obj);
+                    range -= 1;
+                }
             }
         } else {
             if (weapon == ZAPPED_WAND && obj->otyp == WAN_PROBING

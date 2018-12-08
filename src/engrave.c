@@ -675,6 +675,7 @@ doengrave()
             case WAN_LIGHT:
             case WAN_SECRET_DOOR_DETECTION:
             case WAN_CREATE_MONSTER:
+            case WAN_CREATE_HORDE:
             case WAN_WISHING:
             case WAN_ENLIGHTENMENT:
                 if (wonder)
@@ -745,6 +746,14 @@ doengrave()
                             "The %s is riddled by bullet holes!",
                             surface(u.ux, u.uy));
                 }
+                break;
+            case WAN_WINDSTORM:
+                if (!Blind) {
+                    Sprintf(post_engr_text, "The bugs on the %s are blown away!",
+                            surface(u.ux, u.uy));
+                }
+                scatter(u.ux, u.uy, 4, MAY_DESTROY | MAY_HIT | VIS_EFFECTS,
+                    (struct obj *) 0);
                 break;
             /* can't tell sleep from death - Eric Backus */
             case WAN_SLEEP:

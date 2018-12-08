@@ -25,9 +25,10 @@
 #define AT_BOOM 12  /* explodes when killed */
 #define AT_GAZE 13  /* gaze - ranged */
 #define AT_TENT 14  /* tentacles */
+#define AT_SCRE 15  /* scream - sonic attack */
 
-#define AT_WEAP 15 /* uses weapon */
-#define AT_MAGC 16 /* uses magic spell(s) */
+#define AT_WEAP 16 /* uses weapon */
+#define AT_MAGC 17 /* uses magic spell(s) */
 #define LAST_AT AT_MAGC
 
 /*	Add new damage types below.
@@ -94,14 +95,16 @@
 #define AD_TCKL 55	/* Tickle (Nightgaunts) */
 #define AD_POLY 56  /* Polymorph (Genetic Engineer) */
 #define AD_LARV 57  /* Inject Larvae (Brood Wasp) */
-#define AD_HNGY 58 /* a mini version of FAMN, should fake a higher
+#define AD_SKEL 58  /* Generate skeletons (Bone Beast) */
+#define AD_HNGY 59 /* a mini version of FAMN, should fake a higher
                            hunger rating instead  */
-#define AD_CLRC 59 /* random clerical spell */
-#define AD_SPEL 60 /* random magic spell */
-#define AD_RBRE 61 /* random breath weapon */
+#define AD_POTN 60 /* potion effect (gel) */
+#define AD_CLRC 61 /* random clerical spell */
+#define AD_SPEL 62 /* random magic spell */
+#define AD_RBRE 63 /* random breath weapon */
 
-#define AD_SAMU 62 /* hits, may steal Amulet (Wizard) */
-#define AD_CURS 63 /* random curse (ex. gremlin) */
+#define AD_SAMU 64 /* hits, may steal Amulet (Wizard) */
+#define AD_CURS 65 /* random curse (ex. gremlin) */
 #define LAST_AD AD_CURS
 
 /*

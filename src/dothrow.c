@@ -1,4 +1,4 @@
-/* NetHack 3.6	dothrow.c	$NHDT-Date: 1525012611 2018/04/29 14:36:51 $  $NHDT-Branch: master $:$NHDT-Revision: 1.137 $ */
+/* NetHack 3.6	dothrow.c	$NHDT-Date: 1543892215 2018/12/04 02:56:55 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.152 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -672,8 +672,9 @@ int x, y;
          * for that, we need to know that the range is not exhausted
          * and also that the next spot doesn't contain an obstacle */
         && !(mon->mundetected && hides_under(mon) && (Flying || Levitation))
-        && !(mon->mundetected && mon->data->mlet == S_EEL
-             && (Flying || Levitation || Wwalking))
+        && !(mon->mundetected &&
+          mon->data->mlet == S_EEL && (Flying || Levitation || Wwalking))
+        && !(mon->data == &mons[PM_EARTHSHARK])
 #endif
         ) {
         const char *mnam, *pronoun;
@@ -1150,6 +1151,11 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
         u.dz = 1;
     }
 
+    /* KMH -- Handle Plague here */
+  	if (uwep && uwep->oartifact == ART_PLAGUE &&
+  			ammo_and_launcher(obj, uwep) && is_poisonable(obj))
+  		  obj->opoisoned = 1;
+
     thrownobj = obj;
     thrownobj->was_thrown = 1;
 
@@ -1312,9 +1318,10 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
             pline("%s returns to your hand!", The(xname(thrownobj)));
             thrownobj = addinv(thrownobj);
             (void) encumber_msg();
-            if (thrownobj->owornmask & W_QUIVER) /* in case addinv() autoquivered */
+            /* in case addinv() autoquivered */
+            if (thrownobj->owornmask & W_QUIVER)
                 setuqwep((struct obj *) 0);
-            setuwep(thrownobj);            
+            setuwep(thrownobj);
         } else {
             /* ball is not picked up by monster */
             if (obj != uball)
@@ -1671,12 +1678,14 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                  * especially their own special types of bow.
                  * Polymorphing won't make you a bow expert.
                  */
-                if ((Race_if(PM_ELF) || Role_if(PM_SAMURAI))
+                if ((Race_if(PM_ELF) || Race_if(PM_DROW) || Role_if(PM_SAMURAI))
                     && (!Upolyd || your_race(youmonst.data))
                     && objects[uwep->otyp].oc_skill == P_BOW) {
                     tmp++;
                     if (Race_if(PM_ELF) && uwep->otyp == ELVEN_BOW)
                         tmp++;
+                    else if (Race_if(PM_DROW) && uwep->otyp == DARK_ELVEN_BOW)
+              			    tmp++;
                     else if (Role_if(PM_SAMURAI) && uwep->otyp == YUMI)
                         tmp++;
                 }
@@ -1694,14 +1703,17 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         }
 
         if (tmp >= dieroll) {
-            boolean wasthrown = (thrownobj != 0);
+            boolean wasthrown = (thrownobj != 0),
+                    /* remember weapon attribute; hmon() might destroy obj */
+                    chopper = is_axe(obj);
 
             /* attack hits mon */
             if (hmode == HMON_APPLIED)
                 if(!u.uconduct.weaphit++)
                     livelog_write_string(LL_CONDUCT, "hit with a wielded weapon for the first time");
             if (hmon(mon, obj, hmode, dieroll)) { /* mon still alive */
-                cutworm(mon, bhitpos.x, bhitpos.y, obj);
+                if (mon->wormno)
+                    cutworm(mon, bhitpos.x, bhitpos.y, chopper);
             }
             exercise(A_DEX, TRUE);
             /* if hero was swallowed and projectile killed the engulfer,
@@ -1711,8 +1723,9 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
             if (wasthrown && !thrownobj)
                 return 1;
 
-            /* projectiles other than magic stones
-               sometimes disappear when thrown */
+            /* projectiles other than magic stones sometimes disappear
+               when thrown; projectiles aren't among the types of weapon
+               that hmon() might have destroyed so obj is intact */
             if (objects[otyp].oc_skill < P_NONE
                 && objects[otyp].oc_skill > -P_BOOMERANG
                 && !objects[otyp].oc_magic) {

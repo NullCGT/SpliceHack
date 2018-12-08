@@ -1,4 +1,4 @@
-/* NetHack 3.6	mhitu.c	$NHDT-Date: 1513297347 2017/12/15 00:22:27 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.149 $ */
+/* NetHack 3.6	mhitu.c	$NHDT-Date: 1540767817 2018/10/28 23:03:37 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.159 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -23,6 +23,7 @@ STATIC_DCL void FDECL(missmu, (struct monst *, BOOLEAN_P, struct attack *));
 STATIC_DCL void FDECL(mswings, (struct monst *, struct obj *));
 STATIC_DCL void FDECL(wildmiss, (struct monst *, struct attack *));
 STATIC_DCL void FDECL(hitmsg, (struct monst *, struct attack *));
+STATIC_DCL int FDECL(screamu, (struct monst*, struct attack*));
 
 /* See comment in mhitm.c.  If we use this a lot it probably should be */
 /* changed to a parameter to mhitu. */
@@ -890,6 +891,13 @@ register struct monst *mtmp;
                 sum[i] = castmu(mtmp, mattk, TRUE, foundyou);
             break;
 
+        case AT_SCRE:
+    	    if (ranged) {
+    		      sum[i] = screamu(mtmp, mattk);
+    	    }
+    	    /* if you're nice and close, don't bother */
+    	    break;
+
         default: /* no attack */
             break;
         }
@@ -1033,6 +1041,8 @@ register struct monst *mtmp;
 register struct attack *mattk;
 {
     struct permonst *mdat = mtmp->data;
+    struct obj *pseudo;
+    int i;
     int uncancelled, ptmp;
     int dmg, armpro, permdmg;
     char buf[BUFSZ];
@@ -1435,6 +1445,24 @@ register struct attack *mattk;
             }
         }
         break;
+    case AD_POTN:
+        You("%s splashes liquid at you!", Monnam(mtmp));
+        i = POT_GAIN_ABILITY +
+            (mtmp->m_id % (POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY));
+        if (i == POT_GAIN_LEVEL ||
+             i == POT_EXTRA_HEALING ||
+             i == POT_HEALING ||
+             i == POT_FULL_HEALING ||
+             i == POT_GAIN_ABILITY ||
+             i == POT_GAIN_ENERGY) {
+            i = POT_ACID;
+        }
+        pseudo = mksobj(i, FALSE, FALSE);
+        pseudo->blessed = 0;
+        pseudo->cursed = rn2(2);
+        (void) peffects(pseudo);
+        obfree(pseudo, (struct obj *) 0); /* now, get rid of it */
+        /*FALLTHRU*/
     case AD_DRLI:
         hitmsg(mtmp, mattk);
         if (uncancelled && !rn2(3) && !Drain_resistance) {
@@ -1819,7 +1847,7 @@ register struct attack *mattk;
         break;
     case AD_DETH:
         pline("%s reaches out with its deadly touch.", Monnam(mtmp));
-        if (is_undead(youmonst.data)) {
+        if (is_undead(youmonst.data) || Race_if(PM_GHOUL)) {
             /* Still does normal damage */
             pline("Was that the touch of death?");
             break;
@@ -2118,6 +2146,7 @@ struct monst *mtmp;
 struct attack *mattk;
 {
     struct trap *t = t_at(u.ux, u.uy);
+    struct obj *pseudo;
     int tmp = d((int) mattk->damn, (int) mattk->damd);
     int tim_tmp;
     struct obj *otmp2;
@@ -2258,6 +2287,24 @@ struct attack *mattk;
             exercise(A_STR, FALSE);
         }
         break;
+    case AD_POTN:
+        You("get some of %s in your mouth!", mon_nam(mtmp));
+        i = POT_GAIN_ABILITY +
+            (mtmp->m_id % (POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY));
+        if (i == POT_GAIN_LEVEL ||
+             i == POT_EXTRA_HEALING ||
+             i == POT_HEALING ||
+             i == POT_FULL_HEALING ||
+             i == POT_GAIN_ABILITY ||
+             i == POT_GAIN_ENERGY) {
+            i = POT_ACID;
+        }
+        pseudo = mksobj(i, FALSE, FALSE);
+        pseudo->blessed = 0;
+        pseudo->cursed = rn2(2);
+        (void) peffects(pseudo);
+        obfree(pseudo, (struct obj *) 0); /* now, get rid of it */
+        /*FALLTHRU*/
     case AD_ACID:
         if (Acid_resistance) {
             You("are covered with a seemingly harmless goo.");
@@ -2346,11 +2393,17 @@ struct attack *mattk;
     if (tmp)
         stop_occupation();
 
-    if (touch_petrifies(youmonst.data) && !resists_ston(mtmp)) {
+    if (!u.uswallow) {
+        ; /* life-saving has already expelled swallowed hero */
+    } else if (touch_petrifies(youmonst.data) && !resists_ston(mtmp)) {
         pline("%s very hurriedly %s you!", Monnam(mtmp),
               is_animal(mtmp->data) ? "regurgitates" : "expels");
         expels(mtmp, mtmp->data, FALSE);
     } else if (!u.uswldtim || youmonst.data->msize >= MZ_HUGE) {
+        /* 3.6.2: u.uswldtim used to be set to 0 by life-saving but it
+           expels now so the !u.uswldtim case is no longer possible;
+           however, polymorphing into a huge form while already
+           swallowed is still possible */
         You("get %s!", is_animal(mtmp->data) ? "regurgitated" : "expelled");
         if (flags.verbose
             && (is_animal(mtmp->data)
@@ -2559,7 +2612,7 @@ struct attack *mattk;
             if (!mtmp->mcan && canseemon(mtmp)
                 && couldsee(mtmp->mx, mtmp->my) && !is_fainted()
                 && !mtmp->mspec_used && rn2(4)
-                && multi>=0 && !((is_undead(youmonst.data)
+                && multi>=0 && !((is_undead(youmonst.data) || Race_if(PM_GHOUL)
                   || is_demon(youmonst.data)) && is_undead(mtmp->data))) {
                 pline("%s aberrant stare frightens you to the core!",
                     s_suffix(Monnam(mtmp)));
@@ -3209,6 +3262,65 @@ const char *str;
     remove_worn_item(obj, TRUE);
 }
 
+/* The Nazgul's scream attack effect, pulled from SporkHack.
+ * I've modified it here to be more in-line with how 3.6.x
+ * employs its gaze stun attack, which allows a bit more
+ * fine-tuning --K2 */
+STATIC_OVL int
+screamu(mtmp, mattk)
+struct monst *mtmp;
+struct attack *mattk;
+{
+    int react = -1;
+    boolean cancelled = (mtmp->mcan != 0), already = FALSE;
+    /* assumes that hero has to hear the monster's scream in
+       order to be affected */
+    if (Deaf)
+        cancelled = TRUE;
+    switch (mattk->adtyp) {
+	case AD_STUN:
+	/* Only screams when a certain distance from our hero */
+        if (distu(mtmp->mx,mtmp->my) > 85) {
+	    return FALSE;
+	}
+        if (m_canseeu(mtmp) && !mtmp->mspec_used && rn2(5)) {
+            if (cancelled) {
+                react = 1; /* "stunned" */
+                already = (mtmp->mstun != 0);
+            if (m_canseeu(mtmp) && canseemon(mtmp) && (Deaf)) {
+                pline("It looks as if %s is yelling at you.", mon_nam(mtmp));
+            }
+            if (m_canseeu(mtmp) && (Blind) && (Deaf)) {
+                You("sense a disturbing vibration in the air.");
+            }
+	    if (m_canseeu(mtmp) && canseemon(mtmp) && (!Deaf)) {
+		pline("%s croaks hoarsely.", Monnam(mtmp));
+	    } else {
+		You_hear("a hoarse croak nearby.");
+	    }
+        } else {
+            int stun = d(2, 8);
+        if (m_canseeu(mtmp)) {
+            pline("%s lets out a bloodcurdling scream!", Monnam(mtmp));
+        } else {
+            You_hear("a horrific scream!");
+        }
+        if (u.usleep && m_canseeu(mtmp) && (!Deaf)) {
+            unmul("You are frightened awake!");
+        }
+            mtmp->mspec_used = mtmp->mspec_used + (stun + rn2(6));
+            Your("mind reels from the noise!");
+            make_stunned((HStun & TIMEOUT) + (long) stun, TRUE);
+            stop_occupation();
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    return TRUE;
+}
+
 /* FIXME:
  *  sequencing issue:  a monster's attack might cause poly'd hero
  *  to revert to normal form.  The messages for passive counterattack
@@ -3339,6 +3451,12 @@ struct attack *mattk;
         case AD_STCK:
             if (!sticks(mtmp->data))
                 u.ustuck = mtmp; /* it's now stuck to you */
+            break;
+        case AD_BLND:
+            You("spray %s!", mon_nam(mtmp));
+            mtmp->mcansee = 0;
+            mtmp->mblinded = 1 + rn2(3);
+            tmp = 0;
             break;
         case AD_PLYS: /* Floating eye */
             if (tmp > 127)

@@ -1,4 +1,4 @@
-/* NetHack 3.6	eat.c	$NHDT-Date: 1502754159 2017/08/14 23:42:39 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.179 $ */
+/* NetHack 3.6	eat.c	$NHDT-Date: 1542765357 2018/11/21 01:55:57 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.197 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -44,7 +44,7 @@ char msgbuf[BUFSZ];
 
 /* also used to see if you're allowed to eat cats and dogs */
 #define CANNIBAL_ALLOWED() (Role_if(PM_CAVEMAN) || Race_if(PM_ORC) \
-    || Race_if(PM_HUMAN_WEREWOLF) || Race_if(PM_MINOR_ANGEL))
+    || Race_if(PM_HUMAN_WEREWOLF))
 
 /* monster types that cause hero to be turned into stone if eaten */
 #define flesh_petrifies(pm) (touch_petrifies(pm) || (pm) == &mons[PM_MEDUSA])
@@ -53,7 +53,8 @@ char msgbuf[BUFSZ];
    will be sure to reach the stage of eating where that meal is fatal */
 #define nonrotting_corpse(mnum) \
     ((mnum) == PM_LIZARD || (mnum) == PM_LICHEN || \
-     (mnum) == PM_LEGENDARY_LICHEN || is_rider(&mons[mnum]))
+     (mnum) == PM_LEGENDARY_LICHEN || \
+     (mnum) == PM_DEATH_MAGGOT || is_rider(&mons[mnum]))
 
 /* non-rotting non-corpses; unlike lizard corpses, these items will behave
    as if rotten if they are cursed (fortune cookies handled elsewhere) */
@@ -98,7 +99,7 @@ register struct obj *obj;
         return TRUE;
 
     /* Ghouls and ghasts only eat non-veggy corpses or eggs (see dogfood()) */
-    if (u.umonnum == PM_GHOUL || u.umonnum == PM_GHAST)
+    if (Race_if(PM_GHOUL) || is_ghoul(youmonst.data))
         return (boolean)((obj->otyp == CORPSE
                           && !vegan(&mons[obj->corpsenm]))
                          || (obj->otyp == EGG));
@@ -113,14 +114,18 @@ register struct obj *obj;
     return (boolean) (obj->oclass == FOOD_CLASS);
 }
 
+/* used for hero init, life saving (if choking), and prayer results of fix
+   starving, fix weak from hunger, or golden glow boon (if u.uhunger < 900) */
 void
 init_uhunger()
 {
     context.botl = (u.uhs != NOT_HUNGRY || ATEMP(A_STR) < 0);
     u.uhunger = 900;
     u.uhs = NOT_HUNGRY;
-    if (ATEMP(A_STR) < 0)
+    if (ATEMP(A_STR) < 0) {
         ATEMP(A_STR) = 0;
+        (void) encumber_msg();
+    }
 }
 
 /* tin types [SPINACH_TIN = -1, overrides corpsenm, nut==600] */
@@ -994,10 +999,11 @@ register struct permonst *ptr;
 /* called after completely consuming a corpse */
 STATIC_OVL void
 cpostfx(pm)
-register int pm;
+int pm;
 {
-    register int tmp = 0;
+    int tmp = 0;
     int catch_lycanthropy = NON_PM;
+    boolean check_intrinsics = FALSE;
 
     /* in case `afternmv' didn't get called for previously mimicking
        gold, clean up now to avoid `eatmbuf' memory leak */
@@ -1010,6 +1016,7 @@ register int pm;
         /* MRKR: "eye of newt" may give small magical energy boost */
         if (rn2(3) || 3 * u.uen <= 2 * u.uenmax) {
             int old_uen = u.uen;
+
             u.uen += rnd(3);
             if (u.uen > u.uenmax) {
                 if (!rn2(3))
@@ -1045,6 +1052,7 @@ register int pm;
             u.uhp = u.uhpmax;
         make_blinded(0L, !u.ucreamed);
         context.botl = 1;
+        check_intrinsics = TRUE; /* might also convey poison resistance */
         break;
     case PM_STALKER:
         if (!Invis) {
@@ -1158,7 +1166,7 @@ register int pm;
     case PM_MASTER_MIND_FLAYER:
         if (ABASE(A_INT) < ATTRMAX(A_INT)) {
             if (!rn2(2)) {
-                pline("Yum! That was real brain food!");
+                pline("Yum!  That was real brain food!");
                 (void) adjattrib(A_INT, 1, FALSE);
                 break; /* don't give them telepathy, too */
             }
@@ -1166,7 +1174,13 @@ register int pm;
             pline("For some reason, that tasted bland.");
         }
     /*FALLTHRU*/
-    default: {
+    default:
+        check_intrinsics = TRUE;
+        break;
+    }
+
+    /* possibly convey an intrinsic */
+    if (check_intrinsics) {
         struct permonst *ptr = &mons[pm];
         boolean conveys_STR = is_giant(ptr);
         int i, count;
@@ -1213,9 +1227,7 @@ register int pm;
             gainstr((struct obj *) 0, 0, TRUE);
         else if (tmp > 0)
             givit(tmp, ptr);
-        break;
-    } /* default case */
-    } /* switch */
+    } /* check_intrinsics */
 
     if (catch_lycanthropy >= LOW_PM) {
         set_ulycn(catch_lycanthropy);
@@ -1563,6 +1575,7 @@ struct obj *otmp;
         case STILETTO:
         case CRYSKNIFE:
         case SACRIFICIAL_KNIFE:
+        case DARK_ELVEN_DAGGER:
             tmp = 3;
             break;
         case PICK_AXE:
@@ -1696,7 +1709,7 @@ struct obj *otmp;
     if (mnum != PM_ACID_BLOB && !stoneable && !slimeable && rotted > 5L) {
         boolean cannibal = maybe_cannibal(mnum, FALSE);
 
-        if (u.umonnum == PM_GHOUL || u.umonnum == PM_GHAST) {
+        if (Race_if(PM_GHOUL) || is_ghoul(youmonst.data)) {
     	    	pline("Yum - that %s was well aged%s!",
     		      mons[mnum].mlet == S_FUNGUS ? "fungoid vegetation" :
     		      !vegetarian(&mons[mnum]) ? "meat" : "protoplasm",
@@ -1728,10 +1741,6 @@ struct obj *otmp;
                 useupf(otmp, 1L);
             return 2;
         }
-    } else if (youmonst.data == &mons[PM_GHOUL] ||
-  		   youmonst.data == &mons[PM_GHAST]) {
-    		pline ("This corpse is too fresh!");
-    		return 3;
     } else if (acidic(&mons[mnum]) && !Acid_resistance) {
         tp++;
         You("have a very bad case of stomach acid.");   /* not body_part() */
@@ -1783,11 +1792,12 @@ struct obj *otmp;
         You("peck the eyeball with delight.");
     } else {
         /* yummy is always False for omnivores, palatable always True */
-        boolean yummy = (vegan(&mons[mnum])
+        boolean yummy = ((vegan(&mons[mnum])
                             ? (!carnivorous(youmonst.data)
                                && herbivorous(youmonst.data))
                             : (carnivorous(youmonst.data)
-                               && !herbivorous(youmonst.data))),
+                               && !herbivorous(youmonst.data)))
+                                  || Race_if(PM_GHOUL)),
             palatable = ((vegetarian(&mons[mnum])
                           ? herbivorous(youmonst.data)
                           : carnivorous(youmonst.data))
@@ -1889,7 +1899,7 @@ struct obj *otmp;
         if (carnivorous(youmonst.data) && !humanoid(youmonst.data))
             pline("That tripe ration was surprisingly good!");
         else if (maybe_polyd(is_orc(youmonst.data), Race_if(PM_ORC)))
-            pline(Hallucination ? "Tastes great! Less filling!"
+            pline(Hallucination ? "Tastes great!  Less filling!"
                                 : "Mmm, tripe... not bad!");
         else {
             pline("Yak - dog food!");
@@ -2366,7 +2376,7 @@ struct obj *otmp;
             }
         }
         if (!otmp->cursed)
-            heal_legs();
+            heal_legs(0);
         break;
     case EGG:
         if (flesh_petrifies(&mons[otmp->corpsenm])) {
@@ -2478,7 +2488,7 @@ struct obj *otmp;
      */
     if (cadaver && mnum != PM_ACID_BLOB && rotted > 5L && !Sick_resistance) {
         /* Tainted meat */
-        Sprintf(buf, "%s like %s could be tainted! %s", foodsmell, it_or_they,
+        Sprintf(buf, "%s like %s could be tainted!  %s", foodsmell, it_or_they,
                 eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2486,7 +2496,7 @@ struct obj *otmp;
             return 2;
     }
     if (stoneorslime) {
-        Sprintf(buf, "%s like %s could be something very dangerous! %s",
+        Sprintf(buf, "%s like %s could be something very dangerous!  %s",
                 foodsmell, it_or_they, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2495,7 +2505,7 @@ struct obj *otmp;
     }
     if (otmp->orotten || (cadaver && rotted > 3L)) {
         /* Rotten */
-        Sprintf(buf, "%s like %s could be rotten! %s", foodsmell, it_or_they,
+        Sprintf(buf, "%s like %s could be rotten! %s",  foodsmell, it_or_they,
                 eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2504,7 +2514,7 @@ struct obj *otmp;
     }
     if (cadaver && poisonous(&mons[mnum]) && !Poison_resistance) {
         /* poisonous */
-        Sprintf(buf, "%s like %s might be poisonous! %s", foodsmell,
+        Sprintf(buf, "%s like %s might be poisonous!  %s", foodsmell,
                 it_or_they, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2513,20 +2523,20 @@ struct obj *otmp;
     }
     if (otmp->otyp == APPLE && otmp->cursed && !Sleep_resistance) {
         /* causes sleep, for long enough to be dangerous */
-        Sprintf(buf, "%s like %s might have been poisoned. %s", foodsmell,
+        Sprintf(buf, "%s like %s might have been poisoned.  %s", foodsmell,
                 it_or_they, eat_it_anyway);
         return (yn_function(buf, ynchars, 'n') == 'n') ? 1 : 2;
     }
     if (cadaver && !vegetarian(&mons[mnum]) && !u.uconduct.unvegetarian
         && Role_if(PM_MONK)) {
-        Sprintf(buf, "%s unhealthy. %s", foodsmell, eat_it_anyway);
+        Sprintf(buf, "%s unhealthy.  %s", foodsmell, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
         else
             return 2;
     }
     if (cadaver && acidic(&mons[mnum]) && !Acid_resistance) {
-        Sprintf(buf, "%s rather acidic. %s", foodsmell, eat_it_anyway);
+        Sprintf(buf, "%s rather acidic.  %s", foodsmell, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
         else
@@ -2534,7 +2544,7 @@ struct obj *otmp;
     }
     if (Upolyd && u.umonnum == PM_RUST_MONSTER && is_metallic(otmp)
         && otmp->oerodeproof) {
-        Sprintf(buf, "%s disgusting to you right now. %s", foodsmell,
+        Sprintf(buf, "%s disgusting to you right now.  %s", foodsmell,
                 eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2549,7 +2559,7 @@ struct obj *otmp;
         && ((material == LEATHER || material == BONE
              || material == DRAGON_HIDE || material == WAX)
             || (cadaver && !vegan(&mons[mnum])))) {
-        Sprintf(buf, "%s foul and unfamiliar to you. %s", foodsmell,
+        Sprintf(buf, "%s foul and unfamiliar to you.  %s", foodsmell,
                 eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2560,7 +2570,7 @@ struct obj *otmp;
         && ((material == LEATHER || material == BONE
              || material == DRAGON_HIDE)
             || (cadaver && !vegetarian(&mons[mnum])))) {
-        Sprintf(buf, "%s unfamiliar to you. %s", foodsmell, eat_it_anyway);
+        Sprintf(buf, "%s unfamiliar to you.  %s", foodsmell, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
         else
@@ -2569,8 +2579,8 @@ struct obj *otmp;
 
     if (cadaver && mnum != PM_ACID_BLOB && rotted > 5L && Sick_resistance) {
         /* Tainted meat with Sick_resistance */
-        Sprintf(buf, "%s like %s could be tainted! %s", foodsmell, it_or_they,
-                eat_it_anyway);
+        Sprintf(buf, "%s like %s could be tainted!  %s",
+                foodsmell, it_or_they, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
         else
@@ -2618,6 +2628,11 @@ doeat()
     if (!is_edible(otmp)) {
         You("cannot eat that!");
         return 0;
+    } else if ((Race_if(PM_GHOUL) || is_ghoul(youmonst.data))
+        && (((monstermoves - peek_at_iced_corpse_age(otmp))
+            / 10L) <= 5L && !nonrotting_corpse(otmp->corpsenm))) {
+    		pline ("This corpse is too fresh!");
+    		return 0;
     } else if ((otmp->owornmask & (W_ARMOR | W_TOOL | W_AMUL | W_SADDLE))
                != 0) {
         /* let them eat rings */
@@ -3346,7 +3361,8 @@ vomit() /* A good idea from David Neves */
            dealing with some esoteric body_part() */
         Your("jaw gapes convulsively.");
     } else {
-        make_sick(0L, (char *) 0, TRUE, SICK_VOMITABLE);
+        if (Sick && (u.usick_type & SICK_VOMITABLE) != 0)
+            make_sick(0L, (char *) 0, TRUE, SICK_VOMITABLE);
         /* if not enough in stomach to actually vomit then dry heave;
            vomiting_dialog() gives a vomit message when its countdown
            reaches 0, but only if u.uhs < FAINTING (and !cantvomit()) */

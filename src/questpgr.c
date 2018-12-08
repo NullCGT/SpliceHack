@@ -347,10 +347,12 @@ char c;
         str = rank_of(MIN_QUEST_LEVEL, Role_switch, flags.female);
         break;
     case 's':
-        str = (flags.female) ? "sister" : "brother";
+        str = (flags.female == 1) ? "sister" :
+          (flags.female == 2) ? "sibling" : "brother";
         break;
     case 'S':
-        str = (flags.female) ? "daughter" : "son";
+        str = (flags.female == 1) ? "daughter" :
+          (flags.female == 2) ? "child" : "son";
         break;
     case 'l':
         str = ldrname();

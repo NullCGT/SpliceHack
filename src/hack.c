@@ -1,4 +1,4 @@
-/* NetHack 3.6	hack.c	$NHDT-Date: 1518861490 2018/02/17 09:58:10 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.182 $ */
+/* NetHack 3.6	hack.c	$NHDT-Date: 1543972190 2018/12/05 01:09:50 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.200 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -17,6 +17,7 @@ STATIC_DCL boolean FDECL(findtravelpath, (int));
 STATIC_DCL boolean FDECL(trapmove, (int, int, struct trap *));
 STATIC_DCL void NDECL(switch_terrain);
 STATIC_DCL struct monst *FDECL(monstinroom, (struct permonst *, int));
+STATIC_DCL void NDECL(interesting_room);
 STATIC_DCL boolean FDECL(doorless_door, (int, int));
 STATIC_DCL void FDECL(move_update, (BOOLEAN_P));
 
@@ -939,7 +940,7 @@ int mode;
                 u.dx = u.tx - u.ux;
                 u.dy = u.ty - u.uy;
                 nomul(0);
-                iflags.travelcc.x = iflags.travelcc.y = -1;
+                iflags.travelcc.x = iflags.travelcc.y = 0;
             }
             return TRUE;
         }
@@ -1061,7 +1062,7 @@ int mode;
                                     nomul(0);
                                     /* reset run so domove run checks work */
                                     context.run = 8;
-                                    iflags.travelcc.x = iflags.travelcc.y = -1;
+                                    iflags.travelcc.x = iflags.travelcc.y = 0;
                                 }
                                 return TRUE;
                             }
@@ -1229,8 +1230,10 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
         break;
     case TT_WEB:
         if (uwep && uwep->oartifact == ART_STING) {
+            /* escape trap but don't move and don't destroy it */
+            u.utrap = 0; /* caller will call reset_utrap() */
             pline("Sting cuts through the web!");
-            break; /* escape trap but don't move */
+            break;
         }
         if (--u.utrap) {
             if (flags.verbose) {
@@ -2542,6 +2545,12 @@ register boolean newlev;
                     verbalize("Please have a look around, but don't even think about stealing anything.");
             }
             break;
+        case ARTROOM:
+            if (Blind)
+                msg_given = FALSE;
+            else
+                interesting_room();
+            break;
         case TEMPLE:
             intemple(roomno + ROOMOFFSET);
         /*FALLTHRU*/
@@ -2595,6 +2604,61 @@ register boolean newlev;
     }
 
     return;
+}
+
+void interesting_room()
+{
+
+    static const char *const adjectives[] = {
+        "furious",          "wrathful",  "mysterious",  "ugly",
+        "beautiful",        "fearful",   "horrified",   "sinister",
+        "poorly-rendered",  "large",     "lifelike",    "unnerving",
+        "peaceful",         "covetous",  "subservient", "lovely",
+        "misshapen"
+    };
+
+    static const char *const art[] = {
+        "painting",   "carving",   "tapestry",  "bas-relief"
+    };
+
+    int name, name2;
+    /* Modified version of rndmonnam */
+    do {
+        name = rn2(NUMMONS);
+    } while ((type_is_pname(&mons[name]) || (mons[name].geno & G_UNIQ)));
+    do {
+        name2 = rn2(NUMMONS);
+    } while ((type_is_pname(&mons[name2]) || (mons[name2].geno & G_UNIQ)));
+    const char* carvemon = mons[name].mname;
+    const char* carvemon2 = mons[name2].mname;
+    /* Carving message */
+    switch(rn2(5)) {
+    case 0:
+        pline("%s on a wall of this room depicts %s %s.",
+            An(art[rn2(SIZE(art))]),
+            an(adjectives[rn2(SIZE(adjectives))]), carvemon);
+        break;
+    case 1:
+        pline("There is %s of %s in this room.",
+        an(art[rn2(SIZE(art))]), u_gname());
+        break;
+    case 2:
+        pline("%s on a wall of this room depict a large number of %s.",
+            An(art[rn2(SIZE(art))]), makeplural(carvemon));
+        break;
+    case 3:
+        pline("%s in this room contains a partial map of the dungeon!",
+            An(art[rn2(SIZE(art))]));
+            HConfusion = 1;
+            do_mapping();
+            HConfusion = 0;
+        break;
+    default:
+        pline("%s of this room depict a battle between %s and %s. The %s are winning.",
+            An(art[rn2(SIZE(art))]),
+            makeplural(carvemon), makeplural(carvemon2),
+            makeplural(rn2(2) ? carvemon : carvemon2));
+    }
 }
 
 /* returns
@@ -2655,6 +2719,11 @@ pickup_checks()
             You("could drink the %s...", hliquid("water"));
         else if (IS_DOOR(lev->typ) && (lev->doormask & D_ISOPEN))
             pline("It won't come off the hinges.");
+        else if (IS_ALTAR(lev->typ))
+            pline("Moving the altar would be a very bad idea.");
+        else if (lev->typ == STAIRS)
+            pline_The("stairs are solidly fixed to the %s.",
+                      surface(u.ux, u.uy));
         else
             There("is nothing here to pick up.");
         return 0;

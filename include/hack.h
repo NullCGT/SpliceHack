@@ -209,9 +209,9 @@ typedef struct sortloot_item Loot;
 
 #define MATCH_WARN_OF_MON(mon)                                               \
     (Warn_of_mon && ((context.warntype.obj                                   \
-                      && (context.warntype.obj & (mon)->data->mflags2))      \
+                      && (context.warntype.obj & (mon)->data->mhflags))      \
                      || (context.warntype.polyd                              \
-                         && (context.warntype.polyd & (mon)->data->mflags2)) \
+                         && (context.warntype.polyd & (mon)->data->mhflags)) \
                      || (context.warntype.species                            \
                          && (context.warntype.species == (mon)->data))))
 
@@ -443,7 +443,7 @@ enum bodypart_types {
 #define POTION_OCCUPANT_CHANCE(n) (13 + 2 * (n))
 #define WAND_BACKFIRE_CHANCE 100
 #define BALL_IN_MON (u.uswallow && uball && uball->where == OBJ_FREE)
-#define NODIAG(monnum) ((monnum) == PM_GRID_BUG || (monnum == PM_ROOK))
+#define NODIAG(monnum) ((monnum) == PM_GRID_BUG )
 
 /* Flags to control menus */
 #define MENUTYPELEN sizeof("traditional ")

@@ -1,4 +1,4 @@
-/* NetHack 3.6	winmisc.c	$NHDT-Date: 1539892610 2018/10/18 19:56:50 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.39 $ */
+/* NetHack 3.6	winmisc.c	$NHDT-Date: 1543830350 2018/12/03 09:45:50 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.42 $ */
 /* Copyright (c) Dean Luick, 1992                                 */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -1893,6 +1893,8 @@ Cardinal *num_params;
             ec_nchars = 1;
         }
         for (i = 0; extcmdlist[i].ef_txt; i++) {
+            if (extcmdlist[i].flags & CMD_NOT_AVAILABLE)
+                continue;
             if (extcmdlist[i].ef_txt[0] == '?')
                 continue;
 
@@ -1929,22 +1931,27 @@ Cardinal *num_params;
 static void
 init_extended_commands_popup()
 {
-    int i, num_commands;
+    int i, j, num_commands, ignore_cmds = 0;
     const char **command_list;
 
     /* count commands */
     for (num_commands = 0; extcmdlist[num_commands].ef_txt; num_commands++)
-        ; /* do nothing */
+        if (extcmdlist[num_commands].flags & CMD_NOT_AVAILABLE)
+            ++ignore_cmds;
 
     /* If the last entry is "help", don't use it. */
     if (strcmp(extcmdlist[num_commands - 1].ef_txt, "?") == 0)
         --num_commands;
 
-    command_list =
-        (const char **) alloc((unsigned) num_commands * sizeof(char *));
+    j = num_commands - ignore_cmds;
+    command_list = (const char **) alloc((unsigned) j * sizeof (char *));
 
-    for (i = 0; i < num_commands; i++)
-        command_list[i] = extcmdlist[i].ef_txt;
+    for (i = j = 0; i < num_commands; i++) {
+        if (extcmdlist[i].flags & CMD_NOT_AVAILABLE)
+            continue;
+        command_list[j++] = extcmdlist[i].ef_txt;
+    }
+    num_commands = j;
 
     extended_command_popup =
         make_menu("extended_commands", "Extended Commands",
@@ -2001,6 +2008,7 @@ Widget *formp; /* return */
     Dimension width, other_width, max_width, border_width,
               height, cumulative_height, screen_height;
     int distance, skip;
+    char btnname[BUFSZ];
 
     commands = (Widget *) alloc((unsigned) num_names * sizeof (Widget));
 
@@ -2075,11 +2083,13 @@ Widget *formp; /* return */
      */
     num_args = 0;
     XtSetArg(args[num_args], nhStr(XtNfromVert), label); num_args++;
+    XtSetArg(args[num_args], nhStr(XtNlabel), left_name); num_args++;
 #if 0
     XtSetArg(args[num_args], nhStr(XtNshapeStyle),
                               XmuShapeRoundedRectangle); num_args++;
 #endif
-    left = XtCreateManagedWidget(left_name, commandWidgetClass, form, args,
+    Sprintf(btnname, "btn_%s", left_name);
+    left = XtCreateManagedWidget(btnname, commandWidgetClass, form, args,
                                  num_args);
     XtAddCallback(left, XtNcallback, left_callback, (XtPointer) 0);
     skip = (distance < 4) ? 8 : 2 * distance;
@@ -2096,11 +2106,13 @@ Widget *formp; /* return */
     XtSetArg(args[num_args], nhStr(XtNfromHoriz), left); num_args++;
     XtSetArg(args[num_args], nhStr(XtNhorizDistance), skip); num_args++;
     XtSetArg(args[num_args], nhStr(XtNfromVert), label); num_args++;
+    XtSetArg(args[num_args], nhStr(XtNlabel), right_name); num_args++;
 #if 0
     XtSetArg(args[num_args], nhStr(XtNshapeStyle),
                               XmuShapeRoundedRectangle); num_args++;
 #endif
-    right = XtCreateManagedWidget(right_name, commandWidgetClass, form, args,
+    Sprintf(btnname, "btn_%s", right_name);
+    right = XtCreateManagedWidget(btnname, commandWidgetClass, form, args,
                                   num_args);
     XtAddCallback(right, XtNcallback, right_callback, (XtPointer) 0);
 

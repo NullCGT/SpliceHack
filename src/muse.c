@@ -1,4 +1,4 @@
-/* NetHack 3.6	muse.c	$NHDT-Date: 1505181522 2017/09/12 01:58:42 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.80 $ */
+/* NetHack 3.6	muse.c	$NHDT-Date: 1539804880 2018/10/17 19:34:40 $  $NHDT-Branch: keni-makedefsm $:$NHDT-Revision: 1.85 $ */
 /*      Copyright (C) 1990 by Ken Arromdee                         */
 /* NetHack may be freely redistributed.  See license for details.  */
 
@@ -9,8 +9,6 @@
 /* Edited on 5/5/18 by NullCGT */
 
 #include "hack.h"
-
-extern const int monstr[];
 
 boolean m_using = FALSE;
 
@@ -273,6 +271,7 @@ struct obj *otmp;
 #define MUSE_LIZARD_CORPSE 19
 #define MUSE_WAN_HEALING 20
 #define MUSE_POT_VAMPIRE_BLOOD 21
+#define MUSE_WAN_CREATE_HORDE 22
 /*
 #define MUSE_INNATE_TPT 9999
  * We cannot use this.  Since monsters get unlimited teleportation, if they
@@ -615,6 +614,11 @@ boolean force;
                 m.defensive = obj;
                 m.has_defense = MUSE_WAN_CREATE_MONSTER;
             }
+            nomore(MUSE_WAN_CREATE_HORDE);
+        		if (obj->otyp == WAN_CREATE_HORDE && obj->spe > 0) {
+          			m.defensive = obj;
+          			m.has_defense = MUSE_WAN_CREATE_HORDE;
+        		}
             nomore(MUSE_POT_HEALING);
             if (obj->otyp == POT_HEALING) {
                 m.defensive = obj;
@@ -822,6 +826,23 @@ struct monst *mtmp;
                          (coord *) 0);
         return 2;
     }
+    case MUSE_WAN_CREATE_HORDE: {
+        coord cc;
+    		struct permonst *pm=rndmonst();
+    		int cnt = 1;
+    		if (!enexto(&cc, mtmp->mx, mtmp->my, pm)) return 0;
+    		mzapmsg(mtmp, otmp, FALSE);
+    		otmp->spe--;
+    		if (oseen) makeknown(WAN_CREATE_HORDE);
+    		cnt = rnd(4) + 6;
+    		while(cnt--) {
+      			struct monst *mon;
+      			if (!enexto(&cc, mtmp->mx, mtmp->my, pm)) continue;
+      			mon = makemon(rndmonst(), cc.x, cc.y, NO_MM_FLAGS);
+      			if (mon) newsym(mon->mx,mon->my);
+    		}
+    		return 2;
+  	}
     case MUSE_WAN_CREATE_MONSTER: {
         coord cc;
         /* pm: 0 => random, eel => aquatic, croc => amphibious */
@@ -1086,7 +1107,7 @@ rnd_defensive_item(mtmp)
 struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
-    int difficulty = monstr[(monsndx(pm))];
+    int difficulty = mons[(monsndx(pm))].difficulty;
     int trycnt = 0;
 
     if (is_animal(pm) || attacktype(pm, AT_EXPL) || mindless(mtmp->data)
@@ -1157,6 +1178,7 @@ try_again:
 #define MUSE_SCR_WEB 27
 #define MUSE_POT_BLOOD_THROW 28
 #define MUSE_CAMERA 29
+#define MUSE_WAN_WINDSTORM 30
 
 /* Select an offensive item/action for a monster.  Returns TRUE iff one is
  * found.
@@ -1262,6 +1284,11 @@ struct monst *mtmp;
         if (obj->otyp == WAN_STRIKING && obj->spe > 0) {
             m.offensive = obj;
             m.has_offense = MUSE_WAN_STRIKING;
+        }
+        nomore(MUSE_WAN_WINDSTORM);
+        if (obj->otyp == WAN_WINDSTORM && obj->spe > 0) {
+            m.offensive = obj;
+            m.has_offense = MUSE_WAN_WINDSTORM;
         }
 #if 0   /* use_offensive() has had some code to support wand of teleportation
          * for a long time, but find_offensive() never selected one;
@@ -1423,6 +1450,10 @@ register struct obj *otmp;
             if (cansee(mtmp->mx, mtmp->my) && zap_oseen)
                 makeknown(WAN_STRIKING);
         }
+        break;
+    case WAN_WINDSTORM:
+        You("get blasted by hurricane-force winds!");
+        hurtle(u.ux - mtmp->mx, u.uy - mtmp->my, 5 + rn2(5), TRUE);
         break;
 #if 0   /* disabled because find_offensive() never picks WAN_TELEPORTATION */
     case WAN_TELEPORTATION:
@@ -1639,6 +1670,7 @@ struct monst *mtmp;
     case MUSE_WAN_TELEPORTATION:
     case MUSE_WAN_STRIKING:
     case MUSE_WAN_CANCELLATION:
+    case MUSE_WAN_WINDSTORM:
         zap_oseen = oseen;
         mzapmsg(mtmp, otmp, FALSE);
         otmp->spe--;
@@ -1808,7 +1840,7 @@ rnd_offensive_item(mtmp)
 struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
-    int difficulty = monstr[(monsndx(pm))];
+    int difficulty = mons[(monsndx(pm))].difficulty;
 
     if (is_animal(pm) || attacktype(pm, AT_EXPL) || mindless(mtmp->data)
         || pm->mlet == S_GHOST || pm->mlet == S_KOP)
@@ -1892,7 +1924,7 @@ struct monst *mtmp;
         return FALSE;
 
     if (!stuck && !immobile && (mtmp->cham == NON_PM)
-        && monstr[(pmidx = monsndx(mdat))] < 6) {
+        && mons[(pmidx = monsndx(mdat))].difficulty < 6) {
         boolean ignore_boulders = (verysmall(mdat) || throws_rocks(mdat)
                                    || passes_walls(mdat)),
             diag_ok = !NODIAG(pmidx);
@@ -1997,13 +2029,13 @@ struct monst *mtmp;
         }
         nomore(MUSE_WAN_POLYMORPH);
         if (obj->otyp == WAN_POLYMORPH && obj->spe > 0
-            && (mtmp->cham == NON_PM) && monstr[monsndx(mdat)] < 6) {
+            && (mtmp->cham == NON_PM) && mons[monsndx(mdat)].difficulty < 6) {
             m.misc = obj;
             m.has_misc = MUSE_WAN_POLYMORPH;
         }
         nomore(MUSE_POT_POLYMORPH);
         if (obj->otyp == POT_POLYMORPH && (mtmp->cham == NON_PM)
-            && monstr[monsndx(mdat)] < 6) {
+            && mons[monsndx(mdat)].difficulty < 6) {
             m.misc = obj;
             m.has_misc = MUSE_POT_POLYMORPH;
         }
@@ -2373,7 +2405,7 @@ rnd_misc_item(mtmp)
 struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
-    int difficulty = monstr[(monsndx(pm))];
+    int difficulty = mons[(monsndx(pm))].difficulty;
 
     if (is_animal(pm) || attacktype(pm, AT_EXPL) || mindless(mtmp->data)
         || pm->mlet == S_GHOST || pm->mlet == S_KOP)
@@ -2432,10 +2464,12 @@ struct obj *obj;
         if (typ == WAN_DIGGING)
             return (boolean) !is_floater(mon->data);
         if (typ == WAN_POLYMORPH)
-            return (boolean) (monstr[monsndx(mon->data)] < 6);
+            return (boolean) (mons[monsndx(mon->data)].difficulty < 6);
         if (objects[typ].oc_dir == RAY || typ == WAN_STRIKING
             || typ == WAN_TELEPORTATION || typ == WAN_CREATE_MONSTER
             || typ == WAN_CANCELLATION
+            || typ == WAN_CREATE_HORDE
+            || typ == WAN_WINDSTORM
             || typ == WAN_HEALING)
             return TRUE;
         break;
@@ -2460,7 +2494,7 @@ struct obj *obj;
             return TRUE;
         break;
     case AMULET_CLASS:
-        if (typ == AMULET_OF_LIFE_SAVING)
+        if (typ == AMULET_OF_LIFE_SAVING || typ == AMULET_OF_REINCARNATION)
             return (boolean) !(nonliving(mon->data) || is_vampshifter(mon));
         if (typ == AMULET_OF_REFLECTION)
             return TRUE;
@@ -2540,7 +2574,10 @@ const char *str;
         if (str)
             pline(str, s_suffix(mon_nam(mon)), "scales");
         return TRUE;
-    } else if (mon->data == &mons[PM_SILVER_GOLEM] || mon->mreflect) {
+    } else if (mon->data == &mons[PM_SILVER_GOLEM]
+            || mon->data == &mons[PM_CRYSTAL_GOLEM]
+            || mon->data == &mons[PM_SAPPHIRE_GOLEM]
+            || mon->mreflect) {
         if (str)
             pline(str, s_suffix(mon_nam(mon)), "body");
         return TRUE;

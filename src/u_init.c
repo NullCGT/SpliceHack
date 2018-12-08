@@ -244,6 +244,7 @@ static struct inv_sub {
     /* { PM_ELF, SMALL_SHIELD, ELVEN_SHIELD }, */
     { PM_ELF, CLOAK_OF_DISPLACEMENT, ELVEN_CLOAK },
     { PM_ELF, CRAM_RATION, LEMBAS_WAFER },
+    { PM_MERFOLK, SACK, OILSKIN_SACK },
     { PM_MERFOLK, SPEAR, TRIDENT },
     { PM_MERFOLK, MACE, TRIDENT },
     { PM_MERFOLK, BOW, CROSSBOW },
@@ -266,6 +267,10 @@ static struct inv_sub {
     { PM_DWARF, LEMBAS_WAFER, CRAM_RATION },
     { PM_GNOME, BOW, CROSSBOW },
     { PM_GNOME, ARROW, CROSSBOW_BOLT },
+    { PM_DROW, DAGGER, DARK_ELVEN_DAGGER },
+    { PM_DROW, SHORT_SWORD, DARK_ELVEN_SHORT_SWORD },
+    { PM_DROW, BOW, DARK_ELVEN_BOW },
+    { PM_DROW, ARROW, DARK_ELVEN_ARROW },
     { NON_PM, STRANGE_OBJECT, STRANGE_OBJECT }
 };
 
@@ -983,6 +988,14 @@ u_init()
         knows_object(ELVEN_BOOTS);
         knows_object(ELVEN_CLOAK);
         break;
+    case PM_DROW:
+  	    /* Drows can recognize all droven objects */
+  	    knows_object(DARK_ELVEN_SHORT_SWORD);
+  	    knows_object(DARK_ELVEN_ARROW);
+  	    knows_object(DARK_ELVEN_BOW);
+  	    knows_object(DARK_ELVEN_DAGGER);
+  	    knows_object(DARK_ELVEN_RING_MAIL);
+  	    break;
 
     case PM_DWARF:
         /* Dwarves can recognize all dwarvish objects */
@@ -1082,7 +1095,7 @@ u_init()
   					attkptr->adtyp == AD_ENCH || attkptr->adtyp == AD_DISN ||
   					attkptr->adtyp == AD_PEST || attkptr->adtyp == AD_FAMN ||
             attkptr->adtyp == AD_HYDR || attkptr->adtyp == AD_QUIL ||
-            attkptr->adtyp == AD_LUCK) {
+            attkptr->adtyp == AD_LUCK || attkptr->adtyp == AD_SKEL) {
   			attkptr->adtyp = rn2(AD_HNGY);
   		}
   		attkptr->damn = 2;				/* we're almost sure to get this wrong first time */
@@ -1118,7 +1131,7 @@ u_init()
   	}
   	shambler->mflags2 &= ~M2_MERC;				/* no guards */
   	shambler->mflags2 &= ~M2_PEACEFUL;			/* no peacefuls */
-  	shambler->mflags2 &= ~M2_WERE;				/* no lycanthropes */
+  	/* shambler->mflags2 &= ~M2_WERE; */
   	shambler->mflags2 &= ~M2_PNAME;				/* not a proper name */
 
     return;
@@ -1200,6 +1213,7 @@ register struct trobj *trop;
 {
     struct obj *obj;
     int otyp, i;
+    int corpses = 0;
 
     while (trop->trclass) {
         otyp = (int) trop->trotyp;
@@ -1300,8 +1314,23 @@ register struct trobj *trop;
                                 (trop->trotyp == UNDEF_TYP) ? "random " : "",
                                 OBJ_NAME(objects[otyp]));
                     otyp = obj->otyp = inv_subs[i].subs_otyp;
+                    obj->material = objects[obj->otyp].oc_material;
                     break;
                 }
+        }
+
+        /* Create ghoul corpses */
+        if (urace.malenum == PM_GHOUL && obj->oclass == FOOD_CLASS) {
+            dealloc_obj(obj);
+            if (corpses <= 2) {
+                obj = mksobj(CORPSE, TRUE, FALSE);
+                obj->corpsenm = PM_DEATH_MAGGOT;
+                obj->age = -100;
+                corpses++;
+            } else {
+                trop++;
+                continue;
+            }
         }
 
         /* nudist gets no armor */

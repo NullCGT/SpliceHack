@@ -1,4 +1,4 @@
-/* NetHack 3.6	uhitm.c	$NHDT-Date: 1521684760 2018/03/22 02:12:40 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.176 $ */
+/* NetHack 3.6	uhitm.c	$NHDT-Date: 1543892215 2018/12/04 02:56:55 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.195 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -475,7 +475,9 @@ int rollneeded, armorpenalty; /* for monks */
 struct attack *uattk;
 int dieroll;
 {
-    register boolean malive = TRUE;
+    boolean malive = TRUE,
+            /* hmon() might destroy weapon; remember aspect for cutworm */
+            slice_or_chop = (weapon && (is_blade(weapon) || is_axe(weapon)));
 
     if (override_confirmation) {
         /* this may need to be generalized if weapons other than
@@ -516,7 +518,7 @@ int dieroll;
                 u.uconduct.weaphit = oldweaphit;
             }
             if (mon->wormno && *mhit)
-                cutworm(mon, x, y, weapon);
+                cutworm(mon, x, y, slice_or_chop);
         }
 
         /* Lycanthropes sometimes go a little berserk!
@@ -999,7 +1001,17 @@ int dieroll;
                 				} else if (objects[obj->otyp].oc_skill == P_BOW
                 					&& tech_inuse(T_FLURRY)) {
                     				tmp++;
-                    		}
+                    		} else if (Race_if(PM_DROW)) {
+                    				if (obj->otyp == DARK_ELVEN_ARROW &&
+                    					uwep->otyp == DARK_ELVEN_BOW) {
+                    				    tmp += 2;
+                    				    /* WAC Mucho damage if in special ability*/
+                    				    if (tech_inuse(T_FLURRY)) tmp *= 2;
+                    				} else if (objects[obj->otyp].oc_skill == P_BOW
+                    					&& tech_inuse(T_FLURRY)) {
+                    				    tmp++;
+                    				}
+              			    }
                     }
                     if (obj->opoisoned && is_poisonable(obj))
                         ispoisoned = TRUE;
@@ -1110,7 +1122,7 @@ int dieroll;
 
                     if (touch_petrifies(&mons[obj->corpsenm])) {
                         /*learn_egg_type(obj->corpsenm);*/
-                        pline("Splat! You hit %s with %s %s egg%s!",
+                        pline("Splat!  You hit %s with %s %s egg%s!",
                               mon_nam(mon),
                               obj->known ? "the" : cnt > 1L ? "some" : "a",
                               obj->known ? mons[obj->corpsenm].mname
@@ -1396,6 +1408,22 @@ int dieroll;
         }
     }
 
+    /* ghoulish players can freeze opponents */
+    int armpro = magic_negation(mon);
+    boolean negated = !(rn2(10) >= 3 * armpro);
+    if (!negated && !uarmg && unarmed) {
+        if (Race_if(PM_GHOUL) && mon->mcanmove && !rn2(3)) {
+            if (!Blind)
+                pline("%s is frozen by you!", Monnam(mon));
+            paralyze_monst(mon, rnd(10));
+        } else if (Race_if(PM_DROW) && !mon->msleeping
+            && sleep_monst(mon, rnd(10), -1)) {
+            if (!Blind)
+                pline("%s is put to sleep by you!", Monnam(mon));
+            slept_monst(mon);
+        }
+    }
+
     if (tmp && noeffect) {
     		Your("attack doesn't seem to harm %s.", mon_nam(mon));
     		hittxt = TRUE;
@@ -1543,7 +1571,10 @@ int dieroll;
             xkilled(mon, XKILL_NOMSG);
         destroyed = TRUE; /* return FALSE; */
     } else if (destroyed) {
-        if (!already_killed)
+        if (!already_killed && uwep && uwep->oartifact == ART_FINAL) {
+            pline_The("unyielding whip blasts %s apart!", mon_nam(mon));
+            xkilled(mon, XKILL_NOMSG | XKILL_NOCORPSE);
+        } else if (!already_killed)
             killed(mon); /* takes care of most messages */
     } else if (u.umconf && hand_to_hand) {
         nohandglow(mon);
@@ -3048,9 +3079,23 @@ boolean wep_was_destroyed;
             if (mhit && !mon->mcan && weapon && rn2(3)) {
                 if ((is_blade(weapon) || is_axe(weapon))
                       && weapon->oartifact != ART_FIRE_BRAND) {
-                    pline("You decapitate the hydra, but two more heads spring forth!");
+                    pline("You decapitate %s, but two more heads spring forth!",
+                        mon_nam(mon));
                     grow_up(mon, (struct monst *) 0);
                 }
+            }
+            break;
+        case AD_SKEL: /* generate skeletons (bone beast) */
+            if (mhit && !mon->mcan && rn2(3)) {
+                pline("Bits of %s assemble into a skeleton!", mon_nam(mon));
+                makemon(&mons[PM_SHAMBLING_SKELETON], u.ux, u.uy, NO_MM_FLAGS);
+            }
+            break;
+        case AD_BLND:
+            if (!mon->mcan && !rn2(2)) {
+                pline("%s sprays you! Ugh!", Monnam(mon));
+                make_blinded(Blinded + 1 + rn2(3), FALSE);
+                exercise(A_CHA, FALSE);
             }
             break;
         case AD_STCK:

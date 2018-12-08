@@ -1,4 +1,4 @@
-/* NetHack 3.6	allmain.c	$NHDT-Date: 1518193644 2018/02/09 16:27:24 $  $NHDT-Branch: githash $:$NHDT-Revision: 1.86 $ */
+/* NetHack 3.6	allmain.c	$NHDT-Date: 1539804859 2018/10/17 19:34:19 $  $NHDT-Branch: keni-makedefsm $:$NHDT-Revision: 1.89 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -42,7 +42,6 @@ boolean resuming;
     */
     decl_init();
     monst_init();
-    monstr_init(); /* monster strengths */
     objects_init();
 
     /* if a save file created in normal mode is now being restored in
@@ -454,7 +453,7 @@ boolean resuming;
             continue;
         }
 
-        if (iflags.sanity_check)
+        if (iflags.sanity_check || iflags.debug_fuzzer)
             sanity_check();
 
 #ifdef CLIPPING
@@ -708,7 +707,10 @@ boolean new_game; /* false => restoring an old game */
 {
     char buf[BUFSZ];
     char tipbuf[BUFSZ];
+    char tiptxt[BUFSZ];
     char ebuf[BUFSZ];
+    char racebuf[BUFSZ];
+    char rolebuf[BUFSZ];
     int currentgend = Upolyd ? u.mfemale : flags.female;
 
     /* skip "welcome back" if restoring a doomed character */
@@ -753,8 +755,21 @@ boolean new_game; /* false => restoring an old game */
                 ? urole.name.n
                 : urole.name.m);
     if (flags.tips) {
+        if (new_game) {
+            /* display race info */
+            Sprintf(racebuf, "race %s", urace.noun);
+            checkfile(racebuf, 0, TRUE, TRUE, (char *) 0);
+            /* display role info */
+            Sprintf(rolebuf, "role %s", urole.filecode);
+            checkfile(rolebuf, 0, TRUE, TRUE, (char *) 0);
+        }
+        /* Display tip of the day */
         get_rnd_text(SPLICETIPSFILE, tipbuf);
-        pline("Splicehack Tip of the Day: %s", tipbuf);
+        Sprintf(tiptxt, "Splicehack Tip of the Day: %s", tipbuf);
+        winid datawin = create_nhwindow(NHW_TEXT);
+        putstr(datawin, 0, tiptxt);
+        display_nhwindow(datawin, TRUE);
+        destroy_nhwindow(datawin);
     }
 }
 
@@ -841,7 +856,14 @@ const char *msg;
 static struct early_opt earlyopts[] = {
     {ARG_DEBUG, "debug", 5, TRUE},
     {ARG_VERSION, "version", 4, TRUE},
+#ifdef WIN32
+    {ARG_WINDOWS, "windows", 4, TRUE},
+#endif
 };
+
+#ifdef WIN32
+extern int FDECL(windows_early_options, (const char *));
+#endif
 
 /*
  * Returns:
@@ -912,6 +934,14 @@ enum earlyarg e_arg;
             early_version_info(insert_into_pastebuf);
             return 2;
         }
+#ifdef WIN32
+        case ARG_WINDOWS: {
+            if (extended_opt) {
+                extended_opt++;
+                return windows_early_options(extended_opt);
+            }
+        }
+#endif
         default:
             break;
         }

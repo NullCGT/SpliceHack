@@ -45,7 +45,7 @@
 %.au
 \author{Original version - Eric S. Raymond\\
 (Edited and expanded for 3.6 by Mike Stephenson and others)}
-\date{October 16, 2018}
+\date{November 29, 2018}
 
 \maketitle
 
@@ -283,6 +283,7 @@ understand what {\it NetHack\/} is doing with the screen.  The {\it NetHack\/}
 screen replaces the ``You see \ldots'' descriptions of text adventure games.
 Figure 1 is a sample of what a {\it NetHack\/} screen might look like.
 The way the screen looks for you depends on your platform.
+%.BR 2
 
 \vbox{
 \begin{verbatim}
@@ -297,8 +298,8 @@ The way the screen looks for you depends on your platform.
 
 
 
-        Player the Rambler     St:12 Dx:7 Co:18 In:11 Wi:9 Ch:15  Neutral
-        Dlvl:1  $:0  HP:9(12) Pw:3(3) AC:10 Exp:1/19 T:257 Weak
+        Player the Rambler    St:12 Dx:7 Co:18 In:11 Wi:9 Ch:15 Neutral
+        Dlvl:1 $:0 HP:9(12) Pw:3(3) AC:10 Exp:1/19 T:257 Weak
 \end{verbatim}
 \begin{center}
 Figure 1
@@ -1620,7 +1621,7 @@ bit), you can invoke many extended commands by meta-ing the first
 letter of the command.
 In {\it NT, OS/2, PC\/ {\rm and} ST NetHack},
 the `Alt' key can be used in this fashion;
-on the {\it Amiga\/}, set the {\it altmeta\/} option to get this behavior.
+on the {\it Amiga}, set the {\it altmeta\/} option to get this behavior.
 On other systems, if typing `Alt' plus another key transmits a
 two character sequence consisting of an {\tt Escape}
 followed by the other key, you may set the {\it altmeta\/}
@@ -2040,7 +2041,7 @@ location ordinarily wouldn't be seen any more.
 
 %.pg
 When you find something in the dungeon, it is common to want to pick
-it up.  In {\it NetHack\/}, this is accomplished automatically by walking over
+it up.  In {\it NetHack}, this is accomplished automatically by walking over
 the object (unless you turn off the {\it autopickup\/}
 option (see below), or move with the `{\tt m}' prefix (see above)), or
 manually by using the `{\tt ,}' command.
@@ -2791,7 +2792,7 @@ fire, and kick weapons; use a wand, spell, or other type of item;
 or fight with your hands and feet.
 
 %.pg
-In {\it NetHack\/}, a pacifist refuses to cause the death of any other monster
+In {\it NetHack}, a pacifist refuses to cause the death of any other monster
 (i.e. if you would get experience for the death).  This is a particularly
 difficult challenge, although it is still possible to gain experience
 by other means.
@@ -3032,6 +3033,7 @@ Here is a short example of config file contents:
     OPTIONS=!splash_screen
 \end{verbatim}
 %.ed
+%.BR 2
 
 %.hn 2
 \subsection*{Using the NETHACKOPTIONS environment variable}
@@ -3047,25 +3049,29 @@ the option name, a colon or equals sign, and then the value of the string.
 The value is terminated by the next comma or the end of string.
 
 %.pg
-For example, to set up an environment variable so that {\it color\/}
-is on, {\it autopickup\/} is off, the {\it name\/} is set to ``Blue Meanie'',
-and the {\it fruit\/} is set to ``papaya'', you would enter the command
-%.sd
+For example, to set up an environment variable so that
+{\it color\/} is {\tt on},
+{\it legacy\/} is {\tt off},
+character {\it name\/} is set to ``{\tt Blue Meanie}'',
+and named {\it fruit\/} is set to ``{\tt lime}'',
+you would enter the command
+%.SD i
 \begin{verbatim}
-    setenv NETHACKOPTIONS "color,\!autopickup,name:Blue Meanie,fruit:papaya"
+    setenv NETHACKOPTIONS "color,\!leg,name:Blue Meanie,fruit:lime"
 \end{verbatim}
-%.ed
+%.ED
 
 \nd in {\it csh}
-(note the need to escape the `!' since it's special to the shell), or
-%.sd
+(note the need to escape the `!' since it's special
+to that shell), or the pair of commands
+%.SD i
 \begin{verbatim}
-    NETHACKOPTIONS="color,!autopickup,name:Blue Meanie,fruit:papaya"
+    NETHACKOPTIONS="color,!leg,name:Blue Meanie,fruit:lime"
     export NETHACKOPTIONS
 \end{verbatim}
-%.ed
+%.ED
 
-\nd in {\it sh\/}, {\it ksh}, or {\it bash}.
+\nd in {\it sh}, {\it ksh}, or {\it bash}.
 
 %.pg
 Instead of a comma-separated list of options,
@@ -3439,6 +3445,26 @@ Default `,'.
 Prompt for new form whenever any monster changes shape (default off).
 Debug mode only.
 %.lp
+\item[\ib{mouse\verb+_+support}]
+Allow use of the mouse for input and travel.
+Valid settings are:
+
+%.sd
+%.si
+\newlength{\mwidth}
+\settowidth{\mwidth}{\tt -0}
+\newcommand{\numbox}[1]{\makebox[\mwidth][r]{{\tt #1}}}
+\numbox{0} --- disabled\\
+\numbox{1} --- enabled and make OS adjustment to support mouse use in the game\\
+\numbox{2} --- enabled like {\tt 1}, but does not make any OS adjustments\\
+%.ei
+%.ed
+
+For backward compatibility, omitting a value is the same as specifying {\tt 1}
+and negating
+{\it mouse\verb+_+support\/}
+is the same as specifying {\tt 0}.
+%.lp
 \item[\ib{msghistory}]
 The number of top line messages to save (and be able to recall
 with `{\tt \^{}P}') (default 20).
@@ -3480,37 +3506,6 @@ Start the character with no armor (default false).  Persistent.
 %.lp
 \item[\ib{null}]
 Send padding nulls to the terminal (default on).  Persistent.
-%.lp
-\item[\ib{number\verb+_+pad}]
-Use digit keys instead of letters to move (default 0 or off).\\
-Valid settings are:
-
-%.sd
-%.si
-\newlength{\mwidth}
-\settowidth{\mwidth}{\tt -0}
-\newcommand{\numbox}[1]{\makebox[\mwidth][r]{{\tt #1}}}
-\numbox{0} --- move by letters; `{\tt yuhjklbn}'\\
-\numbox{1} --- move by numbers; digit `{\tt 5}' acts as `{\tt G}' movement prefix\\
-\numbox{2} --- like {\tt 1} but `{\tt 5}' works as `{\tt g}' prefix instead of as `{\tt G}'\\
-\numbox{3} --- by numbers using phone key layout; {\tt 123} above, {\tt 789} below\\
-\numbox{4} --- combines {\tt 3} with {\tt 2}; phone layout plus MS-DOS compatibility\\
-\numbox{-1} --- by letters but use `{\tt z}' to go northwest, `{\tt y}' to zap wands
-%.ei
-%.ed
-
-For backward compatibility, omitting a value is the same as specifying {\tt 1}
-and negating
-{\it number\verb+_+pad\/}
-is the same as specifying {\tt 0}.
-(Settings {\tt 2} and {\tt 4} are for compatibility with MS-DOS or old PC Hack;
-in addition to the different behavior for `{\tt 5}', `{\tt Alt-5}' acts as `{\tt G}'
-and `{\tt Alt-0}' acts as `{\tt I}'.
-Setting {\tt -1} is to accommodate some QWERTZ keyboards which have the
-location of the `{\tt y}' and `{\tt z}' keys swapped.)
-When moving by numbers, to enter a count prefix for those commands
-which accept one (such as ``{\tt 12s}'' to search twelve times), precede it
-with the letter `{\tt n}' (``{\tt n12s}'').
 %.lp
 \item[\ib{packorder}]
 Specify the order to list object types in (default
@@ -3933,9 +3928,6 @@ If {\it NetHack\/} can, it should use a large font.
 %.lp
 \item[\ib{map\verb+_+mode}]
 If {\it NetHack\/} can, it should display the map in the manner specified.
-%.lp
-\item[\ib{mouse\verb+_+support}]
-Allow use of the mouse for input and travel.
 %.lp
 \item[\ib{player\verb+_+selection}]
 If {\it NetHack\/} can, it should pop up dialog boxes or use prompts for character selection.
@@ -4543,7 +4535,7 @@ For example, the following line in your config file will cause
 the hitpoints field to display in the color red if your hitpoints
 drop to or below a threshold of 30%:
 \begin{verbatim}
-    OPTION=hilite_status: hitpoints/<30%/red/normal
+    OPTION=hilite_status: hitpoints/<=30%/red/normal
 \end{verbatim}
 %.pg
 For another example, the following line in your config file will cause
@@ -4593,7 +4585,7 @@ percentage or absolute number threshold, or text to match against.
 ``{\tt always}'' will set the default attributes for that field.
 %.lp "*"
 \item{\bb{}}
-``{\tt up}'' and ``(\tt down}'' set the field attributes for when the field
+``{\tt up}'' and ``{\tt down}'' set the field attributes for when the field
 value changes upwards or downwards. This attribute times out after
 {\tt statushilites} turns.
 %.lp "*"
@@ -5513,7 +5505,7 @@ maintained the port of  {\it NetHack\/} 3.6 for Microsoft Windows.
 %.pg
 \medskip
 {\it Pat Rankin} attempted to keep the VMS port running for NetHack 3.6.1,
-hindered by limited access.  {it Kevin Smolkowski} has updated and tested it
+hindered by limited access.  {\it Kevin Smolkowski} has updated and tested it
 for the most recent version of OpenVMS (V8.4 as of this writing) on Alpha
 and Integrity (aka Itanium aka IA64) but not VAX.
 
@@ -5555,46 +5547,47 @@ in this, the list of Dungeoneers:
 \begin{center}
 \begin{tabular}{llll}
 %TABLE_START
-Adam Aronow & J. Ali Harlow & Mikko Juola\\
-Alex Kompel & Janet Walz & Nathan Eady\\
-Alex Smith & Janne Salmij\"{a}rvi & Norm Meluch\\
-Andreas Dorn & Jean-Christophe Collet & Olaf Seibert\\
-Andy Church & Jeff Bailey & Pasi Kallinen\\
-Andy Swanson & Jochen Erwied & Pat Rankin\\
-Ari Huttunen & John Kallen & Patric Mueller\\
-Barton House & John Rupley & Paul Winner\\
-Benson I. Margulies & John S. Bien & Pierre Martineau\\
-Bill Dyer & Johnny Lee & Ralf Brown\\
-Boudewijn Waijers & Jon W\{tte & Ray Chason\\
-Bruce Cox & Jonathan Handler & Richard Addison\\
-Bruce Holloway & Joshua Delahunty & Richard Beigel\\
-Bruce Mewborne & Keizo Yamamoto & Richard P. Hughey\\
-Carl Schelin & Ken Arnold & Rob Menke\\
-Chris Russo & Ken Arromdee & Robin Bandy\\
-David Cohrs & Ken Lorber & Robin Johnson\\
-David Damerell & Ken Washikita & Roderick Schertler\\
-David Gentzel & Kevin Darcy & Roland McGrath\\
-David Hairston & Kevin Hugo & Ron Van Iwaarden\\
-Dean Luick & Kevin Sitze & Ronnen Miller\\
-Del Lamb & Kevin Smolkowski & Ross Brown\\
-Derek S. Ray & Kevin Sweet & Sascha Wostmann\\
-Deron Meranda & Lars Huttar & Scott Bigham\\
-Dion Nicolaas & Leon Arnott & Scott R. Turner\\
-Dylan O'Donnell & M. Drew Streib & Sean Hunt\\
-Eric Backus & Malcolm Ryan & Stephen Spackman\\
-Eric Hendrickson & Mark Gooderum & Stefan Thielscher\\
-Eric R. Smith & Mark Modrall & Stephen White\\
-Eric S. Raymond & Marvin Bressler & Steve Creps\\
-Erik Andersen & Matthew Day & Steve Linhart\\
-Frederick Roeber & Merlyn LeRoy & Steve VanDevender\\
-Gil Neiger & Michael Allison & Teemu Suikki\\
-Greg Laskin & Michael Feir & Tim Lennan\\
-Greg Olson & Michael Hamel & Timo Hakulinen\\
-Gregg Wonderly & Michael Sokolov & Tom Almy\\
-Hao-yang Wang & Mike Engber & Tom West\\
-Helge Hafting & Mike Gallop & Warren Cheung\\
-Irina Rempt-Drijfhout & Mike Passaretti & Warwick Allison\\
-Izchak Miller & Mike Stephenson & Yitzhak Sapir
+Adam Aronow & Janet Walz & Nathan Eady\\
+Alex Kompel & Janne Salmij\"{a}rvi & Norm Meluch\\
+Alex Smith & Jean-Christophe Collet & Olaf Seibert\\
+Andreas Dorn & Jeff Bailey & Pasi Kallinen\\
+Andy Church & Jochen Erwied & Pat Rankin\\
+Andy Swanson & John Kallen & Patric Mueller\\
+Ari Huttunen & John Rupley & Paul Winner\\
+Barton House & John S. Bien & Pierre Martineau\\
+Benson I. Margulies & Johnny Lee & Ralf Brown\\
+Bill Dyer & Jon W\{tte & Ray Chason\\
+Boudewijn Waijers & Jonathan Handler & Richard Addison\\
+Bruce Cox & Joshua Delahunty & Richard Beigel\\
+Bruce Holloway & Karl Garrison & Richard P. Hughey\\
+Bruce Mewborne & Keizo Yamamoto & Rob Menke\\
+Carl Schelin & Ken Arnold & Robin Bandy\\
+Chris Russo & Ken Arromdee & Robin Johnson\\
+David Cohrs & Ken Lorber & Roderick Schertler\\
+David Damerell & Ken Washikita & Roland McGrath\\
+David Gentzel & Kevin Darcy & Ron Van Iwaarden\\
+David Hairston & Kevin Hugo & Ronnen Miller\\
+Dean Luick & Kevin Sitze & Ross Brown\\
+Del Lamb & Kevin Smolkowski & Sascha Wostmann\\
+Derek S. Ray & Kevin Sweet & Scott Bigham\\
+Deron Meranda & Lars Huttar & Scott R. Turner\\
+Dion Nicolaas & Leon Arnott & Sean Hunt\\
+Dylan O'Donnell & M. Drew Streib & Stephen Spackman\\
+Eric Backus & Malcolm Ryan & Stefan Thielscher\\
+Eric Hendrickson & Mark Gooderum & Stephen White\\
+Eric R. Smith & Mark Modrall & Steve Creps\\
+Eric S. Raymond & Marvin Bressler & Steve Linhart\\
+Erik Andersen & Matthew Day & Steve VanDevender\\
+Frederick Roeber & Merlyn LeRoy & Teemu Suikki\\
+Gil Neiger & Michael Allison & Tim Lennan\\
+Greg Laskin & Michael Feir & Timo Hakulinen\\
+Greg Olson & Michael Hamel & Tom Almy\\
+Gregg Wonderly & Michael Sokolov & Tom West\\
+Hao-yang Wang & Mike Engber & Warren Cheung\\
+Helge Hafting & Mike Gallop & Warwick Allison\\
+Irina Rempt-Drijfhout & Mike Passaretti & Yitzhak Sapir\\
+Izchak Miller & Mike Stephenson\\
+J. Ali Harlow & Mikko Juola
 %TABLE_END  Do not delete this line.
 \end{tabular}
 \end{center}

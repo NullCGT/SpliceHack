@@ -1,4 +1,4 @@
-/* NetHack 3.6	weapon.c	$NHDT-Date: 1454660575 2016/02/05 08:22:55 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.57 $ */
+/* NetHack 3.6	weapon.c	$NHDT-Date: 1541145518 2018/11/02 07:58:38 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.60 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -12,6 +12,12 @@
 /* Edited on 3/29/18 by NullCGT */
 
 #include "hack.h"
+
+STATIC_DCL void FDECL(give_may_advance_msg, (int));
+STATIC_DCL boolean FDECL(could_advance, (int));
+STATIC_DCL boolean FDECL(peaked_skill, (int));
+STATIC_DCL int FDECL(slots_required, (int));
+STATIC_DCL void FDECL(skill_advance, (int));
 
 /* Categories whose names don't come from OBJ_NAME(objects[type])
  */
@@ -59,25 +65,6 @@ STATIC_VAR NEARDATA const char *const barehands_or_martial[] = {
     "bare handed combat", "martial arts"
 };
 
-STATIC_OVL void
-give_may_advance_msg(skill)
-int skill;
-{
-    You_feel("more confident in your %sskills.",
-             skill == P_NONE ? "" : skill <= P_LAST_WEAPON
-                                        ? "weapon "
-                                        : skill <= P_LAST_SPELL
-                                              ? "spell casting "
-                                              : "fighting ");
-}
-
-STATIC_DCL boolean FDECL(can_advance, (int, BOOLEAN_P));
-STATIC_DCL boolean FDECL(could_advance, (int));
-STATIC_DCL boolean FDECL(peaked_skill, (int));
-STATIC_DCL int FDECL(slots_required, (int));
-STATIC_DCL char *FDECL(skill_level_name, (int, char *));
-STATIC_DCL void FDECL(skill_advance, (int));
-
 #define P_NAME(type)                                    \
     ((skill_names_indices[type] > 0)                    \
          ? OBJ_NAME(objects[skill_names_indices[type]]) \
@@ -87,6 +74,17 @@ STATIC_DCL void FDECL(skill_advance, (int));
 
 static NEARDATA const char kebabable[] = { S_XORN, S_DRAGON, S_JABBERWOCK,
                                            S_NAGA, S_GIANT,  '\0' };
+
+STATIC_OVL void
+give_may_advance_msg(skill)
+int skill;
+{
+    You_feel("more confident in your %sskills.",
+             (skill == P_NONE) ? ""
+                 : (skill <= P_LAST_WEAPON) ? "weapon "
+                     : (skill <= P_LAST_SPELL) ? "spell casting "
+                         : "fighting ");
+}
 
 /* weapon's skill category name for use as generalized description of weapon;
    mostly used to shorten "you drop your <weapon>" messages when slippery
@@ -428,8 +426,9 @@ int x;
 static NEARDATA const int rwep[] = {
     ORB_OF_PERMAFROST, DWARVISH_SPEAR, ELVEN_SPEAR, SPEAR,
     ORCISH_SPEAR, JAVELIN, THROWING_AXE,
-    SHURIKEN, YA, ELVEN_ARROW, ARROW, ORCISH_ARROW,
-    CROSSBOW_BOLT, ELVEN_DAGGER, DAGGER, ORCISH_DAGGER, KNIFE,
+    SHURIKEN, YA, ELVEN_ARROW, DARK_ELVEN_ARROW, ARROW, ORCISH_ARROW,
+    CROSSBOW_BOLT, ELVEN_DAGGER, DARK_ELVEN_DAGGER,
+    DAGGER, ORCISH_DAGGER, KNIFE,
     FLINT, ROCK, LOADSTONE, LUCKSTONE, DART,
     /* BOOMERANG, */ CREAM_PIE
 };
@@ -577,6 +576,9 @@ register struct monst *mtmp;
                 propellor = (oselect(mtmp, YUMI));
                 if (!propellor)
                     propellor = (oselect(mtmp, ELVEN_BOW));
+                /* WAC added dark elven bow */
+          		  if (!propellor)
+                    propellor = (oselect(mtmp, DARK_ELVEN_BOW));
                 if (!propellor)
                     propellor = (oselect(mtmp, BOW));
                 if (!propellor)
@@ -626,6 +628,7 @@ static const NEARDATA short hwep[] = {
     TSURUGI, RUNESWORD, ORNATE_MACE, DWARVISH_MATTOCK, TWO_HANDED_SWORD,
     BATTLE_AXE, KATANA, UNICORN_HORN, CRYSKNIFE, TRIDENT, LONG_SWORD,
     ELVEN_BROADSWORD, BROADSWORD, SABER, SCIMITAR, MORNING_STAR,
+    DARK_ELVEN_SHORT_SWORD,
     ELVEN_SHORT_SWORD, DWARVISH_SHORT_SWORD, SHORT_SWORD, ORCISH_SHORT_SWORD,
     MACE, AXE, DWARVISH_SPEAR, ELVEN_SPEAR, RAZOR_WHIP, SPEAR,
     ORCISH_SPEAR, FLAIL, BULLWHIP, QUARTERSTAFF, JAVELIN, AKLYS, CLUB, PICK_AXE,
@@ -1011,7 +1014,7 @@ boolean verbose;
 }
 
 /* copy the skill level name into the given buffer */
-STATIC_OVL char *
+char *
 skill_level_name(skill, buf)
 int skill;
 char *buf;
@@ -1046,6 +1049,13 @@ char *buf;
     return buf;
 }
 
+const char *
+skill_name(skill)
+int skill;
+{
+    return P_NAME(skill);
+}
+
 /* return the # of slots required to advance the skill */
 STATIC_OVL int
 slots_required(skill)
@@ -1072,8 +1082,7 @@ int skill;
 }
 
 /* return true if this skill can be advanced */
-/*ARGSUSED*/
-STATIC_OVL boolean
+boolean
 can_advance(skill, speedy)
 int skill;
 boolean speedy;

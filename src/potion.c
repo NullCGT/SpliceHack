@@ -1,4 +1,4 @@
-/* NetHack 3.6	potion.c	$NHDT-Date: 1520797133 2018/03/11 19:38:53 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.144 $ */
+/* NetHack 3.6	potion.c	$NHDT-Date: 1543745356 2018/12/02 10:09:16 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.155 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -108,6 +108,9 @@ boolean talk;
     set_itimeout(&HStun, xtime);
 }
 
+/* Sick is overloaded with both fatal illness and food poisoning (via
+   u.usick_type bit mask), but delayed killer can only support one or
+   the other at a time.  They should become separate intrinsics.... */
 void
 make_sick(xtime, cause, talk, type)
 long xtime;
@@ -115,9 +118,10 @@ const char *cause; /* sickness cause */
 boolean talk;
 int type;
 {
+    struct kinfo *kptr;
     long old = Sick;
 
-#if 0
+#if 0   /* tell player even if hero is unconscious */
     if (Unaware)
         talk = FALSE;
 #endif
@@ -168,11 +172,20 @@ int type;
         context.botl = TRUE;
     }
 
+    kptr = find_delayed_killer(SICK);
     if (Sick) {
         exercise(A_CON, FALSE);
-        delayed_killer(SICK, KILLED_BY_AN, cause);
+        /* setting delayed_killer used to be unconditional, but that's
+           not right when make_sick(0) is called to cure food poisoning
+           if hero was also fatally ill; this is only approximate */
+        if (xtime || !old || !kptr) {
+            int kpfx = ((cause && !strcmp(cause, "#wizintrinsic"))
+                        ? KILLED_BY : KILLED_BY_AN);
+
+            delayed_killer(SICK, kpfx, cause);
+        }
     } else
-        dealloc_killer(find_delayed_killer(SICK));
+        dealloc_killer(kptr);
 }
 
 void
@@ -199,7 +212,7 @@ const char *msg;
 {
     long old = Slimed;
 
-#if 0
+#if 0   /* tell player even if hero is unconscious */
     if (Unaware)
         msg = 0;
 #endif
@@ -207,7 +220,7 @@ const char *msg;
     if ((xtime != 0L) ^ (old != 0L)) {
         context.botl = TRUE;
         if (msg)
-            pline1(msg);
+            pline("%s", msg);
     }
     if (!Slimed)
         dealloc_killer(find_delayed_killer(SLIMED));
@@ -223,7 +236,7 @@ const char *killername;
 {
     long old = Stoned;
 
-#if 0
+#if 0   /* tell player even if hero is unconscious */
     if (Unaware)
         msg = 0;
 #endif
@@ -231,7 +244,7 @@ const char *killername;
     if ((xtime != 0L) ^ (old != 0L)) {
         context.botl = TRUE;
         if (msg)
-            pline1(msg);
+            pline("%s", msg);
     }
     if (!Stoned)
         dealloc_killer(find_delayed_killer(STONED));
@@ -330,30 +343,41 @@ boolean talk;
     set_itimeout(&Blinded, xtime);
 
     if (u_could_see ^ can_see_now) { /* one or the other but not both */
-        context.botl = TRUE;
-        vision_full_recalc = 1; /* blindness just got toggled */
-        /* this vision recalculation used to be deferred until
-           moveloop(), but that made it possible for vision
-           irregularities to occur (cited case was force bolt
-           hitting adjacent potion of blindness and then a
-           secret door; hero was blinded by vapors but then
-           got the message "a door appears in the wall") */
-        vision_recalc(0);
-        if (Blind_telepat || Infravision)
-            see_monsters();
-
-        /* avoid either of the sequences
-           "Sting starts glowing", [become blind], "Sting stops quivering" or
-           "Sting starts quivering", [regain sight], "Sting stops glowing"
-           by giving "Sting is quivering" when becoming blind or
-           "Sting is glowing" when regaining sight so that the eventual
-           "stops" message matches */
-        if (warn_obj_cnt && uwep && (EWarn_of_mon & W_WEP) != 0L)
-            Sting_effects(-1);
-        /* update dknown flag for inventory picked up while blind */
-        if (can_see_now)
-            learn_unseen_invent();
+        toggle_blindness();
     }
+}
+
+/* blindness has just started or just ended--caller enforces that;
+   called by Blindf_on(), Blindf_off(), and make_blinded() */
+void
+toggle_blindness()
+{
+    boolean Stinging = (uwep && (EWarn_of_mon & W_WEP) != 0L);
+
+    /* blindness has just been toggled */
+    context.botl = TRUE; /* status conditions need update */
+    vision_full_recalc = 1; /* vision has changed */
+    /* this vision recalculation used to be deferred until moveloop(),
+       but that made it possible for vision irregularities to occur
+       (cited case was force bolt hitting an adjacent potion of blindness
+       and then a secret door; hero was blinded by vapors but then got the
+       message "a door appears in the wall" because wall spot was IN_SIGHT) */
+    vision_recalc(0);
+    if (Blind_telepat || Infravision || Stinging)
+        see_monsters(); /* also counts EWarn_of_mon monsters */
+    /*
+     * Avoid either of the sequences
+     * "Sting starts glowing", [become blind], "Sting stops quivering" or
+     * "Sting starts quivering", [regain sight], "Sting stops glowing"
+     * by giving "Sting is quivering" when becoming blind or
+     * "Sting is glowing" when regaining sight so that the eventual
+     * "stops" message matches the most recent "Sting is ..." one.
+     */
+    if (Stinging)
+        Sting_effects(-1);
+    /* update dknown flag for inventory picked up while blind */
+    if (!Blind)
+        learn_unseen_invent();
 }
 
 boolean
@@ -500,8 +524,9 @@ register struct obj *obj;
 			obj->otyp = DAGGER;
 			break;
 		case DAGGER:
-			obj->otyp = ELVEN_DAGGER;
-			break;
+        if (!rn2(2)) obj->otyp = ELVEN_DAGGER;
+        else obj->otyp = DARK_ELVEN_DAGGER;
+        break;
 		case KNIFE:
 			obj->otyp = STILETTO;
 			break;
@@ -524,12 +549,14 @@ register struct obj *obj;
 			obj->otyp = SHORT_SWORD;
 			break;
 		case ELVEN_SHORT_SWORD:
+    case DARK_ELVEN_SHORT_SWORD:
 		case SHORT_SWORD:
 			obj->otyp = DWARVISH_SHORT_SWORD;
 			break;
 		case DWARVISH_SHORT_SWORD:
-			obj->otyp = ELVEN_SHORT_SWORD;
-			break;
+        if (!rn2(2)) obj->otyp = ELVEN_SHORT_SWORD;
+        else obj->otyp = DARK_ELVEN_SHORT_SWORD;
+        break;
 		case BROADSWORD:
 			obj->otyp = ELVEN_BROADSWORD;
 			break;
@@ -543,28 +570,38 @@ register struct obj *obj;
 			obj->otyp = CLUB;
 			break;
 		case ELVEN_BOW:
+    case DARK_ELVEN_BOW:
 		case YUMI:
 		case ORCISH_BOW:
 			obj->otyp = BOW;
 			break;
 		case BOW:
-			switch (rn2(2)) {
-				case 0: obj->otyp = ELVEN_BOW; break;
-				case 2: obj->otyp = YUMI; break;
-			}
-			break;
+      switch (rn2(3)) {
+        case 0: obj->otyp = ELVEN_BOW; break;
+        case 1: obj->otyp = DARK_ELVEN_BOW; break;
+        case 2: obj->otyp = YUMI; break;
+      }
+      break;
 		case ELVEN_ARROW:
+    case DARK_ELVEN_ARROW:
 		case YA:
 		case ORCISH_ARROW:
 			obj->otyp = ARROW;
 			break;
 		case ARROW:
-			switch (rn2(2)) {
-				case 0: obj->otyp = ELVEN_ARROW; break;
-				case 1: obj->otyp = YA; break;
-			}
+      switch (rn2(3)) {
+        case 0: obj->otyp = ELVEN_ARROW; break;
+        case 1: obj->otyp = DARK_ELVEN_ARROW; break;
+        case 2: obj->otyp = YA; break;
+      }
 			break;
 		/* armour */
+    case ELVEN_RING_MAIL:
+      obj->otyp = DARK_ELVEN_RING_MAIL;
+      break;
+    case DARK_ELVEN_RING_MAIL:
+			obj->otyp = ELVEN_RING_MAIL;
+			break;
 		case ORCISH_RING_MAIL:
 			obj->otyp = RING_MAIL;
 			break;
@@ -1051,8 +1088,7 @@ register struct obj *otmp;
                the spell or with a unihorn; this is better than full healing
                in that it can restore all of them, not just half, and a
                blessed potion restores them all at once */
-            if (otmp->otyp == POT_RESTORE_ABILITY &&
-                u.ulevel < u.ulevelmax) {
+            if (otmp->otyp == POT_RESTORE_ABILITY && u.ulevel < u.ulevelmax) {
                 do {
                     pluslvl(FALSE);
                 } while (u.ulevel < u.ulevelmax && otmp->blessed);
@@ -1062,9 +1098,9 @@ register struct obj *otmp;
     case POT_HALLUCINATION:
         if (Hallucination || Halluc_resistance)
             nothing++;
-        (void) make_hallucinated(
-            itimeout_incr(HHallucination, rn1(200, 600 - 300 * bcsign(otmp))),
-            TRUE, 0L);
+        (void) make_hallucinated(itimeout_incr(HHallucination,
+                                          rn1(200, 600 - 300 * bcsign(otmp))),
+                                 TRUE, 0L);
         break;
     case POT_WATER:
         if (!otmp->blessed && !otmp->cursed) {
@@ -1075,7 +1111,7 @@ register struct obj *otmp;
         }
         unkn++;
         if (is_undead(youmonst.data) || is_demon(youmonst.data)
-            || u.ualign.type == A_CHAOTIC) {
+            || Race_if(PM_GHOUL) || u.ualign.type == A_CHAOTIC) {
             if (otmp->blessed) {
                 pline("This burns like %s!", hliquid("acid"));
                 exercise(A_CON, FALSE);
@@ -1367,16 +1403,16 @@ register struct obj *otmp;
         } else {
             pline("You are covered in a mirror-like sheen!");
             if (otmp->blessed) {
-                incr_itimeout(&HReflecting, rn1(50, 250));
+                set_itimeout(&HReflecting, rn1(50, 250));
             } else {
-                incr_itimeout(&HReflecting, rn1(10, 20));
+                set_itimeout(&HReflecting, rn1(10, 20));
             }
         }
         break;
     case POT_SPEED:
+        /* skip when mounted; heal_legs() would heal steed's legs */
         if (Wounded_legs && !otmp->cursed && !u.usteed) {
-            /* heal_legs() would heal steeds legs */
-            heal_legs();
+            heal_legs(0);
             unkn++;
             break;
         }

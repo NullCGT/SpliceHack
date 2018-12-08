@@ -665,11 +665,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         break;
     case SCROLL_CLASS:
         if (Role_if(PM_CARTOMANCER)) {
-            if (!nn && dknown) {
-                Strcpy(buf, Cartomancer_rarity(typ));
-                break;
-            } else
-                Strcpy(buf, "spell card");
+            Strcpy(buf, Cartomancer_rarity(typ));
         } else
             Strcpy(buf, "scroll");
         if (!dknown)

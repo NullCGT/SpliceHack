@@ -1303,17 +1303,18 @@ struct obj * wpn;
         "%s of Redress",  "%s of Fate",    "%s of Punition", "%s of Reckoning",
         "%s of Omens",    "%s of Truth",   "%s of Virtue",   "%s of Bloodlust",
         "%s of Disaster", "%s of Torment", "%s of the Horde","%s of the Gods",
+        "%s of Harm",
         "%s of the Peerless", "%s of the End", "%s of the Beginning",
         "%s of Protection",   "%s of the Infinite", "%s of Swift Defeat",
-        "%s of the Planes",
+        "%s of the Planes",   "%s of insanity",
         "Righteous %s",   "Mighty %s",     "Unstoppable %s", "Unlimited %s",
         "Lucky %s",       "Unlucky %s",    "Hungry %s",      "Desecrated %s",
         "Death %s",       "Dudley's %s",   "Gilgamesh's %s", "Punished %s",
-        "Chaos %s",       "Void %s",       "Hungry %s",
-        "Due Process",   "Puddingbane",    "Vladsbane",
-        "Newtsbane",      "Aggressive Negotiation",
+        "Chaos %s",       "Void %s",       "Hungry %s",      "Infinite %s",
+        "Due Process",    "Puddingbane",   "Vladsbane",      "Thorn",
+        "Newtsbane",      "Aggressive Negotiation",          "FINAL",
         "Orphan Maker",   "Monster Slayer"
-        "Astral Caller"
+        "Astral Caller"   "Danger",
     };
     if (!rn2(20)) {
         const char* name = tt_name();

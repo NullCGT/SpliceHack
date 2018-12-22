@@ -1,4 +1,4 @@
-/* NetHack 3.6	dogmove.c	$NHDT-Date: 1557094801 2019/05/05 22:20:01 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.74 $ */
+/* NetHack 3.6	dogmove.c	$NHDT-Date: 1545439152 2018/12/22 00:39:12 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.72 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -384,7 +384,7 @@ boolean devour;
 {
     register struct edog *edog = EDOG(mtmp);
     boolean poly, grow, heal, eyes, slimer, deadmimic, stunner, invis;
-    int nutrit;
+    int nutrit, res;
     long oprice;
     char objnambuf[BUFSZ];
     boolean vampiric = mtmp->data->mlet == S_VAMPIRE;
@@ -434,6 +434,11 @@ boolean devour;
         newsym(x, y);
         newsym(mtmp->mx, mtmp->my);
     }
+    if (mtmp->data == &mons[PM_KILLER_BEE]
+        && obj->otyp == LUMP_OF_ROYAL_JELLY
+        && (res = bee_eat_jelly(mtmp, obj)) >= 0)
+        /* bypass most of dog_eat(), including apport update */
+        return (res + 1); /* 1 -> 2, 0 -> 1; -1, keep going */
 
     /* food items are eaten one at a time; entire stack for other stuff */
     if (obj->quan > 1L && obj->oclass == FOOD_CLASS)

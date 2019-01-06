@@ -4306,16 +4306,18 @@ zhitu(int type, int nd, const char *fltxt, xchar sx, xchar sy)
             dam = resist_reduce(d(nd, 6), FIRE_RES);
         }
         burn_away_slime();
-        if (burnarmor(&g.youmonst)) { /* "body hit" */
-            if (!rn2(3))
-                destroy_item(POTION_CLASS, AD_FIRE);
-            if (!rn2(3))
-                destroy_item(SCROLL_CLASS, AD_FIRE);
-            if (!rn2(5))
-                destroy_item(SPBOOK_CLASS, AD_FIRE);
-            if (!rn2(3))
-                ignite_items(g.invent);
-            destroy_item(FOOD_CLASS, AD_FIRE);
+        if (!Reflecting) {
+            if (burnarmor(&g.youmonst)) { /* "body hit" */
+                if (!rn2(3))
+                    destroy_item(POTION_CLASS, AD_FIRE);
+                if (!rn2(3))
+                    destroy_item(SCROLL_CLASS, AD_FIRE);
+                if (!rn2(5))
+                    destroy_item(SPBOOK_CLASS, AD_FIRE);
+                if (!rn2(3))
+                    ignite_items(g.invent);
+                destroy_item(FOOD_CLASS, AD_FIRE);
+            }
         }
         break;
     case ZT_COLD:
@@ -4327,8 +4329,10 @@ zhitu(int type, int nd, const char *fltxt, xchar sx, xchar sy)
         } else {
             dam = resist_reduce(d(nd, 6), COLD_RES);
         }
-        if (!rn2(3))
-            destroy_item(POTION_CLASS, AD_COLD);
+        if (!Reflecting) {
+            if (!rn2(3))
+                destroy_item(POTION_CLASS, AD_COLD);
+        }
         break;
     case ZT_SLEEP:
         if (how_resistant(SLEEP_RES) == 100) {
@@ -4347,10 +4351,10 @@ zhitu(int type, int nd, const char *fltxt, xchar sx, xchar sy)
                 You("are not disintegrated.");
                 monstseesu(M_SEEN_DISINT);
                 break;
-            } else if (Reflecting) {
-                You("aren't disintegrated, but that hurts!");
-                dam = resist_reduce(d(nd, 6), DISINT_RES);
-                break;
+	    } else if (Reflecting) {
+		You("aren't disintegrated, but that hurts!");
+		dam = resist_reduce(d(6, 6), DISINT_RES);
+		break;
             } else if (!Reflecting && (how_resistant(DISINT_RES) > 0)) {
                 You("aren't disintegrated, but that really hurts!");
                 dam = resist_reduce(d(12, 6), DISINT_RES);
@@ -4368,18 +4372,43 @@ zhitu(int type, int nd, const char *fltxt, xchar sx, xchar sy)
             }
             /* no shield or suit, you're dead; wipe out cloak
                and/or shirt in case of life-saving or bones */
-            if (uarmc)
-                (void) destroy_arm(uarmc);
-            if (uarmu)
-                (void) destroy_arm(uarmu);
-        } else if (nonliving(g.youmonst.data) || is_demon(g.youmonst.data)) {
+            if (!Reflecting) {
+                if (uarmc)
+                    (void) destroy_arm(uarmc);
+                if (uarmu)
+                    (void) destroy_arm(uarmu);
+            }
+        } else if (nonliving(g.youmonst.data) || is_demon(g.youmonst.data)
+            || resists_death(g.youmonst.data)) {
             shieldeff(sx, sy);
             You("seem unaffected.");
             break;
         } else if (Antimagic) {
-            shieldeff(sx, sy);
-            monstseesu(M_SEEN_MAGR);
-            You("aren't affected.");
+            /* not as much damage as 'touch of death'
+             * but this will still leave a mark */
+            dam = d(4, 6);
+            if (Antimagic && Half_spell_damage) {
+                shieldeff(sx, sy);
+                monstseesu(M_SEEN_MAGR);
+                dam /= 2;
+            }
+            if (Reflecting) {
+                You("feel a little drained...");
+                u.uhpmax -= (dam / 3 + rn2(5)) / 2;
+            } else {
+                You("feel drained...");
+                u.uhpmax -= dam / 3 + rn2(5);
+            }
+            break;
+        } else if (Reflecting && !Antimagic) {
+            dam = d(4, 6);
+            if (Reflecting && Half_spell_damage) {
+                shieldeff(sx, sy);
+                monstseesu(M_SEEN_MAGR);
+                dam /= 2;
+            }
+            You("feel drained...");
+            u.uhpmax -= dam / 3 + rn2(5);
             break;
         }
         g.killer.format = KILLED_BY_AN;
@@ -4398,13 +4427,17 @@ zhitu(int type, int nd, const char *fltxt, xchar sx, xchar sy)
             dam = resist_reduce(d(nd, 6), SHOCK_RES);
             exercise(A_CON, FALSE);
         }
-        if (!rn2(3))
-            destroy_item(WAND_CLASS, AD_ELEC);
-        if (!rn2(3))
-            destroy_item(RING_CLASS, AD_ELEC);
+        if (!Reflecting) {
+            if (!rn2(3))
+                destroy_item(WAND_CLASS, AD_ELEC);
+            if (!rn2(3))
+                destroy_item(RING_CLASS, AD_ELEC);
+        }
         break;
     case ZT_POISON_GAS:
-        poisoned("blast", A_DEX, "poisoned blast", 15, FALSE, 0);
+        if (!Reflecting) {
+            poisoned("blast", A_DEX, "poisoned blast", 15, FALSE, 0);
+        }
         break;
     case ZT_ACID:
         if (Acid_resistance) {
@@ -4417,12 +4450,14 @@ zhitu(int type, int nd, const char *fltxt, xchar sx, xchar sy)
             exercise(A_STR, FALSE);
         }
         /* using two weapons at once makes both of them more vulnerable */
-        if (!rn2(u.twoweap ? 3 : 6))
-            acid_damage(uwep);
-        if (u.twoweap && !rn2(3))
-            acid_damage(uswapwep);
-        if (!rn2(6))
-            erode_armor(&g.youmonst, ERODE_CORRODE);
+        if (!Reflecting) {
+            if (!rn2(u.twoweap ? 3 : 6))
+                acid_damage(uwep);
+            if (u.twoweap && !rn2(3))
+                acid_damage(uswapwep);
+            if (!rn2(6))
+                erode_armor(&g.youmonst, ERODE_CORRODE);
+        }
         break;
     case ZT_SONIC:
         if (Sonic_resistance) {
@@ -4770,17 +4805,18 @@ dobuzz(int type, int nd, xchar sx, xchar sy, int dx, int dy,
                 pline("%s hits you!", The(fltxt));
                 if (Reflecting) {
                     if (!Blind) {
-                        (void) ureflects("But %s reflects from your %s!",
+                        (void) ureflects("Some of %s reflects from your %s!",
                                          "it");
-                    } else
-                        pline("For some reason you are not affected.");
-                    monstseesu(M_SEEN_REFL);
+                    } else {
+                        pline("You appear to only be partially affected.");
+                        monstseesu(M_SEEN_REFL);
+                    }
                     dx = -dx;
                     dy = -dy;
                     shieldeff(sx, sy);
-                } else {
-                    zhitu(type, nd, fltxt, sx, sy);
+                    nd = (nd + 1) / 2;
                 }
+                zhitu(type, nd, fltxt, sx, sy);
             } else if (!Blind) {
                 pline("%s whizzes by you!", The(fltxt));
             } else if (abstype == ZT_LIGHTNING) {

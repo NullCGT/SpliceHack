@@ -552,7 +552,7 @@ unsigned corpseflags;
         return obj;
     case PM_BLOOD_PUDDING:
         obj = mksobj_at(POT_BLOOD, x, y, TRUE, FALSE);
-        obj->quan = (long) (rn2(3));
+        obj->quan = (long) (rnd(3));
         free_mname(mtmp);
         return obj;
     default_1:

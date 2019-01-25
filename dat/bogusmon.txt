@@ -16,7 +16,7 @@
 # Junenethack 2018
 invader from the ivory tower
 improved tin opener
-baseball-cap toting elemental
+baseball-cap-toting elemental
 
 # M.U.G.E.N.
 wayward hitbox
@@ -29,11 +29,23 @@ palette-swapped doppelganger
 =Nyarlathotep
 =IT
 
+# Slex
+novice light wall
+moldy potato
+
+# SSBM
+telekinetic swordsman
+fun-canceller
+happy feet
+
+# Dwarf Fortress
+flaming dwarf
+tantrum-throwing dwarf
+drunken cat
+
 # SLASH'EM
 shotgun-wielding shopkeeper
-gug
 bunny
-deep one
 bat from Hell
 shoggoth
 
@@ -150,6 +162,16 @@ scintillating serpent
 devourer
 mad cow
 ascii art
+railgun enthusiast
+man in the mirror
+beast inside
+sensual cabbage
+sleep stealer
+funky frog
+wonky whale
+medium giant
+|ghost of Christmas past
+mistake
 
 # Quendor (Zork, &c.)
 grue
@@ -203,6 +225,7 @@ were-rabbit
 # Discworld
 Luggage
 vampiric watermelon
+Librarian
 
 # Lord of the Rings
 Ent
@@ -263,6 +286,9 @@ boomer
 
 # Dr. Who ("Exterminate!")
 Dalek
+
+# Unfortunate...
+VFD
 
 # HGttG
 microscopic space fleet
@@ -393,6 +419,7 @@ wand of wishing
 
 # DnD monster
 gazebo
+stench kow
 
 # SciFi elements
 gray goo
@@ -455,6 +482,7 @@ MissingNo
 -M
 =Test0
 corrupted cream pie
+bad egg
 
 # South Park
 manbearpig
@@ -632,6 +660,7 @@ stain vortex
 scone giant
 umbrella hulk
 vampire mace
+velocirapper
 verbal jabberwock
 waiter elemental
 water lemon

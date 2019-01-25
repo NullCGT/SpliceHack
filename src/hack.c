@@ -2643,7 +2643,7 @@ void interesting_room()
         an(art[rn2(SIZE(art))]), u_gname());
         break;
     case 2:
-        pline("%s on a wall of this room depict a large number of %s.",
+        pline("%s on a wall of this room depicts a large number of %s.",
             An(art[rn2(SIZE(art))]), makeplural(carvemon));
         break;
     case 3:

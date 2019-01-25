@@ -4004,7 +4004,7 @@ struct permonst _mons2[] = {
           NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(WT_DRAGON, 500, MS_ROAR, MZ_HUGE), 0, 0,
         M1_ANIMAL | M1_THICK_HIDE | M1_NOHANDS | M1_CARNIVORE,
-        M2_STRONG | M2_HOSTILE, 0, 0, 11, CLR_WHITE),
+        M2_STRONG | M2_HOSTILE, 0, 0, 11, CLR_RED),
 
     /*
      * dummy monster needed for visual interface

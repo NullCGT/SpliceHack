@@ -3158,6 +3158,8 @@ warp_material(obj,by_you)
 struct obj* obj;
 boolean by_you;
 {
+    if (obj->oartifact)
+        return FALSE;
     int origmat = obj->material;
     const struct icp* materials =  warp_materials;
 

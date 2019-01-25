@@ -1594,7 +1594,7 @@ int x, y;
 
 /* return TRUE if the corpse has special timing */
 #define special_corpse(num)                                                 \
-    (((num) == PM_LIZARD) || ((num) == PM_LICHEN || ((num) == PM_LEGENDARY_LICHEN) \
+    (((num) == PM_LIZARD) || ((num) == PM_LICHEN) || ((num) == PM_LEGENDARY_LICHEN) \
      || (is_rider(&mons[num])) || (mons[num].mlet == S_TROLL))
 
 /*

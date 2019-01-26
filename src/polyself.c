@@ -1885,6 +1885,10 @@ polysense()
     case PM_PURPLE_WORM:
         warnidx = PM_SHRIEKER;
         break;
+    case PM_BAOBHAN_SITH:
+        context.warntype.polyd = MH_HUMAN;
+        HWarn_of_mon |= FROMRACE;
+        return;
     case PM_VAMPIRE:
     case PM_VAMPIRE_LORD:
         context.warntype.polyd = MH_HUMAN | MH_ELF;

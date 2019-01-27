@@ -197,6 +197,10 @@ const struct symdef defsyms[MAXPCHARS] = {
 /*50*/ { '^', "rust trap", C(CLR_BLUE) },            /* trap */
        { '^', "fire trap", C(CLR_ORANGE) },          /* trap */
        { '^', "buzzsaw trap", C(CLR_CYAN) },         /* trap */
+       { '^', "whirlwind trap", C(CLR_WHITE) },      /* trap */
+       { '^', "glyph of neutrality", C(CLR_GRAY) },  /* trap */
+       { '^', "glyph of law", C(CLR_YELLOW) },       /* trap */
+       { '^', "glyph of chaos", C(CLR_RED) },        /* trap */
        { '^', "pit", C(CLR_BLACK) },                 /* trap */
        { '^', "spiked pit", C(CLR_BLACK) },          /* trap */
        { '^', "hole", C(CLR_BROWN) },                /* trap */

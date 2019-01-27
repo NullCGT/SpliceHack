@@ -18,6 +18,7 @@ STATIC_DCL void FDECL(launch_drop_spot, (struct obj *, XCHAR_P, XCHAR_P));
 STATIC_DCL int FDECL(mkroll_launch, (struct trap *, XCHAR_P, XCHAR_P,
                                      SHORT_P, long));
 STATIC_DCL boolean FDECL(isclearpath, (coord *, int, SCHAR_P, SCHAR_P));
+STATIC_DCL void FDECL(doglyphtrap, (struct trap *, const char*));
 STATIC_DCL void FDECL(dofiretrap, (struct obj *));
 STATIC_DCL void NDECL(domagictrap);
 STATIC_DCL boolean FDECL(emergency_disrobe, (boolean *));
@@ -26,6 +27,8 @@ STATIC_DCL void FDECL(move_into_trap, (struct trap *));
 STATIC_DCL int FDECL(try_disarm, (struct trap *, BOOLEAN_P));
 STATIC_DCL void FDECL(reward_untrap, (struct trap *, struct monst *));
 STATIC_DCL int FDECL(disarm_holdingtrap, (struct trap *));
+STATIC_DCL int FDECL(disarm_whirlwind, (struct trap *));
+STATIC_DCL int FDECL(disarm_glyph, (struct trap *));
 STATIC_DCL int FDECL(disarm_landmine, (struct trap *));
 STATIC_DCL int FDECL(disarm_squeaky_board, (struct trap *));
 STATIC_DCL int FDECL(disarm_shooting_trap, (struct trap *, int));
@@ -793,7 +796,14 @@ xchar ttype;
     case ROCKTRAP:
         /* can hit anything. Even noncorporeal monsters might get a blessed
          * projectile. */
+    case GLYPH_OF_NEUTRALITY:
+    case GLYPH_OF_LAW:
+    case GLYPH_OF_CHAOS:
         return FALSE;
+    case WHIRLWIND_TRAP:
+        if (amorphous(pm) || is_whirly(pm) || unsolid(pm))
+            return 1;
+        return 0;
     case BEAR_TRAP:
         if (pm->msize <= MZ_SMALL || amorphous(pm) || is_whirly(pm)
             || unsolid(pm))
@@ -1327,6 +1337,28 @@ unsigned trflags;
         }
         break;
 
+    case WHIRLWIND_TRAP:
+        seetrap(trap);
+        pline("Gusts of wind issue from hidden air vents in the floor!");
+        hurtle(rn1(3,-1), rn1(3,-1), d(3,3), TRUE);
+        break;
+
+    case GLYPH_OF_NEUTRALITY:
+        if (u.ualign.type == A_NEUTRAL)
+            break;
+        doglyphtrap(trap, "gray");
+        break;
+    case GLYPH_OF_LAW:
+        if (u.ualign.type == A_LAWFUL)
+            break;
+        doglyphtrap(trap, "yellow");
+        break;
+    case GLYPH_OF_CHAOS:
+        if (u.ualign.type == A_CHAOTIC)
+            break;
+        doglyphtrap(trap, "red");
+        break;
+
     case PIT:
     case SPIKED_PIT:
         /* KMH -- You can't escape the Sokoban level traps */
@@ -1788,6 +1820,27 @@ struct obj *otmp;
     case BUZZSAW_TRAP:
         trapkilled = thitm(0, steed, (struct obj *) 0, d(4, 6), FALSE);
         steedhit = TRUE;
+        break;
+    case WHIRLWIND_TRAP:
+        seetrap(trap);
+        pline("Gusts of wind issue from hidden air vents in the floor beneath %s!",
+            mon_nam(steed));
+        hurtle(rn1(3,-1), rn1(3,-1), d(3,3), TRUE);
+        break;
+    case GLYPH_OF_NEUTRALITY:
+        if (steed->data->maligntyp == A_NEUTRAL)
+            break;
+        doglyphtrap(trap, "gray");
+        break;
+    case GLYPH_OF_LAW:
+        if (steed->data->maligntyp == A_LAWFUL)
+            break;
+        doglyphtrap(trap, "yellow");
+        break;
+    case GLYPH_OF_CHAOS:
+        if (steed->data->maligntyp == A_CHAOTIC)
+            break;
+        doglyphtrap(trap, "gray");
         break;
     case PIT:
     case SPIKED_PIT:
@@ -2616,6 +2669,41 @@ register struct monst *mtmp;
                 seetrap(trap);
             }
             break;
+        case WHIRLWIND_TRAP:
+            if (amorphous(mptr) || is_whirly(mptr) || unsolid(mptr))
+                break;
+            if (in_sight)
+                pline("Wind shoots from hidden vents and blasts %s!",
+                    mon_nam(mtmp));
+            mhurtle(mtmp, rn1(3,-1), rn1(3,-1), d(3,3));
+            if (see_it) {
+                seetrap(trap);
+            }
+            break;
+        case GLYPH_OF_NEUTRALITY:
+            if (mptr->maligntyp == A_NEUTRAL)
+                break;
+            if (in_sight)
+                pline("A rune beneath %s glows gray!", mon_nam(mtmp));
+            explode(mtmp->mx, mtmp->my, 15, 10 + rn2(15), TOOL_CLASS, EXPL_MAGICAL);
+            deltrap(trap);
+            break;
+        case GLYPH_OF_LAW:
+            if (mptr->maligntyp == A_LAWFUL)
+                break;
+            if (in_sight)
+                pline("A rune beneath %s glows yellow!", mon_nam(mtmp));
+            explode(mtmp->mx, mtmp->my, 15, 10 + rn2(15), TOOL_CLASS, EXPL_MAGICAL);
+            deltrap(trap);
+            break;
+        case GLYPH_OF_CHAOS:
+            if (mptr->maligntyp == A_CHAOTIC)
+                break;
+            if (in_sight)
+                pline("A rune beneath %s glows red!", mon_nam(mtmp));
+            explode(mtmp->mx, mtmp->my, 15, 10 + rn2(15), TOOL_CLASS, EXPL_MAGICAL);
+            deltrap(trap);
+            break;
         case PIT:
         case SPIKED_PIT:
             fallverb = "falls";
@@ -3279,6 +3367,19 @@ climb_pit()
                       ? "You've fallen, and you can't get up."
                       : "You are still in a pit.");
     }
+}
+
+STATIC_OVL void
+doglyphtrap(trap, clr)
+struct trap *trap;
+const char *clr;
+{
+    seetrap(trap);
+    if (!Blind)
+        pline("A mystic rune on the floor beneath you glows %s!", clr);
+    pline("A massive explosion bursts forth around you!");
+    explode(u.ux, u.uy, 15, 10 + rn2(15), TOOL_CLASS, EXPL_MAGICAL);
+    deltrap(trap);
 }
 
 STATIC_OVL void
@@ -4350,6 +4451,48 @@ struct trap *ttmp;
 }
 
 STATIC_OVL int
+disarm_whirlwind(ttmp)
+struct trap *ttmp;
+{
+    int fails = try_disarm(ttmp, FALSE);
+
+    if (fails < 2)
+        return fails;
+    You("disarm %s whirlwind trap.", the_your[ttmp->madeby_u]);
+    deltrap(ttmp);
+    newsym(u.ux + u.dx, u.uy + u.dy);
+    return 1;
+}
+
+STATIC_OVL int
+disarm_glyph(ttmp)
+struct trap *ttmp;
+{
+    int fails = try_disarm(ttmp, FALSE);
+    if (fails < 2)
+        return fails;
+    if (u.uen > 20 && !ttmp->madeby_u
+          && ynq("Attempt to change glyph type?") == 'y') {
+        u.uen -= 20;
+        context.botl = 1;
+        if (u.ualign.type == A_NEUTRAL)
+            ttmp->ttyp = GLYPH_OF_NEUTRALITY;
+        else if (u.ualign.type == A_LAWFUL)
+            ttmp->ttyp = GLYPH_OF_LAW;
+        else
+            ttmp->ttyp = GLYPH_OF_CHAOS;
+        ttmp->madeby_u = 1;
+        You("alter the glyph so it corresponds to your own alignment.");
+    } else {
+        You("disarm %s aligned warding glyph.", the_your[ttmp->madeby_u]);
+        deltrap(ttmp);
+    }
+    newsym(u.ux + u.dx, u.uy + u.dy);
+    return 1;
+
+}
+
+STATIC_OVL int
 disarm_landmine(ttmp) /* Helge Hafting */
 struct trap *ttmp;
 {
@@ -4635,6 +4778,16 @@ boolean force;
                 case BEAR_TRAP:
                 case WEB:
                     return disarm_holdingtrap(ttmp);
+                case WHIRLWIND_TRAP:
+                    return disarm_whirlwind(ttmp);
+                case GLYPH_OF_NEUTRALITY:
+                case GLYPH_OF_LAW:
+                case GLYPH_OF_CHAOS:
+                    if (acurr(A_INT) < 16) {
+                        You("are not knowledgeable enough about magic to disarm this glyph.");
+                        return 0;
+                    }
+                    return disarm_glyph(ttmp);
                 case LANDMINE:
                     return disarm_landmine(ttmp);
                 case SQKY_BOARD:

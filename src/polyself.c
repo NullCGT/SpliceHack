@@ -1265,6 +1265,11 @@ dospinweb()
             deltrap(ttmp);
             newsym(u.ux, u.uy);
             return 1;
+        case WHIRLWIND_TRAP:
+            You("block the air vents with webbing.");
+            deltrap(ttmp);
+            newsym(u.ux, u.uy);
+            return 1;
         case ROLLING_BOULDER_TRAP:
             You("spin a web, jamming the trigger.");
             deltrap(ttmp);

@@ -230,6 +230,10 @@ start: RogueEpyx
 	S_rust_trap: \x04
 	S_fire_trap: \x04
 	S_buzzsaw_trap: \x04
+	S_whirlwind_trap: \x04
+	S_glyph_of_neutrality: \x04
+	S_glyph_of_law: \x04
+	S_glyph_of_chaos: \x04
 	S_pit: \x04
 	S_spiked_pit: \x04
 	S_hole: \x04
@@ -352,6 +356,10 @@ start: NHAccess
 	S_rust_trap: \094
 	S_fire_trap: \094
 	S_buzzsaw_trap: \094
+	S_whirlwind_trap: \094
+	S_glyph_of_neutrality: \094
+	S_glyph_of_law: \094
+	S_glyph_of_chaos: \094
 	S_pit: \094
 	S_spiked_pit: \094
 	S_hole: \094
@@ -419,6 +427,10 @@ start: Blank
         S_boulder: \032
         S_brcorn: \032
 				S_buzzsaw_trap: \032
+				S_whirlwind_trap: \032
+				S_glyph_of_neutrality: \032
+				S_glyph_of_law: \032
+				S_glyph_of_chaos: \032
         S_centaur: \032
         S_chain: \032
         S_cloud: \032

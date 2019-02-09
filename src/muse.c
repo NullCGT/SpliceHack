@@ -1286,7 +1286,7 @@ struct monst *mtmp;
             m.has_offense = MUSE_WAN_STRIKING;
         }
         nomore(MUSE_WAN_WINDSTORM);
-        if (obj->otyp == WAN_WINDSTORM && obj->spe > 0) {
+        if (obj->otyp == WAN_WINDSTORM && obj->spe > 0 && !rn2(3)) {
             m.offensive = obj;
             m.has_offense = MUSE_WAN_WINDSTORM;
         }

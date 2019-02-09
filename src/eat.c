@@ -2220,9 +2220,14 @@ struct obj *otmp;
         }
         case AMULET_OF_NAUSEA: {
             make_vomiting((long) rn1(15, 10), FALSE);
+            break;
         }
         case AMULET_OF_DANGER: {
-            You("feel more dangerous!");
+            if (Hallucination)
+                pline("Let\'s get dangerous...");
+            else
+                You("feel more dangerous!");
+            break;
         }
         case RIN_SUSTAIN_ABILITY:
         case AMULET_OF_LIFE_SAVING:

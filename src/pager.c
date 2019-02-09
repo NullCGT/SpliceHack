@@ -144,7 +144,8 @@ char *outbuf;
             Strcat(outbuf, something);
         } else if (is_hider(mon->data)) {
             Sprintf(eos(outbuf), " on the %s",
-                    (is_flyer(mon->data) || mon->data->mlet == S_PIERCER)
+                    (is_flyer(mon->data) || mon->data->mlet == S_PIERCER
+                      || mon->data == &mons[PM_DROP_BEAR])
                        ? "ceiling"
                        : surface(x, y)); /* trapper */
         } else {

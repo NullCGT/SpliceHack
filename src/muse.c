@@ -2118,13 +2118,16 @@ struct monst *mtmp;
         if (!enexto(&cc, mtmp->mx, mtmp->my, pm))
             return 0;
         m_useup(mtmp, otmp);
-        mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
-        if (otmp->blessed)
+        if (otmp->blessed) {
+            mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
             mon->mpeaceful = 0;
-        else if (otmp->cursed)
+        } else if (otmp->cursed) {
+            mon = makemon(pm, cc.x, cc.y, MM_EDOG);
             initedog(mon);
-        else
+        } else {
+            mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
             mon->mpeaceful = 1;
+        }
         set_malign(mon);
         return 2;
     }

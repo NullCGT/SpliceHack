@@ -1633,6 +1633,9 @@ STATIC_OVL int
 rottenfood(obj)
 struct obj *obj;
 {
+    if (Race_if(PM_GHOUL) || is_ghoul(youmonst.data)) {
+        return 0;
+    }
     pline("Blecch!  Rotten %s!", foodword(obj));
     if (!rn2(4)) {
         if (Hallucination)

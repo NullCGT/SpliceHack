@@ -95,8 +95,10 @@ int how;
 boolean incl_helpless;
 {
     static NEARDATA const char *const killed_by_prefix[] = {
-        /* DIED, MURDERED, CHOKING, POISONING, STARVING, */
-        "killed by ", "killed by ", "choked on ", "poisoned by ", "died of ",
+        /* DIED, MURDERED, TREX, CHOKING, */
+        "killed by ", "killed by ", "tyranosaurus rekt by", "choked on ",
+        /* POISONING, STARVING, */
+        "poisoned by ", "died of ",
         /* DROWNING, BURNING, DISSOLVED, CRUSHING, */
         "drowned in ", "burned by ", "dissolved in ", "crushed to death by ",
         /* STONING, TURNED_SLIME, GENOCIDED, */

@@ -2861,8 +2861,9 @@ int n;
         u.uhp -= n;
         if (u.uhp < 1) {
             if (mtmp->data == &mons[PM_T_REX])
-                You("get tyranosaurus rekt by %s.", mon_nam(mtmp));
-            done_in_by(mtmp, MURDERED);
+                done_in_by(mtmp, TREX);
+            else
+                done_in_by(mtmp, MURDERED);
         }
     }
 }

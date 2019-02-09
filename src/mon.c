@@ -378,12 +378,6 @@ unsigned corpseflags;
         obj = mkcorpstat(CORPSE, mtmp, &mons[num], x, y, corpstatflags);
         obj->age -= 100; /* this is an *OLD* corpse */
         break;
-    case PM_GHOUL:
-    case PM_GHAST:
-        corpstatflags |= CORPSTAT_INIT;
-        obj = mkcorpstat(CORPSE, mtmp, &mons[mndx], x, y, corpstatflags);
-        obj->age -= 100; /* this is an *OLD* corpse */
-        break;
     case PM_SILVER_GOLEM:
         num = d(1, 2);
         while (num--) {

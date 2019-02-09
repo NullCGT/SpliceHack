@@ -1265,6 +1265,11 @@ dospinweb()
             deltrap(ttmp);
             newsym(u.ux, u.uy);
             return 1;
+        case WHIRLWIND_TRAP:
+            You("block the air vents with webbing.");
+            deltrap(ttmp);
+            newsym(u.ux, u.uy);
+            return 1;
         case ROLLING_BOULDER_TRAP:
             You("spin a web, jamming the trigger.");
             deltrap(ttmp);
@@ -1885,6 +1890,10 @@ polysense()
     case PM_PURPLE_WORM:
         warnidx = PM_SHRIEKER;
         break;
+    case PM_BAOBHAN_SITH:
+        context.warntype.polyd = MH_HUMAN;
+        HWarn_of_mon |= FROMRACE;
+        return;
     case PM_VAMPIRE:
     case PM_VAMPIRE_LORD:
         context.warntype.polyd = MH_HUMAN | MH_ELF;

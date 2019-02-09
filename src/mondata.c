@@ -319,7 +319,7 @@ int material;
     if (material == SILVER) {
         if (ptr->mlet == S_IMP) {
             /* impish creatures that aren't actually demonic */
-            if (ptr == &mons[PM_TENGU] || ptr == &mons[PM_LEPRECHAUN])
+            if (ptr == &mons[PM_TENGU] || ptr == &mons[PM_RED_CAP])
                 return FALSE;
         }
         return (is_were(ptr) || ptr->mlet == S_VAMPIRE
@@ -329,7 +329,7 @@ int material;
     else if (material == IRON) {
         /* cold iron: fairy/fae creatures hate it */
         return (is_elf(ptr) || ptr->mlet == S_NYMPH
-                || ptr->mlet == S_IMP);
+                || ptr->mlet == S_IMP || ptr == &mons[PM_BAOBHAN_SITH]);
     }
     else if (material == COPPER) {
         /* copper has antibacterial and antifungal properties,

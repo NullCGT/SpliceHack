@@ -198,7 +198,8 @@ struct obj {
 #define is_multigen(otmp)                           \
     (otmp->oclass == WEAPON_CLASS                   \
      && objects[otmp->otyp].oc_skill >= -P_SHURIKEN \
-     && objects[otmp->otyp].oc_skill <= -P_BOW)
+     && objects[otmp->otyp].oc_skill <= -P_BOW      \
+     && otmp->otyp != WINDMILL_BLADE)
 #define is_poisonable(otmp)                         \
     (otmp->oclass == WEAPON_CLASS                   \
      && objects[otmp->otyp].oc_skill >= -P_SHURIKEN \

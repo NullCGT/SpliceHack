@@ -1426,8 +1426,8 @@ coord *tm;
                 if (lvl < 5)
                     kind = NO_TRAP;
                 break;
-            case BUZZSAW_TRAP:
-                if (lvl < 15)
+            case WHIRLWIND_TRAP:
+                if (lvl < 5)
                     kind = NO_TRAP;
                 break;
             case LANDMINE:
@@ -1441,6 +1441,16 @@ coord *tm;
             case STATUE_TRAP:
             case POLY_TRAP:
                 if (lvl < 8)
+                    kind = NO_TRAP;
+                break;
+            case BUZZSAW_TRAP:
+                if (lvl < 15)
+                    kind = NO_TRAP;
+                break;
+            case GLYPH_OF_NEUTRALITY:
+            case GLYPH_OF_LAW:
+            case GLYPH_OF_CHAOS:
+                if (lvl < 20)
                     kind = NO_TRAP;
                 break;
             case FIRE_TRAP:

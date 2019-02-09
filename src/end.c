@@ -498,7 +498,12 @@ int how;
     Strcpy(killer.name, buf);
     if (mptr->mlet == S_WRAITH)
         u.ugrave_arise = PM_WRAITH;
-    else if (mptr->mlet == S_MUMMY && urace.mummynum != NON_PM)
+    else if (mptr == &mons[PM_BAOBHAN_SITH]) {
+        if (flags.female == 1)
+            u.ugrave_arise = PM_BAOBHAN_SITH;
+        else
+            u.ugrave_arise = NON_PM;
+    } else if (mptr->mlet == S_MUMMY && urace.mummynum != NON_PM)
         u.ugrave_arise = urace.mummynum;
     else if (mptr->mlet == S_VAMPIRE && Race_if(PM_HUMAN))
         u.ugrave_arise = PM_VAMPIRE;

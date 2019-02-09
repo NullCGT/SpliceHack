@@ -2871,6 +2871,9 @@ int rtype;
     case MASKSHOP:
         str = "mask shop";
         break;
+    case JUNKSHOP:
+        str = "junk shop";
+        break;
     case FODDERSHOP:
         str = "health food store";
         break;

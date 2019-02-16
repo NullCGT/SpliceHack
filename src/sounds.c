@@ -392,7 +392,6 @@ register struct monst *mtmp;
         break;
     case MS_ROAR:
         ret = "roar";
-        aggravate();
         break;
     case MS_BUZZ:
         ret = "buzz";
@@ -437,6 +436,8 @@ register struct monst *mtmp;
     if (mtmp->msleeping || !mtmp->mcanmove || !mtmp->data->msound)
         return;
 
+    if (mtmp->data->msound == MS_ROAR)
+        aggravate();
     /* presumably nearness and soundok checks have already been made */
     if (Hallucination)
         growl_verb = h_sounds[rn2(SIZE(h_sounds))];

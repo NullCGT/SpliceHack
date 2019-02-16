@@ -18,6 +18,10 @@ invader from the ivory tower
 improved tin opener
 baseball-cap-toting elemental
 
+# Anime
+catgirl
+superpowered butler
+
 # M.U.G.E.N.
 wayward hitbox
 null-tier character
@@ -33,10 +37,20 @@ palette-swapped doppelganger
 novice light wall
 moldy potato
 
+# Bioshock
+splicer
+
+# Umineko
+logic error
+_golden witch
+red truth
+
 # SSBM
 telekinetic swordsman
 fun-canceller
 happy feet
+wavedashing weirdo
+wobbler
 
 # Dwarf Fortress
 flaming dwarf
@@ -62,6 +76,7 @@ questionable addition
 poorly balanced monster
 obscure reference
 clunky mechanic
+incongruous reference
 absurdly powerful mystic scarab
 
 # cataclysm
@@ -172,6 +187,22 @@ wonky whale
 medium giant
 |ghost of Christmas past
 mistake
+wumbo warrior
+banger
+dumpster diving panda pounder
+_witch of the Westmereland
+obviously evil uncle
+pop culture reference
+wiggly one
+wonky transistor
+fanged bagel
+disapproving parent
+raisin ninja
+illusiory
+armorlandia
+
+# ;)
+cuddly cutie
 
 # Quendor (Zork, &c.)
 grue
@@ -395,6 +426,8 @@ bohrbug
 mandelbug
 schroedinbug
 heisenbug
+junethack bug
+dune bug
 
 # DooM
 cacodemon

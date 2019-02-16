@@ -438,7 +438,7 @@ register struct monst *mtmp;
 
     if ((is_displaced(mtmp->data) || has_displacement(mtmp))
         && !u.uswallow && !rn2(4) && !See_invisible && !sensemon(mtmp)) {
-        You("the image of %s shimmers and vanishes!", mon_nam(mtmp));
+        pline("The image of %s shimmers and vanishes!", mon_nam(mtmp));
         return FALSE;
     }
     if (Upolyd)

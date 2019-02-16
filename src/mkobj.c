@@ -1,4 +1,4 @@
-/* NetHack 3.6	mkobj.c	$NHDT-Date: 1542798624 2018/11/21 11:10:24 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.136 $ */
+/* NetHack 3.6	mkobj.c	$NHDT-Date: 1548978605 2019/01/31 23:50:05 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.142 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -8,6 +8,7 @@
 #include "hack.h"
 
 STATIC_DCL void FDECL(mkbox_cnts, (struct obj *));
+STATIC_DCL unsigned FDECL(nextoid, (struct obj *, struct obj *));
 STATIC_DCL void FDECL(maybe_adjust_light, (struct obj *, int));
 STATIC_DCL void FDECL(obj_timer_checks, (struct obj *,
                                          XCHAR_P, XCHAR_P, int));
@@ -74,7 +75,7 @@ newoextra()
 {
     struct oextra *oextra;
 
-    oextra = (struct oextra *) alloc(sizeof(struct oextra));
+    oextra = (struct oextra *) alloc(sizeof (struct oextra));
     oextra->oname = 0;
     oextra->omonst = 0;
     oextra->omid = 0;
@@ -403,7 +404,7 @@ struct obj *obj2, *obj1;
         if (!OMONST(obj2))
             newomonst(obj2);
         (void) memcpy((genericptr_t) OMONST(obj2),
-                      (genericptr_t) OMONST(obj1), sizeof(struct monst));
+                      (genericptr_t) OMONST(obj1), sizeof (struct monst));
         OMONST(obj2)->mextra = (struct mextra *) 0;
         OMONST(obj2)->nmon = (struct monst *) 0;
 #if 0
@@ -418,13 +419,13 @@ struct obj *obj2, *obj1;
         if (!OMID(obj2))
             newomid(obj2);
         (void) memcpy((genericptr_t) OMID(obj2), (genericptr_t) OMID(obj1),
-                      sizeof(unsigned));
+                      sizeof (unsigned));
     }
     if (has_olong(obj1)) {
         if (!OLONG(obj2))
             newolong(obj2);
         (void) memcpy((genericptr_t) OLONG(obj2), (genericptr_t) OLONG(obj1),
-                      sizeof(long));
+                      sizeof (long));
     }
     if (has_omailcmd(obj1)) {
         new_omailcmd(obj2, OMAILCMD(obj1));
@@ -449,9 +450,7 @@ long num;
     otmp = newobj();
     *otmp = *obj; /* copies whole structure */
     otmp->oextra = (struct oextra *) 0;
-    otmp->o_id = context.ident++;
-    if (!otmp->o_id)
-        otmp->o_id = context.ident++; /* ident overflowed */
+    otmp->o_id = nextoid(obj, otmp);
     otmp->timed = 0;                  /* not timed, yet */
     otmp->lamplit = 0;                /* ditto */
     otmp->owornmask = 0L;             /* new object isn't worn */
@@ -477,6 +476,26 @@ long num;
     if (obj_sheds_light(obj))
         obj_split_light_source(obj, otmp);
     return otmp;
+}
+
+/* when splitting a stack that has o_id-based shop prices, pick an
+   o_id value for the new stack that will maintain the same price */
+STATIC_OVL unsigned
+nextoid(oldobj, newobj)
+struct obj *oldobj, *newobj;
+{
+    int olddif, newdif, trylimit = 256; /* limit of 4 suffices at present */
+    unsigned oid = context.ident - 1; /* loop increment will reverse -1 */
+
+    olddif = oid_price_adjustment(oldobj, oldobj->o_id);
+    do {
+        ++oid;
+        if (!oid) /* avoid using 0 (in case value wrapped) */
+            ++oid;
+        newdif = oid_price_adjustment(newobj, oid);
+    } while (newdif != olddif && --trylimit >= 0);
+    context.ident = oid + 1; /* ready for next new object */
+    return oid;
 }
 
 /* try to find the stack obj was split from, then merge them back together;
@@ -2045,12 +2064,14 @@ struct obj *obj;
     case OBJ_CONTAINED:
         extract_nobj(obj, &obj->ocontainer->cobj);
         container_weight(obj->ocontainer);
+        obj->ocontainer = (struct obj *) 0; /* clear stale back-link */
         break;
     case OBJ_INVENT:
         freeinv(obj);
         break;
     case OBJ_MINVENT:
         extract_nobj(obj, &obj->ocarry->minvent);
+        obj->ocarry = (struct monst *) 0; /* clear stale back-link */
         break;
     case OBJ_MIGRATING:
         extract_nobj(obj, &migrating_objs);
@@ -2087,7 +2108,7 @@ struct obj *obj, **head_ptr;
     if (!curr)
         panic("extract_nobj: object lost");
     obj->where = OBJ_FREE;
-    obj->nobj = NULL;
+    obj->nobj = (struct obj *) 0;
 }
 
 /*
@@ -2114,6 +2135,7 @@ struct obj *obj, **head_ptr;
     }
     if (!curr)
         panic("extract_nexthere: object lost");
+    obj->nexthere = (struct obj *) 0;
 }
 
 /*
@@ -2176,6 +2198,10 @@ struct obj *obj;
 {
     if (obj->where != OBJ_FREE)
         panic("add_to_migration: obj not free");
+
+    /* lock picking context becomes stale if it's for this object */
+    if (Is_container(obj))
+        maybe_reset_pick(obj);
 
     obj->where = OBJ_MIGRATING;
     obj->nobj = migrating_objs;
@@ -2291,18 +2317,21 @@ boolean tipping; /* caller emptying entire contents; affects shop handling */
            being included in its formatted name during next message */
         iflags.suppress_price++;
         if (!tipping) {
-            obj = hold_another_object(
-                obj, u.uswallow ? "Oops!  %s out of your reach!"
-                                : (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
-                                   || levl[u.ux][u.uy].typ < IRONBARS
-                                   || levl[u.ux][u.uy].typ >= ICE)
-                                      ? "Oops!  %s away from you!"
-                                      : "Oops!  %s to the floor!",
-                The(aobjnam(obj, "slip")), (const char *) 0);
+            obj = hold_another_object(obj,
+                                      u.uswallow
+                                        ? "Oops!  %s out of your reach!"
+                                        : (Is_airlevel(&u.uz)
+                                           || Is_waterlevel(&u.uz)
+                                           || levl[u.ux][u.uy].typ < IRONBARS
+                                           || levl[u.ux][u.uy].typ >= ICE)
+                                          ? "Oops!  %s away from you!"
+                                          : "Oops!  %s to the floor!",
+                                      The(aobjnam(obj, "slip")), (char *) 0);
+            nhUse(obj);
         } else {
             /* assumes this is taking place at hero's location */
             if (!can_reach_floor(TRUE)) {
-                hitfloor(obj); /* does altar check, message, drop */
+                hitfloor(obj, TRUE); /* does altar check, message, drop */
             } else {
                 if (IS_ALTAR(levl[u.ux][u.uy].typ))
                     doaltarobj(obj); /* does its own drop message */

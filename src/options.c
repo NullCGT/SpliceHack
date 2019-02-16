@@ -1,4 +1,4 @@
-/* NetHack 3.6	options.c	$NHDT-Date: 1543972192 2018/12/05 01:09:52 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.335 $ */
+/* NetHack 3.6	options.c	$NHDT-Date: 1546657409 2019/01/05 03:03:29 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.351 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2008. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -22,7 +22,6 @@ NEARDATA struct instance_flags iflags; /* provide linkage */
 #endif
 
 #define BACKWARD_COMPAT
-#define WINTYPELEN 16
 
 #ifdef DEFAULT_WC_TILED_MAP
 #define PREFER_TILED TRUE
@@ -297,7 +296,7 @@ static struct Comp_Opt {
     { "catname", "the name of your (first) cat (e.g., catname:Tabby)",
       PL_PSIZ, DISP_IN_GAME },
     { "disclose", "the kinds of information to disclose at end of game",
-      sizeof(flags.end_disclose) * 2, SET_IN_GAME },
+      sizeof flags.end_disclose * 2, SET_IN_GAME },
     { "dogname", "the name of your (first) dog (e.g., dogname:Fang)", PL_PSIZ,
       DISP_IN_GAME },
     { "dragonname", "the name of your (first) dragon (e.g., dragonname:Flame)" ,
@@ -577,7 +576,6 @@ STATIC_DCL int NDECL(count_menucolors);
 STATIC_DCL boolean FDECL(parse_role_opts, (BOOLEAN_P, const char *,
                                            char *, char **));
 
-STATIC_DCL void FDECL(oc_to_str, (char *, char *));
 STATIC_DCL void FDECL(doset_add_menu, (winid, const char *, int));
 STATIC_DCL void FDECL(opts_add_others, (winid, const char *, int,
                                         char *, int));
@@ -712,8 +710,9 @@ initoptions_init()
     /* set up the command parsing */
     reset_commands(TRUE); /* init */
 
-    /* initialize the random number generator */
-    setrandom();
+    /* initialize the random number generator(s) */
+    init_random(rn2);
+    init_random(rn2_on_display_rng);
 
     /* for detection of configfile options specified multiple times */
     iflags.opt_booldup = iflags.opt_compdup = (int *) 0;
@@ -741,7 +740,7 @@ initoptions_init()
 #endif
 #ifdef SYSFLAGS
     Strcpy(sysflags.sysflagsid, "sysflags");
-    sysflags.sysflagsid[9] = (char) sizeof(struct sysflag);
+    sysflags.sysflagsid[9] = (char) sizeof (struct sysflag);
 #endif
     flags.end_own = FALSE;
     flags.end_top = 3;
@@ -782,6 +781,7 @@ initoptions_init()
     for (i = 0; i < NUM_DISCLOSURE_OPTIONS; i++)
         flags.end_disclose[i] = DISCLOSE_PROMPT_DEFAULT_NO;
     switch_symbols(FALSE); /* set default characters */
+    init_r_symbols();
 #if defined(UNIX) && defined(TTY_GRAPHICS)
     /*
      * Set defaults for some options depending on what we can
@@ -892,16 +892,23 @@ initoptions_finish()
      * A multi-interface binary might only support status highlighting
      * for some of the interfaces; check whether we asked for it but are
      * using one which doesn't.
+     *
+     * Option processing can take place before a user-decided WindowPort
+     * is even initialized, so check for that too.
      */
-    if (iflags.hilite_delta && !wc2_supported("statushilites")) {
-        raw_printf("Status highlighting not supported for %s interface.",
-                   windowprocs.name);
-        iflags.hilite_delta = 0;
+    if (!WINDOWPORT("safe-startup")) {
+        if (iflags.hilite_delta && !wc2_supported("statushilites")) {
+            raw_printf("Status highlighting not supported for %s interface.",
+                       windowprocs.name);
+            iflags.hilite_delta = 0;
+        }
     }
 #endif
     return;
 }
 
+/* copy up to maxlen-1 characters; 'dest' must be able to hold maxlen;
+   treat comma as alternate end of 'src' */
 STATIC_OVL void
 nmcpy(dest, src, maxlen)
 char *dest;
@@ -915,12 +922,14 @@ int maxlen;
             break; /*exit on \0 terminator*/
         *dest++ = *src++;
     }
-    *dest = 0;
+    *dest = '\0';
 }
 
 /*
  * escapes(): escape expansion for showsyms.  C-style escapes understood
  * include \n, \b, \t, \r, \xnnn (hex), \onnn (octal), \nnn (decimal).
+ * (Note: unlike in C, leading digit 0 is not used to indicate octal;
+ * the letter o (either upper or lower case) is used for that.
  * The ^-prefix for control characters is also understood, and \[mM]
  * has the effect of 'meta'-ing the value which follows (so that the
  * alternate character set will be enabled).
@@ -1026,7 +1035,7 @@ const char *optname;
 /*
 
 # errors:
-OPTIONS=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+OPTIONS=aaaaaaaaaa[ more than 247 (255 - 8 for 'OPTIONS=') total ]aaaaaaaaaa
 OPTIONS
 OPTIONS=
 MSGTYPE=stop"You swap places with "
@@ -1403,7 +1412,7 @@ char *str;
 
     /* allow "lightblue", "light blue", and "light-blue" to match "light blue"
        (also junk like "_l i-gh_t---b l u e" but we won't worry about that);
-       also copes with trailing space; mungspaces removed any leading space */
+       also copes with trailing space; caller has removed any leading space */
     for (i = 0; i < SIZE(colornames); i++)
         if (colornames[i].name
             && fuzzymatch(str, colornames[i].name, " -_", TRUE)) {
@@ -1632,8 +1641,7 @@ msgtype_add(typ, pattern)
 int typ;
 char *pattern;
 {
-    struct plinemsg_type
-        *tmp = (struct plinemsg_type *) alloc(sizeof (struct plinemsg_type));
+    struct plinemsg_type *tmp = (struct plinemsg_type *) alloc(sizeof *tmp);
 
     tmp->msgtype = typ;
     tmp->regex = regex_init();
@@ -1804,7 +1812,7 @@ int c, a;
 
     if (!str)
         return FALSE;
-    tmp = (struct menucoloring *) alloc(sizeof (struct menucoloring));
+    tmp = (struct menucoloring *) alloc(sizeof *tmp);
     tmp->match = regex_init();
     if (!regex_compile(str, tmp->match)) {
         config_error_add("%s: %s", re_error, regex_error_desc(tmp->match));
@@ -1865,7 +1873,6 @@ char *tmpstr;
             tmps++;
         }
     }
-
     return add_menu_coloring_parsed(tmps, c, a);
 }
 
@@ -1889,15 +1896,13 @@ int *color, *attr;
 void
 free_menu_coloring()
 {
-    struct menucoloring *tmp = menu_colorings;
+    struct menucoloring *tmp, *tmp2;
 
-    while (tmp) {
-        struct menucoloring *tmp2 = tmp->next;
-
+    for (tmp = menu_colorings; tmp; tmp = tmp2) {
+        tmp2 = tmp->next;
         regex_free(tmp->match);
         free((genericptr_t) tmp->origstr);
         free((genericptr_t) tmp);
-        tmp = tmp2;
     }
 }
 
@@ -1930,13 +1935,11 @@ int idx; /* 0 .. */
 STATIC_OVL int
 count_menucolors(VOID_ARGS)
 {
+    struct menucoloring *tmp;
     int count = 0;
-    struct menucoloring *tmp = menu_colorings;
 
-    while (tmp) {
+    for (tmp = menu_colorings; tmp; tmp = tmp->next)
         count++;
-        tmp = tmp->next;
-    }
     return count;
 }
 
@@ -2085,7 +2088,7 @@ boolean tinitial, tfrom_file;
 
     /* align:string */
     fullname = "align";
-    if (match_optname(opts, fullname, sizeof("align") - 1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "align" - 1, TRUE)) {
         if (parse_role_opts(negated, fullname, opts, &op)) {
             if ((flags.initalign = str2align(op)) == ROLE_NONE) {
                 config_error_add("Unknown %s '%s'", fullname, op);
@@ -2641,7 +2644,7 @@ boolean tinitial, tfrom_file;
 
         if (duplicate)
             complain_about_duplicate(opts, 1);
-        op = string_for_opt(opts, negated);
+        op = string_for_opt(opts, negated || !initial);
         if (negated) {
             if (op) {
                 bad_negation("fruit", TRUE);
@@ -2652,6 +2655,8 @@ boolean tinitial, tfrom_file;
         }
         if (!op)
             return FALSE;
+        /* 3.6.2: strip leading and trailing spaces, condense internal ones */
+        mungspaces(op);
         if (!initial) {
             struct fruit *f;
             int fnum = 0;
@@ -2670,7 +2675,7 @@ boolean tinitial, tfrom_file;
                 }
             }
         }
-    goodfruit:
+ goodfruit:
         nmcpy(pl_fruit, op, PL_FSIZ);
         sanitize_name(pl_fruit);
         /* OBJ_NAME(objects[SLIME_MOLD]) won't work for this after
@@ -2774,27 +2779,31 @@ boolean tinitial, tfrom_file;
         if (!(opts = string_for_opt(opts, FALSE)))
             return FALSE;
         escapes(opts, opts);
+        /* note: dummy monclass #0 has symbol value '\0'; we allow that--
+           attempting to set bouldersym to '^@'/'\0' will reset to default */
         if (def_char_to_monclass(opts[0]) != MAXMCLASSES)
-            clash = 1;
-        else if (opts[0] >= '1' && opts[0] <= '5')
+            clash = opts[0] ? 1 : 0;
+        else if (opts[0] >= '1' && opts[0] < WARNCOUNT + '0')
             clash = 2;
         if (clash) {
             /* symbol chosen matches a used monster or warning
-               symbol which is not good - reject it*/
+               symbol which is not good - reject it */
             config_error_add(
-                "Badoption - boulder symbol '%c' conflicts with a %s symbol.",
-                             opts[0], (clash == 1) ? "monster" : "warning");
+            "Badoption - boulder symbol '%s' would conflict with a %s symbol",
+                             visctrl(opts[0]),
+                             (clash == 1) ? "monster" : "warning");
         } else {
             /*
              * Override the default boulder symbol.
              */
             iflags.bouldersym = (uchar) opts[0];
-        }
-        /* for 'initial', update_bouldersym() is done in initoptions_finish(),
-           after all symset options have been processed */
-        if (!initial) {
-            update_bouldersym();
-            need_redraw = TRUE;
+            /* for 'initial', update_bouldersym() is done in
+               initoptions_finish(), after all symset options
+               have been processed */
+            if (!initial) {
+                update_bouldersym();
+                need_redraw = TRUE;
+            }
         }
         return retval;
 #else
@@ -2839,16 +2848,16 @@ boolean tinitial, tfrom_file;
     /* WINCAP
      * align_status:[left|top|right|bottom] */
     fullname = "align_status";
-    if (match_optname(opts, fullname, sizeof("align_status") - 1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "align_status" - 1, TRUE)) {
         op = string_for_opt(opts, negated);
         if (op && !negated) {
-            if (!strncmpi(op, "left", sizeof("left") - 1))
+            if (!strncmpi(op, "left", sizeof "left" - 1))
                 iflags.wc_align_status = ALIGN_LEFT;
-            else if (!strncmpi(op, "top", sizeof("top") - 1))
+            else if (!strncmpi(op, "top", sizeof "top" - 1))
                 iflags.wc_align_status = ALIGN_TOP;
-            else if (!strncmpi(op, "right", sizeof("right") - 1))
+            else if (!strncmpi(op, "right", sizeof "right" - 1))
                 iflags.wc_align_status = ALIGN_RIGHT;
-            else if (!strncmpi(op, "bottom", sizeof("bottom") - 1))
+            else if (!strncmpi(op, "bottom", sizeof "bottom" - 1))
                 iflags.wc_align_status = ALIGN_BOTTOM;
             else {
                 config_error_add("Unknown %s parameter '%s'", fullname, op);
@@ -2864,18 +2873,18 @@ boolean tinitial, tfrom_file;
     /* WINCAP
      * align_message:[left|top|right|bottom] */
     fullname = "align_message";
-    if (match_optname(opts, fullname, sizeof("align_message") - 1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "align_message" - 1, TRUE)) {
         if (duplicate)
             complain_about_duplicate(opts, 1);
         op = string_for_opt(opts, negated);
         if (op && !negated) {
-            if (!strncmpi(op, "left", sizeof("left") - 1))
+            if (!strncmpi(op, "left", sizeof "left" - 1))
                 iflags.wc_align_message = ALIGN_LEFT;
-            else if (!strncmpi(op, "top", sizeof("top") - 1))
+            else if (!strncmpi(op, "top", sizeof "top" - 1))
                 iflags.wc_align_message = ALIGN_TOP;
-            else if (!strncmpi(op, "right", sizeof("right") - 1))
+            else if (!strncmpi(op, "right", sizeof "right" - 1))
                 iflags.wc_align_message = ALIGN_RIGHT;
-            else if (!strncmpi(op, "bottom", sizeof("bottom") - 1))
+            else if (!strncmpi(op, "bottom", sizeof "bottom" - 1))
                 iflags.wc_align_message = ALIGN_BOTTOM;
             else {
                 config_error_add("Unknown %s parameter '%s'", fullname, op);
@@ -2929,7 +2938,7 @@ boolean tinitial, tfrom_file;
                 pp = index(op, ' ');
                 if (pp)
                     *pp = '\0';
-                /* we aren't matching option names but match_optname
+                /* we aren't matching option names but match_optname()
                    does what we want once we've broken the space
                    delimited aggregate into separate tokens */
                 for (i = 0; i < SIZE(paranoia); ++i) {
@@ -3014,8 +3023,8 @@ boolean tinitial, tfrom_file;
     /* types of objects to pick up automatically */
     fullname = "pickup_types";
     if (match_optname(opts, fullname, 8, TRUE)) {
-        char ocl[MAXOCLASSES + 1], tbuf[MAXOCLASSES + 1], qbuf[QBUFSZ],
-            abuf[BUFSZ] = DUMMY;
+        char ocl[MAXOCLASSES + 1], tbuf[MAXOCLASSES + 1],
+             qbuf[QBUFSZ], abuf[BUFSZ];
         int oc_sym;
         boolean badopt = FALSE, compat = (strlen(opts) <= 6), use_menu;
 
@@ -3036,18 +3045,28 @@ boolean tinitial, tfrom_file;
             use_menu = TRUE;
             if (flags.menu_style == MENU_TRADITIONAL
                 || flags.menu_style == MENU_COMBINATION) {
+                boolean wasspace;
+
                 use_menu = FALSE;
                 Sprintf(qbuf, "New %s: [%s am] (%s)", fullname, ocl,
                         *tbuf ? tbuf : "all");
+                abuf[0] = '\0';
                 getlin(qbuf, abuf);
+                wasspace = (abuf[0] == ' '); /* before mungspaces */
                 op = mungspaces(abuf);
-                if (abuf[0] == '\0' || abuf[0] == '\033')
+                if (wasspace && !abuf[0])
+                    ; /* one or more spaces will remove old value */
+                else if (!abuf[0] || abuf[0] == '\033')
                     op = tbuf; /* restore */
                 else if (abuf[0] == 'm')
                     use_menu = TRUE;
+                /* note: abuf[0]=='a' is already handled via clearing the
+                   the old value (above) as a default action */
             }
             if (use_menu) {
-                (void) choose_classes_menu("Auto-Pickup what?", 1, TRUE, ocl,
+                if (wizard && !index(ocl, VENOM_SYM))
+                    strkitten(ocl, VENOM_SYM);
+                (void) choose_classes_menu("Autopickup what?", 1, TRUE, ocl,
                                            tbuf);
                 op = tbuf;
             }
@@ -3126,18 +3145,18 @@ boolean tinitial, tfrom_file;
     }
 
     /* WINCAP
-     * player_selection: dialog | prompts */
+     * player_selection: dialog | prompt/prompts/prompting */
     fullname = "player_selection";
-    if (match_optname(opts, fullname, sizeof("player_selection") - 1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "player_selection" - 1, TRUE)) {
         if (duplicate)
             complain_about_duplicate(opts, 1);
         op = string_for_opt(opts, negated);
         if (op && !negated) {
-            if (!strncmpi(op, "dialog", sizeof("dialog") - 1))
+            if (!strncmpi(op, "dialog", sizeof "dialog" - 1)) {
                 iflags.wc_player_selection = VIA_DIALOG;
-            else if (!strncmpi(op, "prompt", sizeof("prompt") - 1))
+            } else if (!strncmpi(op, "prompt", sizeof "prompt" - 1)) {
                 iflags.wc_player_selection = VIA_PROMPTS;
-            else {
+            } else {
                 config_error_add("Unknown %s parameter '%s'", fullname, op);
                 return FALSE;
             }
@@ -3159,11 +3178,13 @@ boolean tinitial, tfrom_file;
          *      end_disclose[NUM_DISCLOSURE_OPT];
          * with option settings for the each of the following:
          * iagvc [see disclosure_options in decl.c]:
-         * Legal setting values in that array are:
+         * Allowed setting values in that array are:
          *      DISCLOSE_PROMPT_DEFAULT_YES  ask with default answer yes
          *      DISCLOSE_PROMPT_DEFAULT_NO   ask with default answer no
          *      DISCLOSE_YES_WITHOUT_PROMPT  always disclose and don't ask
          *      DISCLOSE_NO_WITHOUT_PROMPT   never disclose and don't ask
+         *      DISCLOSE_PROMPT_DEFAULT_SPECIAL  for 'vanquished' only...
+         *      DISCLOSE_SPECIAL_WITHOUT_PROMPT  ...to set up sort order.
          *
          * Those setting values can be used in the option
          * string as a prefix to get the desired behaviour.
@@ -3338,8 +3359,10 @@ boolean tinitial, tfrom_file;
         } else if (!(opts = string_for_env_opt(fullname, opts, FALSE))) {
             return FALSE;
         }
-        if (!assign_videocolors(opts)) /* TODO: error msg */
+        if (!assign_videocolors(opts)) {
+            config_error_add("Unknown error handling '%s'", fullname);
             return FALSE;
+        }
         return retval;
     }
     /* videoshades:string */
@@ -3353,8 +3376,10 @@ boolean tinitial, tfrom_file;
         } else if (!(opts = string_for_env_opt(fullname, opts, FALSE))) {
             return FALSE;
         }
-        if (!assign_videoshades(opts)) /* TODO: error msg */
+        if (!assign_videoshades(opts)) {
+            config_error_add("Unknown error handling '%s'", fullname);
             return FALSE;
+        }
         return retval;
     }
 #endif /* VIDEOSHADES */
@@ -3371,8 +3396,10 @@ boolean tinitial, tfrom_file;
         } else if (!(opts = string_for_env_opt(fullname, opts, FALSE))) {
             return FALSE;
         }
-        if (!assign_video(opts)) /* TODO: error msg */
+        if (!assign_video(opts)) {
+            config_error_add("Unknown error handling '%s'", fullname);
             return FALSE;
+        }
         return retval;
     }
 #endif /* NO_TERMS */
@@ -3387,8 +3414,10 @@ boolean tinitial, tfrom_file;
         } else if (!(opts = string_for_env_opt(fullname, opts, FALSE))) {
             return FALSE;
         }
-        if (!assign_soundcard(opts)) /* TODO: error msg */
+        if (!assign_soundcard(opts)) {
+            config_error_add("Unknown error handling '%s'", fullname);
             return FALSE;
+        }
         return retval;
     }
 #endif /* MSDOS */
@@ -3399,33 +3428,33 @@ boolean tinitial, tfrom_file;
      *            |ascii8x12|ascii16x12|ascii12x16|ascii10x18|fit_to_screen]
      */
     fullname = "map_mode";
-    if (match_optname(opts, fullname, sizeof("map_mode") - 1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "map_mode" - 1, TRUE)) {
         if (duplicate)
             complain_about_duplicate(opts, 1);
         op = string_for_opt(opts, negated);
         if (op && !negated) {
-            if (!strncmpi(op, "tiles", sizeof("tiles") - 1))
+            if (!strncmpi(op, "tiles", sizeof "tiles" - 1))
                 iflags.wc_map_mode = MAP_MODE_TILES;
-            else if (!strncmpi(op, "ascii4x6", sizeof("ascii4x6") - 1))
+            else if (!strncmpi(op, "ascii4x6", sizeof "ascii4x6" - 1))
                 iflags.wc_map_mode = MAP_MODE_ASCII4x6;
-            else if (!strncmpi(op, "ascii6x8", sizeof("ascii6x8") - 1))
+            else if (!strncmpi(op, "ascii6x8", sizeof "ascii6x8" - 1))
                 iflags.wc_map_mode = MAP_MODE_ASCII6x8;
-            else if (!strncmpi(op, "ascii8x8", sizeof("ascii8x8") - 1))
+            else if (!strncmpi(op, "ascii8x8", sizeof "ascii8x8" - 1))
                 iflags.wc_map_mode = MAP_MODE_ASCII8x8;
-            else if (!strncmpi(op, "ascii16x8", sizeof("ascii16x8") - 1))
+            else if (!strncmpi(op, "ascii16x8", sizeof "ascii16x8" - 1))
                 iflags.wc_map_mode = MAP_MODE_ASCII16x8;
-            else if (!strncmpi(op, "ascii7x12", sizeof("ascii7x12") - 1))
+            else if (!strncmpi(op, "ascii7x12", sizeof "ascii7x12" - 1))
                 iflags.wc_map_mode = MAP_MODE_ASCII7x12;
-            else if (!strncmpi(op, "ascii8x12", sizeof("ascii8x12") - 1))
+            else if (!strncmpi(op, "ascii8x12", sizeof "ascii8x12" - 1))
                 iflags.wc_map_mode = MAP_MODE_ASCII8x12;
-            else if (!strncmpi(op, "ascii16x12", sizeof("ascii16x12") - 1))
+            else if (!strncmpi(op, "ascii16x12", sizeof "ascii16x12" - 1))
                 iflags.wc_map_mode = MAP_MODE_ASCII16x12;
-            else if (!strncmpi(op, "ascii12x16", sizeof("ascii12x16") - 1))
+            else if (!strncmpi(op, "ascii12x16", sizeof "ascii12x16" - 1))
                 iflags.wc_map_mode = MAP_MODE_ASCII12x16;
-            else if (!strncmpi(op, "ascii10x18", sizeof("ascii10x18") - 1))
+            else if (!strncmpi(op, "ascii10x18", sizeof "ascii10x18" - 1))
                 iflags.wc_map_mode = MAP_MODE_ASCII10x18;
             else if (!strncmpi(op, "fit_to_screen",
-                               sizeof("fit_to_screen") - 1))
+                               sizeof "fit_to_screen" - 1))
                 iflags.wc_map_mode = MAP_MODE_ASCII_FIT_TO_SCREEN;
             else {
                 config_error_add("Unknown %s parameter '%s'", fullname, op);
@@ -3492,7 +3521,7 @@ boolean tinitial, tfrom_file;
     /* WINCAP
      * tile_width:nn */
     fullname = "tile_width";
-    if (match_optname(opts, fullname, sizeof("tile_width") - 1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "tile_width" - 1, TRUE)) {
         if (duplicate)
             complain_about_duplicate(opts, 1);
         op = string_for_opt(opts, negated);
@@ -3507,7 +3536,7 @@ boolean tinitial, tfrom_file;
     /* WINCAP
      * tile_file:name */
     fullname = "tile_file";
-    if (match_optname(opts, fullname, sizeof("tile_file") - 1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "tile_file" - 1, TRUE)) {
         if (duplicate)
             complain_about_duplicate(opts, 1);
         if ((op = string_for_opt(opts, FALSE)) != 0) {
@@ -3521,7 +3550,7 @@ boolean tinitial, tfrom_file;
     /* WINCAP
      * tile_height:nn */
     fullname = "tile_height";
-    if (match_optname(opts, fullname, sizeof("tile_height") - 1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "tile_height" - 1, TRUE)) {
         if (duplicate)
             complain_about_duplicate(opts, 1);
         op = string_for_opt(opts, negated);
@@ -3537,7 +3566,7 @@ boolean tinitial, tfrom_file;
     /* WINCAP
      * vary_msgcount:nn */
     fullname = "vary_msgcount";
-    if (match_optname(opts, fullname, sizeof("vary_msgcount") - 1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "vary_msgcount" - 1, TRUE)) {
         if (duplicate)
             complain_about_duplicate(opts, 1);
         op = string_for_opt(opts, negated);
@@ -3560,7 +3589,8 @@ boolean tinitial, tfrom_file;
      * OPTIONS=windowtype:Foo
      * as the first non-comment line of the file.
      * Making it first in NETHACKOPTIONS requires it to be at the _end_
-     * because option strings are processed from right to left.
+     * because comma-separated option strings are processed from right
+     * to left.
      */
     fullname = "windowtype";
     if (match_optname(opts, fullname, 3, TRUE)) {
@@ -3572,10 +3602,14 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
             return FALSE;
         } else if ((op = string_for_env_opt(fullname, opts, FALSE)) != 0) {
-            char buf[WINTYPELEN];
+            if (!iflags.windowtype_deferred) {
+                char buf[WINTYPELEN];
 
-            nmcpy(buf, op, WINTYPELEN);
-            choose_windows(buf);
+                nmcpy(buf, op, WINTYPELEN);
+                choose_windows(buf);
+            } else {
+                nmcpy(chosen_windowtype, op, WINTYPELEN);
+            }
         } else
             return FALSE;
         return retval;
@@ -3607,64 +3641,77 @@ boolean tinitial, tfrom_file;
         if (duplicate)
             complain_about_duplicate(opts, 1);
         if ((op = string_for_opt(opts, FALSE)) != 0) {
-            if (!wc_set_window_colors(op)) /* TODO: error msg*/
+            if (!wc_set_window_colors(op)) {
+                config_error_add("Could not set %s '%s'", fullname, op);
                 return FALSE;
-        } else if (negated)
+            }
+        } else if (negated) {
             bad_negation(fullname, TRUE);
+            return FALSE;
+        }
         return retval;
     }
 #ifdef CURSES_GRAPHICS
     /* WINCAP2
      * term_cols:amount */
     fullname = "term_cols";
-    if (match_optname(opts, fullname, sizeof("term_cols")-1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "term_cols" - 1, TRUE)) {
         op = string_for_opt(opts, negated);
         iflags.wc2_term_cols = atoi(op);
-        if (negated)
-           bad_negation(fullname, FALSE);
+        if (negated) {
+            bad_negation(fullname, FALSE);
+            return FALSE;
+        }
         return retval;
     }
 
     /* WINCAP2
      * term_rows:amount */
     fullname = "term_rows";
-    if (match_optname(opts, fullname, sizeof("term_rows")-1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "term_rows" - 1, TRUE)) {
         op = string_for_opt(opts, negated);
         iflags.wc2_term_rows = atoi(op);
-        if (negated)
+        if (negated) {
             bad_negation(fullname, FALSE);
+            return FALSE;
+        }
         return retval;
     }
 
     /* WINCAP2
      * petattr:string */
     fullname = "petattr";
-    if (match_optname(opts, fullname, sizeof("petattr")-1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "petattr" - 1, TRUE)) {
         op = string_for_opt(opts, negated);
         if (op && !negated) {
 #ifdef CURSES_GRAPHICS
             iflags.wc2_petattr = curses_read_attrs(op);
-            if (!curses_read_attrs(op))
+            if (!curses_read_attrs(op)) {
                 config_error_add("Unknown %s parameter '%s'", fullname, opts);
                 return FALSE;
+            }
 #else
             /* non-curses windowports will not use this flag anyway
              * but the above will not compile if we don't have curses.
              * Just set it to a sensible default: */
             iflags.wc2_petattr = ATR_INVERSE
 #endif
-        } else if (negated) bad_negation(fullname, TRUE);
+        } else if (negated) {
+            bad_negation(fullname, TRUE);
+            return FALSE;
+        }
         return retval;
     }
 
     /* WINCAP2
      * windowborders:n */
     fullname = "windowborders";
-    if (match_optname(opts, fullname, sizeof("windowborders")-1, TRUE)) {
+    if (match_optname(opts, fullname, sizeof "windowborders" - 1, TRUE)) {
         op = string_for_opt(opts, negated);
-        if (negated && op)
+        if (negated && op) {
             bad_negation(fullname, TRUE);
-        else {
+            return FALSE;
+        } else {
             if (negated)
                 iflags.wc2_windowborders = 2; /* Off */
             else if (!op)
@@ -3672,10 +3719,10 @@ boolean tinitial, tfrom_file;
             else    /* Value supplied */
                 iflags.wc2_windowborders = atoi(op);
             if ((iflags.wc2_windowborders > 3)
-                 || (iflags.wc2_windowborders < 1)) {
+                || (iflags.wc2_windowborders < 1)) {
                     iflags.wc2_windowborders = 0;
-                    config_error_add(
-                        "Badoption - windowborders %s.", opts);
+                    config_error_add("Badoption - windowborders %s.", opts);
+                    return FALSE;
             }
         }
         return retval;
@@ -3822,10 +3869,10 @@ boolean tinitial, tfrom_file;
                 escapes(op, op_buf);
                 c = *op_buf;
 
-                if (illegal_menu_cmd_key(c)) {
+                if (illegal_menu_cmd_key(c))
                     return FALSE;
-                } else
-                    add_menu_cmd_alias(c, default_menu_cmd_info[i].cmd);
+
+                add_menu_cmd_alias(c, default_menu_cmd_info[i].cmd);
             }
             return retval;
         }
@@ -3987,8 +4034,9 @@ boolean tinitial, tfrom_file;
 #endif  /* ?(MAC_GRAPHICS_ENV && BACKWARD_COMPAT) */
     } /* "MACgraphics" */
 
-    /* OK, if we still haven't recognized the option, check the boolean
-     * options list
+    /*
+     * OK, if we still haven't recognized the option, check the boolean
+     * options list.
      */
     for (i = 0; boolopt[i].name; i++) {
         if (match_optname(opts, boolopt[i].name, 3, TRUE)) {
@@ -4192,7 +4240,7 @@ static NEARDATA const char *sortltype[] = { "none", "loot", "full" };
  * Convert the given string of object classes to a string of default object
  * symbols.
  */
-STATIC_OVL void
+void
 oc_to_str(src, dest)
 char *src, *dest;
 {
@@ -4221,8 +4269,8 @@ char from_ch, to_ch;
         mapped_menu_cmds[n_menu_mapped] = from_ch;
         mapped_menu_op[n_menu_mapped] = to_ch;
         n_menu_mapped++;
-        mapped_menu_cmds[n_menu_mapped] = 0;
-        mapped_menu_op[n_menu_mapped] = 0;
+        mapped_menu_cmds[n_menu_mapped] = '\0';
+        mapped_menu_op[n_menu_mapped] = '\0';
     }
 }
 
@@ -4406,7 +4454,7 @@ static struct other_opts {
     int NDECL((*othr_count_func));
 } othropt[] = {
     { "autopickup exceptions", SET_IN_GAME, OPT_OTHER_APEXC, count_apes },
-    { "menucolors", SET_IN_GAME, OPT_OTHER_MENUCOLOR, count_menucolors },
+    { "menu colors", SET_IN_GAME, OPT_OTHER_MENUCOLOR, count_menucolors },
     { "message types", SET_IN_GAME, OPT_OTHER_MSGTYPE, msgtype_count },
 #ifdef STATUS_HILITES
     { "status hilite rules", SET_IN_GAME, OPT_OTHER_STATHILITE,
@@ -4449,17 +4497,14 @@ doset() /* changing options via menu by Per Liboriussen */
            and adjust the format string accordingly */
         longest_name_len = 0;
         for (pass = 0; pass <= 2; pass++)
-            for (i = 0; (name = ((pass == 0)
-                                 ? boolopt[i].name
-                                 : (pass == 1)
-                                   ? compopt[i].name
+            for (i = 0; (name = ((pass == 0) ? boolopt[i].name
+                                 : (pass == 1) ? compopt[i].name
                                    : othropt[i].name)) != 0; i++) {
                 if (pass == 0 && !boolopt[i].addr)
                     continue;
                 optflags = (pass == 0) ? boolopt[i].optflags
-                                       : (pass == 1)
-                                         ? compopt[i].optflags
-                                         : othropt[i].optflags;
+                           : (pass == 1) ? compopt[i].optflags
+                             : othropt[i].optflags;
                 if (optflags < startpass || optflags > endpass)
                     continue;
                 if ((is_wc_option(name) && !wc_supported(name))
@@ -4580,7 +4625,7 @@ doset() /* changing options via menu by Per Liboriussen */
                 }
 #endif
             } else if (opt_indx == OPT_OTHER_MENUCOLOR) {
-                    (void) special_handling("menucolors", setinitial,
+                    (void) special_handling("menu_colors", setinitial,
                                             fromfile);
             } else if (opt_indx == OPT_OTHER_MSGTYPE) {
                     (void) special_handling("msgtype", setinitial, fromfile);
@@ -4588,7 +4633,7 @@ doset() /* changing options via menu by Per Liboriussen */
                 /* boolean option */
                 Sprintf(buf, "%s%s", *boolopt[opt_indx].addr ? "!" : "",
                         boolopt[opt_indx].name);
-                parseoptions(buf, setinitial, fromfile);
+                (void) parseoptions(buf, setinitial, fromfile);
                 if (wc_supported(boolopt[opt_indx].name)
                     || wc2_supported(boolopt[opt_indx].name))
                     preference_update(boolopt[opt_indx].name);
@@ -4604,15 +4649,14 @@ doset() /* changing options via menu by Per Liboriussen */
                         continue;
                     Sprintf(buf, "%s:%s", compopt[opt_indx].name, buf2);
                     /* pass the buck */
-                    parseoptions(buf, setinitial, fromfile);
+                    (void) parseoptions(buf, setinitial, fromfile);
                 }
                 if (wc_supported(compopt[opt_indx].name)
                     || wc2_supported(compopt[opt_indx].name))
                     preference_update(compopt[opt_indx].name);
             }
         }
-        free((genericptr_t) pick_list);
-        pick_list = (menu_item *) 0;
+        free((genericptr_t) pick_list), pick_list = (menu_item *) 0;
     }
 
     destroy_nhwindow(tmpwin);
@@ -4624,6 +4668,7 @@ doset() /* changing options via menu by Per Liboriussen */
     return 0;
 }
 
+/* common to msg-types, menu-colors, autopickup-exceptions */
 STATIC_OVL int
 handle_add_list_remove(optname, numtotal)
 const char *optname;
@@ -4672,7 +4717,7 @@ int numtotal;
 }
 
 struct symsetentry *symset_list = 0; /* files.c will populate this with
-                                              list of available sets */
+                                      * list of available sets */
 
 STATIC_OVL boolean
 special_handling(optname, setinitial, setfromfile)
@@ -4762,7 +4807,8 @@ boolean setinitial, setfromfile;
         destroy_nhwindow(tmpwin);
     } else if (!strcmp("pickup_types", optname)) {
         /* parseoptions will prompt for the list of types */
-        parseoptions(strcpy(buf, "pickup_types"), setinitial, setfromfile);
+        (void) parseoptions(strcpy(buf, "pickup_types"),
+                            setinitial, setfromfile);
     } else if (!strcmp("disclose", optname)) {
         /* order of disclose_names[] must correspond to
            disclosure_options in decl.c */
@@ -4876,24 +4922,24 @@ boolean setinitial, setfromfile;
         start_menu(tmpwin);
         any = zeroany;
         any.a_char = GPCOORDS_COMPASS;
-        add_menu(tmpwin, NO_GLYPH, &any, GPCOORDS_COMPASS,
-                 0, ATR_NONE, "compass ('east' or '3s' or '2n,4w')",
+        add_menu(tmpwin, NO_GLYPH, &any, GPCOORDS_COMPASS, 0, ATR_NONE,
+                 "compass ('east' or '3s' or '2n,4w')",
                  (gp == GPCOORDS_COMPASS) ? MENU_SELECTED : MENU_UNSELECTED);
         any.a_char = GPCOORDS_COMFULL;
         add_menu(tmpwin, NO_GLYPH, &any, GPCOORDS_COMFULL, 0, ATR_NONE,
                  "full compass ('east' or '3south' or '2north,4west')",
                  (gp == GPCOORDS_COMFULL) ? MENU_SELECTED : MENU_UNSELECTED);
         any.a_char = GPCOORDS_MAP;
-        add_menu(tmpwin, NO_GLYPH, &any, GPCOORDS_MAP,
-                 0, ATR_NONE, "map <x,y>",
+        add_menu(tmpwin, NO_GLYPH, &any, GPCOORDS_MAP, 0, ATR_NONE,
+                 "map <x,y>",
                  (gp == GPCOORDS_MAP) ? MENU_SELECTED : MENU_UNSELECTED);
         any.a_char = GPCOORDS_SCREEN;
-        add_menu(tmpwin, NO_GLYPH, &any, GPCOORDS_SCREEN,
-                 0, ATR_NONE, "screen [row,column]",
+        add_menu(tmpwin, NO_GLYPH, &any, GPCOORDS_SCREEN, 0, ATR_NONE,
+                 "screen [row,column]",
                  (gp == GPCOORDS_SCREEN) ? MENU_SELECTED : MENU_UNSELECTED);
         any.a_char = GPCOORDS_NONE;
-        add_menu(tmpwin, NO_GLYPH, &any, GPCOORDS_NONE,
-                 0, ATR_NONE, "none (no coordinates displayed)",
+        add_menu(tmpwin, NO_GLYPH, &any, GPCOORDS_NONE, 0, ATR_NONE,
+                 "none (no coordinates displayed)",
                  (gp == GPCOORDS_NONE) ? MENU_SELECTED : MENU_UNSELECTED);
         any.a_long = 0L;
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
@@ -4901,7 +4947,7 @@ boolean setinitial, setfromfile;
                 1, 0, COLNO - 1, ROWNO - 1,
                 flags.verbose ? "; column 0 unused, off left edge" : "");
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, MENU_UNSELECTED);
-        if (strcmp(windowprocs.name, "tty"))
+        if (strcmp(windowprocs.name, "tty")) /* only show for non-tty */
             add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
        "screen: row is offset to accommodate tty interface's use of top line",
                      MENU_UNSELECTED);
@@ -5101,7 +5147,7 @@ boolean setinitial, setfromfile;
         int opt_idx, nmt, mttyp;
         char mtbuf[BUFSZ] = DUMMY;
 
-    msgtypes_again:
+ msgtypes_again:
         nmt = msgtype_count();
         opt_idx = handle_add_list_remove("message type", nmt);
         if (opt_idx == 3) { /* done */
@@ -5159,19 +5205,23 @@ boolean setinitial, setfromfile;
             if (pick_cnt >= 0)
                 goto msgtypes_again;
         }
-    } else if (!strcmp("menucolors", optname)) {
+    } else if (!strcmp("menu_colors", optname)) {
         int opt_idx, nmc, mcclr, mcattr;
         char mcbuf[BUFSZ] = DUMMY;
 
-    menucolors_again:
+ menucolors_again:
         nmc = count_menucolors();
         opt_idx = handle_add_list_remove("menucolor", nmc);
         if (opt_idx == 3) { /* done */
+ menucolors_done:
+            if (nmc > 0 && !iflags.use_menu_color)
+                pline(
+    "To have menu colors become active, toggle 'menucolors' option to True.");
             return TRUE;
         } else if (opt_idx == 0) { /* add new */
             getlin("What new menucolor pattern?", mcbuf);
             if (*mcbuf == '\033')
-                return TRUE;
+                goto menucolors_done;
             if (*mcbuf
                 && test_regex_pattern(mcbuf, (const char *)0)
                 && (mcclr = query_color((char *) 0)) != -1
@@ -5234,15 +5284,18 @@ boolean setinitial, setfromfile;
         }
     } else if (!strcmp("autopickup_exception", optname)) {
         int opt_idx, pass, totalapes = 0, numapes[2] = { 0, 0 };
-        char apebuf[1 + BUFSZ] = DUMMY; /* so &apebuf[1] is BUFSZ long for getlin() */
+        char apebuf[1 + BUFSZ]; /* so &apebuf[1] is BUFSZ long for getlin() */
         struct autopickup_exception *ape;
 
-    ape_again:
+ ape_again:
         totalapes = count_ape_maps(&numapes[AP_LEAVE], &numapes[AP_GRAB]);
         opt_idx = handle_add_list_remove("autopickup exception", totalapes);
         if (opt_idx == 3) { /* done */
             return TRUE;
         } else if (opt_idx == 0) { /* add new */
+            /* EDIT_GETLIN:  assume user doesn't user want previous
+               exception used as default input string for this one... */
+            apebuf[0] = apebuf[1] = '\0';
             getlin("What new autopickup exception pattern?", &apebuf[1]);
             mungspaces(&apebuf[1]); /* regularize whitespace */
             if (apebuf[1] == '\033')
@@ -5300,8 +5353,7 @@ boolean setinitial, setfromfile;
     } else if (!strcmp("symset", optname)
                || !strcmp("roguesymset", optname)) {
         menu_item *symset_pick = (menu_item *) 0;
-        boolean primaryflag = (*optname == 's'),
-                rogueflag = (*optname == 'r'),
+        boolean rogueflag = (*optname == 'r'),
                 ready_to_switch = FALSE,
                 nothing_to_do = FALSE;
         char *symset_name, fmtstr[20];
@@ -5309,37 +5361,32 @@ boolean setinitial, setfromfile;
         int res, which_set, setcount = 0, chosen = -2;
 
         which_set = rogueflag ? ROGUESET : PRIMARY;
-
+        symset_list = (struct symsetentry *) 0;
         /* clear symset[].name as a flag to read_sym_file() to build list */
         symset_name = symset[which_set].name;
         symset[which_set].name = (char *) 0;
-        symset_list = (struct symsetentry *) 0;
 
         res = read_sym_file(which_set);
-        if (res && symset_list) {
-            char symsetchoice[BUFSZ];
-            int let = 'a', biggest = 0, thissize = 0;
+        /* put symset name back */
+        symset[which_set].name = symset_name;
 
-            sl = symset_list;
-            while (sl) {
+        if (res && symset_list) {
+            int thissize, biggest = 0;
+
+            for (sl = symset_list; sl; sl = sl->next) {
                 /* check restrictions */
-                if ((!rogueflag && sl->rogue)
-                    || (!primaryflag && sl->primary)) {
-                    sl = sl->next;
+                if (rogueflag ? sl->primary : sl->rogue)
                     continue;
-                }
+
                 setcount++;
                 /* find biggest name */
-                if (sl->name)
-                    thissize = strlen(sl->name);
+                thissize = sl->name ? (int) strlen(sl->name) : 0;
                 if (thissize > biggest)
                     biggest = thissize;
-                sl = sl->next;
             }
             if (!setcount) {
-                pline("There are no appropriate %ssymbol sets available.",
-                      (rogueflag) ? "rogue level "
-                                  : (primaryflag) ? "primary " : "");
+                pline("There are no appropriate %s symbol sets available.",
+                      rogueflag ? "rogue level" : "primary");
                 return TRUE;
             }
 
@@ -5348,29 +5395,20 @@ boolean setinitial, setfromfile;
             start_menu(tmpwin);
             any = zeroany;
             any.a_int = 1;
-            add_menu(tmpwin, NO_GLYPH, &any, let++, 0, ATR_NONE,
+            add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                      "Default Symbols", MENU_UNSELECTED);
 
-            sl = symset_list;
-            while (sl) {
+            for (sl = symset_list; sl; sl = sl->next) {
                 /* check restrictions */
-                if ((!rogueflag && sl->rogue)
-                    || (!primaryflag && sl->primary)) {
-                    sl = sl->next;
+                if (rogueflag ? sl->primary : sl->rogue)
                     continue;
-                }
+
                 if (sl->name) {
                     any.a_int = sl->idx + 2;
-                    Sprintf(symsetchoice, fmtstr, sl->name,
-                            sl->desc ? sl->desc : "");
-                    add_menu(tmpwin, NO_GLYPH, &any, let, 0, ATR_NONE,
-                             symsetchoice, MENU_UNSELECTED);
-                    if (let == 'z')
-                        let = 'A';
-                    else
-                        let++;
+                    Sprintf(buf, fmtstr, sl->name, sl->desc ? sl->desc : "");
+                    add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
+                             buf, MENU_UNSELECTED);
                 }
-                sl = sl->next;
             }
             Sprintf(buf, "Select %ssymbol set:",
                     rogueflag ? "rogue level " : "");
@@ -5383,30 +5421,20 @@ boolean setinitial, setfromfile;
 
             if (chosen > -1) {
                 /* chose an actual symset name from file */
-                sl = symset_list;
-                while (sl) {
-                    if (sl->idx == chosen) {
-                        if (symset_name) {
-                            free((genericptr_t) symset_name);
-                            symset_name = (char *) 0;
-                        }
-                        /* free the now stale attributes */
-                        clear_symsetentry(which_set, TRUE);
-
-                        /* transfer only the name of the symbol set */
-                        symset[which_set].name = dupstr(sl->name);
-                        ready_to_switch = TRUE;
+                for (sl = symset_list; sl; sl = sl->next)
+                    if (sl->idx == chosen)
                         break;
-                    }
-                    sl = sl->next;
+                if (sl) {
+                    /* free the now stale attributes */
+                    clear_symsetentry(which_set, TRUE);
+
+                    /* transfer only the name of the symbol set */
+                    symset[which_set].name = dupstr(sl->name);
+                    ready_to_switch = TRUE;
                 }
             } else if (chosen == -1) {
                 /* explicit selection of defaults */
                 /* free the now stale symset attributes */
-                if (symset_name) {
-                    free((genericptr_t) symset_name);
-                    symset_name = (char *) 0;
-                }
                 clear_symsetentry(which_set, TRUE);
             } else
                 nothing_to_do = TRUE;
@@ -5421,25 +5449,17 @@ boolean setinitial, setfromfile;
         }
 
         /* clean up */
-        while (symset_list) {
-            sl = symset_list;
-            if (sl->name)
-                free((genericptr_t) sl->name);
-            sl->name = (char *) 0;
-
-            if (sl->desc)
-                free((genericptr_t) sl->desc);
-            sl->desc = (char *) 0;
-
+        while ((sl = symset_list) != 0) {
             symset_list = sl->next;
+            if (sl->name)
+                free((genericptr_t) sl->name), sl->name = (char *) 0;
+            if (sl->desc)
+                free((genericptr_t) sl->desc), sl->desc = (char *) 0;
             free((genericptr_t) sl);
         }
 
         if (nothing_to_do)
             return TRUE;
-
-        if (!symset[which_set].name && symset_name)
-            symset[which_set].name = symset_name; /* not dupstr() here */
 
         /* Set default symbols and clear the handling value */
         if (rogueflag)
@@ -5448,6 +5468,7 @@ boolean setinitial, setfromfile;
             init_l_symbols();
 
         if (symset[which_set].name) {
+            /* non-default symbols */
             if (read_sym_file(which_set)) {
                 ready_to_switch = TRUE;
             } else {
@@ -5466,7 +5487,6 @@ boolean setinitial, setfromfile;
             assign_graphics(PRIMARY);
         preference_update("symset");
         need_redraw = TRUE;
-        return TRUE;
 
     } else {
         /* didn't match any of the special options */
@@ -5829,9 +5849,10 @@ char *buf;
 #ifdef CURSES_GRAPHICS
     } else if (!strcmp(optname,"windowborders")) {
         Sprintf(buf, "%s",
-                iflags.wc2_windowborders == 1 ? "1=on" :
-                iflags.wc2_windowborders == 2 ? "2=off" :
-                iflags.wc2_windowborders == 3 ? "3=auto" : defopt);
+                (iflags.wc2_windowborders == 1) ? "1=on"
+                : (iflags.wc2_windowborders == 2) ? "2=off"
+                  : (iflags.wc2_windowborders == 3) ? "3=auto"
+                    : defopt);
 #endif
     } else if (!strcmp(optname, "windowtype")) {
         Sprintf(buf, "%s", windowprocs.name);
@@ -5856,10 +5877,9 @@ char *buf;
 #endif
     }
 
-    if (buf[0])
-        return buf;
-    else
-        return "unknown";
+    if (!buf[0])
+        Strcpy(buf, "unknown");
+    return buf;
 }
 
 int
@@ -5938,13 +5958,12 @@ STATIC_OVL void
 remove_autopickup_exception(whichape)
 struct autopickup_exception *whichape;
 {
-    struct autopickup_exception *ape, *prev = 0;
+    struct autopickup_exception *ape, *freeape, *prev = 0;
     int chain = whichape->grab ? AP_GRAB : AP_LEAVE;
 
     for (ape = iflags.autopickup_exceptions[chain]; ape;) {
         if (ape == whichape) {
-            struct autopickup_exception *freeape = ape;
-
+            freeape = ape;
             ape = ape->next;
             if (prev)
                 prev->next = ape;
@@ -6137,7 +6156,8 @@ const char *strval;
 
 /* data for option_help() */
 static const char *opt_intro[] = {
-    "", "                 NetHack Options Help:", "",
+    "",
+    "                 NetHack Options Help:", "",
 #define CONFIG_SLOT 3 /* fill in next value at run-time */
     (char *) 0,
 #if !defined(MICRO) && !defined(MAC)
@@ -6147,7 +6167,8 @@ static const char *opt_intro[] = {
 #ifdef VMS
     "-- for example, $ DEFINE NETHACKOPTIONS \"noautopickup,fruit:kumquat\"",
 #endif
-    "or press \"O\" while playing and use the menu.", "",
+    "or press \"O\" while playing and use the menu.",
+    "",
  "Boolean options (which can be negated by prefixing them with '!' or \"no\"):",
     (char *) 0
 };
@@ -6155,7 +6176,8 @@ static const char *opt_intro[] = {
 static const char *opt_epilog[] = {
     "",
     "Some of the options can be set only before the game is started; those",
-    "items will not be selectable in the 'O' command's menu.", (char *) 0
+    "items will not be selectable in the 'O' command's menu.",
+    (char *) 0
 };
 
 void
@@ -6252,11 +6274,11 @@ struct fruit *replace_fruit;
 {
     register int i;
     register struct fruit *f;
-    int highest_fruit_id = 0;
+    int highest_fruit_id = 0, globpfx;
     char buf[PL_FSIZ], altname[PL_FSIZ];
     boolean user_specified = (str == pl_fruit);
     /* if not user-specified, then it's a fruit name for a fruit on
-     * a bones level...
+     * a bones level or from orctown raider's loot...
      */
 
     /* Note: every fruit has an id (kept in obj->spe) of at least 1;
@@ -6267,39 +6289,54 @@ struct fruit *replace_fruit;
 
         /* force fruit to be singular; this handling is not
            needed--or wanted--for fruits from bones because
-           they already received it in their original game */
+           they already received it in their original game;
+           str==pl_fruit but makesingular() creates a copy
+           so we need to copy that back into pl_fruit */
         nmcpy(pl_fruit, makesingular(str), PL_FSIZ);
+        /* (assertion doesn't matter; we use 'pl_fruit' from here on out) */
         /* assert( str == pl_fruit ); */
 
         /* disallow naming after other foods (since it'd be impossible
-         * to tell the difference)
+         * to tell the difference); globs might have a size prefix which
+         * needs to be skipped in order to match the object type name
          */
+        globpfx = (!strncmp(pl_fruit, "small ", 6)
+                   || !strncmp(pl_fruit, "large ", 6)) ? 6
+                  : (!strncmp(pl_fruit, "very large ", 11)) ? 11
+                    : 0;
         for (i = bases[FOOD_CLASS]; objects[i].oc_class == FOOD_CLASS; i++) {
-            if (!strcmp(OBJ_NAME(objects[i]), pl_fruit)) {
+            if (!strcmp(OBJ_NAME(objects[i]), pl_fruit)
+                || (globpfx > 0
+                    && !strcmp(OBJ_NAME(objects[i]), &pl_fruit[globpfx]))) {
                 found = TRUE;
                 break;
             }
         }
-        {
+        if (!found) {
             char *c;
 
             for (c = pl_fruit; *c >= '0' && *c <= '9'; c++)
                 continue;
-            if (isspace((uchar) *c) || *c == 0)
+            if (!*c || isspace((uchar) *c))
                 numeric = TRUE;
         }
         if (found || numeric
-            || !strncmp(str, "cursed ", 7)
-            || !strncmp(str, "uncursed ", 9)
-            || !strncmp(str, "blessed ", 8)
-            || !strncmp(str, "partly eaten ", 13)
-            || (!strncmp(str, "tin of ", 7)
-                && (!strcmp(str + 7, "spinach")
-                    || name_to_mon(str + 7) >= LOW_PM))
-            || !strcmp(str, "empty tin")
-            || ((str_end_is(str, " corpse")
-                 || str_end_is(str, " egg"))
-                && name_to_mon(str) >= LOW_PM)) {
+            /* these checks for applying food attributes to actual items
+               are case sensitive; "glob of foo" is caught by 'found'
+               if 'foo' is a valid glob; when not valid, allow it as-is */
+            || !strncmp(pl_fruit, "cursed ", 7)
+            || !strncmp(pl_fruit, "uncursed ", 9)
+            || !strncmp(pl_fruit, "blessed ", 8)
+            || !strncmp(pl_fruit, "partly eaten ", 13)
+            || (!strncmp(pl_fruit, "tin of ", 7)
+                && (!strcmp(pl_fruit + 7, "spinach")
+                    || name_to_mon(pl_fruit + 7) >= LOW_PM))
+            || !strcmp(pl_fruit, "empty tin")
+            || (!strcmp(pl_fruit, "glob")
+                || (globpfx > 0 && !strcmp("glob", &pl_fruit[globpfx])))
+            || ((str_end_is(pl_fruit, " corpse")
+                 || str_end_is(pl_fruit, " egg"))
+                && name_to_mon(pl_fruit) >= LOW_PM)) {
             Strcpy(buf, pl_fruit);
             Strcpy(pl_fruit, "candied ");
             nmcpy(pl_fruit + 8, buf, PL_FSIZ - 8);
@@ -6317,11 +6354,11 @@ struct fruit *replace_fruit;
             /* replace_fruit is already part of the fruit chain;
                update it in place rather than looking it up again */
             f = replace_fruit;
-            copynchars(f->fname, str, PL_FSIZ - 1);
+            copynchars(f->fname, pl_fruit, PL_FSIZ - 1);
             goto nonew;
         }
     } else {
-        /* not user_supplied, so assumed to be from bones */
+        /* not user_supplied, so assumed to be from bones (or orc gang) */
         copynchars(altname, str, PL_FSIZ - 1);
         sanitize_name(altname);
         flags.made_fruit = TRUE; /* for safety.  Any fruit name added from a
@@ -6435,10 +6472,30 @@ char *class_select;
                 break;
         }
     }
+    if (category == 1 && next_accelerator <= 'z') {
+        /* for objects, add "A - ' '  all classes", after a separator */
+        any = zeroany;
+        add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
+        any.a_int = (int) ' ';
+        Sprintf(buf, "%c  %s", (char) any.a_int, "all classes of objects");
+        /* we won't preselect this even if the incoming list is empty;
+           having it selected means that it would have to be explicitly
+           de-selected in order to select anything else */
+        add_menu(win, NO_GLYPH, &any, 'A', 0, ATR_NONE, buf, MENU_UNSELECTED);
+    }
     end_menu(win, prompt);
     n = select_menu(win, way ? PICK_ANY : PICK_ONE, &pick_list);
     destroy_nhwindow(win);
     if (n > 0) {
+        if (category == 1) {
+            /* for object classes, first check for 'all'; it means 'use
+               a blank list' rather than 'collect every possible choice' */
+            for (i = 0; i < n; ++i)
+                if (pick_list[i].item.a_int == ' ') {
+                    pick_list[0].item.a_int = ' ';
+                    n = 1; /* return 1; also an implicit 'break;' */
+                }
+        }
         for (i = 0; i < n; ++i)
             *class_select++ = (char) pick_list[i].item.a_int;
         free((genericptr_t) pick_list);

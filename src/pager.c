@@ -1,4 +1,4 @@
-/* NetHack 3.6	pager.c	$NHDT-Date: 1543185072 2018/11/25 22:31:12 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.139 $ */
+/* NetHack 3.6	pager.c	$NHDT-Date: 1549334449 2019/02/05 02:40:49 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.150 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2018. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -119,7 +119,7 @@ char *outbuf;
         } else if (mon->m_ap_type == M_AP_OBJECT
                    /* remembered glyph, not glyph_at() which is 'mon' */
                    && glyph_is_object(glyph)) {
-        objfrommap:
+ objfrommap:
             otmp = (struct obj *) 0;
             fakeobj = object_from_map(glyph, x, y, &otmp);
             Strcat(outbuf, (otmp && otmp->otyp != STRANGE_OBJECT)
@@ -190,14 +190,14 @@ struct obj **obj_p;
             otmp->quan = 2L; /* to force pluralization */
         else if (otmp->otyp == SLIME_MOLD)
             otmp->spe = context.current_fruit; /* give it a type */
-        else if (otmp->otyp == LEASH)
-            otmp->leashmon = 0;
         if (mtmp && has_mcorpsenm(mtmp)) /* mimic as corpse/statue */
             otmp->corpsenm = MCORPSENM(mtmp);
         else if (otmp->otyp == CORPSE && glyph_is_body(glyph))
             otmp->corpsenm = glyph - GLYPH_BODY_OFF;
         else if (otmp->otyp == STATUE && glyph_is_statue(glyph))
             otmp->corpsenm = glyph - GLYPH_STATUE_OFF;
+        if (otmp->otyp == LEASH)
+            otmp->leashmon = 0;
     }
     /* if located at adjacent spot, mark it as having been seen up close
        (corpse type will be known even if dknown is 0, so we don't need a
@@ -226,7 +226,8 @@ int x, y, glyph;
 
     if (otmp) {
         Strcpy(buf, (otmp->otyp != STRANGE_OBJECT)
-                     ? distant_name(otmp, doname_vague_quan)
+                     ? distant_name(otmp, otmp->dknown ? doname_with_price
+                                                       : doname_vague_quan)
                      : obj_descr[STRANGE_OBJECT].oc_name);
         if (fakeobj)
             dealloc_obj(otmp), otmp = 0;
@@ -389,7 +390,8 @@ char *buf, *monbuf;
     buf[0] = monbuf[0] = '\0';
     glyph = glyph_at(x, y);
     if (u.ux == x && u.uy == y && canspotself()
-        && !(iflags.save_uswallow && glyph == mon_to_glyph(u.ustuck))
+        && !(iflags.save_uswallow &&
+             glyph == mon_to_glyph(u.ustuck, rn2_on_display_rng))
         && (!iflags.terrainmode || (iflags.terrainmode & TER_MON) != 0)) {
         /* fill in buf[] */
         (void) self_lookat(buf);
@@ -443,7 +445,7 @@ char *buf, *monbuf;
     } else if (glyph_is_object(glyph)) {
         look_at_object(buf, x, y, glyph); /* fill in buf[] */
     } else if (glyph_is_trap(glyph)) {
-        int tnum = what_trap(glyph_to_trap(glyph));
+        int tnum = what_trap(glyph_to_trap(glyph), rn2_on_display_rng);
 
         /* Trap detection displays a bear trap at locations having
          * a trapped door or trapped container or both.
@@ -1251,14 +1253,14 @@ char *supplemental_name;
 
     fp = dlb_fopen(DATAFILE, "r");
     if (!fp) {
-        pline("Cannot open data file!");
+        pline("Cannot open 'data' file!");
         return;
     }
     /* If someone passed us garbage, prevent fault. */
     if (!inp || strlen(inp) > (BUFSZ - 1)) {
         impossible("bad do_look buffer passed (%s)!",
                    !inp ? "null" : "too long");
-        return;
+        goto checkfile_done;
     }
 
     /* To prevent the need for entries in data.base like *ngel to account
@@ -1300,6 +1302,8 @@ char *supplemental_name;
         if (*dbase_str == ' ')
             ++dbase_str;
     }
+    if (!strncmp(dbase_str, "pair of ", 8))
+        dbase_str += 8;
     if (!strncmp(dbase_str, "tame ", 5))
         dbase_str += 5;
     else if (!strncmp(dbase_str, "peaceful ", 9))
@@ -1366,6 +1370,14 @@ char *supplemental_name;
             ep = strstri(dbase_str, ", ");
         if (ep && ep > dbase_str)
             *ep = '\0';
+        /* remove article from 'alt' name ("a pair of lenses named
+           The Eyes of the Overworld" simplified above to "lenses named
+           The Eyes of the Overworld", now reduced to "The Eyes of the
+           Overworld", skip "The" as with base name processing) */
+        if (alt && (!strncmpi(alt, "a ", 2)
+                    || !strncmpi(alt, "an ", 3)
+                    || !strncmpi(alt, "the ", 4)))
+            alt = index(alt, ' ') + 1;
         /* remove charges or "(lit)" or wizmode "(N aum)" */
         if ((ep = strstri(dbase_str, " (")) != 0 && ep > dbase_str)
             *ep = '\0';
@@ -1617,9 +1629,9 @@ struct permonst **for_supplement;
 
     /* Check for monsters */
     if (!iflags.terrainmode || (iflags.terrainmode & TER_MON) != 0) {
-        for (i = 0; i < MAXMCLASSES; i++) {
+        for (i = 1; i < MAXMCLASSES; i++) {
             if (sym == (looked ? showsyms[i + SYM_OFF_M] : def_monsyms[i].sym)
-                && def_monsyms[i].explain) {
+                && def_monsyms[i].explain && *def_monsyms[i].explain) {
                 need_to_look = TRUE;
                 if (!found) {
                     Sprintf(out_str, "%s%s",
@@ -1991,12 +2003,27 @@ coord *click_cc;
         }
 
         found = do_screen_description(cc, (from_screen || clicklook), sym,
-                                  out_str, &firstmatch, &supplemental_pm);
+                                      out_str, &firstmatch, &supplemental_pm);
 
         /* Finally, print out our explanation. */
         if (found) {
             /* use putmixed() because there may be an encoded glyph present */
             putmixed(WIN_MESSAGE, 0, out_str);
+#ifdef DUMPLOG
+            {
+                char dmpbuf[BUFSZ];
+
+                /* putmixed() bypasses pline() so doesn't write to DUMPLOG;
+                   tty puts it into ^P recall, so it ought to be there;
+                   DUMPLOG is plain text, so override graphics character;
+                   at present, force space, but we ought to use defsyms[]
+                   value for the glyph the graphics character came from */
+                (void) decode_mixed(dmpbuf, out_str);
+                if (dmpbuf[0] < ' ' || dmpbuf[0] >= 127) /* ASCII isprint() */
+                    dmpbuf[0] = ' ';
+                dumplogmsg(dmpbuf);
+            }
+#endif
 
             /* check the data file for information about this thing */
             if (found == 1 && ans != LOOK_QUICK && ans != LOOK_ONCE
@@ -2177,7 +2204,7 @@ boolean without_asking;
                 } else {
                     textp = suptext2;
                     gang = "";
-		}
+                }
                 datawin = create_nhwindow(NHW_MENU);
                 for (i = 0; textp[i]; i++) {
                     char buf[BUFSZ];
@@ -2243,7 +2270,7 @@ doidtrap()
                 if (u.dz < 0 ? is_hole(tt) : tt == ROCKTRAP)
                     break;
             }
-            tt = what_trap(tt);
+            tt = what_trap(tt, rn2_on_display_rng);
             pline("That is %s%s%s.",
                   an(defsyms[trap_to_defsym(tt)].explanation),
                   !trap->madeby_u

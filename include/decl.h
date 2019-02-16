@@ -1,4 +1,4 @@
-/* NetHack 3.6  decl.h  $NHDT-Date: 1496531104 2017/06/03 23:05:04 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.82 $ */
+/* NetHack 3.6  decl.h  $NHDT-Date: 1547025154 2019/01/09 09:12:34 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.147 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2007. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -26,6 +26,10 @@ E char SAVEF[];
 #ifdef MICRO
 E char SAVEP[];
 #endif
+
+/* max size of a windowtype option */
+#define WINTYPELEN 16
+E char chosen_windowtype[WINTYPELEN];
 
 E NEARDATA int bases[MAXOCLASSES];
 
@@ -230,6 +234,7 @@ E NEARDATA boolean mrg_to_wielded;
 E NEARDATA boolean defer_see_monsters;
 
 E NEARDATA boolean in_steed_dismounting;
+E NEARDATA boolean has_strong_rngseed;
 
 E const int shield_static[];
 
@@ -260,9 +265,10 @@ E NEARDATA struct obj *migrating_objs;
 E NEARDATA struct obj *billobjs;
 E NEARDATA struct obj *current_wand, *thrownobj, *kickedobj;
 
-E NEARDATA struct obj zeroobj; /* for init; &zeroobj used as special value */
+E NEARDATA const struct obj zeroobj; /* for init; also, &zeroobj is used
+                                      * as special value */
 
-E NEARDATA anything zeroany;   /* init'd and defined in decl.c */
+E NEARDATA const anything zeroany;   /* init'd and defined in decl.c */
 
 #include "you.h"
 E NEARDATA struct you u;
@@ -274,7 +280,7 @@ E NEARDATA struct u_realtime urealtime;
 #include "pm.h"
 #endif
 
-E NEARDATA struct monst zeromonst; /* for init of new or temp monsters */
+E NEARDATA const struct monst zeromonst; /* for init of new or temp monsters */
 E NEARDATA struct monst youmonst; /* monster details when hero is poly'd */
 E NEARDATA struct monst *mydogs, *migrating_mons;
 
@@ -283,6 +289,11 @@ E NEARDATA struct mvitals {
     uchar died;
     uchar mvflags;
 } mvitals[NUMMONS];
+
+E NEARDATA long domove_attempting;
+E NEARDATA long domove_succeeded;
+#define DOMOVE_WALK         0x00000001
+#define DOMOVE_RUSH         0x00000002
 
 E NEARDATA struct c_color_names {
     const char *const c_black, *const c_amber, *const c_golden,

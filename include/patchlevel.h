@@ -40,14 +40,14 @@
 
 /*  Patch 2, <insert date here>
  *
- *  Performance optimizations for tty including the ability to
- *      do per field updating
- *  Significant performance improvements in sys/winnt/nttty mainly through
- *      the introduction of a back buffer approach
- *  A couple of windows crash bug fixes during early game startup
+ *  Over 220 bug fixes including a couple of crash bug fixes
+ *  More than 15 enhancements or improvements
  *  Ensuring that unix Makefiles do not rely on features unique to gnu make
  *  Improvements to hilite_status parsing in an effort to ensure that expected
  *      and sensible values ranges are more easily specified and accepted
+ *  Performance optimizations for tty
+ *  Windows console tty via use of a back buffer
+ *  Mac OS X build improvements and inclusion of an Xcode project
  */
 
 /*  Patch 1, April 27, 2018

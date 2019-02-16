@@ -1,4 +1,4 @@
-/* NetHack 3.6	weapon.c	$NHDT-Date: 1541145518 2018/11/02 07:58:38 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.60 $ */
+/* NetHack 3.6	weapon.c	$NHDT-Date: 1548209744 2019/01/23 02:15:44 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.69 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -396,6 +396,164 @@ struct monst *mon;
     return  tmp;
 }
 
+/* check whether blessed and/or material damage applies for *non-weapon* hit;
+   return value is the amount of the extra damage */
+int
+special_dmgval(magr, mdef, armask, out_obj)
+struct monst *magr, *mdef;
+long armask; /* armor mask, multiple bits accepted for W_ARMC|W_ARM|W_ARMU
+              * or W_ARMG|W_RINGL|W_RINGR only */
+struct obj **out_obj; /* ptr to offending object, can be NULL if not wanted */
+{
+    struct obj *obj;
+    struct permonst *ptr = mdef->data;
+    boolean left_ring = (armask & W_RINGL) ? TRUE : FALSE,
+            right_ring = (armask & W_RINGR) ? TRUE : FALSE;
+    int bonus = 0;
+
+    obj = 0;
+    if (out_obj)
+        *out_obj = 0;
+    if (armask & (W_ARMC | W_ARM | W_ARMU)) {
+        if ((armask & W_ARMC) != 0L
+            && (obj = which_armor(magr, W_ARMC)) != 0)
+            armask = W_ARMC;
+        else if ((armask & W_ARM) != 0L
+                 && (obj = which_armor(magr, W_ARM)) != 0)
+            armask = W_ARM;
+        else if ((armask & W_ARMU) != 0L
+                 && (obj = which_armor(magr, W_ARMU)) != 0)
+            armask = W_ARMU;
+        else
+            armask = 0L;
+    } else if (armask & (W_ARMG | W_RINGL | W_RINGR)) {
+        armask = ((obj = which_armor(magr, W_ARMG)) != 0) ?  W_ARMG : 0L;
+    } else {
+        obj = which_armor(magr, armask);
+    }
+
+    if (obj) {
+        if (obj->blessed
+            && (is_undead(ptr) || is_demon(ptr) || is_vampshifter(mdef)))
+            bonus += rnd(4);
+        if (mon_hates_material(mdef, obj->material)) {
+            bonus += rnd(sear_damage(obj->material));
+            if (out_obj)
+                *out_obj = obj;
+        }
+
+    /* when no gloves we check for rings made of hated material (blessed rings
+     * ignored) */
+    } else if ((left_ring || right_ring) && magr == &youmonst) {
+        if (left_ring && uleft
+            && mon_hates_material(mdef, uleft->material)) {
+            bonus += rnd(sear_damage(uleft->material));
+            if (out_obj)
+                *out_obj = uleft;
+        }
+        if (right_ring && uright
+            && mon_hates_material(mdef, uright->material)) {
+            /* What if an enemy hates two kinds of materials and you're
+             * wearing one of each?
+             * The most appropriate flavor is that you're only hitting with
+             * one hand at a time, so if both would apply material damage,
+             * take one or the other hand randomly. */
+            if (*out_obj == uleft && rn2(2)) {
+                /* nothing in this function could have set bonus to 0 before
+                 * this except the left ring case above */
+                bonus = 0;
+                bonus += rnd(sear_damage(uright->material));
+                if (out_obj)
+                    *out_obj = uright;
+            }
+        }
+    }
+
+    return bonus;
+}
+
+/* give a "silver <item> sears <target>" message (or similar for other
+ * material); not used for weapon hit, so we only handle rings */
+void
+searmsg(magr, mdef, obj)
+struct monst *magr UNUSED;
+struct monst *mdef;
+struct obj * obj; /* the offending item */
+{
+    char onamebuf[BUFSZ];
+    char whose[BUFSZ];
+    int mat = obj->material;
+    const char* matname = materialnm[mat];
+
+    if (!obj) {
+        impossible("searmsg: nothing searing?");
+        return;
+    }
+
+    /* Make it explicit to the player that this effect is from the
+     * material. If the object name doesn't already contain the material name,
+     * add it (e.g. "engraved silver bell" shouldn't turn into "silver engraved
+     * silver bell") */
+    boolean alreadyin = (strstri(cxname(obj), matname) != NULL);
+    if (!alreadyin) {
+        Sprintf(onamebuf, "%s %s", matname, cxname(obj));
+    }
+    else {
+        Strcpy(onamebuf, cxname(obj));
+    }
+    char* whom = mon_nam(mdef);
+    shk_your(whose, obj);
+    if (mat == SILVER) { /* more dramatic effects than other materials */
+        /* note: s_suffix returns a modifiable buffer */
+        if (!noncorporeal(mdef->data) && !amorphous(mdef->data))
+            whom = strcat(s_suffix(whom), " flesh");
+
+        pline("%s%s %s %s!", upstart(whose), onamebuf,
+              vtense(onamebuf, "sear"), whom);
+    }
+    else {
+        pline("%s flinches from %s %s!", whom, whose, onamebuf);
+    }
+}
+
+
+
+/* give a "silver <item> sears <target>" message;
+   not used for weapon hit, so we only handle rings */
+void
+silver_sears(magr, mdef, silverhit)
+struct monst *magr UNUSED;
+struct monst *mdef;
+long silverhit;
+{
+    char rings[20]; /* plenty of room for "rings" */
+    int ltyp = ((uleft && (silverhit & W_RINGL) != 0L)
+                ? uleft->otyp : STRANGE_OBJECT),
+        rtyp = ((uright && (silverhit & W_RINGR) != 0L)
+                ? uright->otyp : STRANGE_OBJECT);
+    boolean both,
+        l_ag = (objects[ltyp].oc_material == SILVER && uleft->dknown),
+        r_ag = (objects[rtyp].oc_material == SILVER && uright->dknown);
+
+    if ((silverhit & (W_RINGL | W_RINGR)) != 0L) {
+        /* plural if both the same type (so not multi_claw and both rings
+           are non-Null) and either both known or neither known, or both
+           silver (in case there is ever more than one type of silver ring)
+           and both known; singular if multi_claw (where one of ltyp or
+           rtyp will always be STRANGE_OBJECT) even if both rings are known
+           silver [see hmonas(uhitm.c) for explanation of 'multi_claw'] */
+        both = ((ltyp == rtyp && uleft->dknown == uright->dknown)
+                || (l_ag && r_ag));
+        Sprintf(rings, "ring%s", both ? "s" : "");
+        Your("%s%s %s %s!",
+             (l_ag || r_ag) ? "silver "
+             : both ? ""
+               : ((silverhit & W_RINGL) != 0L) ? "left "
+                 : "right ",
+             rings, vtense(rings, "sear"), mon_nam(mdef));
+    }
+}
+
 STATIC_DCL struct obj *FDECL(oselect, (struct monst *, int));
 #define Oselect(x)                      \
     if ((otmp = oselect(mtmp, x)) != 0) \
@@ -423,6 +581,7 @@ int x;
              	return obest;
 }
 
+/* TODO: have monsters use aklys' throw-and-return */
 static NEARDATA const int rwep[] = {
     ORB_OF_PERMAFROST, DWARVISH_SPEAR, ELVEN_SPEAR, SPEAR,
     ORCISH_SPEAR, JAVELIN, WINDMILL_BLADE, THROWING_AXE,
@@ -503,11 +662,11 @@ register struct monst *mtmp;
     boolean mweponly;
     int i;
 
-    struct obj *tmpprop = &zeroobj;
+    struct obj *tmpprop = (struct obj *) &zeroobj;
 
     char mlet = mtmp->data->mlet;
 
-    propellor = &zeroobj;
+    propellor = (struct obj *) &zeroobj;
     Oselect(EGG);      /* cockatrice egg */
     if (mlet == S_KOP) /* pies are first choice for Kops */
         Oselect(CREAM_PIE);
@@ -567,28 +726,28 @@ register struct monst *mtmp;
         }
 
         /* KMH -- This belongs here so darts will work */
-        propellor = &zeroobj;
+        propellor = (struct obj *) &zeroobj;
 
-        prop = (objects[rwep[i]]).oc_skill;
+        prop = objects[rwep[i]].oc_skill;
         if (prop < 0) {
             switch (-prop) {
             case P_BOW:
-                propellor = (oselect(mtmp, YUMI));
+                propellor = oselect(mtmp, YUMI);
                 if (!propellor)
                     propellor = (oselect(mtmp, ELVEN_BOW));
                 /* WAC added dark elven bow */
           		  if (!propellor)
                     propellor = (oselect(mtmp, DARK_ELVEN_BOW));
                 if (!propellor)
-                    propellor = (oselect(mtmp, BOW));
+                    propellor = oselect(mtmp, BOW);
                 if (!propellor)
-                    propellor = (oselect(mtmp, ORCISH_BOW));
+                    propellor = oselect(mtmp, ORCISH_BOW);
                 break;
             case P_SLING:
-                propellor = (oselect(mtmp, SLING));
+                propellor = oselect(mtmp, SLING);
                 break;
             case P_CROSSBOW:
-                propellor = (oselect(mtmp, CROSSBOW));
+                propellor = oselect(mtmp, CROSSBOW);
             }
             if (!tmpprop) tmpprop = propellor;
             if ((otmp = MON_WEP(mtmp)) && mwelded(otmp) && otmp != propellor
@@ -620,6 +779,19 @@ register struct monst *mtmp;
     /* failure */
     if (tmpprop) propellor = tmpprop;
     return (struct obj *) 0;
+}
+
+/* is 'obj' a type of weapon that any monster knows how to throw? */
+boolean
+monmightthrowwep(obj)
+struct obj *obj;
+{
+    short idx;
+
+    for (idx = 0; idx < SIZE(rwep); ++idx)
+        if (obj->otyp == rwep[idx])
+            return TRUE;
+    return FALSE;
 }
 
 /* Weapons in order of preference */
@@ -814,7 +986,8 @@ register struct monst *mon;
     }
     if (obj && obj != &zeroobj) {
         struct obj *mw_tmp = MON_WEP(mon);
-        if (mw_tmp && mw_tmp == obj) {
+
+        if (mw_tmp && mw_tmp->otyp == obj->otyp) {
             /* already wielding it */
             mon->weapon_check = NEED_WEAPON;
             return 0;

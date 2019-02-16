@@ -175,7 +175,8 @@ struct obj *
 droppables(mon)
 struct monst *mon;
 {
-    struct obj *obj, *wep, dummy, *pickaxe, *unihorn, *key, *hwep, *proj, *rwep;
+    struct obj *obj, *wep, dummy, *pickaxe, *unihorn, *key, *hwep, *proj;
+    const struct obj *rwep;
 
     dummy = zeroobj;
     dummy.otyp = GOLD_PIECE; /* not STRANGE_OBJECT or tools of interest */

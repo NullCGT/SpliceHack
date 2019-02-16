@@ -1,7 +1,7 @@
-/* NetHack 3.6 cursstat.c */
-/* Copyright (c) Karl Garrison, 2010. */
-/* NetHack may be freely redistributed.  See license for details. */
 /* vim:set cin ft=c sw=4 sts=4 ts=8 et ai cino=Ls\:0t0(0 : -*- mode:c;fill-column:80;tab-width:8;c-basic-offset:4;indent-tabs-mode:nil;c-file-style:"k&r" -*-*/
+/* NetHack 3.6 cursstat.c */
+/* Copyright (c) Andy Thomson, 2018. */
+/* NetHack may be freely redistributed.  See license for details. */
 
 #include <ctype.h> /* toupper() */
 #include "curses.h"
@@ -55,6 +55,21 @@ curses_status_init()
 
     /* let genl_status_init do most of the initialization */
     genl_status_init();
+}
+
+void
+curses_status_finish()
+{
+#ifdef STATUS_HILITES
+    int i;
+
+    for (i = 0; i < MAXBLSTATS; ++i) {
+         if (status_vals_long[i])
+              free(status_vals_long[i]), status_vals_long[i] = (char *) 0;
+    }
+    genl_status_finish();
+#endif /* STATUS_HILITES */
+    return;
 }
 
 /*

@@ -1,4 +1,4 @@
-/* NetHack 3.6	mondata.h	$NHDT-Date: 1513297342 2017/12/15 00:22:22 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.33 $ */
+/* NetHack 3.6	mondata.h	$NHDT-Date: 1548209737 2019/01/23 02:15:37 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.36 $ */
 /* Copyright (c) 1989 Mike Threepoint				  */
 /* NetHack may be freely redistributed.  See license for details. */
 /* Edited 5/12/18 by NullCGT */
@@ -83,6 +83,7 @@
 #define slithy(ptr) (((ptr)->mflags1 & M1_SLITHY) != 0L)
 #define is_wooden(ptr) ((ptr) == &mons[PM_WOOD_GOLEM] || (ptr->mlet) == S_PLANT)
 #define thick_skinned(ptr) (((ptr)->mflags1 & M1_THICK_HIDE) != 0L)
+#define hug_throttles(ptr) ((ptr) == &mons[PM_ROPE_GOLEM])
 #define slimeproof(ptr) \
     ((ptr) == &mons[PM_GREEN_SLIME] || flaming(ptr) || noncorporeal(ptr))
 #define lays_eggs(ptr) (((ptr)->mflags1 & M1_OVIPAROUS) != 0L)
@@ -162,9 +163,9 @@
 #define is_longworm(ptr)                                                   \
     (((ptr) == &mons[PM_BABY_LONG_WORM]) || ((ptr) == &mons[PM_LONG_WORM]) \
      || ((ptr) == &mons[PM_LONG_WORM_TAIL]))
-#define is_covetous(ptr) ((ptr->mflags3 & M3_COVETOUS))
-#define infravision(ptr) ((ptr->mflags3 & M3_INFRAVISION))
-#define infravisible(ptr) ((ptr->mflags3 & M3_INFRAVISIBLE))
+#define is_covetous(ptr) (((ptr)->mflags3 & M3_COVETOUS))
+#define infravision(ptr) (((ptr)->mflags3 & M3_INFRAVISION))
+#define infravisible(ptr) (((ptr)->mflags3 & M3_INFRAVISIBLE))
 #define is_displacer(ptr) (((ptr)->mflags3 & M3_DISPLACES) != 0L)
 #define is_displaced(ptr) ((ptr) == &mons[PM_SHIMMERING_DRAGON] || \
     (ptr) == &mons[PM_BABY_SHIMMERING_DRAGON] || \

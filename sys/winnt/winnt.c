@@ -43,10 +43,17 @@ boolean win32_cursorblink;
 /* globals required within here */
 HANDLE ffhandle = (HANDLE) 0;
 WIN32_FIND_DATA ffd;
+extern int GUILaunched;
+boolean getreturn_enabled;
+int redirect_stdout;
 
 typedef HWND(WINAPI *GETCONSOLEWINDOW)();
 static HWND GetConsoleHandle(void);
 static HWND GetConsoleHwnd(void);
+#if !defined(TTY_GRAPHICS)
+extern void NDECL(backsp);
+#endif
+int NDECL(windows_console_custom_nhgetch);
 
 /* The function pointer nt_kbhit contains a kbhit() equivalent
  * which varies depending on which window port is active.
@@ -492,12 +499,58 @@ void nhassert_failed(const char * exp, const char * file, int line)
     error(message);
 }
 
-/* nethack_enter_winnt() is the first thing called from main */
+void
+nethack_exit(code)
+int code;
+{
+    /* Only if we started from the GUI, not the command prompt,
+     * we need to get one last return, so the score board does
+     * not vanish instantly after being created.
+     * GUILaunched is defined and set in nttty.c.
+     */
+
+
+    if (!GUILaunched) {
+        windowprocs = *get_safe_procs(1);
+        /* use our custom version which works
+           a little cleaner than the stdio one */
+        windowprocs.win_nhgetch = windows_console_custom_nhgetch;
+    }
+    if (getreturn_enabled)
+        wait_synch();
+    exit(code);
+}
+
+#undef kbhit
+#include <conio.h>
+
+int
+windows_console_custom_nhgetch(VOID_ARGS)
+{
+    return _getch();
+}
+
+
+void
+getreturn(str)
+const char *str;
+{
+    char buf[BUFSZ];
+
+    if (!getreturn_enabled)
+        return;
+    Sprintf(buf,"Hit <Enter> %s.", str);
+    raw_print(buf);
+    wait_synch();
+    return;
+}
+
+/* nethack_enter_winnt() is called from main immediately after
+   initializing the window port */
 void nethack_enter_winnt()
 {
-#ifdef TTY_GRAPHICS
-    nethack_enter_nttty();
-#endif
+	if (WINDOWPORT("tty"))
+		nethack_enter_nttty();
 }
 
 /* CP437 to Unicode mapping according to the Unicode Consortium */
@@ -607,6 +660,74 @@ const char *window_opt;
     }
     return 0;
 }
+
+/*
+ * Add a backslash to any name not ending in /, \ or :	 There must
+ * be room for the \
+ */
+void
+append_slash(name)
+char *name;
+{
+    char *ptr;
+
+    if (!*name)
+        return;
+    ptr = name + (strlen(name) - 1);
+    if (*ptr != '\\' && *ptr != '/' && *ptr != ':') {
+        *++ptr = '\\';
+        *++ptr = '\0';
+    }
+    return;
+}
+
+#include <bcrypt.h>     /* Windows Crypto Next Gen (CNG) */
+
+#ifndef STATUS_SUCCESS
+#define STATUS_SUCCESS 0
+#endif
+#ifndef STATUS_NOT_FOUND
+#define STATUS_NOT_FOUND 0xC0000225
+#endif
+#ifndef STATUS_UNSUCCESSFUL
+#define STATUS_UNSUCCESSFUL 0xC0000001
+#endif
+
+unsigned long
+sys_random_seed(VOID_ARGS)
+{
+    unsigned long ourseed = 0UL;
+    BCRYPT_ALG_HANDLE hRa = (BCRYPT_ALG_HANDLE) 0;
+    NTSTATUS status = STATUS_UNSUCCESSFUL;
+    boolean Plan_B = TRUE;
+
+    status = BCryptOpenAlgorithmProvider(&hRa, BCRYPT_RNG_ALGORITHM,
+                                         (LPCWSTR) 0, 0);
+    if (hRa && status == STATUS_SUCCESS) {
+        status = BCryptGenRandom(hRa, (PUCHAR) &ourseed,
+                                 (ULONG) sizeof ourseed, 0);
+        if (status == STATUS_SUCCESS) {
+            BCryptCloseAlgorithmProvider(hRa,0);
+            has_strong_rngseed = TRUE;
+            Plan_B = FALSE;
+        }
+    }
+
+    if (Plan_B) {
+        time_t datetime = 0;
+        const char *emsg;
+
+        if (status == STATUS_NOT_FOUND)
+            emsg = "BCRYPT_RNG_ALGORITHM not avail, falling back";
+        else
+            emsg = "Other failure than algorithm not avail";
+        paniclog("sys_random_seed", emsg); /* leaves clue, doesn't exit */
+        (void) time(&datetime);
+        ourseed = (unsigned long) datetime;
+    }
+    return ourseed;
+}
+
 #endif /* WIN32 */
 
 /*winnt.c*/

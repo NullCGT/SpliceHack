@@ -911,7 +911,7 @@ skip0:
         if (u.uhave.amulet || !rn2(3)) {
             x = somex(croom);
             y = somey(croom);
-            tmonst = makemon((struct permonst *) 0, x, y, NO_MM_FLAGS);
+            tmonst = makemon((struct permonst *) 0, x, y, MM_NOGRP);
             if (tmonst && tmonst->data == &mons[PM_GIANT_SPIDER]
                 && !occupied(x, y))
                 (void) maketrap(x, y, WEB);
@@ -1097,6 +1097,9 @@ mklev()
     struct mkroom *croom;
     int ridx;
 
+    reseed_random(rn2);
+    reseed_random(rn2_on_display_rng);
+
     init_mapseen(&u.uz);
     if (getbones())
         return;
@@ -1124,6 +1127,9 @@ mklev()
        entered; rooms[].orig_rtype always retains original rtype value */
     for (ridx = 0; ridx < SIZE(rooms); ridx++)
         rooms[ridx].orig_rtype = rooms[ridx].rtype;
+
+    reseed_random(rn2);
+    reseed_random(rn2_on_display_rng);
 }
 
 void

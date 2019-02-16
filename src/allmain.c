@@ -764,7 +764,7 @@ boolean new_game; /* false => restoring an old game */
             checkfile(rolebuf, 0, TRUE, TRUE, (char *) 0);
         }
         /* Display tip of the day */
-        get_rnd_text(SPLICETIPSFILE, tipbuf);
+        get_rnd_text(SPLICETIPSFILE, tipbuf, rn2_on_display_rng);
         Sprintf(tiptxt, "Splicehack Tip of the Day: %s", tipbuf);
         winid datawin = create_nhwindow(NHW_TEXT);
         putstr(datawin, 0, tiptxt);

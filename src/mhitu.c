@@ -1482,7 +1482,7 @@ register struct attack *mattk;
         /*FALLTHRU*/
     case AD_DRLI:
         hitmsg(mtmp, mattk);
-        if (uncancelled && !rn2(3) && !Drain_resistance) {
+        if (uncancelled && !rn2(3) && !Drain_resistance && !item_catches_drain(&youmonst)) {
             losexp("life drainage");
         }
         break;
@@ -3153,7 +3153,7 @@ struct monst *mon;
             context.botl = 1;
             break;
         case 3:
-            if (!resists_drli(&youmonst)) {
+            if (!resists_drli(&youmonst) && !item_catches_drain(&youmonst)) {
                 You_feel("out of shape.");
                 losexp("overexertion");
             } else {

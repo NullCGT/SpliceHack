@@ -946,12 +946,6 @@ int dieroll;
                     hittxt = TRUE;
                 }
 
-                /* maybe break your glass weapon or monster's glass armor */
-                if (hand_to_hand) {
-                    break_glass_obj(obj);
-                    break_glass_obj(some_armor(mon));
-                }
-
                 if (obj->oartifact
                     && artifact_hit(&youmonst, mon, obj, &tmp, dieroll)) {
                     if (DEADMONSTER(mon)) /* artifact killed monster */
@@ -1024,7 +1018,14 @@ int dieroll;
                             pline("The deadly spear vanishes...");
                             obfree(obj, (struct obj *) 0);
                         }
-                    }
+                }
+                /* maybe break your glass weapon or monster's glass armor; put
+                 * this at the end so that other stuff doesn't have to check obj
+                 * && obj->whatever all the time */
+                if (hand_to_hand) {
+                    break_glass_obj(obj);
+                    break_glass_obj(some_armor(mon));
+                }
             }
         } else if (obj->oclass == POTION_CLASS) {
             if (obj->quan > 1L)
@@ -2054,7 +2055,8 @@ int specialdmg; /* blessed and/or material bonus against various things */
         tmp = 0;
         break;
     case AD_DRLI:
-        if (!negated && !rn2(3) && !resists_drli(mdef)) {
+        if (!negated && !rn2(3) && !resists_drli(mdef)
+            && !item_catches_drain(mdef)) {
             int xtmp = d(2, 6);
 
             pline("%s suddenly seems weaker!", Monnam(mdef));
@@ -3403,6 +3405,36 @@ struct attack *mattk;     /* null means we find one internally */
 
     if (carried(obj))
         update_inventory();
+}
+
+/* An item intercepts life drainage, at the cost of itself or its own
+ * enchantment. Currently implemented only for bone armor with a positive
+ * enchantment. */
+boolean
+item_catches_drain(mdef)
+struct monst* mdef;
+{
+    int bone_armor_ct = 0;
+    struct obj *otmp, *interceptor = NULL;
+    otmp = (mdef == &youmonst) ? invent : mdef->minvent;
+    for (; otmp != NULL; otmp = otmp->nobj) {
+        if (otmp->oclass == ARMOR_CLASS && (otmp->owornmask & W_ARMOR) != 0L
+            && otmp->material == BONE && otmp->spe > 0) {
+            bone_armor_ct++;
+            if (!rn2(bone_armor_ct)) {
+                interceptor = otmp;
+            }
+        }
+    }
+    if (interceptor) {
+        /* use mon_moving to check for hero responsibility */
+        drain_item(interceptor, !context.mon_moving);
+        pline("%s less effective.", Yobjnam2(interceptor, "seem"));
+        /* Drain was intercepted, so the monster "resisted" it. */
+        return TRUE;
+    }
+    /* nothing eligible to intercept */
+    return FALSE;
 }
 
 /* Note: caller must ascertain mtmp is mimicking... */

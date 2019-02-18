@@ -1117,7 +1117,7 @@ register struct obj *otmp;
     		    else if (!Deaf && flags.verbose)
           			You("hear an awful gobbling noise!");
   		      mtmp->meating = 2;
-            dogintr(mtmp, &mons[otmp->corpsenm]);
+            dog_givit(mtmp, &mons[otmp->corpsenm]);
   		      delobj(otmp);
   		      break; /* only eat one at a time... */
   		  }
@@ -1151,7 +1151,7 @@ register struct obj *otmp;
                   distant_name(otmp,doname));
             else if (!Deaf && flags.verbose)
                 You("hear an unsettling writhing noise.");
-            dogintr(mtmp, &mons[otmp->corpsenm]);
+            dog_givit(mtmp, &mons[otmp->corpsenm]);
             clone_mon(mtmp, 0, 0);
             delobj(otmp);
             break; /* only eat one at a time... */
@@ -1238,7 +1238,7 @@ struct monst *mtmp;
                     && !strcmpi(OBJ_DESCR(objects[otmp->otyp]), "YUM YUM"))
                     pline("Yum%c", otmp->blessed ? '!' : '.');
                 if (otmp->otyp == CORPSE)
-                    dogintr(mtmp, &mons[otmp->corpsenm]);
+                    dog_givit(mtmp, &mons[otmp->corpsenm]);
             } else {
                 if (flags.verbose)
                     You_hear("a slurping sound.");

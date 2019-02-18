@@ -1799,6 +1799,13 @@ struct monst *magr, /* monster that is currently deciding where to move */
   	if(ma == &mons[PM_RAVEN] && md == &mons[PM_FLOATING_EYE])
   		  return ALLOW_M|ALLOW_TM;
 
+    /* Nazgul vs. hobbits */
+    if(ma == &mons[PM_NAZGUL] && md == &mons[PM_HOBBIT])
+        return ALLOW_M | ALLOW_TM;
+    /* and vice versa */
+    if(md == &mons[PM_NAZGUL] && ma == &mons[PM_HOBBIT])
+        return ALLOW_M | ALLOW_TM;
+
     /* Asmodeus and Mephisto dislike one another. */
     if(ma == &mons[PM_MEPHISTO] && md == &mons[PM_ASMODEUS])
         return ALLOW_M|ALLOW_TM;

@@ -233,6 +233,12 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
 
     /* SLASHEM ARTIFACTS */
 
+    /* Unlike in SLASH'EM, the bat from hell is not rogue-specific. It can be
+     * considered one of the rarest artifacts, since baseball bats are only
+     * generated in junk shops. */
+    A("Bat from Hell", BASEBALL_BAT, SPFX_RESTR, 0, 0, PHYS(3,20), NO_DFNS,
+      NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM, 5000L, NO_COLOR),
+
     A("Doomblade", ORCISH_SHORT_SWORD, SPFX_RESTR, 0, 0, PHYS(0, 10), NO_DFNS,
       NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM, 1000L, NO_COLOR),
 
@@ -251,7 +257,10 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     A("Plague", DARK_ELVEN_BOW,	/* KMH */
     	(SPFX_RESTR | SPFX_DEFN), 0, 0, PHYS(5,7), DFNS(AD_DRST), NO_CARY, 0,
       A_CHAOTIC, PM_DROW, NON_PM, 6000L, CLR_BRIGHT_GREEN),
-    	/* Auto-poison code in dothrow.c */
+
+    /* If necromancers are ever added, they will use this. */
+    A("Serpent's Tongue", DAGGER, SPFX_RESTR, 0, 0, PHYS(2,0), NO_DFNS, NO_CARY,
+      0, A_CHAOTIC, NON_PM, NON_PM, 400L, NO_COLOR),
 
     /* VANILLA ARTIFACTS */
 

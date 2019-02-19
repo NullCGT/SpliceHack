@@ -12,6 +12,7 @@
 - Paranoid Water and Lava
 - Peaceful Displacement
 - Monster Lookup
+- Many code refactors
 - Other Minor QOL Changes
 
 #Biodiversity Patch
@@ -52,6 +53,8 @@
     - Luck Blade Artifact
     - Sword of Balance Artifact
     - Sword of Justice Artifact
+    - Bat from Hell Artifact
+    - Serpent's Tongue Artifact
     - Drow Items
     - Medical Kit and associated items
     - Potions of blood and vampire blood

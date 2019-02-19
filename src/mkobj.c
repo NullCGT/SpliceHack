@@ -1129,9 +1129,11 @@ boolean artif;
     case LEASH:
         otmp->leashmon = 0; /* overloads corpsenm, which was set to NON_PM */
         break;
+    case SPE_ENCYCLOPEDIA:
     case SPE_NOVEL:
         otmp->novelidx = -1; /* "none of the above"; will be changed */
-        otmp = oname(otmp, noveltitle(&otmp->novelidx));
+        otmp = oname(otmp, noveltitle(&otmp->novelidx,
+            otmp->otyp == SPE_NOVEL ? FALSE : TRUE));
         break;
     }
 

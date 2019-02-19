@@ -158,8 +158,11 @@ register int otyp;
         Strcpy(buf, "wand");
         break;
     case SPBOOK_CLASS:
-        if (otyp != SPE_NOVEL) {
+        if (otyp < SPE_NOVEL || otyp == SPE_BOOK_OF_THE_DEAD) {
             Strcpy(buf, "spellbook");
+        } else if (otyp == SPE_ENCYCLOPEDIA) {
+            Strcpy(buf, !nn ? "book" : "encyclopedia");
+            nn = 0;
         } else {
             Strcpy(buf, !nn ? "book" : "novel");
             nn = 0;
@@ -697,13 +700,14 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
             Sprintf(buf, "%s wand", dn);
         break;
     case SPBOOK_CLASS:
-        if (typ == SPE_NOVEL) { /* 3.6 tribute */
+        if (typ == SPE_NOVEL || typ == SPE_ENCYCLOPEDIA) { /* 3.6 tribute */
             if (!dknown)
                 Strcpy(buf, "book");
             else if (nn)
                 Strcpy(buf, actualn);
             else if (un)
-                Sprintf(buf, "novel called %s", un);
+                Sprintf(buf, typ == SPE_NOVEL
+                    ? "novel called %s" : "encyclopedia called %s", un);
             else
                 Sprintf(buf, "%s book", dn);
             break;
@@ -4153,10 +4157,12 @@ struct obj *no_wish;
             name = aname;
 
         /* 3.6 tribute - fix up novel */
-        if (otmp->otyp == SPE_NOVEL) {
+        if (otmp->otyp == SPE_NOVEL || otmp->otyp == SPE_ENCYCLOPEDIA) {
             const char *novelname;
 
-            novelname = lookup_novel(name, &otmp->novelidx);
+            novelname = otmp->otyp == SPE_NOVEL ?
+                lookup_novel(name, &otmp->novelidx) :
+                lookup_encyclopedia(name, &otmp->novelidx);
             if (novelname)
                 name = novelname;
         }

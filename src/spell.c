@@ -512,7 +512,9 @@ register struct obj *spellbook;
            context.spbook.book become erased somehow, resume reading it */
         && booktype != SPE_BLANK_PAPER) {
         You("continue your efforts to %s.",
-            (booktype == SPE_NOVEL) ? "read the novel" : "memorize the spell");
+            (booktype == SPE_NOVEL) ? "read the novel" :
+                (booktype == SPE_ENCYCLOPEDIA)
+                    ? "study the encyclopedia" : "memorize the spell");
     } else {
         /* KMH -- Simplified this code */
         if (booktype == SPE_BLANK_PAPER) {
@@ -524,7 +526,7 @@ register struct obj *spellbook;
         /* 3.6 tribute */
         if (booktype == SPE_NOVEL) {
             /* Obtain current Terry Pratchett book title */
-            const char *tribtitle = noveltitle(&spellbook->novelidx);
+            const char *tribtitle = noveltitle(&spellbook->novelidx, FALSE);
 
             if (read_tribute("books", tribtitle, 0, (char *) 0, 0,
                              spellbook->o_id)) {
@@ -540,6 +542,83 @@ register struct obj *spellbook;
                     u.uevent.read_tribute = 1; /* only once */
                 }
             }
+            return 1;
+        } else if (booktype == SPE_ENCYCLOPEDIA) {
+            const char *tribtitle = noveltitle(&spellbook->novelidx, TRUE);
+            int num_ids, otyp;
+            char listbuf[BUFSZ];
+
+            if (spellbook->spestudied > 0) {
+                You("have already learned everything you can from %s.", tribtitle);
+                return 0;
+            }
+            if(!u.uconduct.literate++)
+                livelog_printf(LL_CONDUCT,
+                        "became literate by reading %s", tribtitle);
+            check_unpaid(spellbook);
+            makeknown(booktype);
+
+            /* Determine the number of identifications */
+            if (spellbook->cursed)
+                num_ids = 1;
+            else if (spellbook->blessed)
+                num_ids = d(1,4);
+            else
+                num_ids = d(1,3);
+
+            /* Yes, this is clumsy and you can learn about something you already know, and
+               it can list the same thing multiple times. Hopefully this will be seen as
+               humorous. */
+            Sprintf(eos(listbuf), "By studying %s, you learn about ", tribtitle);
+            while (num_ids > 0) {
+                switch(rn2(10)) {
+                /* helmets */
+                case 0:
+                    otyp = CORNUTHAUM + rn2(1 + HELM_OF_TELEPATHY - CORNUTHAUM);
+                    break;
+                case 1:
+                    otyp = CLOAK_OF_PROTECTION +
+                        rn2(1 + CLOAK_OF_DISPLACEMENT - CLOAK_OF_PROTECTION);
+                    break;
+                case 2:
+                    otyp = GLOVES + rn2(1 + GAUNTLETS_OF_DEXTERITY - GLOVES);
+                    break;
+                case 3:
+                    otyp = SPEED_BOOTS + rn2(1 + LEVITATION_BOOTS - SPEED_BOOTS);
+                    break;
+                case 4:
+                    otyp = RIN_ADORNMENT +
+                        rn2(1 + RIN_PROTECTION_FROM_SHAPE_CHAN -
+                            RIN_ADORNMENT);
+                case 5:
+                    otyp = AMULET_OF_ESP +
+                        rn2(1 + AMULET_OF_MAGICAL_BREATHING - AMULET_OF_ESP);
+                case 6:
+                    otyp = POT_GAIN_ABILITY +
+                        rn2(1 + POT_OIL - POT_GAIN_ABILITY);;
+                    break;
+                case 7:
+                    otyp = SCR_ENCHANT_ARMOR +
+                        rn2(1 + SCR_STINKING_CLOUD - SCR_ENCHANT_ARMOR);
+                    break;
+                case 8:
+                    otyp = WAN_LIGHT + rn2(1 + WAN_PSIONICS - WAN_LIGHT);
+                    break;
+                default:
+                    otyp = LUCKSTONE + rn2(1 + TOUCHSTONE - LUCKSTONE);
+                }
+                makeknown(otyp);
+                if (num_ids > 2)
+                    Sprintf(eos(listbuf), "%s, ", makeplural(simple_typename(otyp)));
+                else if (num_ids == 2)
+                    Sprintf(eos(listbuf), "%s, and ", makeplural(simple_typename(otyp)));
+                else
+                    Sprintf(eos(listbuf), "%s.", makeplural(simple_typename(otyp)));
+                num_ids--;
+            }
+            spellbook->spestudied++;
+            pline("%s", listbuf);
+            update_inventory();
             return 1;
         }
 

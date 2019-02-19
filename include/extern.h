@@ -446,8 +446,9 @@ E char *FDECL(coyotename, (struct monst *, char *));
 E char *FDECL(rndorcname, (char *));
 E struct monst *FDECL(christen_orc, (struct monst *, const char *,
                                      const char *));
-E const char *FDECL(noveltitle, (int *));
+E const char *FDECL(noveltitle, (int *, BOOLEAN_P));
 E const char *FDECL(lookup_novel, (const char *, int *));
+E const char *FDECL(lookup_encyclopedia, (const char *, int *));
 
 /* ### do_wear.c ### */
 

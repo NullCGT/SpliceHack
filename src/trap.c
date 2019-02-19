@@ -3870,7 +3870,7 @@ boolean force;
         if (carried(obj))
             pline("Your %s %s.", ostr, vtense(ostr, "fade"));
 
-        if (obj->otyp == SPE_NOVEL) {
+        if (obj->otyp == SPE_NOVEL || obj->otyp == SPE_ENCYCLOPEDIA) {
             obj->novelidx = 0;
             free_oname(obj);
         }

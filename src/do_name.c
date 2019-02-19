@@ -2275,6 +2275,20 @@ const char *gang, *other;
     return mtmp;
 }
 
+static const char *const encyclopedias[] = {
+    /* Alliteration */
+    "Index of Items Moste Interesting", "De Dungeons of Doom for Dummies",
+    "The Adventurer\'s Almanac", "The Implausibility of Identification",
+    "The Big Book of Bats", "Mystickism and Magick",
+    "Monsters Most Malevolent", "The Voluminous Volume Vol. V",
+    "Catacomps and Creeps", "The Encyclopedia of Enchantments",
+    /* Misc */
+    "A Treatise on Yendor", "Collected Essays of Og",
+    /* Sir Terry, Night Watch */
+    "Anecdotes of the Great Accountants, Vol. III",
+    "Some Observations on the Art of Invisibility"
+};
+
 /* make sure "The Colour of Magic" remains the first entry in here */
 static const char *const sir_Terry_novels[] = {
     "The Colour of Magic", "The Light Fantastic", "Equal Rites", "Mort",
@@ -2291,10 +2305,11 @@ static const char *const sir_Terry_novels[] = {
 };
 
 const char *
-noveltitle(novidx)
+noveltitle(novidx, encyclopedia)
 int *novidx;
+boolean encyclopedia;
 {
-    int j, k = SIZE(sir_Terry_novels);
+    int j, k = encyclopedia ? SIZE(encyclopedias) : SIZE(sir_Terry_novels);
 
     j = rn2(k);
     if (novidx) {
@@ -2303,7 +2318,7 @@ int *novidx;
         else if (*novidx >= 0 && *novidx < k)
             j = *novidx;
     }
-    return sir_Terry_novels[j];
+    return encyclopedia ? encyclopedias[j] : sir_Terry_novels[j];
 }
 
 const char *
@@ -2328,6 +2343,28 @@ int *idx;
     /* name not found; if novelidx is already set, override the name */
     if (idx && *idx >= 0 && *idx < SIZE(sir_Terry_novels))
         return sir_Terry_novels[*idx];
+
+    return (const char *) 0;
+}
+
+const char *
+lookup_encyclopedia(lookname, idx)
+const char *lookname;
+int *idx;
+{
+    int k;
+
+    for (k = 0; k < SIZE(encyclopedias); ++k) {
+        if (!strcmpi(lookname, encyclopedias[k])
+            || !strcmpi(The(lookname), encyclopedias[k])) {
+            if (idx)
+                *idx = k;
+            return encyclopedias[k];
+        }
+    }
+    /* name not found; if novelidx is already set, override the name */
+    if (idx && *idx >= 0 && *idx < SIZE(encyclopedias))
+        return encyclopedias[*idx];
 
     return (const char *) 0;
 }

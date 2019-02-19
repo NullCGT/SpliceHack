@@ -2053,15 +2053,14 @@ specified_id()
     static char buf[BUFSZ] = DUMMY;
     char promptbuf[BUFSZ];
     char bufcpy[BUFSZ];
-    char answerbuf[BUFSZ];
     short otyp;
     int tries = 0;
 
     promptbuf[0] = '\0';
     if (flags.verbose)
-        You("may learn about any object.");
+        You("may learn about any non-artifact.");
   retry:
-    Strcpy(promptbuf, "What non-artifact do you want to learn the appearance of");
+    Strcpy(promptbuf, "What non-artifact do you want to learn about");
     Strcat(promptbuf, "?");
     getlin(promptbuf, buf);
     (void) mungspaces(buf);
@@ -2086,10 +2085,8 @@ specified_id()
         if (!otyp)
             return;
     }
-    Sprintf(answerbuf, "%s -", obj_typename(otyp));
     (void) makeknown(otyp);
-    Sprintf(eos(answerbuf), " %s.", simple_typename(otyp));
-    pline("%s", answerbuf);
+    You("now know more about %s.", makeplural(simple_typename(otyp)));
     update_inventory();
 }
 

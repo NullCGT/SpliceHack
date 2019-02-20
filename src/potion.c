@@ -621,6 +621,8 @@ register struct obj *obj;
 		case CLOAK_OF_INVISIBILITY:
 		case CLOAK_OF_MAGIC_RESISTANCE:
 		case CLOAK_OF_DISPLACEMENT:
+    case CLOAK_OF_FLIGHT:
+    case CLOAK_OF_REFLECTION:
 		case DWARVISH_CLOAK:
 		case ORCISH_CLOAK:
 			if (!rn2(2)) obj->otyp = OILSKIN_CLOAK;
@@ -628,11 +630,13 @@ register struct obj *obj;
 			break;
 		case OILSKIN_CLOAK:
 		case ELVEN_CLOAK:
-			switch (rn2(4)) {
+			switch (rn2(6)) {
 				case 0: obj->otyp = CLOAK_OF_PROTECTION; break;
 				case 1: obj->otyp = CLOAK_OF_INVISIBILITY; break;
 				case 2: obj->otyp = CLOAK_OF_MAGIC_RESISTANCE; break;
 				case 3: obj->otyp = CLOAK_OF_DISPLACEMENT; break;
+        case 4: obj->otyp = CLOAK_OF_FLIGHT; break;
+        case 5: obj->otyp = CLOAK_OF_REFLECTION; break;
 			}
 			break;
 		/* helms */
@@ -648,11 +652,15 @@ register struct obj *obj;
 		case ORCISH_HELM:
 		case HELM_OF_BRILLIANCE:
 		case HELM_OF_TELEPATHY:
+    case HELM_OF_OPAQUE_THOUGHTS:
 			obj->otyp = DWARVISH_HELM;
 			break;
 		case DWARVISH_HELM:
-			if (!rn2(2)) obj->otyp = HELM_OF_BRILLIANCE;
-			else obj->otyp = HELM_OF_TELEPATHY;
+      switch(rn2(3)) {
+        case 0: obj->otyp = HELM_OF_BRILLIANCE; break;
+        case 1: obj->otyp = HELM_OF_TELEPATHY; break;
+        case 2: obj->otyp = HELM_OF_OPAQUE_THOUGHTS; break;
+      }
 			break;
 		case CORNUTHAUM:
 			obj->otyp = DUNCE_CAP;
@@ -662,9 +670,15 @@ register struct obj *obj;
 			break;
 		/* gloves */
 		case GLOVES:
-			obj->otyp = GAUNTLETS_OF_DEXTERITY;
+      switch(rn2(3)) {
+        case 0: obj->otyp = GAUNTLETS_OF_DEXTERITY; break;
+        case 1: obj->otyp = BOXING_GLOVES; break;
+        case 2: obj->otyp = ROGUES_GLOVES; break;
+      }
 			break;
 		case GAUNTLETS_OF_DEXTERITY:
+    case BOXING_GLOVES:
+    case ROGUES_GLOVES:
 			obj->otyp = GLOVES;
 			break;
 		/* shields */

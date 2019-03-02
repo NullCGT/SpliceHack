@@ -749,6 +749,8 @@ const char *in_str;
         return PM_AMALGAMATION;
     else if (!strncmp(str, "merged ", 7))
         return PM_BAD_CLONE;
+    else if (strstr(str, " gel") != NULL)
+        return PM_GEL;
 
     slen = strlen(str);
     term = str + slen;

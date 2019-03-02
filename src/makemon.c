@@ -62,9 +62,12 @@ struct monst *mtmp;
     if (monsndx(EAMA(mtmp)->m1) == PM_AMALGAMATION
         || (monsndx(EAMA(mtmp)->m1) == PM_BAD_CLONE))
         EAMA(mtmp)->m1 = &mons[PM_FIRE_ELEMENTAL];
-    if (monsndx(EAMA(mtmp)->m2) == PM_AMALGAMATION
+    else if (monsndx(EAMA(mtmp)->m2) == PM_AMALGAMATION
         || (monsndx(EAMA(mtmp)->m2) == PM_BAD_CLONE))
         EAMA(mtmp)->m2 = &mons[PM_WATER_ELEMENTAL];
+    else if (monsndx(EAMA(mtmp)->m2) == PM_AMALGAMATION
+        || (monsndx(EAMA(mtmp)->m2) == PM_GEL))
+        EAMA(mtmp)->m2 = &mons[PM_AIR_ELEMENTAL];
 }
 
 void

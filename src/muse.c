@@ -1642,7 +1642,7 @@ struct monst *mtmp;
         otmp->spe--;
         m_using = TRUE;
         if (!Deaf && distu(mtmp->mx, mtmp->my) < 5) {
-            if (Sleep_resistance || Free_action)
+            if (Sleep_resistance)
                 pline("You yawn.");
             else {
                 pline("You fall asleep!");

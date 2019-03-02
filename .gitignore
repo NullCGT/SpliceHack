@@ -55,4 +55,5 @@ Makefile.gcc-orig
 .vs
 # Win32-specific ignores end
 .DS_Store
-
+# Text editor
+.vscode/

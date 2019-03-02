@@ -299,7 +299,10 @@ WEAPON("quarterstaff", "staff",
 WEAPON("aklys", "thonged club",
        0, 0, 0,  8,  15,   4,  6,  3, 0, B,   P_CLUB, IRON, HI_METAL),
 WEAPON("flail", None,
-       1, 0, 0, 40,  15,   4,  6,  4, 0, B,   P_FLAIL, IRON, HI_METAL),
+       1, 0, 0, 37,  15,   4,  6,  4, 0, B,   P_FLAIL, IRON, HI_METAL),
+/* many-piece */
+WEAPON("spiked chain", None,
+       1, 0, 1, 3,  50,   80,  6,  4, 0, P|S,   P_FLAIL, IRON, HI_METAL),
         /* +1 small, +1d4 large */
 
 /* misc */

@@ -258,6 +258,7 @@ struct monst *mon;
         case BATTLE_AXE:
         case BARDICHE:
         case TRIDENT:
+        case SPIKED_CHAIN:
             tmp += d(2, 4);
             break;
 
@@ -592,7 +593,8 @@ static NEARDATA const int rwep[] = {
     /* BOOMERANG, */ CREAM_PIE
 };
 
-static NEARDATA const int pwep[] = { HALBERD,       BARDICHE, SPETUM,
+static NEARDATA const int pwep[] = { SPIKED_CHAIN,
+                                     HALBERD,       BARDICHE, SPETUM,
                                      BILL_GUISARME, VOULGE,   RANSEUR,
                                      GUISARME,      GLAIVE,   LUCERN_HAMMER,
                                      BEC_DE_CORBIN, FAUCHARD, PARTISAN,
@@ -798,7 +800,7 @@ struct obj *obj;
 static const NEARDATA short hwep[] = {
     CORPSE, /* cockatrice corpse */
     TSURUGI, RUNESWORD, ORNATE_MACE, DWARVISH_MATTOCK, TWO_HANDED_SWORD,
-    BATTLE_AXE, KATANA, UNICORN_HORN, CRYSKNIFE, TRIDENT, LONG_SWORD,
+    BATTLE_AXE, KATANA, SPIKED_CHAIN, UNICORN_HORN, CRYSKNIFE, TRIDENT, LONG_SWORD,
     ELVEN_BROADSWORD, BROADSWORD, SABER, SCIMITAR, MORNING_STAR,
     DARK_ELVEN_SHORT_SWORD,
     ELVEN_SHORT_SWORD, DWARVISH_SHORT_SWORD, SHORT_SWORD, ORCISH_SHORT_SWORD,

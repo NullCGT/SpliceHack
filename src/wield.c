@@ -108,7 +108,7 @@ register struct obj *obj;
     if (obj) {
         unweapon = (obj->oclass == WEAPON_CLASS)
                        ? is_launcher(obj) || is_ammo(obj) || is_missile(obj)
-                             || (is_pole(obj) && !u.usteed)
+                             || (is_pole(obj) && !u.usteed && obj->otyp != SPIKED_CHAIN)
                        : !is_weptool(obj) && !is_wet_towel(obj);
     } else
         unweapon = TRUE; /* for "bare hands" message */

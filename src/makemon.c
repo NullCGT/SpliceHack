@@ -62,9 +62,12 @@ struct monst *mtmp;
     if (monsndx(EAMA(mtmp)->m1) == PM_AMALGAMATION
         || (monsndx(EAMA(mtmp)->m1) == PM_BAD_CLONE))
         EAMA(mtmp)->m1 = &mons[PM_FIRE_ELEMENTAL];
-    if (monsndx(EAMA(mtmp)->m2) == PM_AMALGAMATION
+    else if (monsndx(EAMA(mtmp)->m2) == PM_AMALGAMATION
         || (monsndx(EAMA(mtmp)->m2) == PM_BAD_CLONE))
         EAMA(mtmp)->m2 = &mons[PM_WATER_ELEMENTAL];
+    else if (monsndx(EAMA(mtmp)->m2) == PM_AMALGAMATION
+        || (monsndx(EAMA(mtmp)->m2) == PM_GEL))
+        EAMA(mtmp)->m2 = &mons[PM_AIR_ELEMENTAL];
 }
 
 void
@@ -1944,6 +1947,7 @@ rndmonst()
     if (rndmonst_state.choice_count < 0) { /* need to recalculate */
         int zlevel, minmlev, maxmlev;
         boolean elemlevel;
+        boolean blkmarlevel;
         boolean upper;
 
         rndmonst_state.choice_count = 0;
@@ -1965,6 +1969,7 @@ rndmonst()
         maxmlev = (zlevel + u.ulevel) / 2;
         upper = Is_rogue_level(&u.uz);
         elemlevel = In_endgame(&u.uz) && !Is_astralevel(&u.uz);
+        blkmarlevel = Is_blackmarket(&u.uz);
 
         /*
          * Find out how many monsters exist in the range we have selected.
@@ -1978,9 +1983,9 @@ rndmonst()
                 continue;
             if (elemlevel && wrong_elem_type(ptr))
                 continue;
-            if (is_domestic(ptr) && Is_blackmarket(&u.uz))
+            if (is_domestic(ptr) && blkmarlevel) {
                 continue;
-            if (uncommon(mndx))
+            } if (uncommon(mndx))
                 continue;
             if (Inhell && (ptr->geno & G_NOHELL))
                 continue;

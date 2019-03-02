@@ -131,10 +131,10 @@
                           (ptr) == &mons[PM_KANGAROO])
 #define is_golem(ptr) ((ptr)->mlet == S_GOLEM)
 #define is_jumper(ptr) (((ptr)->mflags2 & M2_JUMPER) != 0L)
-#define is_domestic(ptr) (((ptr)->mflags2 & M2_DOMESTIC) != 0L) \
+#define is_domestic(ptr) ((((ptr)->mflags2 & M2_DOMESTIC) != 0L) \
      || (Role_if(PM_DRAGONMASTER) && (((ptr) >= &mons[PM_BABY_GRAY_DRAGON] && \
                              (ptr) <= &mons[PM_GREEN_DRAGON]) || \
-                             (ptr) == &mons[PM_YELLOW_DRAGON]))
+                             (ptr) == &mons[PM_YELLOW_DRAGON])))
 #define is_mind_flayer(ptr) (((ptr)->mhflags & MH_FLAYER) != 0L)
 #define is_ghoul(ptr) (((ptr)->mhflags & MH_GHOUL) != 0L)
 #define is_demon(ptr) (((ptr)->mhflags & MH_DEMON) != 0L)

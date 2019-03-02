@@ -263,6 +263,7 @@ tech_known(tech)
 /* Called to prematurely stop a technique */
 void
 aborttech(tech)
+	short tech;
 {
 	int i;
 

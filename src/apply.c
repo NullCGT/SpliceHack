@@ -1770,7 +1770,7 @@ dorub()
 
     /* now uwep is obj */
     if (uwep->otyp == MAGIC_LAMP) {
-        if (uwep->spe > 0 && !rn2(3)) {
+        if (uwep->spe > 0) {
             check_unpaid_usage(uwep, TRUE); /* unusual item use */
             /* bones preparation:  perform the lamp transformation
                before releasing the djinni in case the latter turns out
@@ -1785,8 +1785,6 @@ dorub()
             djinni_from_bottle(uwep);
             makeknown(MAGIC_LAMP);
             update_inventory();
-        } else if (rn2(2)) {
-            You("%s smoke.", !Blind ? "see a puff of" : "smell");
         } else
             pline1(nothing_happens);
     } else if (uwep->otyp == MOONSTONE) {

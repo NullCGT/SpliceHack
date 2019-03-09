@@ -1874,7 +1874,7 @@ boolean called;
             Strcat(buf, name);
             name_at_start = TRUE;
         }
-    } else if (mtmp->mextra && EAMA(mtmp) && !do_hallu) {
+    } else if (mtmp->mextra && EAMA(mtmp) && EAMA(mtmp)->m1 && EAMA(mtmp)->m2 && !do_hallu) {
         if (mdat == &mons[PM_AMALGAMATION])
             Sprintf(eos(buf), "fused %s%s",
               EAMA(mtmp)->m1->mname, EAMA(mtmp)->m2->mname);

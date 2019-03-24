@@ -895,7 +895,7 @@ givit(int type, register struct permonst *ptr)
     case SLEEP_RES:
         debugpline0("Trying to give sleep resistance");
         if ((HSleep_resistance & (TIMEOUT | FROMRACE | FROMEXPER)) < 100) {
-            You_feel("a little more lively.");
+            You_feel("a bit perkier.");
             incr_resistance(&HSleep_resistance, percentincrease);
         }
         break;

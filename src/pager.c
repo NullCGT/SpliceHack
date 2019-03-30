@@ -622,6 +622,8 @@ struct permonst * pm;
     boolean uniq = !!(gen & G_UNIQ);
     boolean hell = !!(gen & G_HELL);
     boolean nohell = !!(gen & G_NOHELL);
+    boolean planes = !!(gen & G_PLANES);
+    boolean noplanes = !!(gen & G_NOPLANES);
     uchar mcon = pm->mconveys;
     mcon &= ~(MR_ACID | MR_STONE); /* these don't do anything */
     unsigned int mflag1 = pm->mflags1;
@@ -659,7 +661,9 @@ struct permonst * pm;
     else
         Sprintf(buf, "Normally %s%s, %s.",
                 hell ? "only appears in Gehennom" :
+                planes ? "only appears in the Planes" :
                 nohell ? "only appears outside Gehennom" :
+                noplanes ? "only appears outside the Planes" :
                 "appears in any branch",
                 (gen & G_SGROUP) ? " in groups" :
                 (gen & G_LGROUP) ? " in large groups" : "",

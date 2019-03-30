@@ -48,6 +48,13 @@
      || ptr == &mons[PM_DEATH] || ptr == &mons[PM_GRIM_REAPER])
 /* is_were() doesn't handle hero in human form */
 
+#define resists_death(ptr) \
+    ((ptr == &mons[PM_MOVANIC_DEVA]) || \
+     (ptr == &mons[PM_MONADIC_DEVA]) || \
+     (ptr == &mons[PM_ASTRAL_DEVA]) || \
+     (ptr == &mons[PM_PLANETAR]) || \
+     (ptr == &mons[PM_SOLAR]))
+
 #define is_lminion(mon) \
     (is_minion((mon)->data) && mon_aligntyp(mon) == A_LAWFUL)
 #define is_flyer(ptr) (((ptr)->mflags1 & M1_FLY) != 0L)

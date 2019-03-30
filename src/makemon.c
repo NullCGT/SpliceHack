@@ -37,7 +37,7 @@ rnd_point() {
     register struct permonst *ptr;
     register int i;
     unsigned short excludeflags;
-    excludeflags = G_UNIQ | G_NOGEN | (Inhell ? G_NOHELL : G_HELL);
+    excludeflags = G_UNIQ | G_NOGEN | (Inhell ? G_NOHELL : G_HELL) | (In_endgame(&u.uz) ? G_NOPLANES : G_PLANES);
     do {
         i = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
         ptr = &mons[i];
@@ -482,7 +482,7 @@ register struct monst *mtmp;
             (void) mpickobj(mtmp, otmp);
             break;
         default:
-            if (humanoid(ptr)) {
+            if (mm == PM_ARCHON || mm == PM_ALEAX || mm == PM_ANGEL) {
                 /* create minion stuff; can't use mongets */
                 otmp = mksobj(LONG_SWORD, FALSE, FALSE);
 
@@ -1988,6 +1988,8 @@ rndmonst()
             } if (uncommon(mndx))
                 continue;
             if (Inhell && (ptr->geno & G_NOHELL))
+                continue;
+            if (In_endgame(&u.uz) && (ptr->geno & G_NOPLANES))
                 continue;
             ct = (int) (ptr->geno & G_FREQ) + align_shift(ptr);
             if (ct < 0 || ct > 127)

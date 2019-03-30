@@ -14,6 +14,7 @@
 - Monster Lookup
 - Many code refactors
 - Other Minor QOL Changes
+- Code for SLASH'EM fungus growth.
 
 #Biodiversity Patch
 - Umbral Hulk
@@ -47,6 +48,11 @@
     - Drow
     - ghoul mage
     - ghast
+    - movanic deva (only appear in planes)
+    - monadic deva (only appear in planes)
+    - astral deva (only appear in planes)
+    - planetar (only appear in planes)
+    - solar (only appear in planes)
   #Items
     - Plague Artifact
     - Doomblade Artifact
@@ -63,6 +69,10 @@
     - Drow Race
     - Techniques Code
     - Various tiles
+
+#SliceHack
+- Various bug fixes.
+- Being an awesome variant.
 
 #DNetHack
 - Inspiration for Creeping Kudzu

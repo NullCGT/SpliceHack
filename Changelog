@@ -1,4 +1,91 @@
                         SpliceHack -- Changelog
+                    
+                    Development Changes
+
+Features
+- Modified XNetHack / SLASH'EM fungus growth. Generating mold warriors is
+  highly unlikely.
+- Addition of G_PLANES and G_NOPLANES tags. The SLASH'EM angels and devas
+  can only be generated in the planes. Marids no longer generate in the planes.
+  This should allow greater control over the late game, and hopefully make the
+  planes feel a little bit more distinctive.
+
+New Items
+- Spiked Chains: Combine the best features of polearms and melee weapons. This
+  is a reference to D&D 3.5, where spiked chains are horrifyingly broken.
+
+
+New Monsters
+- From SLASH'EM:
+    - Movanic Deva
+    - Mondadic Deva
+    - Astral Deva
+    - Planetar
+    - Solar
+
+Bug Fixes
+- Stabilized amalgamations and gels.
+- Various other fixes.
+
+                    Version 0.6.2: Critical Errors
+
+Features
+- Hobbits and Nazgul are affected by the grudge patch.
+- Monster intrinsic gain improved.
+
+Items
+- Ported from SLASH'EM:
+    - Serpent's Tongue
+    - Bat from Hell
+
+Bug Fixes
+- Free Action no longer protects against magic flutes.
+- Fixed domestic animals not generating normally.
+- Roaring monsters fail when hallucinating.
+- Various other fixes.
+
+
+
+                    Version 0.6.1: Madness Follows
+
+Features
+- YAFM for getting killed by a T-Rex.
+- Ghouls are now a playable race.
+- Wands of windstorm identify when zapped, and monsters are less likely to use
+  them to stunlock the player.
+- Junk shops: Junk shops sell a variety of "junk items"
+- T-Rexes have been changed from white to red for clarity purposes.
+- Removed rooks. In terms of flavor, they simply do not fit, and are not
+  interesting.
+- Roles and races receive tips on the start of the game.
+
+New Items
+- Junk Items:
+    - Baseball Bat
+    - Giant Shuriken
+
+New Monsters
+- Baobhan-Sith
+- Redcap
+- Avatar of Akasha
+- Nova Fox
+- Bone Beast
+- Mystery Gel
+
+New Traps
+- Aligned Glyph
+- Whirlwind Trap
+
+Bug Fixes
+- Numerous fixes from SliceHack.
+- Wandering cacti are no longer smart.
+- Drop bears no longer hide in the floor.
+- Statues are no longer colored in tiled mode.
+- Artifact materials can no longer be warped.
+- Blood puddings no longer drop stacks of zero potions.
+- Various other fixes.
+- Fixed pirates being more well-equiped than they should be.
+- Fixed magma elementals not being buffed on the plane of fire.
 
                     Version 0.6.0 - Diversity and Danger
 

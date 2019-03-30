@@ -291,7 +291,8 @@ NH_panictrace_gdb()
  */
 static NEARDATA const char *deaths[] = {
     /* the array of death */
-    "died", "died", "choked", "poisoned", "starvation", "drowning", "burning",
+    "died", "died", "choked", "tyranosaurus rekt",
+    "poisoned", "starvation", "drowning", "burning",
     "dissolving under the heat and pressure", "crushed", "turned to stone",
     "turned into slime", "genocided", "panic", "trickery", "quit",
     "escaped", "ascended"
@@ -299,7 +300,8 @@ static NEARDATA const char *deaths[] = {
 
 static NEARDATA const char *ends[] = {
     /* "when you %s" */
-    "died", "died", "choked", "were poisoned",
+    "died", "died", "got tyranosaurus rekt",
+    "choked", "were poisoned",
     "starved", "drowned", "burned",
     "dissolved in the lava",
     "were crushed", "turned to stone",

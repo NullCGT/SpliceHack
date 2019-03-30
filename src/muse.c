@@ -2241,7 +2241,7 @@ struct monst *mtmp;
             pline("%s raises %s corpse over their head.", Monnam(mtmp),
                 the(corpse_xname(otmp, (const char *) 0, CXN_SINGULAR)));
             pline("A beam of pure energy from the heavens strikes %s!", the(xname(otmp)));
-            (void) revive_corpse(otmp);
+            (void) revive_corpse(otmp, FALSE);
         }
         return 2;
     case MUSE_POT_REFLECT:

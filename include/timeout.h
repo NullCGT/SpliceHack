@@ -32,7 +32,7 @@ enum timeout_types {
     HATCH_EGG,
     FIG_TRANSFORM,
     MELT_ICE_AWAY,
-    UNPOLY_MON,
+    MOLDY_CORPSE,
 
     NUM_TIME_FUNCS
 };

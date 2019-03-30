@@ -329,6 +329,7 @@ struct obj *box;
             otmp->age = 0L;
             if (otmp->timed) {
                 (void) stop_timer(ROT_CORPSE, obj_to_any(otmp));
+                (void) stop_timer(MOLDY_CORPSE, obj_to_any(otmp));
                 (void) stop_timer(REVIVE_MON, obj_to_any(otmp));
             }
         } else {
@@ -1216,6 +1217,7 @@ struct obj *body;
 
 #define TAINT_AGE (50L)        /* age when corpses go bad */
 #define TROLL_REVIVE_CHANCE 37 /* 1/37 chance for 50 turns ~ 75% chance */
+#define MOLDY_CHANCE 290       /* 1/290 chance for 200 turns ~ 50% chance */
 #define ROT_AGE (250L)         /* age when corpses rot away */
 
     /* lizards and lichen don't rot or revive */
@@ -1250,6 +1252,19 @@ struct obj *body;
                 when = age;
                 break;
             }
+    }
+
+    if (action == ROT_CORPSE && !acidic(&mons[body->corpsenm])) {
+        /* Corpses get moldy.
+         * TODO: allow green molds to grow on acidic corpses. */
+        long age;
+        for (age = TAINT_AGE + 1; age <= ROT_AGE; age++) {
+            if (!rn2(MOLDY_CHANCE)) {    /* "revives" as a random s_fungus */
+                action = MOLDY_CORPSE;
+                when = age;
+                break;
+            }
+        }
     }
 
     if (body->norevive)
@@ -1944,6 +1959,10 @@ int force; /* 0 = no force so do checks, <0 = force off, >0 force on */
     if (otmp->otyp == CORPSE && (on_floor || buried) && is_ice(x, y)) {
         tleft = stop_timer(action, obj_to_any(otmp));
         if (tleft == 0L) {
+            action = MOLDY_CORPSE;
+            tleft = stop_timer(action, obj_to_any(otmp));
+        }
+        if (tleft == 0L) {
             action = REVIVE_MON;
             tleft = stop_timer(action, obj_to_any(otmp));
         }
@@ -1970,6 +1989,10 @@ int force; /* 0 = no force so do checks, <0 = force off, >0 force on */
     } else if (force < 0 || (otmp->otyp == CORPSE && otmp->on_ice
                              && !((on_floor || buried) && is_ice(x, y)))) {
         tleft = stop_timer(action, obj_to_any(otmp));
+        if (tleft == 0L) {
+            action = MOLDY_CORPSE;
+            tleft = stop_timer(action, obj_to_any(otmp));
+        }
         if (tleft == 0L) {
             action = REVIVE_MON;
             tleft = stop_timer(action, obj_to_any(otmp));

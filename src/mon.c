@@ -1108,7 +1108,7 @@ register struct obj *otmp;
                 if (cansee(mtmp->mx, mtmp->my) && flags.verbose)
                     pline("%s attempts to devour %s!", Monnam(mtmp),
                       distant_name(otmp,doname));
-                (void) revive_corpse(otmp);
+                (void) revive_corpse(otmp, FALSE);
                 return;
             }
   		      if (cansee(mtmp->mx,mtmp->my) && flags.verbose)
@@ -1143,7 +1143,7 @@ register struct obj *otmp;
                 if (cansee(mtmp->mx, mtmp->my) && flags.verbose)
                     pline("%s attempts to infest %s!", Monnam(mtmp),
                       distant_name(otmp,doname));
-                (void) revive_corpse(otmp);
+                (void) revive_corpse(otmp, FALSE);
                 return;
             }
             if (cansee(mtmp->mx,mtmp->my) && flags.verbose)
@@ -1183,7 +1183,7 @@ struct monst *mtmp;
         /* touch sensitive items */
         if (otmp->otyp == CORPSE && is_rider(&mons[otmp->corpsenm])) {
             /* Rider corpse isn't just inedible; can't engulf it either */
-            (void) revive_corpse(otmp);
+            (void) revive_corpse(otmp, FALSE);
 
         /* untouchable (or inaccessible) items */
         } else if ((otmp->otyp == CORPSE

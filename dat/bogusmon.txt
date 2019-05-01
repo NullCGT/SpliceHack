@@ -4,8 +4,6 @@
 #
 # Hallucinatory monsters
 #
-# Edited on 4/17/18 by NullCGT
-#
 # prefix codes:
 # dash		-  female, personal name
 # underscore	_  female, general name
@@ -18,13 +16,17 @@ invader from the ivory tower
 improved tin opener
 baseball-cap-toting elemental
 
+# Junenethack 2019
+resurrected Antigulp
+horrific bug
+troll
+
 # Anime
 catgirl
 superpowered butler
 
 # M.U.G.E.N.
 wayward hitbox
-null-tier character
 palette-swapped doppelganger
 
 # eldritch abominations
@@ -33,9 +35,17 @@ palette-swapped doppelganger
 =Nyarlathotep
 =IT
 
+# Berserk
++ Evil Otto
+
+# Homestuck
+kernelsprite
+lusus
+
 # Slex
 novice light wall
 moldy potato
+bundler
 
 # Bioshock
 splicer
@@ -49,7 +59,6 @@ red truth
 telekinetic swordsman
 fun-canceller
 happy feet
-wavedashing weirdo
 wobbler
 
 # Dwarf Fortress
@@ -69,7 +78,7 @@ pudding farmer
 speedrunner
 lawful female dwarven valkyrie with Excalibur
 Elbereth-spammer
-enexto abuser
+enexto-abuser
 
 # self-deprecation / this variant
 questionable addition
@@ -188,7 +197,7 @@ medium giant
 |ghost of Christmas past
 mistake
 wumbo warrior
-banger
+headbanger
 dumpster diving panda pounder
 _witch of the Westmereland
 obviously evil uncle
@@ -199,6 +208,16 @@ fanged bagel
 disapproving parent
 raisin ninja
 illusiory armorlandia
+venemous vermillion viper
+moobeast
+moon person
++bob, bob, he's our man, if he can't do it no one can
+large intestines
+fifteen-headed grizzly bear
+gunslinger
+fool
+megabeast
+chimneysweep
 
 # ;)
 cuddly cutie
@@ -242,12 +261,14 @@ nemean lion
 
 # Monty Python
 killer bunny
+beast of aaaaaaaarrrgh
 
 # The Princess Bride
 rodent of unusual size
 
 # Wallace & Gromit
 were-rabbit
+wrong trousers
 
 # "Only you can prevent forest fires!
 +Smokey Bear
@@ -285,6 +306,13 @@ Ewok
 
 # Tonari no Totoro
 Totoro
+
+# Nasuverse
+servant
+
+# Jojo
+beautiful duwang
+enemy stand
 
 # Nausicaa
 ohmu
@@ -359,6 +387,7 @@ Predator
 mother-in-law
 
 # Actual creatures
+billy goat
 okapi
 beluga whale
 chicken
@@ -389,7 +418,6 @@ tatzelwurm
 dahu
 
 # fictitious beasts
-dropbear
 wild haggis
 jackalope
 flying pig
@@ -403,6 +431,7 @@ trow
 bouncing eye
 floating nose
 wandering eye
+crossing eye
 
 # Computerese
 buffer overflow
@@ -448,6 +477,7 @@ silver dragon scale mail
 amulet of reflection
 |Amulet of Yendor
 wand of wishing
+frisbee
 
 # DnD monster
 gazebo
@@ -485,6 +515,7 @@ voluptuous ampersand
 turgid exclamation point
 fragile question mark
 alphanumeric character
+jagged asterisk
 
 # Web comics and animation
 +Bob the angry flower
@@ -525,6 +556,7 @@ tie-thulu
 +Domo-kun
 looooooooooooong cat
 nyan cat
+dummy thicc soldier
 
 # the Internet is made for cat pix
 ceiling cat
@@ -583,6 +615,7 @@ ghoti
 
 # Roald Dahl
 vermicious knid
+BFG
 
 # Carcassonne
 meeple
@@ -656,6 +689,7 @@ geriatric snake
 gnat ant
 giant bath
 grant beetle
+green gold
 grind bug
 giant mango
 glossy golem
@@ -688,6 +722,7 @@ score peopn
 seesawing sphere
 simile mimic
 moldier ant
+skull ettin
 stain vortex
 scone giant
 umbrella hulk
@@ -695,6 +730,7 @@ vampire mace
 velocirapper
 verbal jabberwock
 waiter elemental
+wall rush
 water lemon
 water melon
 winged grizzly

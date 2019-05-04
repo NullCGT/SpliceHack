@@ -270,6 +270,9 @@ E NEARDATA const struct obj zeroobj; /* for init; also, &zeroobj is used
 
 E NEARDATA const anything zeroany;   /* init'd and defined in decl.c */
 
+#include "engrave.h"
+E struct engr *head_engr;
+
 #include "you.h"
 E NEARDATA struct you u;
 E NEARDATA time_t ubirthday;

@@ -7,8 +7,8 @@
 
 #include "hack.h"
 #include "lev.h"
+#include "decl.h"
 
-STATIC_VAR NEARDATA struct engr *head_engr;
 STATIC_DCL const char *NDECL(blengr);
 
 char *

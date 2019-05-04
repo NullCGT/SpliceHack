@@ -33,6 +33,7 @@ Bug Fixes
 - Stabilized amalgamations and gels.
 - Various other fixes.
 - Fixed numerous issues with ghouls.
+- Fixed bug that caused fell beasts to spawn normally.
 
                     Version 0.6.2: Critical Errors
 

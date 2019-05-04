@@ -571,9 +571,9 @@ denmon()
         return mkclass(S_QUADRUPED, 0);
     else if (i > 70)
         return &mons[PM_WOLF];
-    else if (i > 50)
+    else if (i > 40)
         return &mons[PM_LION];
-    else if (i > 30)
+    else if (i > 20)
         return mkclass(S_FELINE, 0);
     else
         return mkclass(S_DOG, 0);

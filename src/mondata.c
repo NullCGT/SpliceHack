@@ -739,13 +739,15 @@ const char *in_str;
     else if (!strncmp(str, "the ", 4))
         str += 4;
 
-    /* Amalgamations and bad clones are a special case. */
+    /* Amalgamations, hydra and bad clones are a special case. */
     if (!strncmp(str, "fused ", 6))
         return PM_AMALGAMATION;
     else if (!strncmp(str, "merged ", 7))
         return PM_BAD_CLONE;
     else if (strstr(str, " gel") != NULL)
         return PM_GEL;
+    else if (strstr(str, " hydra") != NULL)
+        return PM_HYDRA;
 
     slen = strlen(str);
     term = str + slen;

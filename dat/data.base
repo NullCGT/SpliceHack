@@ -233,6 +233,10 @@ sacrific*
 	For the ashes of his fathers
 	And the temples of his gods?
 		[ Lays of Ancient Rome, by Thomas B. Macaulay ]
+alucard
+	"What is a man? A miserable pile of secrets!
+	But enough talk. Have at you!"
+		[ Dracula, from Castlevania: Symphony of the Night ]
 amalgamation
 bad clone
 fused *
@@ -309,9 +313,16 @@ amulet of yendor
 	altar on the Astral Plane.
 angel*
 *angel
+<<<<<<< HEAD
 *deva
 planetar
 solar
+=======
+avatar*
+*deva
+solar
+planetar
+>>>>>>> master
 	He answered and said unto them, he that soweth the good seed
 	is the Son of man; the field is the world, and the good seed
 	are the children of the kingdom; but the weeds are the
@@ -413,7 +424,7 @@ archeolog*
 	"That is a rather cynical view," I said.
 		[ the brightonomicon, by Robert Rankin ]
 #		[title & author: same situation as with "bad luck" entry]
-archon
+*archon
 	Archons are the predominant inhabitants of the heavens.
 	However unusual their appearance, they are not generally
 	evil.  They are beings at peace with themselves and their
@@ -467,6 +478,8 @@ asmodeus
 	Asmodeus often figures as the spirit of matrimonial jealousy
 	or unhappiness.
 		[ Brewer's Concise Dictionary of Phrase and Fable ]
+assassin bug
+	Even lowly vermin are capable of feats of deceit.
 athame
 	The consecrated ritual knife of a Wiccan initiate (one of
 	four basic tools, together with the wand, chalice and
@@ -598,6 +611,12 @@ barghest
 	the tale. Some believe that they are an omen of bad luck,
 	while others believe the barghest to be a shapeshifter or
 	some type of gremlin.
+baseball bat
+	The sneer is gone from Casey’s lip, his teeth are clenched in hate,
+	He pounds with cruel violence his bat upon the plate;
+	And now the pitcher holds the ball, and now he lets it go,
+	And now the air is shattered by the force of Casey’s blow.
+		[ Casey at the Bat, by Ernest Lawrence Thayer ]
 # takes "bat or bird" when specifying 'B'
 ~*combat
 ~*wombat
@@ -605,6 +624,7 @@ barghest
 *bat
 *bird
 *falcon
+parrot
 bat or bird
 	A bat, flitting in the darkness outside, took the wrong turn
 	as it made its nightly rounds and came in through the window
@@ -615,6 +635,9 @@ bat or bird
 	proverb, and I will show you something that ought to be in
 	some kind of a home.
 		[ A Pelican at Blandings, by P. G. Wodehouse ]
+bear
+	These creatures bare their teeth and claws in combat. Their
+	strength is unbearable.
 bear*trap
 	Probably most commonly associated with trapping, the leghold
 	trap is a rather simple mechanical trap.  It is made up of two
@@ -686,6 +709,10 @@ blind io
 	large number, led a semi-independent life of their
 	own.  Several were currently hovering above the table.
 	    [ The Colour of Magic, by Terry Pratchett ]
+boar
+	My memory...hehe. King Robert Baratheon...murdered by a pig. 
+	Give me something for the pain, and let me die.
+		[ A Game of Thrones, by George R.R. Martin ]
 * blob
 ooze
 * ooze
@@ -708,6 +735,9 @@ ooze
 	penguins and slithering over the glistening floor that it and its
 	kind had swept so evilly free of all litter.
 		[ At the Mountains of Madness, by H.P. Lovecraft ]
+bloodshot eye
+blinking eye
+	Sometimes when you stare into the void, the void stares back.
 blue jelly
 spotted jelly
 	I'd planned how to prevent the lock from sealing behind me; it
@@ -1441,6 +1471,21 @@ demogorgon
 	spread a quickly fatal illness to his victims while rending
 	them.  He is a mighty spellcaster, and he can drain the life
 	of mortals with a touch of his tail.
+deep one
+deeper one
+deepest one
+		I think their predominant color was a greyish-green, though 
+		they had white bellies. They were mostly shiny and slippery, 
+		but the ridges of their backs were scaly. Their forms vaguely 
+		suggested the anthropoid, while their heads were the heads of fish, 
+		with prodigious bulging eyes that never closed. At the sides of their 
+		necks were palpitating gills, and their long paws were webbed. 
+		They hopped irregularly, sometimes on two legs and sometimes on four. 
+		I was somehow glad that they had no more than four limbs. 
+		Their croaking, baying voices, clearly used for articulate speech, 
+		held all the dark shades of expression which their staring faces lacked... 
+		They were the blasphemous fish-frogs of the nameless design—living and horrible. 
+			[ The Shadow over Innsmouth, by H.P. Lovecraft ]
 # takes "major demon" when specifying '&'
 demon
 major demon
@@ -1643,6 +1688,15 @@ dread pirate roberts
  	Pirate Roberts either. His name was Cummerbund. The real
  	Roberts has been retired 15 years and living like a king in
  	Patagonia.'
+drop bear
+	A drop bear (sometimes dropbear) is a hoax in contemporary 
+	Australian folklore featuring a predatory, carnivorous version of the koala.
+	This imaginary animal is commonly spoken about in tall tales designed to 
+	scare tourists.
+	 	[ Wikipedia, the free encyclopedia ]
+	You haven't heard of drop bears? Terrifying things! They
+	hide on ceilings and drop off onto your head! I would
+	be careful in that dungeon, if I were you!
 *drum*
 	Many travelers have seen the drums of the great apes, and
 	some have heard the sounds of their beating and the noise of
@@ -2149,7 +2203,7 @@ hell
 	perpetual fires were maintained there to prevent pestilence.
 	Thus, in the New Testament, Gehenna became synonymous with hell.
 		[ Encyclopedia Mythica, ed. M.F. Lindemans ]
-gel
+* gel
 	Sometimes that which we digest is more deadly than that which
 	might digest us.
 gelatinous cube
@@ -2207,6 +2261,7 @@ spectre
 	trench, there came a moaning that was horrible to hear.
 	Panic drained the blood from my cheeks.
 	     [ The Odyssey, (chapter Lambda), by Homer ]
+* ghoul
 ghoul
 	The forces of the gloom know each other, and are strangely
 	balanced by each other.  Teeth and claws fear what they cannot
@@ -2232,6 +2287,10 @@ giant humanoid
 	boulders as weapons, hurling them over large distances.  All
 	types of giants share a love for men - roasted, boiled, or
 	fried.  Their table manners are legendary.
+giant fly
+	These enormous insects are little threat to experienced
+	dungeoneers. The maddening buzz of their wings is quickly
+	silenced by the strike of a blade.
 gnoll*
 	These bipedal hyenas serve Yeenoghu, and are almost unmatched
 	in combat.
@@ -2490,6 +2549,18 @@ heart of ahriman
 	stood on the right, with a short, sardonic laugh.  "It is
 	ready to crumble at a touch.  We are fools ---"
 		[ Conan The Conqueror, by Robert E. Howard ]
+hellbat
+	Not to be confused with the Bat from Hell.
+hellcat
+	The scent of rotting flesh and death upon the wind gave
+	Orville pause. Where could that smell be coming from?
+hellrat
+	It is said that the rats of hell carry no diseases, for no
+	fleas can bear to bite them.
+hellbear
+	The main difference between hellbears and grizzly bears is
+	that hellbears have red fur. Hellbears can also be identified
+	by the fact that they are usually on fire.
 hell hound*
 	But suddenly they started forward in a rigid, fixed stare,
 	and his lips parted in amazement.  At the same instant Lestrade
@@ -2760,6 +2831,7 @@ hunter
 	Where is the haste that ye hurry by?
 	Brother, I go to my lair to die.
 		[ The Jungle Book, by Rudyard Kipling ]
+*-headed hydra
 hydra
 	According to Hesiod, the Hydra was the offspring of Typhon
 	and Echidna. It possessed many heads, the exact number of which
@@ -3024,6 +3096,11 @@ kabuto
 	a small plate, the shoshaku tei ita, whose rear edge bent
 	downwards into a flange that rested against the forehead.
 	   [ Arms & Armour of the Samurai, by Bottomley & Hopson ]
+kangaroo
+wallaby
+wallaroo
+tasmanian devil
+	Marsupials in the dungeon? More likely than you might think.
 katana
 	The katana is a long, single-edged samurai sword with a
 	slightly curved blade.  Its long handle is designed to allow
@@ -3116,6 +3193,8 @@ knight
 	But had the fortune in his age
 	To live a fool and die a sage.
 	  [ Don Quixote of La Mancha, by Miquel de Cervantes Saavedra ]
+koala
+	A fine example of evolution gone wrong.
 ~kobold ??m*
 *kobold*
 	The race of kobolds are reputed to be an artificial creation
@@ -3843,6 +3922,10 @@ mog
 	Most molds are saprophytes.  Some species (e.g., penicillium)
 	are used in making cheese and antibiotics.
 		[ The Concise Columbia Encyclopedia ]
+* mold warrior
+	In rare cases, patches of mold have gained intelligence and
+	autonomy. They then use corpses for raw material in order to
+	propogate and grow.
 mol?ch
 	And the Lord spake unto Moses, saying,
 	Again, thou shalt say to the children of Israel, Whosoever
@@ -4040,6 +4123,8 @@ newt
 	For a charm of powerful trouble,
 	Like a hell-broth boil and bubble."
 		[ Macbeth, by William Shakespeare ]
+nightgaunt
+	What could be so terrifying about tickling?
 ninja-to
 	A Japanese broadsword.
 *norn
@@ -4063,6 +4148,11 @@ nosferatu
   lusts after blood without reason is under his spell, the spell
   of the vampire NOSFERATU.
     	[ from _Nosferatu_, written by Henrik Galeen, 1922 ]
+nova fox
+	Nova foxes hail from a world of fire and lightning. Their
+	shrill cry signals death for those that cannot keep up
+	with their speed. There are even rumors that they can turn
+	magical attacks back against the user.
 nunchaku
 	A nunchaku is two sections of wood (or metal in modern
 	incarnations) connected by a cord or chain.  There is much
@@ -4826,6 +4916,9 @@ raven
 	On the morrow *he* will leave me, as my hopes have flown before.'
 		Then the bird said, 'Nevermore.'
 				[ The Raven, by Edgar Allan Poe ]
+red cap
+	Some say the cap is stained with blood. Others claim that he
+	simply loves the color red.
 ~*invisibility
 ring
 * ring
@@ -5147,6 +5240,7 @@ scroll *
 		[ Endymion, by John Keats ]
 serpopard
 	A leopard with a long, serpentine body and neck.
+anubite
 set
 seth
 	The ancient Egyptian god of chaos (Set), the embodiment of
@@ -5324,6 +5418,8 @@ pit viper
 	enmity between thee and the woman, and between thy seed and her
 	seed; it shall bruise thy head, and thou shalt bruise his heel.
 		[ Genesis 3:1-6,13-15 ]
+*skunk
+	Have you considered tomato juice?
 snickersnee
 	Ah, never shall I forget the cry,
 	    or the shriek that shrieked he,
@@ -5408,6 +5504,9 @@ spell card
 	don't I?"
 	"Why, yes, of course," said Wilbur.
 		[ Charlotte's Web, by E.B. White ]
+spiked chain
+	It's never fun when things are unfair, unless things are
+	unfair in your favor.
 *spore
 *sphere
 	The attack by those who want to die -- this is the attack
@@ -5538,6 +5637,9 @@ straw golem
 	figure was raised above the stalks of corn by means of the
 	pole stuck up its back.
 		[ The Wonderful Wizard of Oz, by L. Frank Baum ]
+substance warper
+	Ask not, what your items can do to it.  Ask what it can do
+	to your items.
 sunsword
 	What you seek is a blade of light,
 	a weapon for vengeance.
@@ -5975,6 +6077,10 @@ wakizashi
 	and especially during times of civil wars, a tanto was worn
 	in place of a wakizashi.
 		[ Wikipedia, the free encyclopedia ]
+walrus
+	"The time has come," the walrus said, "to talk of many things: 
+	of shoes and ships - and sealing wax - of cabbages and kings."
+		[Alice in Wonderland, by Lewis Carrol ]
 # takes "wand or a wall" when specifying '/'
 ~*sleep
 wand *
@@ -6022,6 +6128,9 @@ war*hammer
 	while men of both armies scrambled in the swirling waters for
 	rubies knocked free of his armor.
 		[ A Game of Thrones, by George R.R. Martin ]
+* wasp
+	These insects are feared for their ability to lay eggs inside
+	the bodies of their prey.
 water
 	Day after day, day after day,
 	We stuck, nor breath nor motion;
@@ -6164,6 +6273,8 @@ wolf
 	monkshood.
 		[ The American Heritage Dictionary of
 		    the English Language, Fourth Edition. ]
+wombat
+	If I'm a wombat, and you're a wombat, am I a wombat?
 wood golem
 	Come, old broomstick, you are needed,
 	Take these rags and wrap them round you!
@@ -6215,6 +6326,7 @@ lord of worms
 	alone.
 wraith
 nazgul
+fell beast
 	Immediately, though everything else remained as before, dim
 	and dark, the shapes became terribly clear.  He was able to
 	see beneath their black wrappings.  There were five tall
@@ -6288,6 +6400,9 @@ yeti
 	concerning the creature have become even more muddled and
 	confused.
 		[ The Encyclopedia of Monsters, by Daniel Cohen ]
+yuki-onna
+	A Japanese snow spirit, noted in some legends for making
+	travellers lose their way in the snow.
 *yugake
 	Japanese leather archery gloves.  Gloves made for use while
 	practicing had thumbs reinforced with horn.  Those worn into

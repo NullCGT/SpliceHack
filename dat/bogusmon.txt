@@ -72,7 +72,7 @@ bunny
 bat from Hell
 shoggoth
 
-# powergaming and speedrunning
+# Powergaming and speedrunning
 polypiler
 pudding farmer
 speedrunner
@@ -80,7 +80,7 @@ lawful female dwarven valkyrie with Excalibur
 Elbereth-spammer
 enexto-abuser
 
-# self-deprecation / this variant
+# Self-deprecation / this variant
 questionable addition
 poorly balanced monster
 obscure reference
@@ -88,7 +88,7 @@ clunky mechanic
 incongruous reference
 absurdly powerful mystic scarab
 
-# cataclysm
+# Cataclysm
 smoker zombie
 shady zombie
 
@@ -218,6 +218,11 @@ gunslinger
 fool
 megabeast
 chimneysweep
+corpulent cook
+CEO
+salt golem
+misspent youth
+mad scientist
 
 # ;)
 cuddly cutie
@@ -253,11 +258,14 @@ hallucination
 creeping coins
 
 # Greek legend
-hydra
 satyr
 siren
 nemean lion
 -Scylla
+
+# Norse
+ulsfark
+|nidhog
 
 # Monty Python
 killer bunny
@@ -276,7 +284,8 @@ wrong trousers
 # Discworld
 Luggage
 vampiric watermelon
-Librarian
+|librarian
+pictsie
 
 # Lord of the Rings
 Ent
@@ -322,6 +331,8 @@ youma
 
 # Pokemon (Meowth)
 nyaasu
+
+#TPP
 +Digrat
 -Bird Jesus
 +King Fonz
@@ -342,8 +353,12 @@ Terminator
 # Bubblegum Crisis
 boomer
 
+# TDG
++Jeremiah the Bullfrog
+
 # Dr. Who ("Exterminate!")
 Dalek
+Weeping Angel
 
 # Unfortunate...
 VFD
@@ -408,6 +423,14 @@ ant-lion
 gnat swarm
 barnacle
 ferret
+water bear
+blue-footed booby
+spiny lumpsucker
+blobfish
+zebroid
+axolotl
+naked mole rat
+narwhal
 
 # european cryptids
 wolpertinger
@@ -426,6 +449,7 @@ hippogriff
 kelpie
 catoblepas
 trow
+flying monkey
 
 # Unusually animate body parts
 bouncing eye
@@ -673,6 +697,7 @@ clod giant
 clue golem
 cockathrice
 bust vortex
+dead dragon
 ear piercer
 errata elemental
 elastic eel
@@ -696,6 +721,7 @@ glossy golem
 gnome laureate
 gnome dummy
 gooier ooze
+green gold
 green slide
 guardian nacho
 hearth elemental

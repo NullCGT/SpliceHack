@@ -10,9 +10,13 @@ Features
   This should allow greater control over the late game, and hopefully make the
   planes feel a little bit more distinctive.
 
+Special Rooms
+- Added L's Dilapidated Armory Patch.
+
 New Items
 - Spiked Chains: Combine the best features of polearms and melee weapons. This
   is a reference to D&D 3.5, where spiked chains are horrifyingly broken.
+- Encyclopedias: Contain identities of a number of items.
 
 
 New Monsters
@@ -26,6 +30,7 @@ New Monsters
 Bug Fixes
 - Stabilized amalgamations and gels.
 - Various other fixes.
+- Fixed numerous issues with ghouls.
 
                     Version 0.6.2: Critical Errors
 

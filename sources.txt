@@ -98,6 +98,9 @@
 - Grudge Patch
 - Colored Walls and Floors Patch
 
+#L
+- Dilapidated Armory Patch
+
 #RPresser
 - Epitaph Patch
 

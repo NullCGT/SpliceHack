@@ -2505,6 +2505,9 @@ boolean prefilled;
     case DEN:
         level.flags.has_den = TRUE;
         break;
+    case ARMORY:
+        level.flags.has_armory = TRUE;
+        break;
     case BARRACKS:
         level.flags.has_barracks = TRUE;
         break;

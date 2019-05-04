@@ -1225,6 +1225,8 @@ wiz_map_levltyp(VOID_ARGS)
             Strcat(dsc, " lab");
         if (level.flags.has_den)
             Strcat(dsc, " den");
+        if (level.flags.has_armory)
+            Strcat(dsc, " armory");
         if (level.flags.has_swamp)
             Strcat(dsc, " swamp");
         /* level flags */

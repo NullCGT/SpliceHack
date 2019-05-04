@@ -68,6 +68,7 @@ enum roomtype_types {
     TEMPLE,     /* contains a shrine */
     LEPREHALL,  /* leprechaun hall (Tom Proudfoot) */
     COCKNEST,   /* cockatrice nest (Tom Proudfoot) */
+    ARMORY,     /* armory (L's dilapidated armory patch) */
     ANTHOLE,    /* ants (Tom Proudfoot) */
     BLACKFOYER, /* black market */
     ARTROOM,    /* interesting walls */

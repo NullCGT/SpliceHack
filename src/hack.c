@@ -2560,6 +2560,9 @@ register boolean newlev;
         case COCKNEST:
             You("enter a disgusting nest!");
             break;
+        case ARMORY:
+            You("enter a dilapidated armory!");
+            break;
         case ANTHOLE:
             You("enter an anthole!");
             break;
@@ -2636,6 +2639,9 @@ register boolean newlev;
                     break;
                 case DEN:
                     level.flags.has_den = 0;
+                    break;
+                case ARMORY:
+                    level.flags.has_armory = 0;
                     break;
                 }
             }

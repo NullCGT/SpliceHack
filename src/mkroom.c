@@ -82,6 +82,9 @@ int roomtype;
         case LEPREHALL:
             mkzoo(LEPREHALL);
             break;
+        case ARMORY:
+            mkzoo(ARMORY);
+            break;
         case COCKNEST:
             mkzoo(COCKNEST);
             break;
@@ -341,6 +344,8 @@ struct mkroom *sroom;
             /* don't place monster on explicitly placed throne */
             if (type == COURT && IS_THRONE(levl[sx][sy].typ))
                 continue;
+            if (type == ARMORY && rn2(2))
+                continue;
             mon = makemon((type == COURT)
                            ? courtmon()
                            : (type == BARRACKS)
@@ -359,11 +364,13 @@ struct mkroom *sroom;
                                            ? &mons[PM_LEPRECHAUN]
                                            : (type == COCKNEST)
                                                ? &mons[PM_COCKATRICE]
-                                               : (type == DEN)
-                                                   ? denmon()
-                                                   : (type == ANTHOLE)
-                                                       ? antholemon()
-                                                       : (struct permonst *) 0,
+                                               : (type == ARMORY) 
+                                                    ? (rn2(3) ? mkclass(S_RUSTMONST,0) : &mons[PM_BROWN_PUDDING])
+                                                        : (type == DEN)
+                                                            ? denmon()
+                                                            : (type == ANTHOLE)
+                                                                ? antholemon()
+                                                                : (struct permonst *) 0,
                                 sx, sy, MM_ASLEEP);
             if (mon) {
                 mon->msleeping = 1;
@@ -416,6 +423,17 @@ struct mkroom *sroom;
                     }
                 }
                 break;
+            case ARMORY: {
+                    struct obj *otmp;
+                    if (rn2(2))
+                        otmp = mkobj_at(WEAPON_CLASS, sx, sy, FALSE);
+                    else
+                        otmp = mkobj_at(ARMOR_CLASS, sx, sy, FALSE);
+                    otmp->spe = 0;
+                    if (is_rustprone(otmp)) otmp->oeroded = rn2(4);
+                    else if (is_rottable(otmp)) otmp->oeroded2 = rn2(4);
+                }
+                break;
             case ANTHOLE:
                 if (!rn2(3))
                     (void) mkobj_at(FOOD_CLASS, sx, sy, FALSE);
@@ -460,6 +478,9 @@ struct mkroom *sroom;
         break;
     case DEN:
         level.flags.has_den = 1;
+        break;
+    case ARMORY:
+        level.flags.has_armory = 1;
         break;
     }
 }

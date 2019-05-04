@@ -344,7 +344,7 @@ struct mkroom *sroom;
             /* don't place monster on explicitly placed throne */
             if (type == COURT && IS_THRONE(levl[sx][sy].typ))
                 continue;
-            if (type == ARMORY && rn2(2))
+            if ((type == ARMORY || type == LAB) && rn2(2))
                 continue;
             mon = makemon((type == COURT)
                            ? courtmon()
@@ -359,7 +359,7 @@ struct mkroom *sroom;
                                      : (type == LAB)
                                          ? (sx == tx && sy == ty
                                              ? &mons[PM_BAD_CLONE]
-                                             : &mons[PM_AMALGAMATION])
+                                             : mkclass(S_QUANTMECH, 0))
                                        : (type == LEPREHALL)
                                            ? &mons[PM_LEPRECHAUN]
                                            : (type == COCKNEST)

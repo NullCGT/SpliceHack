@@ -1669,7 +1669,7 @@ NEARDATA struct permonst mons[] = {
      * which the rode/flew into battle. Fearsome in their own right.
      * Not exactly dragons, but dragon-like.
      */
-   MON("fell beast", S_DRAGON, LVL(14, 12, -2, 20, -17), (G_NOGEN | 1),
+   MON("fell beast", S_DRAGON, LVL(14, 12, -2, 20, -17), G_NOGEN,
        A(ATTK(AT_CLAW, AD_PHYS, 4, 5), ATTK(AT_CLAW, AD_PHYS, 4, 5),
          ATTK(AT_BITE, AD_PHYS, 2, 6), NO_ATTK, NO_ATTK, NO_ATTK),
        SIZ(1200, 800, MS_SHRIEK, MZ_LARGE), MR_COLD | MR_SLEEP | MR_POISON, 0,

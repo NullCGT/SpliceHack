@@ -312,7 +312,7 @@ register struct monst *mtmp;
 
         mtmp->minvis = mtmp->perminvis = 0;
         if (!boss_entrance(mtmp)) {
-            impossible("demon_talk: still can't see monster?");
+            /* impossible("demon_talk: still can't see monster?"); */
             mtmp->mstrategy &= ~STRAT_APPEARMSG;
         }
         newsym(mtmp->mx, mtmp->my);

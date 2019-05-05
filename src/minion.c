@@ -319,7 +319,7 @@ register struct monst *mtmp;
     }
     if (youmonst.data->mlet == S_DEMON) { /* Won't blackmail their own. */
         pline("%s says, \"Good hunting, %s.\"", Amonnam(mtmp),
-              flags.female ? "Sister" : "Brother");
+              flags.female == 1 ? "Sister" : flags.female == 2 ? "Sibling" : "Brother");
         if (!tele_restrict(mtmp))
             (void) rloc(mtmp, TRUE);
         return 1;

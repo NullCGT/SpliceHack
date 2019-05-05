@@ -992,72 +992,129 @@ OBJECT:('*',"loadstone"),(65,18),cursed,0
 OBJECT:('"',"amulet of strangulation"),(65,18),cursed,0
 
 #
-# The Baalzebub level
+# The New Baalzebub level
 #
-MAZE:"baalz",' '
-FLAGS: noteleport,corrmaze
-GEOMETRY:right,center
-# the two pools are fakes used to mark spots which need special wall fixups
-# the two iron bars are eyes and spots to their left will be made diggable
+MAZE:"baalz",random
+FLAGS: noteleport,hardfloor
+GEOMETRY:center,center
 MAP
--------------------------------------------------
-|                   ----               ----
-|          ----     |     -----------  |
-| ------      |  ---------|.........|--P
-| F....|  -------|...........--------------
----....|--|..................S............|----
-+...--....S..----------------|............S...|
----....|--|..................|............|----
-| F....|  -------|...........-----S--------
-| ------      |  ---------|.........|--P
-|          ----     |     -----------  |
-|                   ----               ----
--------------------------------------------------
+      }}   }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}                  
+  ..}}...} ...}}....}}}}.....}}...}}.}..}.}.}....}}.}  }}.}}...    .....    
+ .}}..}}}..}}}...}}}....}}.F...}}}..}.}}.}.}..F.}..}.}}}...  }}. #.......   
+ }..  }}}}}}}}.F.}}}}}}}}FFF}}}}}}}}}}}}}}}FFFF}}}}.}....}}.}... # ......   
+ .}}}}}}}}}}}}}FFFF}}}}}}F}}}------------}}F}}}}}}}}.}}.}..... }.#          
+  .}}}FFFFFF}}}}}}F}}--------|..........|FFF}}}}}}}}}}.....}}}...  .}...    
+ .}}}}F....F}}-------|...........--------------}}}}}}}}}}.....  }... .}.}   
+ }.}---....|--|..................S............|----}}}}}...}.} ...}......   
+ ..}|...--....S..----------------|..........\.S...|}}}}}}}.....}}...  }..}  
+ .}}---....|--|..................|............|----}}}}}}}}}.....}}.....}.  
+  .}}}F....F}}-------|...........-----S--------}}}}}}}}}.....}}.....} }..   
+ .}.}}FFFFFF}}}}}}F}}--------|..........|FFF}}}}}}}}  }....}..}}..  ....}}  
+ }.}.}}}}}}}}}}FFFF}}}}}F}}}}------------}}F}}}}}}}   ..}}...}...}... }.    
+ }}.}.}}}}}}}}.F.}}}}}}}FFF}}}}}}}}}}}}}}}}FFFF}}... }...}.....}}.}} ...}   
+  .  }..}}}}}}...}}}}}}}}.F.}}}}}....}}}}}}}}.F....}...}...}....}...} ...}  
+ }}. . ..}}}}}}}.}}}}...}...}}...}}....}}}}}}...}}..}....}...}...}}...}     
+ }..}.}.}..  .}.}.}...}..}}...}}...}}}...}}...}.....}.}..}...}}..}  .}..    
+ }}..}.}.}.. }.}.}.}..}.}.}}....}}}...}}}....}}...}}......}}... .}} .....   
+   }}.}}..}}..}}}...}...}}....}}}}}}}}....}}......}....}}}..}}.}......      
+      }}}   }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}    }}}          
 ENDMAP
-STAIR:levregion(01,00,15,20),levregion(15,1,70,16),up
-BRANCH:levregion(01,00,15,20),levregion(15,1,70,16)
-TELEPORT_REGION:levregion(01,00,15,20),levregion(15,1,70,16)
-# this actually leaves the farthest right column diggable
-NON_DIGGABLE:(00,00,47,12)
-MAZEWALK:(00,06),west
-STAIR:(44,06),down
-DOOR:locked,(00,06)
-IF [50%] {
-   TERRAIN:(34,08),'-'
-   TERRAIN:(34,04),'S'
-   TERRAIN:(29,05),'|'
-   TERRAIN:(29,07),'S'
-}
+# Regions
+REGION:(00,00,75,19),unlit,"ordinary"
+REGION:(68,01,72,03),lit,"ordinary"
+# Stairs
+STAIR:(69,02),up
+STAIR:(48,08),down
+BRANCH:(16,15,75,19),(00,00,00,00)
+TELEPORT_REGION:(16,15,75,19),(00,00,00,00)
+# Non diggable walls
+NON_DIGGABLE:(00,00,75,19)
+# Doors
+DOOR:locked,(14,08)
+DOOR:locked,(38,10)
+DOOR:locked,(33,07)
+DOOR:locked,(46,08)
+# Drawbridges
+DRAWBRIDGE:(03,08),east,closed
 # The fellow in residence
-MONSTER:('&',"Baalzebub"),(35,06)
+MONSTER:('&',"Baalzebub"),(44,08)
 # Some random weapons and armor.
 OBJECT:'[',random
 OBJECT:'[',random
+OBJECT:'[',random
+OBJECT:'[',random
+OBJECT:')',random
+OBJECT:')',random
 OBJECT:')',random
 OBJECT:')',random
 OBJECT:'*',random
+OBJECT:'*',random
+OBJECT:'*',random
 OBJECT:'!',random
 OBJECT:'!',random
+OBJECT:'!',random
+OBJECT:'!',random
+OBJECT:'?',random
+OBJECT:'?',random
 OBJECT:'?',random
 OBJECT:'?',random
 OBJECT:'?',random
 # Some traps.
 TRAP:"spiked pit", random
+TRAP:"spiked pit", random
+TRAP:"fire", random
 TRAP:"fire", random
 TRAP:"sleep gas", random
+TRAP:"sleep gas", random
 TRAP:"anti magic", random
-TRAP:"fire", random
+TRAP:"anti magic", random
+TRAP:"rust", random
+TRAP:"rust", random
+TRAP:"rust", random
+TRAP:"magic", random
+TRAP:"magic", random
 TRAP:"magic", random
 TRAP:"magic", random
 # Random monsters.
-MONSTER:(' ',"ghost"),(37,07)
-MONSTER:('&',"horned devil"),(32,05)
-MONSTER:('&',"barbed devil"),(38,07)
+MONSTER:(' ',"ghost"),(39,08)
+MONSTER:('&',"horned devil"),(29,06)
+MONSTER:('&',"barbed devil"),(29,10)
 MONSTER:'L',random
+MONSTER:(' ',"ghost"),random
+MONSTER:(' ',"ghost"),random
+MONSTER:(' ',"shade"),random
+IF [50%] {
+    MONSTER:(' ',"shade"),random
+}
+MONSTER:'&',random
+MONSTER:'&',random
+MONSTER:('&',"horned devil"),random
+MONSTER:('&',"horned devil"),random
+MONSTER:('&',"horned devil"),random
+IF [50%] {
+    MONSTER:('&',"horned devil"),random
+}
+MONSTER:('i',"lemure"),random
+MONSTER:('i',"lemure"),random
+MONSTER:('i',"lemure"),random
+MONSTER:('i',"lemure"),random
+IF [50%] {
+    MONSTER:('i',"lemure"),random
+}
 # Some Vampires for good measure
 MONSTER:'V',random
 MONSTER:'V',random
 MONSTER:'V',random
+# And a few blobby things, borrowed from Big J.
+MONSTER:'F',random
+MONSTER:'F',random
+MONSTER:'F',random
+MONSTER:('P',"green slime"),random
+MONSTER:'P',random
+MONSTER:'P',random
+IF [50%] {
+    MONSTER:'P',random
+}
 #
 # The Sanctum Level
 #

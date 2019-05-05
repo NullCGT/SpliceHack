@@ -69,6 +69,7 @@ enum roomtype_types {
     LEPREHALL,  /* leprechaun hall (Tom Proudfoot) */
     COCKNEST,   /* cockatrice nest (Tom Proudfoot) */
     ANTHOLE,    /* ants (Tom Proudfoot) */
+    LEMUREPIT,  /* contains lemures and horned devils */
     BLACKFOYER, /* black market */
     ARTROOM,    /* interesting walls */
     SHOPBASE,   /* everything above this is a shop */

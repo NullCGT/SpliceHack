@@ -192,6 +192,7 @@ static struct {
     { "swamp", SWAMP },
     { "vault", VAULT },
     { "beehive", BEEHIVE },
+    { "lemurepit", LEMUREPIT },
     { "den", DEN },
     { "morgue", MORGUE },
     { "barracks", BARRACKS },

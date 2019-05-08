@@ -2057,7 +2057,7 @@ Ye breathe deeply of the sweet bouquet that is %H.
 Rather than the chaotic din ye recall, a eerie silence greets yer
 lugs. In the distance, ye hear soldiers on patrol. Seems yer pirate
 brethren be in need of yer assistance!
-%E
+%E [Ye find yerself at Tortuga, but there be soldiers about!]
 %Cp Pir 00002
 Once again, you breathe the bouquet that is %H.
 %E
@@ -2104,7 +2104,7 @@ trapped on %i."
 %S of the coast to show these Yendorans to the plank.
 
 "Let me be see'n if you BE that %S."
-%E
+%E [%lC challenges ye to prove yer worth.]
 %Cp Pir 00016
 "Ye try me patience, %p.
 I hope that this time ye be ready."
@@ -2114,19 +2114,19 @@ I hope that this time ye be ready."
 %E
 %Cc Pir 00018
 "Me mercy is at an end, %p. Leave %H and never return."
-%E
+%E [Ye be an utter failure.]
 %Cc Pir 00019
 "Ye be still too weak.  Return a proven %R. Perhaps then
 ye will be ready.
 
 "Go now, and follow %d to glory and riches."
-%E
+%E [Ye ain't strong enough yet.]
 %Cc Pir 00020
 "Ye must follow %d through %a waters to reach %i.
 
 "As ye be now ye would never make it. Do not return to %H
 until ye be wise in the ways o' %d."
-%E
+%E [Ye must atone fer yer sins. Return when ye be ready.]
 %Cc Pir 00021
 "I always knew ye had greatness in ye, %S. As a %g, perhaps ye may
 succeed where I once failed.
@@ -2178,15 +2178,15 @@ rocks an' Ketch doesn't know the way into the caves."
 "Trust %d in yer hour of need."
 %E
 %Cc Pir 00035
-Ye have reached the treacherous waters around %i at last
+Ye have reached the treacherous waters around %i at last.
 The ghostly minions of %n are everywhere around you.
-%E
+%E [Ye have reached %i. The minions of %n be everywhere.]
 %Cp Pir 00036
 Ye know that this time you must find and destroy %n.
 %E
 %Cc Pir 00040
 Ye sense the presence of %o at the heart of %i.
-%E
+%E [Ye sense %o at the heart of %i.]
 %Cp Pir 00041
 Ye know that soon ye shall claim %o for yer own.
 %E
@@ -2196,7 +2196,7 @@ when even he could not?!
 
 "He must be senile to send %ra to destroy me, when even in his prime
 he failed at the same task! No, it is your soul that shall go to %d."
-%E
+%E [%nC threatens to send ye to %d.]
 %Cp Pir 00051
 "I have been toying with ye, %p. This time I will kill ye."
 %E
@@ -2249,14 +2249,14 @@ It will share your fate!"
 As ye pick up %o, ye feel a great
 weight has been lifted from your shoulders.  Your only thoughts are
 to quickly return to %H and find %l.
-%E
+%E [Ye feel the need to return %o to %l at %H]
 %Cc Pir 00080
 A great crack opens below %n, and a huge, flaming hand
 reaches out to seize his wispy form. He curses ye:
     NO! I won't die here, %p! It is ye who's soul will feed
 	the Devil! I am king of all the oceans, I cannot be killed!
 	I will haunt ye until %d betrays ye!
-%E
+%E [%nC be dragged into the depths of Hell.]
 %Cc Pir 00081
 As %l senses %o, the lines on his face harden
 into what may be his version of a smile.
@@ -2269,11 +2269,11 @@ into what may be his version of a smile.
 	The great Wizard, who lives in Yendor, knows that ye
 	can claim this prize. It was he who sent the soldiers here.
 	Return to %Z, and claim yer destiny!
-%E
+%E [Return to %Z and find the Wizard of Yendor.]
 %Cc Pir 00082
 "%oC is yers.  Yer destiny awaits through the portal that
 brought ye here."
-%E
+%E [Take %oC and return through the portal.]
 %Cp Pir 00090
 "Tell me of yer adventures in yer quest for the Amulet of Yendor."
 %E
@@ -2283,7 +2283,7 @@ the greatest %S of the Breathren of the Coast!
 
 "Now ye must travel to the astral sea, and offer the Amulet on the
 High Altar of %d!"
-%E
+%E [Ye must sail the seas of the Astral Plane!]
 #
 #	Priest
 #

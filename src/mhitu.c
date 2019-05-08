@@ -38,7 +38,8 @@ static const char *const hmonkattacks[] = {
     "suplex",    "piledrive",    "slap",    "shove",    "flick",
     "heel drop", "uppercut",     "flip",    "smack",    "downercut",
     "arm-bar",   "haymaker",     "leopard punch",       "sucker punch",
-    "backhand",  "combo"
+    "backhand",  "combo",        "caress",  "noogie",   "headpat",
+    "leg drop",  "tickle"
 
 };
 

@@ -165,7 +165,7 @@ eatmdone(VOID_ARGS)
         free((genericptr_t) eatmbuf), eatmbuf = 0;
     }
     /* update display */
-    if (youmonst.m_ap_type) {
+    if (U_AP_TYPE) {
         youmonst.m_ap_type = M_AP_NOTHING;
         newsym(u.ux, u.uy);
     }
@@ -881,43 +881,16 @@ givit(type, ptr)
 int type;
 register struct permonst *ptr;
 {
-    register int chance;
 
     debugpline1("Attempting to give intrinsic %d", type);
-    /* some intrinsics are easier to get than others */
-    switch (type) {
-    case POISON_RES:
-        if ((ptr == &mons[PM_KILLER_BEE] || ptr == &mons[PM_SCORPION])
-            && !rn2(4))
-            chance = 1;
-        else
-            chance = 15;
-        break;
-    case TELEPORT:
-        chance = 10;
-        break;
-    case TELEPORT_CONTROL:
-        if (ptr == &mons[PM_BLINKING_EYE])
-            chance = 80;
-        else
-            chance = 12;
-        break;
-    case TELEPAT:
-        chance = 1;
-        break;
-    default:
-        chance = 15;
-        break;
-    }
 
-    if (ptr->mlevel <= rn2(chance))
+    if (!should_givit(type, ptr))
         return; /* failed die roll */
 
     switch (type) {
     case FIRE_RES:
         debugpline0("Trying to give fire resistance");
         if (!(HFire_resistance & FROMOUTSIDE)) {
-            remresists();
             You(Hallucination ? "be chillin'." : "feel a momentary chill.");
             HFire_resistance |= FROMOUTSIDE;
         }
@@ -925,7 +898,6 @@ register struct permonst *ptr;
     case SLEEP_RES:
         debugpline0("Trying to give sleep resistance");
         if (!(HSleep_resistance & FROMOUTSIDE)) {
-            remresists();
             You_feel("wide awake.");
             HSleep_resistance |= FROMOUTSIDE;
         }
@@ -933,7 +905,6 @@ register struct permonst *ptr;
     case COLD_RES:
         debugpline0("Trying to give cold resistance");
         if (!(HCold_resistance & FROMOUTSIDE)) {
-            remresists();
             You_feel("full of hot air.");
             HCold_resistance |= FROMOUTSIDE;
         }
@@ -941,7 +912,6 @@ register struct permonst *ptr;
     case DISINT_RES:
         debugpline0("Trying to give disintegration resistance");
         if (!(HDisint_resistance & FROMOUTSIDE)) {
-            remresists();
             You_feel(Hallucination ? "totally together, man." : "very firm.");
             HDisint_resistance |= FROMOUTSIDE;
         }
@@ -949,7 +919,6 @@ register struct permonst *ptr;
     case SHOCK_RES: /* shock (electricity) resistance */
         debugpline0("Trying to give shock resistance");
         if (!(HShock_resistance & FROMOUTSIDE)) {
-            remresists();
             if (Hallucination)
                 You_feel("grounded in reality.");
             else
@@ -994,6 +963,110 @@ register struct permonst *ptr;
         debugpline0("Tried to give an impossible intrinsic");
         break;
     }
+}
+
+/* The "do we or do we not give the intrinsic" logic from givit(), extracted
+ * into its own function. Depends on the monster's level and the type of
+ * intrinsic it is trying to give you.
+ */
+boolean
+should_givit(type, ptr)
+int type;
+struct permonst * ptr;
+{
+    int chance;
+    /* some intrinsics are easier to get than others */
+    switch (type) {
+    case POISON_RES:
+        if ((ptr == &mons[PM_KILLER_BEE] || ptr == &mons[PM_SCORPION])
+            && !rn2(4))
+            chance = 1;
+        else
+            chance = 15;
+        break;
+    case TELEPORT:
+        chance = 10;
+        break;
+    case TELEPORT_CONTROL:
+        if (ptr == &mons[PM_BLINKING_EYE])
+            chance = 80;
+        else
+            chance = 12;
+        break;
+    case TELEPAT:
+        if (ptr == &mons[PM_FLOATING_EYE] || ptr == &mons[PM_MIND_FLAYER]
+            || ptr == &mons[PM_MASTER_MIND_FLAYER])
+            chance = 1;
+        else
+            chance = 20;
+        break;
+    default:
+        chance = 15;
+        break;
+    }
+
+    return (ptr->mlevel > rn2(chance));
+}
+
+/* Choose (one of) the intrinsics granted by a corpse, and return it.
+ * If this corpse gives no intrinsics, return 0.
+ * For the special not-real-prop cases of strength gain (from giants) and energy
+ * gain (from newts etc), return fake prop values of -1 and -2.
+ * Non-deterministic; should only be called once per corpse.
+ */
+int
+corpse_intrinsic(ptr)
+struct permonst * ptr;
+{
+    int i;
+    int count = 0;
+    int prop = 0;
+    boolean conveys_STR = is_giant(ptr);
+
+    /* Eating magical monsters can give you some magical energy. */
+    /* MRKR: "eye of newt" may give small magical energy boost */
+    boolean conveys_energy = (attacktype(ptr, AT_MAGC)
+                              || ptr == &mons[PM_NEWT]);
+
+    /* Check the monster for all of the intrinsics.  If this
+     * monster can give more than one, pick one to try to give
+     * from among all it can give.
+     *
+     * Strength from giants is now treated like an intrinsic
+     * rather than being given unconditionally.
+     */
+
+    if (conveys_STR) {
+        count++;
+        prop = -1;
+        debugpline1("\"Intrinsic\" strength, %d", prop);
+    }
+    if (conveys_energy) {
+        count++;
+        if (!rn2(count)) {
+            prop = -2;
+            debugpline1("\"Intrinsic\" energy gain, %d", prop);
+        }
+    }
+    for (i = 1; i <= LAST_PROP; i++) {
+        if (!intrinsic_possible(i, ptr))
+            continue;
+        count++;
+        /* a 1 in count chance of replacing the old choice
+           with this one, and a count-1 in count chance
+           of keeping the old choice (note that 1 in 1 and
+           0 in 1 are what we want for the first candidate) */
+        if (!rn2(count)) {
+            debugpline2("Intrinsic %d replacing %d", i, prop);
+            prop = i;
+        }
+    }
+
+    /* if strength is the only candidate, give it 50% chance */
+    if (conveys_STR && count == 1 && !rn2(2))
+        prop = 0;
+
+    return prop;
 }
 
 /* called after completely consuming a corpse */

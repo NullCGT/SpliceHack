@@ -1,4 +1,4 @@
-/* NetHack 3.6	monst.h	$NHDT-Date: 1547428769 2019/01/14 01:19:29 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.27 $ */
+/* NetHack 3.6	monst.h	$NHDT-Date: 1550524559 2019/02/18 21:15:59 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.28 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2016. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -52,6 +52,13 @@ enum m_ap_types {
     M_AP_MONSTER   = 3  /* a monster; mostly used for cloned Wizard */
 };
 
+#define M_AP_TYPMASK  0x7
+#define M_AP_F_DKNOWN 0x8
+#define U_AP_TYPE (youmonst.m_ap_type & M_AP_TYPMASK)
+#define U_AP_FLAG (youmonst.m_ap_type & ~M_AP_TYPMASK)
+#define M_AP_TYPE(m) ((m)->m_ap_type & M_AP_TYPMASK)
+#define M_AP_FLAG(m) ((m)->m_ap_type & ~M_AP_TYPMASK)
+
 struct monst {
     struct monst *nmon;
     struct permonst *data;
@@ -72,7 +79,7 @@ struct monst {
     uchar m_ap_type;      /* what mappearance is describing, m_ap_types */
 
     schar mtame;                /* level of tameness, implies peaceful */
-    unsigned long mintrinsics; /* low 10 correspond to mresists */
+    unsigned long mextrinsics; /* low 10 correspond to mresists */
     int mspec_used;             /* monster's special ability attack timeout */
 
     Bitfield(female, 1);      /* is female */
@@ -175,15 +182,15 @@ struct monst {
 /* mimic appearances that block vision/light */
 #define is_lightblocker_mappear(mon)                       \
     (is_obj_mappear(mon, BOULDER)                          \
-     || ((mon)->m_ap_type == M_AP_FURNITURE                \
+     || (M_AP_TYPE(mon) == M_AP_FURNITURE                    \
          && ((mon)->mappearance == S_hcdoor                \
              || (mon)->mappearance == S_vcdoor             \
              || (mon)->mappearance < S_ndoor /* = walls */ \
              || (mon)->mappearance == S_tree)))
-#define is_door_mappear(mon) ((mon)->m_ap_type == M_AP_FURNITURE \
+#define is_door_mappear(mon) (M_AP_TYPE(mon) == M_AP_FURNITURE   \
                               && ((mon)->mappearance == S_hcdoor \
                                   || (mon)->mappearance == S_vcdoor))
-#define is_obj_mappear(mon,otyp) ((mon)->m_ap_type == M_AP_OBJECT \
+#define is_obj_mappear(mon,otyp) (M_AP_TYPE(mon) == M_AP_OBJECT \
                                   && (mon)->mappearance == (otyp))
 
 #endif /* MONST_H */

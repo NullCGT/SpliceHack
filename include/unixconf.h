@@ -1,4 +1,4 @@
-/* NetHack 3.6	unixconf.h	$NHDT-Date: 1548372343 2019/01/24 23:25:43 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.33 $ */
+/* NetHack 3.6	unixconf.h	$NHDT-Date: 1555361298 2019/04/15 20:48:18 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.42 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Pasi Kallinen, 2018. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -352,7 +352,7 @@
 /* the high quality random number routines */
 #ifndef USE_ISAAC64
 # if defined(BSD) || defined(LINUX) || defined(ULTRIX) || defined(CYGWIN32) \
-    || defined(RANDOM) || defined(__APPLE__)
+    || defined(RANDOM) || defined(MACOSX)
 #  define Rand() random()
 # else
 #  define Rand() lrand48()
@@ -409,7 +409,7 @@
 #endif /* LINUX */
 #endif /* GNOME_GRAPHICS */
 
-#ifdef __APPLE__
+#ifdef MACOSX
 # define RUNTIME_PASTEBUF_SUPPORT
 #endif
 
@@ -417,11 +417,12 @@
  * /dev/random is blocking on Linux, so there we default to /dev/urandom which
  * should still be good enough.
  * BSD systems usually have /dev/random that is supposed to be used.
+ * OSX is based on NetBSD kernel and has both /dev/random and /dev/urandom.
  */
 #ifdef LINUX
 # define DEV_RANDOM "/dev/urandom"
 #else
-# ifdef BSD
+# if defined(BSD) || defined(MACOSX)
 #  define DEV_RANDOM "/dev/random"
 # endif
 #endif

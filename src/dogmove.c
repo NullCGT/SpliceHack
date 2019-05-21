@@ -1,4 +1,4 @@
-/* NetHack 3.6	dogmove.c	$NHDT-Date: 1502753407 2017/08/14 23:30:07 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.63 $ */
+/* NetHack 3.6	dogmove.c	$NHDT-Date: 1557094801 2019/05/05 22:20:01 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.74 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -529,96 +529,69 @@ boolean devour;
             mtmp->perminvis = 1;
     }
     if (obj->otyp == CORPSE)
-        dogintr(mtmp, &mons[obj->corpsenm]);
+        mon_givit(mtmp, &mons[obj->corpsenm]);
     return 1;
 }
 
+/* Maybe give an intrinsic to a monster from eating a corpse that confers it. */
 void
-dogintr(mtmp, ptr)
-struct monst *mtmp;
-register struct permonst *ptr;
+mon_givit(mtmp, ptr)
+struct monst* mtmp;
+struct permonst* ptr;
 {
-    register int type = 0;
-    register int chance;
-    /* this loop of code is copied from cpostfx, since symmetry is good.
-       In the future this should be put into its own function. */
-    int count = 0, i = 0;
-    for (i = 1; i <= LAST_PROP; i++) {
-        if (!intrinsic_possible(i, ptr))
-            continue;
-        ++count;
-        /* a 1 in count chance of replacing the old choice
-           with this one, and a count-1 in count chance
-           of keeping the old choice (note that 1 in 1 and
-           0 in 1 are what we want for the first candidate) */
-        if (!rn2(count)) {
-            type = i;
-        }
-    }
-    /* this section of code is just a modified version of givit() */
-    switch (type) {
-    case POISON_RES:
-        if ((ptr == &mons[PM_KILLER_BEE] || ptr == &mons[PM_SCORPION])
-            && !rn2(4))
-            chance = 1;
-        else
-            chance = 15;
-        break;
-    case TELEPORT:
-        chance = 10;
-        break;
-    case TELEPORT_CONTROL:
-        chance = 12;
-        break;
-    case TELEPAT:
-        chance = 1;
-        break;
-    default:
-        chance = 15;
-        break;
-    }
+    int prop = corpse_intrinsic(ptr);
+    boolean vis = canseemon(mtmp);
+    const char* msg = NULL;
+    unsigned long intrinsic = 0; /* MR_* constant */
 
-    if (ptr->mlevel <= rn2(chance))
+    if (!should_givit(prop, ptr))
         return; /* failed die roll */
-    switch (type) {
+
+    /* Pets don't have all the fields that the hero does, so they can't get all
+     * the same intrinsics. If it happens to choose strength gain or teleport
+     * control or whatever, ignore it. */
+    switch (prop) {
     case FIRE_RES:
-        if ((canseemon(mtmp)) && (!(mtmp->mintrinsics & MR_FIRE)))
-            pline("%s shivers slightly.", Monnam(mtmp));
-        mtmp->mintrinsics |= MR_FIRE;
-        break;
-    case SLEEP_RES:
-        if ((canseemon(mtmp)) && (!(mtmp->mintrinsics & MR_SLEEP)))
-            pline("%s looks wide awake.", Monnam(mtmp));
-        mtmp->mintrinsics |= MR_SLEEP;
+        intrinsic = MR_FIRE;
+        msg = "%s shivers slightly.";
         break;
     case COLD_RES:
-        if ((canseemon(mtmp)) && (!(mtmp->mintrinsics & MR_COLD)))
-            pline("%s looks quite warm.", Monnam(mtmp));
-        mtmp->mintrinsics |= MR_COLD;
+        intrinsic = MR_COLD;
+        msg = "%s looks quite warm.";
+        break;
+    case SLEEP_RES:
+        intrinsic = MR_SLEEP;
+        msg = "%s looks wide awake.";
         break;
     case DISINT_RES:
-        if ((canseemon(mtmp)) && (!(mtmp->mintrinsics & MR_DISINT)))
-            pline("%s seems more firm.", Monnam(mtmp));
-        mtmp->mintrinsics |= MR_DISINT;
+        intrinsic = MR_DISINT;
+        msg = "%s looks very firm.";
         break;
     case SHOCK_RES:
-        if ((canseemon(mtmp)) && (!(mtmp->mintrinsics & MR_ELEC)))
-            pline("%s crackles with static electricity.", Monnam(mtmp));
-        mtmp->mintrinsics |= MR_ELEC;
+        intrinsic = MR_ELEC;
+        msg = "%s crackles with static electricity.";
         break;
     case POISON_RES:
-        if ((canseemon(mtmp)) && (!(mtmp->mintrinsics & MR_POISON)))
-            pline("%s looks very healthy.", Monnam(mtmp));
-        mtmp->mintrinsics |= MR_POISON;
+        intrinsic = MR_POISON;
+        msg = "%s looks healthy.";
         break;
-    case TELEPORT:
-    case TELEPORT_CONTROL:
-    case TELEPAT:
-        break;
-    default:
-        debugpline0("Tried to give an impossible intrinsic");
-        break;
+    /*case TELEPAT:
+        if (!mindless(mtmp->data)) {
+            intrinsic = MR2_TELEPATHY;
+            if (haseyes(mtmp->data))
+                msg = "%s blinks a few times.";
+        } */
     }
+
+    /* Don't give message if it already had this intrinsic */
+    if (mtmp->mextrinsics & intrinsic)
+        return;
+
+    if (intrinsic)
+        mtmp->mextrinsics |= intrinsic;
+
+    if (vis && msg)
+        pline(msg, Monnam(mtmp));
 }
 
 
@@ -672,8 +645,9 @@ struct edog *edog;
             else
                 You_feel("worried about %s.", y_monnam(mtmp));
             stop_occupation();
-        } else if (monstermoves > edog->hungrytime + 750 || DEADMONSTER(mtmp)) {
-        dog_died:
+        } else if (monstermoves > edog->hungrytime + 750
+                   || DEADMONSTER(mtmp)) {
+ dog_died:
             if (mtmp->mleashed && mtmp != u.usteed)
                 Your("leash goes slack.");
             else if (cansee(mtmp->mx, mtmp->my))
@@ -911,7 +885,6 @@ int after, udist, whappr;
     return appr;
 }
 
-
 STATIC_OVL struct monst *
 find_targ(mtmp, dx, dy, maxdist)
 register struct monst *mtmp;
@@ -940,14 +913,13 @@ int maxdist;
         if (!m_cansee(mtmp, curx, cury))
             break;
 
-        targ = m_at(curx, cury);
-
         if (curx == mtmp->mux && cury == mtmp->muy)
             return &youmonst;
 
-        if (targ) {
+        if ((targ = m_at(curx, cury)) != 0) {
             /* Is the monster visible to the pet? */
-            if ((!targ->minvis || perceives(mtmp->data)) && !targ->mundetected)
+            if ((!targ->minvis || perceives(mtmp->data))
+                && !targ->mundetected)
                 break;
             /* If the pet can't see it, it assumes it aint there */
             targ = 0;
@@ -1105,7 +1077,6 @@ struct monst *mtmp, *mtarg;
         score -= 1000;
     return score;
 }
-
 
 STATIC_OVL struct monst *
 best_target(mtmp)
@@ -1515,7 +1486,7 @@ int after; /* this is extra fast monster movement */
                 chcnt = 0;
             chi = i;
         }
-    nxti:
+ nxti:
         ;
     }
 
@@ -1530,6 +1501,7 @@ int after; /* this is extra fast monster movement */
         /* How hungry is the pet? */
         if (!mtmp->isminion) {
             struct edog *dog = EDOG(mtmp);
+
             hungry = (monstermoves > (dog->hungrytime + 300));
         }
 
@@ -1575,7 +1547,7 @@ int after; /* this is extra fast monster movement */
         }
     }
 
-newdogpos:
+ newdogpos:
     if (nix != omx || niy != omy) {
         boolean wasseen;
 
@@ -1647,7 +1619,7 @@ newdogpos:
         }
         cc.x = mtmp->mx;
         cc.y = mtmp->my;
-    dognext:
+ dognext:
         if (!m_in_out_region(mtmp, nix, niy))
             return 1;
         remove_monster(mtmp->mx, mtmp->my);
@@ -1752,7 +1724,7 @@ finish_meating(mtmp)
 struct monst *mtmp;
 {
     mtmp->meating = 0;
-    if (mtmp->m_ap_type && mtmp->mappearance && mtmp->cham == NON_PM) {
+    if (M_AP_TYPE(mtmp) && mtmp->mappearance && mtmp->cham == NON_PM) {
         /* was eating a mimic and now appearance needs resetting */
         mtmp->m_ap_type = 0;
         mtmp->mappearance = 0;
@@ -1769,6 +1741,15 @@ struct monst *mtmp;
 
     if (Protection_from_shape_changers || !mtmp->meating)
         return;
+
+    /* with polymorph, the steed's equipment would be re-checked and its
+       saddle would come off, triggering DISMOUNT_FELL, but mimicking
+       doesn't impact monster's equipment; normally DISMOUNT_POLY is for
+       rider taking on an unsuitable shape, but its message works fine
+       for this and also avoids inflicting damage during forced dismount;
+       do this before changing so that dismount refers to original shape */
+    if (mtmp == u.usteed)
+        dismount_steed(DISMOUNT_POLY);
 
     do {
         idx = rn2(SIZE(qm));
@@ -1797,15 +1778,15 @@ struct monst *mtmp;
         newsym(mtmp->mx, mtmp->my);
         You("%s %s %sappear%s where %s was!",
             cansee(mtmp->mx, mtmp->my) ? "see" : "sense that",
-            (mtmp->m_ap_type == M_AP_FURNITURE)
+            (M_AP_TYPE(mtmp) == M_AP_FURNITURE)
                 ? an(defsyms[mtmp->mappearance].explanation)
-                : (mtmp->m_ap_type == M_AP_OBJECT
+                : (M_AP_TYPE(mtmp) == M_AP_OBJECT
                    && OBJ_DESCR(objects[mtmp->mappearance]))
                       ? an(OBJ_DESCR(objects[mtmp->mappearance]))
-                      : (mtmp->m_ap_type == M_AP_OBJECT
+                      : (M_AP_TYPE(mtmp) == M_AP_OBJECT
                          && OBJ_NAME(objects[mtmp->mappearance]))
                             ? an(OBJ_NAME(objects[mtmp->mappearance]))
-                            : (mtmp->m_ap_type == M_AP_MONSTER)
+                            : (M_AP_TYPE(mtmp) == M_AP_MONSTER)
                                   ? an(mons[mtmp->mappearance].mname)
                                   : something,
             cansee(mtmp->mx, mtmp->my) ? "" : "has ",

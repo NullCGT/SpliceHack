@@ -1,4 +1,4 @@
-/* NetHack 3.6	polyself.c	$NHDT-Date: 1548208238 2019/01/23 01:50:38 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.126 $ */
+/* NetHack 3.6	polyself.c	$NHDT-Date: 1556497911 2019/04/29 00:31:51 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.132 $ */
 /*      Copyright (C) 1987, 1988, 1989 by Ken Arromdee */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -43,9 +43,8 @@ void
 set_uasmon()
 {
     struct permonst *mdat = &mons[u.umonnum];
-    int new_speed, old_speed = youmonst.data ? youmonst.data->mmove : 0;
 
-    set_mon_data(&youmonst, mdat, 0);
+    set_mon_data(&youmonst, mdat);
 
 #define PROPSET(PropIndx, ON)                          \
     do {                                               \
@@ -103,17 +102,9 @@ set_uasmon()
     float_vs_flight(); /* maybe toggle (BFlying & I_SPECIAL) */
     polysense();
 
-    if (youmonst.movement) {
-        new_speed = mdat->mmove;
-        /* prorate unused movement if new form is slower so that
-           it doesn't get extra moves leftover from previous form;
-           if new form is faster, leave unused movement as is */
-        if (new_speed < old_speed)
-            youmonst.movement = new_speed * youmonst.movement / old_speed;
-    }
-
 #ifdef STATUS_HILITES
-    status_initialize(REASSESS_ONLY);
+    if (VIA_WINDOWPORT())
+        status_initialize(REASSESS_ONLY);
 #endif
 }
 
@@ -174,7 +165,7 @@ polyman(fmt, arg)
 const char *fmt, *arg;
 {
     boolean sticky = (sticks(youmonst.data) && u.ustuck && !u.uswallow),
-            was_mimicking = (youmonst.m_ap_type == M_AP_OBJECT);
+            was_mimicking = (U_AP_TYPE == M_AP_OBJECT);
     boolean was_blind = !!Blind;
 
     if (Upolyd) {
@@ -647,7 +638,7 @@ int mntmp;
     }
 
     /* if stuck mimicking gold, stop immediately */
-    if (multi < 0 && youmonst.m_ap_type == M_AP_OBJECT
+    if (multi < 0 && U_AP_TYPE == M_AP_OBJECT
         && youmonst.data->mlet != S_MIMIC)
         unmul("");
     /* if becoming a non-mimic, stop mimicking anything */
@@ -811,8 +802,12 @@ int mntmp;
             pline(use_thec, monsterc, "change shape");
         if (attacktype(youmonst.data, AT_MAGC))
          		pline(use_thec, monsterc,"cast monster spells");
-        if (lays_eggs(youmonst.data) && flags.female)
-            pline(use_thec, "sit", "lay an egg");
+        if (lays_eggs(youmonst.data) && flags.female &&
+            !(youmonst.data == &mons[PM_GIANT_EEL]
+                || youmonst.data == &mons[PM_ELECTRIC_EEL]))
+            pline(use_thec, "sit",
+                  eggs_in_water(youmonst.data) ?
+                      "spawn in the water" : "lay an egg");
     }
 
     /* you now know what an egg of your type looks like */
@@ -1159,7 +1154,7 @@ dospit()
             break;
         default:
             impossible("bad attack type in dospit");
-        /* fall through */
+            /*FALLTHRU*/
         case AD_ACID:
             otmp = mksobj(ACID_VENOM, TRUE, FALSE);
             break;
@@ -1375,8 +1370,8 @@ dogaze()
                 pline("%s seems not to notice your gaze.", Monnam(mtmp));
             } else if (mtmp->minvis && !See_invisible) {
                 You_cant("see where to gaze at %s.", Monnam(mtmp));
-            } else if (mtmp->m_ap_type == M_AP_FURNITURE
-                       || mtmp->m_ap_type == M_AP_OBJECT) {
+            } else if (M_AP_TYPE(mtmp) == M_AP_FURNITURE
+                       || M_AP_TYPE(mtmp) == M_AP_OBJECT) {
                 looked--;
                 continue;
             } else if (flags.safe_dog && mtmp->mtame && !Confusion) {
@@ -1484,7 +1479,7 @@ dohide()
                        : (humanoid(u.ustuck->data) ? "holding someone"
                                                    : "holding that creature"));
         if (u.uundetected
-            || (ismimic && youmonst.m_ap_type != M_AP_NOTHING)) {
+            || (ismimic && U_AP_TYPE != M_AP_NOTHING)) {
             u.uundetected = 0;
             youmonst.m_ap_type = M_AP_NOTHING;
             newsym(u.ux, u.uy);
@@ -1522,7 +1517,7 @@ dohide()
      * else make youhiding() give smarter messages at such spots.
      */
 
-    if (u.uundetected || (ismimic && youmonst.m_ap_type != M_AP_NOTHING)) {
+    if (u.uundetected || (ismimic && U_AP_TYPE != M_AP_NOTHING)) {
         youhiding(FALSE, 1); /* "you are already hiding" */
         return 0;
     }

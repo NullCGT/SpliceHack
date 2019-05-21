@@ -1,5 +1,5 @@
-# NetHack 3.6	Makefile.msc	$NHDT-Date: 1546174708 2018/12/30 12:58:28 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.147 $ */
-#       Copyright (c) NetHack PC Development Team 1993-2018
+# NetHack 3.6	Makefile.msc	$NHDT-Date: 1554784482 2019/04/09 04:34:42 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.153 $ */
+#       Copyright (c) NetHack PC Development Team 1993-2019
 #
 # Edited 5/9/18 by NullCGT
 #
@@ -9,9 +9,8 @@
 #       NetHack 3.6.x Makefile for MS Visual Studio Visual C++ compiler
 #
 #       Visual Studio Compilers Tested:
-#            - Microsoft Visual Studio 2010 Express, with the Platform SDK
-#            - Microsoft Visual Studio 2013 Express
 #            - Microsoft Visual Studio 2017 Community Edition
+#            - Microsoft Visual Studio 2019 Community Edition
 #
 #==============================================================================
 #   This is used for building two versions of NetHack:
@@ -454,7 +453,7 @@ CL_RECENT=-sdl
 #----------------------------------------------------------------
 
 !IF "$(ADD_CURSES)" == "Y"
-CURSESDEF=-D"CURSES_GRAPHICS" -D"CURSES_BRIEF_INCLUDE"
+CURSESDEF=-D"CURSES_GRAPHICS" -D"CURSES_BRIEF_INCLUDE" -DCHTYPE_32
 !ELSE
 CURSDEF=
 CURSESLIB=
@@ -466,8 +465,8 @@ ccommon= -c -nologo -D"_CONSOLE" -D"_CRT_NONSTDC_NO_DEPRECATE" -D"_CRT_SECURE_NO
 	-DHAS_STDINT_H -DHAS_INLINE $(CURSESDEF) \
 	-EHsc -fp:precise -Gd -GF -GS -Gy \
 	$(CL_RECENT) -WX- -Zc:forScope -Zc:wchar_t -Zi
-cdebug= -analyze- -D"_DEBUG" -Gm -MTd -RTC1 -Od
-crelease= -analyze- -D"_MBCS" -errorReport:prompt -Gm- -MT -O2 -Ot -Ox -Oy
+cdebug= -analyze- -D"_DEBUG" -MTd -RTC1 -Od
+crelease= -analyze- -D"_MBCS" -errorReport:prompt -MT -O2 -Ot -Ox -Oy
 
 lcommon= /NOLOGO /INCREMENTAL:NO
 

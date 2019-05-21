@@ -1,4 +1,4 @@
-/* NetHack 3.6	apply.c	$NHDT-Date: 1544442708 2018/12/10 11:51:48 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.269 $ */
+/* NetHack 3.6	apply.c	$NHDT-Date: 1553363415 2019/03/23 17:50:15 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.272 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -583,7 +583,7 @@ register struct obj *obj;
         } else if (mtmp->mappearance) {
             const char *what = "thing";
 
-            switch (mtmp->m_ap_type) {
+            switch (M_AP_TYPE(mtmp)) {
             case M_AP_OBJECT:
                 what = simple_typename(mtmp->mappearance);
                 break;
@@ -685,7 +685,7 @@ struct obj *obj;
                 }
                 /* mimic must be revealed before we know whether it
                    actually moves because line-of-sight may change */
-                if (mtmp->m_ap_type)
+                if (M_AP_TYPE(mtmp))
                     seemimic(mtmp);
                 omx = mtmp->mx, omy = mtmp->my;
                 mnexto(mtmp);
@@ -2144,7 +2144,6 @@ struct obj *obj;
             if (Deaf) /* make_deaf() won't give feedback when already deaf */
                 pline("Nothing seems to happen.");
             make_deaf((HDeaf & TIMEOUT) + lcount, TRUE);
-            context.botl = TRUE;
             break;
         }
         return;
@@ -2277,6 +2276,8 @@ struct obj *obj;
         }
     }
 
+    if (did_attr || did_prop)
+        context.botl = TRUE;
     if (did_attr)
         pline("This makes you feel %s!",
               (did_prop + did_attr) == (trouble_count + unfixable_trbl)
@@ -2285,7 +2286,6 @@ struct obj *obj;
     else if (!did_prop)
         pline("Nothing seems to happen.");
 
-    context.botl = (did_attr || did_prop);
 #undef PROP_COUNT
 #undef ATTR_COUNT
 #undef prop2trbl
@@ -2337,7 +2337,7 @@ long timeout;
         and_vanish[0] = '\0';
         if ((mtmp->minvis && !See_invisible)
             || (mtmp->data->mlet == S_MIMIC
-                && mtmp->m_ap_type != M_AP_NOTHING))
+                && M_AP_TYPE(mtmp) != M_AP_NOTHING))
             suppress_see = TRUE;
 
         if (mtmp->mundetected) {
@@ -2939,7 +2939,6 @@ struct obj *obj;
         You("hit your %s with your whip.", body_part(FOOT));
         Sprintf(buf, "killed %sself with %s whip", uhim(), uhis());
         losehp(Maybe_Half_Phys(dam), buf, NO_KILLER_PREFIX);
-        context.botl = 1;
         return 1;
 
     } else if ((Fumbling || Glib) && !rn2(5)) {
@@ -3093,7 +3092,7 @@ struct obj *obj;
             }
             wakeup(mtmp, TRUE);
         } else {
-            if (mtmp->m_ap_type && !Protection_from_shape_changers
+            if (M_AP_TYPE(mtmp) && !Protection_from_shape_changers
                 && !sensemon(mtmp))
                 stumble_onto_mimic(mtmp);
             else

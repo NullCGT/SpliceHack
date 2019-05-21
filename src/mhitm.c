@@ -1,4 +1,4 @@
-/* NetHack 3.6	mhitm.c	$NHDT-Date: 1547118629 2019/01/10 11:10:29 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.112 $ */
+/* NetHack 3.6	mhitm.c	$NHDT-Date: 1555720096 2019/04/20 00:28:16 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.113 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -99,9 +99,9 @@ struct attack *mattk;
             map_invisible(magr->mx, magr->my);
         if (!canspotmon(mdef))
             map_invisible(mdef->mx, mdef->my);
-        if (mdef->m_ap_type)
+        if (M_AP_TYPE(mdef))
             seemimic(mdef);
-        if (magr->m_ap_type)
+        if (M_AP_TYPE(magr))
             seemimic(magr);
         fmt = (could_seduce(magr, mdef, mattk) && !magr->mcan)
                   ? "%s pretends to be friendly to"
@@ -228,17 +228,14 @@ boolean quietly;
         return MM_MISS;
 
     /* Grid bugs cannot displace at an angle. */
-    if ((pa == &mons[PM_GRID_BUG])
-        && magr->mx != mdef->mx
+    if (pa == &mons[PM_GRID_BUG] && magr->mx != mdef->mx
         && magr->my != mdef->my)
         return MM_MISS;
 
     /* undetected monster becomes un-hidden if it is displaced */
-    if (mdef->mundetected &&
-        dist2(mdef->mx, mdef->my, magr->mx, magr->my) > 2) {
+    if (mdef->mundetected)
         mdef->mundetected = 0;
-    }
-    if (mdef->m_ap_type && mdef->m_ap_type != M_AP_MONSTER)
+    if (M_AP_TYPE(mdef) && M_AP_TYPE(mdef) != M_AP_MONSTER)
         seemimic(mdef);
     /* wake up the displaced defender */
     mdef->msleeping = 0;
@@ -445,7 +442,8 @@ register struct monst *magr, *mdef;
                                  || otmp->material == METAL))
                     && mdef->mhp > 1
                     && !mdef->mcan) {
-                    if (clone_mon(mdef, 0, 0)) {
+                    struct monst *mclone;
+                    if ((mclone = clone_mon(mdef, 0, 0)) != 0) {
                         if (vis && canspotmon(mdef)) {
                             char buf[BUFSZ];
 
@@ -453,6 +451,7 @@ register struct monst *magr, *mdef;
                             pline("%s divides as %s hits it!", buf,
                                   mon_nam(magr));
                         }
+                        mintrap(mclone);
                     }
                 }
             } else
@@ -588,9 +587,9 @@ struct attack *mattk;
             map_invisible(magr->mx, magr->my);
         if (!canspotmon(mdef))
             map_invisible(mdef->mx, mdef->my);
-        if (mdef->m_ap_type)
+        if (M_AP_TYPE(mdef))
             seemimic(mdef);
-        if (magr->m_ap_type)
+        if (M_AP_TYPE(magr))
             seemimic(magr);
         if ((compat = could_seduce(magr, mdef, mattk)) && !magr->mcan) {
             Sprintf(buf, "%s %s", Monnam(magr),
@@ -662,7 +661,7 @@ struct attack *mattk;
 
     if (vis) {
         if (mdef->data->mlet == S_MIMIC
-            && mdef->m_ap_type != M_AP_NOTHING)
+            && M_AP_TYPE(mdef) != M_AP_NOTHING)
             seemimic(mdef);
         Sprintf(buf, "%s gazes at", Monnam(magr));
         pline("%s %s...", buf,
@@ -1227,6 +1226,7 @@ register struct attack *mattk;
         if (!cancelled && tmp < mdef->mhp && !tele_restrict(mdef)) {
             char mdef_Monnam[BUFSZ];
             boolean wasseen = canspotmon(mdef);
+
             /* save the name before monster teleports, otherwise
                we'll get "it" in the suddenly disappears message */
             if (vis && wasseen)
@@ -1235,6 +1235,11 @@ register struct attack *mattk;
             (void) rloc(mdef, TRUE);
             if (vis && wasseen && !canspotmon(mdef) && mdef != u.usteed)
                 pline("%s suddenly disappears!", mdef_Monnam);
+            if (tmp >= mdef->mhp) { /* see hitmu(mhitu.c) */
+                if (mdef->mhp == 1)
+                    ++mdef->mhp;
+                tmp = mdef->mhp - 1;
+            }
         }
         break;
     case AD_SLEE:
@@ -1595,7 +1600,8 @@ register struct attack *mattk;
             break; /* physical damage only */
         if (!rn2(4) && !slimeproof(pd)) {
             if (!munslime(mdef, FALSE) && !DEADMONSTER(mdef)) {
-                if (newcham(mdef, &mons[PM_GREEN_SLIME], FALSE, vis && canseemon(mdef)))
+                if (newcham(mdef, &mons[PM_GREEN_SLIME], FALSE,
+                            (boolean) (vis && canseemon(mdef))))
                     pd = mdef->data;
                 mdef->mstrategy &= ~STRAT_WAITFORU;
                 res = MM_HIT;

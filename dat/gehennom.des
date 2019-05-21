@@ -2,9 +2,6 @@
 #	Copyright (c) 1989 by Jean-Christophe Collet
 #	Copyright (c) 1992 by M. Stephenson and Izchak Miller
 # NetHack may be freely redistributed.  See license for details.
-#
-# Edited by NullCGT on 3/20/18
-#
 
 # Filler levels for gehennom, based on the code in mines.des.
 # The idea of these levels is to be challenging and varied,
@@ -489,7 +486,7 @@ OBJECT:')',random
 #
 # Some random loot.
 #
-OBJECT:('*',"ruby"),random
+OBJECT:('*',"ruby"),random,name:"The Bloody Tear"
 OBJECT:'*',random
 OBJECT:'*',random
 OBJECT:'!',random
@@ -641,7 +638,7 @@ MONSTER:'j',random
 MONSTER:'j',random
 MONSTER:'P',random
 MONSTER:'P',random
-MONSTER:'P',random
+MONSTER:'P',random,"Nunechaur, daughter of Juiblex."
 MONSTER:'P',random
 MONSTER:'b',random
 MONSTER:'b',random
@@ -882,13 +879,13 @@ REGION:(06,15,16,18),lit,"ordinary"
  # The fellow in residence
 MONSTER:('&',"Asmodeus"),(11,16)
  # His close friends
-MONSTER:('&',"marilith"),(08,16),asleep
-MONSTER:('&',"marilith"),(09,17),asleep
+MONSTER:('&',"marilith"),(08,16),"Voran",asleep
+MONSTER:('&',"marilith"),(09,17),"Joggeruuth",asleep
 MONSTER:('&',"succubus"),(14,16),asleep
 MONSTER:('&',"succubus"),(13,17),asleep
 MONSTER:('&',"incubus"),(11,18),asleep
-MONSTER:('&',"barbed devil"),(10,13),asleep
-MONSTER:('&',"barbed devil"),(12,13),asleep
+MONSTER:('&',"barbed devil"),(10,13),"Gogmelon",asleep
+MONSTER:('&',"barbed devil"),(12,13),"Ulgaxicus",asleep
  # A few traps on the way in
 TRAP:"board",(10,12)
 TRAP:"board",(11,12)
@@ -1109,7 +1106,7 @@ MONSTER:'V',random
 MONSTER:'F',random
 MONSTER:'F',random
 MONSTER:'F',random
-MONSTER:('P',"green slime"),random
+MONSTER:('P',"green slime"),random,"Glurrz, emissary of Juiblex"
 MONSTER:'P',random
 MONSTER:'P',random
 IF [50%] {

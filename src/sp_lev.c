@@ -6257,7 +6257,7 @@ sp_lev *lvl;
     if (coder->solidify)
         solidify_map();
 
-    flip_level_rnd(3);
+    /* flip_level_rnd(3); */
 
     /* This must be done before sokoban_detect(),
      * otherwise branch stairs won't be premapped. */

@@ -1,4 +1,4 @@
-/* NetHack 3.6	dungeon.c	$NHDT-Date: 1550103076 2019/02/14 00:11:16 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.91 $ */
+/* NetHack 3.6	dungeon.c	$NHDT-Date: 1554341477 2019/04/04 01:31:17 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.92 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -971,7 +971,7 @@ init_dungeons()
         if (dunlevs_in_dungeon(&x->dlevel) > 1 - dungeons[i].depth_start)
             dungeons[i].depth_start -= 1;
         /* TODO: strip "dummy" out all the way here,
-           so that it's hidden from <ctrl/O> feedback. */
+           so that it's hidden from '#wizwhere' feedback. */
     }
 
 #ifdef DEBUG
@@ -1673,7 +1673,7 @@ const char *nam;
             *(eos(buf) - 6) = '\0';
         }
         /* hell is the old name, and wouldn't match; gehennom would match its
-           branch, yielding the castle level instead of the valley of the dead */
+           branch, yielding the castle level instead of valley of the dead */
         if (!strcmpi(nam, "gehennom") || !strcmpi(nam, "hell")) {
             if (In_V_tower(&u.uz))
                 nam = " to Vlad's tower"; /* branch to... */
@@ -2532,7 +2532,7 @@ recalc_mapseen()
                 if (ltyp == DRAWBRIDGE_UP)
                     ltyp = db_under_typ(levl[x][y].drawbridgemask);
                 if ((mtmp = m_at(x, y)) != 0
-                    && mtmp->m_ap_type == M_AP_FURNITURE && canseemon(mtmp))
+                    && M_AP_TYPE(mtmp) == M_AP_FURNITURE && canseemon(mtmp))
                     ltyp = cmap_to_type(mtmp->mappearance);
                 lastseentyp[x][y] = ltyp;
             }

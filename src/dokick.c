@@ -1,4 +1,4 @@
-/* NetHack 3.6	dokick.c	$NHDT-Date: 1548209738 2019/01/23 02:15:38 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.130 $ */
+/* NetHack 3.6	dokick.c	$NHDT-Date: 1551920353 2019/03/07 00:59:13 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.131 $ */
 /* Copyright (c) Izchak Miller, Mike Stephenson, Steve Linhart, 1989. */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -65,7 +65,7 @@ boolean clumsy;
         return;
     }
 
-    if (mon->m_ap_type)
+    if (M_AP_TYPE(mon))
         seemimic(mon);
 
     check_caitiff(mon);
@@ -171,8 +171,8 @@ xchar x, y;
     /* reveal hidden target even if kick ends up missing (note: being
        hidden doesn't affect chance to hit so neither does this reveal) */
     if (mon->mundetected
-        || (mon->m_ap_type && mon->m_ap_type != M_AP_MONSTER)) {
-        if (mon->m_ap_type)
+        || (M_AP_TYPE(mon) && M_AP_TYPE(mon) != M_AP_MONSTER)) {
+        if (M_AP_TYPE(mon))
             seemimic(mon);
         mon->mundetected = 0;
         if (!canspotmon(mon))
@@ -534,9 +534,25 @@ xchar x, y;
         }
     }
 
-    /* range < 2 means the object will not move.  */
-    /* maybe dexterity should also figure here.   */
-    range = (int) ((ACURRSTR) / 2 - kickedobj->owt / 40);
+    isgold = (kickedobj->oclass == COIN_CLASS);
+    {
+        int k_owt = (int) kickedobj->owt;
+
+        /* for non-gold stack, 1 item will be split off below (unless an
+           early return occurs, so we aren't moving the split to here);
+           calculate the range for that 1 rather than for the whole stack */
+        if (kickedobj->quan > 1L && !isgold) {
+            long save_quan = kickedobj->quan;
+
+            kickedobj->quan = 1L;
+            k_owt = weight(kickedobj);
+            kickedobj->quan = save_quan;
+        }
+
+        /* range < 2 means the object will not move
+           (maybe dexterity should also figure here) */
+        range = ((int) ACURRSTR) / 2 - k_owt / 40;
+    }
 
     if (martial())
         range += rnd(3);
@@ -566,7 +582,6 @@ xchar x, y;
     costly = (!(kickedobj->no_charge && !Has_contents(kickedobj))
               && (shkp = shop_keeper(*in_rooms(x, y, SHOPBASE))) != 0
               && costly_spot(x, y));
-    isgold = (kickedobj->oclass == COIN_CLASS);
 
     if (IS_ROCK(levl[x][y].typ) || closed_door(x, y)) {
         if ((!martial() && rn2(20) > ACURR(A_DEX))

@@ -47,6 +47,7 @@ STATIC_DCL boolean FDECL(uniquespell, (struct monst*));
 STATIC_DCL void FDECL(cursetxt, (struct monst *, BOOLEAN_P));
 STATIC_DCL int FDECL(choose_magic_spell, (int));
 STATIC_DCL int FDECL(choose_clerical_spell, (int));
+STATIC_DCL int FDECL(m_cure_self, (struct monst *, int));
 STATIC_DCL void FDECL(cast_wizard_spell, (struct monst *, int, int));
 STATIC_DCL void FDECL(cast_cleric_spell, (struct monst *, int, int));
 STATIC_DCL boolean FDECL(is_undirected_spell, (unsigned int, int));
@@ -424,6 +425,22 @@ boolean foundyou;
     return (ret);
 }
 
+STATIC_OVL int
+m_cure_self(mtmp, dmg)
+struct monst *mtmp;
+int dmg;
+{
+    if (mtmp->mhp < mtmp->mhpmax) {
+        if (canseemon(mtmp))
+            pline("%s looks better.", Monnam(mtmp));
+        /* note: player healing does 6d4; this used to do 1d8 */
+        if ((mtmp->mhp += d(3, 6)) > mtmp->mhpmax)
+            mtmp->mhp = mtmp->mhpmax;
+        dmg = 0;
+    }
+    return dmg;
+}
+
 /* monster wizard and cleric spellcasting functions */
 /*
    If dmg is zero, then the monster is not casting at you.
@@ -562,14 +579,7 @@ int spellnum;
         dmg = 0;
         break;
     case MGC_CURE_SELF:
-        if (mtmp->mhp < mtmp->mhpmax) {
-            if (canseemon(mtmp))
-                pline("%s looks better.", Monnam(mtmp));
-            /* note: player healing does 6d4; this used to do 1d8 */
-            if ((mtmp->mhp += d(3, 6)) > mtmp->mhpmax)
-                mtmp->mhp = mtmp->mhpmax;
-            dmg = 0;
-        }
+        dmg = m_cure_self(mtmp, dmg);
         break;
     case MGC_SONIC_SCREAM:
         if (!Deaf) {
@@ -802,14 +812,7 @@ int spellnum;
         dmg = 0;
         break;
     case CLC_CURE_SELF:
-        if (mtmp->mhp < mtmp->mhpmax) {
-            if (canseemon(mtmp))
-                pline("%s looks better.", Monnam(mtmp));
-            /* note: player healing does 6d4; this used to do 1d8 */
-            if ((mtmp->mhp += d(3, 6)) > mtmp->mhpmax)
-                mtmp->mhp = mtmp->mhpmax;
-            dmg = 0;
-        }
+        dmg = m_cure_self(mtmp, dmg);
         break;
     case CLC_OPEN_WOUNDS:
         if (Antimagic) {

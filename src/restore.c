@@ -1,4 +1,4 @@
-/* NetHack 3.6	restore.c	$NHDT-Date: 1543972193 2018/12/05 01:09:53 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.128 $ */
+/* NetHack 3.6	restore.c	$NHDT-Date: 1555201698 2019/04/14 00:28:18 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.129 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2009. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -39,7 +39,7 @@ STATIC_DCL void FDECL(freefruitchn, (struct fruit *));
 STATIC_DCL void FDECL(ghostfruit, (struct obj *));
 STATIC_DCL boolean
 FDECL(restgamestate, (int, unsigned int *, unsigned int *));
-STATIC_DCL void NDECL(restmonsteeds);
+STATIC_DCL void FDECL(restmonsteeds, (BOOLEAN_P));
 STATIC_DCL void FDECL(restlevelstate, (unsigned int, unsigned int));
 STATIC_DCL int FDECL(restlevelfile, (int, XCHAR_P));
 STATIC_OVL void FDECL(restore_msghistory, (int));
@@ -196,7 +196,7 @@ boolean ghostly;
                 struct monst *shkp = shop_keeper(*shp);
 
                 if (shkp && inhishop(shkp)
-                    && repair_damage(shkp, tmp_dam, TRUE))
+                    && repair_damage(shkp, tmp_dam, (int *) 0, TRUE))
                     break;
             }
         }
@@ -674,7 +674,7 @@ unsigned int *stuckid, *steedid;
 
     migrating_objs = restobjchn(fd, FALSE, FALSE);
     migrating_mons = restmonchn(fd, FALSE);
-    restmonsteeds();
+    restmonsteeds(FALSE);
     mread(fd, (genericptr_t) mvitals, sizeof(mvitals));
 
     /*
@@ -730,15 +730,23 @@ unsigned int *stuckid, *steedid;
 
 /* TODO: Drop this down so it does not take O(n^2) time */
 STATIC_OVL void
-restmonsteeds()
+restmonsteeds(ghostly)
+boolean ghostly;
 {
     register struct monst *mtmp;
     register struct monst *mon;
+    unsigned int steed_id;
 
     for (mon = fmon; mon; mon = mon->nmon) {
         if (mon->mextra && ERID(mon)) {
+             /* The steed id will change on loading a bones file */
+            if(ghostly) {
+                lookup_id_mapping(ERID(mon)->mid, &steed_id);
+            } else {
+                steed_id = ERID(mon)->mid;
+            }
             for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
-              if (mtmp->m_id == ERID(mon)->mid)
+              if (mtmp->m_id == steed_id)
                   break;
             }
             if (!mtmp)
@@ -1134,7 +1142,7 @@ boolean ghostly;
     restore_timers(fd, RANGE_LEVEL, ghostly, elapsed);
     restore_light_sources(fd);
     fmon = restmonchn(fd, ghostly);
-    restmonsteeds();
+    restmonsteeds(ghostly);
 
     rest_worm(fd); /* restore worm information */
     ftrap = 0;

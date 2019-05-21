@@ -165,7 +165,7 @@ eatmdone(VOID_ARGS)
         free((genericptr_t) eatmbuf), eatmbuf = 0;
     }
     /* update display */
-    if (youmonst.m_ap_type) {
+    if (U_AP_TYPE) {
         youmonst.m_ap_type = M_AP_NOTHING;
         newsym(u.ux, u.uy);
     }
@@ -873,45 +873,6 @@ remresists()
     }
 }
 
-/* The "do we or do we not give the intrinsic" logic from givit(), extracted
- * into its own function. Depends on the monster's level and the type of
- * intrinsic it is trying to give you.
- */
-boolean
-should_givit(type, ptr)
-int type;
-struct permonst * ptr;
-{
-    int chance;
-    /* some intrinsics are easier to get than others */
-    switch (type) {
-    case POISON_RES:
-        if ((ptr == &mons[PM_KILLER_BEE] || ptr == &mons[PM_SCORPION])
-            && !rn2(4))
-            chance = 1;
-        else
-            chance = 15;
-        break;
-    case TELEPORT:
-        chance = 10;
-        break;
-    case TELEPORT_CONTROL:
-        if (ptr == &mons[PM_BLINKING_EYE])
-            chance = 80;
-        else
-            chance = 12;
-        break;
-    case TELEPAT:
-        chance = 1;
-        break;
-    default:
-        chance = 15;
-        break;
-    }
-
-    return (ptr->mlevel > rn2(chance));
-}
-
 /* givit() tries to give you an intrinsic based on the monster's level
  * and what type of intrinsic it is trying to give you.
  */
@@ -930,7 +891,6 @@ register struct permonst *ptr;
     case FIRE_RES:
         debugpline0("Trying to give fire resistance");
         if (!(HFire_resistance & FROMOUTSIDE)) {
-            remresists();
             You(Hallucination ? "be chillin'." : "feel a momentary chill.");
             HFire_resistance |= FROMOUTSIDE;
         }
@@ -938,7 +898,6 @@ register struct permonst *ptr;
     case SLEEP_RES:
         debugpline0("Trying to give sleep resistance");
         if (!(HSleep_resistance & FROMOUTSIDE)) {
-            remresists();
             You_feel("wide awake.");
             HSleep_resistance |= FROMOUTSIDE;
         }
@@ -946,7 +905,6 @@ register struct permonst *ptr;
     case COLD_RES:
         debugpline0("Trying to give cold resistance");
         if (!(HCold_resistance & FROMOUTSIDE)) {
-            remresists();
             You_feel("full of hot air.");
             HCold_resistance |= FROMOUTSIDE;
         }
@@ -954,7 +912,6 @@ register struct permonst *ptr;
     case DISINT_RES:
         debugpline0("Trying to give disintegration resistance");
         if (!(HDisint_resistance & FROMOUTSIDE)) {
-            remresists();
             You_feel(Hallucination ? "totally together, man." : "very firm.");
             HDisint_resistance |= FROMOUTSIDE;
         }
@@ -962,7 +919,6 @@ register struct permonst *ptr;
     case SHOCK_RES: /* shock (electricity) resistance */
         debugpline0("Trying to give shock resistance");
         if (!(HShock_resistance & FROMOUTSIDE)) {
-            remresists();
             if (Hallucination)
                 You_feel("grounded in reality.");
             else
@@ -1007,6 +963,49 @@ register struct permonst *ptr;
         debugpline0("Tried to give an impossible intrinsic");
         break;
     }
+}
+
+/* The "do we or do we not give the intrinsic" logic from givit(), extracted
+ * into its own function. Depends on the monster's level and the type of
+ * intrinsic it is trying to give you.
+ */
+boolean
+should_givit(type, ptr)
+int type;
+struct permonst * ptr;
+{
+    int chance;
+    /* some intrinsics are easier to get than others */
+    switch (type) {
+    case POISON_RES:
+        if ((ptr == &mons[PM_KILLER_BEE] || ptr == &mons[PM_SCORPION])
+            && !rn2(4))
+            chance = 1;
+        else
+            chance = 15;
+        break;
+    case TELEPORT:
+        chance = 10;
+        break;
+    case TELEPORT_CONTROL:
+        if (ptr == &mons[PM_BLINKING_EYE])
+            chance = 80;
+        else
+            chance = 12;
+        break;
+    case TELEPAT:
+        if (ptr == &mons[PM_FLOATING_EYE] || ptr == &mons[PM_MIND_FLAYER]
+            || ptr == &mons[PM_MASTER_MIND_FLAYER])
+            chance = 1;
+        else
+            chance = 20;
+        break;
+    default:
+        chance = 15;
+        break;
+    }
+
+    return (ptr->mlevel > rn2(chance));
 }
 
 /* Choose (one of) the intrinsics granted by a corpse, and return it.
@@ -1069,8 +1068,6 @@ struct permonst * ptr;
 
     return prop;
 }
-
-
 
 /* called after completely consuming a corpse */
 STATIC_OVL void

@@ -42,12 +42,15 @@ curses_read_char()
 {
     int ch, tmpch;
 
+    /* cancel message suppression; all messages have had a chance to be read */
+    curses_got_input();
+
     ch = getch();
     tmpch = ch;
     ch = curses_convert_keys(ch);
 
     if (ch == 0) {
-        ch = '\033';          /* map NUL to ESC since nethack doesn't expect NUL */
+        ch = '\033'; /* map NUL to ESC since nethack doesn't expect NUL */
     }
 #if defined(ALT_0) && defined(ALT_9)    /* PDCurses, maybe others */
     if ((ch >= ALT_0) && (ch <= ALT_9)) {
@@ -66,11 +69,11 @@ curses_read_char()
 #ifdef KEY_RESIZE
     /* Handle resize events via get_nh_event, not this code */
     if (ch == KEY_RESIZE) {
-        ch = '\033';          /* NetHack doesn't know what to do with KEY_RESIZE */
+        ch = '\033'; /* NetHack doesn't know what to do with KEY_RESIZE */
     }
 #endif
 
-    if (counting && !isdigit(ch)) {     /* Dismiss count window if necissary */
+    if (counting && !isdigit(ch)) { /* Dismiss count window if necissary */
         curses_count_window(NULL);
         curses_refresh_nethack_windows();
     }
@@ -81,19 +84,25 @@ curses_read_char()
 /* Turn on or off the specified color and / or attribute */
 
 void
-curses_toggle_color_attr(WINDOW * win, int color, int attr, int onoff)
+curses_toggle_color_attr(WINDOW *win, int color, int attr, int onoff)
 {
 #ifdef TEXTCOLOR
     int curses_color;
 
-    /* Map color disabled */
-    if ((!iflags.wc_color) && (win == mapwin)) {
+    /* if color is disabled, just show attribute */
+    if ((win == mapwin) ? !iflags.wc_color
+                        /* statuswin is for #if STATUS_HILITES
+                           but doesn't need to be conditional */
+                        : !(iflags.wc2_guicolor || win == statuswin)) {
+#endif
+        if (attr != NONE) {
+            if (onoff == ON)
+                wattron(win, attr);
+            else
+                wattroff(win, attr);
+        }
         return;
-    }
-
-    /* GUI color disabled */
-    if ((!iflags.wc2_guicolor) && (win != mapwin)) {
-        return;
+#ifdef TEXTCOLOR
     }
 
     if (color == 0) {           /* make black fg visible */
@@ -149,6 +158,8 @@ curses_toggle_color_attr(WINDOW * win, int color, int attr, int onoff)
             wattroff(win, attr);
         }
     }
+#else
+    nhUse(color);
 #endif /* TEXTCOLOR */
 }
 
@@ -169,9 +180,9 @@ curses_bail(const char *mesg)
 winid
 curses_get_wid(int type)
 {
-    winid ret;
     static winid menu_wid = 20; /* Always even */
     static winid text_wid = 21; /* Always odd */
+    winid ret;
 
     switch (type) {
     case NHW_MESSAGE:
@@ -249,7 +260,7 @@ curses_num_lines(const char *str, int width)
         if (last_space == 0) {  /* No spaces found */
             last_space = count - 1;
         }
-        for (count = (last_space + 1); (size_t) count < strlen(substr); count++) {
+        for (count = (last_space + 1); count < (int) strlen(substr); count++) {
             tmpstr[count - (last_space + 1)] = substr[count];
         }
         tmpstr[count - (last_space + 1)] = '\0';
@@ -389,7 +400,7 @@ curses_str_remainder(const char *str, int width, int line_num)
         if (substr[count] == '\0') {
             break;
         }
-        for (count = (last_space + 1); (size_t) count < strlen(substr); count++) {
+        for (count = (last_space + 1); count < (int) strlen(substr); count++) {
             tmpstr[count - (last_space + 1)] = substr[count];
         }
         tmpstr[count - (last_space + 1)] = '\0';
@@ -578,11 +589,9 @@ curses_view_file(const char *filename, boolean must_exist)
     menu_item *selected = NULL;
     dlb *fp = dlb_fopen(filename, "r");
 
-    if ((fp == NULL) && (must_exist)) {
-        pline("Cannot open %s for reading!", filename);
-    }
-
     if (fp == NULL) {
+        if (must_exist)
+            pline("Cannot open \"%s\" for reading!", filename);
         return;
     }
 
@@ -597,6 +606,7 @@ curses_view_file(const char *filename, boolean must_exist)
     dlb_fclose(fp);
     curses_end_menu(wid, "");
     curses_select_menu(wid, PICK_NONE, &selected);
+    curses_del_wid(wid);
 }
 
 
@@ -667,6 +677,9 @@ curses_convert_attr(int attr)
     case ATR_BOLD:
         curses_attr = A_BOLD;
         break;
+    case ATR_DIM:
+        curses_attr = A_DIM;
+        break;
     case ATR_BLINK:
         curses_attr = A_BLINK;
         break;
@@ -682,44 +695,87 @@ curses_convert_attr(int attr)
 
 
 /* Map letter attributes from a string to bitmask.  Return mask on
-success, or 0 if not found */
+   success (might be 0), or -1 if not found. */
 
 int
-curses_read_attrs(char *attrs)
+curses_read_attrs(const char *attrs)
 {
     int retattr = 0;
 
-    if (strchr(attrs, 'b') || strchr(attrs, 'B')) {
-        retattr = retattr | A_BOLD;
-    }
-    if (strchr(attrs, 'i') || strchr(attrs, 'I')) {
-        retattr = retattr | A_REVERSE;
-    }
-    if (strchr(attrs, 'u') || strchr(attrs, 'U')) {
-        retattr = retattr | A_UNDERLINE;
-    }
-    if (strchr(attrs, 'k') || strchr(attrs, 'K')) {
-        retattr = retattr | A_BLINK;
-    }
+    if (!attrs || !*attrs)
+        return A_NORMAL;
+
+    if (strchr(attrs, 'b') || strchr(attrs, 'B'))
+        retattr |= A_BOLD;
+    if (strchr(attrs, 'i') || strchr(attrs, 'I')) /* inverse */
+        retattr |= A_REVERSE;
+    if (strchr(attrs, 'u') || strchr(attrs, 'U'))
+        retattr |= A_UNDERLINE;
+    if (strchr(attrs, 'k') || strchr(attrs, 'K'))
+        retattr |= A_BLINK;
+    if (strchr(attrs, 'd') || strchr(attrs, 'D'))
+        retattr |= A_DIM;
 #ifdef A_ITALIC
-    if (strchr(attrs, 't') || strchr(attrs, 'T')) {
-        retattr = retattr | A_ITALIC;
-    }
-#endif
-#ifdef A_RIGHTLINE
-    if (strchr(attrs, 'r') || strchr(attrs, 'R')) {
-        retattr = retattr | A_RIGHTLINE;
-    }
+    if (strchr(attrs, 't') || strchr(attrs, 'T'))
+        retattr |= A_ITALIC;
 #endif
 #ifdef A_LEFTLINE
-    if (strchr(attrs, 'l') || strchr(attrs, 'L')) {
-        retattr = retattr | A_LEFTLINE;
-    }
+    if (strchr(attrs, 'l') || strchr(attrs, 'L'))
+        retattr |= A_LEFTLINE;
 #endif
-
+#ifdef A_RIGHTLINE
+    if (strchr(attrs, 'r') || strchr(attrs, 'R'))
+        retattr |= A_RIGHTLINE;
+#endif
+    if (retattr == 0) {
+        /* still default; check for none/normal */
+        if (strchr(attrs, 'n') || strchr(attrs, 'N'))
+            retattr = A_NORMAL;
+        else
+            retattr = -1; /* error */
+    }
     return retattr;
 }
 
+/* format iflags.wc2_petattr into "+a+b..." for set bits a, b, ...
+   (used by core's 'O' command; return value points past leading '+') */
+char *
+curses_fmt_attrs(outbuf)
+char *outbuf;
+{
+    int attr = iflags.wc2_petattr;
+
+    outbuf[0] = '\0';
+    if (attr == A_NORMAL) {
+        Strcpy(outbuf, "+N(None)");
+    } else {
+        if (attr & A_BOLD)
+            Strcat(outbuf, "+B(Bold)");
+        if (attr & A_REVERSE)
+            Strcat(outbuf, "+I(Inverse)");
+        if (attr & A_UNDERLINE)
+            Strcat(outbuf, "+U(Underline)");
+        if (attr & A_BLINK)
+            Strcat(outbuf, "+K(blinK)");
+        if (attr & A_DIM)
+            Strcat(outbuf, "+D(Dim)");
+#ifdef A_ITALIC
+        if (attr & A_ITALIC)
+            Strcat(outbuf, "+T(iTalic)");
+#endif
+#ifdef A_LEFTLINE
+        if (attr & A_LEFTLINE)
+            Strcat(outbuf, "+L(Left line)");
+#endif
+#ifdef A_RIGHTLINE
+        if (attr & A_RIGHTLINE)
+            Strcat(outbuf, "+R(Right line)");
+#endif
+    }
+    if (!*outbuf)
+        Sprintf(outbuf, "+unknown [%d]", attr);
+    return &outbuf[1];
+}
 
 /* Convert special keys into values that NetHack can understand.
 Currently this is limited to arrow keys, but this may be expanded. */
@@ -827,7 +883,7 @@ curses_get_mouse(int *mousex, int *mousey, int *mod)
 #ifdef NCURSES_MOUSE_VERSION
     MEVENT event;
 
-    if (getmouse(&event) == OK) {       /* When the user clicks left mouse button */
+    if (getmouse(&event) == OK) { /* When the user clicks left mouse button */
         if (event.bstate & BUTTON1_CLICKED) {
             /* See if coords are in map window & convert coords */
             if (wmouse_trafo(mapwin, &event.y, &event.x, TRUE)) {

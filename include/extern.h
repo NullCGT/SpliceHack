@@ -1,4 +1,4 @@
-/* NetHack 3.6	extern.h	$NHDT-Date: 1549921169 2019/02/11 21:39:29 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.693 $ */
+/* NetHack 3.6	extern.h	$NHDT-Date: 1557088399 2019/05/05 20:33:19 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.703 $ */
 /* Copyright (c) Steve Creps, 1988.				  */
 /* NetHack may be freely redistributed.  See license for details. */
 /* Edited on 5/8/18 by NullCGT */
@@ -140,6 +140,7 @@ E boolean FDECL(drag_ball, (XCHAR_P, XCHAR_P, int *, xchar *, xchar *,
                             xchar *, xchar *, boolean *, BOOLEAN_P));
 E void FDECL(drop_ball, (XCHAR_P, XCHAR_P));
 E void NDECL(drag_down);
+E void NDECL(bc_sanity_check);
 
 /* ### bones.c ### */
 
@@ -151,27 +152,30 @@ E int NDECL(getbones);
 
 /* ### botl.c ### */
 
-E const char *FDECL(bl_idx_to_fldname, (int));
 E char *NDECL(do_statusline1);
 E void NDECL(check_gold_symbol);
 E char *NDECL(do_statusline2);
+E void NDECL(bot);
+E void NDECL(timebot);
 E int FDECL(xlev_to_rank, (int));
+E const char *FDECL(rank_of, (int, SHORT_P, BOOLEAN_P));
 E int FDECL(title_to_mon, (const char *, int *, int *));
 E void NDECL(max_rank_sz);
 #ifdef SCORE_ON_BOTL
 E long NDECL(botl_score);
 #endif
 E int FDECL(describe_level, (char *));
-E const char *FDECL(rank_of, (int, SHORT_P, BOOLEAN_P));
-E void NDECL(bot);
 E void FDECL(status_initialize, (BOOLEAN_P));
 E void NDECL(status_finish);
-E void FDECL(status_notify_windowport, (BOOLEAN_P));
-E void NDECL(status_eval_next_unhilite);
+E int NDECL(stat_cap_indx);
+E int NDECL(stat_hunger_indx);
+E const char *FDECL(bl_idx_to_fldname, (int));
 #ifdef STATUS_HILITES
-E boolean FDECL(parse_status_hl1, (char *op, BOOLEAN_P));
-E void NDECL(clear_status_hilites);
+E void NDECL(status_eval_next_unhilite);
 E void NDECL(reset_status_hilites);
+E boolean FDECL(parse_status_hl1, (char *op, BOOLEAN_P));
+E void FDECL(status_notify_windowport, (BOOLEAN_P));
+E void NDECL(clear_status_hilites);
 E int NDECL(count_status_hilites);
 E boolean NDECL(status_hilite_menu);
 #endif
@@ -357,6 +361,7 @@ E void NDECL(see_traps);
 E void NDECL(curs_on_u);
 E int NDECL(doredraw);
 E void NDECL(docrt);
+E void NDECL(redraw_map);
 E void FDECL(show_glyph, (int, int, int));
 E void NDECL(clear_glyph_buffer);
 E void FDECL(row_refresh, (int, int, int));
@@ -525,10 +530,10 @@ E boolean FDECL(could_use_item, (struct monst*, struct obj*, BOOLEAN_P));
 /* ### dogmove.c ### */
 
 E boolean FDECL(acceptable_pet_target, (struct monst*, struct monst*, BOOLEAN_P));
-E void FDECL(dog_givit, (struct monst*, struct permonst*));
 E struct obj *FDECL(droppables, (struct monst *));
 E int FDECL(dog_nutrition, (struct monst *, struct obj *));
 E int FDECL(dog_eat, (struct monst *, struct obj *, int, int, BOOLEAN_P));
+E void FDECL(mon_givit, (struct monst *, struct permonst *));
 E int FDECL(dog_move, (struct monst *, int));
 #ifdef USE_TRAMPOLI
 E void FDECL(wantdoor, (int, int, genericptr_t));
@@ -1212,7 +1217,7 @@ E boolean FDECL(usmellmon, (struct permonst *));
 
 E int FDECL(mapglyph, (int, int *, int *, unsigned *, int, int));
 E char *FDECL(encglyph, (int));
-E const char *FDECL(decode_mixed, (char *,const char *));
+E char *FDECL(decode_mixed, (char *, const char *));
 E void FDECL(genl_putmixed, (winid, int, const char *));
 
 /* ### mcastu.c ### */
@@ -1457,7 +1462,7 @@ E void FDECL(mon_to_stone, (struct monst *));
 E void FDECL(m_into_limbo, (struct monst *));
 E void FDECL(mnexto, (struct monst *));
 E void FDECL(maybe_mnexto, (struct monst *));
-E boolean FDECL(mnearto, (struct monst *, XCHAR_P, XCHAR_P, BOOLEAN_P));
+E int FDECL(mnearto, (struct monst *, XCHAR_P, XCHAR_P, BOOLEAN_P));
 E void FDECL(m_respond, (struct monst *));
 E void FDECL(setmangry, (struct monst *, BOOLEAN_P));
 E void FDECL(wakeup, (struct monst *, BOOLEAN_P));
@@ -1487,7 +1492,7 @@ E boolean FDECL(vamp_stone, (struct monst *));
 
 /* ### mondata.c ### */
 
-E void FDECL(set_mon_data, (struct monst *, struct permonst *, int));
+E void FDECL(set_mon_data, (struct monst *, struct permonst *));
 E struct attack *FDECL(attacktype_fordmg, (struct permonst *, int, int));
 E boolean FDECL(attacktype, (struct permonst *, int));
 E boolean FDECL(noattacks, (struct permonst *));
@@ -2311,7 +2316,8 @@ E void FDECL(sellobj, (struct obj *, XCHAR_P, XCHAR_P));
 E int FDECL(doinvbill, (int));
 E struct monst *FDECL(shkcatch, (struct obj *, XCHAR_P, XCHAR_P));
 E void FDECL(add_damage, (XCHAR_P, XCHAR_P, long));
-E int FDECL(repair_damage, (struct monst *, struct damage *, BOOLEAN_P));
+E int FDECL(repair_damage, (struct monst *, struct damage *, int *,
+                            BOOLEAN_P));
 E int FDECL(shk_move, (struct monst *));
 E void FDECL(after_shk_move, (struct monst *));
 E boolean FDECL(is_fshk, (struct monst *));

@@ -1,4 +1,4 @@
-/* NetHack 3.6	mon.c	$NHDT-Date: 1548937318 2019/01/31 12:21:58 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.278 $ */
+/* NetHack 3.6	mon.c	$NHDT-Date: 1556139724 2019/04/24 21:02:04 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.284 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -777,12 +777,12 @@ struct monst *mon;
         mmove = ((rn2(2) ? 4 : 5) * mmove) / 3;
     }
 
-    /* Randomly round the monster's speed to a multiple of NORMAL_SPEED. This
-       makes it impossible for the player to predict when they'll get a free
-       turn (thus preventing exploits like "melee kiting"), while retaining
-       guarantees about shopkeepers not being outsped by a normal-speed player,
-       normal-speed players being unable to open up a gap when fleeing a
-       normal-speed monster, etc.*/
+    /* Randomly round the monster's speed to a multiple of NORMAL_SPEED.
+       This makes it impossible for the player to predict when they'll get
+       a free turn (thus preventing exploits like "melee kiting"), while
+       retaining guarantees about shopkeepers not being outsped by a
+       normal-speed player, normal-speed players being unable to open up
+       a gap when fleeing a normal-speed monster, etc. */
     mmove_adj = mmove % NORMAL_SPEED;
     mmove -= mmove_adj;
     if (rn2(NORMAL_SPEED) < mmove_adj)
@@ -803,8 +803,9 @@ mcalcdistress()
         if (DEADMONSTER(mtmp))
             continue;
 
-        /* must check non-moving monsters once/turn in case
-         * they managed to end up in liquid */
+        /* must check non-moving monsters once/turn in case they managed
+           to end up in water or lava; note: when not in liquid they regen,
+           shape-shift, timeout temporary maladies just like other monsters */
         if (mtmp->data->mmove == 0) {
             if (vision_full_recalc)
                 vision_recalc(0);
@@ -932,8 +933,8 @@ movemon()
             /* unwatched mimics and piercers may hide again  [MRS] */
             if (restrap(mtmp))
                 continue;
-            if (mtmp->m_ap_type == M_AP_FURNITURE
-                || mtmp->m_ap_type == M_AP_OBJECT)
+            if (M_AP_TYPE(mtmp) == M_AP_FURNITURE
+                || M_AP_TYPE(mtmp) == M_AP_OBJECT)
                 continue;
             if (mtmp->mundetected)
                 continue;
@@ -1117,7 +1118,7 @@ register struct obj *otmp;
     		    else if (!Deaf && flags.verbose)
           			You("hear an awful gobbling noise!");
   		      mtmp->meating = 2;
-            dog_givit(mtmp, &mons[otmp->corpsenm]);
+            mon_givit(mtmp, &mons[otmp->corpsenm]);
   		      delobj(otmp);
   		      break; /* only eat one at a time... */
   		  }
@@ -1151,7 +1152,7 @@ register struct obj *otmp;
                   distant_name(otmp,doname));
             else if (!Deaf && flags.verbose)
                 You("hear an unsettling writhing noise.");
-            dog_givit(mtmp, &mons[otmp->corpsenm]);
+            mon_givit(mtmp, &mons[otmp->corpsenm]);
             clone_mon(mtmp, 0, 0);
             delobj(otmp);
             break; /* only eat one at a time... */
@@ -1238,7 +1239,7 @@ struct monst *mtmp;
                     && !strcmpi(OBJ_DESCR(objects[otmp->otyp]), "YUM YUM"))
                     pline("Yum%c", otmp->blessed ? '!' : '.');
                 if (otmp->otyp == CORPSE)
-                    dog_givit(mtmp, &mons[otmp->corpsenm]);
+                    mon_givit(mtmp, &mons[otmp->corpsenm]);
             } else {
                 if (flags.verbose)
                     You_hear("a slurping sound.");
@@ -1973,11 +1974,12 @@ struct monst **monst_list; /* &migrating_mons or &mydogs or null */
            clone can continue imitating some other monster form); also,
            might be imitating a boulder so need line-of-sight unblocking */
         mon->mundetected = 0;
-        if (mon->m_ap_type && mon->m_ap_type != M_AP_MONSTER)
+        if (M_AP_TYPE(mon) && M_AP_TYPE(mon) != M_AP_MONSTER)
             seemimic(mon);
     }
 
     if (on_map) {
+        mon->mtrapped = 0;
         if (mon->wormno)
             remove_worm(mon);
         else
@@ -2126,7 +2128,7 @@ struct permonst *mptr; /* reflects mtmp->data _prior_ to mtmp's death */
     }
     if (emits_light(mptr))
         del_light_source(LS_MONSTER, monst_to_any(mtmp));
-    if (mtmp->m_ap_type)
+    if (M_AP_TYPE(mtmp))
         seemimic(mtmp);
     if (onmap)
         newsym(mtmp->mx, mtmp->my);
@@ -2255,9 +2257,7 @@ register struct monst *mtmp;
             Sprintf(buf, "%s suddenly %s and rises as %%s!",
                     x_monnam(mtmp, ARTICLE_THE,
                              spec_mon ? (char *) 0 : "seemingly dead",
-                             SUPPRESS_SADDLE | SUPPRESS_HALLUCINATION
-                                 | SUPPRESS_INVISIBLE | SUPPRESS_IT,
-                             FALSE),
+                             (SUPPRESS_INVISIBLE | SUPPRESS_IT), FALSE),
                     spec_death ? "reconstitutes" : "transforms");
             mtmp->mcanmove = 1;
             mtmp->mfrozen = 0;
@@ -2285,13 +2285,13 @@ register struct monst *mtmp;
             else
                 mtmp->cham = mndx;
             if (canspotmon(mtmp)) {
-                const char *whom = mtmp->data->mname;
-
-                /* was using a_monnam(mtmp) but that's weird if mtmp is named:
-                   "Dracula suddenly transforms and rises as Dracula" */
-                if (!type_is_pname(mtmp->data))
-                    whom = an(whom);
-                pline(upstart(buf), whom);
+                /* 3.6.0 used a_monnam(mtmp); that was weird if mtmp was
+                   named: "Dracula suddenly transforms and rises as Dracula";
+                   3.6.1 used mtmp->data->mname; that ignored hallucination */
+                pline(upstart(buf),
+                      x_monnam(mtmp, ARTICLE_A, (char *) 0,
+                               (SUPPRESS_NAME | SUPPRESS_IT
+                                | SUPPRESS_INVISIBLE), FALSE));
                 vamp_rise_msg = TRUE;
             }
             newsym(x, y);
@@ -2312,18 +2312,18 @@ register struct monst *mtmp;
     mptr = mtmp->data; /* save this for m_detach() */
     /* restore chameleon, lycanthropes to true form at death */
     if (mtmp->cham >= LOW_PM) {
-        set_mon_data(mtmp, &mons[mtmp->cham], -1);
+        set_mon_data(mtmp, &mons[mtmp->cham]);
         mtmp->cham = NON_PM;
     } else if (mtmp->data == &mons[PM_WEREJACKAL])
-        set_mon_data(mtmp, &mons[PM_HUMAN_WEREJACKAL], -1);
+        set_mon_data(mtmp, &mons[PM_HUMAN_WEREJACKAL]);
     else if (mtmp->data == &mons[PM_WEREBEAR])
-        set_mon_data(mtmp, &mons[PM_HUMAN_WEREBEAR], -1);
+        set_mon_data(mtmp, &mons[PM_HUMAN_WEREBEAR]);
     else if (mtmp->data == &mons[PM_WEREWOLF])
-        set_mon_data(mtmp, &mons[PM_HUMAN_WEREWOLF], -1);
+        set_mon_data(mtmp, &mons[PM_HUMAN_WEREWOLF]);
     else if (mtmp->data == &mons[PM_ALPHA_WEREWOLF])
-        set_mon_data(mtmp, &mons[PM_PACK_LORD], -1);
+        set_mon_data(mtmp, &mons[PM_PACK_LORD]);
     else if (mtmp->data == &mons[PM_WERERAT])
-        set_mon_data(mtmp, &mons[PM_HUMAN_WERERAT], -1);
+        set_mon_data(mtmp, &mons[PM_HUMAN_WERERAT]);
 
     /*
      * mvitals[].died does double duty as total number of dead monsters
@@ -3060,10 +3060,15 @@ struct monst *mtmp;
 /* mnearto()
  * Put monster near (or at) location if possible.
  * Returns:
- *  true if relocation was successful
- *  false otherwise
+ *  2 if another monster was moved out of this one's way;
+ *  1 if relocation was successful (without moving another one);
+ *  0 otherwise.
+ * Note: if already at the target spot, result is 1 rather than 0.
+ *
+ * Might be called recursively if 'move_other' is True; if so, that argument
+ * will be False on the nested call so there won't be any further recursion.
  */
-boolean
+int
 mnearto(mtmp, x, y, move_other)
 register struct monst *mtmp;
 xchar x, y;
@@ -3072,15 +3077,18 @@ boolean move_other; /* make sure mtmp gets to x, y! so move m_at(x, y) */
     struct monst *othermon = (struct monst *) 0;
     xchar newx, newy;
     coord mm;
+    int res = 1;
 
-    if (mtmp->mx == x && mtmp->my == y && m_at(x,y) == mtmp)
-        return TRUE;
+    if (mtmp->mx == x && mtmp->my == y && m_at(x, y) == mtmp)
+        return res;
 
     if (move_other && (othermon = m_at(x, y)) != 0) {
         if (othermon->wormno)
             remove_worm(othermon);
         else
             remove_monster(x, y);
+
+        othermon->mx = othermon->my = 0; /* 'othermon' is not on the map */
     }
 
     newx = x;
@@ -3091,28 +3099,21 @@ boolean move_other; /* make sure mtmp gets to x, y! so move m_at(x, y) */
          * no end of trouble.
          */
         if (!enexto(&mm, newx, newy, mtmp->data))
-            return FALSE;
-        if (!isok(mm.x,mm.y))
-            return FALSE;
+            return 0;
+        if (!isok(mm.x, mm.y))
+            return 0;
         newx = mm.x;
         newy = mm.y;
     }
     rloc_to(mtmp, newx, newy);
 
     if (move_other && othermon) {
-        xchar oldx = othermon->mx, oldy = othermon->my;
-
-        othermon->mx = othermon->my = 0;
-        (void) mnearto(othermon, x, y, FALSE);
-        if (othermon->mx == 0 && othermon->my == 0) {
-            /* reloc failed */
-            othermon->mx = oldx;
-            othermon->my = oldy;
+        res = 2; /* moving another monster out of the way */
+        if (!mnearto(othermon, x, y, FALSE)) /* no 'move_other' this time */
             m_into_limbo(othermon);
-        }
     }
 
-    return TRUE;
+    return res;
 }
 
 /* monster responds to player action; not the same as a passive attack;
@@ -3324,7 +3325,7 @@ register struct monst *mtmp;
 boolean via_attack;
 {
     mtmp->msleeping = 0;
-    if (mtmp->m_ap_type) {
+    if (M_AP_TYPE(mtmp)) {
         seemimic(mtmp);
     } else if (context.forcefight && !context.mon_moving
                && mtmp->mundetected) {
@@ -3412,7 +3413,7 @@ rescham()
         }
         if (is_were(mtmp->data) && mtmp->data->mlet != S_HUMAN)
             new_were(mtmp);
-        if (mtmp->m_ap_type && cansee(mtmp->mx, mtmp->my)) {
+        if (M_AP_TYPE(mtmp) && cansee(mtmp->mx, mtmp->my)) {
             seemimic(mtmp);
             /* we pretend that the mimic doesn't
                know that it has been unmasked */
@@ -3469,7 +3470,7 @@ register struct monst *mtmp;
 {
     struct trap *t;
 
-    if (mtmp->mcan || mtmp->m_ap_type || cansee(mtmp->mx, mtmp->my)
+    if (mtmp->mcan || M_AP_TYPE(mtmp) || cansee(mtmp->mx, mtmp->my)
         || rn2(3) || mtmp == u.ustuck
         /* can't hide while trapped except in pits */
         || (mtmp->mtrapped && (t = t_at(mtmp->mx, mtmp->my)) != 0
@@ -3530,7 +3531,7 @@ struct monst *mon;
     boolean hider_under = hides_under(mon->data) || mon->data->mlet == S_EEL;
 
     if ((is_hider(mon->data) || hider_under)
-        && !(mon->mundetected || mon->m_ap_type)) {
+        && !(mon->mundetected || M_AP_TYPE(mon))) {
         xchar x = mon->mx, y = mon->my;
         char save_viz = viz_array[y][x];
 
@@ -3539,7 +3540,7 @@ struct monst *mon;
         if (is_hider(mon->data))
             (void) restrap(mon);
         /* try again if mimic missed its 1/3 chance to hide */
-        if (mon->data->mlet == S_MIMIC && !mon->m_ap_type)
+        if (mon->data->mlet == S_MIMIC && !M_AP_TYPE(mon))
             (void) restrap(mon);
         if (hider_under)
             (void) hideunder(mon);
@@ -4013,7 +4014,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         wormgone(mtmp);
         place_monster(mtmp, mtmp->mx, mtmp->my);
     }
-    if (mtmp->m_ap_type && mdat->mlet != S_MIMIC)
+    if (M_AP_TYPE(mtmp) && mdat->mlet != S_MIMIC)
         seemimic(mtmp); /* revert to normal monster */
 
     /* (this code used to try to adjust the monster's health based on
@@ -4037,7 +4038,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         mtmp->mhp = 1;
 
     /* take on the new form... */
-    set_mon_data(mtmp, mdat, 0);
+    set_mon_data(mtmp, mdat);
 
     if (emits_light(olddata) != emits_light(mtmp->data)) {
         /* used to give light, now doesn't, or vice versa,
@@ -4402,7 +4403,7 @@ short otyp;
 {
     short ap = mtmp->mappearance;
 
-    switch (mtmp->m_ap_type) {
+    switch (M_AP_TYPE(mtmp)) {
     case M_AP_NOTHING:
     case M_AP_FURNITURE:
     case M_AP_MONSTER:

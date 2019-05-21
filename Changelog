@@ -1,6 +1,6 @@
                         SpliceHack -- Changelog
                     
-                    Development Changes
+                    Version 0.6.3: JuneNetHack Ahoy!
 
 Features
 - Modified XNetHack / SLASH'EM fungus growth. Generating mold warriors is
@@ -9,6 +9,7 @@ Features
   can only be generated in the planes. Marids no longer generate in the planes.
   This should allow greater control over the late game, and hopefully make the
   planes feel a little bit more distinctive.
+- Began selectively implementing maps and features from the Lethe patch.
 
 Special Rooms
 - Added L's Dilapidated Armory Patch.
@@ -28,6 +29,11 @@ New Monsters
     - Astral Deva
     - Planetar
     - Solar
+- Zuggotomoy
+    - Zuggotomoy's passive attack does random elemental damage, and she can
+      infest corpses to create aspects of herself. She is extremely dangerous,
+      but has no lair as of yet.
+- Aspect of Zuggotomoy
 
 Bug Fixes
 - Stabilized amalgamations and gels.

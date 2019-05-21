@@ -15,6 +15,7 @@
 - Many code refactors
 - Other Minor QOL Changes
 - Code for SLASH'EM fungus growth.
+- Fixes to monster intrinsics.
 
 #Biodiversity Patch
 - Umbral Hulk
@@ -90,6 +91,7 @@
 
 #EvilHack
 - Updated Nazgul
+- Fixes to monster steeds
 
 #ChrisANG
 - Pirate Patch

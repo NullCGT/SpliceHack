@@ -312,14 +312,14 @@ register struct monst *mtmp;
 
         mtmp->minvis = mtmp->perminvis = 0;
         if (!boss_entrance(mtmp)) {
-            impossible("demon_talk: still can't see monster?");
+            /* impossible("demon_talk: still can't see monster?"); */
             mtmp->mstrategy &= ~STRAT_APPEARMSG;
         }
         newsym(mtmp->mx, mtmp->my);
     }
     if (youmonst.data->mlet == S_DEMON) { /* Won't blackmail their own. */
         pline("%s says, \"Good hunting, %s.\"", Amonnam(mtmp),
-              flags.female ? "Sister" : "Brother");
+              flags.female == 1 ? "Sister" : flags.female == 2 ? "Sibling" : "Brother");
         if (!tele_restrict(mtmp))
             (void) rloc(mtmp, TRUE);
         return 1;

@@ -1602,7 +1602,9 @@ register int after;
             if (ptr == &mons[PM_BROWN_MOLD_WARRIOR] ||
                 ptr == &mons[PM_GREEN_MOLD_WARRIOR] ||
                 ptr == &mons[PM_YELLOW_MOLD_WARRIOR] ||
-                ptr == &mons[PM_RED_MOLD_WARRIOR])
+                ptr == &mons[PM_RED_MOLD_WARRIOR] ||
+                ptr == &mons[PM_ASPECT_OF_ZUGGOTOMOY] ||
+                ptr == &mons[PM_ZUGGOTOMOY])
                 minfestcorpse(mtmp);
 
             if (!*in_rooms(mtmp->mx, mtmp->my, SHOPBASE) || !rn2(25)) {

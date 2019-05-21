@@ -3097,9 +3097,30 @@ boolean wep_was_destroyed;
     else
         tmp = 0;
 
+    int mon_atyp = ptr->mattk[i].adtyp;
+    if (mon_atyp == AD_RBRE) {
+        switch(rn2(5)) {
+        case 0:
+            mon_atyp = AD_ELEC;
+            break;
+        case 1:
+            mon_atyp = AD_COLD;
+            break;
+        case 2:
+            mon_atyp = AD_FIRE;
+            break;
+        case 3:
+            mon_atyp = AD_STCK;
+            break;
+        default:
+            mon_atyp = AD_ACID;
+            break;
+        }
+    }
+
     /*  These affect you even if they just died.
      */
-    switch (ptr->mattk[i].adtyp) {
+    switch (mon_atyp) {
     case AD_FIRE:
         if (mhit && !mon->mcan && weapon) {
             if (aatyp == AT_KICK) {
@@ -3221,7 +3242,7 @@ boolean wep_was_destroyed;
     /*  These only affect you if they still live.
      */
     if (malive && !mon->mcan && rn2(3)) {
-        switch (ptr->mattk[i].adtyp) {
+        switch (mon_atyp) {
         case AD_HYDR: /* grow additional heads (hydra) */
             if (mhit && !mon->mcan && weapon && rn2(3)) {
                 if ((is_blade(weapon) || is_axe(weapon))
@@ -3304,7 +3325,7 @@ boolean wep_was_destroyed;
                 if (mon->mhpmax < mon->mhp)
                     mon->mhpmax = mon->mhp;
                 /* at a certain point, the monster will reproduce! */
-                if (mon->mhpmax > ((int) (mon->m_lev + 1) * 8))
+                if (mon->data == &mons[PM_BROWN_MOLD] && (mon->mhpmax > ((int) (mon->m_lev + 1) * 8)))
                     (void) split_mon(mon, &youmonst);
             }
             break;

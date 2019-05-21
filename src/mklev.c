@@ -709,6 +709,7 @@ clear_level_structures()
     level.flags.has_court = 0;
     level.flags.has_morgue = level.flags.graveyard = 0;
     level.flags.has_beehive = 0;
+    level.flags.has_lemurepit = 0;
     level.flags.has_lab = 0;
     level.flags.has_den = 0;
     level.flags.has_armory = 0;
@@ -897,6 +898,9 @@ makelevel()
         else if (u_depth > 16 && !rn2(8)
                  && !(mvitals[PM_COCKATRICE].mvflags & G_GONE))
             mkroom(COCKNEST);
+        else if (u_depth > 35 && !rn2(8)
+ 	             && !(mvitals[PM_LEMURE].mvflags & G_GONE)) 
+            mkroom(LEMUREPIT);
     }
 
  skip0:

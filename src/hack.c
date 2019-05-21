@@ -2551,6 +2551,9 @@ register boolean newlev;
         case BEEHIVE:
             You("enter a giant beehive!");
             break;
+        case LEMUREPIT:
+ 		    You("enter a pit of screaming lemures!");
+ 		    break;
         case LAB:
             You("enter an abandoned laboratory!");
             break;
@@ -2637,6 +2640,9 @@ register boolean newlev;
                 case BEEHIVE:
                     level.flags.has_beehive = 0;
                     break;
+                case LEMUREPIT:
+     				level.flags.has_lemurepit = 0;
+     				break;
                 case DEN:
                     level.flags.has_den = 0;
                     break;

@@ -70,6 +70,7 @@ enum roomtype_types {
     COCKNEST,   /* cockatrice nest (Tom Proudfoot) */
     ARMORY,     /* armory (L's dilapidated armory patch) */
     ANTHOLE,    /* ants (Tom Proudfoot) */
+    LEMUREPIT,  /* contains lemures and horned devils */
     BLACKFOYER, /* black market */
     ARTROOM,    /* interesting walls */
     SHOPBASE,   /* everything above this is a shop */

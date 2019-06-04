@@ -1677,6 +1677,8 @@ demonpet()
     pline("Some hell-p has arrived!");
     i = !rn2(6) ? ndemon(u.ualign.type) : NON_PM;
     pm = i != NON_PM ? &mons[i] : youmonst.data;
+    if (youmonst.data == &mons[PM_MOLYDEUS])
+        pm = &mons[PM_MANES];
     if ((dtmp = makemon(pm, u.ux, u.uy, NO_MM_FLAGS)) != 0)
         (void) tamedog(dtmp, (struct obj *) 0);
     exercise(A_WIS, TRUE);
@@ -2259,11 +2261,17 @@ int specialdmg; /* blessed and/or material bonus against various things */
                  * so make it guard against involuntary polymorph
                  * attacks too... */
                 shieldeff(mdef->mx, mdef->my);
+            } else if (youmonst.data == &mons[PM_MOLYDEUS]) {
+                pline("You inject horrific venom into %s!", mon_nam(mdef));
+                if (!rn2(3)) {
+                    newcham(mdef, &mons[PM_MANES], FALSE, TRUE);
+                    tmp = 0;
+                }
             } else {
-              newcham(mdef, (struct permonst *) 0, FALSE, TRUE);
-              /* prevent killing the monster again -
-               * could be killed in mon_poly */
-               tmp = 0;
+                newcham(mdef, (struct permonst *) 0, FALSE, TRUE);
+                /* prevent killing the monster again -
+                * could be killed in mon_poly */
+                tmp = 0;
             }
         }
         break;

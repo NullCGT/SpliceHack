@@ -1042,7 +1042,9 @@ register struct monst *mtmp;
     case MS_GNOLL:
         if (mtmp->mpeaceful)
             pline("%s cackles conspiratorially.", Monnam(mtmp));
-        else {
+        else if (mtmp->data == &mons[PM_MOLYDEUS]) {
+            pline("%s cackles at you, then hisses.", Monnam(mtmp));
+        } else {
             pline("%s cackles at you.", Monnam(mtmp));
         }
         break;

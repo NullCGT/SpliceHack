@@ -1650,8 +1650,11 @@ register struct attack *mattk;
                  * too... */
                 if (vis) shieldeff(mdef->mx, mdef->my);
                 break;
-            }
-            newcham(mdef, (struct permonst *) 0, FALSE, TRUE);
+            } else if (magr->data == &mons[PM_MOLYDEUS] && !rn2(3)) {
+                pline("%s injects horrific venom into %s!", Monnam(magr), mon_nam(mdef));
+                newcham(mdef, &mons[PM_MANES], FALSE, TRUE);
+            } else
+                newcham(mdef, (struct permonst *) 0, FALSE, TRUE);
         }
         break;
     case AD_VOID:

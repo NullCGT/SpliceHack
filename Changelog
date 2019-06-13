@@ -1,5 +1,28 @@
                         SpliceHack -- Changelog
                     
+                    Upcoming Version
+
+Features
+- New sounds for birds. They now let you know if you are abusing them.
+
+New Monsters
+- Molydeus:
+    - Molydei are one of the most dangerous monsters in the game. They are high
+      level, and able to dish out a lot of damage with their greataxes.
+    - Any creature hit by their bite attack has a chance of being polymorphed
+      into a manes. Poison resistance reduces the chance of this occurring, but
+      will not prevent it. The only way to truly be safe is to be unchanging.
+    - In order to balance them, they cannot summon any type of demon through
+      hell-p, just more manes.
+    - If a player polymorphs into one, all demon lords will be automatically
+      hostile to them.
+    - Due to their abilities, Molydei are one of the best choices for pets.
+      Conversely, they are one of the most dangerous to your own pets.
+- Hippo
+    - Hippos are fairly unremarkable. They yawn when angry, just like real
+      hippos. They are also quite dangerous and aggressive, just like real
+      hippos.
+
                     Version 0.6.3: JuneNetHack Ahoy!
 
 Features

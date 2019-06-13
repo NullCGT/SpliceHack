@@ -515,6 +515,9 @@ register struct monst *mtmp;
         case MS_YAWN:
             yelp_verb = (!Deaf) ? "roar" : "yawn";
             break;
+        case MS_SQAWK:
+            yelp_verb = (!Deaf) ? "screech" : "flap";
+            break;
         case MS_MAD:
         case MS_MEW:
             yelp_verb = (!Deaf) ? "yowl" : "arch";

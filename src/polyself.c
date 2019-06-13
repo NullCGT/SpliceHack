@@ -395,7 +395,7 @@ int psflags;
             draconian = (uarm && Is_dragon_armor(uarm)),
             iswere = (u.ulycn >= LOW_PM), isvamp = is_vampire(youmonst.data),
             controllable_poly = Polymorph_control && !(Stunned || Unaware),
-            verysafe = (psflags == 3);
+            verysafe = (psflags == 3), ismolydeus = (psflags == 4);
 
     if (Unchanging) {
         pline("You fail to transform!");
@@ -408,7 +408,7 @@ int psflags;
     }
     /* being Stunned|Unaware doesn't negate this aspect of Poly_control */
     if (!Polymorph_control && !forcecontrol && !draconian && !iswere
-        && !isvamp && !verysafe) {
+        && !isvamp && !verysafe && !ismolydeus) {
         if (rn2(20) > ACURR(A_CON)) {
             You1(shudder_for_moment);
             losehp(rnd(30), "system shock", KILLED_BY_AN);
@@ -495,7 +495,7 @@ int psflags;
         if (isvamp && (tryct <= 0 || mntmp == PM_WOLF || mntmp == PM_FOG_CLOUD
                        || is_bat(&mons[mntmp])))
             goto do_vampyr;
-    } else if (draconian || iswere || isvamp) {
+    } else if (draconian || iswere || isvamp || ismolydeus) {
         /* special changes that don't require polyok() */
         if (draconian) {
         do_merge:
@@ -538,6 +538,8 @@ int psflags;
                 mntmp = PM_HUMAN; /* Illegal; force newman() */
             else
                 mntmp = u.ulycn;
+        } else if (ismolydeus) {
+            mntmp = PM_MANES;
         } else if (isvamp) {
         do_vampyr:
             if (mntmp < LOW_PM || (mons[mntmp].geno & G_UNIQ))

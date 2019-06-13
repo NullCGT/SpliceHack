@@ -82,6 +82,9 @@ struct monst *mon;
         dtype = (!rn2(20)) ? dprince(atyp) : (!rn2(4)) ? dlord(atyp)
                                                        : ndemon(atyp);
         cnt = (!rn2(4) && is_ndemon(&mons[dtype])) ? 2 : 1;
+    } else if (ptr == &mons[PM_MOLYDEUS]) {
+        dtype = PM_MANES;
+        cnt = 1 + rn2(3);
     } else if (is_dlord(ptr)) {
         dtype = (!rn2(50)) ? dprince(atyp) : (!rn2(20)) ? dlord(atyp)
                                                         : ndemon(atyp);

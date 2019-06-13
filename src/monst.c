@@ -3746,6 +3746,13 @@ struct permonst _mons2[] = {
         M1_FLY | M1_SEE_INVIS | M1_POIS,
         M2_STALK | M2_HOSTILE | M2_STRONG | M2_NASTY | M2_COLLECT,
         M3_INFRAVISIBLE | M3_INFRAVISION, MH_DEMON, 20, CLR_RED),
+    MON("molydeus", S_DEMON, LVL(20, 12, -3, 40, -10), (G_HELL | G_NOCORPSE | 1),
+        A(ATTK(AT_WEAP, AD_PHYS, 4, 4), ATTK(AT_WEAP, AD_PHYS, 4, 4), 
+          ATTK(AT_BITE, AD_POLY, 2, 2), NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(WT_HUMAN, 400, MS_GNOLL, MZ_LARGE), MR_FIRE | MR_POISON, 0,
+        M1_SEE_INVIS | M1_POIS | M1_CARNIVORE,
+        M2_STALK | M2_HOSTILE | M2_STRONG | M2_NASTY | M2_COLLECT,
+        M3_INFRAVISIBLE | M3_INFRAVISION, MH_DEMON, 25, CLR_MAGENTA),
     /* Named demon lords & princes plus Arch-Devils.
      * (their order matters; see minion.c)
      */

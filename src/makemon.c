@@ -770,6 +770,10 @@ register struct monst *mtmp;
             (void) mongets(mtmp, BULLWHIP);
             (void) mongets(mtmp, BROADSWORD);
             break;
+        case PM_MOLYDEUS:
+            (void) mongets(mtmp, BATTLE_AXE);
+            (void) mongets(mtmp, MANTLE);
+            break;
         case PM_ORCUS:
             (void) mongets(mtmp, WAN_DEATH); /* the Wand of Orcus */
             break;

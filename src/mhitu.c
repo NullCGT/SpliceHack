@@ -1413,7 +1413,15 @@ register struct attack *mattk;
         break;
     case AD_POLY:
         hitmsg(mtmp, mattk);
-        if (uncancelled && !Unchanging && !Antimagic) {
+        if (mtmp->data == &mons[PM_MOLYDEUS] && uncancelled && !Unchanging) {
+            if (!rn2(Poison_resistance ? 3 : 2)) {
+                pline("%s injects horrific venom into you!", Monnam(mtmp));
+                if (Poison_resistance)
+                    You("are unable to resist the demonic poison!");
+                polyself(4);
+            } else
+                pline("You barely manage to fight off the venom of %s!", mon_nam(mtmp));
+        } else if (uncancelled && !Unchanging && !Antimagic) {
             if (flags.verbose)
           You("undergo a freakish metamorphosis!");
             polyself(0);

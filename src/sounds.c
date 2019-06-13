@@ -429,6 +429,9 @@ register struct monst *mtmp;
     case MS_HISS:
         ret = "hiss";
         break;
+    case MS_YAWN:
+        ret = "laugh";
+        break;
     case MS_BARK:
     case MS_GROWL:
         ret = "growl";
@@ -509,6 +512,9 @@ register struct monst *mtmp;
         yelp_verb = h_sounds[rn2(SIZE(h_sounds))];
     else
         switch (mtmp->data->msound) {
+        case MS_YAWN:
+            yelp_verb = (!Deaf) ? "roar" : "yawn";
+            break;
         case MS_MAD:
         case MS_MEW:
             yelp_verb = (!Deaf) ? "yowl" : "arch";
@@ -562,6 +568,7 @@ register struct monst *mtmp;
         case MS_BARK:
             whimper_verb = "whine";
             break;
+        case MS_YAWN:
         case MS_SQEEK:
             whimper_verb = "squeal";
             break;
@@ -780,6 +787,9 @@ register struct monst *mtmp;
         } else {
             pline_msg = "growls.";
         }
+        break;
+    case MS_YAWN:
+        pline_msg = mtmp->mpeaceful ? "hums." : "yawns!";
         break;
     case MS_MEW:
         if (mtmp->mtame) {

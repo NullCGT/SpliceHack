@@ -2311,6 +2311,15 @@ register struct monst *mtmp;
     /* Player is thrown from his steed when it dies */
     if (mtmp == u.usteed)
         dismount_steed(DISMOUNT_GENERIC);
+    /* Likewise, if it's a mon-steed */
+    if (mtmp->monmount) {
+        struct monst *mtmp2;
+        for (mtmp2 = fmon; mtmp2; mtmp2 = mtmp2->nmon)
+            if (get_mount(mtmp2) == mtmp) {
+                free_erid(mtmp2);
+                break;
+            }
+    }
 
     mptr = mtmp->data; /* save this for m_detach() */
     /* restore chameleon, lycanthropes to true form at death */

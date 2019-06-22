@@ -1096,6 +1096,8 @@ register struct obj *obj;
     if (obj->oclass == SCROLL_CLASS && Role_if(PM_CARTOMANCER) && !rn2(10)) {
         pline("But wait, the card didn't vanish after all!");
         You("actually shuffled the card back into your deck!");
+        obj->in_use = FALSE;
+        update_inventory();
         return;
     }
     if (obj->quan > 1L) {

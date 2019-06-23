@@ -610,6 +610,9 @@ dog_hunger(mtmp, edog)
 struct monst *mtmp;
 struct edog *edog;
 {
+    /* This chunk of code is from grunt, but is currently commented out
+    because it was modifying pet nutrition. */
+    #if 0
     if (monstermoves > edog->hungrytime) {
   	    /* We're hungry; check if we're carrying anything we can eat
   	       Intelligent pets should be able to carry such food */
@@ -633,6 +636,7 @@ struct edog *edog;
     	      return(FALSE);
     	  }
     }
+    #endif
     if (monstermoves > edog->hungrytime + 500) {
         if (!carnivorous(mtmp->data) && !herbivorous(mtmp->data)) {
             edog->hungrytime = monstermoves + 500;
@@ -733,7 +737,7 @@ int udist;
                         obj_extract_self(otmp);
                         newsym(omx, omy);
                         (void) mpickobj(mtmp, otmp);
-                        if (attacktype(mtmp->data, AT_WEAP)) {
+                        if (attacktype(mtmp->data, AT_WEAP) && mtmp->weapon_check == NEED_WEAPON) {
                             mtmp->weapon_check = NEED_HTH_WEAPON;
                             (void) mon_wield_item(mtmp);
                         }

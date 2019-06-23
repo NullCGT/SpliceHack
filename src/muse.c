@@ -324,11 +324,11 @@ struct monst *mtmp;
         if (canseemon(mtmp))
             pline("%s responds defensively!", Monnam(mtmp));
         use_defensive(mtmp);
-    } else if (find_offensive(mtmp) && m.defensive->oclass == SCROLL_CLASS) {
+    } else if (find_offensive(mtmp) && m.offensive->oclass == SCROLL_CLASS) {
         if (canseemon(mtmp))
             pline("%s responds offensively!", Monnam(mtmp));
         use_offensive(mtmp);
-    } else if (find_misc(mtmp) && m.defensive->oclass == SCROLL_CLASS) {
+    } else if (find_misc(mtmp) && m.misc->oclass == SCROLL_CLASS) {
         if (canseemon(mtmp))
             pline("%s responds!", Monnam(mtmp));
         use_misc(mtmp);

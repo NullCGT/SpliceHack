@@ -305,6 +305,10 @@ struct obj *obj;
     int index, pm, n;
     struct monst *mtmp;
 
+    if (Blind) {
+        You("can't play cards in the dark!");
+        return;
+    }
     if (obj->otyp == PLAYING_CARD_DECK) {
         if ((obj->cursed && Luck == 13) || Luck <= 0) {
             pline("You draw a hand of five cards. It's not very good...");

@@ -187,7 +187,7 @@ STAIR:(19,01),up
 # Non diggable walls
 NON_DIGGABLE:(00,00,75,19)
 # Objects
-OBJECT:('(',"credit card"),(33,18),blessed,0,name:"The Holographic Void Lily"
+OBJECT:('(',"credit card"),(32,10),blessed,0,name:"The Holographic Void Lily"
 OBJECT:random,random
 OBJECT:random,random
 OBJECT:random,random

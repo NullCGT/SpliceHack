@@ -250,6 +250,7 @@ register struct monst *mtmp;
     case S_EEL:
         if (rn2(2) && mm == PM_MERFOLK)
             (void) mongets(mtmp, TRIDENT);
+        break;
     case S_HUMAN:
         if (is_mercenary(ptr)) {
             w1 = w2 = 0;

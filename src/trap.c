@@ -2685,7 +2685,7 @@ register struct monst *mtmp;
                 break;
             if (in_sight)
                 pline("A rune beneath %s glows gray!", mon_nam(mtmp));
-            explode(mtmp->mx, mtmp->my, 15, 10 + rn2(15), TOOL_CLASS, EXPL_MAGICAL);
+            explode(mtmp->mx, mtmp->my, 0, 10 + rn2(15), TOOL_CLASS, EXPL_MAGICAL);
             deltrap(trap);
             break;
         case GLYPH_OF_LAW:
@@ -2693,7 +2693,7 @@ register struct monst *mtmp;
                 break;
             if (in_sight)
                 pline("A rune beneath %s glows yellow!", mon_nam(mtmp));
-            explode(mtmp->mx, mtmp->my, 15, 10 + rn2(15), TOOL_CLASS, EXPL_MAGICAL);
+            explode(mtmp->mx, mtmp->my, 0, 10 + rn2(15), TOOL_CLASS, EXPL_MAGICAL);
             deltrap(trap);
             break;
         case GLYPH_OF_CHAOS:
@@ -2701,7 +2701,7 @@ register struct monst *mtmp;
                 break;
             if (in_sight)
                 pline("A rune beneath %s glows red!", mon_nam(mtmp));
-            explode(mtmp->mx, mtmp->my, 15, 10 + rn2(15), TOOL_CLASS, EXPL_MAGICAL);
+            explode(mtmp->mx, mtmp->my, 0, 10 + rn2(15), TOOL_CLASS, EXPL_MAGICAL);
             deltrap(trap);
             break;
         case PIT:
@@ -3394,7 +3394,7 @@ const char *clr;
     if (!Blind)
         pline("A mystic rune on the floor beneath you glows %s!", clr);
     pline("A massive explosion bursts forth around you!");
-    explode(u.ux, u.uy, 15, 10 + rn2(15), TOOL_CLASS, EXPL_MAGICAL);
+    explode(u.ux, u.uy, 0, 10 + rn2(15), TOOL_CLASS, EXPL_MAGICAL);
     deltrap(trap);
 }
 

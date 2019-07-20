@@ -1344,7 +1344,8 @@ dogaze()
     }
     if (adtyp == AD_HNGY || adtyp == AD_LUCK) adtyp = AD_CONF;
 
-    if (adtyp != AD_CONF && adtyp != AD_FIRE) {
+    if (adtyp != AD_CONF && adtyp != AD_FIRE && adtyp != AD_PLYS 
+        && adtyp != AD_STUN && adtyp != AD_TLPT) {
         impossible("gaze attack %d?", adtyp);
         return 0;
     }
@@ -1420,6 +1421,28 @@ dogaze()
                         mtmp->mhp -= dmg;
                     if (DEADMONSTER(mtmp))
                         killed(mtmp);
+                } else if (adtyp == AD_PLYS) {
+                    You("fix %s with an aberrant glare...", mon_nam(mtmp));
+                    if (mtmp->data == &mons[PM_NOSFERATU]) {
+                        pline("%s looks disdainful, and mutters something about amateurs.", Monnam(mtmp));
+                    } else if (is_undead(mtmp->data) || mindless(mtmp->data) 
+                                || is_demon(mtmp->data)) {
+                        pline("%s does not seem to care.", Monnam(mtmp));
+                    } else {
+                        pline("%s reels in shock and horror!", Monnam(mtmp));
+                        paralyze_monst(mtmp, rnd(10));
+                    }
+                } else if (adtyp == AD_STUN) {
+                    pline("%s %s for a moment.", Monnam(mtmp),
+                        makeplural(stagger(mtmp->data, "stagger")));
+                    mtmp->mstun = 1;
+                } else if (adtyp == AD_TLPT) {
+                    char nambuf[BUFSZ];
+                    /* record the name before losing sight of monster */
+                    Strcpy(nambuf, Monnam(mtmp));
+                    if (u_teleport_mon(mtmp, FALSE)
+                        && !(canseemon(mtmp)))
+                        pline("%s suddenly disappears!", nambuf);
                 }
                 /* For consistency with passive() in uhitm.c, this only
                  * affects you if the monster is still alive.

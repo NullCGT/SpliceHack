@@ -3922,8 +3922,6 @@ boolean incl_wsegs;
             sz += (int) sizeof (struct emin);
         if (EDOG(mtmp))
             sz += (int) sizeof (struct edog);
-        if (EAMA(mtmp))
-            sz += (int) sizeof (struct eama);
         if (ERID(mtmp))
             sz += (int) sizeof (struct erid);
         /* mextra->mcorpsenm doesn't point to more memory */

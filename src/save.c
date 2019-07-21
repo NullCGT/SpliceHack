@@ -1115,14 +1115,6 @@ struct monst *mtmp;
         if (buflen > 0)
             bwrite(fd, (genericptr_t) EDOG(mtmp), buflen);
 
-        if (EAMA(mtmp))
-            buflen = sizeof(struct eama);
-        else
-            buflen = 0;
-        bwrite(fd, (genericptr_t) &buflen, sizeof(int));
-        if (buflen > 0)
-            bwrite(fd, (genericptr_t) EAMA(mtmp), buflen);
-
         if (ERID(mtmp))
             buflen = sizeof(struct erid);
         else

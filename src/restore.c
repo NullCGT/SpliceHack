@@ -402,12 +402,6 @@ struct monst *mtmp;
             newedog(mtmp);
             mread(fd, (genericptr_t) EDOG(mtmp), sizeof(struct edog));
         }
-        /* eama - amalgamation */
-        mread(fd, (genericptr_t) &buflen, sizeof(buflen));
-        if (buflen > 0) {
-            neweama(mtmp);
-            mread(fd, (genericptr_t) EAMA(mtmp), sizeof(struct eama));
-        }
         /* erid - steed */
         mread(fd, (genericptr_t) &buflen, sizeof(buflen));
         if (buflen > 0) {

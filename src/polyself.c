@@ -1205,7 +1205,7 @@ dospinweb()
             for (i = 0; i < NATTK; i++)
                 if (u.ustuck->data->mattk[i].aatyp == AT_ENGL)
                     break;
-            if (i == NATTK && !has_eama(u.ustuck))
+            if (i == NATTK)
                 impossible("Swallower has no engulfing attack?");
             else {
                 char sweep[30];

@@ -321,7 +321,7 @@ boolean message;
             struct attack *attk = attacktype_fordmg(mdat, AT_ENGL, AD_ANY);
 
             blast[0] = '\0';
-            if (!attk && !has_eama(mtmp)) {
+            if (!attk) {
                 impossible("Swallower has no engulfing attack?");
             } else {
                 if (is_whirly(mdat)) {
@@ -360,22 +360,12 @@ struct attack *alt_attk_buf;
     struct attack *attk = &mptr->mattk[indx];
     struct obj *weap = (magr == &youmonst) ? uwep : MON_WEP(magr);
 
-    /* TODO: this code can easily be condensed. */
-    if (has_eama(magr)) {
-        if (magr->data == &mons[PM_AMALGAMATION]) {
-            if (indx % 2 == 0) {
-                attk = &EAMA(magr)->m1->mattk[indx];
-            } else {
-                attk = &EAMA(magr)->m2->mattk[indx];
-            }
-        } else if (magr->data == &mons[PM_BAD_CLONE]) {
-            if (indx % 2 == 0) {
-                attk = &EAMA(magr)->m1->mattk[indx / 2];
-            } else {
-                attk = &EAMA(magr)->m2->mattk[indx / 2];
+    if (magr->data == &mons[PM_AMALGAMATION] 
+        || magr->data == &mons[PM_BAD_CLONE]) {
+            if (!rn2(3)) {
+                attk = &(rndmonst()->mattk[0]);
             }
         }
-    }
     /* honor SEDUCE=0 */
     if (!SYSOPT_SEDUCE) {
         extern const struct attack sa_no[NATTK];

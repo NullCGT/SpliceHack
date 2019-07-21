@@ -45,41 +45,6 @@ rnd_point() {
     return ptr;
 }
 
-void
-neweama(mtmp)
-struct monst *mtmp;
-{
-    if (!mtmp->mextra)
-        mtmp->mextra = newmextra();
-    if (!EAMA(mtmp)) {
-        EAMA(mtmp) = (struct eama *) alloc(sizeof(struct eama));
-        (void) memset((genericptr_t) EAMA(mtmp), 0, sizeof(struct eama));
-    }
-
-    EAMA(mtmp)->m1 = rnd_point();
-    EAMA(mtmp)->m2 = rnd_point();
-    /* this needs to happen in order to avoid an xname chain crash. */
-    if (monsndx(EAMA(mtmp)->m1) == PM_AMALGAMATION
-        || (monsndx(EAMA(mtmp)->m1) == PM_BAD_CLONE))
-        EAMA(mtmp)->m1 = &mons[PM_FIRE_ELEMENTAL];
-    else if (monsndx(EAMA(mtmp)->m2) == PM_AMALGAMATION
-        || (monsndx(EAMA(mtmp)->m2) == PM_BAD_CLONE))
-        EAMA(mtmp)->m2 = &mons[PM_WATER_ELEMENTAL];
-    else if (monsndx(EAMA(mtmp)->m2) == PM_AMALGAMATION
-        || (monsndx(EAMA(mtmp)->m2) == PM_GEL))
-        EAMA(mtmp)->m2 = &mons[PM_AIR_ELEMENTAL];
-}
-
-void
-free_eama(mtmp)
-struct monst *mtmp;
-{
-    if (mtmp->mextra && EAMA(mtmp)) {
-        free((genericptr_t) EAMA(mtmp));
-        EAMA(mtmp) = (struct eama *) 0;
-    }
-}
-
 boolean
 is_home_elemental(ptr)
 struct permonst *ptr;
@@ -1372,7 +1337,6 @@ newmextra()
     mextra->eshk = 0;
     mextra->emin = 0;
     mextra->edog = 0;
-    mextra->eama = 0;
     mextra->erid = 0;
     mextra->mcorpsenm = NON_PM;
     return mextra;
@@ -1550,8 +1514,6 @@ int mmflags;
         newemin(mtmp);
     if (mmflags & MM_EDOG)
         newedog(mtmp);
-    if (mmflags & MM_EAMA)
-        neweama(mtmp);
     if (mmflags & MM_ERID)
         newerid(mtmp);
     if (mmflags & MM_ASLEEP)
@@ -1679,9 +1641,7 @@ int mmflags;
             mon_adjust_speed(mtmp, 2, (struct obj *) 0);
         break;
     case S_QUANTMECH:
-        if (mndx == PM_AMALGAMATION || mndx == PM_BAD_CLONE) {
-            neweama(mtmp);
-        }
+        mon_adjust_speed(mtmp, rn2(7), (struct obj *) 0);
         break;
     }
     if ((ct = emits_light(mtmp->data)) > 0)

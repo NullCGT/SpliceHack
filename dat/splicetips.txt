@@ -70,7 +70,6 @@ Cartomancers have a chance of reusing scrolls.
 Wands of wonder cannot grant wishes.
 Dragonmasters cannot wear dragon scale mail.
 Dragonmasters can tame chromatic dragons.
-Amalgamations and bad clones are combinations of two monsters.
 Altars are colored based on their alignment.
 Looking up a monster or object will give you statistics about it.
 Floating eyes are a bit less common in the dungeon these days.

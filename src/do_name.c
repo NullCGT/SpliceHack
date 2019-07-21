@@ -1,4 +1,4 @@
-/* NetHack 3.6	do_name.c	$NHDT-Date: 1555627306 2019/04/18 22:41:46 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.145 $ */
+/* NetHack 3.6	do_name.c	$NHDT-Date: 1560611967 2019/06/15 15:19:27 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.149 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Pasi Kallinen, 2018. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1121,7 +1121,7 @@ char *monnambuf, *usrbuf;
 STATIC_OVL void
 do_mname()
 {
-    char buf[BUFSZ] = DUMMY, monnambuf[BUFSZ], qbuf[QBUFSZ];
+    char buf[BUFSZ], monnambuf[BUFSZ], qbuf[QBUFSZ];
     coord cc;
     int cx, cy;
     struct monst *mtmp = 0;
@@ -1133,9 +1133,9 @@ do_mname()
     cc.x = u.ux;
     cc.y = u.uy;
     if (getpos(&cc, FALSE, "the monster you want to name") < 0
-        || (cx = cc.x) < 0)
+        || !isok(cc.x, cc.y))
         return;
-    cy = cc.y;
+    cx = cc.x, cy = cc.y;
 
     if (cx == u.ux && cy == u.uy) {
         if (u.usteed && canspotmon(u.usteed)) {
@@ -1160,6 +1160,12 @@ do_mname()
     /* special case similar to the one in lookat() */
     Sprintf(qbuf, "What do you want to call %s?",
             distant_monnam(mtmp, ARTICLE_THE, monnambuf));
+    buf[0] = '\0';
+#ifdef EDIT_GETLIN
+    /* if there's an existing name, make it be the default answer */
+    if (has_mname(mtmp))
+        Strcpy(buf, MNAME(mtmp));
+#endif
     getlin(qbuf, buf);
     if (!*buf || *buf == '\033')
         return;
@@ -1172,6 +1178,9 @@ do_mname()
      *
      * Don't say the name is being rejected if it happens to match
      * the existing name.
+     *
+     * TODO: should have an alternate message when the attempt is to
+     * remove existing name without assigning a new one.
      */
     if ((mtmp->data->geno & G_UNIQ) && !mtmp->ispriest) {
         if (!alreadynamed(mtmp, monnambuf, buf))
@@ -1200,7 +1209,7 @@ void
 do_oname(obj)
 register struct obj *obj;
 {
-    char *bufp, buf[BUFSZ] = DUMMY, bufcpy[BUFSZ], qbuf[QBUFSZ];
+    char *bufp, buf[BUFSZ], bufcpy[BUFSZ], qbuf[QBUFSZ];
     const char *aname;
     short objtyp;
 
@@ -1213,6 +1222,12 @@ register struct obj *obj;
     Sprintf(qbuf, "What do you want to name %s ",
             is_plural(obj) ? "these" : "this");
     (void) safe_qbuf(qbuf, qbuf, "?", obj, xname, simpleonames, "item");
+    buf[0] = '\0';
+#ifdef EDIT_GETLIN
+    /* if there's an existing name, make it be the default answer */
+    if (has_oname(obj))
+        Strcpy(buf, ONAME(obj));
+#endif
     getlin(qbuf, buf);
     if (!*buf || *buf == '\033')
         return;
@@ -1547,7 +1562,7 @@ void
 docall(obj)
 struct obj *obj;
 {
-    char buf[BUFSZ] = DUMMY, qbuf[QBUFSZ];
+    char buf[BUFSZ], qbuf[QBUFSZ];
     char **str1;
 
     if (!obj->dknown)
@@ -1560,12 +1575,19 @@ struct obj *obj;
     else
         (void) safe_qbuf(qbuf, "Call ", ":", obj,
                          docall_xname, simpleonames, "thing");
+    /* pointer to old name */
+    str1 = &(objects[obj->otyp].oc_uname);
+    buf[0] = '\0';
+#ifdef EDIT_GETLIN
+    /* if there's an existing name, make it be the default answer */
+    if (*str1)
+        Strcpy(buf, *str1);
+#endif
     getlin(qbuf, buf);
     if (!*buf || *buf == '\033')
         return;
 
     /* clear old name */
-    str1 = &(objects[obj->otyp].oc_uname);
     if (*str1)
         free((genericptr_t) *str1);
 
@@ -2065,6 +2087,35 @@ char *outbuf;
     return outbuf;
 }
 
+/* returns mon_nam(mon) relative to other_mon; normal name unless they're
+   the same, in which case the reference is to {him|her|it} self */
+char *
+mon_nam_too(mon, other_mon)
+struct monst *mon, *other_mon;
+{
+    char *outbuf;
+
+    if (mon != other_mon) {
+        outbuf = mon_nam(mon);
+    } else {
+        outbuf = nextmbuf();
+        switch (pronoun_gender(mon, FALSE)) {
+        case 0:
+            Strcpy(outbuf, "himself");
+            break;
+        case 1:
+            Strcpy(outbuf, "herself");
+            break;
+        default:
+            if (!mindless(mon->data) && humanoid(mon->data))
+                Strcpy(outbuf, "themself");
+            else
+                Strcpy(outbuf, "itself");
+            break;
+        }
+    }
+    return outbuf;
+}
 /* fake monsters used to be in a hard-coded array, now in a data file */
 STATIC_OVL char *
 bogusmon(buf, code)

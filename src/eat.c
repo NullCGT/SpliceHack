@@ -1,4 +1,4 @@
-/* NetHack 3.6	eat.c	$NHDT-Date: 1542765357 2018/11/21 01:55:57 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.197 $ */
+/* NetHack 3.6	eat.c	$NHDT-Date: 1561233801 2019/06/22 20:03:21 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.203 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -26,7 +26,7 @@ STATIC_DCL void FDECL(cpostfx, (int));
 STATIC_DCL void FDECL(consume_tin, (const char *));
 STATIC_DCL void FDECL(start_tin, (struct obj *));
 STATIC_DCL int FDECL(eatcorpse, (struct obj *));
-STATIC_DCL void FDECL(start_eating, (struct obj *));
+STATIC_DCL void FDECL(start_eating, (struct obj *, BOOLEAN_P));
 STATIC_DCL void FDECL(fprefx, (struct obj *));
 STATIC_DCL void FDECL(fpostfx, (struct obj *));
 STATIC_DCL int NDECL(bite);
@@ -1543,15 +1543,12 @@ const char *mesg;
         gainstr(tin, 0, FALSE);
 
         tin = costly_tin(COST_OPEN);
-
-        lesshungry(tin->blessed
-                      ? 600                   /* blessed */
-                      : !tin->cursed
-                         ? (400 + rnd(200))   /* uncursed */
-                         : (200 + rnd(400))); /* cursed */
+        lesshungry(tin->blessed ? 600                   /* blessed */
+                   : !tin->cursed ? (400 + rnd(200))    /* uncursed */
+                     : (200 + rnd(400)));               /* cursed */
     }
 
-use_up_tin:
+ use_up_tin:
     if (carried(tin))
         useup(tin);
     else
@@ -1630,7 +1627,7 @@ struct obj *otmp;
         }
         pline("Using %s you try to open the tin.", yobjnam(uwep, (char *) 0));
     } else {
-    no_opener:
+ no_opener:
         pline("It is not so easy to open this tin.");
         if (Glib) {
             pline_The("tin slips from your %s.",
@@ -1872,8 +1869,9 @@ struct obj *otmp;
 
 /* called as you start to eat */
 STATIC_OVL void
-start_eating(otmp)
+start_eating(otmp, already_partly_eaten)
 struct obj *otmp;
+boolean already_partly_eaten;
 {
     const char *old_nomovemsg, *save_nomovemsg;
 
@@ -1917,7 +1915,8 @@ struct obj *otmp;
 
     if (++context.victual.usedtime >= context.victual.reqtime) {
         /* print "finish eating" message if they just resumed -dlc */
-        done_eating(context.victual.reqtime > 1 ? TRUE : FALSE);
+        done_eating((context.victual.reqtime > 1
+                     || already_partly_eaten) ? TRUE : FALSE);
         return;
     }
 
@@ -1926,28 +1925,35 @@ struct obj *otmp;
 }
 
 /*
- * called on "first bite" of (non-corpse) food.
- * used for non-rotten non-tin non-corpse food
+ * Called on "first bite" of (non-corpse) food, after touchfood() has
+ * marked it 'partly eaten'.  Used for non-rotten non-tin non-corpse food.
+ * Messages should use present tense since multi-turn food won't be
+ * finishing at the time they're issued.
  */
 STATIC_OVL void
 fprefx(otmp)
 struct obj *otmp;
 {
     switch (otmp->otyp) {
-    case FOOD_RATION:
+    case FOOD_RATION: /* nutrition 800 */
+        /* 200+800 remains below 1000+1, the satiation threshold */
         if (u.uhunger <= 200)
-            pline(Hallucination ? "Oh wow, like, superior, man!"
-                                : "That food really hit the spot!");
-        else if (u.uhunger <= 700)
-            pline("That satiated your %s!", body_part(STOMACH));
+            pline("%s!", Hallucination ? "Oh wow, like, superior, man"
+                                       : "This food really hits the spot");
+
+        /* 700-1+800 remains below 1500, the choking threshold which
+           triggers "you're having a hard time getting it down" feedback */
+        else if (u.uhunger < 700)
+            pline("This satiates your %s!", body_part(STOMACH));
+        /* [satiation message may be inaccurate if eating gets interrupted] */
         break;
     case TRIPE_RATION:
-        if (carnivorous(youmonst.data) && !humanoid(youmonst.data))
-            pline("That tripe ration was surprisingly good!");
-        else if (maybe_polyd(is_orc(youmonst.data), Race_if(PM_ORC)))
+        if (carnivorous(youmonst.data) && !humanoid(youmonst.data)) {
+            pline("This tripe ration is surprisingly good!");
+        } else if (maybe_polyd(is_orc(youmonst.data), Race_if(PM_ORC))) {
             pline(Hallucination ? "Tastes great!  Less filling!"
                                 : "Mmm, tripe... not bad!");
-        else {
+        } else {
             pline("Yak - dog food!");
             more_experienced(1, 0);
             newexplevel();
@@ -2028,7 +2034,7 @@ struct obj *otmp;
     default:
         if (otmp->otyp == SLIME_MOLD && !otmp->cursed
             && otmp->spe == context.current_fruit) {
-            pline("My, that was a %s %s!",
+            pline("My, this is a %s %s!",
                   Hallucination ? "primo" : "yummy",
                   singular(otmp, xname));
         } else if (otmp->otyp == APPLE && otmp->cursed && !Sleep_resistance) {
@@ -2047,9 +2053,7 @@ struct obj *otmp;
             if (!Hallucination) {
                 pline("Core dumped.");
             } else {
-                /* This is based on an old Usenet joke, a fake a.out manual
-                 * page
-                 */
+                /* based on an old Usenet joke, a fake a.out manual page */
                 int x = rnd(100);
 
                 pline("%s -- core dumped.",
@@ -2067,7 +2071,7 @@ struct obj *otmp;
                will be abused more times before illness completes */
             make_vomiting((Vomiting & TIMEOUT) + (long) d(10, 4), TRUE);
         } else {
-        give_feedback:
+ give_feedback:
             pline("This %s is %s", singular(otmp, xname),
                   otmp->cursed
                      ? (Hallucination ? "grody!" : "terrible!")
@@ -2646,7 +2650,8 @@ doeat()
 {
     struct obj *otmp;
     int basenutrit; /* nutrition of full item */
-    boolean dont_start = FALSE, nodelicious = FALSE;
+    boolean dont_start = FALSE, nodelicious = FALSE,
+            already_partly_eaten;
     int ll_conduct = 0; /* livelog hardest conduct food>vegn>vegt */
 
     if (Strangled) {
@@ -2712,7 +2717,7 @@ doeat()
          * against the possibility just in case.
          */
         if (welded(otmp) || (otmp->cursed && (otmp->owornmask & W_RING))) {
-            otmp->bknown = 1; /* for ring; welded() does this for weapon */
+            set_bknown(otmp, 1); /* for ring; welded() does this for weapon */
             You("spit out %s.", the(xname(otmp)));
         } else {
             You("spit %s out onto the %s.", the(xname(otmp)),
@@ -2823,8 +2828,10 @@ doeat()
         context.victual.piece = touchfood(otmp);
         if (context.victual.piece)
             context.victual.o_id = context.victual.piece->o_id;
-        You("resume your meal.");
-        start_eating(context.victual.piece);
+        You("resume %syour meal.",
+            (context.victual.usedtime + 1 >= context.victual.reqtime)
+            ? "the last bite of " : "");
+        start_eating(context.victual.piece, FALSE);
         return 1;
     }
 
@@ -2842,6 +2849,7 @@ doeat()
         ll_conduct++;
     }
 
+    already_partly_eaten = otmp->oeaten ? TRUE : FALSE;
     context.victual.o_id = 0;
     context.victual.piece = otmp = touchfood(otmp);
     if (context.victual.piece)
@@ -2896,8 +2904,13 @@ doeat()
                 dont_start = TRUE;
             }
             consume_oeaten(otmp, 1); /* oeaten >>= 1 */
-        } else
+        } else if (!already_partly_eaten) {
             fprefx(otmp);
+        } else {
+            You("%s %s.",
+                (context.victual.reqtime == 1) ? "eat" : "begin eating",
+                doname(otmp));
+        }
     }
 
     /* re-calc the nutrition */
@@ -2929,7 +2942,7 @@ doeat()
     context.victual.canchoke = (u.uhs == SATIATED);
 
     if (!dont_start)
-        start_eating(otmp);
+        start_eating(otmp, already_partly_eaten);
     return 1;
 }
 
@@ -3388,7 +3401,7 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
         }
     }
 
-skipfloor:
+ skipfloor:
     /* We cannot use ALL_CLASSES since that causes getobj() to skip its
      * "ugly checks" and we need to check for inedible items.
      */

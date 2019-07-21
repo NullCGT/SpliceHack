@@ -1,4 +1,4 @@
-/* NetHack 3.6	save.c	$NHDT-Date: 1558880688 2019/05/26 14:24:48 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.120 $ */
+/* NetHack 3.6	save.c	$NHDT-Date: 1559994625 2019/06/08 11:50:25 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.121 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2009. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -286,6 +286,7 @@ savegamestate(fd, mode)
 register int fd, mode;
 {
     unsigned long uid;
+    struct obj * bc_objs = (struct obj *)0;
 
 #ifdef MFLOPPY
     count_only = (mode & COUNT_SAVE);
@@ -313,14 +314,18 @@ register int fd, mode;
     save_light_sources(fd, mode, RANGE_GLOBAL);
 
     saveobjchn(fd, invent, mode);
-    if (BALL_IN_MON) {
-        /* prevent loss of ball & chain when swallowed */
-        uball->nobj = uchain;
-        uchain->nobj = (struct obj *) 0;
-        saveobjchn(fd, uball, mode);
-    } else {
-        saveobjchn(fd, (struct obj *) 0, mode);
+
+    /* save ball and chain if they are currently dangling free (i.e. not on
+       floor or in inventory) */
+    if (CHAIN_IN_MON) {
+        uchain->nobj = bc_objs;
+        bc_objs = uchain;
     }
+    if (BALL_IN_MON) {
+        uball->nobj = bc_objs;
+        bc_objs = uball;
+    }
+    saveobjchn(fd, bc_objs, mode);
 
     saveobjchn(fd, migrating_objs, mode);
     savemonchn(fd, migrating_mons, mode);
@@ -1086,6 +1091,8 @@ struct monst *mtmp;
 {
     int buflen;
 
+    mtmp->mtemplit = 0; /* normally clear; if set here then a panic save
+                         * is being written while bhit() was executing */
     buflen = (int) sizeof (struct monst);
     bwrite(fd, (genericptr_t) &buflen, sizeof buflen);
     bwrite(fd, (genericptr_t) mtmp, buflen);

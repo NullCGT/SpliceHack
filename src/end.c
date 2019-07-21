@@ -1,4 +1,4 @@
-/* NetHack 3.6	end.c	$NHDT-Date: 1558921075 2019/05/27 01:37:55 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.174 $ */
+/* NetHack 3.6	end.c	$NHDT-Date: 1562532734 2019/07/07 20:52:14 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.179 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1058,7 +1058,14 @@ done_object_cleanup()
        swallowed, uball and uchain will be in limbo; put them on floor
        so bones will have them and object list cleanup finds them */
     if (uchain && uchain->where == OBJ_FREE) {
-        placebc();
+        /* placebc(); */
+        lift_covet_and_placebc(override_restriction);
+    }
+    /* persistent inventory window now obsolete since disclosure uses
+       a normal popup one; avoids "Bad fruit #n" when saving bones */
+    if (iflags.perm_invent) {
+        iflags.perm_invent = FALSE;
+        update_inventory(); /* make interface notice the change */
     }
     return;
 }
@@ -1209,6 +1216,7 @@ int how;
     if (!survive && (wizard || discover) && how <= GENOCIDED
         && !paranoid_query(ParanoidDie, "Die?")) {
         pline("OK, so you don't %s.", (how == CHOKING) ? "choke" : "die");
+        iflags.last_msg = PLNMSG_OK_DONT_DIE;
         savelife(how);
         survive = TRUE;
     }
@@ -1254,12 +1262,17 @@ int how;
        deal with ball and chain possibly being temporarily off the map */
     if (!program_state.panicking)
         done_object_cleanup();
+    /* in case we're panicking; normally cleared by done_object_cleanup() */
+    iflags.perm_invent = FALSE;
 
     /* remember time of death here instead of having bones, rip, and
        topten figure it out separately and possibly getting different
        time or even day if player is slow responding to --More-- */
     urealtime.finish_time = endtime = getnow();
     urealtime.realtime += (long) (endtime - urealtime.start_timing);
+    /* collect these for end of game disclosure (not used during play) */
+    iflags.at_night = night();
+    iflags.at_midnight = midnight();
 
     dump_open_log(endtime);
     /* Sometimes you die on the first move.  Life's not fair.
@@ -1664,9 +1677,12 @@ boolean identified, all_containers, reportempty;
 
     for (box = list; box; box = box->nobj) {
         if (Is_container(box) || box->otyp == STATUE) {
-            box->cknown = 1; /* we're looking at the contents now */
-            if (identified)
-                box->lknown = 1;
+            if (!box->cknown || (identified && !box->lknown)) {
+                box->cknown = 1; /* we're looking at the contents now */
+                if (identified)
+                    box->lknown = 1;
+                update_inventory();
+            }
             if (box->otyp == BAG_OF_TRICKS) {
                 continue; /* wrong type of container */
             } else if (box->cobj) {

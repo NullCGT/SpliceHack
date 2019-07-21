@@ -1,4 +1,4 @@
-/* NetHack 3.6	pickup.c	$NHDT-Date: 1559130050 2019/05/29 11:40:50 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.226 $ */
+/* NetHack 3.6	pickup.c	$NHDT-Date: 1562203851 2019/07/04 01:30:51 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.229 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -409,8 +409,8 @@ struct obj *obj;
                           ? TRUE : FALSE)
                        : TRUE; /* catchall: no filters specified, so accept */
 
-    if (Role_if(PM_PRIEST))
-        obj->bknown = TRUE;
+    if (Role_if(PM_PRIEST) && !obj->bknown)
+        set_bknown(obj, 1);
 
     /*
      * There are three types of filters possible and the first and
@@ -841,7 +841,8 @@ boolean FDECL((*allow), (OBJ_P)); /* allow function */
     anything any;
     boolean printed_type_name, first,
             sorted = (qflags & INVORDER_SORT) != 0,
-            engulfer = (qflags & INCLUDE_HERO) != 0;
+            engulfer = (qflags & INCLUDE_HERO) != 0,
+            engulfer_minvent;
     unsigned sortflags;
     Loot *sortedolist, *srtoli;
 
@@ -855,6 +856,13 @@ boolean FDECL((*allow), (OBJ_P)); /* allow function */
             last = curr;
             n++;
         }
+    /* can't depend upon 'engulfer' because that's used to indicate whether
+       hero should be shown as an extra, fake item */
+    engulfer_minvent = (olist && olist->where == OBJ_MINVENT
+                        && u.uswallow && olist->ocarry == u.ustuck);
+    if (engulfer_minvent && n == 1 && olist->owornmask != 0L) {
+        qflags &= ~AUTOSELECT_SINGLE;
+    }
     if (engulfer) {
         ++n;
         /* don't autoselect swallowed hero if it's the only choice */
@@ -958,10 +966,20 @@ boolean FDECL((*allow), (OBJ_P)); /* allow function */
         /* fix up counts:  -1 means no count used => pick all;
            if fake_hero_object was picked, discard that choice */
         for (i = k = 0, mi = *pick_list; i < n; i++, mi++) {
-            if (mi->item.a_obj == &fake_hero_object)
+            curr = mi->item.a_obj;
+            if (curr == &fake_hero_object) {
+                /* this isn't actually possible; fake item representing
+                   hero is only included for look here (':'), not pickup,
+                   and that's PICK_NONE so we can't get here from there */
+                You_cant("pick yourself up!");
                 continue;
-            if (mi->count == -1L || mi->count > mi->item.a_obj->quan)
-                mi->count = mi->item.a_obj->quan;
+            }
+            if (engulfer_minvent && curr->owornmask != 0L) {
+                You_cant("pick %s up.", ysimple_name(curr));
+                continue;
+            }
+            if (mi->count == -1L || mi->count > curr->quan)
+                mi->count = curr->quan;
             if (k < i)
                 (*pick_list)[k] = *mi;
             ++k;
@@ -972,10 +990,14 @@ boolean FDECL((*allow), (OBJ_P)); /* allow function */
             *pick_list = 0;
             n = 0;
         } else if (k < n) {
-            /* other stuff plus fake_hero; last slot is now unused */
-            (*pick_list)[k].item = zeroany;
-            (*pick_list)[k].count = 0L;
-            n = k;
+            /* other stuff plus fake_hero; last slot is now unused
+               (could be more than one if player tried to pick items
+               worn by engulfer) */
+            while (n > k) {
+                --n;
+                (*pick_list)[n].item = zeroany;
+                (*pick_list)[n].count = 0L;
+            }
         }
     } else if (n < 0) {
         /* -1 is used for SIGNAL_NOMENU, so callers don't expect it
@@ -1475,6 +1497,10 @@ boolean telekinesis; /* not picking it up directly by hand */
 
     if (obj == uchain) { /* do not pick up attached chain */
         return 0;
+    } else if (obj->where == OBJ_MINVENT && obj->owornmask != 0L
+               && u.uswallow && obj->ocarry == u.ustuck) {
+        You_cant("pick %s up.", ysimple_name(obj));
+        return 0;
     } else if (obj->oartifact && !touch_artifact(obj, &youmonst)) {
         return 0;
     } else if (obj->otyp == CORPSE) {
@@ -1685,7 +1711,7 @@ int x, y;
     return FALSE;
 }
 
-int
+STATIC_OVL int
 do_loot_cont(cobjp, cindex, ccount)
 struct obj **cobjp;
 int cindex, ccount; /* index of this container (1..N), number of them (N) */
@@ -1705,7 +1731,7 @@ int cindex, ccount; /* index of this container (1..N), number of them (N) */
         cobj->lknown = 1;
         return 0;
     }
-    cobj->lknown = 1;
+    cobj->lknown = 1; /* floor container, so no need for update_inventory() */
 
     if (Hate_material(cobj->material)) {
         char kbuf[BUFSZ];
@@ -2122,7 +2148,7 @@ register struct obj *obj;
               Icebox ? "refrigerate" : "stash", something);
         return 0;
     } else if ((obj->otyp == LOADSTONE) && obj->cursed) {
-        obj->bknown = 1;
+        set_bknown(obj, 1);
         pline_The("stone%s won't leave your person.", plur(obj->quan));
         return 0;
     } else if (obj->otyp == AMULET_OF_YENDOR
@@ -2503,16 +2529,19 @@ boolean more_containers; /* True iff #loot multiple and this isn't last one */
     if (!u_handsy())
         return 0;
 
+    if (!obj->lknown) { /* do this in advance */
+        obj->lknown = 1;
+        if (held)
+            update_inventory();
+    }
     if (obj->olocked) {
         pline("%s locked.", Tobjnam(obj, "are"));
         if (held)
             You("must put it down to unlock.");
-        obj->lknown = 1;
         return 0;
     } else if (obj->otrapped) {
         if (held)
             You("open %s...", the(xname(obj)));
-        obj->lknown = 1;
         (void) chest_trap(obj, HAND, FALSE);
         /* even if the trap fails, you've used up this turn */
         if (multi >= 0) { /* in case we didn't become paralyzed */
@@ -2523,7 +2552,6 @@ boolean more_containers; /* True iff #loot multiple and this isn't last one */
         abort_looting = TRUE;
         return 1;
     }
-    obj->lknown = 1;
 
     current_container = obj; /* for use by in/out_container */
     /*
@@ -3122,7 +3150,11 @@ struct obj *box; /* or bag */
     /* caveat: this assumes that cknown, lknown, olocked, and otrapped
        fields haven't been overloaded to mean something special for the
        non-standard "container" horn of plenty */
-    box->lknown = 1;
+    if (!box->lknown) {
+        box->lknown = 1;
+        if (carried(box))
+            update_inventory(); /* jumping the gun slightly; hope that's ok */
+    }
     if (box->olocked) {
         pline("It's locked.");
     } else if (box->otrapped) {
@@ -3244,6 +3276,8 @@ struct obj *box; /* or bag */
         if (held)
             (void) encumber_msg();
     }
+    if (carried(box)) /* box is now empty with cknown set */
+        update_inventory();
 }
 
 /*pickup.c*/

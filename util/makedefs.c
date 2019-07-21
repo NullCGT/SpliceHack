@@ -1,4 +1,4 @@
-/* NetHack 3.6  makedefs.c  $NHDT-Date: 1557254354 2019/05/07 18:39:14 $  $NHDT-Branch: NetHack-3.6.2 $:$NHDT-Revision: 1.145 $ */
+/* NetHack 3.6  makedefs.c  $NHDT-Date: 1562180226 2019/07/03 18:57:06 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.149 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Kenneth Lorber, Kensington, Maryland, 2015. */
 /* Copyright (c) M. Stephenson, 1990, 1991.                       */
@@ -219,6 +219,13 @@ static int FDECL(case_insensitive_comp, (const char *, const char *));
 
 /* input, output, tmp */
 static FILE *ifp, *ofp, *tfp;
+
+static boolean use_enum =
+#ifdef ENUM_PM
+    TRUE;
+#else
+    FALSE;
+#endif
 
 #if defined(__BORLANDC__) && !defined(_WIN32)
 extern unsigned _stklen = STKSIZ;
@@ -947,7 +954,7 @@ unsigned long old_rumor_offset;
     return rumor_offset;
 }
 
-void
+static void
 do_rnd_access_file(fname)
 const char *fname;
 {
@@ -1412,7 +1419,7 @@ do_date()
     return;
 }
 
-boolean
+static boolean
 get_gitinfo(githash, gitbranch)
 char *githash, *gitbranch;
 {
@@ -1522,8 +1529,10 @@ static const char *build_opts[] = {
 #ifdef TEXTCOLOR
     "color",
 #endif
+#ifdef TTY_GRAPHICS
 #ifdef TTY_TILES_ESCCODES
     "console escape codes for tile hinting",
+#endif
 #endif
 #ifdef COM_COMPL
     "command line completion",
@@ -1649,20 +1658,25 @@ static const char *build_opts[] = {
 #ifdef SUSPEND
     "suspend command",
 #endif
+#ifdef TTY_GRAPHICS
 #ifdef TERMINFO
     "terminal info library",
 #else
-#if defined(TERMLIB) \
-    || ((!defined(MICRO) && !defined(WIN32)) && defined(TTY_GRAPHICS))
+#if defined(TERMLIB) || (!defined(MICRO) && !defined(WIN32))
     "terminal capability library",
 #endif
 #endif
+#endif /*TTY_GRAPHICS*/
+/*#ifdef X11_GRAPHICS*/
 #ifdef USE_XPM
-    "tile_file in XPM format",
+    "tiles file in XPM format",
 #endif
+/*#endif*/
+/*#if (defined(QT_GRAPHICS) || defined(X11_GRAPHICS)*/
 #ifdef GRAPHIC_TOMBSTONE
     "graphical RIP screen",
 #endif
+/*#endif*/
 #ifdef TIMED_DELAY
     "timed wait for display effects",
 #endif
@@ -1715,25 +1729,25 @@ static struct win_info window_opts[] = {
 #ifdef X11_GRAPHICS
     { "X11", "X11" },
 #endif
-#ifdef QT_GRAPHICS
+#ifdef QT_GRAPHICS /* too vague; there are multiple incompatible versions */
     { "Qt", "Qt" },
 #endif
-#ifdef GNOME_GRAPHICS
+#ifdef GNOME_GRAPHICS /* unmaintained/defunct */
     { "Gnome", "Gnome" },
 #endif
-#ifdef MAC
+#ifdef MAC /* defunct OS 9 interface */
     { "mac", "Mac" },
 #endif
-#ifdef AMIGA_INTUITION
+#ifdef AMIGA_INTUITION /* unmaintained/defunct */
     { "amii", "Amiga Intuition" },
 #endif
-#ifdef GEM_GRAPHICS
+#ifdef GEM_GRAPHICS /* defunct Atari interface */
     { "Gem", "Gem" },
 #endif
-#ifdef MSWIN_GRAPHICS
+#ifdef MSWIN_GRAPHICS /* win32 */
     { "mswin", "mswin" },
 #endif
-#ifdef BEOS_GRAPHICS
+#ifdef BEOS_GRAPHICS /* unmaintained/defunct */
     { "BeOS", "BeOS InterfaceKit" },
 #endif
     { 0, 0 }
@@ -2340,10 +2354,20 @@ do_permonst()
     Fprintf(ofp, "%s", Dont_Edit_Code);
     Fprintf(ofp, "#ifndef PM_H\n#define PM_H\n");
 
+    if (use_enum) {
+        Fprintf(ofp, "\nenum monnums {");
+#if 0
+        /* need #define ENUM_PM for the full NetHack build to include these */
+        Fprintf(ofp, "\n        NON_PM = -1,");
+        Fprintf(ofp, "\n        LOW_PM = 0,");
+#endif
+    }
     for (i = 0; mons[i].mlet; i++) {
         SpinCursor(3);
-
-        Fprintf(ofp, "\n#define\tPM_");
+        if (use_enum)
+            Fprintf(ofp, "\n        PM_");
+        else
+            Fprintf(ofp, "\n#define\tPM_");
         if (mons[i].mlet == S_HUMAN && !strncmp(mons[i].mname, "were", 4))
             Fprintf(ofp, "HUMAN_");
         for (nam = c = tmpdup(mons[i].mname); *c; c++)
@@ -2351,9 +2375,17 @@ do_permonst()
                 *c -= (char) ('a' - 'A');
             else if (*c < 'A' || *c > 'Z')
                 *c = '_';
-        Fprintf(ofp, "%s\t%d", nam, i);
+        if (use_enum)
+            Fprintf(ofp, "%s = %d,", nam, i);
+        else
+            Fprintf(ofp, "%s\t%d", nam, i);
     }
-    Fprintf(ofp, "\n\n#define\tNUMMONS\t%d\n", i);
+    if (use_enum) {
+        Fprintf(ofp, "\n\n        NUMMONS = %d", i);
+        Fprintf(ofp, "\n};\n");
+    } else {
+        Fprintf(ofp, "\n\n#define\tNUMMONS\t%d\n", i);
+    }
     Fprintf(ofp, "\n#endif /* PM_H */\n");
     Fclose(ofp);
     return;

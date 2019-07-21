@@ -367,6 +367,7 @@ DATABASE = $(DAT)\data.base
 #==========================================
 
 cc=cl
+cpp=cpp
 link=link
 rc=Rc
 
@@ -584,7 +585,7 @@ DLB =
 	@$(cc) $(cflagsBuild)  -Fo$@  $<
 
 {$(SSYS)}.cpp{$(OBJ)}.o:
-	@$(CC) $(cflagsBuild) /EHsc -Fo$@  $<
+	@$(cc) $(cflagsBuild) /EHsc -Fo$@  $<
 
 #==========================================
 # Rules for files in sys\winnt
@@ -636,7 +637,7 @@ DLB =
 #==========================================
 
 {$(WCURSES)}.c{$(OBJ)}.o:
-	@$(cc) $(PDCINCL) $(cflagsBuild)  -Fo$@ $<
+	@$(cc) -DPDC_NCMOUSE $(PDCINCL) $(cflagsBuild)  -Fo$@ $<
 
 #{$(WCURSES)}.txt{$(DAT)}.txt:
 #	@copy $< $@
@@ -845,7 +846,6 @@ $(GAMEDIR)\NetHackW.exe : $(O)gamedir.tag $(O)tile.o $(O)ttystub.o \
 		$(O)ttystub.o
 		$(O)NetHackW.res
 <<
-	@if exist $(O)install.tag del $(O)install.tag
 
 $(O)gamedir.tag:
 	@if not exist $(GAMEDIR)\*.* echo creating directory $(GAMEDIR:\=/)
@@ -932,7 +932,7 @@ $(O)makedefs.o: $(CONFIG_H)	$(INCL)\monattk.h $(INCL)\monflag.h   $(INCL)\objcla
 		 $(U)makedefs.c
 	@if not exist $(OBJ)\*.* echo creating directory $(OBJ:\=/)
 	@if not exist $(OBJ)\*.* mkdir $(OBJ)
-	@$(cc) $(cflagsBuild) -Fo$@ $(U)makedefs.c
+	@$(cc) -DENUM_PM $(cflagsBuild) -Fo$@ $(U)makedefs.c
 
 #
 #  date.h should be remade every time any of the source or include

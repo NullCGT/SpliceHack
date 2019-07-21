@@ -778,7 +778,7 @@ int tech_no;
                         Your("technique is only effective when riding a monster.");
                 break;
             case T_TURN_UNDEAD:
-                return(turn_undead());
+                return(doturn());
 	    case T_VANISH:
 		if (Invisible && Fast) {
 			You("are already quite nimble and undetectable.");

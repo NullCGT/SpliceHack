@@ -1,4 +1,4 @@
-/* NetHack 3.6	mkobj.c	$NHDT-Date: 1558124913 2019/05/17 20:28:33 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.147 $ */
+/* NetHack 3.6	mkobj.c	$NHDT-Date: 1561588627 2019/06/26 22:37:07 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.151 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -712,7 +712,7 @@ int alter_type;
 {
     xchar ox, oy;
     char objroom;
-    boolean set_bknown;
+    boolean learn_bknown;
     const char *those, *them;
     struct monst *shkp = 0;
 
@@ -752,21 +752,21 @@ int alter_type;
     /* when shopkeeper describes the object as being uncursed or unblessed
        hero will know that it is now uncursed; will also make the feedback
        from `I x' after bill_dummy_object() be more specific for this item */
-    set_bknown = (alter_type == COST_UNCURS || alter_type == COST_UNBLSS);
+    learn_bknown = (alter_type == COST_UNCURS || alter_type == COST_UNBLSS);
 
     switch (obj->where) {
     case OBJ_FREE: /* obj_no_longer_held() */
     case OBJ_INVENT:
-        if (set_bknown)
-            obj->bknown = 1;
+        if (learn_bknown)
+            set_bknown(obj, 1);
         verbalize("You %s %s %s, you pay for %s!",
                   alteration_verbs[alter_type], those, simpleonames(obj),
                   them);
         bill_dummy_object(obj);
         break;
     case OBJ_FLOOR:
-        if (set_bknown)
-            obj->bknown = 1;
+        if (learn_bknown)
+            obj->bknown = 1; /* ok to bypass set_bknown() here */
         if (costly_spot(u.ux, u.uy) && objroom == *u.ushops) {
             verbalize("You %s %s, you pay for %s!",
                       alteration_verbs[alter_type], those, them);
@@ -893,6 +893,7 @@ boolean artif;
                 break;
             }
             if (Is_pudding(otmp)) {
+                otmp->quan = 1L; /* for emphasis; glob quantity is always 1 */
                 otmp->globby = 1;
                 otmp->known = otmp->dknown = 1;
                 otmp->corpsenm = PM_GRAY_OOZE
@@ -1476,6 +1477,19 @@ const int matdensities[] = {
 };
 
 
+/* set the object's bless/curse-state known flag */
+void
+set_bknown(obj, onoff)
+struct obj *obj;
+unsigned onoff; /* 1 or 0 */
+{
+    if (obj->bknown != onoff) {
+        obj->bknown = onoff;
+        if (obj->where == OBJ_INVENT && moves > 1L)
+            update_inventory();
+    }
+}
+
 /*
  *  Calculate the weight of the given object.  This will recursively follow
  *  and calculate the weight of any containers.
@@ -1863,8 +1877,17 @@ int x, y;
 {
     register struct obj *otmp2 = level.objects[x][y];
 
+    if (!isok(x, y)) { /* validate location */
+        void VDECL((*func), (const char *, ...)) PRINTF_F(1, 2);
+
+        func = (x < 0 || y < 0 || x > COLNO - 1 || y > ROWNO - 1) ? panic
+               : impossible;
+        (*func)("place_object: \"%s\" [%d] off map <%d,%d>",
+                safe_typename(otmp->otyp), otmp->where, x, y);
+    }
     if (otmp->where != OBJ_FREE)
-        panic("place_object: obj not free");
+        panic("place_object: obj \"%s\" [%d] not free",
+              safe_typename(otmp->otyp), otmp->where);
 
     obj_no_longer_held(otmp);
     if (otmp->otyp == BOULDER) {
@@ -2952,11 +2975,10 @@ struct obj **obj1, **obj2;
                       / (o1wt + o2wt));
             otmp1->age = moves - agetmp; /* conv. relative back to absolute */
             otmp1->owt += o2wt;
-            if (otmp1->oeaten)
-                otmp1->oeaten += o2wt;
+            if (otmp1->oeaten || otmp2->oeaten)
+                otmp1->oeaten = o1wt + o2wt;
             otmp1->quan = 1L;
             obj_extract_self(otmp2);
-            newsym(otmp2->ox, otmp2->oy); /* in case of floor */
             dealloc_obj(otmp2);
             *obj2 = (struct obj *) 0;
             return otmp1;
@@ -2979,23 +3001,44 @@ struct obj *
 obj_meld(obj1, obj2)
 struct obj **obj1, **obj2;
 {
-    struct obj *otmp1, *otmp2;
+    struct obj *otmp1, *otmp2, *result = 0;
+    int ox, oy;
 
     if (obj1 && obj2) {
         otmp1 = *obj1;
         otmp2 = *obj2;
         if (otmp1 && otmp2 && otmp1 != otmp2) {
-            if (!(otmp2->where == OBJ_FLOOR && otmp1->where == OBJ_FREE) &&
-                (otmp1->owt > otmp2->owt
-                 || (otmp1->owt == otmp2->owt && rn2(2)))) {
-                return obj_absorb(obj1, obj2);
+            ox = oy = 0;
+            /*
+             * FIXME?
+             *  If one of the objects is free because it's being dropped,
+             *  we should really finish a full drop and then absorb/meld
+             *  if it survives the flooreffects().  Then lighter-melds-into-
+             *  heavier will be true even when heavier is the one dropped.
+             *
+             *  [Also, what about when one of the globs is on the shore
+             *  and we drop the other into adjacent pool or vice versa?]
+             */
+            if (!(otmp2->where == OBJ_FLOOR && otmp1->where == OBJ_FREE)
+                && (otmp1->owt > otmp2->owt
+                    || (otmp1->owt == otmp2->owt && rn2(2)))) {
+                if (otmp2->where == OBJ_FLOOR)
+                    ox = otmp2->ox, oy = otmp2->oy;
+                result = obj_absorb(obj1, obj2);
+            } else {
+                if (otmp1->where == OBJ_FLOOR)
+                    ox = otmp1->ox, oy = otmp1->oy;
+                result = obj_absorb(obj2, obj1);
             }
-            return obj_absorb(obj2, obj1);
+            /* callers really ought to take care of this; glob melding is
+               a bookkeeping issue rather than a display one */
+            if (ox && cansee(ox, oy))
+                newsym(ox, oy);
         }
+    } else {
+        impossible("obj_meld: not called with two actual objects");
     }
-
-    impossible("obj_meld: not called with two actual objects");
-    return (struct obj *) 0;
+    return result;
 }
 
 /* give a message if hero notices two globs merging [used to be in pline.c] */
@@ -3021,8 +3064,8 @@ struct obj *otmp2;
              * they'll be out of our view (minvent or container)
              * so don't actually show anything */
         } else if (onfloor || inpack) {
-            boolean adj = ((otmp->ox != u.ux || otmp->oy != u.uy) &&
-                              (otmp2->ox != u.ux || otmp2->oy != u.uy));
+            boolean adj = ((otmp->ox != u.ux || otmp->oy != u.uy)
+                           && (otmp2->ox != u.ux || otmp2->oy != u.uy));
 
             pline("The %s%s coalesce%s.",
                   (onfloor && adj) ? "adjacent " : "",

@@ -1,4 +1,4 @@
-/* NetHack 3.6	pray.c	$NHDT-Date: 1562462064 2019/07/07 01:14:24 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.116 $ */
+/* NetHack 3.6	pray.c	$NHDT-Date: 1564532667 2019/07/31 00:24:27 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.117 $ */
 /* Copyright (c) Benson I. Margulies, Mike Stephenson, Steve Linhart, 1989. */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -779,6 +779,20 @@ gcrownu()
     HPoison_resistance |= FROMOUTSIDE;
     godvoice(u.ualign.type, (char *) 0);
 
+    class_gift = STRANGE_OBJECT;
+    /* 3.3.[01] had this in the A_NEUTRAL case,
+       preventing chaotic wizards from receiving a spellbook */
+    if (Role_if(PM_WIZARD)
+        && (!uwep || (uwep->oartifact != ART_VORPAL_BLADE
+                      && uwep->oartifact != ART_STORMBRINGER))
+        && !carrying(SPE_FINGER_OF_DEATH)) {
+        class_gift = SPE_FINGER_OF_DEATH;
+    } else if (Role_if(PM_MONK) && (!uwep || !uwep->oartifact)
+               && !carrying(SPE_RESTORE_ABILITY)) {
+        /* monks rarely wield a weapon */
+        class_gift = SPE_RESTORE_ABILITY;
+    }
+
     obj = ok_wep(uwep) ? uwep : 0;
     already_exists = in_hand = FALSE; /* lint suppression */
    	if( Role_if(PM_PIRATE) ){
@@ -788,44 +802,39 @@ gcrownu()
      		verbalize("Hurrah for our Pirate King!");
    	} else {
     switch (u.ualign.type) {
-        case A_LAWFUL:
-            u.uevent.uhand_of_elbereth = 1;
-            verbalize("I crown thee...  The Hand of Elbereth!");
-            livelog_printf(LL_DIVINEGIFT,
+    case A_LAWFUL:
+        u.uevent.uhand_of_elbereth = 1;
+        verbalize("I crown thee...  The Hand of Elbereth!");
+        livelog_printf(LL_DIVINEGIFT,
                     "was crowned \"The Hand of Elbereth\" by %s", u_gname());
-            break;
-        case A_NEUTRAL:
-            u.uevent.uhand_of_elbereth = 2;
-            in_hand = (uwep && uwep->oartifact == ART_VORPAL_BLADE);
-            already_exists =
-                exist_artifact(LONG_SWORD, artiname(ART_VORPAL_BLADE));
-            verbalize("Thou shalt be my Envoy of Balance!");
-            livelog_printf(LL_DIVINEGIFT, "became %s Envoy of Balance",
+        break;
+    case A_NEUTRAL:
+        u.uevent.uhand_of_elbereth = 2;
+        in_hand = (uwep && uwep->oartifact == ART_VORPAL_BLADE);
+        already_exists =
+            exist_artifact(LONG_SWORD, artiname(ART_VORPAL_BLADE));
+        verbalize("Thou shalt be my Envoy of Balance!");
+        livelog_printf(LL_DIVINEGIFT, "became %s Envoy of Balance",
                     s_suffix(u_gname()));
-            break;
-        case A_CHAOTIC:
-            u.uevent.uhand_of_elbereth = 3;
-            in_hand = (uwep && uwep->oartifact == ART_STORMBRINGER);
-            already_exists =
-                exist_artifact(RUNESWORD, artiname(ART_STORMBRINGER));
-            verbalize("Thou art chosen to %s for My Glory!",
-                      already_exists && !in_hand ? "take lives" : "steal souls");
-            livelog_printf(LL_DIVINEGIFT, "was chosen to %s for the Glory of %s",
-                    already_exists && !in_hand ? "take lives" : "steal souls",
+        break;
+    case A_CHAOTIC:
+        u.uevent.uhand_of_elbereth = 3;
+        in_hand = (uwep && uwep->oartifact == ART_STORMBRINGER);
+        already_exists =
+            exist_artifact(RUNESWORD, artiname(ART_STORMBRINGER));
+        verbalize("Thou art chosen to %s for My Glory!",
+                  ((already_exists && !in_hand)
+                   || class_gift != STRANGE_OBJECT) ? "take lives"
+                  : "steal souls");
+        livelog_printf(LL_DIVINEGIFT, "was chosen to %s for the Glory of %s",
+                  ((already_exists && !in_hand)
+                    || class_gift != STRANGE_OBJECT) ? "take lives" : "steal souls",
                     u_gname());
-            break;
+        break;
         }
     }
 
-    class_gift = STRANGE_OBJECT;
-    /* 3.3.[01] had this in the A_NEUTRAL case below,
-       preventing chaotic wizards from receiving a spellbook */
-    if (Role_if(PM_WIZARD)
-        && (!uwep || (uwep->oartifact != ART_VORPAL_BLADE
-                      && uwep->oartifact != ART_STORMBRINGER))
-        && !carrying(SPE_FINGER_OF_DEATH)) {
-        class_gift = SPE_FINGER_OF_DEATH;
- make_splbk:
+    if (objects[class_gift].oc_class == SPBOOK_CLASS) {
         obj = mksobj(class_gift, TRUE, FALSE);
         bless(obj);
         obj->bknown = 1; /* ok to skip set_bknown() */
@@ -840,11 +849,6 @@ gcrownu()
                     obj = uwep; /* to be blessed,&c */
                 break;
             }
-    } else if (Role_if(PM_MONK) && (!uwep || !uwep->oartifact)
-               && !carrying(SPE_RESTORE_ABILITY)) {
-        /* monks rarely wield a weapon */
-        class_gift = SPE_RESTORE_ABILITY;
-        goto make_splbk;
     }
 
 	if( Role_if(PM_PIRATE) ){

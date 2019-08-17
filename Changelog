@@ -1,9 +1,16 @@
                         SpliceHack -- Changelog
                     
-                    Upcoming Version
+                    Version 0.6.4: Broken Things
 
 Features
 - New sounds for birds. They now let you know if you are abusing them.
+- New monster gaze attacks implemented for polymorphed players.
+- Changed how amalgamations and bad clones function.
+    - This was a difficult but necessary decision. Amalgamations and
+      bad clones were too buggy and poorly implemented to continue on
+      as they were. They now function as regular monsters, but
+      occasionally use the attacks of random, level-appropriate monsters
+      in place of their own. Hopefully this system is less frustrating.
 
 New Monsters
 - Molydeus:
@@ -22,6 +29,12 @@ New Monsters
     - Hippos are fairly unremarkable. They yawn when angry, just like real
       hippos. They are also quite dangerous and aggressive, just like real
       hippos.
+
+Bug Fixes
+- Numerous fixes to monster steeds.
+- Fixed glyph traps exploding in blasts of lightning.
+- Fixed Dal Zethire instantly dying.
+- Many other fixes.
 
                     Version 0.6.3: JuneNetHack Ahoy!
 

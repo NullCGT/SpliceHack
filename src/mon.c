@@ -326,6 +326,7 @@ unsigned corpseflags;
     case PM_BLACK_DRAGON:
     case PM_BLUE_DRAGON:
     case PM_GREEN_DRAGON:
+    case PM_GOLD_DRAGON:
     case PM_OOZE_DRAGON:
     case PM_RAZOR_DRAGON:
     case PM_FILTH_DRAGON:
@@ -2245,6 +2246,7 @@ mondead(mtmp)
 register struct monst *mtmp;
 {
     struct permonst *mptr;
+    struct obj* otmp;
     int tmp;
 
     mtmp->mhp = 0; /* in case caller hasn't done this */
@@ -2335,6 +2337,10 @@ register struct monst *mtmp;
                 break;
             }
     }
+    /* extinguish monster's armor */
+	if ( (otmp = which_armor(mtmp, W_ARM)) && 
+		(otmp->otyp==GOLD_DRAGON_SCALE_MAIL || otmp->otyp == GOLD_DRAGON_SCALES) )
+		end_burn(otmp,FALSE);
 
     mptr = mtmp->data; /* save this for m_detach() */
     /* restore chameleon, lycanthropes to true form at death */

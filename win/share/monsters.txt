@@ -4397,6 +4397,25 @@ Z = (195, 195, 195)
   .....GFAA..FFAA.
   ...........FAA..
 }
+ tile 221 (baby gold dragon)
+{
+  ................
+  ................
+  ................
+  .....NNNA.......
+  ....DHDHHA......
+  ...NHHHHHA......
+  ..CHHHANHA.AAA..
+  .CHCDA.NHAAAAAA.
+  ..D..NHHAAAAAAA.
+  ....NNHHHHHAAAA.
+  ...NOOHHHHHHAAA.
+  ..NHONHHHHHHHAA.
+  ..NHHNHHONHAHHA.
+  ..NHANH.ANHAHHA.
+  .....NHAA..HHAA.
+  ...........HAA..
+}
 # tile 221 (baby yellow dragon)
 {
   ................
@@ -4605,6 +4624,25 @@ Z = (195, 195, 195)
   GFAAGF.AAFFAFFA.
   ....GFAA...FFJA.
   ........FFFFJA..
+}
+# tile 232 (gold dragon)
+{
+  ......NNNHA.....
+  .....DHDHHHA....
+  ....NHHHHHHA....
+  ..DCHHH..HHA....
+  CHCHCD..NHHA....
+  HD.D...NHHA.....
+  ......ONHAAAAAA.
+  ....NONHAAAAAAAA
+  ..NOONHAJHHJAAA.
+  .NOOONHHHHHHJAA.
+  .NOOONHHHHHHHAA.
+  HHOONNHHHHHHHHA.
+  NH.ONHHOOHHJHJA.
+  NHAANH.AAHHAHHA.
+  ....NHAAJJJHHJA.
+  ........HHHHJA..
 }
 # tile 232 (ooze dragon)
 {

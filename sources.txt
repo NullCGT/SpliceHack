@@ -99,6 +99,7 @@
 #Nephi
 - Grudge Patch
 - Colored Walls and Floors Patch
+- Gold Dragon Patch
 
 #L
 - Dilapidated Armory Patch

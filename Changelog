@@ -34,9 +34,11 @@ Bug Fixes
 - Numerous fixes to monster steeds.
 - Fixed glyph traps exploding in blasts of lightning.
 - Fixed Dal Zethire instantly dying.
+- Alucard no longer begins polymorphed, which should fix the bad weapon restore
+  errors players were running into during Junethack.
 - Many other fixes.
 
-                    Version 0.6.3: JuneNetHack Ahoy!
+                    Version 0.6.3: Junethack Ahoy!
 
 Features
 - Modified XNetHack / SLASH'EM fungus growth. Generating mold warriors is

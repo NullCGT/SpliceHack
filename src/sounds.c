@@ -992,7 +992,7 @@ register struct monst *mtmp;
                 verbl_msg = "Aloha.";
                 break;
             case PM_CARTOMANCER:
-                pline_msg = "Tells you that their deck lacks cards which could be considered pathetic.";
+                pline_msg = "tells you that their deck lacks cards which could be considered pathetic.";
                 break;
             case PM_DRAGONMASTER:
                 verbl_msg = "The only authority I answer to is that of the wyrm.";

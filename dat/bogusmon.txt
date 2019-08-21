@@ -11,15 +11,14 @@
 # vertical bar	|  male, general name
 # equals	=  gender not specified, personal name
 
-# Junenethack 2018
+# Junethack 2018
 invader from the ivory tower
 improved tin opener
 baseball-cap-toting elemental
 
-# Junenethack 2019
-resurrected Antigulp
+# Junethack 2019
+-Nega-Antigulp
 horrific bug
-troll
 
 # Anime
 catgirl
@@ -41,6 +40,9 @@ palette-swapped doppelganger
 # Homestuck
 kernelsprite
 lusus
+
+# Bionicle
+rahkshi
 
 # Slex
 novice light wall
@@ -223,6 +225,12 @@ CEO
 salt golem
 misspent youth
 mad scientist
+homicidal AI
+patent infringement
+sock puppet
+soul eater
+drunken master
+pet rock
 
 # ;)
 cuddly cutie
@@ -298,6 +306,7 @@ wiggle
 # Lewis Carroll
 white rabbit
 snark
+mome rath
 
 # Dr. Dolittle
 pushmi-pullyu
@@ -417,7 +426,6 @@ corpulent porpoise
 quokka
 potoo
 lemming
-hippo
 giant squid
 ant-lion
 gnat swarm
@@ -431,6 +439,7 @@ zebroid
 axolotl
 naked mole rat
 narwhal
+pronghorn
 
 # european cryptids
 wolpertinger
@@ -578,7 +587,6 @@ manbearpig
 bonsai-kitten
 tie-thulu
 +Domo-kun
-looooooooooooong cat
 nyan cat
 dummy thicc soldier
 
@@ -588,6 +596,7 @@ basement cat
 monorail cat
 knife cat
 bode
+looooooooooooong cat
 
 # the internet has good dogs
 big doggo
@@ -687,6 +696,7 @@ baby long word
 baby parable worm
 bad cone
 barfed devil
+barge cat
 blue dragoon
 beer wight
 boor wight
@@ -695,6 +705,7 @@ rave spider
 clockatrice
 clod giant
 clue golem
+craven
 cockathrice
 bust vortex
 dead dragon
@@ -726,13 +737,16 @@ green slide
 guardian nacho
 hearth elemental
 hell hound pun
+hole hound
 high purist
 hairnet devil
+hax golem
 holistic sphere
 ice trowel
 killer beet
-+Mefisto
 feather golem
+lampshades
+lie kin
 lounge worm
 monochromatic dragon
 mountain lymph
@@ -744,10 +758,11 @@ silt golem
 sock mole
 lockatrice
 rogue piercer
-score peopn
+score peon
 seesawing sphere
 simile mimic
 moldier ant
+mommy
 skull ettin
 stain vortex
 scone giant

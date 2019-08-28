@@ -12,6 +12,7 @@ Items
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing
   sonic.
+- Switched to using aosdict's fix for object probabilities over 1000.
                     
                     Version 0.6.4: Broken Things
 

@@ -16,6 +16,7 @@
 - Other Minor QOL Changes
 - Code for SLASH'EM fungus growth.
 - Fixes to monster intrinsics.
+- Code for object probabilities
 
 #Biodiversity Patch
 - Umbral Hulk

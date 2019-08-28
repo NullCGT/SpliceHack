@@ -1964,9 +1964,9 @@ struct obj *otmp;
         }
         break;
     case SLICE_OF_CAKE:
-        exercise(A_DEX, FALSE);
         if (otmp->cursed) {
             pline("This cake is very filling! You feel bloated.");
+            exercise(A_DEX, FALSE);
         } else if (Hallucination) {
             pline("You have some cake, and you eat it too!");
         } else {

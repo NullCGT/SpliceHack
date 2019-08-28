@@ -955,6 +955,7 @@ register struct obj *obj;
     case MEAT_RING:
     case RIN_BLOOD_MAGIC:
     case RIN_PSYCHIC_RESISTANCE:
+    case RIN_SONIC_RESISTANCE:
     case RIN_MEMORY:
         break;
     case RIN_STEALTH:
@@ -1070,6 +1071,7 @@ boolean gone;
     case MEAT_RING:
     case RIN_BLOOD_MAGIC:
     case RIN_PSYCHIC_RESISTANCE:
+    case RIN_SONIC_RESISTANCE:
     case RIN_MEMORY:
         break;
     case RIN_STEALTH:

@@ -1963,6 +1963,23 @@ struct obj *otmp;
                 make_vomiting((long) rn1(context.victual.reqtime, 14), FALSE);
         }
         break;
+    case SLICE_OF_CAKE:
+        exercise(A_DEX, FALSE);
+        if (otmp->cursed) {
+            pline("This cake is very filling! You feel bloated.");
+        } else if (Hallucination) {
+            pline("You have some cake, and you eat it too!");
+        } else {
+            pline("This cake is fantastic! You feel amazing.");
+            /* blessed restore ability */
+            int ii;
+            for (ii = 0; ii < A_MAX; ii++)
+                if (ABASE(ii) < AMAX(ii)) {
+                    ABASE(ii) = AMAX(ii);
+                    context.botl = 1;
+                }
+        }
+        break;
     case PILL:
         You("swallow the little pink pill.");
         switch(rn2(6))
@@ -2888,6 +2905,7 @@ doeat()
             }
         } else if (otmp->otyp == PANCAKE || otmp->otyp == FORTUNE_COOKIE /*eggs*/
                 || otmp->otyp == CREAM_PIE || otmp->otyp == CANDY_BAR /*milk*/
+                || otmp->otyp == SLICE_OF_CAKE /*eggs AND milk*/
                 || otmp->otyp == LUMP_OF_ROYAL_JELLY) {
               if(!u.uconduct.unvegan++ && !ll_conduct)
                   livelog_printf(LL_CONDUCT, "consumed animal products (%s) for the first time", food_xname(otmp,FALSE));

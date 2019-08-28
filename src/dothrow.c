@@ -2149,6 +2149,7 @@ struct obj *obj;
     case EGG:
     case CREAM_PIE:
     case MELON:
+    case SLICE_OF_CAKE:
     case ACID_VENOM:
     case BLINDING_VENOM:
     case QUILL:

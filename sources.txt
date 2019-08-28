@@ -67,6 +67,7 @@
     - Medical Kit and associated items
     - Potions of blood and vampire blood
     - Wand of create horde (nerfed)
+    - Cheese
   #Other
     - Drow Race
     - Techniques Code

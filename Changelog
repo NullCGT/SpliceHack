@@ -14,6 +14,8 @@ Items
 - Pineapple
     - When thrown, pineapples are accurate and deal extra damage. Monsters
       will attempt to throw them.
+- Cheese
+    - Ported from SLASH'EM. The food, to be specific. 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing
   sonic.

@@ -2906,7 +2906,8 @@ doeat()
         } else if (otmp->otyp == PANCAKE || otmp->otyp == FORTUNE_COOKIE /*eggs*/
                 || otmp->otyp == CREAM_PIE || otmp->otyp == CANDY_BAR /*milk*/
                 || otmp->otyp == SLICE_OF_CAKE /*eggs AND milk*/
-                || otmp->otyp == LUMP_OF_ROYAL_JELLY) {
+                || otmp->otyp == LUMP_OF_ROYAL_JELLY
+                || otmp->otyp == CHEESE) {
               if(!u.uconduct.unvegan++ && !ll_conduct)
                   livelog_printf(LL_CONDUCT, "consumed animal products (%s) for the first time", food_xname(otmp,FALSE));
         }

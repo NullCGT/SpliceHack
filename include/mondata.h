@@ -280,9 +280,13 @@
 #define befriend_with_obj(ptr, obj) \
     (((ptr) == &mons[PM_MONKEY] || (ptr) == &mons[PM_APE])               \
      ? (obj)->otyp == BANANA                                             \
-     : ((ptr) == &mons[PM_KOALA])                                          \
+     : ((ptr) == &mons[PM_KOALA])                                        \
       ? (obj)->otyp == EUCALYPTUS_LEAF                                   \
-       : (is_domestic(ptr) && (obj)->oclass == FOOD_CLASS                \
+      : ((ptr) == &mons[PM_GIANT_RAT] ||                                 \
+	    (ptr) == &mons[PM_SEWER_RAT] ||                                  \
+		(ptr) == &mons[PM_PACKRAT])                                      \
+        ? (obj)->otyp == CHEESE                                          \
+        : (is_domestic(ptr) && (obj)->oclass == FOOD_CLASS               \
           && ((ptr)->mlet != S_UNICORN                                   \
               || obj->material == VEGGY               \
               || ((obj)->otyp == CORPSE && ((obj)->corpsenm == PM_LICHEN \

@@ -997,6 +997,9 @@ boolean hitsroof;
         breakobj(obj, u.ux, u.uy, TRUE, TRUE);
         obj = 0; /* it's now gone */
         switch (otyp) {
+        case PINEAPPLE:
+            pline("Ouch! %s is covered in spikes!", Doname2(obj));
+            break;
         case EGG:
             if (petrifier && !Stone_resistance
                 && !(poly_when_stoned(youmonst.data)
@@ -1039,6 +1042,8 @@ boolean hitsroof;
                 dmg = 1;
             else if (dmg > 6)
                 dmg = 6;
+            if (obj->otyp == PINEAPPLE)
+                dmg = dmg + 2;
             if (youmonst.data == &mons[PM_SHADE] && obj->material != SILVER)
                 dmg = 0;
         }
@@ -1491,6 +1496,9 @@ boolean mon_notices;
     }
     /* some objects are more likely to hit than others */
     switch (obj->otyp) {
+    case PINEAPPLE:
+        tmp += 4;
+        break;
     case HEAVY_IRON_BALL:
         if (obj != uball)
             tmp += 2;
@@ -2195,6 +2203,9 @@ boolean in_view;
         if (in_view)
             pline("What a mess!");
         break;
+    case SLICE_OF_CAKE:
+        if (in_view)
+            pline("Dirt cake!");
     case ACID_VENOM:
     case BLINDING_VENOM:
         pline("Splash!");

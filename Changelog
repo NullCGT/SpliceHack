@@ -11,7 +11,9 @@ Items
 - Slice of Cake
     - Cake takes a long time to eat, but it very filling. Cursed cake abuses 
       dexterity, while blessed and uncursed cake heals ability damage.
-
+- Pineapple
+    - When thrown, pineapples are accurate and deal extra damage. Monsters
+      will attempt to throw them.
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing
   sonic.

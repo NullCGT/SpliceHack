@@ -149,9 +149,9 @@ int type;
 int ef_flags;
 {
     static NEARDATA const char
-        *const action[] = { "smoulder", "rust", "rot", "corrode" },
-        *const msg[] = { "burnt", "rusted", "rotten", "corroded" },
-        *const bythe[] = { "heat", "oxidation", "decay", "corrosion" };
+        *const action[] = { "smoulder", "rust", "rot", "corrode", "sizzle" },
+        *const msg[] = { "burnt", "rusted", "rotten", "corroded", "carbonised" },
+        *const bythe[] = { "heat", "oxidation", "decay", "corrosion", "heat" };
     boolean vulnerable = FALSE, is_primary = TRUE,
             check_grease = (ef_flags & EF_GREASE) ? TRUE : FALSE,
             print = (ef_flags & EF_VERBOSE) ? TRUE : FALSE,
@@ -169,8 +169,10 @@ int ef_flags;
     visobj = !victim && cansee(bhitpos.x, bhitpos.y);
 
     switch (type) {
+    case ERODE_COOK:
     case ERODE_BURN:
-        vulnerable = is_flammable(otmp);
+        /* A bit of a kludge, but fire cooks things, right? */
+        vulnerable = is_flammable(otmp) || is_cookable(otmp);
         check_grease = FALSE;
         cost_type = COST_BURN;
         break;
@@ -3645,10 +3647,11 @@ xchar x, y;
           *     awful luck (Luck<-4):  100%
           */
         return FALSE;
+    } else if (obj->otyp == EGG && obj->corpsenm == PM_PHOENIX) {
+        pline("Wisps of smoke curl off of %s.", the(xname(obj)));
+        return FALSE;
     } else if (obj->oclass == SCROLL_CLASS || obj->oclass == SPBOOK_CLASS) {
         if (obj->otyp == SCR_FIRE || obj->otyp == SPE_FIREBALL || obj->oartifact)
-            return FALSE;
-        if (obj->otyp == EGG && obj->corpsenm == PM_PHOENIX)
             return FALSE;
         if (obj->otyp == SPE_BOOK_OF_THE_DEAD) {
             if (in_sight)

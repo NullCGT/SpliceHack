@@ -915,6 +915,7 @@ struct obj *obj;
 char *prefix;
 {
     boolean iscrys = (obj->otyp == CRYSKNIFE);
+    boolean cookable = is_cookable(obj);
     boolean rknown;
 
     rknown = (iflags.override_ID == 0) ? obj->rknown : TRUE;
@@ -925,7 +926,19 @@ char *prefix;
     /* The only cases where any of these bits do double duty are for
      * rotted food and diluted potions, which are all not is_damageable().
      */
-    if (obj->oeroded && !iscrys) {
+    if (obj->oeroded && cookable) {
+        switch(obj->oeroded) {
+        case 1:
+            Strcat(prefix, "cooked ");
+            break;
+        case 2:
+            Strcat(prefix, "charred ");
+            break;
+        case 3:
+            Strcat(prefix, "crispy ");
+            break;
+        }
+    } else if (obj->oeroded && !iscrys) {
         switch (obj->oeroded) {
         case 2:
             Strcat(prefix, "very ");
@@ -950,6 +963,8 @@ char *prefix;
     if (rknown && obj->oerodeproof) {
         if (iscrys)
             Strcat(prefix, "fixed ");
+        else if (cookable)
+            Strcat(prefix, "uncookable ");
         else if (obj->material == GLASS)
             Strcat(prefix, "shatterproof ");
         else if (is_rustprone(obj))
@@ -975,6 +990,7 @@ struct obj *obj;
            so there's no particular reason to try to handle the first
            instance differently [this comment belongs in poly_obj()...] */
         return is_weptool(obj) ? TRUE : FALSE;
+    case FOOD_CLASS:
     case WEAPON_CLASS:
     case ARMOR_CLASS:
     case BALL_CLASS:
@@ -1205,6 +1221,7 @@ unsigned doname_flags;
     case FOOD_CLASS:
         if (obj->oeaten)
             Strcat(prefix, "partly eaten ");
+        add_erosion_words(obj, prefix);
         if (obj->otyp == CORPSE) {
             /* (quan == 1) => want corpse_xname() to supply article,
                (quan != 1) => already have count or "some" as prefix;
@@ -1414,7 +1431,7 @@ struct obj *otmp;
         return FALSE;
     else /* lack of `rknown' only matters for vulnerable objects */
         return (boolean) (is_rustprone(otmp) || is_corrodeable(otmp)
-                          || is_flammable(otmp));
+                          || is_flammable(otmp) || is_cookable(otmp));
 }
 
 /* format a corpse name (xname() omits monster type; doname() calls us);
@@ -3152,6 +3169,7 @@ struct obj *no_wish;
                    || !strncmpi(bp, "fixed ", l = 6)
                    || !strncmpi(bp, "fireproof ", l = 10)
                    || !strncmpi(bp, "rotproof ", l = 9)
+                   || !strncmpi(bp, "uncookable ", l = 11)
                    || !strncmpi(bp, "shatterproof ", l = 13)) {
             erodeproof = 1;
         } else if (!strncmpi(bp, "lit ", l = 4)
@@ -3191,7 +3209,8 @@ struct obj *no_wish;
         } else if (!strncmpi(bp, "rusty ", l = 6)
                    || !strncmpi(bp, "rusted ", l = 7)
                    || !strncmpi(bp, "burnt ", l = 6)
-                   || !strncmpi(bp, "burned ", l = 7)) {
+                   || !strncmpi(bp, "burned ", l = 7)
+                   || !strncmpi(bp, "cooked ", l = 7)) {
             eroded = 1 + very;
             very = 0;
         } else if (!strncmpi(bp, "corroded ", l = 9)
@@ -3201,6 +3220,12 @@ struct obj *no_wish;
         } else if (!strncmpi(bp, "partly eaten ", l = 13)
                    || !strncmpi(bp, "partially eaten ", l = 16)) {
             halfeaten = 1;
+        } else if (!strncmpi(bp, "charred ", l = 8)) {
+            eroded = 2;
+            very = 0;
+        } else if (!strncmpi(bp, "crispy ", l = 7)) {
+            eroded = 3;
+            very = 0;
         } else if (!strncmpi(bp, "historic ", l = 9)) {
             ishistoric = 1;
         } else if (!strncmpi(bp, "diluted ", l = 8)) {
@@ -4160,7 +4185,7 @@ struct obj *no_wish;
 
     /* set eroded and erodeproof */
     if (erosion_matters(otmp)) {
-        if (eroded && (is_flammable(otmp) || is_rustprone(otmp)))
+        if (eroded && (is_flammable(otmp) || is_cookable(otmp) || is_rustprone(otmp)))
             otmp->oeroded = eroded;
         if (eroded2 && (is_corrodeable(otmp) || is_rottable(otmp)))
             otmp->oeroded2 = eroded2;

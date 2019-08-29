@@ -5551,7 +5551,7 @@ boolean doit;
         add_herecmd_menuitem(win, dodrink, buf);
     }
     if (IS_FURNACE(typ)) {
-        add_herecmd_menuitem(win, dodrink, "Really drink from the furnace?");
+        add_herecmd_menuitem(win, dodrink, "Really drink from the furnace? There's lava in there.");
     }
     if (IS_FOUNTAIN(typ))
         Sprintf(buf, "Dip something into the %s",

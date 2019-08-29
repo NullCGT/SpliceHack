@@ -3648,6 +3648,8 @@ xchar x, y;
     } else if (obj->oclass == SCROLL_CLASS || obj->oclass == SPBOOK_CLASS) {
         if (obj->otyp == SCR_FIRE || obj->otyp == SPE_FIREBALL || obj->oartifact)
             return FALSE;
+        if (obj->otyp == EGG && obj->corpsenm == PM_PHOENIX)
+            return FALSE;
         if (obj->otyp == SPE_BOOK_OF_THE_DEAD) {
             if (in_sight)
                 pline("Smoke rises from %s.", the(xname(obj)));
@@ -3716,6 +3718,12 @@ xchar x, y;
        and books--let fire damage deal with them), cloth, leather, wood, bone
        unless it's inherently or explicitly fireproof or contains something;
        note: potions are glass so fall through to fire_damage() and boil */
+    if (obj->otyp == EGG && obj->corpsenm == PM_PHOENIX) {
+        if (cansee(x, y))
+            You_see("%s begin to shudder...", doname(obj));
+        attach_egg_hatch_timeout(obj, 1L);
+        return FALSE;
+    }
     if (obj->material < DRAGON_HIDE
         && ocls != SCROLL_CLASS && ocls != SPBOOK_CLASS
         && objects[otyp].oc_oprop != FIRE_RES

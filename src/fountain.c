@@ -252,6 +252,53 @@ register struct obj *obj;
 }
 
 void
+cookfood(obj, furnace)
+register struct obj *obj;
+boolean furnace;
+{
+    boolean still_cook = FALSE;
+    /* corpse-specific effects */
+    switch(obj->corpsenm) {
+    case PM_WINTER_WOLF:
+        You("thoroughly defrost your %s.", doname(obj));
+        obj->corpsenm = PM_WOLF;
+        break;
+    case PM_PHOENIX:
+        if (furnace) {
+            blowupfurnace(u.ux, u.uy);
+        }
+        lava_damage(obj, u.ux, u.uy);
+        break;
+    case PM_GIANT_SKUNK:
+        pline("The %s explodes in your %s!", doname(obj), makeplural(body_part(HAND)));
+        create_gas_cloud(u.ux, u.uy, 2 + rn2(3), 3);
+        delobj(obj);
+        break;
+    case PM_HUNGER_HULK:
+        pline("Cooking this %s makes your %s growl!", body_part(STOMACH), doname(obj));
+        morehungry(5 + d(3, 4));
+        break;
+    case PM_COCKATRICE:
+    case PM_CHICKATRICE:
+        pline("Yum, fried chicken!");
+        feel_cockatrice(obj, TRUE);
+        still_cook = TRUE;
+        break;
+    case PM_COW:
+        pline("That's some good \'burg.");
+        still_cook = TRUE;
+        break;
+    case PM_BROWN_MOLD:
+        if (furnace)
+            pline("Mold covers the furnace!");
+        else
+            pline("The %s reacts to the heat!", doname(obj));
+        revive_corpse(obj, TRUE);
+        break;
+    }
+}
+
+void
 drinkfountain()
 {
     /* What happens when you drink from a fountain? */

@@ -1513,7 +1513,11 @@ const char *mesg;
 
         tin->dknown = tin->known = 1;
         cprefx(mnum);
-        cpostfx(mnum, 1);
+        /* Tins have variable levels of preparedness */
+        if (r == ROTTEN_TIN || r == HOMEMADE_TIN)
+            cpostfx(mnum, 0);
+        else
+            cpostfx(mnum, 1 + rn2(3));
 
         /* charge for one at pre-eating cost */
         tin = costly_tin(COST_OPEN);

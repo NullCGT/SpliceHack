@@ -1123,7 +1123,7 @@ register struct obj *otmp;
     		    else if (!Deaf && flags.verbose)
           			You("hear an awful gobbling noise!");
   		      mtmp->meating = 2;
-            mon_givit(mtmp, &mons[otmp->corpsenm]);
+            mon_givit(mtmp, &mons[otmp->corpsenm], otmp->oeroded);
   		      delobj(otmp);
   		      break; /* only eat one at a time... */
   		  }
@@ -1157,7 +1157,7 @@ register struct obj *otmp;
                   distant_name(otmp,doname));
             else if (!Deaf && flags.verbose)
                 You("hear an unsettling writhing noise.");
-            mon_givit(mtmp, &mons[otmp->corpsenm]);
+            mon_givit(mtmp, &mons[otmp->corpsenm], 0);
             if (mtmp->data == &mons[PM_ZUGGOTOMOY])
                 makemon(&mons[PM_ASPECT_OF_ZUGGOTOMOY], mtmp->mx, mtmp->my, NO_MM_FLAGS);
             else
@@ -1247,7 +1247,7 @@ struct monst *mtmp;
                     && !strcmpi(OBJ_DESCR(objects[otmp->otyp]), "YUM YUM"))
                     pline("Yum%c", otmp->blessed ? '!' : '.');
                 if (otmp->otyp == CORPSE)
-                    mon_givit(mtmp, &mons[otmp->corpsenm]);
+                    mon_givit(mtmp, &mons[otmp->corpsenm], otmp->oeroded);
             } else {
                 if (flags.verbose)
                     You_hear("a slurping sound.");

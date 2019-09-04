@@ -529,13 +529,13 @@ boolean devour;
             mtmp->perminvis = 1;
     }
     if (obj->otyp == CORPSE)
-        mon_givit(mtmp, &mons[obj->corpsenm]);
+        mon_givit(mtmp, &mons[obj->corpsenm], obj->oeroded);
     return 1;
 }
 
 /* Maybe give an intrinsic to a monster from eating a corpse that confers it. */
 void
-mon_givit(mtmp, ptr)
+mon_givit(mtmp, ptr, cooking)
 struct monst* mtmp;
 struct permonst* ptr;
 {
@@ -544,7 +544,7 @@ struct permonst* ptr;
     const char* msg = NULL;
     unsigned long intrinsic = 0; /* MR_* constant */
 
-    if (!should_givit(prop, ptr))
+    if (!should_givit(prop, ptr, cooking))
         return; /* failed die roll */
 
     /* Pets don't have all the fields that the hero does, so they can't get all

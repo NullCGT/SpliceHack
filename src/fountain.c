@@ -14,6 +14,7 @@ STATIC_DCL void NDECL(dowaternymph);
 STATIC_PTR void FDECL(gush, (int, int, genericptr_t));
 STATIC_DCL void NDECL(dofindgem);
 STATIC_DCL void FDECL(blowupfurnace, (int, int));
+STATIC_DCL boolean FDECL(cookeffects, (struct obj *, BOOLEAN_P));
 
 /* used when trying to dip in or drink from fountain or sink or pool while
    levitating above it, or when trying to move downwards in that state */
@@ -233,30 +234,85 @@ register struct obj *obj;
             bless(obj);
             break;
         case 4:
-        case 5:
-        case 6:
+            if (!Blind)
+                pline("%s flickers with purple light.", Doname2(obj));
+            else
+                pline("%s shudders slightly in your grip.", Doname2(obj));
             obj->oerodeproof = 1;
             break;
-        case 7:
+        case 5:
             blowupfurnace(u.ux, u.uy);
             break;
-        case 8: /* Strange feeling */
-            pline("A strange tingling runs up your %s.", body_part(ARM));
+        case 6: /* Strange feeling */
+            pline("An unsettling tingling runs up your %s.", body_part(ARM));
             break;
-        case 9: /* Strange feeling */
+        case 7: /* Strange feeling */
             You_feel("a sudden flare of heat.");
+            break;
+        default:
+            pline("The lava in the furnace bubbles.");
             break;
     }
     lava_damage(obj, u.ux, u.uy);
     update_inventory();
 }
 
-void
-cookfood(obj, furnace)
+static const char *const cooking_verbs[] = {
+    "saute", "flambeau", "stir fry",   "fry",
+    "boil",  "steam",    "grill",    "roast",
+};
+
+static NEARDATA const char cookables[] = { FOOD_CLASS, 0 };
+
+int
+docook()
+{
+    
+    register struct obj *obj;
+    char qbuf[QBUFSZ];
+    int chance;
+    uchar here;
+    boolean furnace;
+
+    chance = 100;
+    furnace = TRUE; /* Placeholder */
+    /* Find cookables */
+    if (!(obj = getobj(cookables, "cook")))
+        return 0;
+    /* If it isn't cookable, return. */
+    if (!is_cookable(obj)) {
+        You("can't cook that!");
+        return 0;
+    }
+
+    here = levl[u.ux][u.uy].typ;
+    if (IS_FURNACE(here)) {
+        
+    } else if (is_lava(here)) {
+
+    } else {
+        
+    }
+
+    /*  */
+    if (cookeffects(obj, furnace))
+        return 0;
+    if (P_SKILL(P_COOKING) == P_EXPERT) {
+        You("%s the %s", cooking_verbs[rn2(SIZE(cooking_verbs))], doname(obj));
+    } else { 
+        You("cook the %s.", doname(obj));
+    }
+    /* Cooking takes creativity! */
+    exercise(A_INT, TRUE);
+    return 1;
+}
+
+STATIC_OVL boolean
+cookeffects(obj, furnace)
 register struct obj *obj;
 boolean furnace;
 {
-    boolean still_cook = FALSE;
+    boolean stop_cook = TRUE;
     /* corpse-specific effects */
     switch(obj->corpsenm) {
     case PM_WINTER_WOLF:
@@ -267,11 +323,13 @@ boolean furnace;
         if (furnace) {
             blowupfurnace(u.ux, u.uy);
         }
+        exercise(A_INT, FALSE);
         lava_damage(obj, u.ux, u.uy);
         break;
     case PM_GIANT_SKUNK:
         pline("The %s explodes in your %s!", doname(obj), makeplural(body_part(HAND)));
         create_gas_cloud(u.ux, u.uy, 2 + rn2(3), 3);
+        exercise(A_INT, FALSE);
         delobj(obj);
         break;
     case PM_HUNGER_HULK:
@@ -282,20 +340,25 @@ boolean furnace;
     case PM_CHICKATRICE:
         pline("Yum, fried chicken!");
         feel_cockatrice(obj, TRUE);
-        still_cook = TRUE;
+        stop_cook = FALSE;
         break;
     case PM_COW:
         pline("That's some good \'burg.");
-        still_cook = TRUE;
+        stop_cook = FALSE;
         break;
     case PM_BROWN_MOLD:
         if (furnace)
             pline("Mold covers the furnace!");
         else
             pline("The %s reacts to the heat!", doname(obj));
+        exercise(A_INT, FALSE);
         revive_corpse(obj, TRUE);
         break;
+    default:
+        stop_cook = FALSE;
+        break;
     }
+    return stop_cook;
 }
 
 void

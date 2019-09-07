@@ -64,7 +64,10 @@ enum p_skills {
     P_TWO_WEAPON_COMBAT  = 37, /* pair of weapons, one in each hand */
     P_RIDING             = 38, /* How well you control your steed */
 
-    P_NUM_SKILLS         = 39
+    /* Other skills */
+    P_COOKING            = 39,
+
+    P_NUM_SKILLS         = 40
 };
 
 #define P_MARTIAL_ARTS P_BARE_HANDED_COMBAT /* Role distinguishes */

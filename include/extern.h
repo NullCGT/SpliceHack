@@ -883,6 +883,7 @@ E void FDECL(gush, (int, int, genericptr_t));
 #endif
 E void FDECL(dryup, (XCHAR_P, XCHAR_P, BOOLEAN_P));
 E void NDECL(drinkfountain);
+E int NDECL(docook);
 E void FDECL(dipfountain, (struct obj *));
 E void FDECL(breakfurnace, (int, int));
 E void FDECL(breaksink, (int, int));

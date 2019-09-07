@@ -1923,7 +1923,7 @@ struct obj *corpse;
 boolean moldy;
 {
     struct monst *mtmp, *mcarry;
-    boolean is_uwep, chewed;
+    boolean is_uwep, chewed, cooked;
     xchar where;
     char cname[BUFSZ];
     struct obj *container = (struct obj *) 0;
@@ -1932,8 +1932,12 @@ boolean moldy;
     where = corpse->where;
     is_uwep = (corpse == uwep);
     chewed = (corpse->oeaten != 0);
+    cooked = (corpse->oeroded != 0);
     Strcpy(cname, corpse_xname(corpse,
                                chewed ? "bite-covered" : (const char *) 0,
+                               CXN_SINGULAR));
+    Strcpy(cname, corpse_xname(corpse,
+                               chewed ? "cooked" : (const char *) 0,
                                CXN_SINGULAR));
     mcarry = (where == OBJ_MINVENT) ? corpse->ocarry : 0;
 
@@ -2049,6 +2053,10 @@ long timeout UNUSED;
     struct permonst *mptr = &mons[body->corpsenm];
     struct monst *mtmp;
     xchar x, y;
+
+    /* Trolls killed via fire cannot regenerate themselves. */
+    if (mptr->mlet == S_TROLL && body->oeroded)
+        return;
 
     /* corpse will revive somewhere else if there is a monster in the way;
        Riders get a chance to try to bump the obstacle out of their way */

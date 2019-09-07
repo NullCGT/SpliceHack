@@ -1848,6 +1848,12 @@ const struct def_skill *class_skill;
     /* Roles that start with a horse know how to ride it */
     if (urole.petnum == PM_PONY)
         P_SKILL(P_RIDING) = P_BASIC;
+    
+    /* All merfolk can use tridents */
+    if (Race_if(PM_MERFOLK)) {
+        P_SKILL(P_TRIDENT) = P_BASIC;
+        P_MAX_SKILL(P_TRIDENT) = P_EXPERT;
+    }
 
     /*
      * Make sure we haven't missed setting the max on a skill

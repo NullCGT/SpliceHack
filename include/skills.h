@@ -81,6 +81,9 @@ enum p_skills {
 #define P_LAST_H_TO_H P_RIDING
 #define P_FIRST_H_TO_H P_BARE_HANDED_COMBAT
 
+#define P_LAST_MUNDANE P_COOKING
+#define P_FIRST_MUNDANE P_COOKING
+
 /* These roles qualify for a martial arts bonus */
 #define martial_bonus() (Role_if(PM_SAMURAI) || Role_if(PM_MONK))
 

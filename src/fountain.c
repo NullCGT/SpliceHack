@@ -269,13 +269,25 @@ docook()
 {
     
     register struct obj *obj;
-    char qbuf[QBUFSZ];
-    int chance;
-    uchar here;
-    boolean furnace;
+    /* register struct obj *heat; */
+    boolean furnace, source = FALSE;
 
-    chance = 100;
     furnace = TRUE; /* Placeholder */
+
+    if (IS_FURNACE(levl[u.ux][u.uy].typ)) {
+        furnace = TRUE;
+        source = TRUE;
+    } else if (is_lava(u.ux, u.uy)) {
+        source = TRUE;
+    }/* else if((heat=getobj("use as a heat source"))) {
+       source = TRUE; 
+    } */
+
+    if (!source) {
+        You("have no source of heat to cook with.");
+        return 0;
+    }
+
     /* Find cookables */
     if (!(obj = getobj(cookables, "cook")))
         return 0;
@@ -284,24 +296,27 @@ docook()
         You("can't cook that!");
         return 0;
     }
-
-    here = levl[u.ux][u.uy].typ;
-    if (IS_FURNACE(here)) {
-        
-    } else if (is_lava(here)) {
-
-    } else {
-        
+    /* Don't let players overcook food too much. */
+    if (obj->oeroded >= 3) {
+        pline("That is already very well done.");
+        return 0;
     }
 
-    /*  */
+    /* Check for special effects of cooking */
     if (cookeffects(obj, furnace))
         return 0;
-    if (P_SKILL(P_COOKING) == P_EXPERT) {
-        You("%s the %s", cooking_verbs[rn2(SIZE(cooking_verbs))], doname(obj));
+    
+    if (!rn2(1 + P_SKILL(P_COOKING))) {
+        You("accidentally burn %s!", doname(obj));
+        obj->oeroded = min(3, obj->oeroded + 2 + rn2(2));
+    } else if (P_SKILL(P_COOKING) == P_EXPERT) {
+        You("%s %s", cooking_verbs[rn2(SIZE(cooking_verbs))], doname(obj));
+        obj->oeroded = min(3, obj->oeroded + 1);
     } else { 
-        You("cook the %s.", doname(obj));
+        You("cook %s.", doname(obj));
+        obj->oeroded = min(3, obj->oeroded + 1);
     }
+    use_skill(P_COOKING, 1);
     /* Cooking takes creativity! */
     exercise(A_INT, TRUE);
     return 1;

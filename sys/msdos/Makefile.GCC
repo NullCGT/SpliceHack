@@ -1002,15 +1002,11 @@ $(DAT)/engrave:	     $(O)utility.tag    $(DAT)/engrave.txt
 $(DAT)/epitaph:	     $(O)utility.tag    $(DAT)/epitaph.txt
 	@$(subst /,\,$(U)makedefs.exe -s)
 
-<<<<<<< HEAD
 $(DAT)/splicetips:	     $(O)utility.tag    $(DAT)/splicetips.txt
 	@$(subst /,\,$(U)makedefs.exe -s)
 
-$(O)sp_lev.tag: $(O)utility.tag $(DAT)/bigroom.des  $(DAT)/castle.des \
-=======
 $(O)sp_lev.tag: $(O)utility.tag \
 	$(DAT)/bigroom.des  $(DAT)/castle.des \
->>>>>>> a607ea2b7f2a24ba8c8f9ae2ace27bf922f4656f
 	$(DAT)/endgame.des $(DAT)/gehennom.des $(DAT)/knox.des \
 	$(DAT)/medusa.des  $(DAT)/oracle.des   $(DAT)/tower.des \
 	$(DAT)/yendor.des  $(DAT)/arch.des     $(DAT)/barb.des \

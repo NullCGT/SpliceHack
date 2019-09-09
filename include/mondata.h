@@ -134,6 +134,13 @@
     ((ptr) == &mons[PM_BAT] || (ptr) == &mons[PM_GIANT_BAT] \
      || (ptr) == &mons[PM_VAMPIRE_BAT])
 #define is_bird(ptr) ((ptr)->mlet == S_BAT && !is_bat(ptr))
+# define is_rat(ptr)		((ptr) == &mons[PM_SEWER_RAT] || \
+				 (ptr) == &mons[PM_GIANT_RAT] || \
+				 (ptr) == &mons[PM_RABID_RAT] || \
+				 (ptr) == &mons[PM_ENORMOUS_RAT] || \
+				 (ptr) == &mons[PM_PACKRAT] || \
+				 (ptr) == &mons[PM_HELLRAT] || \
+				 (ptr) == &mons[PM_RODENT_OF_UNUSUAL_SIZE])
 #define is_giant(ptr) (((ptr)->mhflags & MH_GIANT) != 0L)
 #define is_marsupial(ptr) ((ptr) == &mons[PM_WALLABY] || \
                           (ptr) == &mons[PM_WALLAROO] || \

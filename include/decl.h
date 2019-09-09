@@ -209,6 +209,7 @@ E NEARDATA char dogname[];
 E NEARDATA char dragonname[];
 E NEARDATA char catname[];
 E NEARDATA char horsename[];
+E NEARDATA char ratname[];
 E char preferred_pet;
 E const char *occtxt; /* defined when occupation != NULL */
 E const char *nomovemsg;

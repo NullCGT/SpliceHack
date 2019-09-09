@@ -384,6 +384,8 @@ static struct Comp_Opt {
       DISP_IN_GAME },
     { "race", "your starting race (e.g., Human, Elf)", PL_CSIZ,
       DISP_IN_GAME },
+    { "ratname",  "the name of your (first) rat (e.g., ratname:Squeak)",
+	  PL_PSIZ, DISP_IN_GAME },
     { "role", "your starting role (e.g., Barbarian, Valkyrie)", PL_CSIZ,
       DISP_IN_GAME },
     { "runmode", "display frequency when `running' or `travelling'",
@@ -2306,6 +2308,14 @@ boolean tinitial, tfrom_file;
         }
         return retval;
     }
+
+	fullname = "ratname";
+	if (match_optname(opts, fullname, 3, TRUE)) {
+		if (negated) bad_negation(fullname, FALSE);
+		else if ((op = string_for_env_opt(fullname, opts, FALSE)) != 0)
+			nmcpy(ratname, op, PL_PSIZ);
+		return retval;
+	}
 
     fullname = "number_pad";
     if (match_optname(opts, fullname, 10, TRUE)) {
@@ -5650,6 +5660,8 @@ char *buf;
         Sprintf(buf, "%s", dogname[0] ? dogname : none);
     else if (!strcmp(optname, "dragonname"))
         Sprintf(buf, "%s", dragonname[0] ? dragonname : none);
+    else if (!strcmp(optname, "ratname"))
+		Sprintf(buf, "%s", ratname[0] ? catname : none );
     else if (!strcmp(optname, "dungeon"))
         Sprintf(buf, "%s", to_be_done);
     else if (!strcmp(optname, "effects"))

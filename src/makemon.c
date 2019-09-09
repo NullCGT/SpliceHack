@@ -234,6 +234,7 @@ register struct monst *mtmp;
             case PM_LIEUTENANT:
                 w1 = rn2(2) ? BROADSWORD : LONG_SWORD;
                 break;
+            case PM_PRISON_GUARD:
             case PM_CAPTAIN:
             case PM_WATCH_CAPTAIN:
                 w1 = rn2(2) ? LONG_SWORD : SABER;
@@ -574,6 +575,11 @@ register struct monst *mtmp;
        			(void)mongets(mtmp, CRYSTAL_PLATE_MAIL);
        			(void)mongets(mtmp, GLOVES);
        			(void)mongets(mtmp, HIGH_BOOTS);
+        } else if (mm == PM_MINER) {
+		    (void)mongets(mtmp, PICK_AXE);
+		    otmp = mksobj(LANTERN, TRUE, FALSE);
+			(void) mpickobj(mtmp, otmp);
+            begin_burn(otmp, FALSE);
         }
         break;
     case S_KOP:
@@ -856,6 +862,9 @@ register struct monst *mtmp;
             switch (monsndx(ptr)) {
             case PM_GUARD:
                 mac = -1;
+                break;
+            case PM_PRISON_GUARD:
+                mac = -2;
                 break;
             case PM_SOLDIER:
                 mac = 3;

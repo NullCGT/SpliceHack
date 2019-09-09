@@ -766,7 +766,7 @@ char *enterstring;
                       NOTANGRY(shkp) ? "is hesitant" : "refuses",
                       tool, plur(cnt));
             should_block = TRUE;
-        } else if (eshkp->pbanned) {
+        } else if (eshkp->pbanned && !ANGRY(shkp)) {
             verbalize("I don't sell to your kind here.");
             should_block = TRUE;
         } else if (u.usteed) {
@@ -4055,7 +4055,7 @@ struct monst *shkp;
             if (uondoor) {
                 badinv =
                     (!Is_blackmarket(&u.uz) && (carrying(PICK_AXE)
-                     || carrying(DWARVISH_MATTOCK || eshkp->pbanned)))
+                     || carrying(DWARVISH_MATTOCK) || eshkp->pbanned))
                      || (Fast && (sobj_at(PICK_AXE, u.ux, u.uy)
                                   || sobj_at(DWARVISH_MATTOCK, u.ux, u.uy)));
                 if (satdoor && badinv)

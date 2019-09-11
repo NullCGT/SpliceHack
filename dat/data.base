@@ -116,6 +116,9 @@ role car
 	You are a cartomancer. You gain power from spell cards, and know many
 	techniques that rely on the manipulation of them. Your enemies may try to
 	play cards against you, however.
+role con
+	You are a convict. Your stomach is empty, you are chained to an iron ball,
+	and your best friends are rats.
 role dra
 	You are a dragonmaster. You are capable of taming dragons, but the thought of
 	wearing their scales fills you with shame.

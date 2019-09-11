@@ -110,6 +110,9 @@
 #NAO 3.4.1
 - Highlight Hidden Stairs Patch
 
+# Karl Garrison
+- Convict Patch
+
 ################
 # Other Thanks #
 ################

@@ -73,6 +73,11 @@ static struct trobj Dragonmaster[] = {
     { TRIPE_RATION, 0, FOOD_CLASS, 2, 0 },
     { 0, 0, 0, 0, 0 }
 };
+static struct trobj Convict[] = {
+	{ ROCK, 0, GEM_CLASS, 1, 0 },
+	{ STRIPED_SHIRT, 0, ARMOR_CLASS, 1, 0 },
+	{ 0, 0, 0, 0, 0 }
+};
 static struct trobj Healer[] = {
     { SCALPEL, 0, WEAPON_CLASS, 1, UNDEF_BLESS },
     { GLOVES, 1, ARMOR_CLASS, 1, UNDEF_BLESS },
@@ -371,6 +376,24 @@ static const struct def_skill Skill_C[] = {
     { P_BOOMERANG, P_EXPERT },
     { P_UNICORN_HORN, P_BASIC },
     { P_BARE_HANDED_COMBAT, P_MASTER },
+    { P_NONE, 0 }
+};
+static const struct def_skill Skill_Con[] = {
+    { P_DAGGER, P_SKILLED },		
+    { P_KNIFE,  P_EXPERT },
+    { P_HAMMER, P_SKILLED },		
+    { P_PICK_AXE, P_EXPERT },
+    { P_CLUB, P_EXPERT },		    
+    { P_MACE, P_BASIC },
+    { P_DART, P_SKILLED },		    
+    { P_FLAIL, P_EXPERT },
+    { P_SHORT_SWORD, P_BASIC },		
+    { P_SLING, P_SKILLED },
+    { P_ATTACK_SPELL, P_BASIC },	
+    { P_ESCAPE_SPELL, P_EXPERT },
+    { P_TWO_WEAPON_COMBAT, P_SKILLED },
+    { P_BARE_HANDED_COMBAT, P_SKILLED },
+    { P_COOKING, P_SKILLED },
     { P_NONE, 0 }
 };
 static const struct def_skill Skill_D[] = {
@@ -850,6 +873,17 @@ u_init()
         knows_class(ARMOR_CLASS);
         skill_init(Skill_D);
         break;
+    case PM_CONVICT:
+        ini_inv(Convict);
+        knows_object(SKELETON_KEY);
+        knows_object(GRAPPLING_HOOK);
+        skill_init(Skill_Con);
+        u.uhunger = 200;  /* On the verge of hungry */
+    	u.ualignbase[A_CURRENT] = u.ualignbase[A_ORIGINAL] =
+        u.ualign.type = A_CHAOTIC; /* Override racial alignment */
+        urace.hatemask |= urace.lovemask;   /* Hated by the race's allies */
+        urace.lovemask = 0; /* Convicts are pariahs of their race */
+        break;
     case PM_HEALER:
         u.umoney0 = rn1(1000, 1001);
         ini_inv(Healer);
@@ -1028,7 +1062,7 @@ u_init()
 
     case PM_ORC:
         /* compensate for generally inferior equipment */
-        if (!Role_if(PM_WIZARD))
+        if (!Role_if(PM_WIZARD) && !Role_if(PM_CONVICT))
             ini_inv(Xtra_food);
         /* Orcs can recognize all orcish objects */
         knows_object(ORCISH_SHORT_SWORD);
@@ -1174,6 +1208,9 @@ int otyp;
         break;
     case PM_DRAGONMASTER:
         skills = Skill_D;
+        break;
+    case PM_CONVICT:
+        skills = Skill_Con;
         break;
     case PM_HEALER:
         skills = Skill_H;
@@ -1374,6 +1411,9 @@ register struct trobj *trop;
             } else if (obj->oclass == GEM_CLASS && is_graystone(obj)
                        && obj->otyp != FLINT) {
                 obj->quan = 1L;
+            }
+            if (obj->otyp == STRIPED_SHIRT ) {
+                obj->cursed = TRUE;
             }
             if (trop->trspe != UNDEF_SPE)
                 obj->spe = trop->trspe;

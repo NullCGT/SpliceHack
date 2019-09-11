@@ -11,6 +11,10 @@ Items
 - Gold Dragon Scale Mail
     - Both of these items shed light when worn.
 
+Roles
+- Added the Convict Patch, originally written by Karl Garrison. The
+  convict role is now fully 3.6.x compatible.
+
 Features
 - Phoenix eggs hatch instantly when exposed to lava, and are not damaged
   by fire.

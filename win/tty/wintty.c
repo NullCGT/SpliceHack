@@ -1088,7 +1088,8 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
     anything any;
     int i;
     boolean role_ok;
-    char thisch, lastch = '\0', rolenamebuf[50];
+    char lastch = '\0', rolenamebuf[50];
+    char thisch = 'a';
 
     any = zeroany; /* zero out all bits */
     for (i = 0; roles[i].name.m; i++) {
@@ -1099,9 +1100,6 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
             any.a_int = i + 1;
         else
             any.a_string = roles[i].name.m;
-        thisch = lowc(*roles[i].name.m);
-        if (thisch == lastch)
-            thisch = highc(thisch);
         Strcpy(rolenamebuf, roles[i].name.m);
         if (roles[i].name.f) {
             /* role has distinct name for female (C,P) */
@@ -1130,6 +1128,9 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
         add_menu(win, NO_GLYPH, &any, thisch, 0, ATR_NONE, an(rolenamebuf),
                  (!filtering && !role_ok) ? MENU_SELECTED : MENU_UNSELECTED);
         lastch = thisch;
+        thisch++;
+        if (thisch == 'q')
+            thisch = 'r';
     }
 }
 

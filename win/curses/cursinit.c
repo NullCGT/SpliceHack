@@ -836,20 +836,23 @@ curses_character_dialog(const char **choices, const char *prompt)
     winid wid = curses_get_wid(NHW_MENU);
 
     identifier.a_void = 0;
+    curletter = 'a';
     curses_start_menu(wid);
 
     for (count = 0; choices[count]; count++) {
-        curletter = tolower(choices[count][0]);
-        for (count2 = 0; count2 < count; count2++) {
-            if (curletter == used_letters[count2]) {
-                curletter = toupper(curletter);
-            }
-        }
+        if (curletter == 'q')
+            curletter++;
 
         identifier.a_int = (count + 1); /* Must be non-zero */
         curses_add_menu(wid, NO_GLYPH, &identifier, curletter, 0,
                         A_NORMAL, choices[count], FALSE);
         used_letters[count] = curletter;
+        curletter++;
+        for (count2 = 0; count2 < count; count2++) {
+            if (curletter == used_letters[count2]) {
+                curletter = toupper(curletter);
+            }
+        }
     }
 
     /* Random Selection */

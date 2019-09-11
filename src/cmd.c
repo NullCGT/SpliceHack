@@ -3438,6 +3438,7 @@ struct ext_func_tab extcmdlist[] = {
     { 'c', "close", "close a door", doclose },
     { M('C'), "conduct", "list voluntary challenges you have maintained",
             doconduct, IFBURIED | AUTOCOMPLETE },
+    { M('F'), "cook", "cook food", docook, AUTOCOMPLETE },
     { M('d'), "dip", "dip an object into something", dodip, AUTOCOMPLETE },
     { '>', "down", "go down a staircase", dodown },
     { 'd', "drop", "drop an item", dodrop },
@@ -5551,7 +5552,7 @@ boolean doit;
         add_herecmd_menuitem(win, dodrink, buf);
     }
     if (IS_FURNACE(typ)) {
-        add_herecmd_menuitem(win, dodrink, "Really drink from the furnace?");
+        add_herecmd_menuitem(win, dodrink, "Really drink from the furnace? There's lava in there.");
     }
     if (IS_FOUNTAIN(typ))
         Sprintf(buf, "Dip something into the %s",
@@ -5676,9 +5677,11 @@ int x, y, mod;
 
             /* here */
             if (IS_FOUNTAIN(levl[u.ux][u.uy].typ)
-                || IS_SINK(levl[u.ux][u.uy].typ)
-                || IS_FURNACE(levl[u.ux][u.uy].typ)) {
+                || IS_SINK(levl[u.ux][u.uy].typ)) {
                 cmd[0] = cmd_from_func(mod == CLICK_1 ? dodrink : dodip);
+                return cmd;
+            } else if (IS_FURNACE(levl[u.ux][u.uy].typ)) {
+                cmd[0] = cmd_from_func(mod == CLICK_1 ? docook : dodip);
                 return cmd;
             } else if (IS_THRONE(levl[u.ux][u.uy].typ)) {
                 cmd[0] = cmd_from_func(dosit);

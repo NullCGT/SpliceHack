@@ -21,8 +21,8 @@ STATIC_DCL struct obj *FDECL(touchfood, (struct obj *));
 STATIC_DCL void NDECL(do_reset_eat);
 STATIC_DCL void FDECL(done_eating, (BOOLEAN_P));
 STATIC_DCL void FDECL(cprefx, (int));
-STATIC_DCL void FDECL(givit, (int, struct permonst *));
-STATIC_DCL void FDECL(cpostfx, (int));
+STATIC_DCL void FDECL(givit, (int, struct permonst *, int));
+STATIC_DCL void FDECL(cpostfx, (int, int));
 STATIC_DCL void FDECL(consume_tin, (const char *));
 STATIC_DCL void FDECL(start_tin, (struct obj *));
 STATIC_DCL int FDECL(eatcorpse, (struct obj *));
@@ -338,6 +338,20 @@ struct obj *otmp;
         if (maybe_polyd(is_dwarf(youmonst.data), Race_if(PM_DWARF)))
             nut += nut / 6; /* 600 -> 700 */
     }
+
+    /* Handle cooked corpses */
+    switch(otmp->oeroded) {
+    case 1:
+        nut = nut * 1.2;
+        break;
+    case 2:
+        nut = nut * 0.6;
+        break;
+    case 3:
+        nut = nut * 0.4;
+        break;
+    }
+
     return nut;
 }
 
@@ -470,7 +484,7 @@ boolean message;
         You("finish eating %s.", food_xname(piece, TRUE));
 
     if (piece->otyp == CORPSE || piece->globby)
-        cpostfx(piece->corpsenm);
+        cpostfx(piece->corpsenm, piece->oeroded);
     else
         fpostfx(piece);
 
@@ -877,14 +891,14 @@ remresists()
  * and what type of intrinsic it is trying to give you.
  */
 STATIC_OVL void
-givit(type, ptr)
+givit(type, ptr, cooking)
 int type;
 register struct permonst *ptr;
 {
 
     debugpline1("Attempting to give intrinsic %d", type);
 
-    if (!should_givit(type, ptr))
+    if (!should_givit(type, ptr, cooking))
         return; /* failed die roll */
 
     switch (type) {
@@ -970,7 +984,7 @@ register struct permonst *ptr;
  * intrinsic it is trying to give you.
  */
 boolean
-should_givit(type, ptr)
+should_givit(type, ptr, cooking)
 int type;
 struct permonst * ptr;
 {
@@ -1004,6 +1018,14 @@ struct permonst * ptr;
         chance = 15;
         break;
     }
+
+    /* Cooking a corpse a increases the chance of an intrinsic.
+       Overcooking it lowers the chance. */
+    if (cooking == 1)
+        chance *= 0.8;
+    else
+        chance += cooking * 15;
+        
 
     return (ptr->mlevel > rn2(chance));
 }
@@ -1071,8 +1093,9 @@ struct permonst * ptr;
 
 /* called after completely consuming a corpse */
 STATIC_OVL void
-cpostfx(pm)
+cpostfx(pm, cooking)
 int pm;
+int cooking;
 {
     int tmp = 0;
     int catch_lycanthropy = NON_PM;
@@ -1269,7 +1292,7 @@ int pm;
         if (tmp == -1)
             gainstr((struct obj *) 0, 0, TRUE);
         else if (tmp > 0)
-            givit(tmp, ptr);
+            givit(tmp, ptr, cooking);
     } /* check_intrinsics */
 
     if (catch_lycanthropy >= LOW_PM) {
@@ -1490,7 +1513,11 @@ const char *mesg;
 
         tin->dknown = tin->known = 1;
         cprefx(mnum);
-        cpostfx(mnum);
+        /* Tins have variable levels of preparedness */
+        if (r == ROTTEN_TIN || r == HOMEMADE_TIN)
+            cpostfx(mnum, 0);
+        else
+            cpostfx(mnum, 1 + rn2(3));
 
         /* charge for one at pre-eating cost */
         tin = costly_tin(COST_OPEN);

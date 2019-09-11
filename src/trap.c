@@ -149,9 +149,9 @@ int type;
 int ef_flags;
 {
     static NEARDATA const char
-        *const action[] = { "smoulder", "rust", "rot", "corrode" },
-        *const msg[] = { "burnt", "rusted", "rotten", "corroded" },
-        *const bythe[] = { "heat", "oxidation", "decay", "corrosion" };
+        *const action[] = { "smoulder", "rust", "rot", "corrode", "sizzle" },
+        *const msg[] = { "burnt", "rusted", "rotten", "corroded", "carbonised" },
+        *const bythe[] = { "heat", "oxidation", "decay", "corrosion", "heat" };
     boolean vulnerable = FALSE, is_primary = TRUE,
             check_grease = (ef_flags & EF_GREASE) ? TRUE : FALSE,
             print = (ef_flags & EF_VERBOSE) ? TRUE : FALSE,
@@ -169,8 +169,10 @@ int ef_flags;
     visobj = !victim && cansee(bhitpos.x, bhitpos.y);
 
     switch (type) {
+    case ERODE_COOK:
     case ERODE_BURN:
-        vulnerable = is_flammable(otmp);
+        /* A bit of a kludge, but fire cooks things, right? */
+        vulnerable = is_flammable(otmp) || is_cookable(otmp);
         check_grease = FALSE;
         cost_type = COST_BURN;
         break;
@@ -3645,6 +3647,9 @@ xchar x, y;
           *     awful luck (Luck<-4):  100%
           */
         return FALSE;
+    } else if (obj->otyp == EGG && obj->corpsenm == PM_PHOENIX) {
+        pline("Wisps of smoke curl off of %s.", the(xname(obj)));
+        return FALSE;
     } else if (obj->oclass == SCROLL_CLASS || obj->oclass == SPBOOK_CLASS) {
         if (obj->otyp == SCR_FIRE || obj->otyp == SPE_FIREBALL || obj->oartifact)
             return FALSE;
@@ -3716,6 +3721,12 @@ xchar x, y;
        and books--let fire damage deal with them), cloth, leather, wood, bone
        unless it's inherently or explicitly fireproof or contains something;
        note: potions are glass so fall through to fire_damage() and boil */
+    if (obj->otyp == EGG && obj->corpsenm == PM_PHOENIX) {
+        if (cansee(x, y))
+            You_see("%s begin to shudder...", doname(obj));
+        attach_egg_hatch_timeout(obj, 1L);
+        return FALSE;
+    }
     if (obj->material < DRAGON_HIDE
         && ocls != SCROLL_CLASS && ocls != SPBOOK_CLASS
         && objects[otyp].oc_oprop != FIRE_RES

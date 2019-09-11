@@ -972,7 +972,7 @@ dodrink()
     if (IS_FOUNTAIN(levl[u.ux][u.uy].typ)
         /* not as low as floor level but similar restrictions apply */
         && can_reach_floor(FALSE)) {
-        if (yn("Drink from the fountain?") == 'y') {
+        if (yn("Drink from the fountain? Are you sure?") == 'y') {
             drinkfountain();
             return 1;
         }

@@ -551,7 +551,7 @@ E boolean FDECL(acceptable_pet_target, (struct monst*, struct monst*, BOOLEAN_P)
 E struct obj *FDECL(droppables, (struct monst *));
 E int FDECL(dog_nutrition, (struct monst *, struct obj *));
 E int FDECL(dog_eat, (struct monst *, struct obj *, int, int, BOOLEAN_P));
-E void FDECL(mon_givit, (struct monst *, struct permonst *));
+E void FDECL(mon_givit, (struct monst *, struct permonst *, int));
 E int FDECL(dog_move, (struct monst *, int));
 #ifdef USE_TRAMPOLI
 E void FDECL(wantdoor, (int, int, genericptr_t));
@@ -706,7 +706,7 @@ E void FDECL(eating_conducts, (struct permonst *));
 E int FDECL(eat_brains, (struct monst *, struct monst *, BOOLEAN_P, int *));
 E void NDECL(fix_petrification);
 E int FDECL(intrinsic_possible, (int, struct permonst *));
-E boolean FDECL(should_givit, (int, struct permonst *));
+E boolean FDECL(should_givit, (int, struct permonst *, int));
 E int FDECL(corpse_intrinsic, (struct permonst *));
 E void FDECL(consume_oeaten, (struct obj *, int));
 E boolean FDECL(maybe_finished_meal, (BOOLEAN_P));
@@ -883,6 +883,7 @@ E void FDECL(gush, (int, int, genericptr_t));
 #endif
 E void FDECL(dryup, (XCHAR_P, XCHAR_P, BOOLEAN_P));
 E void NDECL(drinkfountain);
+E int NDECL(docook);
 E void FDECL(dipfountain, (struct obj *));
 E void FDECL(breakfurnace, (int, int));
 E void FDECL(breaksink, (int, int));

@@ -91,9 +91,17 @@ struct objclass {
 #define is_corrodeable(otmp)                   \
     (otmp->material == COPPER || otmp->material == IRON)
 
+#define is_cookable(otmp)                                       \
+    ((otmp->material == VEGGY && otmp->otyp != PINCH_OF_CATNIP && \
+        otmp->otyp >= KELP_FROND && otmp->otyp <= CLOVE_OF_GARLIC) || \
+    (otmp->otyp == CORPSE && !amorphous(&mons[otmp->corpsenm]) && \
+                             !unsolid(&mons[otmp->corpsenm]) &&  \
+                             !is_undead(&mons[otmp->corpsenm]) && \
+                             !likes_fire(&mons[otmp->corpsenm])))
+
 #define is_damageable(otmp)                                        \
     (is_rustprone(otmp) || is_flammable(otmp) || is_rottable(otmp) \
-     || is_corrodeable(otmp))
+     || is_corrodeable(otmp) || is_cookable(otmp))
 
     /* 3 free bits */
 

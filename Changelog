@@ -11,6 +11,21 @@ Items
 - Gold Dragon Scale Mail
     - Both of these items shed light when worn.
 
+Features
+- Phoenix eggs hatch instantly when exposed to lava, and are not damaged
+  by fire.
+
+Cooking
+- Cooking is done through the extended #cook command.
+- Cooking uses the cooking skill. Raising this skill increases the chances
+  of successfully cooking a corpse. The cooking skill can be increased by
+  cooking food.
+- Cooking a corpse increases nutrition the chance to gain an intrinsic, but 
+  overcooking greatly reduces that chance and have lower nutrition.
+- Rotten and homemade tinned food is considered to be uncooked, but all
+  other tins found by the player are treated as having a random amount of
+  cooking.
+
                     Version 0.6.4: Broken Things
 
 Features

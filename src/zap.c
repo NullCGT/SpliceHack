@@ -5342,6 +5342,9 @@ int osym, dmgtyp;
             if (obj->otyp == GLOB_OF_GREEN_SLIME) {
                 dindx = 1; /* boil and explode */
                 dmg = (obj->owt + 19) / 20;
+            } else if (is_cookable(obj)) {
+                erode_obj(obj, NULL, ERODE_COOK, EF_VERBOSE | EF_PAY);
+                skip++;
             } else {
                 skip++;
             }

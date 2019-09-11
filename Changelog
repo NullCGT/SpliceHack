@@ -5,6 +5,17 @@
 Monsters
 - Gold Dragon
     - Sourced from Nephi's Gold Dragon Patch.
+
+Items
+- Ring of Sonic Resistance (Glass Ring)
+- Slice of Cake
+    - Cake takes a long time to eat, but it very filling. Cursed cake abuses 
+      dexterity, while blessed and uncursed cake heals ability damage.
+- Pineapple
+    - When thrown, pineapples are accurate and deal extra damage. Monsters
+      will attempt to throw them.
+- Cheese
+    - Ported from SLASH'EM. The food, to be specific. 
                     
 Items
 - Gold Dragon Scales
@@ -19,6 +30,11 @@ Roles
 Features
 - Phoenix eggs hatch instantly when exposed to lava, and are not damaged
   by fire.
+
+Fixes
+- Purple dragons breathe "A wave of pure sound" instead of merely breathing
+  sonic.
+- Switched to using aosdict's fix for object probabilities over 1000.
 
 Cooking
 - Cooking is done through the extended #cook command.

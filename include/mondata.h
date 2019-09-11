@@ -289,7 +289,8 @@
      ? (obj)->otyp == BANANA                                             \
      : ((ptr) == &mons[PM_KOALA])                                        \
       ? (obj)->otyp == EUCALYPTUS_LEAF                                   \
-       : ((is_domestic(ptr) || (is_rat(ptr) && Role_if(PM_CONVICT)))     \
+       : ((is_domestic(ptr) ||                                           \
+        (is_rat(ptr) && (Role_if(PM_CONVICT) || (obj)->otyp == CHEESE))) \
           && (obj)->oclass == FOOD_CLASS                                 \
           && ((ptr)->mlet != S_UNICORN                                   \
               || obj->material == VEGGY                                  \

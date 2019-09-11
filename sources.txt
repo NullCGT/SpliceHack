@@ -16,6 +16,7 @@
 - Other Minor QOL Changes
 - Code for SLASH'EM fungus growth.
 - Fixes to monster intrinsics.
+- Code for object probabilities
 
 #Biodiversity Patch
 - Umbral Hulk
@@ -66,6 +67,7 @@
     - Medical Kit and associated items
     - Potions of blood and vampire blood
     - Wand of create horde (nerfed)
+    - Cheese
   #Other
     - Drow Race
     - Techniques Code

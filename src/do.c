@@ -653,6 +653,8 @@ register struct obj *obj;
         case RIN_PSYCHIC_RESISTANCE:
             pline_The("sink glows purple for a moment.");
             break;
+        case RIN_SONIC_RESISTANCE:
+            pline_The("ring silently bounces down the drain.");
         case RIN_MEMORY:
             You("fondly remember the ring that you just lost.");
             break;

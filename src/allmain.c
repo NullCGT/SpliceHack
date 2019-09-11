@@ -730,7 +730,6 @@ boolean new_game; /* false => restoring an old game */
 {
     char buf[BUFSZ];
     char tipbuf[BUFSZ];
-    char tiptxt[BUFSZ];
     char ebuf[BUFSZ];
     char racebuf[BUFSZ];
     char rolebuf[BUFSZ];
@@ -788,11 +787,7 @@ boolean new_game; /* false => restoring an old game */
         }
         /* Display tip of the day */
         get_rnd_text(SPLICETIPSFILE, tipbuf, rn2_on_display_rng);
-        Sprintf(tiptxt, "Splicehack Tip of the Day: %s", tipbuf);
-        winid datawin = create_nhwindow(NHW_TEXT);
-        putstr(datawin, 0, tiptxt);
-        display_nhwindow(datawin, TRUE);
-        destroy_nhwindow(datawin);
+        pline("Splicehack Tip of the Day: %s", tipbuf);
     }
 }
 

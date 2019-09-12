@@ -35,6 +35,8 @@ Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing
   sonic.
 - Switched to using aosdict's fix for object probabilities over 1000.
+- Holographic Void Lily has correctly attributed effects, and no longer
+  relies on a massive kludge in order to function.
 
 Cooking
 - Cooking is done through the extended #cook command.

@@ -1885,6 +1885,9 @@ int atyp;
     case GOLD_DRAGON_SCALE_MAIL:
 	    case GOLD_DRAGON_SCALES:
 		return PM_GOLD_DRAGON;
+    case YELLOW_DRAGON_SCALE_MAIL:
+    case YELLOW_DRAGON_SCALES:
+        return PM_YELLOW_DRAGON;
     case RAZOR_DRAGON_SCALE_MAIL:
     case RAZOR_DRAGON_SCALES:
         return PM_RAZOR_DRAGON;
@@ -1900,9 +1903,6 @@ int atyp;
     case VOID_DRAGON_SCALE_MAIL:
     case VOID_DRAGON_SCALES:
         return PM_VOID_DRAGON;
-    case YELLOW_DRAGON_SCALE_MAIL:
-    case YELLOW_DRAGON_SCALES:
-        return PM_YELLOW_DRAGON;
     default:
         return -1;
     }

@@ -1561,7 +1561,7 @@ dotakeoff()
 
     count_worn_stuff(&otmp, FALSE);
     if (!Narmorpieces && !Naccessories) {
-        /* assert( GRAY_DRAGON_SCALES > YELLOW_DRAGON_SCALE_MAIL ); */
+        /* assert( GRAY_DRAGON_SCALES > VOID_DRAGON_SCALE_MAIL ); */
         if (uskin)
             pline_The("%s merged with your skin!",
                       uskin->otyp >= GRAY_DRAGON_SCALES

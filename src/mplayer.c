@@ -155,7 +155,7 @@ register boolean special;
 
         /* default equipment; much of it will be overridden below */
         weapon = !rn2(2) ? LONG_SWORD : rnd_class(SPEAR, BULLWHIP);
-        armor  = rnd_class(GRAY_DRAGON_SCALE_MAIL, YELLOW_DRAGON_SCALE_MAIL);
+        armor  = rnd_class(GRAY_DRAGON_SCALE_MAIL, VOID_DRAGON_SCALE_MAIL);
         cloak  = !rn2(8) ? STRANGE_OBJECT
                          : rnd_class(OILSKIN_CLOAK, CLOAK_OF_DISPLACEMENT);
         helm   = !rn2(8) ? STRANGE_OBJECT

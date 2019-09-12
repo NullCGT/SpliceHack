@@ -4682,6 +4682,25 @@ Z = (195, 195, 195)
   ....NHAAJJJHHJA.
   ........HHHHJA..
 }
+# tile 248 (yellow dragon)
+{
+  ......NNNHA.....
+  .....DHDHHHA....
+  ....NHHHHHHA....
+  ..DCHHH..HHA....
+  CHCHCD..NHHA....
+  HD.D...NHHA.....
+  ......ONHAAAAAA.
+  ....NONHAAAAAAAA
+  ..NOONHAJHHJAAA.
+  .NOOONHHHHHHJAA.
+  .NOOONHHHHHHHAA.
+  HHOONNHHHHHHHHA.
+  NH.ONHHOOHHJHJA.
+  NHAANH.AAHHAHHA.
+  ....NHAAJJJHHJA.
+  ........HHHHJA..
+}
 # tile 243 (ooze dragon)
 {
   ......GGGFA.....
@@ -4776,25 +4795,6 @@ Z = (195, 195, 195)
   AAQQAA.QQAAQAAQ.
   ....AAQQ...AAAQ.
   ........AAAAA...
-}
-# tile 248 (yellow dragon)
-{
-  ......NNNHA.....
-  .....DHDHHHA....
-  ....NHHHHHHA....
-  ..DCHHH..HHA....
-  CHCHCD..NHHA....
-  HD.D...NHHA.....
-  ......ONHAAAAAA.
-  ....NONHAAAAAAAA
-  ..NOONHAJHHJAAA.
-  .NOOONHHHHHHJAA.
-  .NOOONHHHHHHHAA.
-  HHOONNHHHHHHHHA.
-  NH.ONHHOOHHJHJA.
-  NHAANH.AAHHAHHA.
-  ....NHAAJJJHHJA.
-  ........HHHHJA..
 }
 # tile 249 (stalker)
 {

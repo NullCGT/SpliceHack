@@ -411,12 +411,12 @@ DRGN_ARMR("black dragon scale mail",   1, DISINT_RES, 1200, 1, CLR_BLACK),
 DRGN_ARMR("blue dragon scale mail",    1, SHOCK_RES,   900, 1, CLR_BLUE),
 DRGN_ARMR("green dragon scale mail",   1, POISON_RES,  900, 1, CLR_GREEN),
 DRGN_ARMR("gold dragon scale mail",    1,          0, 1200, 1, HI_GOLD),
+DRGN_ARMR("yellow dragon scale mail",  1, ACID_RES,    900, 1, CLR_YELLOW),
 DRGN_ARMR("ooze dragon scale mail",    1, ACID_RES,   1200, 1, CLR_BRIGHT_GREEN),
 DRGN_ARMR("razor dragon scale mail",   1, FAST,       1200, 1, CLR_CYAN),
 DRGN_ARMR("filth dragon scale mail",   1, SICK_RES,   1200, 1, CLR_BROWN),
 DRGN_ARMR("hex dragon scale mail",     1, ANTIMAGIC,  1200, 1, CLR_BRIGHT_BLUE),
 DRGN_ARMR("void dragon scale mail",    1, DISINT_RES, 1200, 1, CLR_MAGENTA),
-DRGN_ARMR("yellow dragon scale mail",  1, ACID_RES,    900, 1, CLR_YELLOW),
 /* For now, only dragons leave these. */
 /* 3.4.1: dragon scales left classified as "non-magic"; they confer
    magical properties but are produced "naturally" */
@@ -431,12 +431,12 @@ DRGN_ARMR("black dragon scales",       0, DISINT_RES,  700, 7, CLR_BLACK),
 DRGN_ARMR("blue dragon scales",        0, SHOCK_RES,   500, 7, CLR_BLUE),
 DRGN_ARMR("green dragon scales",       0, POISON_RES,  500, 7, CLR_GREEN),
 DRGN_ARMR("gold dragon scales",        0,          0,  700, 7, HI_GOLD),
+DRGN_ARMR("yellow dragon scales",      0, ACID_RES,    700, 7, CLR_YELLOW),
 DRGN_ARMR("ooze dragon scales",        0, POISON_RES,  700, 7, CLR_BRIGHT_GREEN),
 DRGN_ARMR("razor dragon scales",       0, FAST,        700, 7, CLR_CYAN),
 DRGN_ARMR("filth dragon scales",       0, SICK_RES,    700, 7, CLR_BROWN),
 DRGN_ARMR("hex dragon scales",         0, ANTIMAGIC,   700, 7, CLR_BRIGHT_BLUE),
 DRGN_ARMR("void dragon scales",        0, DISINT_RES,  700, 7, CLR_MAGENTA),
-DRGN_ARMR("yellow dragon scales",      0, ACID_RES,    700, 7, CLR_YELLOW),
 #undef DRGN_ARMR
 /* other suits */
 ARMOR("plate mail", None,

@@ -1568,7 +1568,11 @@ int mmflags;
     if (!(mmflags & MM_NOCOUNTBIRTH)) {
         switch (mndx) {
             case PM_KNIGHT:
-                mount_monster(mtmp, PM_PONY);
+                mount_monster(mtmp, !rn2(2) ? PM_PONY : PM_HORSE);
+                break;
+            case PM_DRAGONMASTER:
+                mount_monster(mtmp, PM_BABY_GRAY_DRAGON + 
+                    rn2(PM_YELLOW_DRAGON - PM_BABY_GRAY_DRAGON));
                 break;
             case PM_HEADLESS_HORSEMAN:
                 mount_monster(mtmp, PM_NIGHTMARE);

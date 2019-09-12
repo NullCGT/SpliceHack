@@ -502,8 +502,6 @@ long wp_mask;
         mask = &EPoison_resistance;
     else if (dtyp == AD_DRLI)
         mask = &EDrain_resistance;
-    else if (dtyp == AD_CURS)
-        mask = &EReflecting;
 
     if (mask && wp_mask == W_ART && !on) {
         /* find out if some other artifact also confers this intrinsic;
@@ -641,7 +639,7 @@ long wp_mask;
             u.xray_range = -1;
         vision_full_recalc = 1;
     }
-    if ((spfx & SPFX_REFLECT) && (wp_mask & W_WEP)) {
+    if ((spfx & SPFX_REFLECT) && (otmp->oclass != WEAPON_CLASS || (wp_mask & W_WEP))) {
         if (on)
             EReflecting |= wp_mask;
         else

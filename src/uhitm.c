@@ -2117,8 +2117,11 @@ int specialdmg; /* blessed and/or material bonus against various things */
             if (DEADMONSTER(mdef) || !mdef->m_lev) {
                 pline("%s dies!", Monnam(mdef));
                 xkilled(mdef, XKILL_NOMSG);
-            } else
+            } else {
                 mdef->m_lev--;
+                if (pd == &mons[PM_HYDRA] && canseemon(mdef))
+                    pline("One of %s heads withers and dies!", s_suffix(mon_nam(mdef)));
+            }
             tmp = 0;
         }
         break;

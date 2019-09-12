@@ -1507,8 +1507,10 @@ tamedog(mtmp, (struct obj *) 0);
 				if (!rn2(13))
 						mtmp = makemon(mkclass(S_DRAGON, 0), 0, 0, NO_MM_FLAGS);
 				else
-						mtmp = makemon(&mons[PM_BABY_RED_DRAGON], 0, 0, NO_MM_FLAGS);
-				mtmp->mpeaceful = 1;
+						mtmp = makemon(&mons[rn2(PM_BABY_YELLOW_DRAGON - PM_BABY_GRAY_DRAGON)], 
+							0, 0, NO_MM_FLAGS);
+				if (!rn2(2))
+					mtmp->mpeaceful = 1;
 				pline("You let loose a mighty roar, calling all nearby dragons to your location!");
 				for (mtmp = fmon; mtmp; mtmp = nextmon) {
 						nextmon = mtmp->nmon; /* trap might kill mon */

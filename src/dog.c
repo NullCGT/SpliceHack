@@ -58,6 +58,8 @@ register struct monst *mtmp;
 STATIC_OVL int
 pet_type()
 {
+    int dragon_type;
+
     if (urole.petnum != NON_PM)
         return  urole.petnum;
     else if (preferred_pet == 'c')
@@ -73,6 +75,15 @@ pet_type()
      			  return PM_MONKEY;
      		else
      			  return (rn2(2) ? PM_PARROT : PM_MONKEY);
+    } else if (Role_if(PM_DRAGONMASTER)) {
+        /* baby black dragons are not chosen as starting pets, since
+           black dragons are arguably some of the most powerful pets
+           in SpliceHack. */
+        dragon_type = PM_BABY_SILVER_DRAGON 
+            + rn2(PM_BABY_YELLOW_DRAGON - PM_BABY_SILVER_DRAGON);
+        if (dragon_type == PM_BABY_BLACK_DRAGON)
+            dragon_type = PM_BABY_GRAY_DRAGON;
+        return dragon_type;
     } else
         switch(rn2(3)) {
             case 0:
@@ -185,7 +196,7 @@ makedog()
         petname = horsename;
     else if (pettype == PM_LITTLE_BIRD)
         petname = birdname;
-    else if (pettype == PM_BABY_RED_DRAGON)
+    else if (is_dragon(&mons[pettype]))
         petname = dragonname;
     else if (pettype == PM_SEWER_RAT)
 		petname = ratname;
@@ -210,6 +221,8 @@ makedog()
             petname = "Quothe";
     } else if (!*petname && pettype == PM_SEWER_RAT) {
 	    if(Role_if(PM_CONVICT)) petname = "Nicodemus"; /* Rats of NIMH */
+    } else if (!*petname && pettype == PM_BABY_RED_DRAGON) {
+	    if(Role_if(PM_DRAGONMASTER)) petname = "Flame"; /* D&D */
     }
 
     mtmp = makemon(&mons[pettype], u.ux, u.uy, MM_EDOG);
@@ -219,7 +232,7 @@ makedog()
 
     context.startingpet_mid = mtmp->m_id;
     /* Horses already wear a saddle */
-    if ((pettype == PM_PONY || pettype == PM_BABY_RED_DRAGON)
+    if ((pettype == PM_PONY || is_dragon(&mons[pettype]))
         && !!(otmp = mksobj(SADDLE, TRUE, FALSE))) {
         otmp->dknown = otmp->bknown = otmp->rknown = 1;
         put_saddle_on_mon(otmp, mtmp);

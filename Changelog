@@ -24,8 +24,15 @@ Items
       Gold Dragon patch.
 
 Roles
-- Added the Convict Patch, originally written by Karl Garrison. The
-  convict role is now fully 3.6.x compatible.
+- Convict
+  - Added the Convict Patch, originally written by Karl Garrison. The
+    convict role is now fully 3.6.x compatible.
+- Dragonmaster Changes 
+  - Dragonmasters now start with a random type of pet dragon (except
+    black).
+  - Dragons summoned by the Dragon Call technique only have a 50%
+    chance of being friendly, and the baby dragons can be of any
+    type.
 
 Features
 - Phoenix eggs hatch instantly when exposed to lava, and are not damaged

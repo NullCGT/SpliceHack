@@ -254,7 +254,7 @@ const struct Role roles[] = {
       PM_DRAGONMASTER,
       NON_PM,
       NON_PM,
-      PM_BABY_RED_DRAGON,
+      NON_PM,
       PM_DRAKEMOTHER,
       PM_DRAKE,
       PM_SLIPSCALE_THE_BETRAYER,

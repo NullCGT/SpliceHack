@@ -655,6 +655,7 @@ register struct obj *obj;
             break;
         case RIN_SONIC_RESISTANCE:
             pline_The("ring silently bounces down the drain.");
+            break;
         case RIN_MEMORY:
             You("fondly remember the ring that you just lost.");
             break;

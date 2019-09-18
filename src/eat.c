@@ -2825,6 +2825,8 @@ doeat()
             nodelicious = TRUE;
         } else if (otmp->material == PAPER)
             nodelicious = TRUE;
+        else if (is_cookable(otmp) && otmp->oeroded > 1)
+            nodelicious = TRUE;
 
         if (otmp->oclass == WEAPON_CLASS && otmp->opoisoned) {
             pline("Ecch - that must have been poisonous!");

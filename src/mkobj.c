@@ -334,6 +334,8 @@ struct obj *box;
                 (void) stop_timer(MOLDY_CORPSE, obj_to_any(otmp));
                 (void) stop_timer(REVIVE_MON, obj_to_any(otmp));
             }
+            if (!rn2(5) && is_cookable(otmp))
+                otmp->oeroded = 1;
         } else {
             register int tprob;
             const struct icp *iprobs = boxiprobs;

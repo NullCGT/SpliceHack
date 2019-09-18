@@ -25,7 +25,7 @@ Cooking
   food is less likely to be rotted, and more likely to be safe to eat.
 - Rotten and homemade tinned food is considered to be uncooked, but all
   other tins found by the player are treated as having a random amount of
-  cooking.
+  cooking. Corpses found in ice boxes have a small chance of being cooked.
 - Monsters killed via fire usually leave burned corpses.
 - Cooked corpses cannot be sacrificed.
 

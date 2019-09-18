@@ -1504,7 +1504,9 @@ dosacrifice()
             }
         }
 
-        if (your_race(ptr) || (uwep &&
+        if (otmp->oeroded > 0) {
+            value = 0;
+        } else if (your_race(ptr) || (uwep &&
             uwep->otyp == SACRIFICIAL_KNIFE && uwep->cursed)) {
             if (is_demon(youmonst.data) || Race_if(PM_HUMAN_WEREWOLF)) {
                 You("find the idea very satisfying.");

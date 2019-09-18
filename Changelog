@@ -26,6 +26,7 @@ Cooking
   other tins found by the player are treated as having a random amount of
   cooking.
 - Monsters killed via fire usually leave burned corpses.
+- Cooked corpses cannot be sacrificed.
 
                     Version 0.6.4: Broken Things
 

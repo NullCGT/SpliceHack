@@ -342,13 +342,13 @@ struct obj *otmp;
     /* Handle cooked corpses */
     switch(otmp->oeroded) {
     case 1:
-        nut = nut * 1.2;
+        nut += nut / 5;
         break;
     case 2:
-        nut = nut * 0.6;
+        nut -= nut / 2;
         break;
     case 3:
-        nut = nut * 0.4;
+        nut = nut / 4;
         break;
     }
 

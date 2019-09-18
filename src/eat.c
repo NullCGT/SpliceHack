@@ -1774,6 +1774,10 @@ struct obj *otmp;
             rotted += 2L;
         else if (otmp->blessed)
             rotted -= 2L;
+        
+        if (otmp->oeroded > 0) {
+            rotted += otmp->oeroded * 1L;
+        }
     }
 
     if (mnum != PM_ACID_BLOB && !stoneable && !slimeable && rotted > 5L) {

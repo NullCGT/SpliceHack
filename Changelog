@@ -21,7 +21,8 @@ Cooking
   of successfully cooking a corpse. The cooking skill can be increased by
   cooking food.
 - Cooking a corpse increases nutrition the chance to gain an intrinsic, but 
-  overcooking greatly reduces that chance and have lower nutrition.
+  overcooking greatly reduces that chance and have lower nutrition. Cooked
+  food is less likely to be rotted, and more likely to be safe to eat.
 - Rotten and homemade tinned food is considered to be uncooked, but all
   other tins found by the player are treated as having a random amount of
   cooking.

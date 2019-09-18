@@ -4630,6 +4630,8 @@ boolean say; /* Announce out of sight hit/miss events if true */
                                 /* paper golem or straw golem */
                                 && completelyburns(mon->data))
                                 xkflags |= XKILL_NOCORPSE;
+                            if ((type % 10 == ZT_FIRE))
+                                xkflags |= XKILL_BURNT;
                             xkilled(mon, xkflags);
                         }
                     } else {

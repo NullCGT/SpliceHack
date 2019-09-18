@@ -2565,6 +2565,30 @@ boolean was_swallowed; /* digestion */
     return (boolean) !rn2(tmp);
 }
 
+/* as mondied, but burns the corpse */
+void
+monfried(mdef)
+register struct monst *mdef;
+{
+    struct monst *msteed = NULL;
+
+    mondead(mdef);
+    if (!DEADMONSTER(mdef))
+        return; /* lifesaved */
+
+    if (corpse_chance(mdef, (struct monst *) 0, FALSE)
+        && (accessible(mdef->mx, mdef->my) || is_pool(mdef->mx, mdef->my)))
+        (void) make_corpse(mdef, CORPSTAT_BURNT);
+
+    if (mdef->mextra && ERID(mdef) && ERID(mdef)->m1 != NULL) {
+        msteed = ERID(mdef)->m1;
+        ERID(mdef)->m1->monmount = 0;
+        place_monster(msteed, mdef->mx, mdef->my);
+        newsym(mdef->mx, mdef->my);
+        free_erid(mdef);
+    }
+}
+
 /* drop (perhaps) a cadaver and remove monster */
 void
 mondied(mdef)
@@ -2711,6 +2735,7 @@ const char *fltxt;
 int how;
 {
     boolean be_sad = FALSE; /* true if unseen pet is killed */
+    boolean fried = FALSE; /* true if mon burned to death */
 
     if ((mdef->wormno ? worm_known(mdef) : cansee(mdef->mx, mdef->my))
         && fltxt)
@@ -2722,8 +2747,11 @@ int how;
 
     /* no corpses if digested or disintegrated */
     disintegested = (how == AD_DGST || how == -AD_RBRE);
+    fried = (how == AD_FIRE);
     if (disintegested)
         mondead(mdef);
+    else if (fried)
+        monfried(mdef);
     else
         mondied(mdef);
 
@@ -2773,6 +2801,7 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
     struct trap *t;
     boolean wasinside = u.uswallow && (u.ustuck == mtmp),
             burycorpse = FALSE,
+            burncorpse = (xkill_flags & XKILL_BURNT) != 0,
             nomsg = (xkill_flags & XKILL_NOMSG) != 0,
             nocorpse = (xkill_flags & XKILL_NOCORPSE) != 0,
             noconduct = (xkill_flags & XKILL_NOCONDUCT) != 0;
@@ -2881,8 +2910,13 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
         }
         /* corpse--none if hero was inside the monster */
         if (!wasinside && corpse_chance(mtmp, (struct monst *) 0, FALSE)) {
+
+            
             cadaver = make_corpse(mtmp, burycorpse ? CORPSTAT_BURIED
-                                                   : CORPSTAT_NONE);
+                                                   : CORPSTAT_NONE
+                                        | burncorpse ? CORPSTAT_BURNT : CORPSTAT_NONE);
+
+
             if (burycorpse && cadaver && cansee(x, y) && !mtmp->minvis
                 && cadaver->where == OBJ_BURIED && !nomsg) {
                 pline("%s corpse ends up buried.", s_suffix(Monnam(mtmp)));

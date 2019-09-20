@@ -701,7 +701,10 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
             Strcpy(buf, "scroll");
         if (!dknown)
             break;
-        if (nn) {
+        if (nn && obj->corpsenm != NON_PM) {
+            Strcat(buf, " of summon ");
+            Strcat(buf, mons[obj->corpsenm].mname);
+        } else if (nn) {
             Strcat(buf, " of ");
             Strcat(buf, actualn);
         } else if (un) {

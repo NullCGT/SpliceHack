@@ -902,6 +902,10 @@ struct monst *mtmp;
             pm = fish = &mons[PM_ACID_BLOB];
         else if (is_pool(mtmp->mx, mtmp->my))
             fish = &mons[u.uinwater ? PM_GIANT_EEL : PM_CROCODILE];
+        if (otmp->corpsenm != NON_PM) {
+            pm = fish = &mons[otmp->corpsenm];
+            cnt = 1;
+        }
         mreadmsg(mtmp, otmp);
         while (cnt--) {
             /* `fish' potentially gives bias towards water locations;

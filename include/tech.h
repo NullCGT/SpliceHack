@@ -94,8 +94,9 @@ struct blitz_tab {
 #define T_HEART_CARDS 45
 #define T_BOOTY 46
 #define T_CARD_COMBO 47
+#define T_CARD_CAPTURE 48
 
-#define MAXTECH 47
+#define MAXTECH 48
 
 
 #endif /* TECH_H */

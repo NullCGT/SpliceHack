@@ -1463,7 +1463,16 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         break;
     }
     case SCR_CREATE_MONSTER:
-    case SPE_CREATE_MONSTER:
+    case SPE_CREATE_MONSTER: {
+        register struct monst *mtmp;
+        if (sobj->corpsenm != NON_PM) {
+            mtmp = makemon(&mons[sobj->corpsenm], u.ux, u.uy, MM_NOWAIT);
+            if (!mtmp)
+                break;
+            if (!scursed)
+                (void) tamedog(mtmp, (struct obj *) 0);
+            break;
+        }
         if (create_critters(1 + ((confused || scursed) ? 12 : 0)
                                 + ((sblessed || rn2(73)) ? 0 : rnd(4)),
                             confused ? &mons[PM_ACID_BLOB]
@@ -1474,6 +1483,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
          * monsters are not visible
          */
         break;
+    }
     case SCR_ENCHANT_WEAPON:
         /* [What about twoweapon mode?  Proofing/repairing/enchanting both
            would be too powerful, but shouldn't we choose randomly between

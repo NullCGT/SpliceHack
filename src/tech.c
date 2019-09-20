@@ -85,7 +85,8 @@ STATIC_OVL NEARDATA const char *tech_names[] = {
 	"undertow",
 	"soul of the cards",
 	"treasure hunt",
-	"card combo"
+	"card combo",
+	"card capture"
 	""
 };
 
@@ -97,9 +98,10 @@ static const struct innate_tech
 		       {   0, 0, 0} },
   car_tech[] = {
 					 {   1, T_HEART_CARDS, 1},
+					 {   1, T_CARD_CAPTURE, 1},
 					 {   5, T_CARD_COMBO, 1},
 		       {   0, 0, 0} },
-	cav_tech[] = { {   1, T_PRIMAL_ROAR, 1},
+  cav_tech[] = { {   1, T_PRIMAL_ROAR, 1},
 		       {   0, 0, 0} },
   dra_tech[] = {
 					 {   1, T_DRAGON_BLITZ, 1},
@@ -1633,6 +1635,31 @@ tamedog(mtmp, (struct obj *) 0);
 				}
 				pline("Your combo ends.");
 				t_timeout = rn1(1000, 500);
+				break;
+		case T_CARD_CAPTURE:
+				if (!getdir((char *)0)) return(0);
+				if (!u.dx && !u.dy) {
+					/* Hopefully a mistake ;B */
+					You("decide that you have enough cards already.");
+					return(0);
+				}
+				mtmp = m_at(u.ux + u.dx, u.uy + u.dy);
+				if (!mtmp) {
+					You("menacingly shuffle your cards!");
+					return (0);
+				}
+				pline("You reach out and attempt to capture %s as a spell card.", mon_nam(mtmp));
+				if (tamedog(mtmp, (struct obj *) 0) == TRUE) {
+					pline("%s transforms into a spell card!", Monnam(mtmp));
+					otmp = mksobj_at(SCR_CREATE_MONSTER, mtmp->mx, mtmp->my, FALSE, FALSE);
+					otmp->corpsenm = monsndx(mtmp->data);
+					mongone(mtmp);
+				} else if (Hallucination) {
+					pline("Aww! It appeared to be caught!");
+				} else {
+					pline("%s resists your attempt to turn it into a spell card.", Monnam(mtmp));
+				}
+				t_timeout = rn1(500, 400);
 				break;
 	  default:
 	    	pline ("Error!  No such effect (%i)", tech_no);

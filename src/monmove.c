@@ -151,9 +151,7 @@ struct monst *mtmp;
   return ((sengr_at("the Yellow Sign", x, y, TRUE) ||
             sengr_at("The Yellow Sign", x, y, TRUE))
           && ((u.ux == x && u.uy == y)
-              || (Displaced && mtmp->mux == x && mtmp->muy == y))
-          && !(!mtmp->mcansee
-               || mtmp->data == &mons[PM_KING_IN_YELLOW]));
+              || (Displaced && mtmp->mux == x && mtmp->muy == y)));
 }
 
 boolean
@@ -204,7 +202,6 @@ struct monst *mtmp;
                  || mtmp->mpeaceful || mtmp->data->mlet == S_HUMAN
                  || mtmp->data == &mons[PM_MINOTAUR]
                  || mtmp->data == &mons[PM_GIANT_PRAYING_MANTIS]
-                 || mtmp->data == &mons[PM_KING_IN_YELLOW]
                  || Inhell || In_endgame(&u.uz)));
 }
 

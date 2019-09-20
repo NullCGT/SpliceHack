@@ -1616,12 +1616,6 @@ int mmflags;
             mount_monster(mtmp, PM_VOANAIRRUTH);
         }
         break;
-    case S_DEMON:
-        if (mndx == PM_KING_IN_YELLOW) {
-            mtmp->perminvis = TRUE;
-            mtmp->minvis = TRUE;
-        }
-        break;
     case S_EEL:
         (void) hideunder(mtmp);
         break;

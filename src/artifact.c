@@ -1804,12 +1804,6 @@ struct obj *obj;
             create_critters(rnd(10), (struct permonst *) 0, TRUE);
             break;
         }
-        case KING: {
-            You("contact a being from beyond this realm!");
-            makemon(&mons[PM_KING_IN_YELLOW], u.ux, u.uy, NO_MM_FLAGS);
-            useup(obj);
-            break;
-        }
         case LION: {
             pline("%s transforms into a glorious winged lion!",
                   xname(obj));

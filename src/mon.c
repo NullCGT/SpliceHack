@@ -2404,9 +2404,6 @@ register struct monst *mtmp;
     if (mtmp->data == &mons[PM_MEDUSA]) {
         u.uachieve.killed_medusa = 1;
         livelog_write_string(LL_ACHIEVE|LL_UMONST, "killed Medusa");
-    } else if (mtmp->data == &mons[PM_KING_IN_YELLOW]) {
-        u.uachieve.killed_king = 1;
-        livelog_write_string(LL_ACHIEVE|LL_UMONST, "killed the King in Yellow");
     } else if (mtmp->data == &mons[PM_DEMOGORGON]) {
         u.uachieve.killed_demogorgon = 1;
         livelog_write_string(LL_ACHIEVE|LL_UMONST, "slew Demogorgon");

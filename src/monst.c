@@ -3937,16 +3937,6 @@ struct permonst _mons2[] = {
         M2_NOPOLY | M2_STALK | M2_HOSTILE | M2_PNAME | M2_NASTY
             | M2_PRINCE | M2_MALE,
         M3_WANTSAMUL | M3_INFRAVISIBLE | M3_INFRAVISION, MH_DEMON, 57, HI_LORD),
-    MON("King in Yellow", S_DEMON, LVL(118, 15, -20, 100, 0),
-        (G_NOGEN | G_NOCORPSE | G_UNIQ),
-        A(ATTK(AT_MAGC, AD_CLRC, 6, 10), ATTK(AT_TENT, AD_DCAY, 12, 2),
-          ATTK(AT_TENT, AD_DCAY, 12, 2), ATTK(AT_TENT, AD_PLYS, 12, 2),
-          ATTK(AT_TENT, AD_DISE, 12, 2), ATTK(AT_TENT, AD_CURS, 12, 2)),
-        SIZ(1500, 500, MS_GURGLE, MZ_LARGE), MR_POISON | MR_STONE | MR_SLEEP |
-          MR_DISINT | MR_ELEC, 0,
-        M1_SEE_INVIS | M1_FLY | M1_BREATHLESS | M1_NOHEAD | M1_AMORPHOUS,
-        M2_NOPOLY | M2_STALK | M2_HOSTILE | M2_STRONG | M2_NASTY | M2_MALE,
-        M3_WANTSALL | M3_INFRAVISIBLE | M3_INFRAVISION, 0, 67, CLR_YELLOW),
     /* Not technically a rider, but along the same lines. Only used in the
        deck of fate at this point. */
     MON("Grim Reaper", S_DEMON, LVL(30, 12, -5, 100, 0), (G_NOGEN | G_NOCORPSE),

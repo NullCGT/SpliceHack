@@ -216,13 +216,6 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       PHYS(-5, -5), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 200L,
       CLR_MAGENTA),
 
-    /*
-    *        Summons a superboss.
-    */
-    A("The King in Yellow", SPE_FINGER_OF_DEATH,
-      (SPFX_NOGEN | SPFX_HALRES), 0, 0, NO_ATTK, NO_DFNS, NO_CARY,
-      KING, A_NONE, NON_PM, NON_PM, 30L, NO_COLOR),
-
     /* PIRATE ARTIFACTS */
     A("Reaver",	SCIMITAR, (SPFX_NOGEN | SPFX_RESTR | SPFX_INTEL), 0, 0,
      	PHYS(5,8), NO_DFNS,	NO_CARY, 0, A_CHAOTIC, PM_PIRATE, NON_PM, 6000L,

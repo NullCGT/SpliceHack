@@ -25,8 +25,9 @@ Items
 
 Artifacts
 - Circe's Witchstaff
-    - Has a 1/20 chance of polymorphing the target into a boar or a
-      cow.
+  - Has a 1/20 chance of polymorphing the target into a boar or a
+    cow.
+- Removed the King in Yellow
 
 Roles
 - Convict
@@ -38,6 +39,8 @@ Roles
   - Dragons summoned by the Dragon Call technique only have a 50%
     chance of being friendly, and the baby dragons can be of any
     type.
+- Cartomancer Changes
+  - Cartomancers can use decks of cards as if blessed.
 
 Features
 - Phoenix eggs hatch instantly when exposed to lava, and are not damaged

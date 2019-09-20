@@ -303,12 +303,17 @@ struct obj *obj;
     char buf[BUFSZ];
     long draws;
     int index, pm, n;
+    boolean goodcards = FALSE;
     struct monst *mtmp;
 
     if (Blind) {
         You("can't play cards in the dark!");
         return;
     }
+    if (obj->blessed || Role_if(PM_CARTOMANCER)) {
+        goodcards = TRUE;
+    }
+
     if (obj->otyp == PLAYING_CARD_DECK) {
         if ((obj->cursed && Luck == 13) || Luck <= 0) {
             pline("You draw a hand of five cards. It's not very good...");
@@ -320,7 +325,7 @@ struct obj *obj;
             pline("You draw a hand of five cards. Wow, a royal flush!");
         }
         /* if blessed, indicate the luck value directly. */
-        if (obj->blessed && Luck > 0) {
+        if (goodcards && Luck > 0) {
             pline("You shuffle the deck %d times.", Luck);
         } else {
             pline("You don't bother shuffling the deck.");
@@ -349,7 +354,7 @@ struct obj *obj;
         if (obj->cursed && index > 1) {
           index--;
         }
-        if (obj->blessed && index < 22) {
+        if (goodcards && index < 22) {
           index++;
         }
         switch(index) {

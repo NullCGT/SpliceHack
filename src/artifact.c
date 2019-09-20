@@ -1558,6 +1558,31 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 /* Should amulets fall off? */
                 return TRUE;
             }
+        } else if (otmp->oartifact == ART_CIRCE_S_WITCHSTAFF && dieroll == 1) {
+            wepdesc = "The witch's rod";
+            if (youdefend && !Antimagic && !Unchanging) {
+                pline("%s sends bizarre energies coursing through you!", wepdesc);
+                polyself(5);
+                return TRUE;
+            } else if (youdefend) {
+                shieldeff(u.ux, u.uy);
+                pline("%s blasts you with weird energies, but you manage to fight them off!", wepdesc);
+                return FALSE;
+            }
+
+            if (resists_magm(mdef)) {
+                shieldeff(mdef->mx, mdef->my);
+                pline("%s blasts %s with magical energies, but to no great effect.", wepdesc, mon_nam(mdef));
+                return FALSE;
+            } else if (youattack && u.uswallow && mdef == u.ustuck) {
+                You("compact %s around you and burst free from it!", mon_nam(mdef));
+                *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
+                return TRUE;
+            } else {
+                pline("%s blasts %s with magical power!", wepdesc, mon_nam(mdef));
+                newcham(mdef, &mons[!rn2(2) ? PM_BOAR : PM_COW], FALSE, TRUE);
+                return TRUE;
+            }
         }
     }
     /* STEPHEN WHITE'S NEW CODE */

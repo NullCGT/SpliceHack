@@ -396,7 +396,8 @@ int psflags;
             draconian = (uarm && Is_dragon_armor(uarm)),
             iswere = (u.ulycn >= LOW_PM), isvamp = is_vampire(youmonst.data),
             controllable_poly = Polymorph_control && !(Stunned || Unaware),
-            verysafe = (psflags == 3), ismolydeus = (psflags == 4);
+            verysafe = (psflags == 3), ismolydeus = (psflags == 4), 
+            iscirce = (psflags == 5);
 
     if (Unchanging) {
         pline("You fail to transform!");
@@ -496,7 +497,7 @@ int psflags;
         if (isvamp && (tryct <= 0 || mntmp == PM_WOLF || mntmp == PM_FOG_CLOUD
                        || is_bat(&mons[mntmp])))
             goto do_vampyr;
-    } else if (draconian || iswere || isvamp || ismolydeus) {
+    } else if (draconian || iswere || isvamp || ismolydeus || iscirce) {
         /* special changes that don't require polyok() */
         if (draconian) {
         do_merge:
@@ -541,6 +542,8 @@ int psflags;
                 mntmp = u.ulycn;
         } else if (ismolydeus) {
             mntmp = PM_MANES;
+        } else if (iscirce) {
+            mntmp = !rn2(2) ? PM_BOAR : PM_COW;
         } else if (isvamp) {
         do_vampyr:
             if (mntmp < LOW_PM || (mons[mntmp].geno & G_UNIQ))

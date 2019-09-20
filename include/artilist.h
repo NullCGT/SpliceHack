@@ -199,6 +199,14 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       (SPFX_RESTR | SPFX_TCTRL), 0, 0,
       PHYS(2, 4), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 500L,
       CLR_MAGENTA),
+    
+    /*
+    *     Staff of Circe. 1/20 chance of turning target into an animal.
+    */
+    A("Circe's Witchstaff", QUARTERSTAFF,
+      (SPFX_RESTR | SPFX_BEHEAD), 0, 0,
+      PHYS(4, 2), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 3500,
+      CLR_GREEN),
 
     /*
     *        Just for fun.

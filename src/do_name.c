@@ -1396,6 +1396,9 @@ const char *name;
         }
         /* set up specific materials for the artifact */
         switch(obj->oartifact) {
+        case ART_CIRCE_S_WITCHSTAFF:
+            obj->material = COPPER;
+            break;
         case ART_SHARUR:
         case ART_SUNSWORD:
             obj->material = GOLD;

@@ -1424,7 +1424,7 @@ struct monst *mtmp;
             && (!In_endgame(&u.uz) || Is_earthlevel(&u.uz))) {
             m.offensive = obj;
             m.has_offense = MUSE_SCR_EARTH;
-        }
+        }   
         nomore(MUSE_SCR_FIRE);
         if (obj->otyp == SCR_FIRE && resists_fire(mtmp)
             && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 2
@@ -1433,7 +1433,8 @@ struct monst *mtmp;
             m.has_offense = MUSE_SCR_FIRE;
         }
         nomore(MUSE_CAMERA);
-        if (obj->otyp == EXPENSIVE_CAMERA && !Blind && !rn2(10)
+        if (obj->otyp == EXPENSIVE_CAMERA 
+            && (!Blind || hates_light(youmonst.data)) && !rn2(6)
             && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 2
             && obj->spe > 0) {
             m.offensive = obj;

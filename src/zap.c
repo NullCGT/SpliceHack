@@ -2923,7 +2923,7 @@ int amt;          /* pseudo-damage used to determine blindness duration */
     const char *how;
     int dmg = amt;
 
-    if (dmg && youmonst.data == &mons[PM_GREMLIN]) {
+    if (dmg && hates_light(youmonst.data)) {
         /* reduce high values (from destruction of wand with many charges) */
         dmg = rnd(dmg);
         if (dmg > 10)

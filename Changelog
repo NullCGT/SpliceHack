@@ -19,6 +19,7 @@ Cooking
 Monsters
 - New Monster: Gold Dragon
     - Sourced from Nephi's Gold Dragon Patch.
+- Monsters will use cursed scrolls of light to attempt to blind the player.
 
 New Items
 - New Item: Ring of Sonic Resistance (Glass Ring)
@@ -71,6 +72,7 @@ Fixes
 - Switched to using aosdict's fix for object probabilities over 1000.
 - Holographic Void Lily has correctly attributed effects, and no longer
   relies on a massive kludge in order to function.
+- Expensive cameras used by monsters will hurt players that are gremlins.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

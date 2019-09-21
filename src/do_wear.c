@@ -1167,7 +1167,7 @@ void
 Blindf_on(otmp)
 struct obj *otmp;
 {
-    boolean already_blind = Blind, changed = FALSE;
+    boolean already_blind = Blind, already_deaf = Deaf, changed = FALSE;
 
     /* blindfold might be wielded; release it for wearing */
     if (otmp->owornmask & W_WEAPON)
@@ -1183,6 +1183,10 @@ struct obj *otmp;
         /* set ball&chain variables before the hero goes blind */
         if (Punished)
             set_bc(0);
+    } else if (Deaf && !already_deaf) {
+        context.botl = TRUE;
+        if (flags.verbose)
+            You_cant("hear any more.");
     } else if (already_blind && !Blind) {
         changed = TRUE;
         /* "You are now wearing the Eyes of the Overworld." */
@@ -1199,14 +1203,14 @@ struct obj *otmp;
         toggle_blindness(); /* potion.c */
     }
     if (ublindf->otyp == MASK)
-        use_mask(&ublindf);
+        use_mask(&ublindf); 
 }
 
 void
 Blindf_off(otmp)
 struct obj *otmp;
 {
-    boolean was_blind = Blind, changed = FALSE;
+    boolean was_blind = Blind, was_deaf = Deaf, changed = FALSE;
 
     if (!otmp) {
         impossible("Blindf_off without otmp");
@@ -1236,6 +1240,11 @@ struct obj *otmp;
             changed = TRUE; /* !Blind */
             You("can see again.");
         }
+    } else if (Deaf && otmp->otyp == EARMUFFS) {
+        You("still cannot hear a thing.");
+    } else if (was_deaf && otmp->otyp == EARMUFFS) {
+        context.botl = TRUE;
+        You("can hear again.");
     }
     if (changed) {
         toggle_blindness(); /* potion.c */

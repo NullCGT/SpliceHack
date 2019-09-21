@@ -98,6 +98,7 @@
 #define Blindfolded (ublindf && ublindf->otyp != LENSES \
                       && ublindf->otyp != MASK          \
                       && ublindf->otyp != EARMUFFS)
+#define Earplugged (ublindf && ublindf->otyp == EARMUFFS)
 /* ...means blind because of a cover */
 #define Blind                                     \
     ((u.uroleplay.blind || Blinded || Blindfolded \
@@ -129,7 +130,7 @@
 /* Timeout, plus a worn mask */
 #define HDeaf u.uprops[DEAF].intrinsic
 #define EDeaf u.uprops[DEAF].extrinsic
-#define Deaf (HDeaf || EDeaf || u.uroleplay.deaf)
+#define Deaf (HDeaf || EDeaf || Earplugged || u.uroleplay.deaf)
 
 #define HFumbling u.uprops[FUMBLING].intrinsic
 #define EFumbling u.uprops[FUMBLING].extrinsic

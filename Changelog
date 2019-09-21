@@ -72,7 +72,8 @@ Fixes
 - Switched to using aosdict's fix for object probabilities over 1000.
 - Holographic Void Lily has correctly attributed effects, and no longer
   relies on a massive kludge in order to function.
-- Expensive cameras used by monsters will hurt players that are gremlins.
+- Expensive cameras used by monsters will hurt players that are polymorphed into
+  light-hating monsters.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

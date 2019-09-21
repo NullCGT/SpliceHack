@@ -667,7 +667,8 @@ boolean force;
         			m.has_defense = MUSE_POT_VAMPIRE_BLOOD;
         	}
             nomore(MUSE_SCR_LIGHT);
-            if (obj->otyp == SCR_LIGHT && obj->cursed) {
+            if (obj->otyp == SCR_LIGHT && (obj->cursed 
+                || hates_light(youmonst.data))) {
                 m.defensive = obj;
                 m.has_defense = MUSE_SCR_LIGHT;
             }

@@ -2,11 +2,15 @@
                     
                     Upcoming Version: Stranger Days
 
-Monsters
+New Monsters
 - Gold Dragon
     - Sourced from Nephi's Gold Dragon Patch.
+
+Monster Changes
 - Nerfed Banshees. Previously, they bypassed fixed abilities and deafness,
   and could sap an endgame character's strength in only a few turns.
+- Monsters will use cursed scrolls of light to attempt to blind the player.
+- Expensive cameras used by monsters will hurt players.
 
 Items
 - Ring of Sonic Resistance (Glass Ring)

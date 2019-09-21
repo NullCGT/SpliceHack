@@ -303,6 +303,7 @@ struct obj *otmp;
 #define MUSE_WAN_HEALING 20
 #define MUSE_POT_VAMPIRE_BLOOD 21
 #define MUSE_WAN_CREATE_HORDE 22
+#define MUSE_SCR_LIGHT 23
 /*
 #define MUSE_INNATE_TPT 9999
  * We cannot use this.  Since monsters get unlimited teleportation, if they
@@ -664,7 +665,12 @@ boolean force;
         		if(is_vampire(mtmp->data) && obj->otyp == POT_VAMPIRE_BLOOD) {
         			m.defensive = obj;
         			m.has_defense = MUSE_POT_VAMPIRE_BLOOD;
-        		}
+        	}
+            nomore(MUSE_SCR_LIGHT);
+            if (obj->otyp == SCR_LIGHT && obj->cursed) {
+                m.defensive = obj;
+                m.has_defense = MUSE_SCR_LIGHT;
+            }
         } else { /* Pestilence */
             nomore(MUSE_POT_FULL_HEALING);
             if (obj->otyp == POT_SICKNESS) {
@@ -1120,6 +1126,23 @@ struct monst *mtmp;
     		if (oseen) makeknown(POT_VAMPIRE_BLOOD);
     		m_useup(mtmp, otmp);
     		return 2;
+    case MUSE_SCR_LIGHT:
+        mreadmsg(mtmp, otmp);
+        if (mtmp->mconf || rn2(5)) {
+            if (oseen)
+                makeknown(otmp->otyp);
+            litroom(!mtmp->mconf && !otmp->cursed, otmp);
+            if (!mtmp->mconf && !otmp->cursed) {
+                if (lightdamage(otmp, TRUE, 5))
+                    makeknown(otmp->otyp);
+            }
+        } else {
+            (void) create_critters(1, !otmp->cursed ? &mons[PM_YELLOW_LIGHT]
+                                                    : &mons[PM_BLACK_LIGHT],
+                                   TRUE);
+        }
+        m_useup(mtmp, otmp);
+        break;
     case 0:
         return 0; /* i.e. an exploded wand */
     default:
@@ -1756,6 +1779,7 @@ struct monst *mtmp;
             You("are blinded by the flash of light!");
             make_blinded(Blinded + (long) rnd(1 + 50), FALSE);
         }
+        lightdamage(otmp, TRUE, 5);
         m_using = FALSE;
         otmp->spe--;
         return 1;
@@ -2526,7 +2550,7 @@ struct obj *obj;
     case SCROLL_CLASS:
         if (typ == SCR_TELEPORTATION || typ == SCR_CREATE_MONSTER
             || typ == SCR_EARTH || typ == SCR_FIRE || typ == SCR_REMOVE_CURSE
-            || typ == SCR_WEB)
+            || typ == SCR_WEB || typ == SCR_LIGHT)
             return TRUE;
         break;
     case AMULET_CLASS:

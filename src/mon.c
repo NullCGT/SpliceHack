@@ -3326,11 +3326,17 @@ void
 m_respond(mtmp)
 struct monst *mtmp;
 {
-    if (mtmp->data == &mons[PM_BANSHEE]) {
-        if (!Sonic_resistance) {
+    if (mtmp->data == &mons[PM_BANSHEE] && !mtmp->mspec_used) {
+        if (!Sonic_resistance && !Deaf) {
             pline("%s unleashes a bloodcurdling wail!", Monnam(mtmp));
             stop_occupation();
-            losestr(rnd(3));
+            if (Fixed_abil)
+                Your("muscles briefly spasm.");
+            else {
+                pline("You feel weaker.");
+                losestr(1);
+            }
+            mtmp->mspec_used = 4 + rn2(6);
         }
         aggravate();
     }

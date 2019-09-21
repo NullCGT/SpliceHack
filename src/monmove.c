@@ -464,7 +464,7 @@ register struct monst *mtmp;
         return 0;
     }
     if (mdat == &mons[PM_BANSHEE] && couldsee(mtmp->mx, mtmp->my) &&
-        ABASE(A_STR) > 3 && rnd(2) == 1)
+        ABASE(A_STR) > 10 && !um_dist(mtmp->mx, mtmp->my, 6))
         m_respond(mtmp);
     if (mdat->msound == MS_SHRIEK && !um_dist(mtmp->mx, mtmp->my, 1))
         m_respond(mtmp);

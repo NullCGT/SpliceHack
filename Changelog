@@ -57,6 +57,11 @@ Features
   by fire.
 - Added YAFM explaining hydras losing heads when hit by a level-draining attack.
 
+Techniques
+- Pull Under now has a failure rate, so that players do not use it to reliably
+  slay boss monsters. The higher your level and the lower the monster's level,
+  the more likely it is for the attack to succed.
+
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing
   sonic.

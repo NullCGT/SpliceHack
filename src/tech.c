@@ -1590,11 +1590,14 @@ tamedog(mtmp, (struct obj *) 0);
 								pline("You wrap up %s with your tail and pull them into the depths with you!",
 										Monnam(mtmp));
 						/* Monsters don't wear amulets of magical breathing */
-						if (!is_swimmer(mtmp->data) && !amphibious(mtmp->data)) {
-								You("drown %s...", mon_nam(mtmp));
-								hurtmon(mtmp, mtmp->mhp);
-						} else {
-								pline("%s does not drown!", Monnam(mtmp));
+						if (is_swimmer(mtmp->data) || amphibious(mtmp->data))
+							pline("%s is perfectly comfortable underwater.", Monnam(mtmp));
+						else if (techlev(tech_no) > rn2(mtmp->m_lev))
+							pline("%s manages to keep %s %s above water.", Monnam(mtmp), 
+								mhis(mtmp), mbodypart(mtmp, HEAD));
+						else  {
+							You("drown %s...", mon_nam(mtmp));
+							hurtmon(mtmp, mtmp->mhp);
 						}
 				} else {
 						You("cannot get a grip on %s!", mon_nam(mtmp));

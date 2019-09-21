@@ -2387,6 +2387,8 @@ int specialdmg; /* blessed and/or material bonus against various things */
             You_feel("embarrassed for a moment.");
             if (tmp)
                 xkilled(mdef, XKILL_NOMSG); /* !tmp but hp<1: already killed */
+        } else if (mattk->adtyp == AD_FIRE) { /* burn corpses */
+            xkilled(mdef, XKILL_BURNT);
         } else if (!flags.verbose) {
             You("destroy it!");
             if (tmp)

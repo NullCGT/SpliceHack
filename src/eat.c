@@ -342,13 +342,13 @@ struct obj *otmp;
     /* Handle cooked corpses */
     switch(otmp->oeroded) {
     case 1:
-        nut = nut * 1.2;
+        nut += nut / 5;
         break;
     case 2:
-        nut = nut * 0.6;
+        nut -= nut / 2;
         break;
     case 3:
-        nut = nut * 0.4;
+        nut = nut / 4;
         break;
     }
 
@@ -1773,6 +1773,10 @@ struct obj *otmp;
             rotted += 2L;
         else if (otmp->blessed)
             rotted -= 2L;
+        
+        if (otmp->oeroded > 0) {
+            rotted += otmp->oeroded * 1L;
+        }
     }
 
     if (mnum != PM_ACID_BLOB && !stoneable && !slimeable && rotted > 5L) {
@@ -2841,6 +2845,8 @@ doeat()
             (void) rottenfood(otmp);
             nodelicious = TRUE;
         } else if (otmp->material == PAPER)
+            nodelicious = TRUE;
+        else if (is_cookable(otmp) && otmp->oeroded > 1)
             nodelicious = TRUE;
 
         if (otmp->oclass == WEAPON_CLASS && otmp->opoisoned) {

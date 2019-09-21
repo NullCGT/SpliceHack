@@ -13,6 +13,7 @@ STATIC_DCL void FDECL(maybe_adjust_light, (struct obj *, int));
 STATIC_DCL void FDECL(obj_timer_checks, (struct obj *,
                                          XCHAR_P, XCHAR_P, int));
 STATIC_DCL void FDECL(container_weight, (struct obj *));
+STATIC_DCL struct obj *FDECL(burn_corpse, (struct obj *));
 STATIC_DCL struct obj *FDECL(save_mtraits, (struct obj *, struct monst *));
 STATIC_DCL void FDECL(objlist_sanity, (struct obj *, int, const char *));
 STATIC_DCL void FDECL(mon_obj_sanity, (struct monst *, const char *));
@@ -344,6 +345,8 @@ struct obj *box;
                 (void) stop_timer(MOLDY_CORPSE, obj_to_any(otmp));
                 (void) stop_timer(REVIVE_MON, obj_to_any(otmp));
             }
+            if (!rn2(5) && is_cookable(otmp))
+                otmp->oeroded = 1;
         } else {
             register int tprob;
             const struct icp *iprobs = boxiprobs;
@@ -1678,6 +1681,7 @@ unsigned corpstatflags;
 {
     register struct obj *otmp;
     boolean init = ((corpstatflags & CORPSTAT_INIT) != 0);
+    boolean burnt = ((corpstatflags & CORPSTAT_BURNT) != 0);
 
     if (objtype != CORPSE && objtype != STATUE)
         impossible("making corpstat type %d", objtype);
@@ -1711,8 +1715,35 @@ unsigned corpstatflags;
                 start_corpse_timeout(otmp);
             }
         }
+        /* sometimes burn the corpse */
+        if (burnt && is_cookable(otmp)) {
+           otmp = burn_corpse(otmp);
+        }
     }
     return otmp;
+}
+
+static struct obj *
+burn_corpse(obj) 
+struct obj *obj;
+{
+    switch(rn2(8)) {
+        case 0:
+            obj->oeroded = 1;
+            break;
+        case 1:
+        case 2:
+            obj->oeroded = 2;
+            break;
+        case 3:
+        case 4:
+            obj->oeroded = 3;
+            break;
+        default:
+            obj->oeroded = 0;
+            break;
+    }
+    return obj;
 }
 
 /*

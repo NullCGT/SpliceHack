@@ -272,6 +272,7 @@ typedef struct sortloot_item Loot;
 #define CORPSTAT_NONE 0x00
 #define CORPSTAT_INIT 0x01   /* pass init flag to mkcorpstat */
 #define CORPSTAT_BURIED 0x02 /* bury the corpse or statue */
+#define CORPSTAT_BURNT 0x04 /* burn the corpse */
 
 /* flags for decide_to_shift() */
 #define SHIFT_SEENMSG 0x01 /* put out a message if in sight */
@@ -401,6 +402,7 @@ enum explosion_types {
 #define XKILL_NOMSG     1
 #define XKILL_NOCORPSE  2
 #define XKILL_NOCONDUCT 4
+#define XKILL_BURNT     5
 
 /* pline_flags; mask values for custompline()'s first argument */
 /* #define PLINE_ORDINARY 0 */

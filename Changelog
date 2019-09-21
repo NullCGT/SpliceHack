@@ -2,42 +2,50 @@
                     
                     Upcoming Version: Stranger Days
 
+Cooking
+- Cooking is done through the extended #cook command.
+- Cooking uses the cooking skill. Raising this skill increases the chances
+  of successfully cooking a corpse. The cooking skill can be increased by
+  cooking food.
+- Cooking a corpse increases nutrition the chance to gain an intrinsic, but 
+  overcooking greatly reduces that chance and have lower nutrition. Cooked
+  food is less likely to be rotted, and more likely to be safe to eat.
+- Rotten and homemade tinned food is considered to be uncooked, but all
+  other tins found by the player are treated as having a random amount of
+  cooking. Corpses found in ice boxes have a small chance of being cooked.
+- Monsters killed via fire usually leave burned corpses.
+- Cooked corpses cannot be sacrificed.
+
 Monsters
-- Gold Dragon
+- New Monster: Gold Dragon
     - Sourced from Nephi's Gold Dragon Patch.
-- Nerfed Banshees. Previously, they bypassed fixed abilities and deafness,
-  and could sap an endgame character's strength in only a few turns.
 
 New Items
-- Ring of Sonic Resistance (Glass Ring)
-- Gold Dragon Scales
-- Gold Dragon Scale Mail
+- New Item: Ring of Sonic Resistance (Glass Ring)
+- New Item: Gold Dragon Scales
+- New Item: Gold Dragon Scale Mail
     - Both of these items shed light when worn. Sourced from Nephi's
       Gold Dragon patch.
-- Slice of Cake
+- New Item: Slice of Cake
     - Cake takes a long time to eat, but it very filling. Cursed cake abuses 
       dexterity, while blessed and uncursed cake heals ability damage.
-- Pineapple
+- New Item: Pineapple
     - When thrown, pineapples are accurate and deal extra damage. Monsters
       will attempt to throw them.
-- Cheese
+- New Item: Cheese
     - Ported from SLASH'EM. The food, to be specific.
-
-Item Changes
 - Earmuffs are now treated as a tool, instead of as a helmet. They are also
   pluralized correctly. Basically, earmuffs are actually a viable item for
   the first time.
-- Scrolls of time cause the reader to become more hungry, and grant less
-  movement points. This is in order to prevent abuse in the endgame.
 
 Artifacts
-- Circe's Witchstaff
+- New Artifact: Circe's Witchstaff
   - Has a 1/20 chance of polymorphing the target into a boar or a
     cow.
-- Removed the King in Yellow
+- Removed the King in Yellow.
 
 Roles
-- Convict
+- New Role: Convict
   - Added the Convict Patch, originally written by Karl Garrison. The
     convict role is now fully 3.6.x compatible.
 - Dragonmaster Changes 
@@ -57,11 +65,6 @@ Features
   by fire.
 - Added YAFM explaining hydras losing heads when hit by a level-draining attack.
 
-Techniques
-- Pull Under now has a failure rate, so that players do not use it to reliably
-  slay boss monsters. The higher your level and the lower the monster's level,
-  the more likely it is for the attack to succed.
-
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing
   sonic.
@@ -69,19 +72,14 @@ Fixes
 - Holographic Void Lily has correctly attributed effects, and no longer
   relies on a massive kludge in order to function.
 
-Cooking
-- Cooking is done through the extended #cook command.
-- Cooking uses the cooking skill. Raising this skill increases the chances
-  of successfully cooking a corpse. The cooking skill can be increased by
-  cooking food.
-- Cooking a corpse increases nutrition the chance to gain an intrinsic, but 
-  overcooking greatly reduces that chance and have lower nutrition. Cooked
-  food is less likely to be rotted, and more likely to be safe to eat.
-- Rotten and homemade tinned food is considered to be uncooked, but all
-  other tins found by the player are treated as having a random amount of
-  cooking. Corpses found in ice boxes have a small chance of being cooked.
-- Monsters killed via fire usually leave burned corpses.
-- Cooked corpses cannot be sacrificed.
+Balance Changes
+- Pull Under now has a failure rate, so that players do not use it to reliably
+  slay boss monsters. The higher your level and the lower the monster's level,
+  the more likely it is for the attack to succed.
+- Scrolls of time cause the reader to become more hungry, and grant less
+  movement points. This is in order to prevent abuse in the endgame.
+- Nerfed Banshees. Previously, they bypassed fixed abilities and deafness,
+  and could sap an endgame character's strength in only a few turns.
 
                     Version 0.6.4: Broken Things
 

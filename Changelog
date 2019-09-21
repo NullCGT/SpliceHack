@@ -15,7 +15,10 @@ Items
     - When thrown, pineapples are accurate and deal extra damage. Monsters
       will attempt to throw them.
 - Cheese
-    - Ported from SLASH'EM. The food, to be specific. 
+    - Ported from SLASH'EM. The food, to be specific.
+- Earmuffs are now treated as a tool, instead of as a helmet. They are also
+  pluralized correctly. Basically, earmuffs are actually a viable item for
+  the first time.
                     
 Items
 - Gold Dragon Scales

@@ -96,7 +96,8 @@
 
 #define Blinded u.uprops[BLINDED].intrinsic
 #define Blindfolded (ublindf && ublindf->otyp != LENSES \
-                      && ublindf->otyp != MASK)
+                      && ublindf->otyp != MASK          \
+                      && ublindf->otyp != EARMUFFS)
 /* ...means blind because of a cover */
 #define Blind                                     \
     ((u.uroleplay.blind || Blinded || Blindfolded \

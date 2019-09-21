@@ -398,8 +398,6 @@ Helmet_on(VOID_ARGS)
     case ORCISH_HELM:
     case HELM_OF_TELEPATHY:
     case HELM_OF_OPAQUE_THOUGHTS:
-    case EARMUFF:
-        break;
     case HELM_OF_BRILLIANCE:
         adj_abon(uarmh, uarmh->spe);
         break;
@@ -464,7 +462,6 @@ Helmet_off(VOID_ARGS)
     case ELVEN_HELM:
     case DWARVISH_HELM:
     case ORCISH_HELM:
-    case EARMUFF:
     case HELM_OF_OPAQUE_THOUGHTS:
         break;
     case DUNCE_CAP:
@@ -1223,7 +1220,8 @@ struct obj *otmp;
         if (was_blind) {
             /* "still cannot see" makes no sense when removing lenses
                since they can't have been the cause of your blindness */
-            if (otmp->otyp != LENSES && otmp->otyp != MASK)
+            if (otmp->otyp != LENSES && otmp->otyp != MASK 
+                && otmp->otyp != EARMUFFS)
                 You("still cannot see.");
         } else {
             changed = TRUE; /* !was_blind */
@@ -1611,6 +1609,7 @@ struct obj *otmp;
     if ((otmp == uwep) ? welded(otmp) : (int) otmp->cursed) {
         boolean use_plural = (is_boots(otmp) || is_gloves(otmp)
                               || otmp->otyp == LENSES
+                              || otmp->otyp == EARMUFFS
                               || otmp->otyp == MASK || otmp->quan > 1L);
 
         You("can't.  %s cursed.", use_plural ? "They are" : "It is");
@@ -1905,6 +1904,7 @@ struct obj *obj;
     armor = (obj->oclass == ARMOR_CLASS);
     ring = (obj->oclass == RING_CLASS || obj->otyp == MEAT_RING);
     eyewear = (obj->otyp == BLINDFOLD || obj->otyp == TOWEL
+               || obj->otyp ==EARMUFFS
                || obj->otyp == LENSES || obj->otyp == MASK);
     /* checks which are performed prior to actually touching the item */
     if (armor) {
@@ -1991,6 +1991,9 @@ struct obj *obj;
                 if (ublindf->otyp == MASK)
                     Your("%s is already covered by a mask.",
                          body_part(FACE));
+                else if (ublindf->otyp == EARMUFFS)
+                    Your("%s is already occupied by earmuffs.",
+                         body_part(HEAD));
                 else if (ublindf->otyp == TOWEL)
                     Your("%s is already covered by a towel.",
                          body_part(FACE));

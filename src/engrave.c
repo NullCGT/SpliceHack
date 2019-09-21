@@ -899,6 +899,10 @@ doengrave()
             return 0;
         }
         switch (otmp->otyp) {
+        case EARMUFFS:
+            if (oep)
+                You("can no longer hear the engraving.");
+            break;
         case MAGIC_MARKER:
             if (otmp->spe <= 0)
                 Your("marker has dried out.");

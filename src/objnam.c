@@ -529,7 +529,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         /*FALLTHRU*/
     case VENOM_CLASS:
     case TOOL_CLASS:
-        if (typ == LENSES)
+        if (typ == LENSES || typ == EARMUFFS)
             Strcpy(buf, "pair of ");
         else if (is_wet_towel(obj))
             Strcpy(buf, (obj->spe < 3) ? "moist " : "wet ");
@@ -565,10 +565,6 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         /* depends on order of the dragon scales objects */
         if (typ >= GRAY_DRAGON_SCALES && typ <= VOID_DRAGON_SCALES) {
             Sprintf(buf, "set of %s", actualn);
-            break;
-        }
-        if (obj->otyp == EARMUFF) {
-            Strcpy(buf, "pair of earmuffs");
             break;
         }
         if (is_boots(obj) || is_gloves(obj))
@@ -2248,7 +2244,7 @@ static struct sing_plur one_off[] = {
 static const char *const as_is[] = {
     /* makesingular() leaves these plural due to how they're used */
     "boots",   "shoes",     "gloves",    "lenses",   "scales",
-    "eyes",    "gauntlets", "iron bars",
+    "eyes",    "gauntlets", "iron bars", "earmuffs",
     /* both singular and plural are spelled the same */
     "bison",   "deer",      "elk",       "fish",      "fowl",
     "tuna",    "yaki",      "-hai",      "krill",     "manes",

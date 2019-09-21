@@ -333,7 +333,7 @@ const struct shclass shtypes[] = {
       2,
       D_SHOP,
       { { 90, -MASK },
-        { 2, -TOWEL },
+        { 2, -EARMUFFS },
         { 3, -LENSES },
         { 5, -BLINDFOLD } },
       shkweapons },

@@ -731,6 +731,7 @@ register struct obj *obj;
 		case BAG_OF_HOLDING:
 			obj->otyp = OILSKIN_SACK;
 			break;
+        case EARMUFFS:
 		case TOWEL:
 			obj->otyp = BLINDFOLD;
 			break;
@@ -898,7 +899,7 @@ register struct obj *obj;
 	    if (owornmask & W_ARMU && !is_shirt(obj))
 		owornmask &= ~W_ARMU;
 	    if (owornmask & W_TOOL && obj->otyp != BLINDFOLD &&
-	      obj->otyp != TOWEL && obj->otyp != LENSES)
+	      obj->otyp != TOWEL && obj->otyp != LENSES && obj->otyp != EARMUFFS)
 		owornmask &= ~W_TOOL;
 	    otyp2 = obj->otyp;
 	    obj->otyp = otyp;

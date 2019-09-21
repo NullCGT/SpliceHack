@@ -3838,6 +3838,7 @@ doapply()
     case BLINDFOLD:
     case LENSES:
     case MASK:
+    case EARMUFFS:
         if (obj == ublindf) {
             if (!cursed(obj))
                 Blindf_off(obj);
@@ -3848,6 +3849,8 @@ doapply()
                                        ? "covered by a towel"
                                        : ublindf->otyp == BLINDFOLD
                                              ? "wearing a blindfold"
+                                             : ublindf->otyp == EARMUFFS
+                                             ? "wearing earmuffs"
                                              : ublindf->otyp == LENSES
                                              ? "wearing lenses"
                                              : "wearing a mask");

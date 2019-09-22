@@ -6,6 +6,9 @@
 # Code and Patches #
 ####################
 
+# Slash'em Extended
+- Autorecover patch by Kerio
+
 #XNetHack
 - Object Materials Patch
 - Colored Altars and Stairs Patch

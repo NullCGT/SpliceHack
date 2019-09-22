@@ -71,6 +71,7 @@ Features
 - Phoenix eggs hatch instantly when exposed to lava, and are not damaged
   by fire.
 - Added YAFM explaining hydras losing heads when hit by a level-draining attack.
+- Autorecover patch to allow the player to continue crashed games.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing

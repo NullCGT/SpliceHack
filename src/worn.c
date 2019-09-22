@@ -380,16 +380,24 @@ boolean on, silently;
         /* properties which should have an effect but aren't implemented */
         case LEVITATION:
             break;
-        /* properties which maybe should have an effect but don't */
-        case FUMBLING:
-        case PROTECTION:
-            break;
-        default:
+        case FIRE_RES:
+        case COLD_RES:
+        case SLEEP_RES:
+        case DISINT_RES:
+        case SHOCK_RES:
+        case POISON_RES:
+        case ACID_RES:
+        case STONE_RES:
+        case SONIC_RES:
+        case PSYCHIC_RES:
             if (which <= 10) { /* 1 thru 10 correspond to MR_xxx mask values */
                 /* FIRE,COLD,SLEEP,DISINT,SHOCK,POISON,ACID,STONE,SONIC,PSYCHIC */
                 mask = (uchar) (1 << (which - 1));
                 mon->mextrinsics |= (unsigned long) mask;
             }
+            break;
+        /* properties which maybe should have an effect but don't */
+        default:
             break;
         }
     } else { /* off */
@@ -509,6 +517,8 @@ boolean creation;
         return;
 
     m_dowear_type(mon, W_AMUL, creation, FALSE);
+    m_dowear_type(mon, W_RINGL, creation, FALSE);
+    /* m_dowear_type(mon, W_RINGR, creation, FALSE); */
     /* can't put on shirt if already wearing suit */
     if (!cantweararm(mon->data) && !(mon->misc_worn_check & W_ARM))
         m_dowear_type(mon, W_ARMU, creation, FALSE);
@@ -552,6 +562,8 @@ boolean racialexception;
         return;
     if (old && flag == W_AMUL)
         return; /* no such thing as better amulets */
+    if (old && (flag == W_RING))
+        return;
     best = old;
 
     for (obj = mon->minvent; obj; obj = obj->nobj) {
@@ -564,6 +576,12 @@ boolean racialexception;
                 continue;
             best = obj;
             goto outer_break; /* no such thing as better amulets */
+        case W_RING:
+            /* For now, wear all rings and see what happens */
+            if (obj->oclass != RING_CLASS)
+                continue;
+            best = obj;
+            goto outer_break;
         case W_ARMU:
             if (!is_shirt(obj))
                 continue;

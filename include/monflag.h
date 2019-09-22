@@ -82,6 +82,7 @@
 #define MR2_STRENGTH 0x00010000L  /* gauntlets of power */
 #define MR2_FUMBLING 0x00020000L  /* clumsy */
 #define MR2_JUMPING  0x00040000L  /* jumping */
+#define MR2_TELEPORT    0x00080000L  /* teleporting */
 
 #define M1_FLY 0x00000001L         /* can fly or float */
 #define M1_SWIM 0x00000002L        /* can traverse water */

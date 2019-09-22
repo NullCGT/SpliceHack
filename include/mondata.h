@@ -37,6 +37,8 @@
 
 #define can_wwalk(mon) (((mon)->mextrinsics & MR2_WATERWALK) != 0)
 #define can_jump(mon)  (((mon)->mextrinsics & MR2_JUMPING) != 0)
+#define teleporter(mon) (((mon)->mextrinsics & MR2_TELEPORT) != 0 || \
+                          (mon->data->mflags1 & M1_TPORT) != 0L)
 #define has_displacement(mon) (((mon)->mextrinsics & MR2_DISPLACED) != 0)
 
 #define resists_mgc(ptr) \

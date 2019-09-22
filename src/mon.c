@@ -670,7 +670,7 @@ register struct monst *mtmp;
         if (!is_clinger(mtmp->data) && !likes_lava(mtmp->data)) {
             /* not fair...?  hero doesn't automatically teleport away
                from lava, just from water */
-            if (can_teleport(mtmp->data) && !tele_restrict(mtmp)) {
+            if (teleporter(mtmp) && !tele_restrict(mtmp)) {
                 if (rloc(mtmp, TRUE))
                     return 0;
             }

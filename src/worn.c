@@ -359,6 +359,9 @@ boolean on, silently;
             in_mklev = save_in_mklev;
             break;
         }
+        case TELEPORT:
+            mon->mextrinsics |= MR2_TELEPORT;
+            break;
         case WWALKING:
             mon->mextrinsics |= MR2_WATERWALK;
             break;

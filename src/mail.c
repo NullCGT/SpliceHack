@@ -474,7 +474,6 @@ struct obj *otmp UNUSED;
         "Please return to sender (Asmodeus)",
       "Buy a potion of gain level for only $19.99! Guaranteed to be blessed!",
         "Invitation: Visit the NetHack web site at http://www.nethack.org!",
-        "Contribute to SpliceHack at https://github.com/NullCGT/SpliceHack!"
     };
 
     /* XXX replace with more general substitution code and add local
@@ -482,8 +481,8 @@ struct obj *otmp UNUSED;
     if (junk[0] == NULL) {
 #define BUGS_FORMAT "Report bugs to <%s>."
         /* +2 from '%s' suffices as substitute for usual +1 for terminator */
-        junk[0] = (char *) alloc(strlen(BUGS_FORMAT) + strlen(DEVTEAM_EMAIL));
-        Sprintf(junk[0], BUGS_FORMAT, DEVTEAM_EMAIL);
+        junk[0] = (char *) alloc(strlen(BUGS_FORMAT) + strlen(DEVTEAM_URL));
+        Sprintf(junk[0], BUGS_FORMAT, DEVTEAM_URL);
 #undef BUGS_FORMAT
     }
     if (Blind) {

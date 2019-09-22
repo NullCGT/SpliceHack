@@ -613,8 +613,8 @@ VA_DECL(const char *, str)
 #ifndef MICRO
 #ifdef NOTIFY_NETHACK_BUGS
     if (!wizard)
-        raw_printf("Report the following error to \"%s\" or at \"%s\".",
-                   DEVTEAM_EMAIL, DEVTEAM_URL);
+        raw_printf("Report the following error to at \"%s\".",
+                   DEVTEAM_URL);
     else if (program_state.something_worth_saving)
         raw_print("\nError save file being written.\n");
 #else /* !NOTIFY_NETHACK_BUGS */

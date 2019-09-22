@@ -458,7 +458,7 @@ register struct monst *mtmp;
         mtmp->mstun = 0;
 
     /* some monsters teleport */
-    if (mtmp->mflee && !rn2(40) && can_teleport(mdat) && !mtmp->iswiz
+    if (mtmp->mflee && !rn2(40) && teleporter(mtmp) && !mtmp->iswiz
         && !level.flags.noteleport) {
         (void) rloc(mtmp, TRUE);
         return 0;

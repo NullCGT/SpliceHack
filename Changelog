@@ -21,6 +21,10 @@ Monsters
     - Sourced from Nephi's Gold Dragon Patch.
 - Monsters will use cursed scrolls of light to attempt to blind the player.
 - Monsters are more aggressive about using expensive cameras.
+- Monsters can wear rings. For the sake of keeping the code simple, each
+  monster is only capable of wearing a single ring. This has the indirect
+  effect of buffing Nazgul, since they spawn with rings of invisiblity.
+- Monsters can get teleportation extrinsically.
 - Nosferatu are harmed by light.
 
 New Items

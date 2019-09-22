@@ -2555,6 +2555,10 @@ struct obj *obj;
             || typ == SCR_WEB || typ == SCR_LIGHT)
             return TRUE;
         break;
+    case RING_CLASS:
+        if (typ == RIN_INVISIBILITY || typ == RIN_TELEPORTATION
+            || (typ >= RIN_POISON_RESISTANCE && typ <= RIN_SHOCK_RESISTANCE))
+        return TRUE;
     case AMULET_CLASS:
         if (typ == AMULET_OF_LIFE_SAVING || typ == AMULET_OF_REINCARNATION)
             return (boolean) !(nonliving(mon->data) || is_vampshifter(mon));

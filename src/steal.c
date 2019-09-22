@@ -625,7 +625,7 @@ struct monst *mtmp;
         Strcpy(buf, doname(otmp));
         (void) mpickobj(mtmp, otmp); /* could merge and free otmp but won't */
         pline("%s steals %s!", Monnam(mtmp), buf);
-        if (can_teleport(mtmp->data) && !tele_restrict(mtmp))
+        if (teleporter(mtmp) && !tele_restrict(mtmp))
             (void) rloc(mtmp, TRUE);
     }
 }

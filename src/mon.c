@@ -360,6 +360,7 @@ unsigned corpseflags;
         goto default_1;
     case PM_VAMPIRE:
     case PM_VAMPIRE_LORD:
+    case PM_BAOBHAN_SITH:
     case PM_NOSFERATU:
     case PM_VAMPIRE_MAGE:
         /* include mtmp in the mkcorpstat() call */
@@ -4027,6 +4028,7 @@ struct monst *mon;
     case PM_ALUCARD:
     case PM_VLAD_THE_IMPALER:
     case PM_VAMPIRE_LORD:
+    case PM_BAOBHAN_SITH:
     case PM_VAMPIRE_MAGE:
     case PM_VAMPIRE:
         mndx = pickvampshape(mon);

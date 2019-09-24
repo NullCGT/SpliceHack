@@ -1065,6 +1065,9 @@ boolean artif;
                 otmp->oerodeproof = otmp->rknown = 1;
 #endif
             }
+            if (otmp->otyp == ROBE_OF_STASIS) {
+                otmp->oerodeproof = 1;
+            }
             break;
         case WAND_CLASS:
             if (otmp->otyp == WAN_WISHING)

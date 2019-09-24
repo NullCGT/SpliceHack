@@ -496,10 +496,10 @@ CLOAK("mantle", "armored cloak",
       0, 0,          0,  4, 0, 30, 70, 7, 1,  IRON, CLR_GRAY),
 CLOAK("oilskin cloak", "slippery cloak",
       0, 0,          0,  4, 0, 10, 50,  9, 2,  CLOTH, HI_CLOTH),
-CLOAK("robe", None,
+CLOAK("mystic robe", "red robe",
       1, 1,          0,  3, 0, 15, 50,  8, 2,  CLOTH, CLR_RED),
-        /* robe was adopted from slash'em, where it's worn as a suit
-           rather than as a cloak and there are several variations */
+CLOAK("robe of stasis", "bleached robe",
+      1, 1,    UNCHANGING,  3, 0, 15, 50,  8, 2,  CLOTH, CLR_WHITE),
 CLOAK("alchemy smock", "apron",
       0, 1, POISON_RES,  9, 0, 10, 50,  9, 1,  CLOTH, CLR_WHITE),
 CLOAK("plain cloak", None,

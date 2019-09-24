@@ -1871,9 +1871,9 @@ int spell;
     statused = ACURR(urole.spelstat);
 
     if (uarm && is_metallic(uarm))
-        splcaster += (uarmc && uarmc->otyp == ROBE) ? urole.spelarmr / 2
-                                                    : urole.spelarmr;
-    else if (uarmc && uarmc->otyp == ROBE)
+        splcaster += (uarmc && uarmc->otyp == MYSTIC_ROBE) ? urole.spelarmr / 2
+                                                           : urole.spelarmr;
+    else if (uarmc && uarmc->otyp == MYSTIC_ROBE)
         splcaster -= urole.spelarmr;
     if (uwep && uwep->oartifact == ART_ORIGIN)
         splcaster -= urole.spelarmr;

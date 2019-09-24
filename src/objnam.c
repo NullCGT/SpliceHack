@@ -4407,7 +4407,8 @@ struct obj *cloak;
 {
     if (cloak) {
         switch (cloak->otyp) {
-        case ROBE:
+        case ROBE_OF_STASIS:
+        case MYSTIC_ROBE:
             return "robe";
         case MUMMY_WRAPPING:
             return "wrapping";

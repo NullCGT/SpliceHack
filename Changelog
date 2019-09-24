@@ -27,7 +27,7 @@ Monsters
 - Monsters can get teleportation extrinsically.
 - Nosferatu are harmed by light.
 
-New Items
+Items
 - New Item: Ring of Sonic Resistance (Glass Ring)
 - New Item: Gold Dragon Scales
 - New Item: Gold Dragon Scale Mail
@@ -41,6 +41,10 @@ New Items
       will attempt to throw them.
 - New Item: Cheese
     - Ported from SLASH'EM. The food, to be specific.
+- New Item: Robe of Stasis (Bleached Robe)
+    - Confers unchanging when worn, and is generated erodeproof. Cannot
+      be polymorphed.
+- Robes are renamed to mystic robes.
 - Earmuffs are now treated as a tool, instead of as a helmet. They are also
   pluralized correctly. Basically, earmuffs are actually a viable item for
   the first time.

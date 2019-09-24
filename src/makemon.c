@@ -976,13 +976,13 @@ register struct monst *mtmp;
               (void) mongets(mtmp,SKELETON_KEY);
         } else if (ptr->msound == MS_PRIEST
                    || quest_mon_represents_role(ptr, PM_PRIEST)) {
-            (void) mongets(mtmp, rn2(7) ? ROBE
+            (void) mongets(mtmp, rn2(7) ? MYSTIC_ROBE
                                         : rn2(3) ? CLOAK_OF_PROTECTION
                                                  : CLOAK_OF_MAGIC_RESISTANCE);
             (void) mongets(mtmp, SMALL_SHIELD);
             mkmonmoney(mtmp, (long) rn1(10, 20));
         } else if (quest_mon_represents_role(ptr, PM_MONK)) {
-            (void) mongets(mtmp, rn2(11) ? ROBE : CLOAK_OF_MAGIC_RESISTANCE);
+            (void) mongets(mtmp, rn2(11) ? MYSTIC_ROBE : CLOAK_OF_MAGIC_RESISTANCE);
         } else if(ptr == &mons[PM_DAL_ZETHIRE]) {
             for (cnt = rn2(3); cnt < 4; cnt++) {
                 otmp = mksobj(SCR_CREATE_MONSTER, FALSE, FALSE);

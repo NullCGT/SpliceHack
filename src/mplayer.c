@@ -219,7 +219,7 @@ register boolean special;
         case PM_MONK:
             weapon = !rn2(3) ? SHURIKEN : STRANGE_OBJECT;
             armor = STRANGE_OBJECT;
-            cloak = ROBE;
+            cloak = MYSTIC_ROBE;
             if (rn2(2))
                 shield = STRANGE_OBJECT;
             break;
@@ -231,7 +231,7 @@ register boolean special;
             if (rn2(2))
                 armor = rnd_class(PLATE_MAIL, CHAIN_MAIL);
             if (rn2(4))
-                cloak = ROBE;
+                cloak = MYSTIC_ROBE;
             if (rn2(4))
                 helm = rn2(2) ? HELM_OF_BRILLIANCE : HELM_OF_TELEPATHY;
             if (rn2(2))

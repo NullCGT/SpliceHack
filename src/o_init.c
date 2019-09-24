@@ -192,6 +192,8 @@ int *lo_p, *hi_p; /* output: range that item belongs among */
             *lo_p = GLOVES, *hi_p = GAUNTLETS_OF_DEXTERITY;
         else if (otyp >= CLOAK_OF_PROTECTION && otyp <= CLOAK_OF_DISPLACEMENT)
             *lo_p = CLOAK_OF_PROTECTION, *hi_p = CLOAK_OF_DISPLACEMENT;
+        else if (otyp >= MYSTIC_ROBE && otyp <= ROBE_OF_STASIS)
+            *lo_p = MYSTIC_ROBE, *hi_p = ROBE_OF_STASIS;
         else if (otyp >= SPEED_BOOTS && otyp <= LEVITATION_BOOTS)
             *lo_p = SPEED_BOOTS, *hi_p = LEVITATION_BOOTS;
         break;
@@ -238,7 +240,7 @@ shuffle_all()
     };
     /* sub-class type ranges (one item from each group) */
     static short shuffle_types[] = {
-        HELMET, GLOVES, CLOAK_OF_PROTECTION, SPEED_BOOTS, VENOM_CLASS,
+        HELMET, GLOVES, CLOAK_OF_PROTECTION, MYSTIC_ROBE, SPEED_BOOTS, VENOM_CLASS,
     };
     int first, last, idx;
 

@@ -1144,6 +1144,15 @@ mayfourth()
     return (boolean) (lt->tm_mday == 4 && lt->tm_mon == 4);
 }
 
+boolean
+halloween()
+{
+    register struct tm *lt = getlt();
+
+    /* tm_mon (month, 0-11) */
+    return (boolean) (lt->tm_mday == 31 && lt->tm_mon == 10);
+}
+
 
 int
 night()

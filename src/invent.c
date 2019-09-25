@@ -1554,7 +1554,7 @@ register const char *let, *word;
              */
             else if (
                 (putting_on(word)
-                 && ((otmp->oclass == FOOD_CLASS && otmp->otyp != MEAT_RING)
+                 && ((otmp->oclass == FOOD_CLASS && otmp->otyp != MEAT_RING && otmp->otyp != PUMPKIN)
                      || (otmp->oclass == TOOL_CLASS && otyp != BLINDFOLD
                          && otyp != EARMUFFS
                          && otyp != TOWEL && otyp != LENSES && otyp != MASK)))

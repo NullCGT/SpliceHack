@@ -401,6 +401,7 @@ Helmet_on(VOID_ARGS)
     case HELM_OF_TELEPATHY:
     case HELM_OF_OPAQUE_THOUGHTS:
     case HELM_OF_BRILLIANCE:
+    case PUMPKIN:
         adj_abon(uarmh, uarmh->spe);
         break;
     case CORNUTHAUM:
@@ -465,6 +466,7 @@ Helmet_off(VOID_ARGS)
     case DWARVISH_HELM:
     case ORCISH_HELM:
     case HELM_OF_OPAQUE_THOUGHTS:
+    case PUMPKIN:
         break;
     case DUNCE_CAP:
         context.botl = 1;
@@ -1453,7 +1455,7 @@ struct obj *stolenobj; /* no message if stolenobj is already being doffing */
 }
 
 /* both 'clothes' and 'accessories' now include both armor and accessories;
-   TOOL_CLASS is for eyewear, FOOD_CLASS is for MEAT_RING */
+   TOOL_CLASS is for eyewear, FOOD_CLASS is for MEAT_RING and PUMPKIN */
 static NEARDATA const char clothes[] = {
     ARMOR_CLASS, RING_CLASS, AMULET_CLASS, TOOL_CLASS, FOOD_CLASS, 0
 };
@@ -1912,7 +1914,7 @@ struct obj *obj;
         already_wearing(c_that_);
         return 0;
     }
-    armor = (obj->oclass == ARMOR_CLASS);
+    armor = (obj->oclass == ARMOR_CLASS || obj->otyp == PUMPKIN);
     ring = (obj->oclass == RING_CLASS || obj->otyp == MEAT_RING);
     eyewear = (obj->otyp == BLINDFOLD || obj->otyp == TOWEL
                || obj->otyp ==EARMUFFS

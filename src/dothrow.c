@@ -2197,6 +2197,7 @@ boolean in_view;
         break;
     case EGG:
     case MELON:
+    case PUMPKIN:
         pline("Splat!");
         break;
     case CREAM_PIE:

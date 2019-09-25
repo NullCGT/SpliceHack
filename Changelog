@@ -39,6 +39,12 @@ Items
 - New Item: Pineapple
     - When thrown, pineapples are accurate and deal extra damage. Monsters
       will attempt to throw them.
+- New Item: Pumpkin
+    - Can be worn as a helmet, or eaten.
+    - Monsters will pick up and put on pumpkins.
+    - Headless horsemen always carry a pumpkin.
+    - On halloween, humanoid monsters have a 1/30 chance of being generated
+      with a pumpkin.
 - New Item: Cheese
     - Ported from SLASH'EM. The food, to be specific.
 - New Item: Robe of Stasis (Bleached Robe)

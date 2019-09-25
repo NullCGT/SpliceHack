@@ -1138,6 +1138,7 @@ unsigned doname_flags;
             Strcat(bp, " (being worn)");
         break;
     case ARMOR_CLASS:
+        armor:
         if (obj->owornmask & W_ARMOR)
             Strcat(bp, (obj == uskin) ? " (embedded in your skin)"
                        /* in case of perm_invent update while Wear/Takeoff
@@ -1220,6 +1221,8 @@ unsigned doname_flags;
     case FOOD_CLASS:
         if (obj->oeaten)
             Strcat(prefix, "partly eaten ");
+        if (obj->otyp == PUMPKIN)
+            goto armor;
         add_erosion_words(obj, prefix);
         if (obj->otyp == CORPSE) {
             /* (quan == 1) => want corpse_xname() to supply article,

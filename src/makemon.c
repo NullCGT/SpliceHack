@@ -737,6 +737,7 @@ register struct monst *mtmp;
         case PM_HEADLESS_HORSEMAN:
             (void) mongets(mtmp, LANCE);
             (void) mongets(mtmp, SCALE_MAIL);
+            (void) mongets(mtmp, PUMPKIN);
             break;
         case PM_BALROG:
             (void) mongets(mtmp, BULLWHIP);
@@ -823,6 +824,8 @@ register struct monst *mtmp;
 
     if ((int) mtmp->m_lev > rn2(75))
         (void) mongets(mtmp, rnd_offensive_item(mtmp));
+    if (halloween() && !rn2(30))
+        (void) mongets(mtmp, PUMPKIN);
 }
 
 /*

@@ -20,6 +20,7 @@
 - Code for SLASH'EM fungus growth.
 - Fixes to monster intrinsics.
 - Code for object probabilities
+- Mjollnir invocation.
 
 #Biodiversity Patch
 - Umbral Hulk

@@ -1026,7 +1026,7 @@ int dieroll;
                 if (thrown == HMON_THROWN
                     && obj->oartifact == ART_GAE_BULG && !noncorporeal(mdat) &&
                     !amorphous(mdat)) {
-                        tmp += 200;
+                        tmp += mon->mhp;
                         pline("You throw %s as a last resort... it flies true and impales %s!", yname(obj), mon_nam(mon));
                         /* chance that Gae Bulg is lost... */
                         if (rnd(3) < 2) {

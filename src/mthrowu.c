@@ -584,7 +584,7 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
         if (otmp->oartifact == ART_GAE_BULG && cansee(mtmp->mx, mtmp->my)) {
             pline_The("barbed spear flies through the air and impales %s!",
                       mon_nam(mtmp));
-            damage += 200;
+            damage += mtmp->mhp;
         }
         if (!DEADMONSTER(mtmp)) { /* might already be dead (if petrified) */
             mtmp->mhp -= damage;
@@ -783,7 +783,7 @@ register boolean verbose;
             default:
                 dam = dmgval(singleobj, &youmonst);
                 if (singleobj->oartifact == ART_GAE_BULG) {
-                    dam += 200;
+                    dam += u.uhp;
                 }
                 hitv = 3 - distmin(u.ux, u.uy, mon->mx, mon->my);
                 if (hitv < -4)

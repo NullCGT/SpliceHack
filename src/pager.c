@@ -1146,7 +1146,6 @@ add_obj_info(winid datawin, short otyp)
                 continue;
             }
             if (oc.oc_oprop == propertynames[i].prop_num) {
-                OBJPUTSTR(buf);
                 /* proper grammar */
                 const char* confers = "Makes you";
                 const char* effect = propertynames[i].prop_name;
@@ -1193,6 +1192,7 @@ add_obj_info(winid datawin, short otyp)
                 if (strstri(propertynames[i].prop_name, "resistance"))
                     confers = "Confers";
                 Sprintf(buf, "%s %s.", confers, effect);
+                OBJPUTSTR(buf);
             }
         }
     }
@@ -1509,9 +1509,13 @@ char *supplemental_name;
 
             /* finally, put the appropriate information into a window */
             if (user_typed_name || without_asking || yes_to_moreinfo) {
-                if (!found_in_file && !pm && otyp == STRANGE_OBJECT &&
-                    user_typed_name && pass == 0 && !pass1found_in_file) {
-                    pline("I don't have any information on those things.");
+                if (!found_in_file && !pm && otyp == STRANGE_OBJECT) {
+                    if ((user_typed_name && pass == 0 && !pass1found_in_file)
+                        || yes_to_moreinfo)
+                        pline("I don't have any information on those things.");
+                    /* don't print anything otherwise; we don't want it to e.g.
+                     * print a database entry and then print the above message.
+                     */
                 }
                 else {
                     datawin = create_nhwindow(NHW_MENU);

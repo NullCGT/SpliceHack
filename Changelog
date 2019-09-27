@@ -93,6 +93,7 @@ Fixes
 - Expensive cameras used by monsters will hurt players that are polymorphed into
   light-hating monsters.
 - Fixed boabhan-sith spawning as random monsters.
+- Fixed intelligent pet patch issue where monsters would repeatedly wield polearms.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

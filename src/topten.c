@@ -130,7 +130,7 @@ boolean incl_helpless;
     case KILLED_BY:
         if (how == MURDERED)
             (void) strncat(buf,
-                murdered_by_msg[rn2(SIZE(murdered_by_msg))], siz - 1);
+                murdered_by_msg[moves % SIZE(murdered_by_msg)], siz - 1);
         else
             (void) strncat(buf, killed_by_prefix[how], siz - 1);
         l = strlen(buf);

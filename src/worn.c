@@ -522,8 +522,7 @@ boolean creation;
         return;
 
     m_dowear_type(mon, W_AMUL, creation, FALSE);
-    m_dowear_type(mon, W_RINGL, creation, FALSE);
-    /* m_dowear_type(mon, W_RINGR, creation, FALSE); */
+    m_dowear_type(mon, W_RING, creation, FALSE);
     /* can't put on shirt if already wearing suit */
     if (!cantweararm(mon->data) && !(mon->misc_worn_check & W_ARM))
         m_dowear_type(mon, W_ARMU, creation, FALSE);
@@ -567,7 +566,7 @@ boolean racialexception;
         return;
     if (old && flag == W_AMUL)
         return; /* no such thing as better amulets */
-    if (old && (flag == W_RING))
+    if (old && flag == W_RING)
         return;
     best = old;
 

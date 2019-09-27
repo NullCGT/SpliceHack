@@ -101,6 +101,7 @@ Fixes
   when receiving a random death message.
 - Fixed monster steeds not teleporting with their masters, lagging behind by
   one turn.
+- Fixed bad feedback when monster steeds have invisible riders.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

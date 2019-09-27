@@ -95,6 +95,8 @@ Fixes
   light-hating monsters.
 - Fixed boabhan-sith spawning as random monsters.
 - Fixed intelligent pet patch issue where monsters would repeatedly wield polearms.
+- Fixed intelligent pet patch issue where monsters would treat polearms as having
+  the same range as bows, and would stand motionless far away from the player.
 - Fixed inconsistent cause of death across livelog, top ten list, and gravestone
   when receiving a random death message.
 - Fixed monster steeds not teleporting with their masters, lagging behind by

@@ -690,8 +690,7 @@ register struct monst *mtmp;
     mweponly = (mwelded(mwep) && mtmp->weapon_check == NO_WEAPON_WANTED);
    	/* This check is disabled, as it's targeted towards attacking you
    	   and not any arbitrary target. */
-   	/* if (dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 13 && couldsee(mtmp->mx, mtmp->my)) */
-   	{
+   	if (dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 5 && couldsee(mtmp->mx, mtmp->my)) {
         for (i = 0; i < SIZE(pwep); i++) {
             /* Only strong monsters can wield big (esp. long) weapons.
              * Big weapon is basically the same as bimanual.

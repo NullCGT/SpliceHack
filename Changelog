@@ -97,6 +97,8 @@ Fixes
 - Fixed intelligent pet patch issue where monsters would repeatedly wield polearms.
 - Fixed inconsistent cause of death across livelog, top ten list, and gravestone
   when receiving a random death message.
+- Fixed monster steeds not teleporting with their masters, lagging behind by
+  one turn.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

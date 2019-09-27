@@ -582,7 +582,9 @@ boolean racialexception;
             goto outer_break; /* no such thing as better amulets */
         case W_RING:
             /* For now, wear all rings and see what happens */
-            if (obj->oclass != RING_CLASS)
+            if (obj->oclass != RING_CLASS 
+                || (obj->oclass == PROT_FROM_SHAPE_CHANGERS 
+                    && is_shapeshifter(mon->data)))
                 continue;
             best = obj;
             goto outer_break;

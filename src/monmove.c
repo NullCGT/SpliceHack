@@ -630,6 +630,7 @@ register struct monst *mtmp;
          */
         mw_tmp = MON_WEP(mtmp);
         if (!(scared && mw_tmp && is_pick(mw_tmp))
+            && !is_pole(mw_tmp)
             && mtmp->weapon_check == NEED_WEAPON
             && !(mtmp->mtrapped && !nearby && select_rwep(mtmp))) {
             mtmp->weapon_check = NEED_HTH_WEAPON;

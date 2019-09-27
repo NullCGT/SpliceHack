@@ -112,7 +112,8 @@ boolean incl_helpless;
         "killed by ",       "inhumed by ",                "dispatched by ",
         "exterminated by ", "done in by ",                "defeated by ",
         "struck down by ",  "offed by ",                  "mowed down by ",
-        "taken down by ",   "sent to the grave by ",
+        "taken down by ",   "sent to the grave by ",      "cut down by ",
+        "slaughtered by "
     };
     unsigned l;
     char c, *kname = killer.name;

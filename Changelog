@@ -83,6 +83,7 @@ Features
   by fire.
 - Added YAFM explaining hydras losing heads when hit by a level-draining attack.
 - Autorecover patch to allow the player to continue crashed games.
+- Added a few additional death messages.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing
@@ -94,6 +95,8 @@ Fixes
   light-hating monsters.
 - Fixed boabhan-sith spawning as random monsters.
 - Fixed intelligent pet patch issue where monsters would repeatedly wield polearms.
+- Fixed inconsistent cause of death across livelog, top ten list, and gravestone
+  when receiving a random death message.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

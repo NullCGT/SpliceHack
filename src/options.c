@@ -128,7 +128,6 @@ static struct Bool_Opt {
 #else
     { "fast_map", (boolean *) 0, TRUE, SET_IN_FILE },
 #endif
-    { "female", &flags.female, FALSE, DISP_IN_GAME },
     { "fixinv", &flags.invlet_constant, TRUE, SET_IN_GAME },
 #if defined(SYSFLAGS) && defined(AMIFLUSH)
     { "flush", &sysflags.amiflush, FALSE, SET_IN_GAME },
@@ -320,7 +319,7 @@ static struct Comp_Opt {
     { "font_text", "the font to use in text windows", 40,
       DISP_IN_GAME }, /*WC*/
     { "fruit", "the name of a fruit you enjoy eating", PL_FSIZ, SET_IN_GAME },
-    { "gender", "your starting gender (male, female, or nonbinary)", 8, DISP_IN_GAME },
+    { "gender", "your starting gender (male, female, or nonbinary)", 10, DISP_IN_GAME },
     { "horsename", "the name of your (first) horse (e.g., horsename:Silver)",
       PL_PSIZ, DISP_IN_GAME },
     { "map_mode", "map display mode under Windows", 20, DISP_IN_GAME }, /*WC*/
@@ -1973,7 +1972,7 @@ char **opp;
     } else if ((op = string_for_env_opt(fullname, opts, FALSE)) != 0) {
         boolean val_negated = FALSE;
 
-        while ((*op == '!') || !strncmpi(op, "no", 2)) {
+        while ((*op == '!') || (!strncmpi(op, "no", 2) && strncmp(fullname, "gender", 6) != 0)) {
             if (*op == '!')
                 op++;
             else
@@ -2066,29 +2065,6 @@ boolean tinitial, tfrom_file;
     if (match_optname(opts, "colour", 5, FALSE))
         Strcpy(opts, "color"); /* fortunately this isn't longer */
 
-    /* special boolean options */
-
-    if (match_optname(opts, "female", 3, FALSE)) {
-        if (duplicate_opt_detection(opts, 0))
-            complain_about_duplicate(opts, 0);
-        if (!initial && flags.female == negated) {
-            config_error_add("That is not anatomically possible.");
-            return FALSE;
-        } else
-            flags.initgend = flags.female = !negated;
-        return retval;
-    }
-
-    if (match_optname(opts, "male", 4, FALSE)) {
-        if (duplicate_opt_detection(opts, 0))
-            complain_about_duplicate(opts, 0);
-        if (!initial && flags.female != negated) {
-            config_error_add("That is not anatomically possible.");
-            return FALSE;
-        } else
-            flags.initgend = flags.female = negated;
-        return retval;
-    }
 
 #if defined(MICRO) && !defined(AMIGA)
     /* included for compatibility with old NetHack.cnf files */
@@ -2152,7 +2128,7 @@ boolean tinitial, tfrom_file;
                 config_error_add("Unknown %s '%s'", fullname, op);
                 return FALSE;
             } else
-                flags.female = flags.initgend;
+                flags.gender = flags.initgend;
         } else
             return FALSE;
         return retval;
@@ -4631,8 +4607,6 @@ doset() /* changing options via menu by Per Liboriussen */
             if ((bool_p = boolopt[i].addr) != 0
                 && ((boolopt[i].optflags <= DISP_IN_GAME && pass == 0)
                     || (boolopt[i].optflags >= SET_IN_GAME && pass == 1))) {
-                if (bool_p == &flags.female)
-                    continue; /* obsolete */
                 if (boolopt[i].optflags == SET_IN_WIZGAME && !wizard)
                     continue;
                 if ((is_wc_option(name) && !wc_supported(name))

@@ -745,7 +745,7 @@ u_init()
     struct permonst* shambler = &mons[PM_SHAMBLING_HORROR];
     struct attack* attkptr;
 
-    flags.female = flags.initgend;
+    flags.gender = flags.initgend;
     flags.beginner = 1;
 
     /* WAC -- Clear Tech List since adjabil will init the 1st level techs*/
@@ -792,9 +792,9 @@ u_init()
     u.ukinghill = 0;
     u.protean = 0;
 
-    u.umonnum = u.umonster = (flags.female == 1 && urole.femalenum != NON_PM)
+    u.umonnum = u.umonster = (flags.gender == 1 && urole.femalenum != NON_PM)
                                  ? urole.femalenum
-                                 : (flags.female == 2 && urole.nbnum != NON_PM)
+                                 : (flags.gender == 2 && urole.nbnum != NON_PM)
                                     ? urole.nbnum
                                     : urole.malenum;
     u.ulycn = NON_PM;

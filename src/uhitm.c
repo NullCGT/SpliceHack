@@ -1753,7 +1753,7 @@ struct attack *mattk;
     gold = findgold(mdef->minvent, TRUE);
 
     if (stealoid) { /* we will be taking everything */
-        if (gender(mdef) == (int) u.mfemale && youmonst.data->mlet == S_NYMPH)
+        if (gender(mdef) == (int) u.ugender && youmonst.data->mlet == S_NYMPH)
             You("charm %s.  She gladly hands over %sher possessions.",
                 mon_nam(mdef), !gold ? "" : "most of ");
         else

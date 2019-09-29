@@ -327,7 +327,7 @@ register struct monst *mtmp;
     if (youmonst.data->mlet == S_DEMON) { /* Won't blackmail their own. */
         if (!Deaf)
             pline("%s says, \"Good hunting, %s.\"", Amonnam(mtmp),
-              flags.female == 1 ? "Sister" : flags.female == 2 ? "Sibling" : "Brother");
+              flags.gender == 1 ? "Sister" : flags.gender == 2 ? "Sibling" : "Brother");
         else if (canseemon(mtmp))
             pline("%s says something.", Amonnam(mtmp));
         if (!tele_restrict(mtmp))

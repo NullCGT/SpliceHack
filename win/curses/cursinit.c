@@ -599,9 +599,9 @@ curses_choose_character()
         for (;;) {
             for (n = 0, i = 0; roles[i].name.m; i++) {
                 if (ok_role(i, flags.initrace, flags.initgend, flags.initalign)) {
-                    if (flags.initgend >= 0 && flags.female == 1 && roles[i].name.f)
+                    if (flags.initgend >= 0 && flags.gender == 1 && roles[i].name.f)
                         choices[n] = roles[i].name.f;
-                    else if (flags.initgend >= 0 && flags.female == 2 && roles[i].name.n)
+                    else if (flags.initgend >= 0 && flags.gender == 2 && roles[i].name.n)
                         choices[n] = roles[i].name.n;
                     else
                         choices[n] = roles[i].name.m;

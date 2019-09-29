@@ -1652,8 +1652,8 @@ register struct attack *mattk;
             if (!Blind)
                 pline("%s tries to %s you, but you seem %s.",
                       Adjmonnam(mtmp, "plain"),
-                      flags.female ? "charm" : "seduce",
-                      flags.female ? "unaffected" : "uninterested");
+                      flags.gender ? "charm" : "seduce",
+                      flags.gender ? "unaffected" : "uninterested");
             if (rn2(3)) {
                 if (!tele_restrict(mtmp))
                     (void) rloc(mtmp, TRUE);
@@ -3138,11 +3138,11 @@ struct monst *mon;
 
     if (uarm || uarmc) {
         if (!Deaf) {
-            if (flags.female == 0)
+            if (flags.gender == 0)
                 verbalize("You're such a nice guy; I wish...");
-            else if (flags.female == 1)
+            else if (flags.gender == 1)
                 verbalize("You're such a sweet lady; I wish...");
-            else if (flags.female == 2)
+            else if (flags.gender == 2)
                 verbalize("You're such a wonderful person; I wish...");
         }
         else if (seewho)

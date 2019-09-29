@@ -172,7 +172,7 @@ const char *fmt, *arg;
         u.acurr = u.macurr; /* restore old attribs */
         u.amax = u.mamax;
         u.umonnum = u.umonster;
-        flags.female = u.mfemale;
+        flags.gender = u.ugender;
     }
     set_uasmon();
 
@@ -244,22 +244,22 @@ change_sex()
     if (!already_polyd
         || (!is_male(youmonst.data) && !is_female(youmonst.data)
             && !is_neuter(youmonst.data)))
-        flags.female = !flags.female;
+        flags.gender = !flags.gender;
     if (already_polyd) /* poly'd: also change saved sex */
-        u.mfemale = !u.mfemale;
+        u.ugender = !u.ugender;
     max_rank_sz(); /* [this appears to be superfluous] */
-    if ((already_polyd ? u.mfemale : flags.female) && urole.name.f)
+    if ((already_polyd ? u.ugender : flags.gender) && urole.name.f)
         Strcpy(pl_character, urole.name.f);
     else
         Strcpy(pl_character, urole.name.m);
-    u.umonster = ((already_polyd ? u.mfemale : flags.female)
+    u.umonster = ((already_polyd ? u.ugender : flags.gender)
                   && urole.femalenum != NON_PM)
                      ? urole.femalenum
                      : urole.malenum;
     if (!already_polyd) {
         u.umonnum = u.umonster;
     } else if (u.umonnum == PM_SUCCUBUS || u.umonnum == PM_INCUBUS) {
-        flags.female = !flags.female;
+        flags.gender = !flags.gender;
         /* change monster type to match new sex */
         u.umonnum = (u.umonnum == PM_SUCCUBUS) ? PM_INCUBUS : PM_SUCCUBUS;
         set_uasmon();
@@ -367,7 +367,7 @@ newman()
     newuhs(FALSE);
     polyman("feel like a new %s!",
             /* use saved gender we're about to revert to, not current */
-            ((Upolyd ? u.mfemale : flags.female) && urace.individual.f)
+            ((Upolyd ? u.ugender : flags.gender) && urace.individual.f)
                 ? urace.individual.f
                 : (urace.individual.m)
                    ? urace.individual.m
@@ -633,14 +633,14 @@ int mntmp;
         /* Human to monster; save human stats */
         u.macurr = u.acurr;
         u.mamax = u.amax;
-        u.mfemale = flags.female;
+        u.ugender = flags.gender;
     } else {
         /* Monster to monster; restore human stats, to be
          * immediately changed to provide stats for the new monster
          */
         u.acurr = u.macurr;
         u.amax = u.mamax;
-        flags.female = u.mfemale;
+        flags.gender = u.ugender;
     }
 
     /* if stuck mimicking gold, stop immediately */
@@ -654,10 +654,10 @@ int mntmp;
         youmonst.mappearance = 0;
     }
     if (is_male(&mons[mntmp])) {
-        if (flags.female)
+        if (flags.gender)
             dochange = TRUE;
     } else if (is_female(&mons[mntmp])) {
-        if (!flags.female)
+        if (!flags.gender)
             dochange = TRUE;
     } else if (!is_neuter(&mons[mntmp]) && mntmp != u.ulycn) {
         if (sex_change_ok && !rn2(10))
@@ -666,9 +666,9 @@ int mntmp;
 
     Strcpy(buf, (u.umonnum != mntmp) ? "" : "new ");
     if (dochange) {
-        flags.female = !flags.female;
+        flags.gender = !flags.gender;
         Strcat(buf, (is_male(&mons[mntmp]) || is_female(&mons[mntmp]))
-                       ? "" : flags.female ? "female " : "male ");
+                       ? "" : flags.gender ? "female " : "male ");
     }
     Strcat(buf, mons[mntmp].mname);
     You("%s %s!", (u.umonnum != mntmp) ? "turn into" : "feel like", an(buf));
@@ -809,7 +809,7 @@ int mntmp;
             pline(use_thec, monsterc, "change shape");
         if (attacktype(youmonst.data, AT_MAGC))
          		pline(use_thec, monsterc,"cast monster spells");
-        if (lays_eggs(youmonst.data) && flags.female &&
+        if (lays_eggs(youmonst.data) && flags.gender &&
             !(youmonst.data == &mons[PM_GIANT_EEL]
                 || youmonst.data == &mons[PM_ELECTRIC_EEL]))
             pline(use_thec, "sit",
@@ -1811,11 +1811,11 @@ int
 poly_gender()
 {
     /* Returns gender of polymorphed player;
-     * 0/1=same meaning as flags.female, 2=none.
+     * 0/1=same meaning as flags.gender, 2=none.
      */
     if (is_neuter(youmonst.data) || !humanoid(youmonst.data))
         return 2;
-    return flags.female;
+    return flags.gender;
 }
 
 void
@@ -1951,8 +1951,8 @@ ugenocided()
                       || (urole.femalenum != NON_PM
                           && (mvitals[urole.femalenum].mvflags & G_GENOD))
                       || (mvitals[urace.malenum].mvflags & G_GENOD)
-                      || (urace.femalenum != NON_PM
-                          && (mvitals[urace.femalenum].mvflags & G_GENOD)));
+                      || (urace.nbnum != NON_PM
+                          && (mvitals[urace.nbnum].mvflags & G_GENOD)));
 }
 
 /* how hero feels "inside" after self-genocide of role or race */

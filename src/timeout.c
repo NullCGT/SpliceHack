@@ -893,7 +893,7 @@ long timeout;
     mon = mon2 = (struct monst *) 0;
     mnum = big_to_little(egg->corpsenm);
     /* The identity of one's father is learned, not innate */
-    yours = (egg->spe || (!flags.female && carried(egg) && !rn2(2)));
+    yours = (egg->spe || (flags.gender == 0 && carried(egg) && !rn2(2)));
     silent = (timeout != monstermoves); /* hatched while away */
 
     /* only can hatch when in INVENT, FLOOR, MINVENT */
@@ -976,7 +976,7 @@ long timeout;
             if (yours) {
                 pline("%s cries sound like \"%s%s\"",
                       siblings ? "Their" : "Its",
-                      flags.female ? "mommy" : "daddy", egg->spe ? "." : "?");
+                      flags.gender == 1 ? "mommy" : flags.gender == 2 ? plname : "daddy", egg->spe ? "." : "?");
             } else if (mon->data->mlet == S_DRAGON && !Deaf) {
                 verbalize("Gleep!"); /* Mything eggs :-) */
             }

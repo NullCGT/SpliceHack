@@ -733,7 +733,7 @@ boolean new_game; /* false => restoring an old game */
     char ebuf[BUFSZ];
     char racebuf[BUFSZ];
     char rolebuf[BUFSZ];
-    int currentgend = Upolyd ? u.mfemale : flags.female;
+    int currentgend = Upolyd ? u.ugender : flags.gender;
 
     /* skip "welcome back" if restoring a doomed character */
     if (!new_game && Upolyd && ugenocided()) {

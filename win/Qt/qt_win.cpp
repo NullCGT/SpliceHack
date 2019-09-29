@@ -2547,7 +2547,7 @@ void NetHackQtStatusWindow::updateStats()
 	}
 	Strcat(buf, mname);
     } else {
-	Strcat(buf, rank_of(u.ulevel, pl_character[0], ::flags.female));
+	Strcat(buf, rank_of(u.ulevel, pl_character[0], ::flags.gender));
     }
     name.setLabel(buf,NetHackQtLabelledIcon::NoNum,u.ulevel);
 

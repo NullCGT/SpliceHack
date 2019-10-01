@@ -358,11 +358,7 @@
 #define hero_glyph                                                    \
     monnum_to_glyph((Upolyd || !flags.showrace)                       \
                         ? u.umonnum                                   \
-                        : (flags.gender == 1 && urace.femalenum != NON_PM) \
-                            ? urace.femalenum                       \
-                            : (flags.gender == 2 && urace.nbnum != NON_PM) \
-                              ? urace.nbnum \
-                              : urace.malenum) \
+                        : monnum_gender(flags.gender, TRUE))          \
 
 /*
  * Change the given glyph into it's given type.  Note:

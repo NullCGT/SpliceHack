@@ -3138,11 +3138,11 @@ struct monst *mon;
 
     if (uarm || uarmc) {
         if (!Deaf) {
-            if (flags.gender == 0)
+            if (flags.gender == GEND_M)
                 verbalize("You're such a nice guy; I wish...");
-            else if (flags.gender == 1)
+            else if (flags.gender == GEND_F)
                 verbalize("You're such a sweet lady; I wish...");
-            else if (flags.gender == 2)
+            else if (flags.gender == GEND_N)
                 verbalize("You're such a wonderful person; I wish...");
         }
         else if (seewho)

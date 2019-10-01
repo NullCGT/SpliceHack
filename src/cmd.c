@@ -1805,11 +1805,7 @@ int final; /* ENL_GAMEINPROGRESS:0, ENL_GAMEOVERALIVE, ENL_GAMEOVERDEAD */
     /* as in background_enlightenment, when poly'd we need to use the saved
        gender in u.ugender rather than the current you-as-monster gender */
     Sprintf(buf, "%s the %s's attributes:", tmpbuf,
-            ((Upolyd ? u.ugender : flags.gender) == 1 && urole.name.f)
-                ? urole.name.f
-                : ((Upolyd ? u.ugender : flags.gender) == 2 && urole.name.n)
-                ? urole.name.n
-                : urole.name.m);
+            (Upolyd ? rolename_gender(u.ugender) : rolename_gender(flags.gender)));
 
     /* title */
     enlght_out_attr(ATR_HEADING, buf); /* "Conan the Archeologist's attributes:" */

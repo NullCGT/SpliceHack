@@ -4141,10 +4141,10 @@ register int fall;
                 if (u.utraptype == TT_PIT)
                     verbalize(
                         "Be careful, %s, or you might fall through the floor.",
-                        (flags.gender == 1) ? "madam" : (flags.gender == 2) ? "mix" : "sir");
+                        (flags.gender == GEND_F) ? "madam" : (flags.gender == GEND_N) ? "mix" : "sir");
                 else
                     verbalize("%s, do not damage the floor here!",
-                        (flags.gender == 1) ? "Madam" : (flags.gender == 2) ? "Mix" : "Sir");
+                        (flags.gender == GEND_F) ? "Madam" : (flags.gender == GEND_N) ? "Mix" : "Sir");
             }
         }
         if (Role_if(PM_KNIGHT)) {

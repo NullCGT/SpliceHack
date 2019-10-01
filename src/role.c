@@ -2525,4 +2525,73 @@ Goodbye()
     }
 }
 
+const char *
+sibling_gender()
+{
+    const char* ret;
+    switch(flags.gender) {
+    case 0:
+        ret = "brother";
+        break;
+    case 1:
+        ret = "sister";
+        break;
+    default:
+        ret = "sibling";
+        break;
+    }
+    return ret;
+}
+
+const char *
+child_gender()
+{
+    const char* ret;
+    switch(flags.gender) {
+    case 0:
+        ret = "son";
+        break;
+    case 1:
+        ret = "daughter";
+        break;
+    default:
+        ret = "child";
+        break;
+    }
+    return ret;
+}
+
+int
+monnum_gender(flag, race)
+int flag;
+boolean race;
+{
+    int mnum;
+    if (race) {
+        mnum = (flag == GEND_F && urace.femalenum != NON_PM)
+            ? urace.femalenum
+            : (flag == GEND_N && urace.nbnum != NON_PM)
+                ? urace.nbnum
+                : urace.malenum;
+    } else {
+        mnum = (flag == GEND_F && urole.femalenum != NON_PM)
+                ? urole.femalenum
+                : (flag == GEND_N && urole.nbnum != NON_PM)
+                    ? urole.nbnum
+                    : urole.malenum;
+    }
+    return mnum;
+}
+
+const char*
+rolename_gender(flag)
+int flag;
+{
+    return (flag == GEND_F && urole.name.f)
+                ? urole.name.f
+                : (flag == GEND_N && urole.name.n)
+                ? urole.name.n
+                : urole.name.m;
+}
+
 /* role.c */

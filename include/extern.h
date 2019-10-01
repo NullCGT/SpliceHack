@@ -2246,6 +2246,10 @@ E void FDECL(role_menu_extra, (int, winid, BOOLEAN_P));
 E void NDECL(role_init);
 E const char *FDECL(Hello, (struct monst *));
 E const char *NDECL(Goodbye);
+E const char *NDECL(sibling_gender);
+E const char *NDECL(child_gender);
+E int FDECL(monnum_gender, (int, BOOLEAN_P));
+E const char* FDECL(rolename_gender, (int));
 
 /* ### rumors.c ### */
 

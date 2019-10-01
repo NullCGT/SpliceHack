@@ -714,8 +714,7 @@ register struct monst *mtmp;
             }
         } else if (mtmp->mpeaceful) {
             if (kindred && isnight) {
-                Sprintf(verbuf, "Good feeding, %s!",
-                        flags.gender == 1 ? "sister" : flags.gender == 2 ? "sibling" : "brother");
+                Sprintf(verbuf, "Good feeding, %s!", sibling_gender());
                 verbl_msg = verbuf;
             } else if (nightchild && isnight) {
                 Sprintf(verbuf, "How nice to hear you, child of the night!");

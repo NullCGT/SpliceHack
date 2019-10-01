@@ -1311,10 +1311,10 @@ X11_player_selection_prompts()
                 if (ok_role(i, flags.initrace, flags.initgend,
                             flags.initalign)) {
                     choices[i] = roles[i].name.m;
-                    if (flags.initgend >= 0 && flags.gender == 1
+                    if (flags.initgend >= 0 && flags.gender == GEND_F
                         && roles[i].name.f)
                         choices[i] = roles[i].name.f;
-                    else if (flags.initgend >= 0 && flags.gender == 2
+                    else if (flags.initgend >= 0 && flags.gender == GEND_N
                         && roles[i].name.n)
                         choices[i] = roles[i].name.n;
                     ++availcount;

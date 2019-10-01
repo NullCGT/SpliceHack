@@ -248,8 +248,10 @@ change_sex()
     if (already_polyd) /* poly'd: also change saved sex */
         u.ugender = !u.ugender;
     max_rank_sz(); /* [this appears to be superfluous] */
-    if ((already_polyd ? u.ugender : flags.gender) && urole.name.f)
+    if ((already_polyd ? u.ugender : flags.gender == GEND_F) && urole.name.f)
         Strcpy(pl_character, urole.name.f);
+    else if ((already_polyd ? u.ugender : flags.gender == GEND_N) && urole.name.n)
+        Strcpy(pl_character, urole.name.n);
     else
         Strcpy(pl_character, urole.name.m);
     u.umonster = ((already_polyd ? u.ugender : flags.gender)
@@ -369,6 +371,8 @@ newman()
             /* use saved gender we're about to revert to, not current */
             ((Upolyd ? u.ugender : flags.gender) && urace.individual.f)
                 ? urace.individual.f
+                : ((Upolyd ? u.ugender : flags.gender) && urace.individual.n)
+                ? urace.individual.n
                 : (urace.individual.m)
                    ? urace.individual.m
                    : urace.noun);
@@ -654,10 +658,10 @@ int mntmp;
         youmonst.mappearance = 0;
     }
     if (is_male(&mons[mntmp])) {
-        if (flags.gender)
+        if (flags.gender != GEND_M)
             dochange = TRUE;
     } else if (is_female(&mons[mntmp])) {
-        if (!flags.gender)
+        if (flags.gender != GEND_F)
             dochange = TRUE;
     } else if (!is_neuter(&mons[mntmp]) && mntmp != u.ulycn) {
         if (sex_change_ok && !rn2(10))
@@ -668,7 +672,7 @@ int mntmp;
     if (dochange) {
         flags.gender = !flags.gender;
         Strcat(buf, (is_male(&mons[mntmp]) || is_female(&mons[mntmp]))
-                       ? "" : flags.gender ? "female " : "male ");
+                       ? "" : flags.gender == GEND_F ? "female " : flags.gender == GEND_N ? "person " : "male ");
     }
     Strcat(buf, mons[mntmp].mname);
     You("%s %s!", (u.umonnum != mntmp) ? "turn into" : "feel like", an(buf));
@@ -809,7 +813,7 @@ int mntmp;
             pline(use_thec, monsterc, "change shape");
         if (attacktype(youmonst.data, AT_MAGC))
          		pline(use_thec, monsterc,"cast monster spells");
-        if (lays_eggs(youmonst.data) && flags.gender &&
+        if (lays_eggs(youmonst.data) && flags.gender == GEND_F &&
             !(youmonst.data == &mons[PM_GIANT_EEL]
                 || youmonst.data == &mons[PM_ELECTRIC_EEL]))
             pline(use_thec, "sit",

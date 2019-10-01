@@ -269,6 +269,7 @@ docook()
 {
     
     register struct obj *obj;
+    struct monst *mon;
     /* register struct obj *heat; */
     boolean furnace, source = FALSE;
 
@@ -302,6 +303,15 @@ docook()
         return 0;
     }
 
+    /* Cooking someone's friend is generally a poor idea. */
+    for (mon = fmon; mon; mon = mon->nmon) {
+        if (DEADMONSTER(mon))
+            continue;
+        if (m_canseeu(mon) && same_race(mon->data, &mons[obj->corpsenm])) {
+            setmangry(mon, FALSE);
+        }
+    }
+
     /* Check for special effects of cooking */
     if (cookeffects(obj, furnace))
         return 0;
@@ -316,6 +326,7 @@ docook()
         You("cook %s.", doname(obj));
         obj->oeroded = min(3, obj->oeroded + 1);
     }
+
     use_skill(P_COOKING, 1);
     /* Cooking takes creativity! */
     exercise(A_INT, TRUE);

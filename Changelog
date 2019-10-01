@@ -15,6 +15,8 @@ Cooking
   cooking. Corpses found in ice boxes have a small chance of being cooked.
 - Monsters killed via fire usually leave burned corpses.
 - Cooked corpses cannot be sacrificed.
+- Cooking in front of a monster of the same race as the corpse being cooked
+  will cause them to become angry.
 
 Monsters
 - New Monster: Gold Dragon

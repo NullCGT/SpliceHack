@@ -980,6 +980,7 @@ boolean artif;
                 break;
             case HORN_OF_PLENTY:
             case BAG_OF_TRICKS:
+            case BAG_OF_RATS:
                 otmp->spe = rnd(20);
                 break;
             case FIGURINE:

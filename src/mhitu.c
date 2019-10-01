@@ -3305,7 +3305,7 @@ const char *str;
     /* being deaf overrides confirmation prompt for high charisma */
     if (Deaf) {
         pline("%s takes off your %s.", seducer, str);
-    } else if (rn2(20) < ACURR(A_CHA)) {
+    } else if (rn2(20) < ACURR(A_CHA) + (flags.gender == GEND_N) ? 3 : 0) {
         Sprintf(qbuf, "\"Shall I remove your %s, %s?\"", str,
                 (!rn2(2) ? "lover" : !rn2(2) ? "dear" : "sweetheart"));
         if (yn(qbuf) == 'n')

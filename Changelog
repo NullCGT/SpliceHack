@@ -62,7 +62,15 @@ Artifacts
 - Removed the King in Yellow.
 - Mjollnir can now be invoked for a powerful lightning bolt. From XNetHack.
 
-Roles
+Roles, Races, and Character Creation
+- Nonbinary Gender
+  - Resolved numerous bugs and corner cases which would cause the player
+    to be referred to incorrectly.
+  - Nonbinary characters are more likely to receive prompts on armor removal
+    via foocubus.
+  - Nonbinary characters cannot lay eggs.
+  - Eggs hatched in the inventory of nonbinary characters always hatch
+    peaceful monsters.
 - New Role: Convict
   - Added the Convict Patch, originally written by Karl Garrison. The
     convict role is now fully 3.6.x compatible.

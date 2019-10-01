@@ -915,6 +915,8 @@ long timeout;
                         if (carried(egg) && mon->data->mlet != S_DRAGON)
                             mon->mtame = 20;
                     }
+                } else if (flags.gender == GEND_N && !silent) {
+                    mon->mpeaceful = 1;
                 }
                 if (mvitals[mnum].mvflags & G_EXTINCT)
                     break;  /* just made last one */
@@ -977,6 +979,8 @@ long timeout;
                 pline("%s cries sound like \"%s%s\"",
                       siblings ? "Their" : "Its",
                       flags.gender == GEND_F ? "mommy" : flags.gender == GEND_N ? plname : "daddy", egg->spe ? "." : "?");
+            } else if (flags.gender == GEND_N) {
+                pline("%s makes a curious noise.", siblings ? "They" : "It");
             } else if (mon->data->mlet == S_DRAGON && !Deaf) {
                 verbalize("Gleep!"); /* Mything eggs :-) */
             }

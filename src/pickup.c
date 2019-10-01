@@ -1751,6 +1751,17 @@ int cindex, ccount; /* index of this container (1..N), number of them (N) */
         makeknown(BAG_OF_TRICKS);
         abort_looting = TRUE;
         return 1;
+    } else if (cobj->otyp == BAG_OF_RATS) {
+        You("carefully open %s...", the(xname(cobj)));
+        if (create_critters(1 + rn2(7), &mons[PM_RABID_RAT], TRUE)) {
+            pline("A torrent of angrily frothing rats spews out!");
+            makeknown(BAG_OF_RATS);
+        } else {
+            pline("%s emits a petulant squeaking noise, and refuses to open.",
+                  The(xname(cobj)));
+        }
+        abort_looting = TRUE;
+        return 1;
     }
 
     You("%sopen %s...", (!cobj->cknown || !cobj->lknown) ? "carefully " : "",
@@ -2085,7 +2096,7 @@ struct obj *obj;
 int depthin;
 {
     /* these won't cause an explosion when they're empty */
-    if ((obj->otyp == WAN_CANCELLATION || obj->otyp == BAG_OF_TRICKS)
+    if ((obj->otyp == WAN_CANCELLATION || obj->otyp == BAG_OF_TRICKS || obj->otyp == BAG_OF_RATS)
         && obj->spe <= 0)
         return FALSE;
 
@@ -3166,8 +3177,9 @@ struct obj *box; /* or bag */
             multi_reason = "tipping a container";
             nomovemsg = "";
         }
-    } else if (box->otyp == BAG_OF_TRICKS || box->otyp == HORN_OF_PLENTY) {
-        boolean bag = box->otyp == BAG_OF_TRICKS;
+    } else if (box->otyp == BAG_OF_TRICKS || box->otyp == HORN_OF_PLENTY 
+               || box->otyp == BAG_OF_RATS) {
+        boolean bag = (box->otyp == BAG_OF_TRICKS || box->otyp == BAG_OF_RATS);
         int old_spe = box->spe, seen = 0;
 
         if (maybeshopgoods && !box->no_charge)

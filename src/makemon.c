@@ -2678,7 +2678,7 @@ int *seencount;  /* secondary output */
 {
     int moncount = 0;
 
-    if (!bag || bag->otyp != BAG_OF_TRICKS) {
+    if (!bag || (bag->otyp != BAG_OF_TRICKS && bag->otyp != BAG_OF_RATS)) {
         impossible("bad bag o' tricks");
     } else if (bag->spe < 1) {
         /* if tipping known empty bag, give normal empty container message */
@@ -2692,10 +2692,14 @@ int *seencount;  /* secondary output */
 
         consume_obj_charge(bag, !tipping);
 
-        if (!rn2(23))
+        if (bag->otyp == BAG_OF_RATS && !rn2(4))
+            creatcnt += rnd(3);
+        else if (!rn2(23))
             creatcnt += rnd(7);
         do {
-            mtmp = makemon((struct permonst *) 0, u.ux, u.uy, NO_MM_FLAGS);
+            mtmp = makemon(bag->otyp == BAG_OF_TRICKS ? 
+                            (struct permonst *) 0 : &mons[PM_SEWER_RAT + rn2(2)], 
+                            u.ux, u.uy, NO_MM_FLAGS);
             if (mtmp) {
                 ++moncount;
                 if (canspotmon(mtmp))
@@ -2706,7 +2710,7 @@ int *seencount;  /* secondary output */
             if (seencount)
                 *seencount += seecount;
             if (bag->dknown)
-                makeknown(BAG_OF_TRICKS);
+                makeknown(bag->otyp);
         } else if (!tipping) {
             pline1(!moncount ? nothing_happens : "Nothing seems to happen.");
         }

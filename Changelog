@@ -47,6 +47,11 @@ Items
       with a pumpkin.
 - New Item: Cheese
     - Ported from SLASH'EM. The food, to be specific.
+- New Item: Bag of Rats
+    - Functionally very similar to the bag of tricks, except it only
+      produces rats, and lots of them.
+    - Reference to D&D, in which many problems can be solved with the simple
+      application of a bag full of an arbitrary number of rats.
 - New Item: Robe of Stasis (Bleached Robe)
     - Confers unchanging when worn, and is generated erodeproof. Cannot
       be polymorphed.

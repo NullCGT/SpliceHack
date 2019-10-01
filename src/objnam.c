@@ -1067,7 +1067,7 @@ unsigned doname_flags;
            making the prefix be redundant; note that 'known' flag
            isn't set when emptiness gets discovered because then
            charging magic would yield known number of new charges) */
-        && ((obj->otyp == BAG_OF_TRICKS)
+        && ((obj->otyp == BAG_OF_TRICKS || obj->otyp == BAG_OF_RATS)
              ? (obj->spe == 0 && !obj->known)
              /* not bag of tricks: empty if container which has no contents */
              : ((Is_container(obj) || obj->otyp == STATUE)

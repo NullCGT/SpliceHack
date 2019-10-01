@@ -2295,8 +2295,10 @@ static const char *hallu_gods[] = {
     "the Ori",                      /* Stargate */
     "destiny",                      /* why not? */
     "your Friend the Computer",     /* Paranoia */
-    "Big Brother"                   /* 1984 */
-    "your Parents"                  /* Just because */
+    "Big Brother",                  /* 1984 */
+    "your Parents",                 /* Just because */
+    "Greyskull",                    /* She-Ra */
+    "your self-image"               /* Narcisism */
 };
 
 /* hallucination handling for priest/minion names: select a random god

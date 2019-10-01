@@ -357,6 +357,10 @@ boolean furnace;
         feel_cockatrice(obj, TRUE);
         stop_cook = FALSE;
         break;
+    case PM_WIZARD_OF_YENDOR:
+        You("get the sense that may have been a bad idea...");
+        intervene();
+        break;
     case PM_COW:
         pline("That's some good \'burg.");
         stop_cook = FALSE;

@@ -300,7 +300,7 @@ dosit()
     } else if (lays_eggs(youmonst.data)) {
         struct obj *uegg;
 
-        if (!flags.gender) {
+        if (flags.gender != GEND_F) {
             pline("%s can't lay eggs!",
                   Hallucination
                       ? "You may think you are a platypus, but a male still"

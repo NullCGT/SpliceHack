@@ -2940,7 +2940,7 @@ int final;
             Sprintf(eos(buf), " (%d)", u.mtimedone);
         you_are(buf, "");
     }
-    if (lays_eggs(youmonst.data) && flags.gender) /* Upolyd */
+    if (lays_eggs(youmonst.data) && flags.gender == GEND_F) /* Upolyd */
         you_can("lay eggs", "");
     if (u.ulycn >= LOW_PM) {
         /* "you are a werecreature [in beast form]" */

@@ -321,7 +321,7 @@ boolean female;
 STATIC_OVL const char *
 rank()
 {
-    return rank_of(u.ulevel, Role_switch, flags.female);
+    return rank_of(u.ulevel, Role_switch, flags.gender);
 }
 
 int
@@ -3387,12 +3387,12 @@ choose_value:
                 if (urole.rank[i].f) {
                     Sprintf(fbuf, "\"%s\"", urole.rank[i].f);
                     Sprintf(obuf, "%s or %s",
-                            flags.female ? fbuf : mbuf,
-                            flags.female ? mbuf : fbuf);
+                            flags.gender ? fbuf : mbuf,
+                            flags.gender ? mbuf : fbuf);
                 } else {
                     fbuf[0] = obuf[0] = '\0';
                 }
-                if (flags.female) {
+                if (flags.gender) {
                     if (*fbuf)
                         rolelist[j++] = dupstr(fbuf);
                     rolelist[j++] = dupstr(mbuf);

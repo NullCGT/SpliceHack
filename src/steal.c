@@ -428,7 +428,7 @@ boolean artifact;
                     unmul((char *) 0);
                 slowly = (armordelay >= 1 || multi < 0);
                 if (!artifact) {
-                    if (flags.female)
+                    if (flags.gender)
                         pline("%s charms you.  You gladly %s your %s.",
                               !seen ? "She" : Monnam(mtmp),
                               curssv ? "let her take"

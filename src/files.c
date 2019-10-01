@@ -770,7 +770,7 @@ boolean playing; /**< True if game is running.  */
 #endif
 	        urole.filecode,
 	        urace.filecode,
-	        genders[flags.female].filecode,
+	        genders[flags.gender].filecode,
 	        aligns[1-u.ualign.type].filecode,
 #ifdef RECORD_CONDUCT
 	        encodeconduct(),
@@ -4334,7 +4334,7 @@ const char *buffer;
                      LLOG_SEP,
                      urace.filecode,
                      LLOG_SEP,
-                     genders[flags.female].filecode,
+                     genders[flags.gender].filecode,
                      LLOG_SEP,
                      aligns[1-u.ualign.type].filecode,
                      LLOG_SEP,

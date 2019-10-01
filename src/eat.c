@@ -1565,7 +1565,7 @@ const char *mesg;
                      get it if at-maximum and fixed-abil both apply */
                   : !Fixed_abil ? "Popeye"
                   /* no gain, feel like another character from Popeye */
-                  : (flags.female ? "Olive Oyl" : "Bluto"));
+                  : (flags.gender ? "Olive Oyl" : "Bluto"));
         gainstr(tin, 0, FALSE);
 
         tin = costly_tin(COST_OPEN);
@@ -2291,7 +2291,7 @@ struct obj *otmp;
             makeknown(typ);
             change_sex();
             You("are suddenly very %s!",
-                flags.female ? "feminine" : "masculine");
+                flags.gender ? "feminine" : "masculine");
             context.botl = 1;
             break;
         case AMULET_OF_UNCHANGING:

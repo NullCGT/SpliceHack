@@ -733,7 +733,7 @@ boolean new_game; /* false => restoring an old game */
     char ebuf[BUFSZ];
     char racebuf[BUFSZ];
     char rolebuf[BUFSZ];
-    int currentgend = Upolyd ? u.mfemale : flags.female;
+    int currentgend = Upolyd ? u.ugender : flags.gender;
 
     /* skip "welcome back" if restoring a doomed character */
     if (!new_game && Upolyd && ugenocided()) {
@@ -771,11 +771,7 @@ boolean new_game; /* false => restoring an old game */
     pline(new_game ? "%s %s, welcome to SpliceHack!  You are a%s %s %s %s."
                    : "%s %s, the%s %s %s %s, welcome back to SpliceHack!",
           Hello((struct monst *) 0), plname, buf, genders[currentgend].adj, urace.adj,
-              (currentgend == 1 && urole.name.f)
-                ? urole.name.f
-                : (currentgend == 2 && urole.name.n)
-                ? urole.name.n
-                : urole.name.m);
+            rolename_gender(currentgend));
     if (flags.tips) {
         if (new_game) {
             /* display race info */

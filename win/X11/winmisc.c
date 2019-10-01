@@ -185,7 +185,7 @@ Cardinal *num_params;
     (void) memset(rolechars, '\0', sizeof rolechars); /* for index() */
     for (i = 0; roles[i].name.m; ++i) {
         ch = lowc(*roles[i].name.m);
-        /* if (flags.female && roles[i].name.f) ch = lowc(*roles[i].name.f);
+        /* if (flags.gender && roles[i].name.f) ch = lowc(*roles[i].name.f);
          */
         /* this supports at most two roles with the same first letter */
         if (index(rolechars, ch))
@@ -1311,10 +1311,10 @@ X11_player_selection_prompts()
                 if (ok_role(i, flags.initrace, flags.initgend,
                             flags.initalign)) {
                     choices[i] = roles[i].name.m;
-                    if (flags.initgend >= 0 && flags.female == 1
+                    if (flags.initgend >= 0 && flags.gender == GEND_F
                         && roles[i].name.f)
                         choices[i] = roles[i].name.f;
-                    else if (flags.initgend >= 0 && flags.female == 2
+                    else if (flags.initgend >= 0 && flags.gender == GEND_N
                         && roles[i].name.n)
                         choices[i] = roles[i].name.n;
                     ++availcount;

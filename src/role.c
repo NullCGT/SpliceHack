@@ -808,6 +808,7 @@ const struct Race races[] = {
         { "man", "woman", "person" },
         PM_HUMAN,
         NON_PM,
+        NON_PM,
         PM_HUMAN_MUMMY,
         PM_HUMAN_ZOMBIE,
         MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER
@@ -832,6 +833,7 @@ const struct Race races[] = {
         NON_PM,
         NON_PM,
         NON_PM,
+        NON_PM,
         MH_ANGEL | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_LAWFUL,
         MH_ANGEL,
         0,
@@ -850,6 +852,7 @@ const struct Race races[] = {
         "Elf",
         { 0, 0, 0 },
         PM_ELF,
+        NON_PM,
         NON_PM,
         PM_ELF_MUMMY,
         PM_ELF_ZOMBIE,
@@ -871,6 +874,7 @@ const struct Race races[] = {
         "Inf",
         { 0, 0, 0 },
         PM_INFERNAL,
+        NON_PM,
         NON_PM,
         NON_PM,
         NON_PM,
@@ -896,6 +900,7 @@ const struct Race races[] = {
         NON_PM,
         NON_PM,
         NON_PM,
+        NON_PM,
         MH_MERFOLK | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER
             | ROLE_NEUTRAL | ROLE_LAWFUL,
         MH_MERFOLK,
@@ -914,7 +919,8 @@ const struct Race races[] = {
         "drovenkind",
         "Dro",
     	  {0, 0, 0},
-    	  PM_DROW,
+    	PM_DROW,
+        NON_PM,
         NON_PM,
         PM_ELF_MUMMY,
         PM_ELF_ZOMBIE,
@@ -937,6 +943,7 @@ const struct Race races[] = {
         { 0, 0, 0 },
         PM_DWARF,
         NON_PM,
+        NON_PM,
         PM_DWARF_MUMMY,
         PM_DWARF_ZOMBIE,
         MH_DWARF | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_LAWFUL,
@@ -958,6 +965,7 @@ const struct Race races[] = {
         { 0, 0, 0 },
         PM_GNOME,
         NON_PM,
+        NON_PM,
         PM_GNOME_MUMMY,
         PM_GNOME_ZOMBIE,
         MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_NEUTRAL,
@@ -978,6 +986,7 @@ const struct Race races[] = {
         "Gul",
         { 0, 0, 0 },
         PM_GHOUL,
+        NON_PM,
         NON_PM,
         PM_HUMAN_MUMMY,
         PM_HUMAN_ZOMBIE,
@@ -1001,6 +1010,7 @@ const struct Race races[] = {
         { 0, 0, 0 },
         PM_ORC,
         NON_PM,
+        NON_PM,
         PM_ORC_MUMMY,
         PM_ORC_ZOMBIE,
         MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_CHAOTIC,
@@ -1021,6 +1031,7 @@ const struct Race races[] = {
         "Wer",
         { "man", "woman", "person" },
         PM_HUMAN_WEREWOLF,
+        NON_PM,
         NON_PM,
         PM_HUMAN_MUMMY,
         PM_HUMAN_ZOMBIE,
@@ -1049,6 +1060,7 @@ struct Race urace = {
     "something",
     "Xxx",
     { 0, 0, 0 },
+    NON_PM,
     NON_PM,
     NON_PM,
     NON_PM,
@@ -2366,16 +2378,16 @@ role_init()
         flags.initrace = randrace(flags.initrole);
 
     /* Check for a valid gender.  If new game, check both initgend
-     * and female.  On restore, assume flags.female is correct. */
-    flags.female = flags.initgend;
+     * and female.  On restore, assume flags.gender is correct. */
+    flags.gender = flags.initgend;
 
     if (flags.pantheon == -1) { /* new game */
-        if (!validgend(flags.initrole, flags.initrace, flags.female))
-            flags.female = !flags.female;
+        if (!validgend(flags.initrole, flags.initrace, flags.gender))
+            flags.gender = !flags.gender;
     }
     if (!validgend(flags.initrole, flags.initrace, flags.initgend))
         /* Note that there is no way to check for an unspecified gender. */
-        flags.initgend = flags.female;
+        flags.initgend = flags.gender;
 
     /* Check for a valid alignment */
     if (!validalign(flags.initrole, flags.initrace, flags.initalign))
@@ -2511,6 +2523,75 @@ Goodbye()
     default:
         return "Goodbye";
     }
+}
+
+const char *
+sibling_gender()
+{
+    const char* ret;
+    switch(flags.gender) {
+    case 0:
+        ret = "brother";
+        break;
+    case 1:
+        ret = "sister";
+        break;
+    default:
+        ret = "sibling";
+        break;
+    }
+    return ret;
+}
+
+const char *
+child_gender()
+{
+    const char* ret;
+    switch(flags.gender) {
+    case 0:
+        ret = "son";
+        break;
+    case 1:
+        ret = "daughter";
+        break;
+    default:
+        ret = "child";
+        break;
+    }
+    return ret;
+}
+
+int
+monnum_gender(flag, race)
+int flag;
+boolean race;
+{
+    int mnum;
+    if (race) {
+        mnum = (flag == GEND_F && urace.femalenum != NON_PM)
+            ? urace.femalenum
+            : (flag == GEND_N && urace.nbnum != NON_PM)
+                ? urace.nbnum
+                : urace.malenum;
+    } else {
+        mnum = (flag == GEND_F && urole.femalenum != NON_PM)
+                ? urole.femalenum
+                : (flag == GEND_N && urole.nbnum != NON_PM)
+                    ? urole.nbnum
+                    : urole.malenum;
+    }
+    return mnum;
+}
+
+const char*
+rolename_gender(flag)
+int flag;
+{
+    return (flag == GEND_F && urole.name.f)
+                ? urole.name.f
+                : (flag == GEND_N && urole.name.n)
+                ? urole.name.n
+                : urole.name.m;
 }
 
 /* role.c */

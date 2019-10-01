@@ -1803,11 +1803,9 @@ int final; /* ENL_GAMEINPROGRESS:0, ENL_GAMEOVERALIVE, ENL_GAMEOVERDEAD */
     Strcpy(tmpbuf, plname);
     *tmpbuf = highc(*tmpbuf); /* same adjustment as bottom line */
     /* as in background_enlightenment, when poly'd we need to use the saved
-       gender in u.mfemale rather than the current you-as-monster gender */
+       gender in u.ugender rather than the current you-as-monster gender */
     Sprintf(buf, "%s the %s's attributes:", tmpbuf,
-            ((Upolyd ? u.mfemale : flags.female) && urole.name.f)
-                ? urole.name.f
-                : urole.name.m);
+            (Upolyd ? rolename_gender(u.ugender) : rolename_gender(flags.gender)));
 
     /* title */
     enlght_out_attr(ATR_HEADING, buf); /* "Conan the Archeologist's attributes:" */
@@ -1858,10 +1856,12 @@ int final;
     int innategend, difgend, difalgn;
     char buf[BUFSZ], tmpbuf[BUFSZ];
 
-    /* note that if poly'd, we need to use u.mfemale instead of flags.female
+    /* note that if poly'd, we need to use u.ugender instead of flags.gender
        to access hero's saved gender-as-human/elf/&c rather than current one */
-    innategend = (Upolyd ? u.mfemale : flags.female) ? 1 : 0;
-    role_titl = (innategend && urole.name.f) ? urole.name.f : urole.name.m;
+    innategend = Upolyd ? u.ugender : flags.gender;
+    role_titl = (innategend && urole.name.f) ? urole.name.f : 
+                (innategend && urole.name.n) ? urole.name.n : 
+                urole.name.m;
     rank_titl = rank_of(u.ulevel, Role_switch, innategend);
 
     enlght_out(""); /* separator after title */
@@ -1879,7 +1879,7 @@ int final;
         tmpbuf[0] = '\0';
         /* here we always use current gender, not saved role gender */
         if (!is_male(uasmon) && !is_female(uasmon) && !is_neuter(uasmon))
-            Sprintf(tmpbuf, "%s ", genders[flags.female ? 1 : 0].adj);
+            Sprintf(tmpbuf, "%s ", genders[flags.gender].adj);
         Sprintf(buf, "%sin %s%s form", !final ? "currently " : "", tmpbuf,
                 uasmon->mname);
         you_are(buf, "");
@@ -1888,7 +1888,7 @@ int final;
     /* report role; omit gender if it's redundant (eg, "female priestess") */
     tmpbuf[0] = '\0';
     if (!urole.name.f
-        && ((urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)
+        && ((urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER)
             || innategend != flags.initgend))
         Sprintf(tmpbuf, "%s ", genders[innategend].adj);
     buf[0] = '\0';
@@ -2940,7 +2940,7 @@ int final;
             Sprintf(eos(buf), " (%d)", u.mtimedone);
         you_are(buf, "");
     }
-    if (lays_eggs(youmonst.data) && flags.female) /* Upolyd */
+    if (lays_eggs(youmonst.data) && flags.gender == GEND_F) /* Upolyd */
         you_can("lay eggs", "");
     if (u.ulycn >= LOW_PM) {
         /* "you are a werecreature [in beast form]" */
@@ -3146,21 +3146,21 @@ minimal_enlightenment()
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     if (Upolyd) {
         Sprintf(buf, fmtstr, "role (base)",
-                (u.mfemale && urole.name.f) ? urole.name.f
+                (u.ugender && urole.name.f) ? urole.name.f
                                             : urole.name.m);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     } else {
         Sprintf(buf, fmtstr, "role",
-                (flags.female && urole.name.f) ? urole.name.f
+                (flags.gender && urole.name.f) ? urole.name.f
                                                : urole.name.m);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     }
     /* don't want poly_gender() here; it forces `2' for non-humanoids */
-    genidx = is_neuter(youmonst.data) ? 2 : flags.female;
+    genidx = is_neuter(youmonst.data) ? 2 : flags.gender;
     Sprintf(buf, fmtstr, "gender", genders[genidx].adj);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
-    if (Upolyd && (int) u.mfemale != genidx) {
-        Sprintf(buf, fmtstr, "gender (base)", genders[u.mfemale].adj);
+    if (Upolyd && (int) u.ugender != genidx) {
+        Sprintf(buf, fmtstr, "gender (base)", genders[u.ugender].adj);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     }
 

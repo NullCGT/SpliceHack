@@ -203,6 +203,7 @@ struct Race {
     /*** Indices of important monsters and objects ***/
     short malenum, /* PM_ as a male monster */
         femalenum, /* ...or as a female (NON_PM == same) */
+        nbnum,     /* ...or as a nonbinary (NON_PM == same) */
         mummynum,  /* PM_ as a mummy */
         zombienum; /* PM_ as a zombie */
 
@@ -251,9 +252,9 @@ struct Gender {
 
 extern const struct Gender genders[]; /* table of available genders */
 /* pronouns for the hero */
-#define uhe()      (genders[flags.female].he)
-#define uhim()     (genders[flags.female].him)
-#define uhis()     (genders[flags.female].his)
+#define uhe()      (genders[flags.gender].he)
+#define uhim()     (genders[flags.gender].him)
+#define uhis()     (genders[flags.gender].his)
 /* corresponding pronouns for monsters; yields "it" when mtmp can't be seen */
 #define mhe(mtmp)  (genders[pronoun_gender(mtmp, FALSE)].he)
 #define mhim(mtmp) (genders[pronoun_gender(mtmp, FALSE)].him)
@@ -336,6 +337,7 @@ struct you {
     int cglyph;       /* glyph under the chain */
     int bc_order;     /* ball & chain order [see bc_order() in ball.c] */
     int bc_felt;      /* mask for ball/chain being felt */
+    int ugender;      /* saved human value of flags.gender */
 
     int umonster;               /* hero's "real" monster num */
     int umonnum;                /* current monster number */
@@ -352,11 +354,10 @@ struct you {
     Bitfield(uinwater, 1);      /* if you're currently in water (only
                                    underwater possible currently) */
     Bitfield(uundetected, 1);   /* if you're a hiding monster/piercer */
-    Bitfield(mfemale, 1);       /* saved human value of flags.female */
     Bitfield(uinvulnerable, 1); /* you're invulnerable (praying) */
     Bitfield(uburied, 1);       /* you're buried */
     Bitfield(uedibility, 1);    /* blessed food detect; sense unsafe food */
-    /* 1 free bit! */
+    /* 2 free bits! */
 
     unsigned udg_cnt;           /* how long you have been demigod */
     unsigned uin_cnt;           /* how long since the invocation */

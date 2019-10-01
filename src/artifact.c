@@ -1536,7 +1536,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
                 pline(behead_msg[rn2(SIZE(behead_msg))], wepdesc,
                       mon_nam(mdef));
-                if (Hallucination && !flags.female)
+                if (Hallucination && flags.gender == GEND_M)
                     pline("Good job Henry, but that wasn't Anne.");
                 otmp->dknown = TRUE;
                 return TRUE;

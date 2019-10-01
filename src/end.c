@@ -519,7 +519,7 @@ int how;
     if (mptr->mlet == S_WRAITH)
         u.ugrave_arise = PM_WRAITH;
     else if (mptr == &mons[PM_BAOBHAN_SITH]) {
-        if (flags.female == 1)
+        if (flags.gender == GEND_F)
             u.ugrave_arise = PM_BAOBHAN_SITH;
         else
             u.ugrave_arise = NON_PM;
@@ -769,10 +769,9 @@ time_t when; /* date+time at end of game */
     /* character name and basic role info */
     Sprintf(pbuf, "%s, %s %s %s %s", plname,
             aligns[1 - u.ualign.type].adj,
-            genders[flags.female].adj,
+            genders[flags.gender].adj,
             urace.adj,
-            (flags.female == 1 && urole.name.f) ? urole.name.f
-              : (flags.female == 2) ? urole.name.n : urole.name.m);
+            rolename_gender(flags.gender));
     putstr(0, ATR_SUBHEAD, pbuf);
     putstr(NHW_DUMPTXT, 0, "");
 
@@ -1404,9 +1403,7 @@ int how;
         if (!Upolyd) {
             /* Base corpse on race when not poly'd since original u.umonnum
                is based on role, and all role monsters are human. */
-            mnum = (flags.female && urace.femalenum != NON_PM)
-                       ? urace.femalenum
-                       : urace.malenum;
+            mnum = monnum_gender(flags.gender, TRUE);
         }
         corpse = mk_named_object(CORPSE, &mons[mnum], u.ux, u.uy, plname);
         Sprintf(pbuf, "%s, ", plname);
@@ -1519,14 +1516,12 @@ int how;
 
     Sprintf(pbuf, "%s %s the %s...", Goodbye(), plname,
             (how != ASCENDED)
-                ? (const char *) ((flags.female == 1 && urole.name.f)
+                ? (const char *) ((flags.gender == 1 && urole.name.f)
                     ? urole.name.f
-                    : (flags.female == 2)
+                    : (flags.gender == 2)
                       ? urole.name.n
                       : urole.name.m)
-                : (const char *) (flags.female == 1 ? "Demigoddess" :
-                                    flags.female == 2 ? "Demideity" :
-                                      "Demigod"));
+                : (const char *) (flags.gender ? "Demigoddess" : "Demigod"));
 
 #if defined(DUMPLOG) || defined(DUMPHTML)
     dump_redirect(TRUE);

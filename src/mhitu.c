@@ -1652,8 +1652,8 @@ register struct attack *mattk;
             if (!Blind)
                 pline("%s tries to %s you, but you seem %s.",
                       Adjmonnam(mtmp, "plain"),
-                      flags.female ? "charm" : "seduce",
-                      flags.female ? "unaffected" : "uninterested");
+                      flags.gender ? "charm" : "seduce",
+                      flags.gender ? "unaffected" : "uninterested");
             if (rn2(3)) {
                 if (!tele_restrict(mtmp))
                     (void) rloc(mtmp, TRUE);
@@ -3138,11 +3138,11 @@ struct monst *mon;
 
     if (uarm || uarmc) {
         if (!Deaf) {
-            if (flags.female == 0)
+            if (flags.gender == GEND_M)
                 verbalize("You're such a nice guy; I wish...");
-            else if (flags.female == 1)
+            else if (flags.gender == GEND_F)
                 verbalize("You're such a sweet lady; I wish...");
-            else if (flags.female == 2)
+            else if (flags.gender == GEND_N)
                 verbalize("You're such a wonderful person; I wish...");
         }
         else if (seewho)
@@ -3305,7 +3305,7 @@ const char *str;
     /* being deaf overrides confirmation prompt for high charisma */
     if (Deaf) {
         pline("%s takes off your %s.", seducer, str);
-    } else if (rn2(20) < ACURR(A_CHA)) {
+    } else if (rn2(20) < ACURR(A_CHA) + (flags.gender == GEND_N) ? 3 : 0) {
         Sprintf(qbuf, "\"Shall I remove your %s, %s?\"", str,
                 (!rn2(2) ? "lover" : !rn2(2) ? "dear" : "sweetheart"));
         if (yn(qbuf) == 'n')

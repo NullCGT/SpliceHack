@@ -1447,7 +1447,7 @@ get_playerrank(char *rank)
         }
         Strcpy(rank, buf);
     } else
-        Strcpy(rank, rank_of(u.ulevel, Role_switch, flags.female));
+        Strcpy(rank, rank_of(u.ulevel, Role_switch, flags.gender));
 }
 
 /* Handles numerical stat changes of various kinds.

@@ -1074,7 +1074,7 @@ long new_value;
                 }
                 Strcat(buf, mname);
             } else
-                Strcat(buf, rank_of(u.ulevel, pl_character[0], flags.female));
+                Strcat(buf, rank_of(u.ulevel, pl_character[0], flags.gender));
 
         } else if (attr_rec == &shown_stats[F_DLEVEL]) {
             if (!describe_level(buf)) {

@@ -508,7 +508,7 @@ plselInitDialog(HWND hWnd)
         lvitem.iSubItem = 0;
         lvitem.state = 0;
         lvitem.stateMask = LVIS_FOCUSED;
-        if (flags.female && roles[i].name.f)
+        if (flags.gender && roles[i].name.f)
             lvitem.pszText = NH_A2W(roles[i].name.f, wbuf, BUFSZ);
         else
             lvitem.pszText = NH_A2W(roles[i].name.m, wbuf, BUFSZ);
@@ -735,7 +735,7 @@ plselDrawItem(HWND hWnd, WPARAM wParam, LPARAM lParam)
     boolean selected;
 
     if (wParam == IDC_PLSEL_ROLE_LIST) {
-        if (flags.female && roles[i].name.f)
+        if (flags.gender && roles[i].name.f)
             string = roles[i].name.f;
         else
             string = roles[i].name.m;

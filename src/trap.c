@@ -2821,6 +2821,8 @@ register struct monst *mtmp;
             case PM_TITANOTHERE:
             case PM_BALUCHITHERIUM:
             case PM_PURPLE_WORM:
+            case PM_VENT_WURM:
+            case PM_CREVASSE_WURM:
             case PM_JABBERWOCK:
             case PM_IRON_GOLEM:
             case PM_SILVER_GOLEM:

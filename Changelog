@@ -66,6 +66,11 @@ Artifacts
 - New Artifact: Circe's Witchstaff
   - Has a 1/20 chance of polymorphing the target into a boar or a
     cow.
+- New Artifact: Anaconda.
+  - Artifact bullwhip. Replaces Final.
+  - +1d7 to hit and damage.
+  - Has a 1/7 chance of wrapping the target in magic coils, paralyzing them
+    for two turns.
 - Removed the King in Yellow.
 - Mjollnir can now be invoked for a powerful lightning bolt. From XNetHack.
 

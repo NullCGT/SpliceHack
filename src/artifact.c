@@ -860,6 +860,8 @@ struct monst *mtmp;
             return !(yours ? Drain_resistance : resists_drli(mtmp));
         case AD_STON:
             return !(yours ? Stone_resistance : resists_ston(mtmp));
+        case AD_PLYS:
+            return !(yours ? Free_action : FALSE);
         default:
             impossible("Weird weapon special attack.");
         }
@@ -1345,6 +1347,21 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     if (attacks(AD_STUN, otmp) && dieroll <= MB_MAX_DIEROLL) {
         /* Magicbane's special attacks (possibly modifies hittee[]) */
         return Mb_hit(magr, mdef, otmp, dmgptr, dieroll, vis, hittee);
+    }
+
+    if (attacks(AD_PLYS, otmp) && !rn2(7)) {
+        if (realizes_damage) {
+            pline_The("slithering whip wraps %s in its magic coils!", hittee);
+        }
+        if (youdefend && Free_action) {
+            pline_The("whip cannot seem to keep a hold on you.");
+        } else if (youdefend) {
+            nomul(-2);
+            multi_reason = "bound by a whip";
+            nomovemsg = You_can_move_again;
+        } else if (mdef->mcanmove) {
+            paralyze_monst(mdef, 2);
+        }
     }
 
     if (otmp->oartifact != ART_THIEFBANE || !youdefend) {

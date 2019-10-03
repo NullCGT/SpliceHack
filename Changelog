@@ -21,6 +21,9 @@ Cooking
 Monsters
 - New Monster: Gold Dragon
     - Sourced from Nephi's Gold Dragon Patch.
+- New Monster: Vent Wurm.
+- New Monster: Crevasse Wurm.
+   - Both of these monsters only appear in the planes.
 - Monsters will use cursed scrolls of light to attempt to blind the player.
 - Monsters are more aggressive about using expensive cameras.
 - Monsters can wear rings. For the sake of keeping the code simple, each

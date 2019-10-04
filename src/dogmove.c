@@ -377,7 +377,7 @@ int x, y; /* dog's starting location, might be different from current */
 boolean devour;
 {
     register struct edog *edog = EDOG(mtmp);
-    boolean poly, grow, heal, eyes, slimer, deadmimic, stunner, invis, porter;
+    boolean poly, grow, heal, eyes, slimer, deadmimic, stunner, invis;
     int nutrit;
     long oprice;
     char objnambuf[BUFSZ];

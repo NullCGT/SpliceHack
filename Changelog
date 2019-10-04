@@ -21,6 +21,8 @@ Cooking
 Monsters
 - New Monster: Gold Dragon
     - Sourced from Nephi's Gold Dragon Patch.
+- New Monster: Concussive Sphere
+- New Monster: Psionic Sphere
 - Monsters will use cursed scrolls of light to attempt to blind the player.
 - Monsters are more aggressive about using expensive cameras.
 - Monsters can wear rings. For the sake of keeping the code simple, each
@@ -104,6 +106,7 @@ Features
 - Added YAFM explaining hydras losing heads when hit by a level-draining attack.
 - Autorecover patch to allow the player to continue crashed games.
 - Added a few additional death messages.
+- Flipped levels patch has been enabled, after adding fixes from UnNetHack.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing

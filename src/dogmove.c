@@ -377,7 +377,7 @@ int x, y; /* dog's starting location, might be different from current */
 boolean devour;
 {
     register struct edog *edog = EDOG(mtmp);
-    boolean poly, grow, heal, eyes, slimer, deadmimic, stunner, invis;
+    boolean poly, grow, heal, eyes, slimer, deadmimic, stunner, invis, porter;
     int nutrit;
     long oprice;
     char objnambuf[BUFSZ];
@@ -574,6 +574,10 @@ struct permonst* ptr;
     case POISON_RES:
         intrinsic = MR_POISON;
         msg = "%s looks healthy.";
+        break;
+    case TELEPORT:
+        intrinsic = MR2_TELEPORT;
+        msg = "%s looks very jumpy.";
         break;
     case TELEPAT:
         if (!mindless(mtmp->data)) {

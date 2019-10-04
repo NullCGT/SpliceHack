@@ -4028,6 +4028,22 @@ struct permonst _mons2[] = {
         M2_STALK | M2_COLLECT | M2_STRONG | M2_NASTY | M2_HOSTILE,
         M3_INFRAVISION, 0, 19, CLR_BLUE),
     /*
+     * seven deadly sins
+     */
+    MON("Wrath", S_SIN, LVL(77, 18, -7, 80, 0), (G_UNIQ | G_NOGEN),
+        A(ATTK(AT_WEAP, AD_PHYS, 3, 4), ATTK(AT_WEAP, AD_PHYS, 3, 4),
+          ATTK(AT_WEAP, AD_PHYS, 4, 4), ATTK(AT_WEAP, AD_PHYS, 4, 4),
+          NO_ATTK, NO_ATTK),
+        SIZ(WT_HUMAN, 400, MS_SILENT, MZ_HUMAN), 
+        MR_POISON | MR_FIRE | MR_COLD | MR_ELEC | MR_STONE,
+        MR_POISON | MR_FIRE | MR_COLD | MR_ELEC | MR_STONE,
+        M1_FLY | M1_SWIM | M1_HUMANOID | M1_REGEN | M1_SEE_INVIS
+          | M1_CARNIVORE | M1_TUNNEL, 
+        M2_JUMPER | M2_LORD | M2_MALE | M2_HOSTILE | M2_STALK 
+          | M2_STRONG | M2_ROCKTHROW | M2_COLLECT | M2_MAGIC 
+          | M2_PNAME | M2_NOPOLY,
+        M3_INFRAVISION, MH_ANGEL, 77, CLR_MAGENTA),
+    /*
      * sea monsters
      */
     MON("jellyfish", S_EEL, LVL(3, 3, 6, 0, 0), (G_GENO | G_NOGEN),

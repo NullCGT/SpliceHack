@@ -470,7 +470,7 @@ start: Blank
         S_ghost: \032
         S_giant: \032
         S_gnome: \032
-	S_gnoll: \032
+		S_gnoll: \032
         S_golem: \032
         S_grave: \032
         S_gremlin: \032
@@ -527,6 +527,7 @@ start: Blank
         S_rust_trap: \032
         S_rustmonst: \032
         S_scroll: \032
+		S_sin: \032
         S_sink: \032
         S_sleeping_gas_trap: \032
         S_snake: \032

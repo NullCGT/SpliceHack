@@ -24,6 +24,10 @@ Monsters
 - New Monster: Vent Wurm.
 - New Monster: Crevasse Wurm.
    - Both of these monsters only appear in the planes.
+- New Monster: Wrath
+  - Unique, appears on the planes. One of the seven deadly sins.
+  - Always equipped with a spiked chain, which is whatever material will
+    harm the player.
 - Monsters will use cursed scrolls of light to attempt to blind the player.
 - Monsters are more aggressive about using expensive cameras.
 - Monsters can wear rings. For the sake of keeping the code simple, each

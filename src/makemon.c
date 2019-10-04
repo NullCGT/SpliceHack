@@ -723,6 +723,24 @@ register struct monst *mtmp;
             (void) mongets(mtmp,
                            (rn2(7) ? SPEAR : rn2(3) ? TRIDENT : STILETTO));
         break;
+    case S_SIN:
+        switch(mm) {
+        case PM_WRATH:
+            otmp = mksobj(SPIKED_CHAIN, FALSE, FALSE);
+            bless(otmp);
+            otmp->spe = rn2(4);
+            /* Wrath always gets a deadly material */
+            if (Race_if(PM_ELF) || Race_if(PM_DROW)) {
+                otmp->material = IRON;
+            } else if (Race_if(PM_INFERNAL)) {
+                otmp->material = SILVER;
+            }
+            (void) mpickobj(mtmp, otmp);
+            otmp = mksobj(KNIFE, FALSE, FALSE);
+            m_initthrow(mtmp, KNIFE, 20);
+            (void) mongets(mtmp, PLATE_MAIL);
+            break;
+        }
     case S_DEMON:
         switch (mm) {
         case PM_DAMNED_PIRATE:

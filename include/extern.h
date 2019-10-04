@@ -3010,6 +3010,8 @@ E int FDECL(count_wsegs, (struct monst *));
 E boolean FDECL(worm_known, (struct monst *));
 E boolean FDECL(worm_cross, (int, int, int, int));
 E int FDECL(wseg_at, (struct monst *, int, int));
+E void FDECL(flip_worm_segs_vertical, (struct monst *, int));
+E void FDECL(flip_worm_segs_horizontal, (struct monst *, int));
 
 /* ### worn.c ### */
 

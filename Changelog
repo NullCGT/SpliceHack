@@ -78,6 +78,22 @@ Roles, Races, and Character Creation
   - Nonbinary characters cannot lay eggs.
   - Eggs hatched in the inventory of nonbinary characters always hatch
     peaceful monsters.
+- The following role and race combinations are now available:
+  - Dwarf Barbarian
+  - Dwarf Cartomancer
+  - Dwarf Knight
+  - Dwarf Monk
+  - Dwarf Priest
+  - Dwarf Ranger
+  - Dwarf Wizard
+  - Elf Healer
+  - Elf Rogue
+  - Drow Rogue
+  - Orc Monk
+  - Orc Pirate
+  - Orc Priest
+  - Gnome Pirate
+  - Gnome Rogue
 - New Role: Convict
   - Added the Convict Patch, originally written by Karl Garrison. The
     convict role is now fully 3.6.x compatible.

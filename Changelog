@@ -134,6 +134,7 @@ Features
 - Autorecover patch to allow the player to continue crashed games.
 - Added a few additional death messages.
 - Flipped levels patch has been enabled, after adding fixes from UnNetHack.
+- Unique names for junk shop and archery shop shopkeers.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing

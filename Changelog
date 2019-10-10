@@ -54,6 +54,7 @@ Monsters
   effect of buffing Nazgul, since they spawn with rings of invisiblity.
 - Monsters can get teleportation extrinsically.
 - Nosferatu are harmed by light.
+- The riders are now immune to sonic, as they were always supposed to be.
 
 Items
 - New Item: Ring of Sonic Resistance (Glass Ring)
@@ -143,6 +144,7 @@ Fixes
 - Fixed monster steeds not teleporting with their masters, lagging behind by
   one turn.
 - Fixed bad feedback when monster steeds have invisible riders.
+- Numerous other minor bugs.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

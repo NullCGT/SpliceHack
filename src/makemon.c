@@ -428,7 +428,7 @@ register struct monst *mtmp;
             otmp->spe = max(otmp->spe, spe2);
             (void) mpickobj(mtmp, otmp);
 
-            m_initthrow(mtmp, YA, 50);
+            m_initthrow(mtmp, LIGHT_ARROW, 50);
             (void) mongets(mtmp, rnd_defensive_item(mtmp));
             (void) mongets(mtmp, rnd_misc_item(mtmp));
             break;

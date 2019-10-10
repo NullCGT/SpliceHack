@@ -589,11 +589,14 @@ register struct obj *obj;
         case 2: obj->otyp = YUMI; break;
       }
       break;
+        case LIGHT_ARROW:
+            obj->otyp = ARROW;
+            break;
 		case ELVEN_ARROW:
-    case DARK_ELVEN_ARROW:
+        case DARK_ELVEN_ARROW:
 		case YA:
 		case ORCISH_ARROW:
-			obj->otyp = ARROW;
+			obj->otyp = LIGHT_ARROW;
 			break;
 		case ARROW:
       switch (rn2(3)) {

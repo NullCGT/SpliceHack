@@ -86,6 +86,9 @@ Items
 - New Item: Robe of Stasis (Bleached Robe)
     - Confers unchanging when worn, and is generated erodeproof. Cannot
       be polymorphed.
+- New Item: Light Arrow
+    - High damage, very deadly arrow. Only generated in shops and with 
+      Avenger Archons.
 - Robes are renamed to mystic robes.
 - Earmuffs are now treated as a tool, instead of as a helmet. They are also
   pluralized correctly. Basically, earmuffs are actually a viable item for

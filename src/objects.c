@@ -122,6 +122,8 @@ PROJECTILE("dark elven arrow", "black runed arrow",
 	         0,  0, 1, 2, 7, 6, 0,        WOOD, -P_BOW, CLR_BLACK),
 PROJECTILE("ya", "long arrow",
            0, 15, 1, 4, 7, 7, 1,        WOOD, -P_BOW, HI_WOOD),
+PROJECTILE("light arrow", None,
+           0,  0, 0, 20, 12, 12, 2,     GLASS, -P_BOW, HI_WOOD),
 PROJECTILE("crossbow bolt", None,
            1, 55, 1, 2, 4, 6, 0,        IRON, -P_CROSSBOW, HI_METAL),
 

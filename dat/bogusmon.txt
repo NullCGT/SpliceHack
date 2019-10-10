@@ -23,10 +23,12 @@ horrific bug
 # Anime
 catgirl
 superpowered butler
+toast-munching schoolkid
 
 # M.U.G.E.N.
 wayward hitbox
 palette-swapped doppelganger
++omega Tiger Woods
 
 # eldritch abominations
 =Cthulu
@@ -40,6 +42,7 @@ palette-swapped doppelganger
 # Homestuck
 kernelsprite
 lusus
++hella jeff
 
 # Bionicle
 rahkshi
@@ -213,7 +216,7 @@ illusiory armorlandia
 venemous vermillion viper
 moobeast
 moon person
-+bob, bob, he's our man, if he can't do it no one can
++bob, Bob, he's our man, if he can't do it no one can
 large intestines
 fifteen-headed grizzly bear
 gunslinger
@@ -231,6 +234,7 @@ sock puppet
 soul eater
 drunken master
 pet rock
+weedwhacker maniac
 
 # ;)
 cuddly cutie
@@ -589,6 +593,10 @@ tie-thulu
 +Domo-kun
 nyan cat
 dummy thicc soldier
+goose
+
+# Undertale
++sans
 
 # the Internet is made for cat pix
 ceiling cat
@@ -732,6 +740,7 @@ glossy golem
 gnome laureate
 gnome dummy
 gooier ooze
+great worm
 green gold
 green slide
 guardian nacho

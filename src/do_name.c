@@ -1413,6 +1413,9 @@ const char *name;
         case ART_YENDORIAN_EXPRESS_CARD:
             obj->material = PLATINUM;
             break;
+        case ART_IRON_BALL_OF_LIBERATION:
+            obj->material = IRON;
+            break;
         default:
             /* prevent any wishes for materials on an artifact */
             obj->material = objects[obj->otyp].oc_material;

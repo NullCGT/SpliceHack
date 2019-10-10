@@ -47,6 +47,8 @@ Monsters
   - One of each of the seven sins appears on the planes.
 - New Monster: Extraplanar Merchant
   - Only appears in shops on the planes.
+- New Monster: Concussive Sphere
+- New Monster: Psionic Sphere
 - Monsters will use cursed scrolls of light to attempt to blind the player.
 - Monsters are more aggressive about using expensive cameras.
 - Monsters can wear rings. For the sake of keeping the code simple, each
@@ -93,6 +95,11 @@ Artifacts
 - New Artifact: Circe's Witchstaff
   - Has a 1/20 chance of polymorphing the target into a boar or a
     cow.
+- New Artifact: Anaconda.
+  - Artifact bullwhip. Replaces Final.
+  - +1d7 to hit and damage.
+  - Has a 1/7 chance of wrapping the target in magic coils, paralyzing them
+    for two turns.
 - Removed the King in Yellow.
 - Mjollnir can now be invoked for a powerful lightning bolt. From XNetHack.
 
@@ -126,6 +133,7 @@ Features
 - Added YAFM explaining hydras losing heads when hit by a level-draining attack.
 - Autorecover patch to allow the player to continue crashed games.
 - Added a few additional death messages.
+- Flipped levels patch has been enabled, after adding fixes from UnNetHack.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing

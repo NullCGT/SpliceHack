@@ -1830,6 +1830,7 @@ struct monst *mtmp;
                 }
             }
         }
+        m_useup(mtmp, otmp);
         return 2;
     }
     case MUSE_SCR_WEB: {

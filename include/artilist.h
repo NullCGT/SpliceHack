@@ -35,6 +35,7 @@ static const char *artifact_names[] = {
 #define     STUN(a,b)   {0,AD_STUN,a,b}         /* magical attack */
 #define     WIND(a,b)   {0,AD_WIND,a,b}         /* wind blast */
 #define     VOID(a,b)   {0,AD_VOID,a,b}
+#define     PLYS(a,b)   {0,AD_PLYS,a,b}         /* whip binding */
 /* clang-format on */
 
 STATIC_OVL NEARDATA struct artifact artilist[] = {
@@ -141,9 +142,9 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     /*
     *       Destroys the corpses of monsters.
     */
-    A("Final", BULLWHIP, (SPFX_RESTR | SPFX_WARN | SPFX_DFLAGH),
-      0, MH_UNDEAD,
-      PHYS(3, 4), DRLI(0,0), NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 200L,
+    A("Anaconda", BULLWHIP, (SPFX_RESTR),
+      0, 0,
+      PLYS(7, 7), DRLI(0,0), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 200L,
       CLR_RED),
 
     /*

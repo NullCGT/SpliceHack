@@ -10,6 +10,7 @@
 #	specific levels as defined below.
 #
 MAZE: "minefill" , ' '
+FLAGS: noflip
 INIT_MAP: mines, '.' , ' ' , true , true , random , true
 NOMAP
 #
@@ -53,7 +54,7 @@ TRAP: random, random
 # overrun by orcs.  Note the barricades (iron bars).
 #
 LEVEL: "minetn-1"
-FLAGS:mazelevel
+FLAGS:mazelevel,noflip
 INIT_MAP:mines,'.',' ',true,true,random,true
 GEOMETRY:center,center
 MAP
@@ -189,6 +190,7 @@ WALLIFY
 # "Town Square"
 #
 LEVEL: "minetn-2"
+FLAGS: noflip
 ROOM: "ordinary" , lit, (3,3), (center,center), (31,15) {
 FOUNTAIN: (17, 5)
 FOUNTAIN: (13, 8)
@@ -304,6 +306,7 @@ RANDOM_CORRIDORS
 # "Alley Town"
 #
 LEVEL: "minetn-3"
+FLAGS: noflip
 ROOM: "ordinary",lit,(3,3),(center,center),(31,15) {
 FOUNTAIN:(01,06)
 FOUNTAIN:(29,13)
@@ -413,6 +416,7 @@ RANDOM_CORRIDORS
 # "College Town"
 #
 LEVEL: "minetn-4"
+FLAGS: noflip
 ROOM: "ordinary",lit,(3,3),(center,center),(30,15) {
 FOUNTAIN:(08,07)
 FOUNTAIN:(18,07)
@@ -509,6 +513,7 @@ RANDOM_CORRIDORS
 # "Grotto Town" by Kelly Bailey
 #
 MAZE: "minetn-5",' '
+FLAGS: noflip
 GEOMETRY:center,center
 MAP
 -----         ---------                                                    
@@ -639,7 +644,7 @@ ALTAR:(31,03),align[0],shrine
 # "Bustling Town" by Kelly Bailey
 #
 MAZE: "minetn-6",' '
-FLAGS: inaccessibles
+FLAGS: inaccessibles, noflip
 INIT_MAP:mines,'.','-',true,true,lit,true
 GEOMETRY:center,top
 MAP
@@ -716,6 +721,7 @@ MONSTER: ('@', "watch captain"), random, peaceful
 # "Bazaar Town" by Kelly Bailey
 #
 LEVEL: "minetn-7"
+FLAGS: noflip
 ROOM: "ordinary" , lit, (3,3), (center,center), (30,15) {
 FOUNTAIN: (12, 07)
 FOUNTAIN: (11, 13)

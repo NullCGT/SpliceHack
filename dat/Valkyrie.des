@@ -283,7 +283,7 @@ MONSTER:'H',random,hostile
 #
 
 MAZE: "Val-fila" , 'I'
-FLAGS: icedpools
+FLAGS: icedpools, noflip
 INIT_MAP: mines, '.', 'I', true, true, lit, false
 NOMAP
 #
@@ -317,7 +317,7 @@ TRAP: random, random
 TRAP: random, random
 
 MAZE: "Val-filb" , 'L'
-FLAGS: icedpools
+FLAGS: icedpools, noflip
 INIT_MAP: mines, '.', 'L', true, true, lit, false
 NOMAP
 #

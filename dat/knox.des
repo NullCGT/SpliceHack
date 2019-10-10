@@ -4,7 +4,7 @@
 # NetHack may be freely redistributed.  See license for details.
 #
 MAZE:"knox-1",' '
-FLAGS: noteleport
+FLAGS: noteleport,noflip
 GEOMETRY:center,center
 # Fort's entry is via a secret door rather than a drawbridge;
 # the moat must be manually circumvented.
@@ -156,7 +156,7 @@ OBJECT:('*',"amethyst"),(48,13)
 # "Winterly Fort Ludios" by Patric Mueller <bhaak@gmx.net>
 #
 MAZE:"knox-2",' '
-FLAGS: noteleport,shortsighted
+FLAGS: noteleport,shortsighted,noflip
 GEOMETRY:center,center
 MAP
 --------------------}}I-----------------------------------------------------
@@ -281,7 +281,7 @@ OBJECT:('*',"amethyst"),(68,11)
 # "Minas Tirith?" by Patric Mueller <bhaak@gmx.net>
 #
 MAZE:"knox-3",' '
-FLAGS: noteleport,shortsighted
+FLAGS: noteleport,shortsighted,noflip
 GEOMETRY:center,center
 MAP
 ----------------------------------------------------------------------------

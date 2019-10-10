@@ -3019,7 +3019,7 @@ struct obj *obj;
         if (otmp) {
             char onambuf[BUFSZ];
             const char *mon_hand;
-            boolean gotit = proficient && (!Fumbling || !rn2(10));
+            boolean gotit = proficient && (!Fumbling || !rn2(10) || obj->oartifact == ART_ANACONDA);
 
             Strcpy(onambuf, cxname(otmp));
             if (gotit) {

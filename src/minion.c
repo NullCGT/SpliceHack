@@ -195,7 +195,7 @@ boolean talk;
             EMIN(mon)->min_align = alignment;
             EMIN(mon)->renegade = FALSE;
         }
-    } else if (mnum != PM_SHOPKEEPER && mnum != PM_GUARD
+    } else if (!is_shopkeeper(&mons[mnum]) && mnum != PM_GUARD
                && mnum != PM_ALIGNED_PRIEST && mnum != PM_HIGH_PRIEST) {
         /* This was mons[mnum].pxlth == 0 but is this restriction
            appropriate or necessary now that the structures are separate? */
@@ -267,6 +267,10 @@ struct monst* mtmp;
     }
     else if (mondx == PM_VLAD_THE_IMPALER) {
         com_pager(QT_VLAD_APPEARS);
+        return TRUE;
+    }
+    else if (mondx == PM_ENVY) {
+        com_pager(QT_ENVY_APPEARS);
         return TRUE;
     }
 #if 0 /* Deferred because currently this would hardly ever happen. */

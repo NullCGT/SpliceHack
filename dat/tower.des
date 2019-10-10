@@ -4,7 +4,7 @@
 #
 # Upper stage of Vlad's tower
 MAZE:"tower1",' '
-FLAGS: noteleport,hardfloor,solidify
+FLAGS: noteleport,hardfloor,solidify,noflip
 GEOMETRY:half-left,center
 MAP
   --- --- ---  
@@ -57,7 +57,7 @@ NON_DIGGABLE:(00,00,14,10)
 
 # Intermediate stage of Vlad's tower
 MAZE:"tower2",' '
-FLAGS: noteleport,hardfloor,solidify
+FLAGS: noteleport,hardfloor,solidify,noflip
 GEOMETRY:half-left,center
 MAP
   --- --- ---  
@@ -100,7 +100,7 @@ NON_DIGGABLE:(00,00,14,10)
 
 # Bottom most stage of Vlad's tower
 MAZE:"tower3",' '
-FLAGS: noteleport,hardfloor,solidify
+FLAGS: noteleport,hardfloor,solidify,noflip
 GEOMETRY:half-left,center
 MAP
 --------------------------------------------------------------------------
@@ -160,7 +160,7 @@ MONSTER:'Z',random
 MONSTER:'Z',random
 MONSTER:'Z',random
 MONSTER:'Z',random
-MONSTER:'V',(35,10)
+MONSTER:('V',"Alucard"),(35,10)
 MONSTER:'V',(35,08)
 MONSTER:'V',(43,10)
 MONSTER:'V',(43,08)

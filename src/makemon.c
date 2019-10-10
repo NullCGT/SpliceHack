@@ -58,7 +58,7 @@ struct permonst *ptr;
         case PM_FIRE_ELEMENTAL:
             return Is_firelevel(&u.uz);
         case PM_EARTH_ELEMENTAL:
-            return Is_earthlevel(&u.uz);
+            return Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz);
         case PM_WATER_ELEMENTAL:
             return Is_waterlevel(&u.uz);
         case PM_FUSION_ELEMENTAL:
@@ -76,7 +76,7 @@ struct permonst *ptr;
 {
     if (ptr->mlet == S_ELEMENTAL) {
         return (boolean) !is_home_elemental(ptr);
-    } else if (Is_earthlevel(&u.uz)) {
+    } else if (Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz)) {
         /* no restrictions? */
     } else if (Is_waterlevel(&u.uz)) {
         /* just monsters that can swim */
@@ -723,6 +723,24 @@ register struct monst *mtmp;
             (void) mongets(mtmp,
                            (rn2(7) ? SPEAR : rn2(3) ? TRIDENT : STILETTO));
         break;
+    case S_SIN:
+        switch(mm) {
+        case PM_WRATH:
+            otmp = mksobj(SPIKED_CHAIN, FALSE, FALSE);
+            bless(otmp);
+            otmp->spe = rn2(4);
+            /* Wrath always gets a deadly material */
+            if (Race_if(PM_ELF) || Race_if(PM_DROW)) {
+                otmp->material = IRON;
+            } else if (Race_if(PM_INFERNAL)) {
+                otmp->material = SILVER;
+            }
+            (void) mpickobj(mtmp, otmp);
+            otmp = mksobj(KNIFE, FALSE, FALSE);
+            m_initthrow(mtmp, KNIFE, 20);
+            (void) mongets(mtmp, PLATE_MAIL);
+            break;
+        }
     case S_DEMON:
         switch (mm) {
         case PM_DAMNED_PIRATE:
@@ -762,6 +780,9 @@ register struct monst *mtmp;
         case PM_DESERT_JINN:
             (void) mongets(mtmp, SHORT_SWORD);
             (void) mongets(mtmp, SHORT_SWORD);
+            break;
+        case PM_EFREET:
+            (void) mongets(mtmp, TWO_HANDED_SWORD);
             break;
         case PM_GRIM_REAPER:
             otmp = mksobj(GRAIN_SCYTHE, FALSE, FALSE);
@@ -959,6 +980,22 @@ register struct monst *mtmp;
                 /*FALLTHRU*/
             case 3:
                 (void) mongets(mtmp, WAN_STRIKING);
+            }
+        } else if (ptr == &mons[PM_EXTRAPLANAR_MERCHANT]) {
+            (void) mongets(mtmp, SKELETON_KEY);
+            switch (rn2(4)) {
+            /* MAJOR fall through ... */
+            case 0:
+                (void) mongets(mtmp, KATANA);
+                /*FALLTHRU*/
+            case 1:
+                (void) mongets(mtmp, POT_FULL_HEALING);
+                /*FALLTHRU*/
+            case 2:
+                (void) mongets(mtmp, POT_HALLUCINATION);
+                /*FALLTHRU*/
+            case 3:
+                (void) mongets(mtmp, WAN_SPEED_MONSTER);
             }
         } else if (ptr == &mons[PM_ARMS_DEALER]) {
               otmp = mksobj(TWO_HANDED_SWORD, FALSE, FALSE);
@@ -2667,6 +2704,21 @@ register struct monst *mtmp;
 
     if (does_block(mx, my, &levl[mx][my]))
         block_point(mx, my);
+}
+
+void
+create_sin()
+{
+    int tryct = 0;
+    int pm = 0;
+    do {
+        pm = rn1(PM_ENVY - PM_WRATH + 1, PM_WRATH);
+        tryct++;
+    } while ((mvitals[pm].mvflags & G_EXTINCT) && tryct < 100);
+    if (!(mvitals[pm].mvflags & G_EXTINCT)) {
+        makemon(&mons[pm], 0, 0, NO_MM_FLAGS);
+        mvitals[pm].mvflags |= G_EXTINCT;
+    }
 }
 
 /* release monster from bag of tricks; return number of monsters created */

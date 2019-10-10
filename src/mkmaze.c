@@ -179,16 +179,12 @@ int x1, y1, x2, y2;
 	struct rm *lev;
 	int bits;
 	int locale[3][3];	/* rock or wall status surrounding positions */
-    int FDECL((*loc_f), (int, int));
 
- 	/*
--	 * Step 2: set the correct wall type.  We can't combine steps
--	 * 1 and 2 into a single sweep because we depend on knowing if
--	 * the surrounding positions are stone.
+	/*
 	 * Value 0 represents a free-standing wall.  It could be anything,
 	 * so even though this table says VWALL, we actually leave whatever
 	 * typ was there alone.
- 	 */
+	 */
 	static xchar spine_array[16] = {
 	    VWALL,	HWALL,		HWALL,		HWALL,
 	    VWALL,	TRCORNER,	TLCORNER,	TDWALL,
@@ -200,41 +196,33 @@ int x1, y1, x2, y2;
 	if (x1<0 || x2>=COLNO || x1>x2 || y1<0 || y2>=ROWNO || y1>y2)
 	    panic("wall_extends: bad bounds (%d,%d) to (%d,%d)",x1,y1,x2,y2);
 
-    /* set the correct wall type. */
-    for (x = x1; x <= x2; x++)
-        for (y = y1; y <= y2; y++) {
-            lev = &levl[x][y];
-            type = lev->typ;
-            if (!(IS_WALL(type) && type != DBWALL))
-                continue;
+	for(x = x1; x <= x2; x++)
+	    for(y = y1; y <= y2; y++) {
+		lev = &levl[x][y];
+		type = lev->typ;
+		if ( !(IS_WALL(type) && type != DBWALL)) continue;
 
-            /* set the locations TRUE if rock or wall or out of bounds */
-            loc_f = within_bounded_area(x, y, /* for baalz insect */
-                                        bughack.inarea.x1, bughack.inarea.y1,
-                                        bughack.inarea.x2, bughack.inarea.y2)
-                       ? iswall
-                       : iswall_or_stone;
-            locale[0][0] = (*loc_f)(x - 1, y - 1);
-            locale[1][0] = (*loc_f)(x, y - 1);
-            locale[2][0] = (*loc_f)(x + 1, y - 1);
+		/* set the locations TRUE if rock or wall or out of bounds */
+		locale[0][0] = iswall_or_stone(x-1,y-1);
+		locale[1][0] = iswall_or_stone(  x,y-1);
+		locale[2][0] = iswall_or_stone(x+1,y-1);
 
-            locale[0][1] = (*loc_f)(x - 1, y);
-            locale[2][1] = (*loc_f)(x + 1, y);
+		locale[0][1] = iswall_or_stone(x-1,  y);
+		locale[2][1] = iswall_or_stone(x+1,  y);
 
-            locale[0][2] = (*loc_f)(x - 1, y + 1);
-            locale[1][2] = (*loc_f)(x, y + 1);
-            locale[2][2] = (*loc_f)(x + 1, y + 1);
+		locale[0][2] = iswall_or_stone(x-1,y+1);
+		locale[1][2] = iswall_or_stone(  x,y+1);
+		locale[2][2] = iswall_or_stone(x+1,y+1);
 
-            /* determine if wall should extend to each direction NSEW */
-            bits = (extend_spine(locale, iswall(x, y - 1), 0, -1) << 3)
-                   | (extend_spine(locale, iswall(x, y + 1), 0, 1) << 2)
-                   | (extend_spine(locale, iswall(x + 1, y), 1, 0) << 1)
-                   | extend_spine(locale, iswall(x - 1, y), -1, 0);
+		/* determine if wall should extend to each direction NSEW */
+		bits =    (extend_spine(locale, iswall(x,y-1),  0, -1) << 3)
+			| (extend_spine(locale, iswall(x,y+1),  0,  1) << 2)
+			| (extend_spine(locale, iswall(x+1,y),  1,  0) << 1)
+			|  extend_spine(locale, iswall(x-1,y), -1,  0);
 
-            /* don't change typ if wall is free-standing */
-            if (bits)
-                lev->typ = spine_array[bits];
-        }
+		/* don't change typ if wall is free-standing */
+		if (bits) lev->typ = spine_array[bits];
+	    }
 }
 
 void
@@ -1269,7 +1257,7 @@ bound_digging()
     boolean found, nonwall;
     int xmin, xmax, ymin, ymax;
 
-    if (Is_earthlevel(&u.uz))
+    if (Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz))
         return; /* everything diggable here */
 
     found = nonwall = FALSE;
@@ -1518,7 +1506,11 @@ movebubbles()
         for (x = 1; x <= (COLNO - 1); x++)
             for (y = 0; y <= (ROWNO - 1); y++) {
                 levl[x][y] = air_pos;
-                unblock_point(x, y);
+                if (!Is_stormlevel(&u.uz))
+                    unblock_point(x, y);
+                else {
+                    block_point(x, y);
+                }
                 /* all air or all cloud around the perimeter of the Air
                    level tends to look strange; break up the pattern */
                 xedge = (boolean) (x < bxmin || x > bxmax);

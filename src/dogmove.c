@@ -575,6 +575,10 @@ struct permonst* ptr;
         intrinsic = MR_POISON;
         msg = "%s looks healthy.";
         break;
+    case TELEPORT:
+        intrinsic = MR2_TELEPORT;
+        msg = "%s looks very jumpy.";
+        break;
     case TELEPAT:
         if (!mindless(mtmp->data)) {
             intrinsic = MR2_TELEPATHY;

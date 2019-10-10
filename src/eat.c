@@ -1024,6 +1024,7 @@ struct permonst * ptr;
         chance *= 0.8;
     else
         chance += cooking * 15;
+    chance = max(chance, 1);
         
 
     return (ptr->mlevel > rn2(chance));

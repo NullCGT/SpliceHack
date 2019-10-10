@@ -213,7 +213,8 @@
      || (ptr) == &mons[PM_ELF] || (ptr) == &mons[PM_HUMAN] \
      || (ptr) == &mons[PM_MINOR_ANGEL] || (ptr) == &mons[PM_INFERNAL])
 /* return TRUE if the monster tends to revive */
-#define is_reviver(ptr) (is_rider(ptr) || (ptr)->mlet == S_TROLL)
+#define is_reviver(ptr) (is_rider(ptr) || (ptr)->mlet == S_TROLL \
+                         || (ptr) == &mons[PM_SLOTH])
 /* monsters whose corpses and statues need special handling;
    note that high priests and the Wizard of Yendor are flagged
    as unique even though they really aren't; that's ok here */
@@ -233,7 +234,8 @@
 /*	[note: the light ranges above were reduced to 1 for performance...] */
 #define likes_lava(ptr) \
     (ptr == &mons[PM_FIRE_ELEMENTAL] || ptr == &mons[PM_SALAMANDER] \
-          || ptr == &mons[PM_MAGMA_ELEMENTAL])
+          || ptr == &mons[PM_MAGMA_ELEMENTAL] \
+          || ptr == &mons[PM_VENT_WURM])
 #define pm_invisible(ptr) \
     ((ptr) == &mons[PM_STALKER] || (ptr) == &mons[PM_BLACK_LIGHT] \
       || (ptr) == &mons[PM_HELLCAT])
@@ -251,6 +253,8 @@
     ((ptr) == &mons[PM_PIRATE] || (ptr) == &mons[PM_SKELETAL_PIRATE] \
       || (ptr) == &mons[PM_DAMNED_PIRATE] || (ptr) == &mons[PM_PLANAR_PIRATE] \
       || (ptr) == &mons[PM_MAYOR_CUMMERBUND] || (ptr) == &mons[PM_PIRATE_BROTHER])
+#define is_shopkeeper(ptr) \
+    ((ptr) == &mons[PM_SHOPKEEPER] || (ptr) == &mons[PM_EXTRAPLANAR_MERCHANT])
 
 #define hates_light(ptr) ((ptr) == &mons[PM_GREMLIN] \
       || (ptr) == &mons[PM_NOSFERATU])

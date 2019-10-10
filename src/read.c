@@ -1970,7 +1970,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     case SCR_EARTH:
         /* TODO: handle steeds */
         if (!Is_rogue_level(&u.uz) && has_ceiling(&u.uz)
-            && (!In_endgame(&u.uz) || Is_earthlevel(&u.uz))) {
+            && (!In_endgame(&u.uz) || Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz))) {
             register int x, y;
             int nboulders = 0;
 
@@ -2864,7 +2864,8 @@ boolean revival;
 struct obj *from_obj;
 {
     /* SHOPKEEPERS can be revived now */
-    if (*mtype == PM_GUARD || (*mtype == PM_SHOPKEEPER && !revival)
+    if (*mtype == PM_GUARD 
+        || ((*mtype == PM_SHOPKEEPER || *mtype == PM_EXTRAPLANAR_MERCHANT) && !revival)
         || *mtype == PM_HIGH_PRIEST || *mtype == PM_ALIGNED_PRIEST
         || *mtype == PM_ANGEL) {
         *mtype = PM_HUMAN_ZOMBIE;

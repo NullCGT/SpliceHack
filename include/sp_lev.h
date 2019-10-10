@@ -22,15 +22,17 @@
 #define NOMMAP 0x00000004L
 #define SHORTSIGHTED 0x00000008L
 #define ARBOREAL 0x00000010L
-#define MAZELEVEL 0x00000020L
-#define PREMAPPED 0x00000040L /* premapped level & sokoban rules */
-#define SHROUD 0x00000080L
-#define GRAVEYARD 0x00000100L
-#define ICEDPOOLS 0x00000200L /* for ice locations: ICED_POOL vs ICED_MOAT \
+#define NOFLIPX		0x00000020L
+#define NOFLIPY		0x00000040L
+#define MAZELEVEL	0x00000080L
+#define PREMAPPED	0x00000100L
+#define SHROUD		0x00000200L
+#define GRAVEYARD 0x00000400L
+#define ICEDPOOLS 0x00000800L /* for ice locations: ICED_POOL vs ICED_MOAT \
                                  */
-#define SOLIDIFY 0x00000400L  /* outer areas are nondiggable & nonpasswall */
-#define CORRMAZE 0x00000800L  /* for maze levels only */
-#define CHECK_INACCESSIBLES 0x00001000L /* check for inaccessible areas and
+#define SOLIDIFY 0x00001000L  /* outer areas are nondiggable & nonpasswall */
+#define CORRMAZE 0x00002000L  /* for maze levels only */
+#define CHECK_INACCESSIBLES 0x00004000L /* check for inaccessible areas and
    generate ways to escape from them */
 
 /* different level layout initializers */
@@ -287,6 +289,7 @@ struct sp_frame {
 struct sp_coder {
     struct splevstack *stack;
     struct sp_frame *frame;
+    int allow_flips;
     int premapped;
     boolean solidify;
     struct mkroom *croom;

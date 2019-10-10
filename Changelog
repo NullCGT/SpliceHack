@@ -18,9 +18,37 @@ Cooking
 - Cooking in front of a monster of the same race as the corpse being cooked
   will cause them to become angry.
 
+Endgame Rewrite:
+- The following levels are now part of the endgame:
+  - The City of Brass
+    - City with shops inside the plane of fire.
+  - The Gemstone Array
+    - Earthquakes occur regularly in this level. It is filled
+      with many boulders, and many crystal golems.
+  - The Eternal Storm
+    - Unlike the plane of air, this level is completely dark.
+- On each plane, one of the seven deadly sins appears. They are
+  not required to beat the game, and are very dangerous, so
+  avoiding them is highly important.
+
 Monsters
 - New Monster: Gold Dragon
     - Sourced from Nephi's Gold Dragon Patch.
+- New Monster: Vent Wurm.
+- New Monster: Crevasse Wurm.
+  - Both of these monsters only appear in the planes.
+- New Monster: Wrath
+- New Monster: Envy
+- New Monster: Sloth
+- New Monster: Gluttony
+- New Monster: Pride
+- New Monster: Greed
+- New Monster: Lust
+  - One of each of the seven sins appears on the planes.
+- New Monster: Extraplanar Merchant
+  - Only appears in shops on the planes.
+- New Monster: Concussive Sphere
+- New Monster: Psionic Sphere
 - Monsters will use cursed scrolls of light to attempt to blind the player.
 - Monsters are more aggressive about using expensive cameras.
 - Monsters can wear rings. For the sake of keeping the code simple, each
@@ -28,6 +56,7 @@ Monsters
   effect of buffing Nazgul, since they spawn with rings of invisiblity.
 - Monsters can get teleportation extrinsically.
 - Nosferatu are harmed by light.
+- The riders are now immune to sonic, as they were always supposed to be.
 
 Items
 - New Item: Ring of Sonic Resistance (Glass Ring)
@@ -66,6 +95,11 @@ Artifacts
 - New Artifact: Circe's Witchstaff
   - Has a 1/20 chance of polymorphing the target into a boar or a
     cow.
+- New Artifact: Anaconda.
+  - Artifact bullwhip. Replaces Final.
+  - +1d7 to hit and damage.
+  - Has a 1/7 chance of wrapping the target in magic coils, paralyzing them
+    for two turns.
 - Removed the King in Yellow.
 - Mjollnir can now be invoked for a powerful lightning bolt. From XNetHack.
 
@@ -115,6 +149,7 @@ Features
 - Added YAFM explaining hydras losing heads when hit by a level-draining attack.
 - Autorecover patch to allow the player to continue crashed games.
 - Added a few additional death messages.
+- Flipped levels patch has been enabled, after adding fixes from UnNetHack.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing
@@ -133,6 +168,7 @@ Fixes
 - Fixed monster steeds not teleporting with their masters, lagging behind by
   one turn.
 - Fixed bad feedback when monster steeds have invisible riders.
+- Numerous other minor bugs.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

@@ -428,6 +428,34 @@ struct opvar *ov;
     Free(ov);
 }
 
+void flip_drawbridge_horizontal(lev)
+struct rm *lev;
+{
+	if (IS_DRAWBRIDGE(lev->typ)) {
+		if ((lev->drawbridgemask & DB_DIR) == DB_WEST) {
+			lev->drawbridgemask &= ~DB_WEST;
+			lev->drawbridgemask |=  DB_EAST;
+		} else if ((lev->drawbridgemask & DB_DIR) == DB_EAST) {
+			lev->drawbridgemask &= ~DB_EAST;
+			lev->drawbridgemask |=  DB_WEST;
+		}
+	}
+}
+
+void flip_drawbridge_vertical(lev)
+struct rm *lev;
+{
+	if (IS_DRAWBRIDGE(lev->typ)) {
+		if ((lev->drawbridgemask & DB_DIR) == DB_NORTH) {
+			lev->drawbridgemask &= ~DB_NORTH;
+			lev->drawbridgemask |=  DB_SOUTH;
+		} else if ((lev->drawbridgemask & DB_DIR) == DB_SOUTH) {
+			lev->drawbridgemask &= ~DB_SOUTH;
+			lev->drawbridgemask |=  DB_NORTH;
+		}
+	}
+}
+
 void
 flip_level(int flp)
 {
@@ -484,6 +512,14 @@ flip_level(int flp)
 	    otmp->ox = x2 - otmp->ox;
     }
 
+    /* buried objects */
+    for (otmp = level.buriedobjlist; otmp; otmp = otmp->nobj) {
+	if (flp & 1)
+	    otmp->oy = y2 - otmp->oy;
+	if (flp & 2)
+	    otmp->ox = x2 - otmp->ox;
+    }
+
     /* monsters */
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
 	if (flp & 1) {
@@ -493,6 +529,8 @@ flip_level(int flp)
 	    else if (mtmp->isshk) {
 		ESHK(mtmp)->shk.y = y2 - ESHK(mtmp)->shk.y;
 		ESHK(mtmp)->shd.y = y2 - ESHK(mtmp)->shd.y;
+	    } else if (mtmp->wormno) {
+		flip_worm_segs_vertical(mtmp, y2);
 	    }
 	}
 	if (flp & 2) {
@@ -502,6 +540,8 @@ flip_level(int flp)
 	    else if (mtmp->isshk) {
 		ESHK(mtmp)->shk.x = x2 - ESHK(mtmp)->shk.x;
 		ESHK(mtmp)->shd.x = x2 - ESHK(mtmp)->shd.x;
+	    } else if (mtmp->wormno) {
+		flip_worm_segs_horizontal(mtmp, x2);
 	    }
 	}
     }
@@ -612,6 +652,9 @@ flip_level(int flp)
 	for (x = 0; x <= x2; x++)
 	    for (y = 0; y <= (y2 / 2); y++) {
 
+		flip_drawbridge_vertical(&levl[x][y]);
+		flip_drawbridge_vertical(&levl[x][y2-y]);
+
 		trm = levl[x][y];
 		levl[x][y] = levl[x][y2-y];
 		levl[x][y2-y] = trm;
@@ -628,6 +671,9 @@ flip_level(int flp)
     if (flp & 2) {
 	for (x = 0; x <= (x2 / 2); x++)
 	    for (y = 0; y <= y2; y++) {
+
+		flip_drawbridge_horizontal(&levl[x][y]);
+		flip_drawbridge_horizontal(&levl[x2-x][y]);
 
 		trm = levl[x][y];
 		levl[x][y] = levl[x2-x][y];
@@ -652,6 +698,11 @@ flip_level_rnd(int flp)
     int c = 0;
     if ((flp & 1) && rn2(2)) c |= 1;
     if ((flp & 2) && rn2(2)) c |= 2;
+
+    /* Workaround for preventing the stairs to Vlad's tower appearing
+     * in the wizard's tower because of a bug in level flipping. */
+    if (On_W_tower_level(&u.uz)) { flp &= 1; }
+
     flip_level(c);
 }
 
@@ -3553,6 +3604,10 @@ struct sp_coder *coder;
         level.flags.shortsighted = 1;
     if (lflags & ARBOREAL)
         level.flags.arboreal = 1;
+    if (lflags & NOFLIPX)      
+        coder->allow_flips &= ~1;
+    if (lflags & NOFLIPY)      
+        coder->allow_flips &= ~2;
     if (lflags & MAZELEVEL)
         level.flags.is_maze_lev = 1;
     if (lflags & PREMAPPED)
@@ -5576,6 +5631,7 @@ sp_lev *lvl;
     coder->n_subroom = 1;
     coder->exit_script = FALSE;
     coder->lvl_is_joined = 0;
+    coder->allow_flips = 3;
 
     splev_init_present = FALSE;
     icedpools = FALSE;
@@ -6263,7 +6319,7 @@ sp_lev *lvl;
     if (coder->solidify)
         solidify_map();
 
-    /* flip_level_rnd(3); */
+    flip_level_rnd(coder->allow_flips);
 
     /* This must be done before sokoban_detect(),
      * otherwise branch stairs won't be premapped. */

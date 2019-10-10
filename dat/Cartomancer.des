@@ -214,6 +214,7 @@ WALLIFY
 #
 
 LEVEL: "Car-fila"
+FLAGS: noflip
 #
 ROOM: "ordinary" , random, random, random, random {
   STAIR: random, up
@@ -259,6 +260,7 @@ ROOM: "ordinary" , random, random, random, random {
 RANDOM_CORRIDORS
 
 LEVEL: "Car-filb"
+FLAGS: noflip
 #
 ROOM: "ordinary" , random, random, random, random {
   STAIR: random, up

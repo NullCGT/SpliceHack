@@ -58,7 +58,7 @@ struct permonst *ptr;
         case PM_FIRE_ELEMENTAL:
             return Is_firelevel(&u.uz);
         case PM_EARTH_ELEMENTAL:
-            return Is_earthlevel(&u.uz);
+            return Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz);
         case PM_WATER_ELEMENTAL:
             return Is_waterlevel(&u.uz);
         case PM_FUSION_ELEMENTAL:
@@ -76,7 +76,7 @@ struct permonst *ptr;
 {
     if (ptr->mlet == S_ELEMENTAL) {
         return (boolean) !is_home_elemental(ptr);
-    } else if (Is_earthlevel(&u.uz)) {
+    } else if (Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz)) {
         /* no restrictions? */
     } else if (Is_waterlevel(&u.uz)) {
         /* just monsters that can swim */
@@ -781,6 +781,9 @@ register struct monst *mtmp;
             (void) mongets(mtmp, SHORT_SWORD);
             (void) mongets(mtmp, SHORT_SWORD);
             break;
+        case PM_EFREET:
+            (void) mongets(mtmp, TWO_HANDED_SWORD);
+            break;
         case PM_GRIM_REAPER:
             otmp = mksobj(GRAIN_SCYTHE, FALSE, FALSE);
             otmp = oname(otmp, artiname(ART_END));
@@ -977,6 +980,22 @@ register struct monst *mtmp;
                 /*FALLTHRU*/
             case 3:
                 (void) mongets(mtmp, WAN_STRIKING);
+            }
+        } else if (ptr == &mons[PM_EXTRAPLANAR_MERCHANT]) {
+            (void) mongets(mtmp, SKELETON_KEY);
+            switch (rn2(4)) {
+            /* MAJOR fall through ... */
+            case 0:
+                (void) mongets(mtmp, KATANA);
+                /*FALLTHRU*/
+            case 1:
+                (void) mongets(mtmp, POT_FULL_HEALING);
+                /*FALLTHRU*/
+            case 2:
+                (void) mongets(mtmp, POT_HALLUCINATION);
+                /*FALLTHRU*/
+            case 3:
+                (void) mongets(mtmp, WAN_SPEED_MONSTER);
             }
         } else if (ptr == &mons[PM_ARMS_DEALER]) {
               otmp = mksobj(TWO_HANDED_SWORD, FALSE, FALSE);
@@ -2685,6 +2704,21 @@ register struct monst *mtmp;
 
     if (does_block(mx, my, &levl[mx][my]))
         block_point(mx, my);
+}
+
+void
+create_sin()
+{
+    int tryct = 0;
+    int pm = 0;
+    do {
+        pm = rn1(PM_ENVY - PM_WRATH + 1, PM_WRATH);
+        tryct++;
+    } while ((mvitals[pm].mvflags & G_EXTINCT) && tryct < 100);
+    if (!(mvitals[pm].mvflags & G_EXTINCT)) {
+        makemon(&mons[pm], 0, 0, NO_MM_FLAGS);
+        mvitals[pm].mvflags |= G_EXTINCT;
+    }
 }
 
 /* release monster from bag of tricks; return number of monsters created */

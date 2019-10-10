@@ -1269,7 +1269,7 @@ bound_digging()
     boolean found, nonwall;
     int xmin, xmax, ymin, ymax;
 
-    if (Is_earthlevel(&u.uz))
+    if (Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz))
         return; /* everything diggable here */
 
     found = nonwall = FALSE;

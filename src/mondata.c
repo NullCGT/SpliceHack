@@ -794,6 +794,7 @@ const char *in_str;
             { "wood elf", PM_WOODLAND_ELF },
             { "woodland nymph", PM_WOOD_NYMPH },
             { "halfling", PM_HOBBIT },    /* potential guess for polyself */
+            { "ifrit", PM_EFREET },
             { "genie", PM_DJINNI }, /* potential guess for ^G/#wizgenesis */
             /* Hyphenated names -- it would be nice to handle these via
                fuzzymatch() but it isn't able to ignore trailing stuff */

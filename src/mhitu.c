@@ -2424,6 +2424,21 @@ struct attack *mattk;
         if (!diseasemu(mtmp->data))
             tmp = 0;
         break;
+    case AD_SLIM:
+        if (flaming(youmonst.data)) {
+            pline_The("slime burns away!");
+            tmp = 0;
+        } else if (Unchanging || noncorporeal(youmonst.data)
+                   || youmonst.data == &mons[PM_GREEN_SLIME]) {
+            You("are unaffected.");
+            tmp = 0;
+        } else if (!Slimed) {
+            You("don't feel very well.");
+            make_slimed(10L, (char *) 0);
+            delayed_killer(SLIMED, KILLED_BY_AN, mtmp->data->mname);
+        } else
+            pline("Yuck!");
+        break;
     case AD_DREN:
         /* AC magic cancellation doesn't help when engulfed */
         if (!mtmp->mcan && rn2(4)) /* 75% chance */

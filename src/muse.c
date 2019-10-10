@@ -1421,7 +1421,7 @@ struct monst *mtmp;
             && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 2
             && mtmp->mcansee && haseyes(mtmp->data)
             && !Is_rogue_level(&u.uz)
-            && (!In_endgame(&u.uz) || Is_earthlevel(&u.uz))) {
+            && (!In_endgame(&u.uz) || Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz))) {
             m.offensive = obj;
             m.has_offense = MUSE_SCR_EARTH;
         }   

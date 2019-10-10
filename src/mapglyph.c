@@ -150,6 +150,8 @@ unsigned *ospecial;
         		    color = CLR_BROWN;
         		else if (In_hell(&u.uz) && !Is_valley(&u.uz))
         		    color =  CLR_RED;
+                else if (Is_firelevel(&u.uz))
+                    color = CLR_YELLOW;
         		else if (Is_astralevel(&u.uz))
         		    color = CLR_WHITE;
       	} else if (iflags.use_color && offset == S_room) {

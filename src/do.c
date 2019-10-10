@@ -121,7 +121,7 @@ dogive()
         return 0;
 
     /* how does our monster respond? */
-    if (monsndx(mtmp->data) == PM_SHOPKEEPER) {
+    if (is_shopkeeper(mtmp->data)) {
         if (!is_unpaid(otmp)) {
             pline("%s thanks you for your contribution to the store.",
                   mon_nam(mtmp));
@@ -1792,6 +1792,8 @@ boolean at_stairs, falling, portal;
             final_level(); /* guardian angel,&c */
         else if (newdungeon && u.uhave.amulet)
             resurrect(); /* force confrontation with Wizard */
+        if (new &&!on_level(&u.uz, &astral_level))
+            create_sin();
     } else if (In_quest(&u.uz)) {
         onquest(); /* might be reaching locate|goal level */
     } else if (In_V_tower(&u.uz)) {

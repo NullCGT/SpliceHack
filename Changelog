@@ -18,16 +18,28 @@ Cooking
 - Cooking in front of a monster of the same race as the corpse being cooked
   will cause them to become angry.
 
+Endgame Rewrite:
+- The following levels are now part of the endgame:
+  - The City of Brass
+  - The Gemstone Array
+  - The Eternal Storm
+
 Monsters
 - New Monster: Gold Dragon
     - Sourced from Nephi's Gold Dragon Patch.
 - New Monster: Vent Wurm.
 - New Monster: Crevasse Wurm.
-   - Both of these monsters only appear in the planes.
+  - Both of these monsters only appear in the planes.
 - New Monster: Wrath
-  - Unique, appears on the planes. One of the seven deadly sins.
-  - Always equipped with a spiked chain, which is whatever material will
-    harm the player.
+- New Monster: Envy
+- New Monster: Sloth
+- New Monster: Gluttony
+- New Monster: Pride
+- New Monster: Greed
+- New Monster: Lust
+  - One of each of the seven sins appears on the planes.
+- New Monster: Extraplanar Merchant
+  - Only appears in shops on the planes.
 - Monsters will use cursed scrolls of light to attempt to blind the player.
 - Monsters are more aggressive about using expensive cameras.
 - Monsters can wear rings. For the sake of keeping the code simple, each

@@ -387,7 +387,7 @@ dig(VOID_ARGS)
             digtxt = "The boulder falls apart.";
         } else if (lev->typ == STONE || lev->typ == SCORR
                    || IS_TREE(lev->typ)) {
-            if (Is_earthlevel(&u.uz)) {
+            if (Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz)) {
                 if (uwep->blessed && !rn2(3)) {
                     mkcavearea(FALSE);
                     goto cleanup;
@@ -443,7 +443,7 @@ dig(VOID_ARGS)
         if (dmgtxt)
             pay_for_damage(dmgtxt, FALSE);
 
-        if (Is_earthlevel(&u.uz) && !rn2(3)) {
+        if ((Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz)) && !rn2(3)) {
             register struct monst *mtmp;
 
             switch (rn2(2)) {
@@ -1454,7 +1454,7 @@ zap_dig()
 
     /* normal case: digging across the level */
     shopdoor = shopwall = FALSE;
-    maze_dig = level.flags.is_maze_lev && !Is_earthlevel(&u.uz);
+    maze_dig = level.flags.is_maze_lev && !Is_earthlevel(&u.uz) && !Is_gemlevel(&u.uz);
     zx = u.ux + u.dx;
     zy = u.uy + u.dy;
     if (u.utrap && u.utraptype == TT_PIT

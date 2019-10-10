@@ -708,8 +708,11 @@ struct mkroom *sroom;
             shk = makemon(&mons[PM_ARMS_DEALER], sx, sy, MM_ESHK);
           }
     }
-    if (!shk) {
+    if (!shk && !In_endgame(&u.uz)) {
           if(!(shk = makemon(&mons[PM_SHOPKEEPER], sx, sy, MM_ESHK)))
+              return(-1);
+    } else if (!shk) {
+          if(!(shk = makemon(&mons[PM_EXTRAPLANAR_MERCHANT], sx, sy, MM_ESHK)))
               return(-1);
     }
     eshkp = ESHK(shk); /* makemon(...,MM_ESHK) allocates this */

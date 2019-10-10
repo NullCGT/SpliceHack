@@ -1184,7 +1184,8 @@ register int after;
                              && otmp->material != MINERAL)
                          || (conceals && !cansee(otmp->ox, otmp->oy))
                          || ((ptr == &mons[PM_GELATINOUS_CUBE] ||
-                              ptr == &mons[PM_TASMANIAN_DEVIL])
+                              ptr == &mons[PM_TASMANIAN_DEVIL] ||
+                              ptr == &mons[PM_GLUTTONY])
                              && !index(indigestion, otmp->oclass)
                              && !(otmp->otyp == CORPSE
                                   && touch_petrifies(&mons[otmp->corpsenm]))))

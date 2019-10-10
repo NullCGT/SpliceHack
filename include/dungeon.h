@@ -102,6 +102,7 @@ typedef struct branch {
  */
 #define Is_astralevel(x) (on_level(x, &astral_level))
 #define Is_gemlevel(x) (on_level(x, &gem_level))
+#define Is_stormlevel(x) (on_level(x, &storm_level))
 #define Is_earthlevel(x) (on_level(x, &earth_level))
 #define Is_waterlevel(x) (on_level(x, &water_level))
 #define Is_firelevel(x) (on_level(x, &fire_level) || on_level(x, &brass_level))

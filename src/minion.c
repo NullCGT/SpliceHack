@@ -269,6 +269,10 @@ struct monst* mtmp;
         com_pager(QT_VLAD_APPEARS);
         return TRUE;
     }
+    else if (mondx == PM_ENVY) {
+        com_pager(QT_ENVY_APPEARS);
+        return TRUE;
+    }
 #if 0 /* Deferred because currently this would hardly ever happen. */
     else if (mondx == PM_MEDUSA) {
         com_pager(QT_MEDUSA_APPEARS);

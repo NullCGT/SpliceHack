@@ -4628,6 +4628,12 @@ velvet cloak. His skin is very pale, except for some disturbing red stains
 around his mouth.  His lips curl into a sneer, revealing long white fangs.
 "I am Vlad Dracula, the Impaler. Tonight I will feast on thy blood."
 %E [You encounter Vlad The Impaler!]
+%Cc - 00126
+With a loud "crack" and a flash of emerald light, a horrifying being appears
+before you. Its heavy coils have no start or end, and its body is a sickly
+green. The creature stares at you with eyes filled to the brim with disgust.
+"I... am... Envy..."
+%E [You encounter Envy!]
 #
 #
 #	TEST PATTERN

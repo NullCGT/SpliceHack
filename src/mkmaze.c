@@ -1518,7 +1518,11 @@ movebubbles()
         for (x = 1; x <= (COLNO - 1); x++)
             for (y = 0; y <= (ROWNO - 1); y++) {
                 levl[x][y] = air_pos;
-                unblock_point(x, y);
+                if (!Is_stormlevel(&u.uz))
+                    unblock_point(x, y);
+                else {
+                    block_point(x, y);
+                }
                 /* all air or all cloud around the perimeter of the Air
                    level tends to look strange; break up the pattern */
                 xedge = (boolean) (x < bxmin || x > bxmax);

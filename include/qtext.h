@@ -124,6 +124,7 @@ struct qtlists {
 #define QTN_RIDER 3 /* number of Riders */
 #define QT_WIZARD_APPEARS 123
 #define QT_VLAD_APPEARS 124
+#define QT_ENVY_APPEARS 126
 
 #endif /***** !MAKEDEFS *****/
 

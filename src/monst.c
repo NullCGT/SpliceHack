@@ -4069,7 +4069,7 @@ struct permonst _mons2[] = {
         M2_LORD | M2_NEUTER | M2_HOSTILE | M2_STALK | M2_STRONG
           | M2_PNAME | M2_NOPOLY | M2_NASTY,
         M3_INFRAVISION, 0, 77, CLR_MAGENTA),
-    MON("Pride", S_SIN, LVL(77, 15, -7, 70, 0), (G_UNIQ | G_NOGEN),
+    MON("Pride", S_SIN, LVL(77, 15, -7, 70, 0), (G_UNIQ | G_NOCORPSE | G_NOGEN),
         A(ATTK(AT_CLAW, AD_PHYS, 5, 4), ATTK(AT_CLAW, AD_PHYS, 5, 4), 
           ATTK(AT_TUCH, AD_PSYC, 6, 6), ATTK(AT_TUCH, AD_LEGS, 2, 2), 
           NO_ATTK, NO_ATTK),
@@ -4115,7 +4115,7 @@ struct permonst _mons2[] = {
         MR_POISON | MR_FIRE | MR_ACID | MR_ELEC | MR_STONE,
         MR_POISON | MR_FIRE | MR_ACID | MR_ELEC,
         M1_FLY | M1_SWIM | M1_HUMANOID | M1_REGEN | M1_SEE_INVIS
-          | M1_OMNIVORE | M1_SLITHY, 
+          | M1_OMNIVORE | M1_SLITHY | M1_POIS, 
         M2_LORD | M2_MALE | M2_HOSTILE | M2_STALK | M2_NEUTER
           | M2_STRONG | M2_PNAME | M2_NOPOLY | M2_NASTY,
         M3_INFRAVISION, MH_ANGEL, 77, CLR_BRIGHT_MAGENTA),
@@ -4126,8 +4126,8 @@ struct permonst _mons2[] = {
         MR_POISON | MR_DISINT | MR_FIRE | MR_COLD | MR_PSYCHIC | MR_SONIC,
         MR_POISON | MR_DISINT | MR_FIRE | MR_COLD,
         M1_FLY | M1_SWIM | M1_HUMANOID | M1_REGEN | M1_SEE_INVIS
-          | M1_SLITHY | M1_POIS,
-        M2_LORD | M2_NEUTER | M2_HOSTILE | M2_STALK | M2_COLLECT | M2_MAGIC
+          | M1_SLITHY | M1_POIS | M1_ACID,
+        M2_NEUTER | M2_HOSTILE | M2_STALK | M2_COLLECT | M2_MAGIC
           | M2_PNAME | M2_NOPOLY | M2_NASTY,
         M3_WANTSAMUL, MH_DEMON, 77, CLR_BRIGHT_GREEN),
     /*

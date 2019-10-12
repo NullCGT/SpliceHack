@@ -711,6 +711,7 @@ boolean allowmsg;
            about cannibalism--hero's innate traits aren't altered) */
         && (your_race(fptr)
             || (Upolyd && same_race(youmonst.data, fptr))
+            || (Role_if(PM_DRAGONMASTER) && (is_dragon(fptr)))
             || (u.ulycn >= LOW_PM && were_beastie(pm) == u.ulycn))) {
         if (allowmsg) {
             if (Upolyd && your_race(fptr))

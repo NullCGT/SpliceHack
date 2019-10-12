@@ -76,10 +76,12 @@
     - Drow Race
     - Techniques Code
     - Various tiles
+    - Vampire Race
 
 #SliceHack
 - Various bug fixes.
 - Being an awesome variant.
+- Dragonmaster changes.
 
 #DNetHack
 - Inspiration for Creeping Kudzu

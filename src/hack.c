@@ -3129,12 +3129,20 @@ maybe_wail()
     static short powers[] = { TELEPORT, SEE_INVIS, POISON_RES, COLD_RES,
                               SHOCK_RES, FIRE_RES, SLEEP_RES, DISINT_RES,
                               TELEPORT_CONTROL, STEALTH, FAST, INVIS };
+    struct monst *mon;
 
     if (moves <= wailmsg + 50)
         return;
 
     wailmsg = moves;
-    if (Role_if(PM_WIZARD) || Race_if(PM_ELF) || Role_if(PM_VALKYRIE)) {
+    if (uarmc && uarmc->otyp == ROBE_OF_THE_BLOOD_MAGUS && !uarmc->cursed) {
+        mon = makemon(&mons[PM_BLOOD_PUDDING], u.ux, u.uy, MM_EDOG | NO_MINVENT);
+        uarmc->cursed = 1;
+        if (mon)
+            initedog(mon);
+        Your("robe constricts around you, and you vomit blood!");
+        healup(d(4, 4), 0, TRUE, FALSE);
+    } else if (Role_if(PM_WIZARD) || Race_if(PM_ELF) || Role_if(PM_VALKYRIE)) {
         const char *who;
         int i, powercnt;
 
@@ -3155,6 +3163,8 @@ maybe_wail()
         You_hear(u.uhp == 1 ? "the wailing of a chorus of Banshees..."
                             : "the howling of the CwnAnnwn...");
     }
+
+
 }
 
 void

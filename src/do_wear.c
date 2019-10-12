@@ -276,6 +276,7 @@ Cloak_on(VOID_ARGS)
     case CLOAK_OF_MAGIC_RESISTANCE:
     case MYSTIC_ROBE:
     case ROBE_OF_STASIS:
+    case ROBE_OF_THE_BLOOD_MAGUS:
     case PLAIN_CLOAK:
     case MANTLE:
     case CLOAK_OF_REFLECTION:
@@ -348,6 +349,7 @@ Cloak_off(VOID_ARGS)
     case OILSKIN_CLOAK:
     case MYSTIC_ROBE:
     case ROBE_OF_STASIS:
+    case ROBE_OF_THE_BLOOD_MAGUS:
     case PLAIN_CLOAK:
     case MANTLE:
     case CLOAK_OF_FLIGHT:

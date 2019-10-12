@@ -86,6 +86,11 @@ Items
 - New Item: Robe of Stasis (Bleached Robe)
     - Confers unchanging when worn, and is generated erodeproof. Cannot
       be polymorphed.
+- New Item: Robe of the Blood Magus (Starry Robe)
+    - Confers blood magic when worn.
+    - Engravings made using the finger of the player are made in blood.
+    - Upon being reduced to extremely low hit points, the player will vomit
+      out a blood pudding and gain a few hp. The robe curses itself.
 - New Item: Light Arrow
     - High damage, very deadly arrow. Only generated in shops and with 
       Avenger Archons.

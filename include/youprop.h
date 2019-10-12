@@ -273,7 +273,7 @@
 /* Get wet, may go under surface */
 
 #define Breathless \
-    (HMagical_breathing || EMagical_breathing || breathless(youmonst.data))
+    (HMagical_breathing || EMagical_breathing || breathless(Upolyd ? youmonst.data : &mons[urace.malenum]))
 
 #define Underwater (u.uinwater)
 /* Note that Underwater and u.uinwater are both used in code.

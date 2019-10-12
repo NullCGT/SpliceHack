@@ -53,7 +53,8 @@ const struct Role roles[] = {
       S_SNAKE,
       S_MUMMY,
       ART_ORB_OF_DETECTION,
-      MH_HUMAN | MH_DWARF | MH_GNOME | MH_ANGEL | MH_DEMON | MH_GHOUL | MH_WERE,
+      MH_HUMAN | MH_DWARF | MH_GNOME | MH_ANGEL | MH_DEMON | MH_GHOUL | MH_WERE
+        | MH_VAMPIRE,
       ROLE_MALE | ROLE_FEMALE |
       ROLE_NEUTER | ROLE_LAWFUL | ROLE_NEUTRAL,
       /* Str Int Wis Dex Con Cha */
@@ -97,7 +98,8 @@ const struct Role roles[] = {
       S_OGRE,
       S_TROLL,
       ART_HEART_OF_AHRIMAN,
-      MH_HUMAN | MH_DWARF | MH_MERFOLK | MH_ORC | MH_DEMON | MH_GHOUL | MH_WERE,
+      MH_HUMAN | MH_DWARF | MH_MERFOLK | MH_ORC | MH_DEMON | MH_GHOUL | MH_WERE
+        | MH_VAMPIRE,
       ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
       { 16, 7, 7, 15, 16, 6 },
@@ -140,7 +142,7 @@ const struct Role roles[] = {
       S_HUMANOID,
       S_GIANT,
       ART_SCEPTRE_OF_MIGHT,
-      MH_HUMAN | MH_DWARF | MH_GNOME | MH_WERE,
+      MH_HUMAN | MH_DWARF | MH_GNOME | MH_WERE | MH_VAMPIRE,
       ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_LAWFUL | ROLE_NEUTRAL,
       /* Str Int Wis Dex Con Cha */
       { 10, 7, 7, 7, 8, 6 },
@@ -183,7 +185,8 @@ const struct Role roles[] = {
       S_SNAKE,
       S_NAGA,
       ART_HOLOGRAPHIC_VOID_LILY,
-      MH_HUMAN | MH_DWARF | MH_ELF | MH_GNOME | MH_DEMON | MH_GHOUL,
+      MH_HUMAN | MH_DWARF | MH_ELF | MH_GNOME | MH_DEMON | MH_GHOUL
+        | MH_VAMPIRE,
       ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER |
           ROLE_LAWFUL | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
@@ -225,7 +228,8 @@ const struct Role roles[] = {
         S_RODENT, 
         S_SPIDER,
         ART_IRON_BALL_OF_LIBERATION,
-        MH_HUMAN | MH_DWARF | MH_GNOME | MH_MERFOLK | MH_ORC | MH_GHOUL | MH_WERE,  
+        MH_HUMAN | MH_DWARF | MH_GNOME | MH_MERFOLK | MH_ORC | MH_GHOUL | MH_WERE
+            | MH_VAMPIRE,  
         ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_CHAOTIC,
         /* Str Int Wis Dex Con Cha */
         {  10,  7,  7,  7, 13,  6 },
@@ -436,7 +440,8 @@ const struct Role roles[] = {
       S_ZOMBIE,
       S_WRAITH,
       ART_MITRE_OF_HOLINESS,
-      MH_HUMAN | MH_DWARF | MH_MERFOLK | MH_GNOME | MH_ELF | MH_DEMON | MH_GHOUL | MH_ANGEL | MH_WERE | MH_ORC,
+      MH_HUMAN | MH_DWARF | MH_MERFOLK | MH_GNOME | MH_ELF | MH_DEMON | MH_GHOUL | MH_ANGEL | MH_WERE | MH_ORC
+        | MH_VAMPIRE,
       ROLE_MALE | ROLE_FEMALE |
           ROLE_NEUTER | ROLE_LAWFUL | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
@@ -480,7 +485,8 @@ const struct Role roles[] = {
       S_RODENT,
       S_ELEMENTAL, /* Ghost pirates, soldiers, rats in the food stores, and the occasional storm*/
      	ART_TREASURY_OF_PROTEUS,
-     	MH_HUMAN | MH_DEMON | MH_MERFOLK | MH_GHOUL | MH_WERE | MH_GNOME | MH_ORC,
+     	MH_HUMAN | MH_DEMON | MH_MERFOLK | MH_GHOUL | MH_WERE | MH_GNOME | MH_ORC
+            | MH_VAMPIRE,
           ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_CHAOTIC | ROLE_NEUTRAL,
      	/* Str Int Wis Dex Con Cha */
      	{   8,  7, 7,  8,  8,  7 },
@@ -518,7 +524,8 @@ const struct Role roles[] = {
       S_NYMPH,
       S_NAGA,
       ART_MASTER_KEY_OF_THIEVERY,
-      MH_HUMAN | MH_MERFOLK | MH_DEMON | MH_GHOUL | MH_ORC | MH_WERE | MH_GNOME | MH_ELF,
+      MH_HUMAN | MH_MERFOLK | MH_DEMON | MH_GHOUL | MH_ORC | MH_WERE | MH_GNOME | MH_ELF
+        | MH_VAMPIRE,
       ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
       { 7, 7, 7, 10, 7, 6 },
@@ -749,7 +756,7 @@ const struct Role roles[] = {
       S_WRAITH,
       ART_EYE_OF_THE_AETHIOPICA,
       MH_HUMAN | MH_ELF | MH_MERFOLK | MH_GNOME | MH_ORC | MH_DEMON | MH_ANGEL |
-          MH_GHOUL | MH_WERE | MH_DWARF,
+          MH_GHOUL | MH_WERE | MH_DWARF | MH_VAMPIRE,
       ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
       { 7, 10, 7, 7, 7, 7 },
@@ -1046,6 +1053,29 @@ const struct Race races[] = {
         /* Init   Lower  Higher */
         { 2, 0, 0, 2, 1, 0 }, /* Hit points */
         { 1, 0, 2, 0, 2, 0 }  /* Energy */
+    },
+    {	
+        "vampire", 
+        "vampiric", 
+        "vampirehood", 
+        "Vam",
+        {0, 0, 0},
+        PM_VAMPIRE, 
+        NON_PM, 
+        NON_PM,
+        PM_HUMAN_MUMMY, 
+        PM_HUMAN_ZOMBIE,
+        MH_VAMPIRE | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER 
+            | ROLE_CHAOTIC,
+        MH_VAMPIRE, 
+        0, 
+        MH_ELF | MH_GNOME | MH_DWARF | MH_ORC,
+        /*    Str     Int Wis Dex Con Cha */
+        {      4,      0,  0,  4,  3,  4 },
+        { STR19(19), 18, 18, 20, 20, 20 },
+        /* Init   Lower  Higher */
+        {  3, 0,  0, 3,  2, 0 },	/* Hit points */
+        {  3, 0,  4, 0,  4, 0 }		/* Energy */
     },
     /* Array terminator */
     { 0, 0, 0, 0 }

@@ -198,12 +198,10 @@ static const struct innate_tech
 		       {  10, T_BERSERK, 1},
 		       {   0, 0, 0} },
   mer_tech[] = { {   1, T_PULL_UNDER, 1},
-		       {   0, 0, 0} };
-	#if 0
+		       {   0, 0, 0} },
 	vam_tech[] = { {   1, T_DAZZLE, 1},
 		       {   1, T_DRAW_BLOOD, 1},
 		       {   0, 0, 0} };
-	#endif
 	/* Orc */
 
 /* Local Macros
@@ -1843,8 +1841,8 @@ race_tech()
 		case PM_DOPPELGANGER:	return (dop_tech);
 		case PM_DROW:		return (elf_tech);
 		case PM_HOBBIT:		return (hob_tech);
-    case PM_VAMPIRE:	return (vam_tech);
     #endif
+		case PM_VAMPIRE:	return (vam_tech);
 		case PM_MERFOLK:	return (mer_tech);
 		case PM_GNOME:		return (gno_tech);
 		case PM_HUMAN_WEREWOLF:	return (lyc_tech);

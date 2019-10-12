@@ -131,6 +131,7 @@
 #define is_gnome(ptr) (((ptr)->mhflags & MH_GNOME) != 0L)
 #define is_orc(ptr) (((ptr)->mhflags & MH_ORC) != 0L)
 #define is_human(ptr) (((ptr)->mhflags & MH_HUMAN) != 0L)
+#define is_vampire(ptr)	(((ptr)->mhflags & MH_VAMPIRE) != 0L)
 #define your_race(ptr) (((ptr)->mhflags & urace.selfmask) != 0L)
 #define is_bat(ptr)                                         \
     ((ptr) == &mons[PM_BAT] || (ptr) == &mons[PM_GIANT_BAT] \
@@ -248,7 +249,6 @@
 #define touch_petrifies(ptr) \
     ((ptr) == &mons[PM_COCKATRICE] || (ptr) == &mons[PM_CHICKATRICE])
 
-#define is_vampire(ptr) ((ptr)->mlet == S_VAMPIRE)
 #define is_pirate(ptr) \
     ((ptr) == &mons[PM_PIRATE] || (ptr) == &mons[PM_SKELETAL_PIRATE] \
       || (ptr) == &mons[PM_DAMNED_PIRATE] || (ptr) == &mons[PM_PLANAR_PIRATE] \
@@ -301,6 +301,11 @@
               || obj->material == VEGGY                                  \
               || ((obj)->otyp == CORPSE && ((obj)->corpsenm == PM_LICHEN \
                     || (obj)->corpsenm == PM_LEGENDARY_LICHEN)))))
+
+/* For vampires */
+#define has_blood(ptr)	(!vegetarian(ptr) && \
+				   (ptr)->mlet != S_GOLEM && \
+				   (!is_undead(ptr) || is_vampire(ptr)))
 
 #define is_blkmktstaff(ptr)	(Is_blackmarket(&u.uz) && \
 				  (ptr) == &mons[PM_ARMS_DEALER])

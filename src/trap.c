@@ -4164,6 +4164,14 @@ crawl:
     }
     u.uinwater = 1;
     You("drown.");
+    /* [ALI] Vampires return to vampiric form on drowning.
+	 */
+	if (Upolyd && !Unchanging && Race_if(PM_VAMPIRE)) {
+		rehumanize();
+		u.uinwater = 0;
+		You("fly up out of the water!");
+		return (TRUE);
+	}
     for (i = 0; i < 5; i++) { /* arbitrary number of loops */
         /* killer format and name are reconstructed every iteration
            because lifesaving resets them */

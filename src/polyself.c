@@ -90,13 +90,14 @@ set_uasmon()
     /* floating eye is the only 'floater'; it is also flagged as a 'flyer';
        suppress flying for it so that enlightenment doesn't confusingly
        show latent flight capability always blocked by levitation */
-    PROPSET(FLYING, (is_flyer(mdat) && !is_floater(mdat)));
     PROPSET(SWIMMING, is_swimmer(mdat));
     /* [don't touch MAGICAL_BREATHING here; both Amphibious and Breathless
        key off of it but include different monster forms...] */
     PROPSET(PASSES_WALLS, passes_walls(mdat));
-    PROPSET(REGENERATION, regenerates(mdat));
     PROPSET(REFLECTING, (mdat == &mons[PM_SILVER_DRAGON]));
+    /* Changed in the vampire patch in order to account for vampires (and because no class grants flying) */
+    PROPSET(FLYING, (is_flyer(Upolyd ? mdat : &mons[urace.malenum]) && !is_floater(Upolyd ? mdat : &mons[urace.malenum])));
+    PROPSET(REGENERATION, regenerates(Upolyd ? mdat : &mons[urace.malenum]));
 #undef PROPSET
 
     float_vs_flight(); /* maybe toggle (BFlying & I_SPECIAL) */

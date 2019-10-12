@@ -2034,6 +2034,8 @@ struct obj *corpse;
 {
     if (corpse->oeaten)
         return 0;
+    if (corpse->odrained) 
+        return 0;
     if (!mons[corpse->corpsenm].cnutrit)
         return 0;
     return 1;
@@ -2054,7 +2056,7 @@ struct obj *obj;
     }
     if (!(corpse = floorfood("tin", 2)))
         return;
-    if (corpse->oeaten) {
+    if (corpse->oeaten || corpse->odrained) {
         You("cannot tin %s which is partly eaten.", something);
         return;
     }

@@ -1219,7 +1219,13 @@ unsigned doname_flags;
         }
         break;
     case FOOD_CLASS:
-        if (obj->oeaten)
+        if (obj->otyp == CORPSE && obj->odrained) {
+		    if (wizard && obj->oeaten < drainlevel(obj))
+			    Strcat(prefix, "over-drained ");
+		    else
+		        Sprintf(prefix, "%sdrained ",
+		            (obj->oeaten > drainlevel(obj)) ? "partly " : "");
+		} else if (obj->oeaten)
             Strcat(prefix, "partly eaten ");
         if (obj->otyp == PUMPKIN)
             goto armor;
@@ -3072,9 +3078,9 @@ struct obj *no_wish;
     register int i;
     register struct obj *otmp;
     int cnt, spe, spesgn, typ, very, rechrg;
-    int blessed, uncursed, iscursed, ispoisoned, isgreased;
+    int blessed, uncursed, iscursed, ispoisoned, isgreased, isdrained;
     int eroded, eroded2, erodeproof, locked, unlocked, broken;
-    int halfeaten, mntmp, contents;
+    int halfeaten, halfdrained, mntmp, contents;
     int islit, unlabeled, ishistoric, isdiluted, trapped;
     int tmp, tinv, tvariety;
     int material;
@@ -3104,7 +3110,7 @@ struct obj *no_wish;
     very = rechrg = blessed = uncursed = iscursed = ispoisoned =
         isgreased = eroded = eroded2 = erodeproof = halfeaten =
         islit = unlabeled = ishistoric = isdiluted = trapped =
-        locked = unlocked = broken = 0;
+        locked = unlocked = broken = isdrained = halfdrained = 0;
     tvariety = RANDOM_TIN;
     mntmp = NON_PM;
 #define UNDEFINED 0
@@ -3223,6 +3229,12 @@ struct obj *no_wish;
         } else if (!strncmpi(bp, "partly eaten ", l = 13)
                    || !strncmpi(bp, "partially eaten ", l = 16)) {
             halfeaten = 1;
+        } else if (!strncmpi(bp, "partly drained ", l=15)) {
+			isdrained = 1;
+			halfdrained = 1;
+		} else if (!strncmpi(bp, "drained ", l=8)) {
+			isdrained = 1;
+			halfdrained = 0;
         } else if (!strncmpi(bp, "charred ", l = 8)) {
             eroded = 2;
             very = 0;
@@ -3463,6 +3475,8 @@ struct obj *no_wish;
         && strncmpi(bp, "ninja-to", 8)     /* not the "ninja" rank */
         && strncmpi(bp, "Thiefbane", 9)    /* not the "thief" rank */
         && strncmpi(bp, "master key", 10)  /* not the "master" rank */
+        && strncmpi(bp, "Bat from Hell", 13) /* not the "bat" monster */
+        && strncmpi(bp, "vampire blood", 13) /* not the "vampire" monster */
         && strncmpi(bp, "magenta", 7)) {   /* not the "mage" rank */
         if (mntmp < LOW_PM && strlen(bp) > 2
             && (mntmp = name_to_mon(bp)) >= LOW_PM) {
@@ -4325,6 +4339,18 @@ struct obj *no_wish;
         /* (do this adjustment before setting up object's weight) */
         consume_oeaten(otmp, 1);
     }
+    if (isdrained && otmp->otyp == CORPSE && mons[otmp->corpsenm].cnutrit) {
+		int amt;
+		otmp->odrained = 1;
+		amt = mons[otmp->corpsenm].cnutrit - drainlevel(otmp);
+		if (halfdrained) {
+		    amt /= 2;
+		    if (amt == 0)
+			amt++;
+		}
+		/* (do this adjustment before setting up object's weight) */
+		consume_oeaten(otmp, -amt);
+	}
     otmp->owt = weight(otmp);
     if (very && otmp->otyp == HEAVY_IRON_BALL)
         otmp->owt += IRON_BALL_W_INCR;

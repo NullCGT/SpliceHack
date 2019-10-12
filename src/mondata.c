@@ -105,6 +105,11 @@ struct monst *mon;
         || (mon == &youmonst && u.ulycn >= LOW_PM)
         || ptr == &mons[PM_DEATH] || is_vampshifter(mon))
         return TRUE;
+    /* Added in the vampire patch to ensure that vampires have racial abilities */
+    if (!Upolyd && mon == &youmonst 
+        && (is_undead(&mons[urace.malenum])
+            || is_were(&mons[urace.malenum])))
+        return TRUE;
     wep = (mon == &youmonst) ? uwep : MON_WEP(mon);
     return (boolean) (wep && wep->oartifact && defends(AD_DRLI, wep));
 }

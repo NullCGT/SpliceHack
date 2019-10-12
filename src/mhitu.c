@@ -1482,6 +1482,16 @@ register struct attack *mattk;
         /*FALLTHRU*/
     case AD_DRLI:
         hitmsg(mtmp, mattk);
+        /* if vampire biting (and also a pet) */
+		if (is_vampire(mtmp->data) && mattk->aatyp == AT_BITE &&
+			has_blood(youmonst.data)) {
+			   Your("blood is being drained!");
+			   /* Get 1/20th of full corpse value
+			    * Therefore 4 bites == 1 drink
+			    */
+			    if (mtmp->mtame && !mtmp->isminion)
+			    	EDOG(mtmp)->hungrytime += ((int)((youmonst.data)->cnutrit / 20) + 1);
+		}
         if (uncancelled && !rn2(3) && !Drain_resistance && !item_catches_drain(&youmonst)) {
             losexp("life drainage");
         }

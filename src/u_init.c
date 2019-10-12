@@ -276,6 +276,8 @@ static struct inv_sub {
     { PM_DROW, SHORT_SWORD, DARK_ELVEN_SHORT_SWORD },
     { PM_DROW, BOW, DARK_ELVEN_BOW },
     { PM_DROW, ARROW, DARK_ELVEN_ARROW },
+    { PM_VAMPIRE, POT_FRUIT_JUICE, POT_BLOOD },
+    { PM_VAMPIRE, FOOD_RATION, POT_VAMPIRE_BLOOD },
     { NON_PM, STRANGE_OBJECT, STRANGE_OBJECT }
 };
 
@@ -1072,6 +1074,12 @@ u_init()
         knows_object(URUK_HAI_SHIELD);
         knows_object(ORCISH_CLOAK);
         break;
+
+    case PM_VAMPIRE:
+	    /* Vampires start off with gods not as pleased, luck penalty */
+	    adjalign(-5); 
+	    change_luck(-1);
+	    break;
 
     case PM_HUMAN_WEREWOLF:
         set_ulycn(PM_WEREWOLF);

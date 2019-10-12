@@ -88,6 +88,7 @@ struct obj {
 #define odiluted oeroded /* diluted potions */
 #define norevive oeroded2
     Bitfield(oerodeproof, 1); /* erodeproof weapon/armor */
+#define odrained olocked	/* drained corpse */
     Bitfield(olocked, 1);     /* object is locked */
     Bitfield(obroken, 1);     /* lock has been broken */
 #define degraded_horn obroken /* unicorn horn will poly to non-magic */
@@ -257,6 +258,7 @@ struct obj {
 #define Is_pudding(o)                                                 \
     (o->otyp == GLOB_OF_GRAY_OOZE || o->otyp == GLOB_OF_BROWN_PUDDING \
      || o->otyp == GLOB_OF_GREEN_SLIME || o->otyp == GLOB_OF_BLACK_PUDDING)
+#define drainlevel(corpse) (mons[(corpse)->corpsenm].cnutrit * 0.8)
 
 /* Containers */
 #define carried(o) ((o)->where == OBJ_INVENT)

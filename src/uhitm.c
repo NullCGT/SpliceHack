@@ -714,6 +714,26 @@ struct attack *uattk;
         if (mhit)
             (void) passive(mon, uswapwep, mhit, malive, AT_WEAP, !uswapwep);
     }
+
+    /* Tertiary bite attack for vampires */
+    if (malive && m_at(x, y) == mon && Race_if(PM_VAMPIRE) && !Upolyd) {
+        if ((uwep || (u.twoweap && uswapwep)) &&
+            maybe_polyd(is_vampire(youmonst.data), Race_if(PM_VAMPIRE)) &&
+            (is_rider(mon->data) ||
+                mon->data == &mons[PM_GRIM_REAPER] ||
+                mon->data == &mons[PM_GREEN_SLIME]))
+            return malive;
+        tmp = find_roll_to_hit(mon, AT_BITE, (struct obj *) 0, &attknum,
+                               &armorpenalty);
+        dieroll = rnd(20);
+        mhit = (tmp > dieroll || u.uswallow);
+        if (mhit) {
+            You("bite %s.", mon_nam(mon));
+            malive = damageum(mon, &mons[PM_VAMPIRE].mattk[1], 0) != 2;
+            (void) passive(mon, uswapwep, mhit, malive, AT_BITE, !uswapwep);
+            wakeup(mon, TRUE);
+        }
+    }
     return malive;
 }
 
@@ -2107,6 +2127,20 @@ int specialdmg; /* blessed and/or material bonus against various things */
             && !item_catches_drain(mdef)) {
             int xtmp = d(2, 6);
 
+            if (maybe_polyd(is_vampire(youmonst.data),
+			    Race_if(PM_VAMPIRE)) && mattk->aatyp == AT_BITE &&
+			    has_blood(pd)) {
+				/* For the life of a creature is in the blood
+				   (Lev 17:11) */
+				if (flags.verbose)
+				    You("feed on the lifeblood.");
+				/* [ALI] Biting monsters does not count against
+				   eating conducts. The draining of life is
+				   considered to be primarily a non-physical
+				   effect */
+				lesshungry(xtmp * 6);
+			}
+
             pline("%s suddenly seems weaker!", Monnam(mdef));
             mdef->mhpmax -= xtmp;
             mdef->mhp -= xtmp;
@@ -2834,8 +2868,16 @@ register struct monst *mon;
             if (uwep && youmonst.data->mlet == S_LICH && !weapon_used)
                 goto use_weapon;
             /*FALLTHRU*/
-        case AT_KICK:
         case AT_BITE:
+            /* [ALI] Vampires are also smart. They avoid biting
+			   monsters if doing so would be fatal */
+			if ((uwep || (u.twoweap && uswapwep)) &&
+				maybe_polyd(is_vampire(youmonst.data), Race_if(PM_VAMPIRE)) &&
+				(is_rider(mon->data) ||
+                 mon->data == &mons[PM_GRIM_REAPER] ||
+				 mon->data == &mons[PM_GREEN_SLIME]))
+			    break;
+        case AT_KICK:
         case AT_STNG:
         case AT_BUTT:
         case AT_TENT:
@@ -3129,6 +3171,10 @@ boolean wep_was_destroyed;
     register struct permonst *ptr = mon->data;
     register int i, tmp;
 
+    if (mhit && aatyp == AT_BITE && maybe_polyd(is_vampire(youmonst.data), Race_if(PM_VAMPIRE))) {
+	    if (bite_monster(mon))
+		return 2;			/* lifesaved */
+	}
     for (i = 0;; i++) {
         if (i >= NATTK)
             return (malive | mhit); /* no passive attacks */

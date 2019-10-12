@@ -1376,6 +1376,11 @@ register struct attack *mattk;
         }
         break;
     case AD_DRLI:
+        if (!cancelled && magr->mtame && !magr->isminion &&
+			is_vampire(pa) && mattk->aatyp == AT_BITE &&
+			has_blood(pd))
+		    EDOG(magr)->hungrytime += ((int)((mdef->data)->cnutrit / 20) + 1);
+            
         if (!cancelled && !rn2(3) && !resists_drli(mdef)
             && !item_catches_drain(mdef)) {
             tmp = d(2, 6);

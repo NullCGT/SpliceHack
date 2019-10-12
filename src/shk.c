@@ -2900,7 +2900,7 @@ char *buf;
                                            "most renowned and sacred" };
 
     Strcat(buf, honored[rn2(SIZE(honored) - 1) + u.uevent.udemigod]);
-    if (is_vampire(youmonst.data))
+    if (maybe_polyd(is_vampire(youmonst.data), Race_if(PM_VAMPIRE)))
         Strcat(buf, (flags.gender == GEND_F) ? " dark lady" : (flags.gender == GEND_N) ? "dark liege" : " dark lord");
     else if (is_elf(youmonst.data))
         Strcat(buf, (flags.gender == GEND_F) ? " hiril" : (flags.gender == GEND_N) ? "mehtar" : " hir");

@@ -144,6 +144,11 @@ boolean check_if_better;
  	      otmp->otyp == FIRE_HORN ||
         otmp->otyp == MAGIC_HARP ||
         otmp->otyp == DRUM_OF_EARTHQUAKE ||
+        otmp->otyp == EXPENSIVE_CAMERA ||
+        otmp->otyp == SCR_LIGHT ||
+        otmp->otyp == POT_BOOZE ||
+        otmp->otyp == POT_BLOOD ||
+        otmp->otyp == WAN_WINDSTORM ||
  	      otmp->otyp == UNICORN_HORN));
 
     if (can_use)

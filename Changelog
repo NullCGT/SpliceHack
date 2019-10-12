@@ -162,6 +162,7 @@ Features
 - Added a few additional death messages.
 - Flipped levels patch has been enabled, after adding fixes from UnNetHack.
 - Unique names for junk shop and archery shop shopkeers.
+- Wands of psionics now have an engrave message, as requested by Hothraxxa.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing

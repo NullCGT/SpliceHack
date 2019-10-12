@@ -737,7 +737,11 @@ doengrave()
                             surface(u.ux, u.uy));
                 }
             /* RAY wands */
+                break;
             case WAN_PSIONICS:
+                if (!Blind)
+                    Sprintf(post_engr_text, "The bugs on the %s run around in circles!",
+                                surface(u.ux, u.uy));
                 break;
             case WAN_MAGIC_MISSILE:
                 ptext = TRUE;

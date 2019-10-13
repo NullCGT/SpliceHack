@@ -58,6 +58,7 @@
 #define MS_MAD 46       /* cheshire cats */
 #define MS_GNOLL 47     /* gnolls */
 #define MS_YAWN 48      /* hippos yawn when angry */
+#define MS_SIN 49       /* seven deadly sins */
 
 #define MR_FIRE 0x00000001L      /* resists fire */
 #define MR_COLD 0x00000002L      /* resists cold */

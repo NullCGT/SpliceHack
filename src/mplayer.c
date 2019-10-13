@@ -383,10 +383,11 @@ mplayer_talk(mtmp)
 register struct monst *mtmp;
 {
     static const char
-        *same_class_msg[3] = {
+        *same_class_msg[4] = {
             "I can't win, and neither will you!",
             "You don't deserve to win!",
             "Mine should be the honor, not yours!",
+            "Glory will be mine!",
         },
         *other_class_msg[3] = {
             "The low-life wants to talk, eh?",
@@ -394,8 +395,8 @@ register struct monst *mtmp;
             "Here is what I have to say!",
         },
         *peaceful_msg[3] = {
-            "Don\'t make the same mistakes I did.",
-            "I was so close."
+            "Best of luck in your quest. Don\'t make the same mistakes I did.",
+            "Let's hope you know what you're doing."
             "You must complete what I started."
         };
 

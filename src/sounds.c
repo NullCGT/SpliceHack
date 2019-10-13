@@ -684,10 +684,7 @@ register struct monst *mtmp;
         /* vampire messages are varied by tameness, peacefulness, and time of
          * night */
         boolean isnight = night();
-        boolean kindred = (Upolyd && (u.umonnum == PM_VAMPIRE
-                                      || u.umonnum == PM_VAMPIRE_LORD
-                                      || u.umonnum == PM_VAMPIRE_MAGE
-                                      || u.umonnum == PM_NOSFERATU));
+        boolean kindred = maybe_polyd(is_vampire(youmonst.data), Race_if(PM_VAMPIRE));
         boolean nightchild =
             (Upolyd && (u.umonnum == PM_WOLF || u.umonnum == PM_WINTER_WOLF
                         || u.umonnum == PM_WINTER_WOLF_CUB));
@@ -906,7 +903,9 @@ register struct monst *mtmp;
         } else if (mtmp->mpeaceful) {
             if (ptr == &mons[PM_WATER_DEMON])
                 pline_msg = "gurgles.";
-            if (ptr == &mons[PM_DESERT_JINN])
+            else if (ptr == &mons[PM_LAVA_DEMON])
+                pline_msg = "gargles.";
+            else if (ptr == &mons[PM_DESERT_JINN])
                 pline_msg = "discusses the nature of free will.";
             else
                 verbl_msg = "I'm free!";
@@ -990,8 +989,15 @@ register struct monst *mtmp;
             case PM_TOURIST:
                 verbl_msg = "Aloha.";
                 break;
+            case PM_WIZARD:
+                pline_msg =
+                "discusses spellbooks.";
+                break;
+            case PM_RANGER:
+                verbl_msg = Hallucination ? "I am the bone of my sword." : "I can't talk for long, I'm on the hunt.";
+                break;
             case PM_CARTOMANCER:
-                pline_msg = "tells you that their deck lacks cards which could be considered pathetic.";
+                pline_msg = "informs you that their deck has no pathetic cards.";
                 break;
             case PM_DRAGONMASTER:
                 verbl_msg = "The only authority I answer to is that of the wyrm.";
@@ -1041,6 +1047,17 @@ register struct monst *mtmp;
             };
             verbl_msg = arrest_msg[rn2(3)];
         }
+        break;
+    case MS_SIN:
+        if (monsndx(ptr) == PM_WRATH) {
+            verbl_msg = "...";
+            break;
+        }
+        static const char * const sin_msg[3] = {
+                "You're no better than us, War.",
+                "You know what you are doing is wrong, but just like us, you don't care.",
+                "Is this all really worth it? Just give in."};
+            verbl_msg = sin_msg[rn2(3)];
         break;
     case MS_MAD:
         if (mtmp->mpeaceful)

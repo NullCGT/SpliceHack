@@ -178,6 +178,7 @@ Features
 - Unique names for junk shop and archery shop shopkeers.
 - Wands of psionics now have an engrave message, as requested by Hothraxxa.
 - YAFM when praying near a praying mantis.
+- Additional sounds and YAFMS for chatting with various monsters.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing
@@ -196,6 +197,7 @@ Fixes
 - Fixed monster steeds not teleporting with their masters, lagging behind by
   one turn.
 - Fixed bad feedback when monster steeds have invisible riders.
+- Unintentional fallthrough when chatting with types of djinn.
 - Numerous other minor bugs.
 
 Balance Changes

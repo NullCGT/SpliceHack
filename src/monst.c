@@ -4071,7 +4071,7 @@ struct permonst _mons2[] = {
         A(ATTK(AT_WEAP, AD_PHYS, 4, 4), ATTK(AT_WEAP, AD_PHYS, 4, 4),
           ATTK(AT_WEAP, AD_PHYS, 4, 4), ATTK(AT_MAGC, AD_MAGM, 2, 6),
           NO_ATTK, NO_ATTK),
-        SIZ(WT_HUMAN, 400, MS_SILENT, MZ_HUMAN), 
+        SIZ(WT_HUMAN, 400, MS_SIN, MZ_HUMAN), 
         MR_POISON | MR_FIRE | MR_COLD | MR_ELEC | MR_STONE,
         MR_POISON | MR_FIRE | MR_COLD | MR_ELEC,
         M1_FLY | M1_SWIM | M1_HUMANOID | M1_REGEN | M1_SEE_INVIS
@@ -4095,7 +4095,7 @@ struct permonst _mons2[] = {
         A(ATTK(AT_CLAW, AD_PHYS, 5, 4), ATTK(AT_CLAW, AD_PHYS, 5, 4), 
           ATTK(AT_TUCH, AD_PSYC, 6, 6), ATTK(AT_TUCH, AD_LEGS, 2, 2), 
           NO_ATTK, NO_ATTK),
-        SIZ(2000, 0, MS_SILENT, MZ_GIGANTIC),
+        SIZ(2000, 0, MS_SIN, MZ_GIGANTIC),
         MR_FIRE | MR_COLD | MR_ELEC | MR_SLEEP | MR_POISON | MR_STONE |
         MR_PSYCHIC | MR_SONIC, 0,
         M1_FLY | M1_SWIM | M1_REGEN | M1_SEE_INVIS | M1_CARNIVORE 
@@ -4107,7 +4107,7 @@ struct permonst _mons2[] = {
         A(ATTK(AT_WEAP, AD_PHYS, 8, 8), ATTK(AT_CLAW, AD_DREN, 4, 4),
           ATTK(AT_CLAW, AD_SITM, 2, 4), ATTK(AT_CLAW, AD_SGLD, 2, 4),
           NO_ATTK, NO_ATTK),
-        SIZ(WT_HUMAN, 400, MS_SILENT, MZ_HUMAN), 
+        SIZ(WT_HUMAN, 400, MS_SIN, MZ_HUMAN), 
         MR_POISON | MR_FIRE | MR_COLD | MR_ELEC | MR_STONE,
         MR_POISON | MR_FIRE | MR_COLD | MR_ELEC,
         M1_FLY | M1_SWIM | M1_HUMANOID | M1_REGEN | M1_SEE_INVIS
@@ -4120,7 +4120,7 @@ struct permonst _mons2[] = {
         A(ATTK(AT_BITE, AD_HNGY, 5, 8), ATTK(AT_ENGL, AD_DGST, 2, 10), 
           ATTK(AT_ENGL, AD_ACID, 3, 10),  ATTK(AT_ENGL, AD_SLIM, 4, 10), 
           NO_ATTK, NO_ATTK),
-        SIZ(1500, 0, MS_GROAN, MZ_LARGE),
+        SIZ(1500, 0, MS_SIN, MZ_LARGE),
         MR_FIRE | MR_COLD | MR_ELEC | MR_SLEEP | MR_POISON | MR_STONE |
         MR_PSYCHIC | MR_SONIC, 0,
         M1_FLY | M1_SWIM | M1_REGEN | M1_SEE_INVIS | M1_OMNIVORE 
@@ -4133,7 +4133,7 @@ struct permonst _mons2[] = {
         A(ATTK(AT_TUCH, AD_CALM, 5, 2), ATTK(AT_TUCH, AD_DSRM, 5, 2),
           ATTK(AT_TUCH, AD_TCKL, 2, 2), ATTK(AT_TUCH, AD_SEDU, 2, 2),
           NO_ATTK, NO_ATTK),
-        SIZ(WT_HUMAN, 400, MS_SILENT, MZ_HUMAN), 
+        SIZ(WT_HUMAN, 400, MS_SIN, MZ_HUMAN), 
         MR_POISON | MR_FIRE | MR_ACID | MR_ELEC | MR_STONE,
         MR_POISON | MR_FIRE | MR_ACID | MR_ELEC,
         M1_FLY | M1_SWIM | M1_HUMANOID | M1_REGEN | M1_SEE_INVIS

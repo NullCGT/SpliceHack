@@ -906,6 +906,13 @@ NEARDATA struct permonst mons[] = {
         M1_CLING | M1_HIDE | M1_ANIMAL | M1_NOEYES | M1_NOLIMBS | M1_CARNIVORE
             | M1_NOTAKE,
         M2_HOSTILE, 0, 0, 9, CLR_WHITE),
+    MON("god piercer", S_PIERCER, LVL(15, 1, 0, 0, 3), (G_GENO | G_PLANES | 2),
+        A(ATTK(AT_BITE, AD_PHYS, 8, 6), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
+          NO_ATTK),
+        SIZ(400, 300, MS_SILENT, MZ_MEDIUM), MR_ACID, 0,
+        M1_CLING | M1_HIDE | M1_ANIMAL | M1_NOEYES | M1_NOLIMBS | M1_CARNIVORE
+            | M1_NOTAKE,
+        M2_HOSTILE, 0, 0, 17, CLR_BLUE),
     /*
      * quadrupeds
      */

@@ -772,7 +772,9 @@ register struct monst *mtmp;
             (void) mongets(mtmp, rn2(4) ? TRIDENT : BULLWHIP);
             break;
         case PM_DISPATER:
-            (void) mongets(mtmp, WAN_STRIKING);
+            otmp = mksobj(rnd_class(SPE_DIG, SPE_FREEZE_SPHERE),
+                              FALSE, FALSE);
+            mpickobj(mtmp, otmp);
             break;
         case PM_YEENOGHU:
             (void) mongets(mtmp, FLAIL);

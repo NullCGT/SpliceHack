@@ -110,6 +110,8 @@ Artifacts
     for two turns.
 - Removed the King in Yellow.
 - Mjollnir can now be invoked for a powerful lightning bolt. From XNetHack.
+- Altars have a 50% chance to break apart when an artifact is granted once the
+  player has already been gifted two artifacts.
 
 Roles, Races, and Character Creation
 - Nonbinary Gender

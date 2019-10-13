@@ -1906,6 +1906,10 @@ dosacrifice()
                         makeknown(otmp->otyp);
                         discover_artifact(otmp->oartifact);
                     }
+                    if (u.ugifts > 2 && !rn2(2)) {
+                        pline("The altar cracks in two!");
+                        levl[u.ux][u.uy].typ = ROOM;
+                    }
                     return 1;
                 }
             }

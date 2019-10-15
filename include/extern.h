@@ -1,4 +1,4 @@
-/* NetHack 3.6	extern.h	$NHDT-Date: 1562114349 2019/07/03 00:39:09 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.715 $ */
+/* NetHack 3.6	extern.h	$NHDT-Date: 1567213888 2019/08/31 01:11:28 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.728 $ */
 /* Copyright (c) Steve Creps, 1988.				  */
 /* NetHack may be freely redistributed.  See license for details. */
 /* Edited on 5/8/18 by NullCGT */
@@ -1050,6 +1050,7 @@ E int FDECL(identify, (struct obj *));
 E int FDECL(count_unidentified, (struct obj *));
 E void FDECL(identify_pack, (int, BOOLEAN_P));
 E void NDECL(learn_unseen_invent);
+E void NDECL(update_inventory);
 E void FDECL(prinv, (const char *, struct obj *, long));
 E char *FDECL(xprname,
               (struct obj *, const char *, CHAR_P, BOOLEAN_P, long, long));
@@ -1955,7 +1956,7 @@ E boolean NDECL(u_handsy);
 E int FDECL(use_container, (struct obj **, int, BOOLEAN_P));
 E int FDECL(loot_mon, (struct monst *, int *, boolean *));
 E int NDECL(dotip);
-E boolean FDECL(is_autopickup_exception, (struct obj *, BOOLEAN_P));
+E struct autopickup_exception *FDECL(check_autopickup_exceptions, (struct obj *));
 E boolean FDECL(autopick_testobj, (struct obj *, BOOLEAN_P));
 
 /* ### pline.c ### */

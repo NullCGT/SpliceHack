@@ -1,4 +1,4 @@
-/* NetHack 3.6	do_wear.c	$NHDT-Date: 1559670603 2019/06/04 17:50:03 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.109 $ */
+/* NetHack 3.6	do_wear.c	$NHDT-Date: 1570566377 2019/10/08 20:26:17 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.111 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -416,6 +416,7 @@ Helmet_on(VOID_ARGS)
         makeknown(uarmh->otyp);
         break;
     case HELM_OF_OPPOSITE_ALIGNMENT:
+        uarmh->known = 1; /* do this here because uarmh could get cleared */
         /* changing alignment can toggle off active artifact
            properties, including levitation; uarmh could get
            dropped or destroyed here */
@@ -451,7 +452,9 @@ Helmet_on(VOID_ARGS)
     default:
         impossible(unknown_type, c_helmet, uarmh->otyp);
     }
-    uarmh->known = 1; /* helmet's +/- evident because of status line AC */
+    /* uarmh could be zero due to uchangealign() */
+    if (uarmh)
+        uarmh->known = 1; /* helmet's +/- evident because of status line AC */
     return 0;
 }
 
@@ -1176,7 +1179,7 @@ struct obj *otmp;
     boolean already_blind = Blind, already_deaf = Deaf, changed = FALSE;
 
     /* blindfold might be wielded; release it for wearing */
-    if (otmp->owornmask & W_WEAPON)
+    if (otmp->owornmask & W_WEAPONS)
         remove_worn_item(otmp, FALSE);
 
     setworn(otmp, W_TOOL);
@@ -2044,7 +2047,7 @@ struct obj *obj;
 
         /* if the armor is wielded, release it for wearing (won't be
            welded even if cursed; that only happens for weapons/weptools) */
-        if (obj->owornmask & W_WEAPON)
+        if (obj->owornmask & W_WEAPONS)
             remove_worn_item(obj, FALSE);
         /*
          * Setting obj->known=1 is done because setworn() causes hero's AC
@@ -2670,7 +2673,7 @@ doddoremarm()
            possibly combined with weapons */
         (void) strncpy(context.takeoff.disrobing, "disrobing", CONTEXTVERBSZ);
         /* specific activity when handling weapons only */
-        if (!(context.takeoff.mask & ~W_WEAPON))
+        if (!(context.takeoff.mask & ~W_WEAPONS))
             (void) strncpy(context.takeoff.disrobing, "disarming",
                            CONTEXTVERBSZ);
         (void) take_off();

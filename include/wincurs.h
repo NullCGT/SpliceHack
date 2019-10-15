@@ -143,6 +143,7 @@ extern boolean curses_map_borders(int *sx, int *sy, int *ex, int *ey,
 extern int curses_read_char(void);
 extern void curses_toggle_color_attr(WINDOW *win, int color, int attr,
                                      int onoff);
+extern void curses_menu_color_attr(WINDOW *, int, int, int);
 extern void curses_bail(const char *mesg);
 extern winid curses_get_wid(int type);
 extern char *curses_copy_of(const char *s);
@@ -151,7 +152,7 @@ extern char *curses_break_str(const char *str, int width, int line_num);
 extern char *curses_str_remainder(const char *str, int width, int line_num);
 extern boolean curses_is_menu(winid wid);
 extern boolean curses_is_text(winid wid);
-extern int curses_convert_glyph(int ch, int glyph);
+extern int curses_convert_glyph(boolean decgraphics, int ch, int glyph);
 extern void curses_move_cursor(winid wid, int x, int y);
 extern void curses_prehousekeeping(void);
 extern void curses_posthousekeeping(void);

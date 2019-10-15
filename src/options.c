@@ -1,4 +1,4 @@
-/* NetHack 3.6	options.c	$NHDT-Date: 1561682566 2019/06/28 00:42:46 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.367 $ */
+/* NetHack 3.6	options.c	$NHDT-Date: 1571045295 2019/10/14 09:28:15 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.376 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2008. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -588,7 +588,6 @@ STATIC_DCL boolean FDECL(special_handling, (const char *,
 STATIC_DCL const char *FDECL(get_compopt_value, (const char *, char *));
 STATIC_DCL void FDECL(remove_autopickup_exception,
                       (struct autopickup_exception *));
-STATIC_DCL int FDECL(count_ape_maps, (int *, int *));
 
 STATIC_DCL boolean FDECL(is_wc_option, (const char *));
 STATIC_DCL boolean FDECL(wc_supported, (const char *));
@@ -842,8 +841,9 @@ initoptions_init()
 
     iflags.wc_align_message = ALIGN_TOP;
     iflags.wc_align_status = ALIGN_BOTTOM;
-    /* these are currently only used by curses */
+    /* used by tty and curses */
     iflags.wc2_statuslines = 2;
+    /* only used by curses */
     iflags.wc2_windowborders = 2; /* 'Auto' */
 
     /* since this is done before init_objects(), do partial init here */
@@ -3762,7 +3762,7 @@ boolean tinitial, tfrom_file;
             itmp = atoi(op);
         }
         if (itmp < 2 || itmp > 3) {
-            config_error_add("'%s' requires a value of 2 and 3", fullname);
+            config_error_add("'%s' requires a value of 2 or 3", fullname);
             retval = FALSE;
         } else {
             iflags.wc2_statuslines = itmp;
@@ -4156,11 +4156,11 @@ boolean tinitial, tfrom_file;
                     status_initialize(REASSESS_ONLY);
                 context.botl = TRUE;
             } else if (boolopt[i].addr == &flags.invlet_constant
-                       || boolopt[i].addr == &flags.sortpack) {
+                       || boolopt[i].addr == &flags.sortpack
+                       || boolopt[i].addr == &iflags.implicit_uncursed) {
                 if (!flags.invlet_constant)
                     reassign();
-                if (iflags.perm_invent)
-                    update_inventory();
+                update_inventory();
             } else if (boolopt[i].addr == &flags.lit_corridor
                        || boolopt[i].addr == &flags.dark_room) {
                 /*
@@ -4212,6 +4212,9 @@ boolean tinitial, tfrom_file;
                         set_colors();
                 }
 #endif
+            } else if (boolopt[i].addr == &iflags.use_menu_color
+                       || boolopt[i].addr == &iflags.wc2_guicolor) {
+                update_inventory();
 #endif /* TEXTCOLOR */
             }
             return retval;
@@ -4515,7 +4518,15 @@ int nset;
 int
 count_apes(VOID_ARGS)
 {
-    return count_ape_maps((int *) 0, (int *) 0);
+    int numapes = 0;
+    struct autopickup_exception *ape = apelist;
+
+    while (ape) {
+      numapes++;
+      ape = ape->next;
+    }
+
+    return numapes;
 }
 
 enum opt_other_enums {
@@ -4547,7 +4558,7 @@ int
 doset() /* changing options via menu by Per Liboriussen */
 {
     static boolean made_fmtstr = FALSE;
-    char buf[BUFSZ], buf2[BUFSZ] = DUMMY;
+    char buf[BUFSZ];
     const char *name;
     int i = 0, pass, boolcount, pick_cnt, pick_idx, opt_indx;
     boolean *bool_p;
@@ -4720,11 +4731,16 @@ doset() /* changing options via menu by Per Liboriussen */
 
                 if (!special_handling(compopt[opt_indx].name, setinitial,
                                       fromfile)) {
+                    char abuf[BUFSZ];
+
                     Sprintf(buf, "Set %s to what?", compopt[opt_indx].name);
-                    getlin(buf, buf2);
-                    if (buf2[0] == '\033')
+                    abuf[0] = '\0';
+                    getlin(buf, abuf);
+                    if (abuf[0] == '\033')
                         continue;
-                    Sprintf(buf, "%s:%s", compopt[opt_indx].name, buf2);
+                    Sprintf(buf, "%s:", compopt[opt_indx].name);
+                    (void) strncat(eos(buf), abuf,
+                                   (sizeof buf - 1 - strlen(buf)));
                     /* pass the buck */
                     (void) parseoptions(buf, setinitial, fromfile);
                 }
@@ -5228,7 +5244,7 @@ boolean setinitial, setfromfile;
             iflags.menu_headings = mhattr;
     } else if (!strcmp("msgtype", optname)) {
         int opt_idx, nmt, mttyp;
-        char mtbuf[BUFSZ] = DUMMY;
+        char mtbuf[BUFSZ];
 
  msgtypes_again:
         nmt = msgtype_count();
@@ -5236,6 +5252,7 @@ boolean setinitial, setfromfile;
         if (opt_idx == 3) { /* done */
             return TRUE;
         } else if (opt_idx == 0) { /* add new */
+            mtbuf[0] = '\0';
             getlin("What new message pattern?", mtbuf);
             if (*mtbuf == '\033')
                 return TRUE;
@@ -5290,18 +5307,29 @@ boolean setinitial, setfromfile;
         }
     } else if (!strcmp("menu_colors", optname)) {
         int opt_idx, nmc, mcclr, mcattr;
-        char mcbuf[BUFSZ] = DUMMY;
+        char mcbuf[BUFSZ];
 
  menucolors_again:
         nmc = count_menucolors();
         opt_idx = handle_add_list_remove("menucolor", nmc);
         if (opt_idx == 3) { /* done */
  menucolors_done:
-            if (nmc > 0 && !iflags.use_menu_color)
+            /* in case we've made a change which impacts current persistent
+               inventory window; we don't track whether an actual changed
+               occurred, so just assume there was one and that it matters;
+               if we're wrong, a redundant update is cheap... */
+            if (iflags.use_menu_color)
+                update_inventory();
+
+            /* menu colors aren't being used; if any are defined, remind
+               player how to use them */
+            else if (nmc > 0)
                 pline(
     "To have menu colors become active, toggle 'menucolors' option to True.");
             return TRUE;
+
         } else if (opt_idx == 0) { /* add new */
+            mcbuf[0] = '\0';
             getlin("What new menucolor pattern?", mcbuf);
             if (*mcbuf == '\033')
                 goto menucolors_done;
@@ -5314,6 +5342,7 @@ boolean setinitial, setfromfile;
                 wait_synch();
             }
             goto menucolors_again;
+
         } else { /* list (1) or remove (2) */
             int pick_idx, pick_cnt;
             int mc_idx;
@@ -5366,13 +5395,13 @@ boolean setinitial, setfromfile;
                 goto menucolors_again;
         }
     } else if (!strcmp("autopickup_exception", optname)) {
-        int opt_idx, pass, totalapes = 0, numapes[2] = { 0, 0 };
-        char apebuf[1 + BUFSZ]; /* so &apebuf[1] is BUFSZ long for getlin() */
+        int opt_idx, numapes = 0;
+        char apebuf[2 + BUFSZ]; /* so &apebuf[1] is BUFSZ long for getlin() */
         struct autopickup_exception *ape;
 
  ape_again:
-        totalapes = count_ape_maps(&numapes[AP_LEAVE], &numapes[AP_GRAB]);
-        opt_idx = handle_add_list_remove("autopickup exception", totalapes);
+        numapes = count_apes();
+        opt_idx = handle_add_list_remove("autopickup exception", numapes);
         if (opt_idx == 3) { /* done */
             return TRUE;
         } else if (opt_idx == 0) { /* add new */
@@ -5388,7 +5417,7 @@ boolean setinitial, setfromfile;
                 /* guarantee room for \" prefix and \"\0 suffix;
                    -2 is good enough for apebuf[] but -3 makes
                    sure the whole thing fits within normal BUFSZ */
-                apebuf[sizeof apebuf - 3] = '\0';
+                apebuf[sizeof apebuf - 2] = '\0';
                 Strcat(apebuf, "\"");
                 add_autopickup_exception(apebuf);
             }
@@ -5399,18 +5428,18 @@ boolean setinitial, setfromfile;
 
             tmpwin = create_nhwindow(NHW_MENU);
             start_menu(tmpwin);
-            for (pass = AP_LEAVE; pass <= AP_GRAB; ++pass) {
-                if (numapes[pass] == 0)
-                    continue;
-                ape = iflags.autopickup_exceptions[pass];
+            if (numapes) {
+                ape = apelist;
                 any = zeroany;
                 add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
-                         (pass == 0) ? "Never pickup" : "Always pickup",
+                         "Always pickup '<'; never pickup '>'",
                          MENU_UNSELECTED);
-                for (i = 0; i < numapes[pass] && ape; i++) {
+                for (i = 0; i < numapes && ape; i++) {
                     any.a_void = (opt_idx == 1) ? 0 : ape;
-                    /* length of pattern plus quotes is less than BUFSZ */
-                    Sprintf(apebuf, "\"%s\"", ape->pattern);
+                    /* length of pattern plus quotes (plus '<'/'>') is less than
+                       BUFSZ */
+                    Sprintf(apebuf, "\"%c%s\"", ape->grab ? '<' : '>',
+                            ape->pattern);
                     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, apebuf,
                              MENU_UNSELECTED);
                     ape = ape->next;
@@ -5976,9 +6005,8 @@ dotogglepickup()
     if (flags.pickup) {
         oc_to_str(flags.pickup_types, ocl);
         Sprintf(buf, "ON, for %s objects%s", ocl[0] ? ocl : "all",
-                (iflags.autopickup_exceptions[AP_LEAVE]
-                 || iflags.autopickup_exceptions[AP_GRAB])
-                    ? ((count_ape_maps((int *) 0, (int *) 0) == 1)
+                (apelist)
+                    ? ((count_apes() == 1)
                            ? ", with one exception"
                            : ", with some exceptions")
                     : "");
@@ -5997,7 +6025,7 @@ const char *mapping;
         APE_regex_error[] = "regex error in AUTOPICKUP_EXCEPTION",
         APE_syntax_error[] = "syntax error in AUTOPICKUP_EXCEPTION";
 
-    struct autopickup_exception *ape, **apehead;
+    struct autopickup_exception *ape;
     char text[256], end;
     int n;
     boolean grab = FALSE;
@@ -6029,13 +6057,11 @@ const char *mapping;
         free((genericptr_t) ape);
         return 0;
     }
-    apehead = (grab) ? &iflags.autopickup_exceptions[AP_GRAB]
-                     : &iflags.autopickup_exceptions[AP_LEAVE];
 
     ape->pattern = dupstr(text);
     ape->grab = grab;
-    ape->next = *apehead;
-    *apehead = ape;
+    ape->next = apelist;
+    apelist = ape;
     return 1;
 }
 
@@ -6044,16 +6070,15 @@ remove_autopickup_exception(whichape)
 struct autopickup_exception *whichape;
 {
     struct autopickup_exception *ape, *freeape, *prev = 0;
-    int chain = whichape->grab ? AP_GRAB : AP_LEAVE;
 
-    for (ape = iflags.autopickup_exceptions[chain]; ape;) {
+    for (ape = apelist; ape;) {
         if (ape == whichape) {
             freeape = ape;
             ape = ape->next;
             if (prev)
                 prev->next = ape;
             else
-                iflags.autopickup_exceptions[chain] = ape;
+                apelist = ape;
             regex_free(freeape->regex);
             free((genericptr_t) freeape->pattern);
             free((genericptr_t) freeape);
@@ -6064,42 +6089,16 @@ struct autopickup_exception *whichape;
     }
 }
 
-STATIC_OVL int
-count_ape_maps(leave, grab)
-int *leave, *grab;
-{
-    struct autopickup_exception *ape;
-    int pass, totalapes, numapes[2];
-
-    numapes[0] = numapes[1] = 0;
-    for (pass = AP_LEAVE; pass <= AP_GRAB; ++pass) {
-        ape = iflags.autopickup_exceptions[pass];
-        while (ape) {
-            ape = ape->next;
-            numapes[pass]++;
-        }
-    }
-    totalapes = numapes[AP_LEAVE] + numapes[AP_GRAB];
-    if (leave)
-        *leave = numapes[AP_LEAVE];
-    if (grab)
-        *grab = numapes[AP_GRAB];
-    return totalapes;
-}
-
 void
 free_autopickup_exceptions()
 {
-    struct autopickup_exception *ape;
-    int pass;
+    struct autopickup_exception *ape = apelist;
 
-    for (pass = AP_LEAVE; pass <= AP_GRAB; ++pass) {
-        while ((ape = iflags.autopickup_exceptions[pass]) != 0) {
-            regex_free(ape->regex);
-            free((genericptr_t) ape->pattern);
-            iflags.autopickup_exceptions[pass] = ape->next;
-            free((genericptr_t) ape);
-        }
+    while ((ape = apelist) != 0) {
+      regex_free(ape->regex);
+      free((genericptr_t) ape->pattern);
+      apelist = ape->next;
+      free((genericptr_t) ape);
     }
 }
 

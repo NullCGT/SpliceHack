@@ -1,4 +1,4 @@
-/* NetHack 3.6	flag.h	$NHDT-Date: 1562532730 2019/07/07 20:52:10 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.152 $ */
+/* NetHack 3.6	flag.h	$NHDT-Date: 1569276988 2019/09/23 22:16:28 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.155 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2006. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -433,9 +433,6 @@ struct instance_flags {
     int wc2_statuslines;        /* default = 2, curses can handle 3 */
     int wc2_windowborders;	/* display borders on NetHack windows */
     int wc2_petattr;            /* text attributes for pet */
-    struct autopickup_exception *autopickup_exceptions[2];
-#define AP_LEAVE 0
-#define AP_GRAB 1
 #ifdef WIN32
 #define MAX_ALTKEYHANDLER 25
     char altkeyhandler[MAX_ALTKEYHANDLER];
@@ -456,6 +453,7 @@ struct instance_flags {
     boolean windowtype_deferred; /* pick a windowport and store it in
                                     chosen_windowport[], but do not switch to
                                     it in the midst of options processing */
+    genericptr_t returning_missile; /* 'struct obj *'; Mjollnir or aklys */
     boolean obsolete;  /* obsolete options can point at this, it isn't used */
 };
 

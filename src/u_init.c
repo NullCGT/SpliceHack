@@ -277,7 +277,6 @@ static struct inv_sub {
     { PM_DROW, BOW, DARK_ELVEN_BOW },
     { PM_DROW, ARROW, DARK_ELVEN_ARROW },
     { PM_VAMPIRE, POT_FRUIT_JUICE, POT_BLOOD },
-    { PM_VAMPIRE, FOOD_RATION, POT_VAMPIRE_BLOOD },
     { NON_PM, STRANGE_OBJECT, STRANGE_OBJECT }
 };
 
@@ -1076,6 +1075,8 @@ u_init()
         break;
 
     case PM_VAMPIRE:
+        knows_object(POT_VAMPIRE_BLOOD);
+        knows_object(POT_BLOOD);
 	    /* Vampires start off with gods not as pleased, luck penalty */
 	    adjalign(-5); 
 	    change_luck(-1);
@@ -1386,6 +1387,12 @@ register struct trobj *trop;
                 trop++;
                 continue;
             }
+        }
+
+        /* Create vampire blood */
+        if (urace.malenum == PM_VAMPIRE && obj->otyp == FOOD_RATION) {
+            dealloc_obj(obj);
+            obj = mksobj(POT_VAMPIRE_BLOOD, TRUE, FALSE);
         }
 
         /* nudist gets no armor */

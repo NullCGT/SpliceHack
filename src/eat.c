@@ -109,7 +109,7 @@ register struct obj *obj;
 	 */
 	if (maybe_polyd(is_vampire(youmonst.data), Race_if(PM_VAMPIRE)))
 		return (boolean)(obj->otyp == CORPSE &&
-		  has_blood(&mons[obj->corpsenm]) && (!obj->odrained ||
+		  has_blood(&mons[obj->corpsenm]) && !obj->oeroded && (!obj->odrained ||
 		  obj->oeaten > drainlevel(obj)));
 
     if (u.umonnum == PM_GELATINOUS_CUBE && is_organic(obj)

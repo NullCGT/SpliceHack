@@ -1854,20 +1854,23 @@ struct obj *otmp;
 	      otmp->oeaten < mons[otmp->corpsenm].cnutrit) {
 	    	pline("There is no blood left in this corpse!");
 	    	return 3;
+        } else if (otmp->oeroded > 0) {
+            pline("The blood in this corpse has been cooked away!");
+            return 3;
 	    } else if (rotted <= 0 &&
 	      (peek_at_iced_corpse_age(otmp) + 5) >= monstermoves) {
-		char buf[BUFSZ];
+            char buf[BUFSZ];
 
-		/* Generate the name for the corpse */
-		if (!uniq || Hallucination)
-		    Sprintf(buf, "%s", the(corpse_xname(otmp, (const char *) 0, CXN_NORMAL)));
-		else
-		    Sprintf(buf, "%s%s corpse",
-			    !type_is_pname(&mons[mnum]) ? "the " : "",
-			    s_suffix(mons[mnum].mname));
+            /* Generate the name for the corpse */
+            if (!uniq || Hallucination)
+                Sprintf(buf, "%s", the(corpse_xname(otmp, (const char *) 0, CXN_NORMAL)));
+            else
+                Sprintf(buf, "%s%s corpse",
+                    !type_is_pname(&mons[mnum]) ? "the " : "",
+                    s_suffix(mons[mnum].mname));
 
-	    pline("You drain the blood from %s.", buf);
-		otmp->odrained = 1;
+            pline("You drain the blood from %s.", buf);
+            otmp->odrained = 1;
 	    } else {
 	    	pline("The blood in this corpse has coagulated!");
 	    	return 3;

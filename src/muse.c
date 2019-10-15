@@ -2066,7 +2066,7 @@ struct monst *mtmp;
             m.has_misc = MUSE_POT_SPEED;
         }
         nomore(MUSE_WISH);
-        if (mtmp->data == &mons[PM_EFREET] && !mtmp->mcan && m_canseeu(mtmp)) {
+        if (mtmp->data == &mons[PM_EFREET] && In_endgame(&u.uz) && !mtmp->mcan && m_canseeu(mtmp)) {
             m.misc = NULL;
             m.has_misc = MUSE_WISH;
         }

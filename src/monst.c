@@ -4061,7 +4061,7 @@ struct permonst _mons2[] = {
           ATTK(AT_TUCH, AD_WIND, 2, 2), NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(1800, 600, MS_DJINNI, MZ_HUMAN), 
         MR_POISON | MR_STONE | MR_FIRE, 0,
-        M1_HUMANOID | M1_FLY | M1_POIS, 
+        M1_HUMANOID | M1_FLY | M1_POIS | M1_SEE_INVIS, 
         M2_NOPOLY | M2_STALK | M2_COLLECT | M2_STRONG,
         M3_INFRAVISIBLE, 0, 8, CLR_WHITE),
     /*

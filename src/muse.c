@@ -1946,6 +1946,7 @@ struct monst *mtmp;
 #define MUSE_SCR_REMOVE_CURSE 12
 #define MUSE_POT_BOOZE 13
 #define MUSE_CORPSE 14
+#define MUSE_WISH 15
 
 boolean
 find_misc(mtmp)
@@ -2064,6 +2065,11 @@ struct monst *mtmp;
             m.misc = obj;
             m.has_misc = MUSE_POT_SPEED;
         }
+        nomore(MUSE_WISH);
+        if (mtmp->data == &mons[PM_EFREET] && !mtmp->mcan && m_canseeu(mtmp)) {
+            m.misc = NULL;
+            m.has_misc = MUSE_WISH;
+        }
         nomore(MUSE_POT_BOOZE);
         if (obj->otyp == POT_BOOZE &&
           ((is_pirate(mtmp->data) && !mtmp->mconf) || mtmp->mflee)) {
@@ -2166,7 +2172,6 @@ struct monst *mtmp;
         }
         if (!enexto(&cc, mtmp->mx, mtmp->my, pm))
             return 0;
-        m_useup(mtmp, otmp);
         if (otmp->blessed) {
             mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
             mon->mpeaceful = 0;
@@ -2177,7 +2182,12 @@ struct monst *mtmp;
             mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
             mon->mpeaceful = 1;
         }
+        if (has_oname(otmp)) {
+            mon = christen_monst(mon, ONAME(otmp));
+        }
         set_malign(mon);
+        newsym(mon->mx, mon->my);
+        m_useup(mtmp, otmp);
         return 2;
     }
     case MUSE_POT_GAIN_LEVEL:
@@ -2263,6 +2273,10 @@ struct monst *mtmp;
            monster becomes "one stage faster" permanently */
         mon_adjust_speed(mtmp, 1, otmp);
         m_useup(mtmp, otmp);
+        return 2;
+    case MUSE_WISH:
+        mmake_wish(mtmp);
+        mtmp->mcan = 1;
         return 2;
     case MUSE_POT_BOOZE:
         mquaffmsg(mtmp, otmp);
@@ -3121,7 +3135,18 @@ struct monst *mon;
     register int cnt;
     register boolean wearable = FALSE;
     register struct obj *otmp;
-    switch(rn2(5)) {
+    const char* str;
+
+    otmp = NULL;
+    str = "something";
+    switch(rn2(6)) {
+        case 0:
+            otmp = mksobj(FIGURINE, FALSE, FALSE);
+            bless(otmp);
+            otmp->corpsenm = PM_WOODCHUCK;
+            oname(otmp, "Carl");
+            (void) mpickobj(mon, otmp);
+            break;
         case 1:
             for (cnt = 0; cnt < 1 + rn2(3); cnt++) {
                 otmp = mksobj(POT_GAIN_LEVEL, FALSE, FALSE);
@@ -3145,7 +3170,8 @@ struct monst *mon;
             }
             break;
         case 4:
-            if (mon->mreflect == 1 || monsndx(mon->data) == PM_SILVER_DRAGON) {
+            if (mon->mreflect == 1 || monsndx(mon->data) == PM_SILVER_DRAGON
+                                   || monsndx(mon->data) == PM_BABY_SILVER_DRAGON) {
                 if (humanoid(mon->data))
                     otmp = mksobj(SILVER_DRAGON_SCALE_MAIL, FALSE, FALSE);
                 else
@@ -3157,15 +3183,15 @@ struct monst *mon;
             }
         /* FALLTHRU */
         default:
-            if (is_dragon(mon->data)) {
-                /* Dragons don't have a use for wands of death */
-                (void) mkmonmoney(mon, 5000);
-            }
-            else {
-                (void) mongets(mon, WAN_SPEED_MONSTER);
-            }
+            /* Dragons don't have a use for wands of death */
+            (void) mkmonmoney(mon, 5000);
+            str = "gold";
     }
-    if (wearable)
-        m_dowear(mon, FALSE);
+    if (otmp)
+        str = an(xname(otmp));
+    if (canseemon(mon)) {
+        pline("%s makes a wish for %s!", Monnam(mon), str);
+    }
+    m_dowear(mon, FALSE);
 }
 /*muse.c*/

@@ -37,6 +37,7 @@ Monsters
 - New Monster: Vent Wurm
 - New Monster: Crevasse Wurm
 - New Monster: God Piercer
+- Efreet
   - All of these monsters only appear in the planes.
 - New Monster: Wrath
 - New Monster: Envy
@@ -61,6 +62,7 @@ Monsters
 - The Wizard of Yendor has a weapon attack.
 - Instead of a wand of striking, Dispater receives a random spellbook,
   making him much more dangerous than in vanilla.
+- Efreet are capable of wishing for items.
 
 Items
 - New Item: Ring of Sonic Resistance (Glass Ring)
@@ -199,6 +201,7 @@ Fixes
 - Fixed bad feedback when monster steeds have invisible riders.
 - Unintentional fallthrough when chatting with types of djinn.
 - Numerous other minor bugs.
+- Named figurines applied by monsters create named monsters.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

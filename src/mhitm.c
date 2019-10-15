@@ -1666,7 +1666,7 @@ register struct attack *mattk;
             /* no body armor, victim dies; destroy cloak
                and shirt now in case target gets life-saved */
                pline("%s is utterly consumed by %s!",
-                   Monnam(magr), mon_nam(mdef));
+                   Monnam(mdef), mon_nam(magr));
             tmp = mdef->mhp + 1;
             if (which_armor(mdef, W_ARMC) != 0)
                 m_useup(mdef, which_armor(mdef, W_ARMC));

@@ -1207,6 +1207,7 @@ register struct attack *mattk;
         }
         tmp = (mattk->adtyp == AD_STON ? 0 : 1);
         break;
+    case AD_KDNP:
     case AD_TLPT:
         if (!cancelled && tmp < mdef->mhp && !tele_restrict(mdef)) {
             char mdef_Monnam[BUFSZ];
@@ -1220,6 +1221,8 @@ register struct attack *mattk;
             (void) rloc(mdef, TRUE);
             if (vis && wasseen && !canspotmon(mdef) && mdef != u.usteed)
                 pline("%s suddenly disappears!", mdef_Monnam);
+            if (mattk->adtyp == AD_TLPT)
+                rloc_to(magr, mdef->mx, mdef->my);
             if (tmp >= mdef->mhp) { /* see hitmu(mhitu.c) */
                 if (mdef->mhp == 1)
                     ++mdef->mhp;

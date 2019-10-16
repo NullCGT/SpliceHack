@@ -616,6 +616,7 @@ static const char * damagetypes[] = {
     "spawn skeletons",
     "hunger",
     "potion effect",
+    "kidnapping",
     "clerical",
     "arcane",
     "random breath",

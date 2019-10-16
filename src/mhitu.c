@@ -1716,6 +1716,7 @@ register struct attack *mattk;
         }
         break;
     case AD_TLPT:
+    case AD_KDNP:
         hitmsg(mtmp, mattk);
         if (uncancelled) {
             if (flags.verbose)
@@ -1723,6 +1724,8 @@ register struct attack *mattk;
                      (Teleport_control && !Stunned && !unconscious()) ? ""
                      : "very ");
             tele();
+            if (mattk->adtyp == AD_KDNP)
+                mnexto(mtmp);
             /* 3.6.2:  make sure damage isn't fatal; previously, it
                was possible to be teleported and then drop dead at
                the destination when QM's 1d4 damage gets applied below;

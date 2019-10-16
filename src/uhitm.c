@@ -2076,6 +2076,7 @@ int specialdmg; /* blessed and/or material bonus against various things */
         tmp = 0;
         break;
     case AD_TLPT:
+    case AD_KDNP:
         if (tmp <= 0)
             tmp = 1;
         if (!negated) {
@@ -2086,8 +2087,11 @@ int specialdmg; /* blessed and/or material bonus against various things */
             /* record the name before losing sight of monster */
             Strcpy(nambuf, Monnam(mdef));
             if (u_teleport_mon(mdef, FALSE) && u_saw_mon
-                && !(canseemon(mdef) || (u.uswallow && u.ustuck == mdef)))
+                && !(canseemon(mdef) || (u.uswallow && u.ustuck == mdef))) {
                 pline("%s suddenly disappears!", nambuf);
+                if (mattk->adtyp == AD_KDNP)
+                    teleds(mdef->mx, mdef->my, FALSE);
+            }
             if (tmp >= mdef->mhp) { /* see hitmu(mhitu.c) */
                 if (mdef->mhp == 1)
                     ++mdef->mhp;

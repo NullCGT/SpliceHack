@@ -3010,6 +3010,15 @@ struct attack *mattk; /* non-Null: current attack; Null: general capability */
         || (adtyp != AD_SEDU && adtyp != AD_SSEX && adtyp != AD_SITM))
         return 0;
 
+    if (mdef == &youmonst || magr == &youmonst) {
+        if (flags.orientation == SEX_GAY) {
+            return genagr == gendef;
+        } else if (flags.orientation == SEX_BI) {
+            return 1;
+        } else if (flags.orientation == SEX_ACE) {
+            return 0;
+        }
+    }
     return (genagr == 1 - gendef) ? 1 : (pagr->mlet == S_NYMPH) ? 2 : 0;
 }
 

@@ -1904,6 +1904,11 @@ int final;
     }
     you_are(buf, "");
 
+    /* sexual orientation */
+    buf[0] = '\0';
+    Sprintf(eos(buf), "%s", orientations[flags.orientation].adj);
+    you_are(buf, "");
+
     /* report alignment (bypass you_are() in order to omit ending period);
        adverb is used to distinguish between temporary change (helm of opp.
        alignment), permanent change (one-time conversion), and original */
@@ -3350,6 +3355,16 @@ int final;
         Sprintf(buf, "engraved Elbereth %ld time%s", u.uconduct.elbereth,
                 plur(u.uconduct.elbereth));
         you_have_X(buf);
+    }
+
+    if (flags.orientation == SEX_BI) {
+        you_have_been("bisexual");
+    } else if (flags.orientation == SEX_ACE) {
+        you_have_been("asexual");
+    } else if (flags.orientation == SEX_GAY) {
+        you_have_been("gay");
+    } else if (flags.orientation != SEX_STRAIGHT) {
+        you_have_been("straight");
     }
 
     ngenocided = num_genocides();

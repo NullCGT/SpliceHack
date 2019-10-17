@@ -247,10 +247,16 @@ struct Gender {
     const char *filecode; /* file code */
     short allow;          /* equivalent ROLE_ mask */
 };
+struct Orientation {
+    const char *adj;      /* gay/straight/bi/ace */
+    boolean tar;          /* target of attraction */
+};
 #define ROLE_GENDERS 3    /* number of permitted player genders
                              increment to 3 if you allow neuter roles */
+#define ROLE_ORIENTATIONS 4 /* number of permitted player orientations */
 
 extern const struct Gender genders[]; /* table of available genders */
+extern const struct Orientation orientations[]; /* table of available orientations */
 /* pronouns for the hero */
 #define uhe()      (genders[flags.gender].he)
 #define uhim()     (genders[flags.gender].him)

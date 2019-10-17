@@ -36,6 +36,11 @@ struct flag {
 #define GEND_M 0
 #define GEND_F 1
 #define GEND_N 2
+#define SEX_STRAIGHT 0
+#define SEX_GAY 1
+#define SEX_ACE 2
+#define SEX_BI 3 
+    int orientation;
     boolean friday13;        /* it's Friday the 13th */
     boolean help;            /* look in data file for info about stuff */
     boolean ignintr;         /* ignore interrupts */
@@ -161,6 +166,7 @@ struct flag {
     int initrole;  /* starting role      (index into roles[])   */
     int initrace;  /* starting race      (index into races[])   */
     int initgend;  /* starting gender    (index into genders[]) */
+    int initorientation; /* starting orientation (index into orientations[]) */
     int initalign; /* starting alignment (index into aligns[])  */
     int randomall; /* randomly assign everything not specified */
     int pantheon;  /* deity selection for priest character */

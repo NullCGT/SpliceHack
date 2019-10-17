@@ -1114,6 +1114,13 @@ const struct Gender genders[] = {
     { "nonbinary", "they", "them", "their", "Nbn", ROLE_NEUTER },
 };
 
+const struct Orientation orientations[] = {
+    { "straight", SEX_STRAIGHT },
+    { "gay", SEX_GAY },
+    { "asexual", SEX_ACE },
+    { "bisexual", SEX_BI },
+};
+
 /* Table of all alignments */
 const struct Align aligns[] = {
     { "law", "lawful", "Law", ROLE_LAWFUL, A_LAWFUL },
@@ -1336,6 +1343,31 @@ const char *str;
 
     /* Couldn't find anything appropriate */
     return ROLE_NONE;
+}
+
+int
+str2orientation(str)
+const char *str;
+{
+    int i, len;
+
+    /* Is str valid? */
+    if (!str || !str[0])
+        return SEX_STRAIGHT;
+
+    /* Match as much of str as is provided */
+    len = strlen(str);
+    for (i = 0; i < ROLE_ORIENTATIONS; i++) {
+        /* Does it match the adjective? */
+        if (!strncmpi(str, orientations[i].adj, len))
+            return i;
+    }
+    if ((len == 1 && (*str == '*' || *str == '@'))
+        || !strncmpi(str, randomstr, len))
+        return rn2(ROLE_ORIENTATIONS);
+
+    /* Couldn't find anything appropriate */
+    return SEX_STRAIGHT;
 }
 
 boolean

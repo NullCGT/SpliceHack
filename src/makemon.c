@@ -1605,6 +1605,12 @@ int mmflags;
     mtmp->mcansee = mtmp->mcanmove = TRUE;
     mtmp->mpeaceful = (mmflags & MM_ANGRY) ? FALSE : peace_minded(ptr);
 
+    /* If the player is bisexual, 50% of foocubi have headaches. */
+    if ((mndx == PM_INCUBUS || mndx == PM_SUCCUBUS) 
+        && flags.orientation == SEX_BI && !rn2(2)) {
+        mtmp->mcan = 1;
+    }
+
     /* mounting */
     if (!(mmflags & MM_NOCOUNTBIRTH)) {
         switch (mndx) {

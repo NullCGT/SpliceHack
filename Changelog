@@ -124,14 +124,25 @@ Artifacts
   player has already been gifted two artifacts.
 
 Roles, Races, and Character Creation
+- Sexual Orientation
+  - Sexual orientation affects whether you are seduced by succubi, incubi,
+    both, or neither.
+  - Options are gay, lesbian, bisexual, and asexual.
+  - Please note that this is an experimental implementation, and as such
+    only a few orientations are included, and the in-game representation
+    may not be a perfect reflection of real life. This is a work in
+    progress.
 - Nonbinary Gender
   - Resolved numerous bugs and corner cases which would cause the player
-    to be referred to incorrectly.
+    to be referred to incorrectly. Nonbinary characters should be referred
+    to with they/them pronouns in all cases.
   - Nonbinary characters are more likely to receive prompts on armor removal
     via foocubus.
   - Nonbinary characters cannot lay eggs.
   - Eggs hatched in the inventory of nonbinary characters always hatch
     peaceful monsters.
+  - Nonbinary characters are not seduced by incubi or succubi, unless
+    they are bisexual.
 - The following role and race combinations are now available:
   - Dwarf Barbarian
   - Dwarf Cartomancer

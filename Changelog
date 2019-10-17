@@ -132,6 +132,7 @@ Roles, Races, and Character Creation
     only a few orientations are included, and the in-game representation
     may not be a perfect reflection of real life. This is a work in
     progress.
+  - Sexual orientation is defined in the rc file.
 - Nonbinary Gender
   - Resolved numerous bugs and corner cases which would cause the player
     to be referred to incorrectly. Nonbinary characters should be referred

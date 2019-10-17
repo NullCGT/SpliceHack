@@ -47,6 +47,10 @@ Uncomment this if you do not want to receive gameplay tips.
 #OPTIONS=illfated
 #OPTIONS=marathon
 
+# *** SpliceHack Options ***
+# Orientation can be defined as gay, bisexual, straight, or asexual.
+#OPTIONS=orientation:gay
+
 #
 # General options.  You might also set "silent" so as not to attract
 # the boss's attention.

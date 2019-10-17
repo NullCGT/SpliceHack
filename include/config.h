@@ -225,6 +225,10 @@
 /* #define LIVELOG_DETAIL (LL_WISH|LL_ACHIEVE|LL_UMONST) */
 #define LIVELOG_DETAIL 0xFF
 #endif
+
+/* Can be commented out for JunetHack, in order to simplify cause of death. */
+#define UNIQDEATHS
+
 #define NEWS     "news"     /* the file containing the latest hack news */
 #define PANICLOG "paniclog" /* log of panic and impossible events */
 

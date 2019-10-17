@@ -1049,11 +1049,11 @@ int dieroll;
                     !amorphous(mdat)) {
                         tmp += mon->mhp;
                         pline("You throw %s as a last resort... it flies true and impales %s!", yname(obj), mon_nam(mon));
-                        /* chance that Gae Bulg is lost... */
-                        if (rnd(3) < 2) {
-                            pline("The deadly spear vanishes...");
-                            obfree(obj, (struct obj *) 0);
-                        }
+                        livelog_printf(LL_UMONST, "cast forth Gae Bulg %s %s ",
+                            nonliving(mon->data) ? "to destroy" : "to kill",
+                            noit_mon_nam(mon));
+                        pline("The deadly spear vanishes...");
+                        obfree(obj, (struct obj *) 0);
                 }
                 /* maybe break your glass weapon or monster's glass armor; put
                  * this at the end so that other stuff doesn't have to check obj

@@ -18,7 +18,12 @@ Cooking
 - Cooking in front of a monster of the same race as the corpse being cooked
   will cause them to become angry.
 
-Endgame Rewrite:
+Dungeon Changes
+- The Banquet Hall, found in the level just above Mine's End. A very large
+  throne room containing numerous dwarves and giants. Loot includes historic
+  statues, potions of booze, kegs, and a throne.
+
+Endgame Rewrite
 - The following levels are now part of the endgame:
   - The City of Brass
     - City with shops inside the plane of fire.
@@ -83,6 +88,11 @@ Items
 - New Item: Gold Dragon Scale Mail
     - Both of these items shed light when worn. Sourced from Nephi's
       Gold Dragon patch.
+- New Item: Keg
+    - Contains a large number of potions of booze.
+    - Applying it will drink one potion of booze.
+    - Burning kegs explode.
+    - Quaffing a keg is a Bad Idea.
 - New Item: Slice of Cake
     - Cake takes a long time to eat, but it very filling. Cursed cake abuses 
       dexterity, while blessed and uncursed cake heals ability damage.

@@ -96,6 +96,16 @@ DESCRIPTION:	mazelike
 RNDLEVEL:	"minetn" "T" @ (3, 2) 7
 LEVELDESC:	town
 RNDLEVEL:	"minend" "E" @ (-1, 0) 3
+BRANCH:     "Banquet Hall" @ (-2, 0) up
+
+#
+# Giant Lord's Banquet Hall
+#
+DUNGEON: "Banquet Hall" "B" (1,0)
+DESCRIPTION: mazelike
+ALIGNMENT:   chaotic
+ENTRY:       -1
+LEVEL:		"banquet" "b" @ (1, 0)
 
 #
 #	The Questdungeon

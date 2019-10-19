@@ -1079,6 +1079,7 @@ add_obj_info(winid datawin, short otyp)
         case LARGE_BOX:
         case CHEST:
         case ICE_BOX:
+        case KEG:
         case SACK:
         case OILSKIN_SACK:
         case BAG_OF_HOLDING:

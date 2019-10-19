@@ -3605,6 +3605,7 @@ xchar x, y;
     struct obj *otmp, *ncobj;
     int in_sight = !Blind && couldsee(x, y); /* Don't care if it's lit */
     int dindx;
+    boolean contents = Is_container(obj) && Has_contents(obj);
 
     /* object might light in a controlled manner */
     if (catch_lit(obj))
@@ -3615,6 +3616,7 @@ xchar x, y;
         case ICE_BOX:
             return FALSE; /* Immune */
         case CHEST:
+        case KEG:
             chance = 40;
             break;
         case LARGE_BOX:
@@ -3630,8 +3632,8 @@ xchar x, y;
         /* Container is burnt up - dump contents out */
         if (in_sight)
             pline("%s catches fire and burns.", Yname2(obj));
-        if (Has_contents(obj)) {
-            if (in_sight)
+        if (contents) {
+            if (in_sight && obj->otyp != KEG)
                 pline("Its contents fall out.");
             for (otmp = obj->cobj; otmp; otmp = ncobj) {
                 ncobj = otmp->nobj;
@@ -3639,6 +3641,11 @@ xchar x, y;
                 if (!flooreffects(otmp, x, y, ""))
                     place_object(otmp, x, y);
             }
+        }
+        if (obj->otyp == KEG && contents) {
+            if (in_sight)
+                pline("It explodes!");
+            explode(x, y, 11, d(6, 6), 0, EXPL_FIERY);
         }
         setnotworn(obj);
         delobj(obj);

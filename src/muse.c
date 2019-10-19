@@ -2072,7 +2072,8 @@ struct monst *mtmp;
         }
         nomore(MUSE_POT_BOOZE);
         if (obj->otyp == POT_BOOZE &&
-          ((is_pirate(mtmp->data) && !mtmp->mconf) || mtmp->mflee)) {
+          (((is_pirate(mtmp->data) || is_dwarf(mtmp->data)) 
+            && !mtmp->mconf) || mtmp->mflee)) {
             m.misc = obj;
             m.has_misc = MUSE_POT_BOOZE;
         }
@@ -2554,7 +2555,7 @@ struct obj *obj;
         if (typ == POT_VAMPIRE_BLOOD)
             return is_vampire(mon->data);
         if (typ == POT_BOOZE)
-            return is_pirate(mon->data);
+            return is_pirate(mon->data) || is_dwarf(mon->data);
         if (typ == POT_HEALING || typ == POT_EXTRA_HEALING
             || typ == POT_FULL_HEALING || typ == POT_POLYMORPH
             || typ == POT_GAIN_LEVEL || typ == POT_PARALYSIS

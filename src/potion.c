@@ -10,7 +10,7 @@
 boolean notonhead = FALSE;
 
 static NEARDATA int nothing, unkn;
-static NEARDATA const char beverages[] = { POTION_CLASS, 0 };
+static NEARDATA const char beverages[] = { ALL_CLASSES, POTION_CLASS, 0 };
 
 STATIC_DCL long FDECL(itimeout, (long));
 STATIC_DCL long FDECL(itimeout_incr, (long, int));
@@ -720,6 +720,10 @@ register struct obj *obj;
 		/* rings,  amulets */
 		case LARGE_BOX:
 		case ICE_BOX:
+        case KEG:
+            /* Technically, this allows for a strat in which you upgrade your
+               keg to obtain a large number of potions of booze. This is silly
+               enough that I'm going to allow it. */
 			obj->otyp = CHEST;
 			break;
 		case CHEST:
@@ -1026,6 +1030,51 @@ dodrink()
         remove_worn_item(otmp, FALSE);
     }
     otmp->in_use = TRUE; /* you've opened the stopper */
+
+    if (otmp->otyp == KEG) {
+        if (yn("Really drink the entire keg at once?") == 'n') {
+            pline("Perhaps not.");
+            return 0;
+        }
+        if (otmp->cobj) {
+            struct obj *obj;
+            int quan = 0;
+            u.uconduct.alcohol++;
+            while (otmp->cobj) {
+                quan++;
+                for (obj = otmp->cobj; obj; obj = obj->nobj) {
+                    if (obj->otyp == POT_BOOZE)
+                        break;
+                }
+                check_unpaid(obj);
+                if (obj->quan > 1L) {
+                    obj->quan--;
+                    otmp->owt = weight(otmp);
+                } else {
+                    obj_extract_self(obj);
+                    obfree(obj, (struct obj *)0);
+                }
+                if (!obj->odiluted)
+                    healup(1, 0, FALSE, FALSE);
+                if (!obj->blessed)
+                    make_confused(itimeout_incr(HConfusion, d(3, 8)), FALSE);
+                u.uhunger += 10 * (2 + bcsign(obj));
+            }
+            You("down the entire keg! You are incredibly drunk!");
+            if (quan > 5 && !maybe_polyd(is_dwarf(youmonst.data) || is_giant(youmonst.data), 
+                Race_if(PM_DWARF))) {
+                u.uhp = 0;
+                losehp(1, "alcohol poisoning", KILLED_BY);
+            }
+        } else {
+            pline("Unfortunately, your keg is dry as a desert.");
+            return 0;
+        }
+        return 1;
+    } else if (otmp->oclass != POTION_CLASS) {
+        pline(silly_thing_to, "drink");
+        return 0;
+    }
 
     potion_descr = OBJ_DESCR(objects[otmp->otyp]);
     if (potion_descr) {

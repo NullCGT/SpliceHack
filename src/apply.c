@@ -3825,6 +3825,7 @@ int
 doapply()
 {
     struct obj *obj;
+    struct obj *pseudo;
     register int res = 1;
     char class_list[MAXOCLASSES + 2];
     register boolean can_use = FALSE;
@@ -3994,6 +3995,33 @@ doapply()
     case LEATHER_DRUM:
     case DRUM_OF_EARTHQUAKE:
         res = do_play_instrument(obj);
+        break;
+    case KEG:
+        if (obj->cobj) {
+            struct obj *otmp;
+            for (otmp = obj->cobj; otmp; otmp = otmp->nobj)
+                if (otmp->otyp == POT_BOOZE)
+                    break;
+
+            check_unpaid(obj);
+            pseudo = mksobj(POT_BOOZE, FALSE, FALSE);
+            pseudo->blessed = otmp->blessed;
+            pseudo->cursed = otmp->cursed;
+            if (otmp->quan > 1L) {
+                otmp->quan--;
+                obj->owt = weight(obj);
+            } else {
+                obj_extract_self(otmp);
+          		obfree(otmp, (struct obj *)0);
+            }
+            u.uconduct.alcohol++;
+            You("chug some booze from %s.",
+                    yname(obj));
+            (void) peffects(pseudo);
+        } else if (Hallucination) 
+            pline("Where has the rum gone?");
+        else
+            You("seem to have run out of booze.");
         break;
     case MEDICAL_KIT:
     		if (Role_if(PM_HEALER)) can_use = TRUE;

@@ -2198,6 +2198,7 @@ register struct obj *obj;
 
     /* boxes, boulders, and big statues can't fit into any container */
     if (obj->otyp == ICE_BOX || Is_box(obj) || obj->otyp == BOULDER
+        || obj->otyp == KEG
         || (obj->otyp == STATUE && bigmonst(&mons[obj->corpsenm]))) {
         /*
          *  xname() uses a static result array.  Save obj's name
@@ -2585,7 +2586,7 @@ boolean more_containers; /* True iff #loot multiple and this isn't last one */
         You("owe %ld %s for lost merchandise.", loss, currency(loss));
         current_container->owt = weight(current_container);
     }
-    if (current_container->otyp == MEDICAL_KIT) {
+    if (current_container->otyp == MEDICAL_KIT || current_container->otyp == KEG) {
   	    if (!Has_contents(current_container))
   		      pline("%s", emptymsg);
   	    else
@@ -3250,7 +3251,8 @@ struct obj *box; /* or bag */
             if (box->otyp == ICE_BOX) {
                 removed_from_icebox(otmp); /* resume rotting for corpse */
             } else if ((cursed_mbag && !rn2(13)) ||
-              (otmp->otyp == PILL && box->otyp == MEDICAL_KIT)) {
+              (otmp->otyp == PILL && box->otyp == MEDICAL_KIT) ||
+               box->otyp == KEG) {
                 loss += mbag_item_gone(held, otmp);
                 /* abbreviated drop format is no longer appropriate */
                 terse = FALSE;

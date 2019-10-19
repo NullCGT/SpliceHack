@@ -302,6 +302,8 @@ WEAPON("aklys", "thonged club",
        0, 0, 0,  8,  15,   4,  6,  3, 0, B,   P_CLUB, IRON, HI_METAL),
 WEAPON("flail", None,
        1, 0, 0, 37,  15,   4,  6,  4, 0, B,   P_FLAIL, IRON, HI_METAL),
+WEAPON("triple flail", None,
+       1, 0, 0, 0,   15,   4, 18, 12, 0, B,   P_FLAIL, BONE, HI_METAL),
 /* many-piece */
 WEAPON("spiked chain", None,
        1, 0, 1, 3,  50,   80,  6,  4, 0, P|S,   P_FLAIL, IRON, HI_METAL),

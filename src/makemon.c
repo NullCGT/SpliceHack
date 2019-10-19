@@ -776,7 +776,9 @@ register struct monst *mtmp;
             mpickobj(mtmp, otmp);
             break;
         case PM_YEENOGHU:
-            (void) mongets(mtmp, FLAIL);
+            otmp = mksobj(TRIPLE_FLAIL, FALSE, FALSE);
+            otmp->material = BONE;
+            mpickobj(mtmp, otmp);
             break;
         case PM_BAPHOMET:
             (void) mongets(mtmp, RANSEUR);

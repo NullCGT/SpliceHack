@@ -4522,13 +4522,20 @@ emerges could charitably be called a laugh.
 Yeenoghu has come to call.
 %E [Yeenoghu appears!]
 %Cc - 00104
+The thing that stands in front of you has the head of a bull, but that is where
+the resemblance stops. His body bulges with cords of grotesquely swollen muscle
+and his skin is slick with blood.
+
+"Fool! You dare trifle with Baphomet?!"
+%E [Baphomet appears!]
+%Cc - 00105
 Blackness cloaks the being in front of you. All you can see of them is a
 muscular form, two burning yellow eyes, and a pair of claws. One of the claws
 clutches a skull-topped wand, about which a miasma of dark magic gathers.
 
 "I am Orcus, Lord of the Dead. Goodbye."
 %E [Orcus appears!]
-%Cc - 00105
+%Cc - 00106
 The monster you now face is nothing short of horrifying. The upper body seems to
 be a combination of three separate humanoids that have been forcibly merged.
 The lower body is serpentine and distended, tapering off into an enormous
@@ -4536,7 +4543,7 @@ stinger. The hands of the monster end in wicked claws.
 
 "Greetings, Mortal. I am Geryon."
 %E [Geryon appears!]
-%Cc - 00106
+%Cc - 00107
 The being in front of you sniffs in disdain and tosses his ram's horns. He is
 dressed in fine clothing, and his skin is covered in bony protrusions. A
 flickering gray aura surrounds him, which occasionally curls into a bestial
@@ -4545,7 +4552,7 @@ shape.
 "Is this the one who seeks the Amulet of Yendor? How utterly pathetic. I,
 Dispater, shall dispatch you."
 %E [Dispater appears!]
-%Cc - 00107
+%Cc - 00108
 A soft voice whispers in your ear.
 
 "Think you could take some time off from your search for the amulet, mortal?
@@ -4557,14 +4564,14 @@ and the cloud of writhing tendrils protruding from their back.
 
 Malcanthet is here.
 %E [Malcanthet appears!]
-%Cc - 00108
+%Cc - 00109
 A maddening buzz fills your ears. Thousands of flies appear from everywhere,
 swarming through the air to coalesce into a horrible, pulsating mass, which
 continually spews torrents of insects as it expands.
 
 Baalzebub, Lord of the Flies approaches.
 %E [Baalzebub appears!]
-%Cc - 00109
+%Cc - 00110
 The area in front of you is suddenly consumed in a roaring wave of hellfire.
 Out of the flames steps a demon, power radiating off him. You recognize him on
 sight. Mephisto.
@@ -4572,13 +4579,13 @@ sight. Mephisto.
 "So, you are the latest pawn sent forth by %d. I hope you prove more
 entertaining than the previous guests I have entertained."
 %E [Mephisto appears!]
-%Cc - 00110
+%Cc - 00111
 The air around you is filled with a momentary hissing, before a figure appears
 in a flash of frost. He grins at you, displaying a mouth full of fangs.
 
 "I am Asmodeus. Come to me, %r."
 %E [Asmodeus appears!]
-%CC - 00111
+%CC - 00112
 A great beast drags itself from the earth in a shower of stone, roaring loudly
 enough that the world shakes around it. You cannot wrap your mind around the
 entirety of its form, and instead must process bits and pieces of it at a time.

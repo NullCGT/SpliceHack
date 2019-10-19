@@ -1826,6 +1826,11 @@ struct monst *magr, /* monster that is currently deciding where to move */
         return ALLOW_M|ALLOW_TM;
     if(ma == &mons[PM_ASMODEUS] && md == &mons[PM_MEPHISTO])
         return ALLOW_M|ALLOW_TM;
+    /* Yeenoghu and Baphomet have an ancient rivalry. */
+    if(ma == &mons[PM_YEENOGHU] && md == &mons[PM_BAPHOMET])
+        return ALLOW_M|ALLOW_TM;
+    if(ma == &mons[PM_YEENOGHU] && md == &mons[PM_BAPHOMET])
+        return ALLOW_M|ALLOW_TM;
 
     /* Pirate patch. TODO: Clean this up */
     if (magr->data == &mons[PM_SKELETAL_PIRATE] &&

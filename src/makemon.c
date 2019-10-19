@@ -778,6 +778,9 @@ register struct monst *mtmp;
         case PM_YEENOGHU:
             (void) mongets(mtmp, FLAIL);
             break;
+        case PM_BAPHOMET:
+            (void) mongets(mtmp, RANSEUR);
+            break;
         case PM_DESERT_JINN:
             (void) mongets(mtmp, SHORT_SWORD);
             (void) mongets(mtmp, SHORT_SWORD);

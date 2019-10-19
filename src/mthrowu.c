@@ -1225,6 +1225,14 @@ struct attack *mattk;
                     mtmp->mspec_used = 10 + rn2(20);
                 if (typ == AD_SLEE && !Sleep_resistance)
                     mtmp->mspec_used += rnd(20);
+            } else if (typ == AD_CURS) {
+                if (canseemon(mtmp))
+                    pline("%s spits a geyser of turgid water at you!", Monnam(mtmp));
+                    water_damage_chain(invent, FALSE);
+                    rndcurse();
+                if (!rn2(3))
+                    mtmp->mspec_used = 10 + rn2(20);
+                nomul(0);
             } else
                 impossible("Breath weapon %d used", typ - 1);
         }

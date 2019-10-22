@@ -721,7 +721,7 @@ OBJECT(OBJ("Amulet of Yendor", /* note: description == name */
 /* containers */
 CONTAINER("large box",       None, 1, 0, 0, 40, 350,   8, WOOD, HI_WOOD),
 CONTAINER("chest",           None, 1, 0, 0, 35, 600,  16, WOOD, HI_WOOD),
-CONTAINER("keg",             None, 1, 0, 0,  0, 600,  50, WOOD, HI_WOOD),
+CONTAINER("keg",             None, 1, 0, 0,  0, 350,  50, WOOD, HI_WOOD),
 CONTAINER("ice box",         None, 1, 0, 0,  5, 900,  42, PLASTIC, CLR_WHITE),
 CONTAINER("sack",           "bag", 0, 0, 0, 35,  15,   2, CLOTH, HI_CLOTH),
 CONTAINER("oilskin sack",   "bag", 0, 0, 0,  5,  15, 100, CLOTH, HI_CLOTH),

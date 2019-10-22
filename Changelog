@@ -217,6 +217,8 @@ Features
 - Wands of psionics now have an engrave message, as requested by Hothraxxa.
 - YAFM when praying near a praying mantis.
 - Additional sounds and YAFMS for chatting with various monsters.
+- Monsters in the endgame attempt to find altars to sacrifice the amulet on
+  if they manage to steal it.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing
@@ -238,6 +240,7 @@ Fixes
 - Unintentional fallthrough when chatting with types of djinn.
 - Numerous other minor bugs.
 - Named figurines applied by monsters create named monsters.
+- Fixed some feedback issues when monsters offer on altars.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

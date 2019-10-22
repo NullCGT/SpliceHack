@@ -96,10 +96,12 @@
 
 #GruntHack
 - Intelligent Pets Patch
+- Monster amulet flight.
 
 #EvilHack
 - Updated Nazgul
 - Fixes to monster steeds
+- Monster amulet flight.
 
 #ChrisANG
 - Pirate Patch

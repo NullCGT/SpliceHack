@@ -1324,8 +1324,9 @@ register struct monst *mtmp;
             a_align(mtmp->mx, mtmp->my) == check_malign(mtmp) &&
             (otmp->corpsenm == PM_ACID_BLOB
              || (monstermoves <= peek_at_iced_corpse_age(otmp) + 50))) {
-                pline("%s offers %s upon the altar.",
-                      Monnam(mtmp), doname(otmp));
+                if (canseemon(mtmp))
+                    pline("%s offers %s upon the altar.",
+                        Monnam(mtmp), doname(otmp));
                 /* monsters might try to offer cockatrice corpses. */
                 if (touch_petrifies(&mons[otmp->corpsenm])) {
                       minstapetrify(mtmp, FALSE);
@@ -1336,8 +1337,9 @@ register struct monst *mtmp;
                 if (rider_corpse_revival(otmp, FALSE)) {
                     return 3;
                 }
-                pline("The sacrifice of %s is consumed in a burst of flame!",
-                      mon_nam(mtmp));
+                if (canseemon(mtmp))
+                    pline("The sacrifice of %s is consumed in a burst of flame!",
+                        mon_nam(mtmp));
                 m_useup(mtmp, otmp);
                 /* monsters get experiments from sacrificing instead of luck */
                 if (!grow_up(mtmp, (struct monst *) 0)) {

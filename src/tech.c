@@ -1605,9 +1605,21 @@ tamedog(mtmp, (struct obj *) 0);
 			t_timeout = rn1(1000, 500);
 			break;
 		case T_HEART_CARDS:
+			if (Slimed) {
+				j = SCR_FIRE;
+			} else if (critically_low_hp(FALSE)) {
+				j = SCR_AIR;
+			} else if (region_danger()) {
+				j = SCR_TELEPORTATION;
+			} else if (Strangled || welded(uwep)) {
+				j = SCR_REMOVE_CURSE;
+			} else {
+				j = STRANGE_OBJECT;
+			}
+			/* find the spell crad */
 			for (i = 0, obj = invent; obj; obj = obj->nobj) {
 					if (obj->oclass == SCROLL_CLASS) {
-							otmp = poly_obj(obj, STRANGE_OBJECT);
+							otmp = poly_obj(obj, j);
 							bless(otmp);
 							i++;
 							break;
@@ -1618,7 +1630,9 @@ tamedog(mtmp, (struct obj *) 0);
 					return 0;
 			}
 			pline("With a flourish, you exchange your first card for one from beyond!");
-			You("know with all your heart that this card is the one!");
+			You("shout the incantation on the card, and know with all your heart that this card is the one!");
+			(void) seffects(otmp);
+			useup(otmp);
 			u.uconduct.polypiles++;
 			t_timeout = rn1(1000, 500);
 			break;

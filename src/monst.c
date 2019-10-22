@@ -3917,7 +3917,7 @@ struct permonst _mons2[] = {
         M3_WANTSAMUL | M3_INFRAVISIBLE | M3_INFRAVISION, MH_DEMON, 31, HI_LORD),
     MON("Baphomet", S_DEMON, LVL(56, 15, -15, 70, -15),
         (G_HELL | G_NOCORPSE | G_NOGEN | G_UNIQ),
-        A(ATTK(AT_WEAP, AD_PHYS, 3, 10), ATTK(AT_CLAW, AD_PHYS, 3, 10),
+        A(ATTK(AT_WEAP, AD_PHYS, 3, 7), ATTK(AT_CLAW, AD_PHYS, 3, 7),
           ATTK(AT_BUTT, AD_PHYS, 3, 8), ATTK(AT_BREA, AD_CURS, 1, 6), 
           NO_ATTK, NO_ATTK),
         SIZ(1500, 700, MS_ROAR, MZ_LARGE), MR_FIRE | MR_POISON, 0,

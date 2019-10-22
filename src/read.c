@@ -1472,6 +1472,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 break;
             if (!scursed)
                 (void) tamedog(mtmp, (struct obj *) 0);
+            mtmp->mfading = Role_if(PM_CARTOMANCER) ? rn1(70 + 4 * u.ulevel, 30) : rn1(20, 30);
             break;
         }
         if (create_critters(1 + ((confused || scursed) ? 12 : 0)

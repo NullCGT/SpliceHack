@@ -825,6 +825,12 @@ mcalcdistress()
         /* regenerate hit points */
         mon_regen(mtmp, FALSE);
 
+        if (mtmp->mfading && mtmp->mfading == 1) {
+            if canseemon(mtmp)
+                pline("%s vanishes in a puff of smoke!", Monnam(mtmp));
+            mongone(mtmp);
+        }
+
         /* possibly polymorph shapechangers and lycanthropes */
         if (mtmp->cham >= LOW_PM)
             decide_to_shapeshift(mtmp, (canspotmon(mtmp)
@@ -2547,6 +2553,15 @@ boolean was_swallowed; /* digestion */
             killer.format = 0;
             return FALSE;
         }
+    }
+
+    /* Anything killed while playing as a cartomancer has a chance of leaving behind
+       a monster card. */
+    if (Role_if(PM_CARTOMANCER) && !(mdat->geno & G_UNIQ) && !rn2(20)) {
+        obj = mksobj(SCR_CREATE_MONSTER, FALSE, FALSE);
+        obj->corpsenm = monsndx(mdat);
+        place_object(obj, mon->mx, mon->my);
+        return FALSE;
     }
 
     /* must duplicate this below check in xkilled() since it results in

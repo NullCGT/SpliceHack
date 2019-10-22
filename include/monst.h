@@ -173,6 +173,7 @@ struct monst {
     xchar weapon_check;    /* flag for whether to try switching weapons */
 
     int meating;           /* monster is eating timeout */
+    int mfading;           /* monster is fading away timeout */
     struct mextra *mextra; /* point to mextra struct */
 };
 

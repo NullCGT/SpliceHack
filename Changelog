@@ -198,11 +198,15 @@ Roles, Races, and Character Creation
     cannibalism. In exchange, they gain intrinsics on level up. This is
     from SliceHack.
 - Cartomancer Changes
+  - Every time a cartomancer kills a monster, there is a 1/20 chance that a
+    spell card of create monster drops instead of a corpse. This card 
+    (unless cursed) will summon a tame version of the monster to fight by
+    the side of the player.
   - The Soul of the Cards technique gives the cartomancer a card which might
     fix their current problem (or a random card otherwise) and instantly
     reads it.
   - Cartomancers can use decks of cards as if blessed.
-  - Cartomancers have a new technique that shapes their playstyle: Card Capture.
+  - Cartomancers have a new technique: Card Capture.
     Card Capture allows a cartomancer to morph a nearby monster into a
     spell card, then play that card to create a tame version of them.
 - Merfolk Changes

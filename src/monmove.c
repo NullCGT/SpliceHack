@@ -216,6 +216,8 @@ boolean digest_meal;
         mon->mhp++;
     if (mon->mspec_used)
         mon->mspec_used--;
+    if (mon->mfading)
+        mon->mfading--;
     if (digest_meal) {
         if (mon->meating) {
             mon->meating--;

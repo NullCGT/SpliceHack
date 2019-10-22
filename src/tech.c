@@ -100,8 +100,8 @@ static const struct innate_tech
 		       {   0, 0, 0} },
   car_tech[] = {
 					 {   1, T_HEART_CARDS, 1},
-					 {   1, T_CARD_CAPTURE, 1},
 					 {   5, T_CARD_COMBO, 1},
+					 {  15, T_CARD_CAPTURE, 1},
 		       {   0, 0, 0} },
   cav_tech[] = { {   1, T_PRIMAL_ROAR, 1},
 		       {   0, 0, 0} },

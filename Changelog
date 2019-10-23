@@ -35,6 +35,11 @@ Endgame Rewrite
 - On each plane, one of the seven deadly sins appears. They are
   not required to beat the game, and are very dangerous, so
   avoiding them is highly important.
+- Once the player has the amulet, a horde of demons will pursue
+  them wherever they go. Whenever a player leaves a level, all
+  demons on the level with them will follow them, regardless of
+  location. This includes demon princes and demon lords, and will
+  occur all the way through the planes!
 
 Monsters
 - New Monster: Bar-Lgura

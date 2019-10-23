@@ -267,9 +267,12 @@ struct obj *book2;
                 u.udg_cnt = soon;
             /* Awaken all the ndemons and scatter them throughout the game. The
                ascension run is no easy task :D */
-            pline("You feel like you are being watched...");
-            for (pm = PM_JUIBLEX; pm <= PM_DEMOGORGON; pm++) {
-                if (!(mvitals[pm].mvflags & G_EXTINCT)) {
+            pline("The air is suddenly thick with infernal screams. The legions of hell are after you!");
+            for (pm = 0; pm < PM_ARCHEOLOGIST; pm++) {
+                if ((mons[pm].geno & G_HELL) != 0) {
+                    mons[pm].geno &= ~G_HELL;
+                }
+                if ( pm >= PM_JUIBLEX && pm <= PM_DEMOGORGON && !(mvitals[pm].mvflags & G_EXTINCT)) {
                     mtmp = makemon(&mons[pm], u.ux, u.uy, NO_MM_FLAGS);
                     mtmp->mpeaceful = mtmp->minvis = mtmp->perminvis = 0;
                     if (mtmp->data->mflags3 & M3_WANTSAMUL)
@@ -278,6 +281,8 @@ struct obj *book2;
                         mtmp->data->mflags3 &= ~M3_WANTSBOOK;
                     if (mtmp->data->mflags3 & M3_WAITFORU)
                         mtmp->data->mflags3 &= ~M3_WAITFORU;
+                    if (mtmp->mstrategy & STRAT_WAITFORU)
+                        mtmp->mstrategy &= ~STRAT_WAITFORU;
                     /* based on muse.c code */
                     d_level flev;
                     get_level(&flev, 1 + rn2(depth(&u.uz)));

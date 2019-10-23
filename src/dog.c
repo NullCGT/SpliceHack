@@ -608,6 +608,27 @@ long nmv; /* number of moves */
         mtmp->mhp += imv;
 }
 
+void
+demonic_horde(newlevel)
+d_level *newlevel;
+{
+    struct monst *mtmp, *mtmp2;
+    for (mtmp = fmon; mtmp; mtmp = mtmp2) {
+        mtmp2 = mtmp->nmon;
+        if (!is_demon(mtmp->data) || monnear(mtmp, u.ux, u.uy) || mtmp->mpeaceful)
+            continue;
+        if (DEADMONSTER(mtmp))
+            continue;
+        if ((mtmp->mextra && ERID(mtmp)) || mtmp->monmount)
+            continue;
+
+        migrate_to_level(mtmp, ledger_no(newlevel), MIGR_EXACT_XY,
+                             (coord *) 0);
+    }
+    if (!Deaf)
+        You_hear("screeching from the demonic horde pursuing you!");
+}
+
 /* called when you move to another level */
 void
 keepdogs(pets_only, stairs)

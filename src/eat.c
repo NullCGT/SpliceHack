@@ -3042,13 +3042,16 @@ doeat()
 		 * rotten food). We must preserve this case to avoid corpses
 		 * changing appearance after a failed attempt to eat.
 		 */
+        #if 0
         if (!otmp->odrained &&
 			otmp->oeaten == mons[otmp->corpsenm].cnutrit) {
 		    otmp->oeaten = 0;
             /* ALI, conduct: didn't eat it after all */
             u.uconduct.food--;
             return 0;
-        } else if (tmp == 2) {
+        } else 
+        #endif
+        if (tmp == 2) {
             /* used up */
             context.victual.piece = (struct obj *) 0;
             context.victual.o_id = 0;

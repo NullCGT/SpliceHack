@@ -59,8 +59,6 @@ Monsters
     - Can cause fumbling with his attack.
 - New Monster: Gold Dragon
     - Sourced from Nephi's Gold Dragon Patch.
-- New Monster: Bullet Ant
-  - A stronger version of soldier ants
 - New Monster: Vent Wurm
   - Only appears in the planes.
 - New Monster: Crevasse Wurm
@@ -81,6 +79,9 @@ Monsters
   - Only appears in shops on the planes.
 - New Monster: Concussive Sphere
 - New Monster: Psionic Sphere
+- New Monster: Bullet Ant
+- New Monster: Grave Troll
+- New Monster: Cave Troll
 - Monsters will use cursed scrolls of light to attempt to blind the player.
 - Monsters are more aggressive about using expensive cameras.
 - Monsters can wear rings. For the sake of keeping the code simple, each

@@ -719,6 +719,7 @@ register struct obj *obj;
 			the iron magic boots are fumble */
 		/* rings,  amulets */
 		case LARGE_BOX:
+        case COFFIN:
 		case ICE_BOX:
         case KEG:
             /* Technically, this allows for a strat in which you upgrade your

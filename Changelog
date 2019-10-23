@@ -93,11 +93,14 @@ Monsters
 - The Wizard of Yendor has a weapon attack.
 - Instead of a wand of striking, Dispater receives a random spellbook,
   making him much more dangerous than in vanilla.
-- Efreet are capable of wishing for items.
+- Efreet are capable of wZishing for items.
 - Yeenoghu wields a triple flail, which does an extremely large amount of
   damage.
 
 Items
+- New Object: Coffin    
+    - Replaces chests in Vlad's, like in Unnethack.
+    - Otherwise, appears occasionally as a normal container.
 - New Item: Triple Flail
 - New Item: Ring of Sonic Resistance (Glass Ring)
 - New Item: Gold Dragon Scales

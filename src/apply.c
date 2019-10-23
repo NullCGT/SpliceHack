@@ -3877,6 +3877,7 @@ doapply()
     case GRAPPLING_HOOK:
         res = use_grapple(obj);
         break;
+    case COFFIN:
     case LARGE_BOX:
     case CHEST:
     case ICE_BOX:

@@ -1078,6 +1078,7 @@ add_obj_info(winid datawin, short otyp)
         const char* subclass = "tool";
         switch (otyp) {
         case LARGE_BOX:
+        case COFFIN:
         case CHEST:
         case ICE_BOX:
         case KEG:

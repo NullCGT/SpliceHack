@@ -406,7 +406,7 @@ struct mkroom *sroom;
                 if (!rn2(5))
                     (void) mk_tt_object(CORPSE, sx, sy);
                 if (!rn2(10)) /* lots of treasure buried with dead */
-                    (void) mksobj_at((rn2(3)) ? LARGE_BOX : CHEST, sx, sy,
+                    (void) mksobj_at((rn2(3)) ? COFFIN : CHEST, sx, sy,
                                      TRUE, FALSE);
                 if (!rn2(5))
                     make_grave(sx, sy, (char *) 0);

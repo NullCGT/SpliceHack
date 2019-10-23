@@ -719,7 +719,8 @@ OBJECT(OBJ("Amulet of Yendor", /* note: description == name */
            BITS(kn, 0, 1, 0, mgc, 1, 0, 0, bi, 0, hitbon, sub, mat),    \
            0, TOOL_CLASS, prob, 0, wt, cost, sdam, ldam, hitbon, 0, wt, clr)
 /* containers */
-CONTAINER("large box",       None, 1, 0, 0, 40, 350,   8, WOOD, HI_WOOD),
+CONTAINER("large box",       None, 1, 0, 0, 35, 350,   8, WOOD, HI_WOOD),
+CONTAINER("coffin",          None, 1, 0, 0,  5, 350,   8, WOOD, HI_WOOD),
 CONTAINER("chest",           None, 1, 0, 0, 35, 600,  16, WOOD, HI_WOOD),
 CONTAINER("keg",             None, 1, 0, 0,  0, 350,  50, WOOD, HI_WOOD),
 CONTAINER("ice box",         None, 1, 0, 0,  5, 900,  42, PLASTIC, CLR_WHITE),

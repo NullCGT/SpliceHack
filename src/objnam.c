@@ -4112,6 +4112,7 @@ struct obj *no_wish;
     case SKELETON_KEY:
     case CHEST:
     case LARGE_BOX:
+    case COFFIN:
     case HEAVY_IRON_BALL:
     case IRON_CHAIN:
     case STATUE:

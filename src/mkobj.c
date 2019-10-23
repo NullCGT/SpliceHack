@@ -308,6 +308,7 @@ struct obj *box;
     case ICE_BOX:
         n = 20;
         break;
+    case COFFIN:
     case CHEST:
         n = box->olocked ? 7 : 5;
         break;
@@ -960,6 +961,7 @@ boolean artif;
                 break;
             case CHEST:
             case LARGE_BOX:
+            case COFFIN:
                 otmp->olocked = !!(rn2(5));
                 otmp->otrapped = !(rn2(10));
                 /*FALLTHRU*/

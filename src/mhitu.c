@@ -1333,6 +1333,14 @@ register struct attack *mattk;
                 You("are put to sleep by %s!", mon_nam(mtmp));
         }
         break;
+    case AD_FUMB:
+        hitmsg(mtmp, mattk);
+        if (uncancelled && !thick_skinned(youmonst.data) 
+            && (Cold_resistance ? !rn2(7) : !rn2(2))) {
+            You_feel(Hallucination ? "wiggly" : "very shaky.");
+            incr_itimeout(&HFumbling, rnd(30));
+        }
+        break;
     case AD_LARV:
         hitmsg(mtmp, mattk);
         if (uncancelled && !thick_skinned(youmonst.data)

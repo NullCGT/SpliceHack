@@ -620,6 +620,7 @@ static const char * damagetypes[] = {
     "hunger",
     "potion effect",
     "kidnapping",
+    "fumbling",
     "clerical",
     "arcane",
     "random breath",

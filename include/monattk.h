@@ -99,12 +99,13 @@
 #define AD_HNGY 59 /* a mini version of FAMN, should fake a higher hunger rating instead  */
 #define AD_POTN 60 /* potion effect (gel) */
 #define AD_KDNP 61 /* kidnap (bar-lgura) */
-#define AD_CLRC 62 /* random clerical spell */
-#define AD_SPEL 63 /* random magic spell */
-#define AD_RBRE 64 /* random breath weapon */
+#define AD_FUMB 62 /* fumbling (Kostchtchie) */
+#define AD_CLRC 63 /* random clerical spell */
+#define AD_SPEL 64 /* random magic spell */
+#define AD_RBRE 65 /* random breath weapon */
 
-#define AD_SAMU 65 /* hits, may steal Amulet (Wizard) */
-#define AD_CURS 66 /* random curse (ex. gremlin) */
+#define AD_SAMU 66 /* hits, may steal Amulet (Wizard) */
+#define AD_CURS 67 /* random curse (ex. gremlin) */
 #define LAST_AD AD_CURS
 
 /*

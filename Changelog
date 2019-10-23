@@ -40,6 +40,8 @@ Endgame Rewrite
   demons on the level with them will follow them, regardless of
   location. This includes demon princes and demon lords, and will
   occur all the way through the planes!
+- Upon performing the ascension ritual, all monsters generated only
+  in gehennom can be generated throughout the regular dungeon.
 
 Monsters
 - New Monster: Bar-Lgura
@@ -52,6 +54,9 @@ Monsters
       the player, making him very dangerous.
     - One of the few demon lords to be truly dangerous on the
       ascension run, due to his breath weapon.
+- New Monster: Kostchtchie
+    - Another new demon lord.
+    - Can cause fumbling with his attack.
 - New Monster: Gold Dragon
     - Sourced from Nephi's Gold Dragon Patch.
 - New Monster: Vent Wurm

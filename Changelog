@@ -44,6 +44,11 @@ Endgame Rewrite
   in gehennom can be generated throughout the regular dungeon.
 
 Monsters
+- New Monster: Fat Cat
+    - A large cat can grow up into a fat cat, but only by eating
+      a wraith corpse.
+    - The tile for a fat cat has a monocle. I just wanted to
+      mention that.
 - New Monster: Bar-Lgura
     - From SLASH'EM.
     - Different from their SLASH'EM incarnation in that they can

@@ -1723,7 +1723,7 @@ tamedog(mtmp, (struct obj *) 0);
 			t_timeout = rn1(2000, 1000);
 			break;
 		case T_CROWN_CHAOS:
-			You("let loose your furty, and call forth Chaos to tear the world to pieces!");
+			You("let loose your fury, and call forth Chaos to tear the world to pieces!");
 			do_earthquake(13, u.ux, u.uy);
 			t_timeout = rn1(2000, 1000);
 			break;

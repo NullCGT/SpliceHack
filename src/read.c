@@ -1467,11 +1467,11 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     case SPE_CREATE_MONSTER: {
         register struct monst *mtmp;
         if (sobj->corpsenm != NON_PM) {
-            mtmp = makemon(&mons[sobj->corpsenm], u.ux, u.uy, MM_NOWAIT);
+            mtmp = makemon(&mons[sobj->corpsenm], u.ux, u.uy, MM_EDOG);
             if (!mtmp)
                 break;
             if (!scursed)
-                (void) tamedog(mtmp, (struct obj *) 0);
+                initedog(mtmp);
             mtmp->mfading = Role_if(PM_CARTOMANCER) ? rn1(70 + 4 * u.ulevel, 30) : rn1(20, 30);
             break;
         }

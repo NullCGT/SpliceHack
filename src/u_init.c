@@ -54,7 +54,9 @@ static struct trobj Cartomancer[] = {
     { DAGGER, 1, WEAPON_CLASS, 1, UNDEF_BLESS },
     { SHURIKEN, 0, GEM_CLASS, 60, UNDEF_BLESS },
     { UNDEF_TYP, UNDEF_SPE, SCROLL_CLASS, 4, UNDEF_BLESS },
-    { SCR_CREATE_MONSTER, 0, SCROLL_CLASS, 3, UNDEF_BLESS },
+    { SCR_CREATE_MONSTER, 0, SCROLL_CLASS, 1, UNDEF_BLESS },
+    { SCR_CREATE_MONSTER, 0, SCROLL_CLASS, 1, UNDEF_BLESS },
+    { SCR_CREATE_MONSTER, 0, SCROLL_CLASS, 1, UNDEF_BLESS },
     { 0, 0, 0, 0, 0 }
 };
 static struct trobj Cave_man[] = {
@@ -1389,6 +1391,14 @@ register struct trobj *trop;
                 trop++;
                 continue;
             }
+        }
+
+        /* Set up cartomancer cards */
+        if (urole.malenum == PM_CARTOMANCER && obj->otyp == SCR_CREATE_MONSTER) {
+            do {
+                i = rn2(NUMMONS);
+            } while ((type_is_pname(&mons[i]) || (mons[i].geno & G_UNIQ) || (mons[i].geno & G_NOGEN)));
+            obj->corpsenm = i;
         }
 
         /* Create vampire blood */

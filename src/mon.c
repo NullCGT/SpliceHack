@@ -2555,15 +2555,6 @@ boolean was_swallowed; /* digestion */
         }
     }
 
-    /* Anything killed while playing as a cartomancer has a chance of leaving behind
-       a monster card. */
-    if (Role_if(PM_CARTOMANCER) && !(mdat->geno & G_UNIQ) && !rn2(20)) {
-        obj = mksobj(SCR_CREATE_MONSTER, FALSE, FALSE);
-        obj->corpsenm = monsndx(mdat);
-        place_object(obj, mon->mx, mon->my);
-        return FALSE;
-    }
-
     /* must duplicate this below check in xkilled() since it results in
      * creating no objects as well as no corpse
      */
@@ -2887,6 +2878,15 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
 
     if (stoned) {
         stoned = FALSE;
+        goto cleanup;
+    }
+
+    /* Anything killed while playing as a cartomancer has a chance of leaving behind
+       a monster card. */
+    if (Role_if(PM_CARTOMANCER) && !(mdat->geno & G_UNIQ) && !rn2(20)) {
+        otmp = mksobj(SCR_CREATE_MONSTER, FALSE, FALSE);
+        otmp->corpsenm = monsndx(mdat);
+        place_object(otmp, mtmp->mx, mtmp->my);
         goto cleanup;
     }
 

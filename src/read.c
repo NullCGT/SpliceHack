@@ -1473,6 +1473,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             if (!scursed)
                 initedog(mtmp);
             mtmp->mfading = Role_if(PM_CARTOMANCER) ? rn1(70 + 4 * u.ulevel, 30) : rn1(20, 30);
+            known = TRUE;
             break;
         }
         if (create_critters(1 + ((confused || scursed) ? 12 : 0)

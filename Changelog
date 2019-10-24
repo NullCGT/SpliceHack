@@ -245,6 +245,8 @@ Features
 - Additional sounds and YAFMS for chatting with various monsters.
 - Monsters in the endgame attempt to find altars to sacrifice the amulet on
   if they manage to steal it.
+- Crowning grants the player character a unique technique dependent on their
+  alignment.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing

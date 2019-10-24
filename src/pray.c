@@ -807,6 +807,7 @@ gcrownu()
         verbalize("I crown thee...  The Hand of Elbereth!");
         livelog_printf(LL_DIVINEGIFT,
                     "was crowned \"The Hand of Elbereth\" by %s", u_gname());
+        learntech(T_CROWN_LAW, FROMOUTSIDE, 1);
         break;
     case A_NEUTRAL:
         u.uevent.uhand_of_elbereth = 2;
@@ -816,6 +817,7 @@ gcrownu()
         verbalize("Thou shalt be my Envoy of Balance!");
         livelog_printf(LL_DIVINEGIFT, "became %s Envoy of Balance",
                     s_suffix(u_gname()));
+        learntech(T_CROWN_NEU, FROMOUTSIDE, 1);
         break;
     case A_CHAOTIC:
         u.uevent.uhand_of_elbereth = 3;
@@ -830,6 +832,7 @@ gcrownu()
                   ((already_exists && !in_hand)
                     || class_gift != STRANGE_OBJECT) ? "take lives" : "steal souls",
                     u_gname());
+        learntech(T_CROWN_CHAOS, FROMOUTSIDE, 1);
         break;
         }
     }

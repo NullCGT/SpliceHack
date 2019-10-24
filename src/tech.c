@@ -89,7 +89,9 @@ STATIC_OVL NEARDATA const char *tech_names[] = {
 	"card capture",
 	"whirlwind",
 	"clobber",
-	""
+	"court of blades",
+	"perfect balance",
+	"end of the world"
 };
 
 static const struct innate_tech
@@ -1710,6 +1712,34 @@ tamedog(mtmp, (struct obj *) 0);
 				}
 				t_timeout = rn1(1000, 500);
 			}
+			break;
+		case T_CROWN_LAW:
+			You("call upon the seven heavens to enact holy justice upon your enemies!");
+			for(i = 0; i < 7; i++) {
+				mtmp = makemon(&mons[PM_MOVANIC_DEVA], u.ux, u.uy, MM_EDOG);
+				(void) tamedog(mtmp, (struct obj *) 0);
+				mtmp->mfading = 15 + techlev(tech_no);
+			}
+			t_timeout = rn1(2000, 1000);
+			break;
+		case T_CROWN_CHAOS:
+			You("let loose your furty, and call forth Chaos to tear the world to pieces!");
+			do_earthquake(13, u.ux, u.uy);
+			t_timeout = rn1(2000, 1000);
+			break;
+		case T_CROWN_NEU:
+			pline("With a single word, all within your sight is in perfect balance.");
+			for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
+				if (DEADMONSTER(mtmp))
+					continue;
+				if (!canseemon(mtmp))
+					continue;
+				mtmp->mhp = mtmp->mhpmax / 2;
+				u.uhp = u.uhpmax / 2;
+				u.uen = u.uenmax / 2;
+				context.botl = TRUE;
+			}
+			t_timeout = rn1(2000, 1000);
 			break;
 	  default:
 	    	pline ("Error!  No such effect (%i)", tech_no);

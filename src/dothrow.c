@@ -1329,7 +1329,7 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
                 || !index(in_rooms(mon->mx, mon->my, SHOPBASE), *u.ushops)))
             hot_pursuit(mon);
 
-        if (obj_gone || obj == uball)
+        if (obj_gone)
             thrownobj = (struct obj *) 0;
     }
 
@@ -1341,6 +1341,8 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
  swallowit:
         if (obj != uball)
             (void) mpickobj(u.ustuck, obj); /* clears 'thrownobj' */
+        else
+            clear_thrownobj = TRUE;
         goto throwit_return;
     } else {
         /* Mjollnir must we wielded to be thrown--caller verifies this;

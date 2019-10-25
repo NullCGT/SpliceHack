@@ -455,7 +455,7 @@ dotechmenu(how, tech_no)
 	} else
 	    Sprintf(buf, "Name\tLevel\tStatus");
 
-	add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, MENU_UNSELECTED);
+	add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings, buf, MENU_UNSELECTED);
 
 	for (i = 0; i < MAXTECH; i++) {
 	    if (techid(i) == NO_TECH)
@@ -521,8 +521,8 @@ dotechmenu(how, tech_no)
 	if (!techs_useable)
 	    how = PICK_NONE;
 
-	end_menu(tmpwin, how == PICK_ONE ? "Choose a technique" :
-					   "Currently known techniques");
+	end_menu(tmpwin, how == PICK_ONE ? "Choose a technique:" :
+					   "Currently known techniques:");
 
 	n = select_menu(tmpwin, how, &selected);
 	destroy_nhwindow(tmpwin);

@@ -827,7 +827,7 @@ mcalcdistress()
 
         if (mtmp->mfading && mtmp->mfading == 1) {
             if canseemon(mtmp)
-                pline("%s vanishes in a puff of smoke!", Monnam(mtmp));
+                pline(Hallucination ? "%s explodes into multicolored polygons!" : "%s vanishes in a puff of smoke!", Monnam(mtmp));
             mongone(mtmp);
         }
 

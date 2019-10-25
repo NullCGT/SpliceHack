@@ -267,6 +267,7 @@ typedef struct sortloot_item Loot;
 #define GP_ALLOW_XY 0x08000 /* [actually used by enexto() to decide whether
                              * to make an extra call to goodpos()]          */
 #define MM_ERID 0x10000   /* add erid structure */
+#define MM_NOERID 0x20000 /* no steed */
 
 /* flags for make_corpse() and mkcorpstat() */
 #define CORPSTAT_NONE 0x00

@@ -1621,7 +1621,7 @@ int mmflags;
     }
 
     /* mounting */
-    if (!(mmflags & MM_NOCOUNTBIRTH)) {
+    if (!(mmflags & MM_NOCOUNTBIRTH) && ! (mmflags & MM_NOERID)) {
         switch (mndx) {
             case PM_KNIGHT:
                 mount_monster(mtmp, !rn2(2) ? PM_PONY : PM_HORSE);

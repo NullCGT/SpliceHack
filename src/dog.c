@@ -132,7 +132,7 @@ boolean quietly;
             }
         }
 
-        mtmp = makemon(pm, x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
+        mtmp = makemon(pm, x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT | MM_NOERID);
         if (otmp && !mtmp) { /* monster was genocided or square occupied */
             if (!quietly)
                 pline_The("figurine writhes and then shatters into pieces!");

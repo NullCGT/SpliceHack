@@ -503,7 +503,9 @@ dotechmenu(how, tech_no)
 			tlevel <= 0 ? "Beyond recall" :
 			can_limitbreak() ? "LIMIT" :
 			!techtout(i) ? "Prepared" :
-			techtout(i) > 100 ? "Not Ready" : "Soon");
+			techtout(i) > 100 
+				? "Not Ready" : techtout(i) > 50 
+				? "Soon" : "Very Soon");
 	    else
 		Sprintf(buf, "%s%s\t%5d\t%s",
 			prefix, techname(i), tlevel,

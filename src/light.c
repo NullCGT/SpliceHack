@@ -616,6 +616,7 @@ obj_is_burning(obj)
 struct obj *obj;
 {
     return (boolean) (obj->lamplit && (obj->otyp == MAGIC_LAMP
+                                       || obj->otyp == MOONSTONE
                                        || ignitable(obj)
                                        || artifact_light(obj)));
 }

@@ -305,6 +305,7 @@ struct obj *obj;
     int index, pm, n;
     boolean goodcards = FALSE;
     struct monst *mtmp;
+    struct obj *otmp;
 
     if (Blind) {
         You("can't play cards in the dark!");
@@ -374,7 +375,8 @@ struct obj *obj;
                     pline("You draw The Devil...");
                 }
                 if ((pm = dlord(A_NONE)) != NON_PM)
-                    makemon(&mons[pm], u.ux, u.uy, NO_MM_FLAGS);
+                    mtmp = makemon(&mons[pm], u.ux, u.uy, NO_MM_FLAGS);
+                    pline("%s appears from a cloud of noxious smoke!", Monnam(mtmp));
                 draws = 0;
                 break;
             case 4:
@@ -382,6 +384,7 @@ struct obj *obj;
                 (void) adjattrib(A_INT, -rnd(3), FALSE);
                 (void) adjattrib(A_WIS, -rnd(3), FALSE);
                 forget_objects(10);
+                pline("You feel foolish!");
                 break;
             case 5:
                 pline("You draw Death...");
@@ -401,8 +404,9 @@ struct obj *obj;
                 break;
             case 8:
                 pline("You draw The Hermit...");
-                pline("What were you supposed to be doing here?");
-                forget_objects(100);
+                level_tele();
+                forget_map(ALL_MAP);
+                forget_traps();
                 aggravate();
                 break;
             case 9:
@@ -422,52 +426,74 @@ struct obj *obj;
                 pline("You draw Temperance...");
                 destroy_arm(some_armor(&youmonst));
                 destroy_arm(some_armor(&youmonst));
+                pline("That ought to teach you.");
                 break;
             case 12:
-                pline("You draw The Lovers! Some lovers appear!");
+                pline("You draw The Lovers!");
                 for (n = 0; n < 2; n++) {
                     if (!rn2(2))
-                        mtmp = makemon(&mons[PM_SUCCUBUS],
-                                       u.ux, u.uy, NO_MM_FLAGS);
-                    else
                         mtmp = makemon(&mons[PM_INCUBUS],
                                        u.ux, u.uy, NO_MM_FLAGS);
+                    else
+                        mtmp = makemon(&mons[PM_SUCCUBUS],
+                                       u.ux, u.uy, NO_MM_FLAGS);
                     mtmp->mpeaceful = 1;
+                }
+                if (!Deaf && mtmp) {
+                    You_hear("infernal giggling.");
                 }
                 break;
             case 13:
                 if (!Blind) {
                     pline("You draw the Magician! The figure on the card winks!");
                 }
-                    pline("You draw the Magician!");
+                pline("You draw the Magician!");
                 u.uenmax += rn1(20,10);
                 u.uen = u.uenmax;
                 break;
             case 14:
                 pline("You draw Strength!");
                 (void) adjattrib(A_STR, rn1(5, 4), FALSE);
+                You("feel impossibly strong!");
                 break;
             case 15:
                 pline("You draw The High Priestess! You feel more devout.");
                 adjalign(10);
                 break;
             case 16:
-                pline("You draw The Hierophant! Your altar arrives.");
+                pline("You draw The Hierophant!");
                 if (levl[u.ux][u.uy].typ != STAIRS &&
-                      levl[u.ux][u.uy].typ != LADDER)
+                      levl[u.ux][u.uy].typ != LADDER &&
+                      levl[u.ux][u.uy].typ != AIR) {
                     levl[u.ux][u.uy].typ = ALTAR;
+                    pline("The %s beneath you twists reshapes itself into an altar!", surface(u.ux, u.uy));
+                } else {
+                    You("feel a twinge of anxiety.");
+                }
                 break;
             case 17:
                 pline("You draw the Emperess! Your throne arrives.");
                 if (levl[u.ux][u.uy].typ != STAIRS &&
-                      levl[u.ux][u.uy].typ != LADDER)
+                      levl[u.ux][u.uy].typ != LADDER &&
+                      levl[u.ux][u.uy].typ != AIR) {
                     levl[u.ux][u.uy].typ = THRONE;
+                } else {
+                    You("feel quite lordly.");
+                }
                 break;
             case 18:
-                pline("You draw The Chariot! Your steed has arrived.");
+                pline("You draw The Chariot!");
+                unrestrict_weapon_skill(P_RIDING);
                 mtmp = makemon(&mons[PM_NIGHTMARE],
-                               u.ux, u.uy, NO_MM_FLAGS);
-                (void) tamedog(mtmp, (struct obj *) 0);
+                               u.ux, u.uy, MM_EDOG);
+                (void) initedog(mtmp);
+                if (mtmp) {
+                    otmp = mksobj(SADDLE, FALSE, FALSE);
+                    put_saddle_on_mon(otmp, mtmp);
+                    Your("steed arrives!");
+                } else {
+                    pline("It is time to ride to victory!");
+                }
                 break;
             case 19:
                 pline("You draw the Sun! You are bathed in warmth!");
@@ -477,11 +503,19 @@ struct obj *obj;
                     if (!u.ublessed)
                         u.ublessed = rn1(3, 2);
                 } else
-                    u.ublessed++;
+                    u.ublessed += 3;
                 break;
             case 20:
-                pline("You draw The Moon! Your luck is beginning to change!");
-                change_luck(5);
+                pline("You draw The Moon!");
+                if (Luck > 0) {
+                    otmp = mksobj(MOONSTONE, FALSE, FALSE);
+                    pline(Blind ? "Something phases through your foot." 
+                        : "An object shimmers into existence at your feet!");
+                    dropy(otmp);
+                } else {
+                    change_luck(3);
+                    pline("Your luck is beginning to change...");
+                }
                 break;
             case 21:
                 pline("You draw the Star!");
@@ -1668,7 +1702,7 @@ dorub()
 {
     struct obj *obj = getobj(cuddly, "rub");
 
-    if (obj && obj->oclass == GEM_CLASS) {
+    if (obj && obj->oclass == GEM_CLASS && obj->otyp != MOONSTONE) {
         if (is_graystone(obj)) {
             use_stone(obj);
             return 1;
@@ -1702,6 +1736,22 @@ dorub()
             You("%s smoke.", !Blind ? "see a puff of" : "smell");
         } else
             pline1(nothing_happens);
+    } else if (uwep->otyp == MOONSTONE) {
+        if (!uwep->in_use) {
+            begin_burn(uwep, FALSE);
+            uwep->in_use = 1;
+        } else {
+            pline("%s glowing.", Yobjnam2(uwep, "stop"));
+            end_burn(uwep, FALSE);
+            uwep->in_use = 0;
+            return 1;
+        }
+        makeknown(MOONSTONE);
+        update_inventory();
+        pline("This stone is quite cold!");
+        if (!Blind)
+            pline("%s begins to glow with a %s silvery light.", Yobjnam2(obj, "glow"), 
+                (flags.moonphase < 2 || flags.moonphase > 5) ? "soft" : "bright");
     } else if (obj->otyp == LANTERN) {
         /* message from Adventure */
         pline("Rubbing the electric lamp is not particularly rewarding.");
@@ -2705,6 +2755,8 @@ struct obj *tstone;
         case SILVER:
             do_scratch = TRUE; /* scratching and streaks */
             streak_color = "silvery";
+            if (obj->otyp == MOONSTONE)
+                pline("%s shinier now.", Tobjnam(tstone, "are"));
             break;
         default:
             /* Objects passing the is_flimsy() test will not
@@ -4117,6 +4169,7 @@ doapply()
     case FLINT:
     case LUCKSTONE:
     case LOADSTONE:
+    case MOONSTONE:
     case TOUCHSTONE:
         use_stone(obj);
         break;

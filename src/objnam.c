@@ -2890,6 +2890,7 @@ static struct alt_spellings {
        lets "flint stone" be a match, so we also accept bogus "flintstone" */
     { "luck stone", LUCKSTONE },
     { "load stone", LOADSTONE },
+    { "moon stone", MOONSTONE },
     { "touch stone", TOUCHSTONE },
     { "flintstone", FLINT },
     { (const char *) 0, 0 },

@@ -929,7 +929,10 @@ boolean artif;
             otmp->corpsenm = 0; /* LOADSTONE hack */
             if (otmp->otyp == LOADSTONE)
                 curse(otmp);
-            else if (otmp->otyp == ROCK)
+            else if (otmp->otyp == MOONSTONE) {
+                otmp->spe = 1;
+                otmp->lamplit = 0;
+            } else if (otmp->otyp == ROCK)
                 otmp->quan = (long) rn1(6, 6);
             else if (otmp->otyp != LUCKSTONE && !rn2(6))
                 otmp->quan = 2L;

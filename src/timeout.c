@@ -1534,6 +1534,13 @@ boolean already_lit;
         do_timer = FALSE;
         break;
 
+    case MOONSTONE:
+        obj->lamplit = 1;
+        do_timer = FALSE;
+        radius = (flags.moonphase < 2 && flags.moonphase > 5) ? 2 
+            : flags.moonphase == FULL_MOON ? 4 : 3;
+        break;
+
     case POT_OIL:
         turns = obj->age;
         if (obj->odiluted)

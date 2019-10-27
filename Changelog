@@ -103,6 +103,14 @@ Monsters
   damage.
 
 Items
+- New Object: Moonstone
+    - A permanent light source whose light radius depends on the moon phase.
+      - Within one step of new: Radius 2.
+      - Full moon: Radius 4.
+      - Otherwise: Radius 3.
+    - Moonstones are used by rubbing them.
+    - Currently only possible to obtain via wishing or applying a deck of fate
+      with positive luck and drawing the Moon.
 - New Object: Coffin    
     - Replaces chests in Vlad's, like in Unnethack.
     - Otherwise, appears occasionally as a normal container.
@@ -151,6 +159,7 @@ Items
 - Earmuffs are now treated as a tool, instead of as a helmet. They are also
   pluralized correctly. Basically, earmuffs are actually a viable item for
   the first time.
+- Deck of Fate redone to be more useful.
 
 Artifacts
 - New Artifact: Circe's Witchstaff

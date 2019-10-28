@@ -1202,6 +1202,12 @@ int cooking;
     case PM_HUMAN_WEREBEAR:
         catch_lycanthropy = PM_WEREBEAR;
         break;
+    case PM_WERECOCKATRICE:
+        catch_lycanthropy = PM_COCKATRICE;
+        break;
+    case PM_WERETIGER:
+        catch_lycanthropy = PM_WERETIGER;
+        break;
     case PM_NURSE:
         if (Upolyd)
             u.mh = u.mhmax;
@@ -1961,7 +1967,7 @@ struct obj *otmp;
             consume_oeaten(otmp, 2); /* oeaten >>= 2 */
         if (retcode < 2 && otmp->odrained && otmp->oeaten < drainlevel(otmp))
 	        otmp->oeaten = drainlevel(otmp);
-    } else if ((mnum == PM_COCKATRICE || mnum == PM_CHICKATRICE)
+    } else if (touch_petrifies(&mons[mnum])
                && (Stone_resistance || Hallucination)) {
         pline("This tastes just like chicken!");
     } else if (mnum == PM_FLOATING_EYE && u.umonnum == PM_RAVEN) {

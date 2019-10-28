@@ -9,6 +9,9 @@
 # Slash'em Extended
 - Autorecover patch by Kerio
 
+# DynaHack
+- Skill Progress
+
 #XNetHack
 - Object Materials Patch
 - Colored Altars and Stairs Patch
@@ -59,6 +62,7 @@
     - astral deva (only appear in planes)
     - planetar (only appear in planes)
     - solar (only appear in planes)
+    - weretiger (not randomly generated)
   #Items
     - Plague Artifact
     - Doomblade Artifact

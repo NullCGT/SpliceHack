@@ -135,10 +135,11 @@ options:	../util/makedefs
 spec_levs: ../util/lev_comp \
 	bigroom.des banquet.des castle.des endgame.des gehennom.des knox.des medusa.des \
 	mines.des oracle.des sokoban.des statuary.des tower.des void.des yendor.des \
-	blkmar.des icewaste.des laboratory.des
+	blkmar.des icewaste.des laboratory.des darkforest.des
 	../util/lev_comp banquet.des
 	../util/lev_comp bigroom.des
 	../util/lev_comp castle.des
+	../util/lev_comp darkforest.des
 	../util/lev_comp endgame.des
 	../util/lev_comp gehennom.des
 	../util/lev_comp knox.des

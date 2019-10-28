@@ -247,7 +247,8 @@
      || likes_lava(ptr))
 
 #define touch_petrifies(ptr) \
-    ((ptr) == &mons[PM_COCKATRICE] || (ptr) == &mons[PM_CHICKATRICE])
+    ((ptr) == &mons[PM_COCKATRICE] || (ptr) == &mons[PM_CHICKATRICE] \
+     || (ptr) == &mons[PM_WERECOCKATRICE] || (ptr) == &mons[PM_HUMAN_WERECOCKATRICE])
 
 #define is_pirate(ptr) \
     ((ptr) == &mons[PM_PIRATE] || (ptr) == &mons[PM_SKELETAL_PIRATE] \
@@ -257,7 +258,7 @@
     ((ptr) == &mons[PM_SHOPKEEPER] || (ptr) == &mons[PM_EXTRAPLANAR_MERCHANT])
 
 #define hates_light(ptr) ((ptr) == &mons[PM_GREMLIN] \
-      || (ptr) == &mons[PM_NOSFERATU])
+      || (ptr) == &mons[PM_NOSFERATU] || (ptr) == &mons[PM_DRAUGLIR])
 
 /* used to vary a few messages */
 #define weirdnonliving(ptr) (is_golem(ptr) || (ptr)->mlet == S_VORTEX)

@@ -364,6 +364,8 @@ boolean furnace;
         break;
     case PM_COCKATRICE:
     case PM_CHICKATRICE:
+    case PM_WERECOCKATRICE:
+    case PM_HUMAN_WERECOCKATRICE:
         pline("Yum, fried chicken!");
         feel_cockatrice(obj, TRUE);
         stop_cook = FALSE;

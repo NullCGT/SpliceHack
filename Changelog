@@ -22,6 +22,8 @@ Dungeon Changes
 - The Banquet Hall, found in the level just above Mine's End. A very large
   throne room containing numerous dwarves and giants. Loot includes historic
   statues, potions of booze, kegs, and a throne.
+- The Dark Forest. Contains a gauranteed moonstone, gaurded by an army of
+  bizarre werecreatures.
 
 Endgame Rewrite
 - The following levels are now part of the endgame:
@@ -70,8 +72,22 @@ Monsters
   - Only appears in the planes.
 - New Monster: God Piercer
   - Only appears in the planes.
-- Efreet
+- New Monster: Efreet
   - Only appears in the planes.
+- New Monster: Werecockatrice
+  - Only appears in the Dark Forest.
+  - Petrifies on touch, just like a cockatrice.
+- New Monster: Weretiger
+  - Only appears in the Dark Forest.
+  - From SLASH'EM.
+- New Monster: Drauglir
+  - Boss monster of the dark forest.
+  - Can regenerate hit points spontaneously.
+  - Drauglir is a werewolf, but instead of changing form, he gains the
+    hit points and revitalization a werewolf would while maintaining
+    his usual form.
+  - Summons thought hounds and memory hounds when summoning.
+  - Is harmed by light.
 - New Monster: Wrath
 - New Monster: Envy
 - New Monster: Sloth
@@ -109,8 +125,8 @@ Items
       - Full moon: Radius 4.
       - Otherwise: Radius 3.
     - Moonstones are used by rubbing them.
-    - Currently only possible to obtain via wishing or applying a deck of fate
-      with positive luck and drawing the Moon.
+    - Currently only possible to obtain via wishing, applying a deck of fate
+      with positive luck and drawing the Moon, or in the Dark Forest.
 - New Object: Coffin    
     - Replaces chests in Vlad's, like in Unnethack.
     - Otherwise, appears occasionally as a normal container.

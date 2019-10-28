@@ -2357,6 +2357,10 @@ register struct monst *mtmp;
         set_mon_data(mtmp, &mons[PM_HUMAN_WEREJACKAL]);
     else if (mtmp->data == &mons[PM_WEREBEAR])
         set_mon_data(mtmp, &mons[PM_HUMAN_WEREBEAR]);
+    else if (mtmp->data == &mons[PM_WERECOCKATRICE])
+        set_mon_data(mtmp, &mons[PM_HUMAN_WERECOCKATRICE]);
+    else if (mtmp->data == &mons[PM_WERETIGER])
+        set_mon_data(mtmp, &mons[PM_HUMAN_WERETIGER]);
     else if (mtmp->data == &mons[PM_WEREWOLF])
         set_mon_data(mtmp, &mons[PM_HUMAN_WEREWOLF]);
     else if (mtmp->data == &mons[PM_ALPHA_WEREWOLF])
@@ -4720,12 +4724,16 @@ struct permonst *mdat;
             break;
         case PM_HUMAN_WEREJACKAL:
         case PM_HUMAN_WEREBEAR:
+        case PM_HUMAN_WERECOCKATRICE:
+        case PM_HUMAN_WERETIGER:
         case PM_HUMAN_WERERAT:
         case PM_HUMAN_WEREWOLF:
         case PM_PACK_LORD:
         case PM_ALPHA_WEREWOLF:
         case PM_WEREJACKAL:
         case PM_WEREBEAR:
+        case PM_WERECOCKATRICE:
+        case PM_WERETIGER:
         case PM_WERERAT:
         case PM_WEREWOLF:
         case PM_OWLBEAR:

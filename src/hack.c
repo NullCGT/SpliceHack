@@ -2738,7 +2738,7 @@ void interesting_room()
             HConfusion = 0;
         break;
     default:
-        pline("%s of this room depict a battle between %s and %s. The %s are winning.",
+        pline("%s on the wall of this room depicts a battle between %s and %s. The %s are winning.",
             An(art[rn2(SIZE(art))]),
             makeplural(carvemon), makeplural(carvemon2),
             makeplural(rn2(2) ? carvemon : carvemon2));

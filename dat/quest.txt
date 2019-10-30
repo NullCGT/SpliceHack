@@ -4514,6 +4514,14 @@ serrated teeth.
 Buer has come out to hunt.
 %E [Buer appears!]
 %Cc - 00103
+An enormous giant stands before you, his skin slick with frost. His eyes bulge
+with rage, which radiates off of him almost like heat from a furnace.
+
+"I AM KOSTCHTCHIE!"
+
+Kostchtchie is itching for a fight.
+%E [Kostchtchie storms in!]
+%Cc - 00103
 The hulking humanoid that stands before you is covered nearly three meters tall
 and has the head of a hyena. In one hand it grips a  flail, and the other hand
 crackles with magical energy. When it opens its mouth, the unholy din that

@@ -446,8 +446,8 @@ struct obj *obj;
             case 13:
                 if (!Blind) {
                     pline("You draw the Magician! The figure on the card winks!");
-                }
-                pline("You draw the Magician!");
+                } else
+                    pline("You draw the Magician!");
                 u.uenmax += rn1(20,10);
                 u.uen = u.uenmax;
                 break;

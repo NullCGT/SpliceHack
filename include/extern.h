@@ -473,6 +473,7 @@ E struct monst *FDECL(christen_orc, (struct monst *, const char *,
 E const char *FDECL(noveltitle, (int *, BOOLEAN_P));
 E const char *FDECL(lookup_novel, (const char *, int *));
 E const char *FDECL(lookup_encyclopedia, (const char *, int *));
+E void FDECL(mintroduce, (struct monst *));
 
 /* ### do_wear.c ### */
 
@@ -1282,7 +1283,6 @@ E int FDECL(gazemu, (struct monst *, struct attack *));
 E void FDECL(mdamageu, (struct monst *, int));
 E int FDECL(could_seduce, (struct monst *, struct monst *, struct attack *));
 E int FDECL(doseduce, (struct monst *));
-E void FDECL(mintroduce, (struct monst *));
 
 /* ### minion.c ### */
 

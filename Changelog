@@ -1,6 +1,6 @@
                         SpliceHack -- Changelog
                     
-                    Upcoming Version: Stranger Days
+                    Version 0.7.0: Stranger Days
 
 Cooking
 - Cooking is done through the extended #cook command.
@@ -119,6 +119,7 @@ Monsters
   damage.
 - Some monsters (giants, ogre kings, Kostchtchie, the Drakemother) can send
   the player hurtling with their attacks.
+- Switch to XNetHack's system of monster naming and introduction.
 
 Items
 - New Object: Moonstone

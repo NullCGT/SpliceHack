@@ -103,6 +103,12 @@ race werewolf
 	fly into a berserk rage.
 
 	You are a werewolf, full of primal fury.
+
+race vampire
+	As a vampire, blood means everything. You must drink blood to survive, and
+	take lives to live.
+
+	You are a vampire, child of night.
 role arc
 	You are an archeologist. You begin your adventure well-equipped for dungeon
 	delving, and are capable of using many unique weapons.

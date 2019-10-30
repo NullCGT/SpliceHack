@@ -180,8 +180,7 @@ struct monst *mtmp;
 
     /* the scare monster scroll doesn't have any of the below
      * restrictions, being its own source of power */
-    if (sobj_at(SCR_SCARE_MONSTER, x, y))
-        return TRUE;
+    return (sobj_at(SCR_SCARE_MONSTER, x, y) && !(mtmp->data->geno & G_UNIQ));
 
     /*
      * Creatures who don't (or can't) fear a written Elbereth:

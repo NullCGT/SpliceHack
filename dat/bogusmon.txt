@@ -58,7 +58,7 @@ splicer
 # Umineko
 logic error
 _golden witch
-red truth
+small bombs
 
 # SSBM
 telekinetic swordsman
@@ -92,6 +92,7 @@ obscure reference
 clunky mechanic
 incongruous reference
 absurdly powerful mystic scarab
+ill-timed release
 
 # Cataclysm
 smoker zombie
@@ -274,6 +275,7 @@ satyr
 siren
 nemean lion
 -Scylla
+golden bovine
 
 # Norse
 ulsfark
@@ -444,6 +446,8 @@ axolotl
 naked mole rat
 narwhal
 pronghorn
+beaver
+sea slug
 
 # european cryptids
 wolpertinger
@@ -694,6 +698,7 @@ aliasing priest
 aligned parasite
 aligned parquet
 aligned proctor
+amber hulk
 baby balky dragon
 baby blues dragon
 baby caricature
@@ -749,6 +754,7 @@ hell hound pun
 hole hound
 high purist
 hairnet devil
+hanger hulk
 hax golem
 holistic sphere
 ice trowel

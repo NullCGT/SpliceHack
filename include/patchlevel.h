@@ -3,15 +3,13 @@
 /*-Copyright (c) Michael Allison, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
 
-/* Edited on 5/3/18 by NullCGT */
-
-/* SpliceHack 0.6.0 */
+/* SpliceHack 0.7.0 */
 #define VERSION_MAJOR 0
-#define VERSION_MINOR 6
+#define VERSION_MINOR 7
 /*
  * PATCHLEVEL is updated for each release.
  */
-#define PATCHLEVEL 4
+#define PATCHLEVEL 0
 /*
  * Incrementing EDITLEVEL can be used to force invalidation of old bones
  * and save files.
@@ -33,7 +31,7 @@
  * PP = patch level, ee = edit level, L = literal suffix "L",
  * with all four numbers specified as two hexadecimal digits.
  */
-#define VERSION_COMPATIBILITY 0x00060400L
+#define VERSION_COMPATIBILITY 0x00070000L
 
 /****************************************************************************/
 /* Version 3.6.x */

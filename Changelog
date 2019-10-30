@@ -98,6 +98,7 @@ Monsters
 - New Monster: Bullet Ant
 - New Monster: Grave Troll
 - New Monster: Cave Troll
+- New Monster: Vampiric Mind Flayer
 - Monsters will use cursed scrolls of light to attempt to blind the player.
 - Monsters are more aggressive about using expensive cameras.
 - Monsters can wear rings. For the sake of keeping the code simple, each
@@ -300,6 +301,8 @@ Fixes
 - Numerous other minor bugs.
 - Named figurines applied by monsters create named monsters.
 - Fixed some feedback issues when monsters offer on altars.
+- Fixed players polymorphed into non-shapeshifting vampires being prompted to
+  shapeshift.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

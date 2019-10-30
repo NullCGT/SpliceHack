@@ -811,7 +811,7 @@ int mntmp;
             pline(use_thec, monsterc, "jump");
         if (youmonst.data->msound == MS_SHRIEK) /* worthless, actually */
             pline(use_thec, monsterc, "shriek");
-        if (is_vampire(youmonst.data))
+        if (is_vampshifter(&youmonst))
             pline(use_thec, monsterc, "change shape");
         if (attacktype(youmonst.data, AT_MAGC))
          		pline(use_thec, monsterc,"cast monster spells");

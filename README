@@ -1,4 +1,4 @@
-                   SpliceHack -- General information
+                   SpliceHack 0.7.0 -- General information
 
 SpliceHack is an in-progress fork of NetHack 3.6.2, made with the goal of adding
 additional monsters, items, special levels, and game features without changing
@@ -21,9 +21,8 @@ there. SpliceHack can be played online at https://www.hardfought.org.
 SpliceHack follows the conditions put forth in the license provided by the
 NetHack Dev Team (see dat/license). If you are aware of any licensing or
 permissions issues with SpliceHack, please contact us through github.
+>>>>>>> 43ef5ef7fa35e841b3210b494caeb5cea9656fab
 
                   -- Good luck, and happy Hacking --
-
-# $NHDT-Date: 1557077369 2019/05/05 17:29:29 $ $NHDT-Branch: NetHack-3.6.2 $:$NHDT-Revision: 1.55 $
-# Copyright (c) 2012 by Michael Allison
+                  
 # NetHack may be freely redistributed.  See license for details.

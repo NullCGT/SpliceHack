@@ -1100,6 +1100,7 @@ register struct attack *mattk;
     permdmg = 0;
     /*  Now, adjust damages via resistances or specific attacks */
     switch (mattk->adtyp) {
+    case AD_CLOB:
     case AD_PHYS:
         if (mattk->aatyp == AT_HUGS && !sticks(youmonst.data)) {
             if (!u.ustuck && rn2(2)) {
@@ -1196,6 +1197,10 @@ register struct attack *mattk;
                 exercise(A_CON, FALSE);
                 dmg += rnd(20);
             }
+        }
+        if (mattk->adtyp == AD_CLOB && dmg != 0 && !rn2(5)) {
+            pline("%s knocks you back with an awesome blow!", Monnam(mtmp));
+            hurtle(u.ux - mtmp->mx, u.uy - mtmp->my, rn1(3, 3), FALSE);
         }
         break;
     case AD_DISE:

@@ -115,6 +115,7 @@ Monsters
 - Some monsters (giants, ogre kings, Kostchtchie, the Drakemother) can send
   the player hurtling with their attacks.
 - Switch to XNetHack's system of monster naming and introduction.
+- Monsters are no longer affected by the mysteriuos force.
 
 Items
 - New Object: Moonstone

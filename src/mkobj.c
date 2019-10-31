@@ -1004,9 +1004,11 @@ boolean artif;
             case MASK:
                 tryct = 0;
                 do
-                    otmp->corpsenm = rndmonnum();
+                    otmp->corpsenm = rn2(NUMMONS);
                 while (is_human(&mons[otmp->corpsenm]) &&
-                        !polyok(&mons[otmp->corpsenm]) && tryct++ < 30);
+                        !(mons[otmp->corpsenm].geno & G_NOGEN) &&
+                        (mons[otmp->corpsenm].difficulty > u.ulevel + 15) &&
+                        !polyok(&mons[otmp->corpsenm]) && tryct++ < 200);
                 blessorcurse(otmp, 4);
                 break;
             case BELL_OF_OPENING:

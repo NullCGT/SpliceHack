@@ -281,6 +281,8 @@ Features
 - Crowning grants the player character a unique technique dependent on their
   alignment.
 - Improved formatting for the technique menu.
+- Masks are generated randomly from the list of monsters, making the chance 
+  of obtaining a useful mask much higher.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing

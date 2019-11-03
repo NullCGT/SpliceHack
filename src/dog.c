@@ -67,7 +67,7 @@ pet_type()
     else if (preferred_pet == 'd')
         return  PM_LITTLE_DOG;
     else if (preferred_pet == 'b')
-        return PM_LITTLE_BIRD;
+        return PM_PENGUIN;
     else if (Role_if(PM_PIRATE)) {
      		if (preferred_pet == 'B')
      			  return (PM_PARROT);
@@ -89,7 +89,7 @@ pet_type()
             case 0:
                 return PM_KITTEN;
             case 1:
-                return PM_LITTLE_BIRD;
+                return PM_PENGUIN;
             default:
                 return PM_LITTLE_DOG;
         }
@@ -194,7 +194,7 @@ makedog()
         petname = dogname;
     else if (pettype == PM_PONY)
         petname = horsename;
-    else if (pettype == PM_LITTLE_BIRD)
+    else if (pettype == PM_PENGUIN)
         petname = birdname;
     else if (is_dragon(&mons[pettype]))
         petname = dragonname;
@@ -216,9 +216,9 @@ makedog()
             petname = "Sirius"; /* Orion's dog */
         if (Role_if(PM_CARTOMANCER))
             petname = "Joey"; /* Obscure SpliceHack reference (tm) */
-    } else if (!*petname && pettype == PM_LITTLE_BIRD) {
+    } else if (!*petname && pettype == PM_PENGUIN) {
         if (Role_if(PM_RANGER))
-            petname = "Quothe";
+            petname = "Topper";
     } else if (!*petname && pettype == PM_SEWER_RAT) {
 	    if(Role_if(PM_CONVICT)) petname = "Nicodemus"; /* Rats of NIMH */
     } else if (!*petname && pettype == PM_BABY_RED_DRAGON) {

@@ -140,7 +140,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       NO_COLOR),
 
     /*
-    *       Destroys the corpses of monsters.
+    *       Can temporarily paralyze a target.
     */
     A("Anaconda", BULLWHIP, (SPFX_RESTR),
       0, 0,
@@ -218,6 +218,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       CLR_MAGENTA),
 
     /* PIRATE ARTIFACTS */
+
     A("Reaver",	SCIMITAR, (SPFX_NOGEN | SPFX_RESTR | SPFX_INTEL), 0, 0,
      	PHYS(5,8), NO_DFNS,	NO_CARY, 0, A_CHAOTIC, PM_PIRATE, NON_PM, 6000L,
       NO_COLOR),
@@ -512,6 +513,9 @@ A("The Palantir of Westernesse",        CRYSTAL_BALL,
 #undef FIRE
 #undef ELEC
 #undef STUN
+#undef WIND
+#undef VOID
+#undef PLYS
 #endif
 
 /*artilist.h*/

@@ -309,6 +309,7 @@ Fixes
 - Fixed some feedback issues when monsters offer on altars.
 - Fixed players polymorphed into non-shapeshifting vampires being prompted to
   shapeshift.
+- High score list is no longer checked in marathon mode.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

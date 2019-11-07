@@ -624,7 +624,7 @@ time_t when;
     }
 #endif /* XLOGFILE */
 
-    if (wizard || discover) {
+    if (wizard || discover || u.uroleplay.marathon) {
         if (how != PANICKED)
             HUP {
                 char pbuf[BUFSZ];
@@ -632,7 +632,7 @@ time_t when;
                 topten_print("");
                 Sprintf(pbuf,
              "Since you were in %s mode, the score list will not be checked.",
-                        wizard ? "wizard" : "discover");
+                        wizard ? "wizard" : discover ? "discover" : "marathon");
                 topten_print(pbuf);
             }
         goto showwin;

@@ -3056,6 +3056,7 @@ struct monst *mon;
         pline("%s seems dismayed at your lack of response.", Monnam(mon));
         return 0;
     }
+    u.uconduct.celibate = 1;
     seewho = canseemon(mon);
     if (!seewho)
         pline("Someone caresses you...");

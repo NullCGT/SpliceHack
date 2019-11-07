@@ -286,6 +286,7 @@ Features
 - Masks are generated randomly from the list of monsters, making the chance 
   of obtaining a useful mask much higher.
 - Track the number of techniques used in a game as a conduct.
+- Track the celibate conduct.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing

@@ -3331,6 +3331,9 @@ int final;
 
     if (!u.uconduct.gnostic)
         you_have_been("an atheist");
+    
+    if (!u.uconduct.celibate)
+        you_have_been("celibate");
 
     if (!u.uconduct.weaphit) {
         you_have_never("hit with a wielded weapon");

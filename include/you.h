@@ -100,6 +100,7 @@ struct u_conduct {     /* number of times... */
     long wishes;       /* used a wish */
     long wisharti;     /* wished for an artifact */
     long elbereth;     /* engraved Elbereth */
+    long notech;       /* activated a technique */
     /* genocides already listed at end of game */
 };
 

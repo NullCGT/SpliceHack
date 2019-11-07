@@ -3358,6 +3358,14 @@ int final;
         you_have_X(buf);
     }
 
+    if (u.uconduct.notech == 0) {
+        you_have_never("used a special technique");
+    } else {
+        Sprintf(buf, "used special techniques %ld time%s", u.uconduct.notech,
+                plur(u.uconduct.notech));
+        you_have_X(buf);
+    }
+
     if (flags.orientation == SEX_BI) {
         you_have_been("bisexual");
     } else if (flags.orientation == SEX_ACE) {

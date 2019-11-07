@@ -285,6 +285,7 @@ Features
 - Improved formatting for the technique menu.
 - Masks are generated randomly from the list of monsters, making the chance 
   of obtaining a useful mask much higher.
+- Track the number of techniques used in a game as a conduct.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing
@@ -310,6 +311,7 @@ Fixes
 - Fixed players polymorphed into non-shapeshifting vampires being prompted to
   shapeshift.
 - High score list is no longer checked in marathon mode.
+- Fixed a bug where turning undead as a knight would consistently fail.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

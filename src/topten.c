@@ -447,6 +447,8 @@ encodeconduct()
         e |= 1L << 12;
     if (!u.uconduct.alcohol)
         e |= 1L << 13;
+    if (!u.uconduct.notech)
+        e |= 1L << 14; 
 
     return e;
 }

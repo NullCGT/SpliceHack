@@ -554,10 +554,14 @@ int
 dotech()
 {
 	int tech_no;
+	int ret = 0;
 
 	if (gettech(&tech_no))
-	    return techeffects(tech_no);
-	return 0;
+	    ret = techeffects(tech_no);
+	if (ret > 0) {
+		u.uconduct.notech++;
+	}
+	return ret;
 }
 
 static NEARDATA const char kits[] = { TOOL_CLASS, 0 };
@@ -1059,6 +1063,7 @@ tamedog(mtmp, (struct obj *) 0);
 			You("invoke the sigil of tempest!");
 					techt_inuse(tech_no) = d(1,6) + rnd(techlev(tech_no)/5 + 1) + 2;
 			u_wipe_engr(2);
+			u.uconduct.notech++;
 			return(0);
 			break;
         case T_SIGIL_CONTROL:
@@ -1074,6 +1079,7 @@ tamedog(mtmp, (struct obj *) 0);
 			You("invoke the sigil of control!");
 					techt_inuse(tech_no) = d(1,4) + rnd(techlev(tech_no)/5 + 1) + 2;
 			u_wipe_engr(2);
+			u.uconduct.notech++;
 			return(0);
 			break;
 				case T_SIGIL_DISCHARGE:
@@ -1089,6 +1095,7 @@ tamedog(mtmp, (struct obj *) 0);
 			You("invoke the sigil of discharge!");
 					techt_inuse(tech_no) = d(1,4) + rnd(techlev(tech_no)/5 + 1) + 2;
 			u_wipe_engr(2);
+			u.uconduct.notech++;
 			return(0);
 			break;
         case T_RAISE_ZOMBIES:

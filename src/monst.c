@@ -4234,7 +4234,7 @@ struct permonst _mons2[] = {
         M2_LORD | M2_MALE | M2_HOSTILE | M2_STALK 
           | M2_STRONG | M2_COLLECT | M2_MAGIC | M2_GREEDY | M2_JEWELS
           | M2_PNAME | M2_NOPOLY | M2_NASTY,
-        M3_INFRAVISION, MH_ANGEL, 77, CLR_MAGENTA),
+        M3_INFRAVISION, 0, 77, CLR_MAGENTA),
     MON("Gluttony", S_SIN, LVL(77, 15, -7, 100, 0), (G_UNIQ | G_NOGEN),
         A(ATTK(AT_BITE, AD_HNGY, 5, 8), ATTK(AT_ENGL, AD_DGST, 2, 10), 
           ATTK(AT_ENGL, AD_ACID, 3, 10),  ATTK(AT_ENGL, AD_SLIM, 4, 10), 
@@ -4259,7 +4259,7 @@ struct permonst _mons2[] = {
           | M1_OMNIVORE | M1_SLITHY | M1_POIS, 
         M2_LORD | M2_MALE | M2_HOSTILE | M2_STALK | M2_NEUTER
           | M2_STRONG | M2_PNAME | M2_NOPOLY | M2_NASTY,
-        M3_INFRAVISION, MH_ANGEL, 77, CLR_BRIGHT_MAGENTA),
+        M3_INFRAVISION, 0, 77, CLR_BRIGHT_MAGENTA),
     MON("Envy", S_SIN, LVL(77, 15, -7, 70, 0), (G_UNIQ | G_NOGEN),
         A(ATTK(AT_CLAW, AD_CURS, 4, 10), ATTK(AT_CLAW, AD_CURS, 4, 10),
           ATTK(AT_TUCH, AD_WRAP, 0, 0), NO_ATTK, NO_ATTK, NO_ATTK),

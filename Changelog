@@ -121,6 +121,8 @@ Monsters
 - Monsters are no longer affected by the mysteriuos force.
 - Bird pets have been changed to penguins, which have the same stats as cats
   and dogs.
+- Demon lords and princes can steal intrinsics, deal damage, and cause the player to
+  wither by chanting in the dark speech.
 
 Items
 - New Object: Moonstone

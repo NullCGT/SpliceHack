@@ -485,6 +485,10 @@ register struct monst *mtmp;
         m_respond(mtmp);
     if (mdat == &mons[PM_MEDUSA] && couldsee(mtmp->mx, mtmp->my))
         m_respond(mtmp);
+    if ((is_dlord(mtmp->data) || is_dprince(mtmp->data)) 
+        && couldsee(mtmp->mx, mtmp->my) && !mtmp->mpeaceful
+        && !rn2(18))
+            m_respond(mtmp);
     if (DEADMONSTER(mtmp))
         return 1; /* m_respond gaze can kill medusa */
 

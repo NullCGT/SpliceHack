@@ -3399,6 +3399,37 @@ struct monst *mtmp;
                 break;
             }
     }
+    if (is_dprince(mtmp->data) || is_dlord(mtmp->data)) {
+        if (Sonic_resistance && !Deaf)
+            pline("%s chants something, but you do not quite catch what.", Monnam(mtmp));
+        else if (!Deaf) {
+            pline("%s intones a horrifying chant in the dark speech!", Monnam(mtmp));
+            switch(rn2(5)) {
+            case 0:
+                You("feel a sense of great loss!");
+                attrcurse();
+                break;
+            case 1:
+                You("begin decomposing!");
+                incr_itimeout(&HWithering, rn1(40, 40));
+                break;
+            case 2:
+                if (Psychic_resistance) {
+                    pline("Fortunately, you are able to block out the words.");
+                } else {
+                    Your("mind twists!");
+                    losehp(d(6, 6), "mental damage from hearing the dark speech", KILLED_BY);
+                }
+                break;
+            default:
+                pline("A shiver runs down your spine.");
+                break;
+                break;
+            }
+        } else if (canseemon(mtmp)) {
+            pline("%s mutters something.", Monnam(mtmp));
+        }
+    }
 }
 
 /* Called whenever the player attacks mtmp; also called in other situations

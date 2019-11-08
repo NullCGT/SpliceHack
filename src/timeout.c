@@ -103,6 +103,7 @@ const struct propname {
     { FIXED_ABIL, "fixed abilites" },
     { BLOODMAGIC, "blood magic" },
     { GOODMEMORY, "resistance to amnesia" },
+    { WITHERING, "withering away"},
     { LIFESAVED, "life will be saved" },
     {  0, 0 },
 };
@@ -663,6 +664,13 @@ nh_timeout()
                 }
                 done_timeout(POISONING, SICK);
                 u.usick_type = 0;
+                break;
+            case WITHERING:
+                You("are no longer withering away.");
+                context.botl = TRUE;
+                break;
+            case REGENERATION:
+                You_feel("your metabolism returning to normal.");
                 break;
             case REFLECTING:
                 You("are no longer as shiny.");

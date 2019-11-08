@@ -1484,6 +1484,21 @@ register struct obj *otmp;
             }
         }
         break;
+    case POT_REGENERATION:
+        if (otmp->cursed) {
+            You("begin to wither away!");
+            set_itimeout(&HWithering, rn1(10, 20));
+            unkn++;
+            context.botl = TRUE;
+        } else {
+            You("metabolism kicks into overdrive!");
+            if (otmp->blessed) {
+                set_itimeout(&HRegeneration, rn1(100, 100));
+            } else {
+                set_itimeout(&HRegeneration, rn1(50, 50));
+            }
+        }
+        break;
     case POT_SPEED:
         /* skip when mounted; heal_legs() would heal steed's legs */
         if (Wounded_legs && !otmp->cursed && !u.usteed) {
@@ -2287,6 +2302,18 @@ register struct obj *obj;
             make_deaf(0L, TRUE);
         }
         exercise(A_CON, TRUE);
+        break;
+    case POT_REGENERATION:
+        if (obj->cursed) {
+            set_itimeout(&HWithering, rn1(5, 5));
+            exercise(A_CON, FALSE);
+            You("start to shrivel up!");
+        } else {
+            You("feel a tiny bit better.");
+            set_itimeout(&HRegeneration, rn1(5, 5));
+            kn++;
+        }
+        context.btl = TRUE;
         break;
     case POT_SICKNESS:
         if (!Role_if(PM_HEALER)) {

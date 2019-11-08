@@ -2803,6 +2803,7 @@ static mswin_condition_field _condition_fields[BL_MASK_BITS] = {
     { BL_MASK_STRNGL, "Strngl" },
     { BL_MASK_FOODPOIS, "FoodPois" },
     { BL_MASK_TERMILL, "TermIll" },
+    { BL_MASK_WITHER, "Wither" },
     { BL_MASK_BLIND, "Blind" },
     { BL_MASK_DEAF, "Deaf" },
     { BL_MASK_STUN, "Stun" },
@@ -3023,6 +3024,7 @@ status_update(int fldindex, genericptr_t ptr, int chg, int percent, int color, u
                         BL_MASK_LEV             0x00000400L
                         BL_MASK_FLY             0x00000800L
                         BL_MASK_RIDE            0x00001000L
+                        BL_MASK_WITHER          0x00002000L
                 -- The value passed for BL_GOLD includes an encoded leading
                    symbol for GOLD "\GXXXXNNNN:nnn". If window port needs
                    textual gold amount without the leading "$:" the port will

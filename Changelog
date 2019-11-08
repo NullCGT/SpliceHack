@@ -175,6 +175,9 @@ Items
 - New Item: Light Arrow
     - High damage, very deadly arrow. Only generated in shops and with 
       Avenger Archons.
+- New Item: Potion of Regeneration (Soupy Potion)
+    - Grants regeneration for a certain number of turns.
+    - A cursed potion inflicts withering.
 - Robes are renamed to mystic robes.
 - Earmuffs are now treated as a tool, instead of as a helmet. They are also
   pluralized correctly. Basically, earmuffs are actually a viable item for
@@ -296,6 +299,9 @@ Features
   of obtaining a useful mask much higher.
 - Track the number of techniques used in a game as a conduct.
 - Track the celibate conduct.
+- Withering status effect. Blocks normal HP regeneration, and causes the
+  player to lose 1 HP per turn. Having regeneration and withering at the
+  same time nullifies HP regeneration, but there is no HP loss over time.
 
 Fixes
 - Purple dragons breathe "A wave of pure sound" instead of merely breathing

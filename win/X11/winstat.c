@@ -68,20 +68,21 @@
 #define F_STRNGL   22
 #define F_FOODPOIS 23
 #define F_TERMILL  24
+#define F_WITHER   25
 
-#define F_HUNGER   25
-#define F_ENCUMBER 26
-#define F_LEV      27
-#define F_FLY      28
-#define F_RIDE     29
+#define F_HUNGER   26
+#define F_ENCUMBER 27
+#define F_LEV      28
+#define F_FLY      29
+#define F_RIDE     30
 
-#define F_BLIND    30
-#define F_DEAF     31
-#define F_STUN     32
-#define F_CONF     33
-#define F_HALLU    34
+#define F_BLIND    31
+#define F_DEAF     32
+#define F_STUN     33
+#define F_CONF     34
+#define F_HALLU    35
 
-#define NUM_STATS 35
+#define NUM_STATS 36
 
 static void FDECL(update_fancy_status, (struct xwindow *));
 static void FDECL(update_fancy_status_field, (int));
@@ -366,6 +367,7 @@ unsigned long *colormasks;
             MaybeDisplayCond(BL_MASK_STRNGL, colormasks, "Strngl");
             MaybeDisplayCond(BL_MASK_FOODPOIS, colormasks, "FoodPois");
             MaybeDisplayCond(BL_MASK_TERMILL, colormasks, "TermIll");
+            MaybeDisplayCond(BL_MASK_WITHER, colormasks, "Wither");
             MaybeDisplayCond(BL_MASK_BLIND, colormasks, "Blind");
             MaybeDisplayCond(BL_MASK_DEAF, colormasks, "Deaf");
             MaybeDisplayCond(BL_MASK_STUN, colormasks, "Stun");
@@ -547,6 +549,7 @@ unsigned long *colormasks UNUSED;
         { BL_MASK_STRNGL, F_STRNGL },
         { BL_MASK_FOODPOIS, F_FOODPOIS },
         { BL_MASK_TERMILL, F_TERMILL },
+        { BL_MASK_WITHER, F_WITHER },
         { BL_MASK_BLIND, F_BLIND },
         { BL_MASK_DEAF, F_DEAF },
         { BL_MASK_STUN, F_STUN },
@@ -1338,6 +1341,9 @@ int i;
         case F_TERMILL:
             val = (Sick && (u.usick_type & SICK_NONVOMITABLE)) ? 1L : 0L;
             break;
+        case F_WITHER:
+            val = Withering ? 1L : 0L;
+            break;
         /* non-fatal status conditions */
         case F_BLIND:
             val = Blind ? 1L : 0L;
@@ -1496,6 +1502,7 @@ int sv_index;
     case F_STRNGL:
     case F_FOODPOIS:
     case F_TERMILL:
+    case F_WITHER:
     case F_BLIND:
     case F_DEAF:
     case F_STUN:
@@ -1692,7 +1699,7 @@ static int attrib_indices[] = { F_STR, F_DEX, F_CON, F_INT, F_WIS, F_CHA,
    one before, leaving the one from leftover_indices[]; since they're never
    updated, that shouldn't matter */
 static int status_indices[3][9] = { { F_STONE, F_SLIME, F_STRNGL,
-                                      F_FOODPOIS, F_TERMILL, F_DUMMY,
+                                      F_FOODPOIS, F_TERMILL, F_WITHER,
                                       -1, 0, 0 },
                                     { F_HUNGER, F_ENCUMBER,
                                       F_LEV, F_FLY, F_RIDE, F_DUMMY,

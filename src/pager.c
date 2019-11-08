@@ -1191,6 +1191,7 @@ add_obj_info(winid datawin, short otyp)
                     case HALF_SPDAM:
                     case HALF_PHDAM:
                     case REGENERATION:
+                    case WITHERING:
                     case ENERGY_REGENERATION:
                     case PROTECTION:
                     case PROT_FROM_SHAPE_CHANGERS:

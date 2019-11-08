@@ -3699,6 +3699,7 @@ static struct condition_t {
     { BL_MASK_STRNGL,   { "Strngl",   "Stngl", "Str" } },
     { BL_MASK_FOODPOIS, { "FoodPois", "Fpois", "Poi" } },
     { BL_MASK_TERMILL,  { "TermIll" , "Ill",   "Ill" } },
+    { BL_MASK_WITHER,   { "Wither",   "Wthr",  "Wth" } },
     { BL_MASK_BLIND,    { "Blind",    "Blnd",  "Bl"  } },
     { BL_MASK_DEAF,     { "Deaf",     "Def",   "Df"  } },
     { BL_MASK_STUN,     { "Stun",     "Stun",  "St"  } },

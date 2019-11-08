@@ -984,6 +984,8 @@ unsigned long *colormasks UNUSED;
                 Strcpy(nb = eos(nb), " FoodPois");
             if (cond & BL_MASK_TERMILL)
                 Strcpy(nb = eos(nb), " TermIll");
+            if (cond & BL_MASK_WITHER)
+                Strcpy(nb = eos(nb), " Wither");
             if (cond & BL_MASK_BLIND)
                 Strcpy(nb = eos(nb), " Blind");
             if (cond & BL_MASK_DEAF)
@@ -1619,6 +1621,7 @@ dump_render_status()
         { BL_MASK_STRNGL,    "Strngl"   },
         { BL_MASK_FOODPOIS,  "FoodPois" },
         { BL_MASK_TERMILL,   "TermIll"  },
+        { BL_MASK_WITHER,    "Wither"   },
         { BL_MASK_BLIND,     "Blind"    },
         { BL_MASK_DEAF,      "Deaf"     },
         { BL_MASK_STUN,      "Stun"     },

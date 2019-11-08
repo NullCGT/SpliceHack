@@ -180,6 +180,9 @@ do_statusline2()
         if (u.usick_type & SICK_NONVOMITABLE)
             Strcpy(nb = eos(nb), " TermIll");
     }
+    if (Withering) {
+        Strcpy(nb = eos(nb), " Wither");
+    }
     if (u.uhs != NOT_HUNGRY)
         Sprintf(nb = eos(nb), " %s", hu_stat[u.uhs]);
     if ((cap = near_capacity()) > UNENCUMBERED)
@@ -732,6 +735,8 @@ bot_via_windowport()
     /*
      * basic formatting puts hunger status and encumbrance here
      */
+    if (Withering)
+        blstats[idx][BL_CONDITION].a.a_ulong |= BL_MASK_WITHER;
     if (Blind)
         blstats[idx][BL_CONDITION].a.a_ulong |= BL_MASK_BLIND;
     if (Deaf)
@@ -2318,6 +2323,7 @@ const struct condmap valid_conditions[] = {
     { "lev",      BL_MASK_LEV },
     { "fly",      BL_MASK_FLY },
     { "ride",     BL_MASK_RIDE },
+    { "wither",     BL_MASK_WITHER }
 };
 
 #ifdef STATUS_HILITES
@@ -2328,9 +2334,10 @@ const struct condmap condition_aliases[] = {
                         | BL_MASK_FOODPOIS | BL_MASK_TERMILL
                         | BL_MASK_BLIND | BL_MASK_DEAF | BL_MASK_STUN
                         | BL_MASK_CONF | BL_MASK_HALLU
-                        | BL_MASK_LEV | BL_MASK_FLY | BL_MASK_RIDE },
+                        | BL_MASK_LEV | BL_MASK_FLY | BL_MASK_RIDE
+                        | BL_MASK_WITHER },
     { "major_troubles", BL_MASK_STONE | BL_MASK_SLIME | BL_MASK_STRNGL
-                        | BL_MASK_FOODPOIS | BL_MASK_TERMILL },
+                        | BL_MASK_FOODPOIS | BL_MASK_TERMILL | BL_MASK_WITHER },
     { "minor_troubles", BL_MASK_BLIND | BL_MASK_DEAF | BL_MASK_STUN
                         | BL_MASK_CONF | BL_MASK_HALLU },
     { "movement",       BL_MASK_LEV | BL_MASK_FLY | BL_MASK_RIDE }

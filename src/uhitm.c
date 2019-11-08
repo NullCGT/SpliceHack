@@ -342,7 +342,7 @@ int *attk_count, *role_roll_penalty;
         tmp -= 2 * Luck;
     } else if (weapon && weapon->oartifact &&
         weapon->oartifact == ART_UNLIMITED_MOON) {
-        tmp += phase_of_the_moon();
+        tmp += (10 - abs(4 - phase_of_the_moon()));
     }
 
     return tmp;
@@ -995,7 +995,7 @@ int dieroll;
                     tmp -= 2 * Luck;
                 } else if (obj && obj->oartifact &&
                     obj->oartifact == ART_UNLIMITED_MOON) {
-                    tmp += phase_of_the_moon();
+                    tmp += (10 - abs(4 - phase_of_the_moon()));
                 }
 
                 if (mon_hates_material(mon, obj->material)) {

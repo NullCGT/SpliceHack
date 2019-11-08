@@ -194,6 +194,15 @@ Artifacts
 - Mjollnir can now be invoked for a powerful lightning bolt. From XNetHack.
 - Altars have a 50% chance to break apart when an artifact is granted once the
   player has already been gifted two artifacts.
+- Increased damage for Unlimited Moon, Gae Dearg, Gae Buidhe, Carnwennan,
+  Seafoam, War's Sword, Origin.
+- Most artifacts have a special incantation recited by the player when invoked.
+- New Invocation Effects
+    - Imhullu: As blessed scroll of air.
+    - Stormbringer: As blessed scroll of scare monster.
+    - Gungnir: Lightning bolt.
+    - Mjollnir: Lightning bolt.
+    - Demonbane: Flying.
 
 Roles, Races, and Character Creation
 - Sexual Orientation

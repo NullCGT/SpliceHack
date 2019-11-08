@@ -58,7 +58,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     *      the wielder is a Valkyrie, but there is no strength requirement.
     */
     A("Gungnir", DWARVISH_SPEAR, (SPFX_RESTR | SPFX_ATTK), 0, 0, ELEC(7, 20),
-      NO_DFNS, NO_CARY, 0, A_NEUTRAL, PM_VALKYRIE, NON_PM, 4000L, NO_COLOR),
+      NO_DFNS, NO_CARY, LIGHTNING_BOLT, A_NEUTRAL, PM_VALKYRIE, NON_PM, 4000L, NO_COLOR),
 
     /*
     *      Gae Bulg can be thrown as a last resort. If it hits, the attack
@@ -75,14 +75,14 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     *      should cancel their armor? This occurs 1/3 of the time.
     */
     A("Gae Dearg", ELVEN_SPEAR, (SPFX_RESTR | SPFX_ATTK | SPFX_CANC), 0, 0,
-      DRLI(2, 2), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM,
+      DRLI(2, 5), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM,
       7000L, NO_COLOR),
 
     /*
     *      Gae Buidhe inflicts cursed wounds (drains levels).
     */
     A("Gae Buidhe", ELVEN_SPEAR, (SPFX_RESTR | SPFX_ATTK | SPFX_DRLI), 0, 0,
-      DRLI(3, 3), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM,
+      DRLI(3, 5), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM,
       7000L, NO_COLOR),
 
     /*
@@ -90,19 +90,19 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     *       overpowered. Used to be PM_KNIGHT.
     */
     A("Carnwennan", KNIFE, (SPFX_RESTR | SPFX_SEARCH | SPFX_STLTH), 0, 0,
-      PHYS(3, 3), NO_DFNS, NO_CARY, 0, A_LAWFUL,
+      PHYS(3, 8), NO_DFNS, NO_CARY, INVIS, A_LAWFUL,
       NON_PM, NON_PM, 400L, NO_COLOR),
 
     /*
     *       Seafoam grants waterbreathing, and is generated rustproof.
     */
-    A("Seafoam", TRIDENT, (SPFX_RESTR | SPFX_BREATHE), 0, 0, PHYS(3,7),
-      NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 1500L, NO_COLOR),
+    A("Seafoam", TRIDENT, (SPFX_RESTR | SPFX_BREATHE), 0, 0, PHYS(3, 7),
+      NO_DFNS, NO_CARY, WWALKING, A_NONE, NON_PM, NON_PM, 1500L, NO_COLOR),
 
     /*
     *       Mesopatamian in origin.
     */
-    A("Imhullu", GLAIVE, (SPFX_RESTR), 0, 0, WIND(4, 5), NO_DFNS, NO_CARY, 0,
+    A("Imhullu", GLAIVE, (SPFX_RESTR), 0, 0, WIND(4, 5), NO_DFNS, NO_CARY, SEFFECT,
       A_NEUTRAL, NON_PM, NON_PM, 2000L, NO_COLOR),
 
     /*
@@ -144,7 +144,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     */
     A("Anaconda", BULLWHIP, (SPFX_RESTR),
       0, 0,
-      PLYS(7, 7), DRLI(0,0), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 200L,
+      PLYS(7, 7), DRLI(0,0), NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 200L,
       CLR_RED),
 
     /*
@@ -158,7 +158,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     *       Definitely no canonical problems here.
     */
     A("War\'s Sword", TWO_HANDED_SWORD,
-      (SPFX_RESTR | SPFX_CONFLICT), 0, 0, PHYS(3, 3), NO_DFNS, NO_CARY, 0,
+      (SPFX_RESTR | SPFX_CONFLICT), 0, 0, PHYS(3, 7), NO_DFNS, NO_CARY, 0,
       A_NONE, NON_PM, NON_PM, 7000L, NO_COLOR),
 
     /*
@@ -198,7 +198,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     */
     A("Origin", QUARTERSTAFF,
       (SPFX_RESTR | SPFX_TCTRL), 0, 0,
-      PHYS(2, 4), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 500L,
+      PHYS(2, 6), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 500L,
       CLR_MAGENTA),
     
     /*
@@ -206,7 +206,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     */
     A("Circe's Witchstaff", QUARTERSTAFF,
       (SPFX_RESTR | SPFX_BEHEAD), 0, 0,
-      PHYS(4, 2), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 3500,
+      PHYS(4, 4), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 3500,
       CLR_GREEN),
 
     /*
@@ -220,7 +220,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
     /* PIRATE ARTIFACTS */
 
     A("Reaver",	SCIMITAR, (SPFX_NOGEN | SPFX_RESTR | SPFX_INTEL), 0, 0,
-     	PHYS(5,8), NO_DFNS,	NO_CARY, 0, A_CHAOTIC, PM_PIRATE, NON_PM, 6000L,
+     	PHYS(5, 8), NO_DFNS,	NO_CARY, 0, A_CHAOTIC, PM_PIRATE, NON_PM, 6000L,
       NO_COLOR),
 
     A("The Marauder's Map", SCR_MAGIC_MAPPING, SPFX_RESTR, 0, 0, NO_ATTK,
@@ -278,7 +278,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
      */
     A("Stormbringer", RUNESWORD,
       (SPFX_RESTR | SPFX_ATTK | SPFX_DEFN | SPFX_INTEL | SPFX_DRLI), 0, 0,
-      DRLI(5, 2), DRLI(0, 0), NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM, 8000L,
+      DRLI(5, 2), DRLI(0, 0), NO_CARY, SEFFECT, A_CHAOTIC, NON_PM, NON_PM, 8000L,
       NO_COLOR),
 
     /*
@@ -343,7 +343,7 @@ STATIC_OVL NEARDATA struct artifact artilist[] = {
       NO_COLOR),
 
     A("Demonbane", LONG_SWORD, (SPFX_RESTR | SPFX_DFLAGH), 0, MH_DEMON,
-      PHYS(5, 0), NO_DFNS, NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 2500L,
+      PHYS(5, 0), NO_DFNS, NO_CARY, FLYING, A_LAWFUL, NON_PM, NON_PM, 2500L,
       NO_COLOR),
 
     A("Werebane", SABER, (SPFX_RESTR | SPFX_DFLAGH), 0, MH_WERE,

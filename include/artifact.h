@@ -78,7 +78,8 @@ enum invoke_prop_types {
     CREATE_AMMO,
     OBJECT_DET,
     PHASING,
-    LIGHTNING_BOLT
+    LIGHTNING_BOLT,
+    SEFFECT
 };
 
 #endif /* ARTIFACT_H */

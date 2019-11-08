@@ -66,11 +66,12 @@ static int p_type; /* (-1)-3: (-1)=really naughty, 3=really good */
  * order to have the values be meaningful.
  */
 
-#define TROUBLE_STONED 15
-#define TROUBLE_SLIMED 14
-#define TROUBLE_STRANGLED 13
-#define TROUBLE_LAVA 12
-#define TROUBLE_SICK 11
+#define TROUBLE_STONED 16
+#define TROUBLE_SLIMED 15
+#define TROUBLE_STRANGLED 14
+#define TROUBLE_LAVA 13
+#define TROUBLE_SICK 12
+#define TROUBLE_WITHERING 11
 #define TROUBLE_STARVING 10
 #define TROUBLE_CARRIER 9
 #define TROUBLE_REGION 8 /* stinking cloud */
@@ -200,6 +201,8 @@ in_trouble()
         return TROUBLE_LAVA;
     if (Sick)
         return TROUBLE_SICK;
+    if (Withering)
+        return TROUBLE_WITHERING;
     if (u.uhs >= WEAK)
         return TROUBLE_STARVING;
     if (LarvaCarrier)
@@ -377,6 +380,10 @@ int trouble;
     case TROUBLE_SICK:
         You_feel("better.");
         make_sick(0L, (char *) 0, FALSE, SICK_ALL);
+        break;
+    case TROUBLE_WITHERING:
+        You_feel("hardier.");
+        set_itimeout(&HWithering, (long) 0);
         break;
     case TROUBLE_CARRIER:
         You_feel("the things infesting you vanish.");

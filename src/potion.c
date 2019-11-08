@@ -1487,7 +1487,7 @@ register struct obj *otmp;
     case POT_REGENERATION:
         if (otmp->cursed) {
             You("begin to wither away!");
-            set_itimeout(&HWithering, rn1(10, 20));
+            incr_itimeout(&HWithering, rn1(10, 20));
             unkn++;
             context.botl = TRUE;
         } else {
@@ -2188,6 +2188,12 @@ int how;
                 }
             }
             break;
+        case POT_REGENERATION:
+            if (obj->cursed) {
+                pline("%s begins to wither!", Monnam(mon));
+                mon->mwither = 1;
+            }
+            break;
         case POT_POLYMORPH:
             (void) bhitm(mon, obj);
             break;
@@ -2305,7 +2311,7 @@ register struct obj *obj;
         break;
     case POT_REGENERATION:
         if (obj->cursed) {
-            set_itimeout(&HWithering, rn1(5, 5));
+            incr_itimeout(&HWithering, rn1(5, 5));
             exercise(A_CON, FALSE);
             You("start to shrivel up!");
         } else {
@@ -2313,7 +2319,7 @@ register struct obj *obj;
             set_itimeout(&HRegeneration, rn1(5, 5));
             kn++;
         }
-        context.btl = TRUE;
+        context.botl = TRUE;
         break;
     case POT_SICKNESS:
         if (!Role_if(PM_HEALER)) {

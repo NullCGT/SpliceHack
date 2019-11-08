@@ -450,6 +450,13 @@ register struct monst *mtmp;
     /* not frozen or sleeping: wipe out texts written in the dust */
     wipe_engr_at(mtmp->mx, mtmp->my, 1, FALSE);
 
+    /* wither away */
+    if (mtmp->mwither) {
+        mtmp->mhp -= 1;
+        if (DEADMONSTER(mtmp))
+            monkilled(mtmp, "", AD_DETH);
+    }
+
     /* confused monsters get unconfused with small probability */
     if (mtmp->mconf && !rn2(50))
         mtmp->mconf = 0;
@@ -457,6 +464,10 @@ register struct monst *mtmp;
     /* stunned monsters get un-stunned with larger probability */
     if (mtmp->mstun && !rn2(10))
         mtmp->mstun = 0;
+
+    /* withering monsters stop withering with high probability */
+    if (mtmp->mwither && !rn2(5))
+        mtmp->mwither = 0;
 
     /* some monsters teleport */
     if (mtmp->mflee && !rn2(40) && teleporter(mtmp) && !mtmp->iswiz

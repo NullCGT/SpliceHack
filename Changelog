@@ -330,6 +330,7 @@ Fixes
   shapeshift.
 - High score list is no longer checked in marathon mode.
 - Fixed a bug where turning undead as a knight would consistently fail.
+- Switched psychic rays color from blue to magenta.
 
 Balance Changes
 - Pull Under now has a failure rate, so that players do not use it to reliably

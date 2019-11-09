@@ -1842,6 +1842,8 @@ int mmflags;
             mtmp->mstrategy |= STRAT_CLOSE;
         if (ptr->mflags3 & (M3_WAITMASK | M3_COVETOUS))
             mtmp->mstrategy |= STRAT_APPEARMSG;
+        if (ptr->mflags3 & (M3_ORGANIZED))
+            mtmp->mstrategy |= STRAT_SHOUTOUT;
     }
 
     if (allow_minvent && migrating_objs)

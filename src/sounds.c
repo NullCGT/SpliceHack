@@ -413,6 +413,73 @@ static const char *const h_sounds[] = {
 };
 
 const char *
+callout_sound(mtmp)
+register struct monst *mtmp;
+{
+    const char *ret;
+    switch (mtmp->data->msound) {
+    case MS_BARK:
+        ret = "howl";
+        break;
+    case MS_MEW:
+        ret = is_feline(mtmp->data) ? "caterwaul" : "yowl";
+        break;
+    case MS_GRUNT:
+    case MS_GROWL:
+        ret = is_feline(mtmp->data) ? "yowl" : "bellow";
+        break;
+    case MS_PIRATE:
+        verbalize("To me, ye scurvy dogs!");
+        ret = NULL;
+        break;
+    case MS_CUSS:
+        cuss(mtmp);
+        ret = NULL;
+        break;
+    case MS_GNOLL:
+        pline("%s lets out a series of high pitched barks, then cackles madly.", Monnam(mtmp));
+        ret = NULL;
+        break;
+    case MS_BOAST:
+        pline("%s yells, \"I found a live one!\"", Monnam(mtmp));
+        ret = NULL;
+        break;
+    case MS_ARREST:
+        verbalize("Suspect is hostile! Where\'s my team?");
+        ret = NULL;
+        break;
+    case MS_VAMPIRE:
+        verbalize("Look, siblings: Fresh blood.");
+        ret = NULL;
+        break;
+    case MS_SOLDIER:
+    case MS_BRIBE:
+        pline("%s yells, \"Over here!\"", Monnam(mtmp));
+        ret = NULL;
+        break;
+    case MS_SELL:
+        verbalize("You\'ll pay for this!");
+        ret = NULL;
+        break;
+    case MS_ONEEYEDSAM:
+        verbalize("Kill %s.", uhe());
+        ret = NULL;
+        break;
+    case MS_GUARD:
+        verbalize("Target is armed and dangerous!");
+        ret = NULL;
+        break;
+    case MS_RIDER:
+        pline("%s calls out,\"Ah, siblings. It seems our estranged %s has come to call.\"", Monnam(mtmp), sibling_gender());
+        ret = NULL;
+        break;
+    default:
+        ret = growl_sound(mtmp);
+    }
+    return ret;
+}
+
+const char *
 growl_sound(mtmp)
 register struct monst *mtmp;
 {
@@ -423,7 +490,7 @@ register struct monst *mtmp;
         ret = "moan";
         break;
     case MS_MOO:
-        ret = "moo";
+        ret = "low";
         break;
     case MS_MEW:
     case MS_HISS:
@@ -466,6 +533,9 @@ register struct monst *mtmp;
     case MS_PIRATE:
         ret = "curse";
         break;
+    case MS_ANT:
+        ret = "chitter";
+        break;
     default:
         ret = "scream";
     }
@@ -487,6 +557,8 @@ register struct monst *mtmp;
     /* presumably nearness and soundok checks have already been made */
     if (Hallucination)
         growl_verb = h_sounds[rn2(SIZE(h_sounds))];
+    else if (!mtmp->mpeaceful && !mtmp->mtame && is_organized(mtmp->data))
+        growl_verb = callout_sound(mtmp);
     else
         growl_verb = growl_sound(mtmp);
     if (growl_verb) {

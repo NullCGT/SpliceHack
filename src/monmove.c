@@ -398,6 +398,7 @@ dochug(mtmp)
 register struct monst *mtmp;
 {
     register struct permonst *mdat;
+    register struct monst *mon;
     register struct engr *ep = engr_at(mtmp->mx, mtmp->my);
     register int tmp = 0;
     int inrange, nearby, scared;
@@ -428,6 +429,29 @@ register struct monst *mtmp;
             && !mtmp->msleeping && monnear(mtmp, u.ux, u.uy))
             quest_talk(mtmp); /* give the leaders a chance to speak */
         return 0;             /* other frozen monsters can't do anything */
+    }
+
+    if ((mtmp->mstrategy & STRAT_SHOUTOUT) 
+        && m_canseeu(mtmp) && !mtmp->mpeaceful 
+        && mtmp->mcanmove) {
+        if (!is_silent(mtmp->data)) {
+            growl(mtmp);
+        }
+        for (mon = fmon; mon; mon = mon->nmon) {
+            if (DEADMONSTER(mon)
+                || mon->msleeping
+                || !same_race(mdat, mon->data)
+                || dist2(mtmp->mx, mtmp->my, mon->mx, mon->my) > 30)
+                continue;
+            mon->mux = mtmp->mux;
+            mon->muy = mtmp->muy;
+            if (m_canseeu(mon)) {
+                mon->mstrategy &= ~STRAT_SHOUTOUT;
+            }
+        }
+        mtmp->mstrategy &= ~STRAT_SHOUTOUT;
+    } else if (is_organized(mtmp->data) && !m_canseeu(mtmp) && !rn2(60)) {
+        mtmp->mstrategy &= STRAT_SHOUTOUT;
     }
 
     /* there is a chance we will wake it */

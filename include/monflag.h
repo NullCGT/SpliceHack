@@ -169,6 +169,8 @@
 
 #define M3_DISPLACES 0x0400 /* moves monsters out of its way */
 
+#define M3_ORGANIZED 0x0800 /* uses group tactics */
+
 #define MZ_TINY 0          /* < 2' */
 #define MZ_SMALL 1         /* 2-4' */
 #define MZ_MEDIUM 2        /* 4-7' */

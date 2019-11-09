@@ -43,6 +43,7 @@ STATIC_DCL int FDECL(percent_success, (int));
 STATIC_DCL char *FDECL(spellretention, (int, char *));
 STATIC_DCL void NDECL(cast_protection);
 STATIC_DCL void FDECL(spell_backfire, (int));
+STATIC_DCL int FDECL(expltyp, (int));
 STATIC_DCL boolean FDECL(spell_aim_step, (genericptr_t, int, int));
 
 /* The roles[] table lists the role-specific values for tuning
@@ -1165,6 +1166,11 @@ boolean atme;
      * effects, e.g. more damage, further distance, and so on, without
      * additional cost to the spellcaster.
      */
+    case SPE_ACID_STREAM:
+    case SPE_LIGHTNING:
+    case SPE_POISON_BLAST:
+    case SPE_SONICBOOM:
+    case SPE_PSYSTRIKE:
     case SPE_FIREBALL:
     case SPE_CONE_OF_COLD:
         if (tech_inuse(T_SIGIL_TEMPEST)) {
@@ -1188,9 +1194,7 @@ boolean atme;
                         explode(u.dx, u.dy,
                                 otyp - SPE_MAGIC_MISSILE + 10,
                                 spell_damage_bonus(u.ulevel / 2 + 1), 0,
-                                (otyp == SPE_CONE_OF_COLD)
-                                   ? EXPL_FROSTY
-                                   : EXPL_FIERY);
+                                expltyp(otyp));
                     }
                     u.dx = cc.x + rnd(3) - 2;
                     u.dy = cc.y + rnd(3) - 2;
@@ -1356,6 +1360,28 @@ boolean atme;
 
     obfree(pseudo, (struct obj *) 0); /* now, get rid of it */
     return 1;
+}
+
+STATIC_OVL int
+expltyp(spell) 
+int spell;
+{
+    switch(spell) {
+    case SPE_FIREBALL:
+        return EXPL_FIERY;
+        break;
+    case SPE_CONE_OF_COLD:
+        return EXPL_FROSTY;
+        break;
+    case SPE_ACID_STREAM:
+    case SPE_POISON_BLAST:
+        return EXPL_NOXIOUS;
+        break;
+    case SPE_SONICBOOM:
+        return EXPL_DARK;
+        break;
+    }
+    return EXPL_MAGICAL;
 }
 
 /*ARGSUSED*/

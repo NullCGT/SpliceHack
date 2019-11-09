@@ -2540,6 +2540,8 @@ boolean ordinary;
         break;
     case WAN_LIGHTNING:
         learn_it = TRUE;
+        /* FALLTHRU */
+    case SPE_LIGHTNING:
         if (!Shock_resistance) {
             You("shock yourself!");
             damage = d(12, 6);
@@ -2559,8 +2561,14 @@ boolean ordinary;
         explode(u.ux, u.uy, 11, d(6, 6), WAND_CLASS, EXPL_FIERY);
         break;
 
+    case SPE_POISON_BLAST:
+        poisoned("blast", A_DEX, "poisoned blast", 15, FALSE);
+        break;
+
     case WAN_ACID:
         learn_it = TRUE;
+        /* FALLTHRU */
+    case SPE_ACID_STREAM:
         if (Acid_resistance) {
             shieldeff(u.ux, u.uy);
             You("take a hot bath.");
@@ -2582,6 +2590,8 @@ boolean ordinary;
 
     case WAN_SONICS:
         learn_it = TRUE;
+        /* FALLTHRU */
+    case SPE_SONICBOOM:
         if (!Deaf) {
             pline("KABOOM! You deafen yourself!");
             incr_itimeout(&HDeaf, rn1(300, 100));
@@ -2600,6 +2610,8 @@ boolean ordinary;
 
     case WAN_PSIONICS:
         learn_it = TRUE;
+        /* FALLTHRU */
+    case SPE_PSYSTRIKE:
         if (Psychic_resistance) {
             shieldeff(u.ux, u.uy);
             pline("You try to break into your own mind!");
@@ -3390,11 +3402,11 @@ struct obj *obj;
 
         if (otyp == WAN_DIGGING || otyp == SPE_DIG)
             zap_dig();
-        else if ((otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_CONE_OF_COLD)
+        else if ((otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_PSYSTRIKE)
   		            && (tech_inuse(T_SIGIL_TEMPEST))) {
   				/* sigil of tempest */
   				throwstorm(obj, skilldmg, 2 , 2);
-  			} else if ((otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_CONE_OF_COLD)
+  			} else if ((otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_PSYSTRIKE)
   					/*WAC - use sigil of discharge */
   		            && (tech_inuse(T_SIGIL_DISCHARGE))) {
   				You("yell \"%s\"",yell_types[otyp - SPE_MAGIC_MISSILE]);
@@ -3403,7 +3415,7 @@ struct obj *obj;
   						u.ulevel/2 + 1 + skilldmg,
   						u.ux, u.uy, u.dx, u.dy);
   			}
-        else if (otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_FINGER_OF_DEATH)
+        else if (otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_PSYSTRIKE)
             buzz(otyp - SPE_MAGIC_MISSILE + 10, u.ulevel / 2 + 1, u.ux, u.uy,
                  u.dx, u.dy);
         else if (otyp >= WAN_MAGIC_MISSILE && otyp <= WAN_PSIONICS)

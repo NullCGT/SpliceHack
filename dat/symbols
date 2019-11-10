@@ -73,10 +73,7 @@ start: NHAccess
 	S_grave: \126
 	S_throne: \126
 	S_sink: \126
-<<<<<<< HEAD
 	S_furnace: \126
-=======
->>>>>>> b7ca0b4cc6502a92e3cb5485d8e075e1fde227b8
 	S_fountain: \126
 	S_pool: \042
 	S_ice: \042

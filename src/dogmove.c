@@ -570,6 +570,7 @@ void
 mon_givit(mtmp, ptr, cooking)
 struct monst* mtmp;
 struct permonst* ptr;
+boolean cooking;
 {
     int prop = corpse_intrinsic(ptr);
     boolean vis = canseemon(mtmp);

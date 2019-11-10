@@ -954,6 +954,7 @@ STATIC_OVL void
 givit(type, ptr, cooking)
 int type;
 register struct permonst *ptr;
+boolean cooking;
 {
 
     debugpline1("Attempting to give intrinsic %d", type);

@@ -4384,7 +4384,9 @@ int first, last;
 }
 
 STATIC_OVL const char*
-Cartomancer_rarity(otyp) {
+Cartomancer_rarity(otyp)
+int otyp;
+{
     int price = objects[otyp].oc_cost;
     if (price < 60) {
         return "common spell card";

@@ -562,7 +562,8 @@ register struct monst *mtmp;
     else
         growl_verb = growl_sound(mtmp);
     if (growl_verb) {
-        pline("%s %s!", Monnam(mtmp), vtense((char *) 0, growl_verb));
+        if (!Deaf)
+            pline("%s %s!", Monnam(mtmp), vtense((char *) 0, growl_verb));
         if (context.run)
             nomul(0);
         wake_nearto(mtmp->mx, mtmp->my, mtmp->data->mlevel * 18);

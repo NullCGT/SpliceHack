@@ -1047,6 +1047,7 @@ boolean
 should_givit(type, ptr, cooking)
 int type;
 struct permonst * ptr;
+boolean cooking;
 {
     int chance;
     /* some intrinsics are easier to get than others */

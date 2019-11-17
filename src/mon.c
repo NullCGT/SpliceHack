@@ -3424,7 +3424,6 @@ struct monst *mtmp;
             default:
                 pline("A shiver runs down your spine.");
                 break;
-                break;
             }
         } else if (canseemon(mtmp)) {
             pline("%s mutters something.", Monnam(mtmp));

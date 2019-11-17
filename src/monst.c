@@ -3993,7 +3993,7 @@ struct permonst _mons2[] = {
         M2_NOPOLY | M2_STALK | M2_HOSTILE | M2_PNAME | M2_NASTY
             | M2_LORD | M2_MALE | M2_COLLECT,
         M3_WANTSAMUL | M3_INFRAVISIBLE | M3_INFRAVISION, MH_DEMON, 28, HI_LORD),
-    MON("Kostchtchie", S_DEMON, LVL(54, 15, 3, 30, -3),
+    MON("Kostchtchie", S_DEMON, LVL(54, 15, 3, 30, -15),
         (G_HELL | G_NOGEN | G_UNIQ),
         A(ATTK(AT_WEAP, AD_CLOB, 3, 10), ATTK(AT_WEAP, AD_FUMB, 2, 8), 
           ATTK(AT_HUGS, AD_PHYS, 2, 12), NO_ATTK, NO_ATTK, NO_ATTK),
@@ -4098,7 +4098,7 @@ struct permonst _mons2[] = {
             | M2_NASTY | M2_PRINCE | M2_MALE,
         M3_WANTSAMUL | M3_WAITFORU | M3_INFRAVISIBLE | M3_INFRAVISION | M3_ORGANIZED, MH_DEMON,
         53, HI_LORD),
-    MON("Demogorgon", S_DEMON, LVL(106, 15, -18, 95, 20),
+    MON("Demogorgon", S_DEMON, LVL(106, 15, -18, 95, -20),
         (G_HELL | G_NOCORPSE | G_NOGEN | G_UNIQ),
         A(ATTK(AT_MAGC, AD_SPEL, 8, 6), ATTK(AT_STNG, AD_DRLI, 1, 4),
           ATTK(AT_CLAW, AD_DISE, 1, 6), ATTK(AT_CLAW, AD_DISE, 1, 6), NO_ATTK,

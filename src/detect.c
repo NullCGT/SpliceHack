@@ -2055,13 +2055,12 @@ dump_map()
 
             glyph = reveal_terrain_getglyph(x, y, FALSE, u.uswallow,
                                             default_glyph, subset);
-            sym = mapglyph(glyph, &ch, &color, &special, x, y);
-
-#ifdef DUMPHTML
-            /* HTML map prints in a defined rectangle, so
-               just render every glyph - no skipping. */
-            html_dump_glyph(x, y, sym, ch, color, special);
-#endif
+            sym =mapglyph(glyph, &ch, &color, &special, x, y, 0);
+            #ifdef DUMPHTML
+                /* HTML map prints in a defined rectangle, so
+                just render every glyph - no skipping. */
+                html_dump_glyph(x, y, sym, ch, color, special);
+            #endif
             buf[x - 1] = ch;
             if (ch != ' ') {
                 blankrow = FALSE;

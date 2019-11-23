@@ -2483,7 +2483,7 @@ void
 mintroduce(mtmp)
 struct monst *mtmp;
 {
-    if (!has_mname(mtmp)) {
+    if (!has_mname(mtmp) && !(mtmp->data->geno & G_UNIQ)) {
         const char* name;
         if (mtmp->data->mlet == S_NYMPH) {
             name = rnd_name(nymphnames);

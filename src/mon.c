@@ -2889,7 +2889,7 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
        a monster card. */
     if (Role_if(PM_CARTOMANCER) && !(mdat->geno & G_UNIQ) && !rn2(20)) {
         otmp = mksobj(SCR_CREATE_MONSTER, FALSE, FALSE);
-        otmp->corpsenm = monsndx(mdat);
+        otmp->corpsenm = mndx;
         place_object(otmp, mtmp->mx, mtmp->my);
         goto cleanup;
     }

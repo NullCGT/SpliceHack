@@ -1655,7 +1655,6 @@ register struct attack *mattk;
         /*FALLTHRU*/
     case AD_SITM: /* for now these are the same */
     case AD_SEDU:
-        mintroduce(mtmp);
         if (is_animal(mtmp->data)) {
             hitmsg(mtmp, mattk);
             if (mtmp->mcan)
@@ -1674,18 +1673,21 @@ register struct attack *mattk;
             if (!tele_restrict(mtmp))
                 (void) rloc(mtmp, TRUE);
             return 3;
-        } else if (mtmp->mcan) {
-            if (!Blind)
-                pline("%s tries to %s you, but you seem %s.",
-                      Adjmonnam(mtmp, "plain"),
-                      flags.gender ? "charm" : "seduce",
-                      flags.gender ? "unaffected" : "uninterested");
-            if (rn2(3)) {
-                if (!tele_restrict(mtmp))
-                    (void) rloc(mtmp, TRUE);
-                return 3;
+        } else {
+            mintroduce(mtmp);
+            if (mtmp->mcan) {
+                if (!Blind)
+                    pline("%s tries to %s you, but you seem %s.",
+                        Adjmonnam(mtmp, "plain"),
+                        flags.gender ? "charm" : "seduce",
+                        flags.gender ? "unaffected" : "uninterested");
+                if (rn2(3)) {
+                    if (!tele_restrict(mtmp))
+                        (void) rloc(mtmp, TRUE);
+                    return 3;
+                }
+                break;
             }
-            break;
         }
         buf[0] = '\0';
         switch (steal(mtmp, buf, FALSE)) {

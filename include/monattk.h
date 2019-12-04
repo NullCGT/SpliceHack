@@ -100,12 +100,12 @@
 #define AD_POTN 60 /* potion effect (gel) */
 #define AD_KDNP 61 /* kidnap (bar-lgura) */
 #define AD_FUMB 62 /* fumbling (Kostchtchie) */
-#define AD_CLOB 65 /* knockback */
-#define AD_CLRC 66 /* random clerical spell */
-#define AD_SPEL 67 /* random magic spell */
-#define AD_RBRE 68 /* random breath weapon */
-#define AD_SAMU 69 /* hits, may steal Amulet (Wizard) */
-#define AD_CURS 70 /* random curse (ex. gremlin) */
+#define AD_CLOB 63 /* knockback */
+#define AD_CLRC 64 /* random clerical spell */
+#define AD_SPEL 65 /* random magic spell */
+#define AD_RBRE 66 /* random breath weapon */
+#define AD_SAMU 67 /* hits, may steal Amulet (Wizard) */
+#define AD_CURS 68 /* random curse (ex. gremlin) */
 #define LAST_AD AD_CURS
 
 /*

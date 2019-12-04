@@ -628,10 +628,12 @@ static const char * damagetypes[] = {
     "potion effect",
     "kidnapping",
     "fumbling",
+    "knockback",
     "clerical",
     "arcane",
     "random breath",
     "steal Amulet",
+    "random curse",
     "steal intrinsic",
 };
 

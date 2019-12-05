@@ -2237,7 +2237,7 @@ static void
 doblitzlist()
 {
 	winid tmpwin;
-	int i, n;
+	int i;
 	char buf[BUFSZ];
 	menu_item *selected;
 	anything any;
@@ -2275,7 +2275,7 @@ doblitzlist()
 	}
         end_menu(tmpwin, "Currently known blitz manoeuvers");
 
-	n = select_menu(tmpwin, PICK_NONE, &selected);
+	(void) select_menu(tmpwin, PICK_NONE, &selected);
 	destroy_nhwindow(tmpwin);
 	return;
 }

@@ -215,8 +215,8 @@ struct obj {
     (otmp->oclass == ARMOR_CLASS \
      && objects[otmp->otyp].oc_armcat == ARM_SHIELD)
 #define is_helmet(otmp) \
-    (otmp->oclass == ARMOR_CLASS && objects[otmp->otyp].oc_armcat == ARM_HELM \
-     || (otmp)->otyp == PUMPKIN)
+    (otmp->oclass == ARMOR_CLASS && (objects[otmp->otyp].oc_armcat == ARM_HELM \
+     || (otmp)->otyp == PUMPKIN))
 #define is_boots(otmp)           \
     (otmp->oclass == ARMOR_CLASS \
      && objects[otmp->otyp].oc_armcat == ARM_BOOTS)
@@ -267,7 +267,7 @@ struct obj {
     (/* (Is_container(o) || (o)->otyp == STATUE) && */ \
      (o)->cobj != (struct obj *) 0)
 #define Is_container(o) ((o)->otyp == MEDICAL_KIT || \
-			 (o)->otyp >= LARGE_BOX && (o)->otyp <= BAG_OF_TRICKS)
+			 ((o)->otyp >= LARGE_BOX && (o)->otyp <= BAG_OF_TRICKS))
 #define Is_box(otmp) (otmp->otyp == LARGE_BOX || otmp->otyp == COFFIN || otmp->otyp == CHEST)
 #define Is_mbag(otmp) \
     (otmp->otyp == BAG_OF_HOLDING || otmp->otyp == BAG_OF_TRICKS)

@@ -740,6 +740,7 @@ register struct monst *mtmp;
             (void) mongets(mtmp, PLATE_MAIL);
             break;
         }
+        break;
     case S_DEMON:
         switch (mm) {
         case PM_DAMNED_PIRATE:
@@ -1682,6 +1683,7 @@ int mmflags;
     case S_JABBERWOCK:
         if (rn2(5) && !u.uhave.amulet)
             mtmp->msleeping = 1;
+        break;
     case S_NYMPH:
         if (rn2(5) && !u.uhave.amulet)
             mtmp->msleeping = 1;

@@ -944,6 +944,8 @@ register struct obj *obj;
           			is_gnome(mon->data) ||
           			is_orc(mon->data))
           	return ACCFOOD;
+        /*FALLTHRU*/
+        /* TODO: Adjust this for new SpliceHack races */
         default:
             if (starving)
                 return ACCFOOD;

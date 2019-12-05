@@ -341,7 +341,7 @@ struct obj *obj;
         draws = 0L;
     if (draws > 5)
         draws = 5;
-    if (buf <= 0L || draws <= 0L) {
+    if (strlen(buf) <= 0L || draws <= 0L) {
         pline("You decide not to try your luck.");
         pline("The pack of cards vanishes in a puff of smoke.");
         useup(obj);
@@ -365,6 +365,7 @@ struct obj *obj;
                 explode(u.ux, u.uy, 15, rnd(30), TOOL_CLASS, EXPL_MAGICAL);
                 explode(u.ux, u.uy, 11, rnd(30), TOOL_CLASS, EXPL_FIERY);
                 (void) cancel_monst(&youmonst, obj, TRUE, FALSE, TRUE);
+                break;
             case 2:
                 pline("You draw the Wheel of Fortune... Two cards flip out of the deck.");
                 draws += 2;
@@ -375,9 +376,10 @@ struct obj *obj;
                 } else {
                     pline("You draw The Devil...");
                 }
-                if ((pm = dlord(A_NONE)) != NON_PM)
+                if ((pm = dlord(A_NONE)) != NON_PM) {
                     mtmp = makemon(&mons[pm], u.ux, u.uy, NO_MM_FLAGS);
                     pline("%s appears from a cloud of noxious smoke!", Monnam(mtmp));
+                }
                 draws = 0;
                 break;
             case 4:

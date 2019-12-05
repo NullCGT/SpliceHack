@@ -1087,7 +1087,7 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
     anything any;
     int i;
     boolean role_ok;
-    char lastch = '\0', rolenamebuf[50];
+    char rolenamebuf[50];
     char thisch = 'a';
 
     any = zeroany; /* zero out all bits */
@@ -1126,7 +1126,6 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
            mark this role as preseleted if current filter excludes it */
         add_menu(win, NO_GLYPH, &any, thisch, 0, ATR_NONE, an(rolenamebuf),
                  (!filtering && !role_ok) ? MENU_SELECTED : MENU_UNSELECTED);
-        lastch = thisch;
         thisch++;
         if (thisch == 'q')
             thisch = 'r';

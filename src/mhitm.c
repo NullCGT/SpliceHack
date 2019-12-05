@@ -1624,10 +1624,10 @@ register struct attack *mattk;
         case 18:
         case 17:
      		    if (!resists_magm(mdef) && !resist(mdef, 0, 0, 0)) {
-     			mdef->mhp = 0;
-     		        monkilled(mdef, "", AD_DETH);
-     			tmp = 0;
-     			break;
+                    mdef->mhp = 0;
+                        monkilled(mdef, "", AD_DETH);
+                    tmp = 0;
+                    break;
      		    } /* else FALLTHRU */
      		default: /* case 16: ... case 5: */
      		    if (vis)

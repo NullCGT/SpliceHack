@@ -3942,8 +3942,8 @@ struct monst *mon;
     case PM_ALUCARD:
         if (!rn2(wolfchance) && !uppercase_only) {
             mndx = PM_BARGHEST;
-            break;
         }
+        break;
     case PM_VAMPIRE_MAGE:
     case PM_VAMPIRE_LORD: /* vampire lord or Vlad can become wolf */
         if (!rn2(wolfchance) && !uppercase_only) {

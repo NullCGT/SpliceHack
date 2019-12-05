@@ -1153,12 +1153,12 @@ register struct attack *mattk;
 
                 if (!dmg)
                     break;
-                    if (Hate_material(otmp->material)) {
-                        if (otmp->material == SILVER)
-                            pline_The("silver sears your flesh!");
-                        else
-                            You("flinch at the touch of %s!",
-                                materialnm[otmp->material]);
+                if (Hate_material(otmp->material)) {
+                    if (otmp->material == SILVER)
+                        pline_The("silver sears your flesh!");
+                    else
+                        You("flinch at the touch of %s!",
+                            materialnm[otmp->material]);
                     exercise(A_CON, FALSE);
                     dmg += rnd(sear_damage(otmp->material));
                 }
@@ -3368,7 +3368,7 @@ const char *str;
     /* being deaf overrides confirmation prompt for high charisma */
     if (Deaf) {
         pline("%s takes off your %s.", seducer, str);
-    } else if (rn2(20) < ACURR(A_CHA) + (flags.gender == GEND_N) ? 3 : 0) {
+    } else if (rn2(20) < ((ACURR(A_CHA) + (flags.gender == GEND_N)) ? 3 : 0)) {
         Sprintf(qbuf, "\"Shall I remove your %s, %s?\"", str,
                 (!rn2(2) ? "lover" : !rn2(2) ? "dear" : "sweetheart"));
         if (yn(qbuf) == 'n')
@@ -3404,8 +3404,7 @@ screamu(mtmp, mattk)
 struct monst *mtmp;
 struct attack *mattk;
 {
-    int react = -1;
-    boolean cancelled = (mtmp->mcan != 0), already = FALSE;
+    boolean cancelled = (mtmp->mcan != 0);
     /* assumes that hero has to hear the monster's scream in
        order to be affected */
     if (Deaf)
@@ -3417,9 +3416,6 @@ struct attack *mattk;
 	    return FALSE;
 	}
         if (m_canseeu(mtmp) && !mtmp->mspec_used && rn2(5)) {
-            if (cancelled) {
-                react = 1; /* "stunned" */
-                already = (mtmp->mstun != 0);
             if (m_canseeu(mtmp) && canseemon(mtmp) && (Deaf)) {
                 pline("It looks as if %s is yelling at you.", mon_nam(mtmp));
             }
@@ -3446,7 +3442,6 @@ struct attack *mattk;
             make_stunned((HStun & TIMEOUT) + (long) stun, TRUE);
             stop_occupation();
             }
-        }
         break;
     default:
         break;

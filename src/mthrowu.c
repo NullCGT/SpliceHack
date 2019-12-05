@@ -1244,9 +1244,9 @@ struct attack *mattk;
             } else if (typ == AD_CURS) {
                 if (canseemon(mtmp))
                     pline("%s spits a geyser of turgid water at you!", Monnam(mtmp));
-                    rndcurse();
                 if (!rn2(3))
                     mtmp->mspec_used = 10 + rn2(20);
+                rndcurse();
                 nomul(0);
             } else
                 impossible("Breath weapon %d used", typ - 1);

@@ -2561,6 +2561,7 @@ struct obj *obj;
         if (typ == RIN_INVISIBILITY || typ == RIN_TELEPORTATION
             || (typ >= RIN_POISON_RESISTANCE && typ <= RIN_SHOCK_RESISTANCE))
         return TRUE;
+        break;
     case AMULET_CLASS:
         if (typ == AMULET_OF_LIFE_SAVING || typ == AMULET_OF_REINCARNATION)
             return (boolean) !(nonliving(mon->data) || is_vampshifter(mon));

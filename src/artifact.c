@@ -2044,6 +2044,7 @@ struct obj *obj;
             }
             obfree(pseudo, NULL);
         }
+            break;
         case SEFFECT: {
             struct obj* pseudo = NULL;
             switch(artinum) {

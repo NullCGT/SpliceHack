@@ -2157,8 +2157,8 @@ struct obj *obj;
 {
     if (obj_resists(obj, 1, 99))
         return 0;
-        if (obj->material == GLASS && !obj->oerodeproof
-            && !obj->oartifact && obj->oclass != GEM_CLASS)
+    if (obj->material == GLASS && !obj->oerodeproof
+        && !obj->oartifact && obj->oclass != GEM_CLASS)
         return 1;
     switch (obj->oclass == POTION_CLASS ? POT_WATER : obj->otyp) {
     case EXPENSIVE_CAMERA:
@@ -2216,6 +2216,7 @@ boolean in_view;
     case SLICE_OF_CAKE:
         if (in_view)
             pline("Dirt cake!");
+        break;
     case ACID_VENOM:
     case BLINDING_VENOM:
         pline("Splash!");

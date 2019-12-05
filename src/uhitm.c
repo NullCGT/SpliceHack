@@ -2500,8 +2500,10 @@ register struct attack *mattk;
         goto common;
     case AD_ELEC:
         resistance = resists_elec(mdef);
+        goto common;
     case AD_ACID:
         resistance = resists_acid(mdef);
+        goto common;
     common:
         if (!resistance) {
             pline("%s gets blasted!", Monnam(mdef));
@@ -3552,8 +3554,8 @@ struct attack *mattk;     /* null means we find one internally */
                 && (obj->oclass == ARMOR_CLASS)) {
                 pline("%s seems different than you remember.", Yobjnam2(obj, "seem"));
             }
-            break;
         }
+        break;
     case AD_ENCH:
         if (!mon->mcan) {
             if (drain_item(obj, TRUE) && carried(obj)

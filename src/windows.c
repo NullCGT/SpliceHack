@@ -1,4 +1,4 @@
-/* NetHack 3.6	windows.c	$NHDT-Date: 1573869064 2019/11/16 01:51:04 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.58 $ */
+/* NetHack 3.6	windows.c	$NHDT-Date: 1575245096 2019/12/02 00:04:56 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.60 $ */
 /* Copyright (c) D. Cohrs, 1993. */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -539,7 +539,9 @@ static void FDECL(hup_void_fdecl_winid, (winid));
 static void FDECL(hup_void_fdecl_constchar_p, (const char *));
 
 static struct window_procs hup_procs = {
-    "hup", 0L, 0L, hup_init_nhwindows,
+    "hup", 0L, 0L,
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    hup_init_nhwindows,
     hup_void_ndecl,                                    /* player_selection */
     hup_void_ndecl,                                    /* askname */
     hup_void_ndecl,                                    /* get_nh_event */
@@ -1177,7 +1179,7 @@ boolean fullsubs; /* True -> full substitution for file name, False ->
                 else
                     Strcpy(tmpbuf, "{current date+time}");
                 break;
-            case 'v': /* version, eg. "3.6.2-0" */
+            case 'v': /* version, eg. "3.6.3-0" */
                 Sprintf(tmpbuf, "%s", version_string(verbuf));
                 break;
             case 'u': /* UID */
@@ -2245,6 +2247,30 @@ unsigned int llflags;
 #else
     nhUse(llflags);
 #endif /*?DUMPLOG*/
+}
+
+#ifdef TTY_GRAPHICS
+#ifdef TEXTCOLOR
+#ifdef TOS
+extern const char *hilites[CLR_MAX];
+#else
+extern NEARDATA char *hilites[CLR_MAX];
+#endif
+#endif
+#endif
+
+int
+has_color(color)
+int color;
+{
+    return (iflags.use_color && windowprocs.name
+            && (windowprocs.wincap & WC_COLOR) && windowprocs.has_color[color]
+#ifdef TTY_GRAPHICS
+#if defined(TEXTCOLOR) && defined(TERMLIB) && !defined(NO_TERMS)
+             && (hilites[color] != 0)
+#endif
+#endif
+    );
 }
 
 /*windows.c*/

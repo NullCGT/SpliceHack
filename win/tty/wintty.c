@@ -1,4 +1,4 @@
-/* NetHack 3.6	wintty.c	$NHDT-Date: 1571787079 2019/10/22 23:31:19 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.223 $ */
+/* NetHack 3.6	wintty.c	$NHDT-Date: 1575245194 2019/12/02 00:06:34 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.227 $ */
 /* Copyright (c) David Cohrs, 1991                                */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -97,6 +97,11 @@ struct window_procs tty_procs = {
      | WC2_RESET_STATUS
 #endif
      | WC2_DARKGRAY | WC2_SUPPRESS_HIST | WC2_STATUSLINES),
+#ifdef TEXTCOLOR
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},   /* color availability */
+#else
+    {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+#endif
     tty_init_nhwindows, tty_player_selection, tty_askname, tty_get_nh_event,
     tty_exit_nhwindows, tty_suspend_nhwindows, tty_resume_nhwindows,
     tty_create_nhwindow, tty_clear_nhwindow, tty_display_nhwindow,
@@ -3986,7 +3991,7 @@ unsigned long *colormasks;
         enclev = stat_cap_indx();
         break;
     }
-    /* 3.6.2 we only render on BL_FLUSH (or BL_RESET) */
+    /* As of 3.6.2 we only render on BL_FLUSH (or BL_RESET) */
     return;
 }
 
@@ -4334,7 +4339,7 @@ unsigned long *bmarray;
    the condition where this gets used always has the same value */
 #define condcolor(bm,bmarray) NO_COLOR
 #define term_start_color(color) /*empty*/
-#define term_end_color(color) /*empty*/
+#define term_end_color() /*empty*/
 #endif /* TEXTCOLOR */
 
 STATIC_OVL int

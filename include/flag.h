@@ -1,4 +1,4 @@
-/* NetHack 3.6	flag.h	$NHDT-Date: 1569276988 2019/09/23 22:16:28 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.155 $ */
+/* NetHack 3.6	flag.h	$NHDT-Date: 1574900824 2019/11/28 00:27:04 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.160 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2006. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -120,6 +120,7 @@ struct flag {
 #define PARANOID_WERECHANGE 0x0100
 #define PARANOID_SWIM       0x0200
 #define PARANOID_TRAP       0x0400
+#define PARANOID_EATING     0x0600
     int pickup_burden; /* maximum burden before prompt */
     int pile_limit;    /* controls feedback when walking over objects */
     char inv_order[MAXOCLASSES];
@@ -541,6 +542,9 @@ enum runmode_types {
 #define ParanoidSwim ((flags.paranoia_bits & PARANOID_SWIM) != 0)
 /* trap: move onto a trap that you know is there */
 #define ParanoidTrap ((flags.paranoia_bits & PARANOID_TRAP) != 0)
+/* continue eating: prompt given _after_first_bite_ when eating something
+   while satiated */
+#define ParanoidEating ((flags.paranoia_bits & PARANOID_EATING) != 0)
 
 /* command parsing, mainly dealing with number_pad handling;
    not saved and restored */

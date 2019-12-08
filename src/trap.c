@@ -1854,13 +1854,20 @@ struct obj *otmp;
         break;
     case POLY_TRAP:
         if (!resists_magm(steed) && !resist(steed, WAND_CLASS, 0, NOTELL)) {
+            struct permonst *mdat = steed->data;
+
             (void) newcham(steed, (struct permonst *) 0, FALSE, FALSE);
-            if (!can_saddle(steed) || !can_ride(steed))
+            if (!can_saddle(steed) || !can_ride(steed)) {
                 dismount_steed(DISMOUNT_POLY);
-            else
-                You("have to adjust yourself in the saddle on %s.",
-                    x_monnam(steed, ARTICLE_A, (char *) 0, SUPPRESS_SADDLE,
-                             FALSE));
+            } else {
+                char buf[BUFSZ];
+
+                Strcpy(buf, x_monnam(steed, ARTICLE_YOUR, (char *) 0,
+                                            SUPPRESS_SADDLE, FALSE));
+                if (mdat != steed->data)
+                    (void) strsubst(buf, "your ", "your new ");
+                You("have to adjust yourself in the saddle on %s.", buf);
+            }
         }
         steedhit = TRUE;
         break;
@@ -5485,11 +5492,21 @@ boolean
 uteetering_at_seen_pit(trap)
 struct trap *trap;
 {
-    if (trap && trap->tseen && (!u.utrap || u.utraptype != TT_PIT)
-        && is_pit(trap->ttyp))
-        return TRUE;
-    else
-        return FALSE;
+    return (trap && is_pit(trap->ttyp) && trap->tseen
+            && trap->tx == u.ux && trap->ty == u.uy
+            && !(u.utrap && u.utraptype == TT_PIT));
+}
+
+/*
+ * Returns TRUE if you didn't fall through a hole or didn't
+ * release a trap door
+ */
+boolean
+uescaped_shaft(trap)
+struct trap *trap;
+{
+    return (trap && is_hole(trap->ttyp) && trap->tseen
+            && trap->tx == u.ux && trap->ty == u.uy);
 }
 
 /* Destroy a trap that emanates from the floor. */

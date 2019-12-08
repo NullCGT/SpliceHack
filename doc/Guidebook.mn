@@ -1,4 +1,4 @@
-.\" $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.331 $ $NHDT-Date: 1573943499 2019/11/16 22:31:39 $
+.\" $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.334 $ $NHDT-Date: 1575245028 2019/12/02 00:03:48 $
 .\"
 .\" This is an excerpt from the 'roff' man page from the 'groff' package.
 .\" NetHack's Guidebook.mn currently does *not* adhere to these guidelines.
@@ -24,7 +24,7 @@
 .ds vr "NetHack 3.6
 .ds f0 "\*(vr
 .ds f1
-.ds f2 "November 7, 2019
+.ds f2 "December 5, 2019
 .
 .\" A note on some special characters:
 .\" \(lq = left double quote
@@ -693,6 +693,14 @@ Normally checks for edible item(s) on the floor, then if none are found
 or none are chosen, checks for edible item(s) in inventory.
 Precede \(oqe\(cq with the \(oqm\(cq prefix to bypass attempting to eat
 anything off the floor.
+.lp ""
+If you attempt to eat while already satiated, you might choke to death.
+If you risk it, you will be asked whether
+to \(lqcontinue eating?\(rq \fIif you survive the first bite\fP.
+You can set the
+.op paranoid_confirmation:eating
+option to require a response of \f(CRyes\fP instead of just \f(CRy\fP.
+.
 .\" Make sure Elbereth is not hyphenated below, the exact spelling matters
 .hw Elbereth
 .lp E
@@ -3322,6 +3330,8 @@ bones data when dying in debug mode;
 require \(lqyes\(rq rather than \(oqy\(cq to confirm attacking a peaceful monster;
 .PL wand-break
 require \(lqyes\(rq rather than \(oqy\(cq to confirm breaking a wand;
+.PL eating
+require \(lqyes\(rq rather than \(oqy\(cq to confirm whether to continue eating;
 .PL Were-change
 require \(lqyes\(rq rather than \(oqy\(cq to confirm changing form due to lycanthropy
 when hero has polymorph control;
@@ -4801,7 +4811,7 @@ if your game is compiled with DUMPLOG. Allows the following placeholders:
 .PL %%
 literal \(oq\f(CR%\fP\(cq
 .PL %v
-version (eg. \(lq\f(CR3.6.2\-0\fP\(rq)
+version (eg. \(lq\f(CR3.6.3\-0\fP\(rq)
 .PL %u
 game UID
 .PL %t
@@ -5172,9 +5182,12 @@ the adopted curses window port, were released as 3.6.2.
 \fBBart House\fP, who had contributed to the game as a porting team
 participant for decades, joined the NetHack Development Team in late May 2019.
 .pg
+NetHack 3.6.3 was released on December 5, 2019 containing over 190 bug
+fixes to NetHack 3.6.2.
+.pg
 The official NetHack web site is maintained by \fBKen Lorber\fP
 at
-.UR http://www.nethack.org/ .
+.UR https://www.nethack.org/ .
 .pg
 .hn 2
 SPECIAL THANKS

@@ -1,4 +1,4 @@
-/* NetHack 3.6	files.c	$NHDT-Date: 1573869063 2019/11/16 01:51:03 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.269 $ */
+/* NetHack 3.6	files.c	$NHDT-Date: 1574116097 2019/11/18 22:28:17 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.272 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -2740,8 +2740,8 @@ char *origbuf;
 #endif /* SYSCF */
 
     } else if (match_varname(buf, "BOULDER", 3)) {
-        (void) get_uchars(bufp, &ov_primary_syms[SYM_BOULDER + SYM_OFF_X], TRUE, 1,
-                          "BOULDER");
+        (void) get_uchars(bufp, &ov_primary_syms[SYM_BOULDER + SYM_OFF_X],
+                          TRUE, 1, "BOULDER");
     } else if (match_varname(buf, "MENUCOLOR", 9)) {
         if (!add_menu_coloring(bufp))
             retval = FALSE;
@@ -4152,10 +4152,13 @@ boolean wildcards;
 void
 reveal_paths(VOID_ARGS)
 {
-    const char *fqn, *gamename = (hname && *hname) ? hname : "NetHack";
+    const char *fqn, *nodumpreason;
     char buf[BUFSZ];
-#if defined(SYSCF) || !defined(UNIX)
+#if defined(SYSCF) || !defined(UNIX) || defined(DLB)
     const char *filep;
+#ifdef SYSCF
+    const char *gamename = (hname && *hname) ? hname : "NetHack";
+#endif
 #endif
 #ifdef UNIX
     char *endp, *envp, cwdbuf[PATH_MAX];
@@ -4211,13 +4214,13 @@ reveal_paths(VOID_ARGS)
     if (strp && (int) strlen(strp) < maxlen)
         Sprintf(buf, " (in %s)", strp);
 #endif /* PREFIXES_IN_USE */
-    raw_printf("%s loadable symbols file%s:", s_suffix(gamename), buf);
+    raw_printf("The loadable symbols file%s:", buf);
 #endif /* UNIX */
 
 #ifdef UNIX
     envp = getcwd(cwdbuf, PATH_MAX);
     if (envp) {
-        raw_printf("%s loadable symbols file:", s_suffix(gamename));
+        raw_print("The loadable symbols file:");
         raw_printf("    \"%s/%s\"", envp, SYMBOLS);
     }
 #else /* UNIX */
@@ -4233,6 +4236,59 @@ reveal_paths(VOID_ARGS)
 #endif /* PREFIXES_IN_USE */
     raw_printf("    \"%s\"", filep);
 #endif /* UNIX */
+
+    /* dlb vs non-dlb */
+
+    buf[0] = '\0';
+#ifdef PREFIXES_IN_USE
+    strp = fqn_prefix_names[DATAPREFIX];
+    maxlen = BUFSZ - sizeof " (in )";
+    if (strp && (int) strlen(strp) < maxlen)
+        Sprintf(buf, " (in %s)", strp);
+#endif
+#ifdef DLB
+    raw_printf("Basic data files%s are collected inside:", buf);
+    filep = DLBFILE;
+#ifdef VERSION_IN_DLB_FILENAME
+    Strcpy(buf, build_dlb_filename((const char *) 0));
+#ifdef PREFIXES_IN_USE
+    fqn = fqname(buf, DATAPREFIX, 1);
+    if (fqn)
+        filep = fqn;
+#endif /* PREFIXES_IN_USE */
+#endif
+    raw_printf("    \"%s\"", filep);
+#ifdef DLBFILE2
+    filep = DLBFILE2;
+    raw_printf("    \"%s\"", filep);
+#endif
+#else /* !DLB */
+    raw_printf("Basic data files%s are in many separate files.", buf);
+#endif /* ?DLB */
+
+    /* dumplog */
+
+#ifndef DUMPLOG
+    nodumpreason = "not supported";
+#else
+    nodumpreason = "disabled";
+#ifdef SYSCF
+    fqn = sysopt.dumplogfile;
+#else  /* !SYSCF */
+#ifdef DUMPLOG_FILE
+    fqn = DUMPLOG_FILE;
+#else
+    fqn = (char *) 0;
+#endif
+#endif /* ?SYSCF */
+    if (fqn && *fqn) {
+        raw_print("Your end-of-game disclosure file:");
+        (void) dump_fmtstr(fqn, buf, FALSE);
+        buf[sizeof buf - sizeof "    \"\""] = '\0';
+        raw_printf("    \"%s\"", buf);
+    } else
+#endif /* ?DUMPLOG */
+        raw_printf("No end-of-game disclosure file (%s).", nodumpreason);
 
     /* personal configuration file */
 
@@ -4285,25 +4341,6 @@ reveal_paths(VOID_ARGS)
 #endif
     raw_printf("    \"%s\"", fqn ? fqn : default_configfile);
 #endif  /* ?UNIX */
-
-#ifdef DUMPLOG
-#ifdef SYSCF
-    fqn = sysopt.dumplogfile;
-#else  /* !SYSCF */
-#ifdef DUMPLOG_FILE
-    fqn = DUMPLOG_FILE;
-#else
-    fqn = (char *) 0;
-#endif
-#endif /* ?SYSCF */
-    if (fqn) {
-        raw_print("Your end-of-game dump file:");
-        (void) dump_fmtstr(fqn, buf, FALSE);
-        buf[sizeof buf - sizeof "    \"\""] = '\0';
-        raw_printf("    \"%s\"", buf);
-    } else
-#endif /* DUMPLOG */
-        raw_print("No end-of-game dump file.");
 
     raw_print("");
 }

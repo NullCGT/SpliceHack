@@ -1,4 +1,4 @@
-/* NetHack 3.6	objnam.c	$NHDT-Date: 1573290418 2019/11/09 09:06:58 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.248 $ */
+/* NetHack 3.6	objnam.c	$NHDT-Date: 1575245076 2019/12/02 00:04:36 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.255 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -2549,8 +2549,11 @@ const char *oldstr;
     if (index("zxs", lo_c)
         || (len >= 2 && lo_c == 'h' && index("cs", lowc(*(spot - 1)))
             /* 21st century k-sound */
-            && !(len >= 4 && !strcmpi(spot - 2, "ech")
-                && index("tm", lowc(*(spot - 4)))))
+            && !(len >= 4 &&
+                 ((lowc(*(spot - 2)) == 'e'
+                    && index("mt", lowc(*(spot - 3)))) ||
+                  (lowc(*(spot - 2)) == 'o'
+                    && index("lp", lowc(*(spot - 3)))))))
         /* Kludge to get "tomatoes" and "potatoes" right */
         || (len >= 4 && !strcmpi(spot - 2, "ato"))
         || (len >= 5 && !strcmpi(spot - 4, "dingo"))) {

@@ -1,4 +1,4 @@
-/* NetHack 3.6	options.c	$NHDT-Date: 1573505739 2019/11/11 20:55:39 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.386 $ */
+/* NetHack 3.6	options.c	$NHDT-Date: 1575245078 2019/12/02 00:04:38 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.391 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2008. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -110,9 +110,9 @@ static struct Bool_Opt {
     { "clumsy", &u.uroleplay.clumsy, FALSE, DISP_IN_GAME },
     { "cmdassist", &iflags.cmdassist, TRUE, SET_IN_GAME },
 #if defined(MICRO) || defined(WIN32) || defined(CURSES_GRAPHICS)
-    { "color", &iflags.wc_color, TRUE, SET_IN_GAME }, /*WC*/
+    { "color", &iflags.wc_color, TRUE, SET_IN_GAME }, /* on/off: use WC or not */
 #else /* systems that support multiple terminals, many monochrome */
-    { "color", &iflags.wc_color, FALSE, SET_IN_GAME }, /*WC*/
+    { "color", &iflags.wc_color, FALSE, SET_IN_GAME },
 #endif
     { "confirm", &flags.confirm, TRUE, SET_IN_GAME },
     { "dark_room", &flags.dark_room, TRUE, SET_IN_GAME },
@@ -186,7 +186,7 @@ static struct Bool_Opt {
 #else
     { "page_wait", (boolean *) 0, FALSE, SET_IN_FILE },
 #endif
-    /* 3.6.2: move perm_invent from flags to iflags and out of save file */
+    /* moved perm_invent from flags to iflags and out of save file in 3.6.2 */
     { "perm_invent", &iflags.perm_invent, FALSE, SET_IN_GAME },
     { "pickup_thrown", &flags.pickup_thrown, TRUE, SET_IN_GAME },
     { "popup_dialog", &iflags.wc_popup_dialog, FALSE, SET_IN_GAME },   /*WC*/
@@ -1329,12 +1329,13 @@ STATIC_VAR const struct paranoia_opts {
        and "d"ie vs "d"eath, synonyms for each other so doesn't matter;
        (also "p"ray vs "P"aranoia, "pray" takes precedence since "Paranoia"
        is just a synonym for "Confirm"); "b"ones vs "br"eak-wand, the
-       latter requires at least two letters; "wand"-break vs "Were"-change,
+       latter requires at least two letters; "e"at vs "ex"plore,
+       "cont"inue eating vs "C"onfirm; "wand"-break vs "Were"-change,
        both require at least two letters during config processing and use
        case-senstivity for 'O's interactive menu */
     { PARANOID_CONFIRM, "Confirm", 1, "Paranoia", 2,
       "for \"yes\" confirmations, require \"no\" to reject" },
-    { PARANOID_QUIT, "quit", 1, "explore", 1,
+    { PARANOID_QUIT, "quit", 1, "explore", 2,
       "yes vs y to quit or to enter explore mode" },
     { PARANOID_DIE, "die", 1, "death", 2,
       "yes vs y to die (explore mode or debug mode)" },
@@ -1344,6 +1345,8 @@ STATIC_VAR const struct paranoia_opts {
       "yes vs y to attack a peaceful monster" },
     { PARANOID_BREAKWAND, "wand-break", 2, "break-wand", 2,
       "yes vs y to break a wand via (a)pply" },
+    { PARANOID_EATING, "eat", 1, "continue", 4,
+      "yes vs y to continue eating after first bite when satiated" },
     { PARANOID_WERECHANGE, "Were-change", 2, (const char *) 0, 0,
       "yes vs y to change form when lycanthropy is controllable" },
     { PARANOID_PRAY, "pray", 1, 0, 0,
@@ -2673,7 +2676,7 @@ boolean tinitial, tfrom_file;
         }
         if (!op)
             return FALSE;
-        /* 3.6.2: strip leading and trailing spaces, condense internal ones */
+        /* stripped leading and trailing spaces, condensed internal ones in 3.6.2 */
         mungspaces(op);
         if (!initial) {
             struct fruit *f;
@@ -4255,14 +4258,12 @@ boolean tinitial, tfrom_file;
         }
     }
 
-#if 0
     /* Is it a symbol? */
     if (strstr(opts, "S_") == opts && parsesymbols(opts, PRIMARY)) {
         switch_symbols(TRUE);
         check_gold_symbol();
         return retval;
     }
-#endif
 
     /* out of valid options */
     config_error_add("Unknown option '%s'", opts);

@@ -1886,15 +1886,17 @@ E char *FDECL(dowhatdoes_core, (CHAR_P, char *));
 E int NDECL(dohelp);
 E int NDECL(dohistory);
 
-/* ### pcmain.c ### */
+/* ### xxmain.c ### */
 
 #if defined(MICRO) || defined(WIN32)
 #ifdef CHDIR
 E void FDECL(chdirx, (char *, BOOLEAN_P));
 #endif /* CHDIR */
 E boolean NDECL(authorize_wizard_mode);
-
 #endif /* MICRO || WIN32 */
+#if defined(WIN32)
+E int NDECL(getlock);
+#endif
 
 /* ### pcsys.c ### */
 
@@ -1932,10 +1934,10 @@ E void FDECL(msleep, (unsigned));
 
 #if defined(MICRO)
 E void FDECL(regularize, (char *));
-#endif /* MICRO */
 #if defined(PC_LOCKING)
 E void NDECL(getlock);
 #endif
+#endif /* MICRO */
 
 /* ### pickup.c ### */
 
@@ -2657,6 +2659,7 @@ E int FDECL(launch_obj, (SHORT_P, int, int, int, int, int));
 E boolean NDECL(launch_in_progress);
 E void NDECL(force_launch_placement);
 E boolean FDECL(uteetering_at_seen_pit, (struct trap *));
+E boolean FDECL(uescaped_shaft, (struct trap *));
 E boolean NDECL(lava_effects);
 E void NDECL(sink_into_lava);
 E void NDECL(sokoban_guilt);

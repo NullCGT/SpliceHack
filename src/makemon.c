@@ -1726,7 +1726,7 @@ int mmflags;
         mtmp->cham = mcham;
         /* Vlad stays in his normal shape so he can carry the Candelabrum,
             and Alucard stays in his normal shape since he has weapons. */
-        if (mndx != PM_VLAD_THE_IMPALER && mndx != PM_ALUCARD && mndx != PM_BAOBHAN_SITH
+        if (mndx != PM_VLAD_THE_IMPALER && mndx != PM_ALUCARD
             /* Note:  shapechanger's initial form used to be chosen here
                with rndmonst(), yielding a monster which was appropriate
                to the level's difficulty but ignoring the changer's usual

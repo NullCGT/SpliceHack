@@ -3288,28 +3288,6 @@ static const struct icp bow_materials[] = {
     { 1, GOLD}
 };
 
-static const struct icp warp_materials[] = {
-    /* Not good. */
-    {5, GLASS},
-    {5, WAX},
-    {5, PAPER},
-    {5, CLOTH},
-    {5, LEATHER},
-    {10, WOOD},
-    {15, PLASTIC},
-    /* Decent */
-    {5, IRON},
-    {5, METAL},
-    {5, PLATINUM},
-    {5, GEMSTONE},
-    {5, MINERAL},
-    {5, BONE},
-    {5, COPPER},
-    {5, MITHRIL},
-    {5, SILVER},
-    {5, GOLD}
-};
-
 /* TODO: Orcish? */
 
 /* Return the appropriate above list for a given object, or NULL if there isn't
@@ -3408,7 +3386,7 @@ boolean by_you;
     if (obj->oartifact)
         return FALSE;
     int origmat = obj->material;
-    const struct icp* materials =  warp_materials;
+    const struct icp* materials =  material_list(obj);
 
     int i = rnd(100);
     while (i > 0) {

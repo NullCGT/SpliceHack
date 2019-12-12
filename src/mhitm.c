@@ -1306,8 +1306,10 @@ register struct attack *mattk;
             (void) rloc(mdef, TRUE);
             if (vis && wasseen && !canspotmon(mdef) && mdef != u.usteed)
                 pline("%s suddenly disappears!", mdef_Monnam);
-            if (mattk->adtyp == AD_TLPT)
-                rloc_to(magr, mdef->mx, mdef->my);
+            if (mattk->adtyp == AD_KDNP) {
+                if (!mnearto(magr, mdef->mx, mdef->my, FALSE))
+                    (void) rloc(magr, TRUE);
+            } 
             if (tmp >= mdef->mhp) { /* see hitmu(mhitu.c) */
                 if (mdef->mhp == 1)
                     ++mdef->mhp;

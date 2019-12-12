@@ -4681,7 +4681,7 @@ struct permonst _mons2[] = {
         M1_FLY | M1_THICK_HIDE | M1_NOHANDS | M1_SEE_INVIS | M1_OVIPAROUS
             | M1_CARNIVORE,
         M2_HOSTILE | M2_STRONG | M2_NASTY | M2_GREEDY | M2_JEWELS | M2_MAGIC |
-        M2_FEMALE,
+        M2_FEMALE | M2_NOPOLY,
         M3_CLOSE | M3_INFRAVISIBLE, 0, 30, HI_LORD),
     MON("Grand Master", S_HUMAN, LVL(25, 12, 0, 70, 0), (G_NOGEN | G_UNIQ),
         A(ATTK(AT_CLAW, AD_PHYS, 4, 10), ATTK(AT_KICK, AD_PHYS, 2, 8),
@@ -4873,7 +4873,7 @@ struct permonst _mons2[] = {
         M1_FLY | M1_THICK_HIDE | M1_NOHANDS | M1_SEE_INVIS | M1_OVIPAROUS
             | M1_CARNIVORE,
         M2_HOSTILE | M2_STRONG | M2_PNAME | M2_NASTY | M2_GREEDY | M2_JEWELS |
-        M2_MAGIC, 0, 0, 21, CLR_WHITE),
+        M2_MAGIC | M2_NOPOLY, 0, 0, 21, CLR_WHITE),
     MON("Master Kaen", S_HUMAN, LVL(25, 12, -10, 10, -20), (G_NOGEN | G_UNIQ),
         A(ATTK(AT_CLAW, AD_PHYS, 16, 2), ATTK(AT_CLAW, AD_PHYS, 16, 2),
           ATTK(AT_MAGC, AD_CLRC, 0, 0), ATTK(AT_CLAW, AD_SAMU, 1, 4), NO_ATTK,

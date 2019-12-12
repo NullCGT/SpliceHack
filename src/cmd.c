@@ -2618,7 +2618,7 @@ int final;
         if (sklvl == P_ISRESTRICTED)
             Strcpy(sklvlbuf, "no");
         else
-            (void) lcase(skill_level_name(wtype, sklvlbuf));
+            (void) lcase(skill_level_name(P_SKILL(wtype), sklvlbuf));
         /* "you have no/basic/expert/master/grand-master skill with <skill>"
            or "you are unskilled/skilled in <skill>" */
         Sprintf(buf, "%s %s %s", sklvlbuf,

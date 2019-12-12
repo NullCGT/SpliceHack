@@ -3395,7 +3395,7 @@ boolean by_you;
             break;
         j++;
     }
-    if (valid_obj_material(obj, newmat) && !mon_hates_material(&youmonst, newmat))
+    if (valid_obj_material(obj, newmat) && !Hate_material(newmat))
         obj->material = newmat;
     else
         /* can use a 0 in the list to default to the base material */

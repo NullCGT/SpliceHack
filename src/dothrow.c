@@ -592,6 +592,7 @@ int x, y;
     int dmg = 0;
 
     if (!isok(x, y)) {
+        unmul((char *) 0);
         You_feel("the spirits holding you back.");
         return FALSE;
     } else if (!in_out_region(x, y)) {

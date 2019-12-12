@@ -3698,7 +3698,7 @@ register struct obj *otmp, *obj;
             || obj->rknown != otmp->rknown))
         return FALSE;
 
-    if (obj->otyp == CORPSE || obj->otyp == EGG || obj->otyp == TIN) {
+    if (obj->otyp == CORPSE || obj->otyp == EGG || obj->otyp == TIN || obj->otyp == SCR_CREATE_MONSTER) {
         if (obj->corpsenm != otmp->corpsenm)
             return FALSE;
     }

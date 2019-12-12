@@ -469,7 +469,7 @@ NEARDATA struct permonst mons[] = {
       	SIZ(10, 10, MS_SILENT, MZ_SMALL), 0, 0,
       	M1_FLY | M1_NOLIMBS | M1_NOHEAD | M1_MINDLESS,
       	M2_HOSTILE | M2_NEUTER, M3_INFRAVISIBLE, 0, 8, CLR_BRIGHT_MAGENTA),
-    MON("blinking eye", S_EYE, LVL(8, 12, 4, 0, 0), (G_NOHELL | G_GENO | 1),
+    MON("blinking eye", S_EYE, LVL(8, 4, 4, 0, 0), (G_NOHELL | G_GENO | 1),
       	A(ATTK(AT_GAZE, AD_TLPT, 0, 0), NO_ATTK, NO_ATTK,
       	  NO_ATTK, NO_ATTK, NO_ATTK),
       	SIZ(10, 10, MS_SILENT, MZ_SMALL), 0, 0,

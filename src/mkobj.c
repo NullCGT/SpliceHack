@@ -3386,18 +3386,17 @@ boolean by_you;
     if (obj->oartifact)
         return FALSE;
     int origmat = obj->material;
-    const struct icp* materials =  material_list(obj);
 
-    int i = rnd(100);
-    while (i > 0) {
-        if (i <= materials->iprob)
+    int j = 0;
+    int newmat;
+    while (j < 100) {
+        newmat = 1 + rn2(NUM_MATERIAL_TYPES);
+        if (newmat != origmat && valid_obj_material(obj, newmat))
             break;
-        i -= materials->iprob;
-        materials++;
+        j++;
     }
-    if (materials->iclass && valid_obj_material(obj, materials->iclass) &&
-          !mon_hates_material(&youmonst, materials->iclass))
-        obj->material = materials->iclass;
+    if (valid_obj_material(obj, newmat) && !mon_hates_material(&youmonst, newmat))
+        obj->material = newmat;
     else
         /* can use a 0 in the list to default to the base material */
         obj->material = objects[obj->otyp].oc_material;

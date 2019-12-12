@@ -2024,6 +2024,8 @@ rndmonst()
                 continue;
             if (In_endgame(&u.uz) && (ptr->geno & G_NOPLANES))
                 continue;
+            if (!In_endgame(&u.uz) && (ptr->geno & G_PLANES))
+                continue;
             ct = (int) (ptr->geno & G_FREQ) + align_shift(ptr);
             if (ct < 0 || ct > 127)
                 panic("rndmonst: bad count [#%d: %d]", mndx, ct);

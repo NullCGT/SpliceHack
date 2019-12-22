@@ -1753,11 +1753,13 @@ int cindex, ccount; /* index of this container (1..N), number of them (N) */
         return 1;
     } else if (cobj->otyp == BAG_OF_RATS) {
         You("carefully open %s...", the(xname(cobj)));
-        if (create_critters(1 + rn2(7), &mons[PM_RABID_RAT], TRUE)) {
+        if (cobj->spe && create_critters(1 + rn2(7), &mons[PM_RABID_RAT], TRUE)) {
             pline("A torrent of angrily frothing rats spews out!");
             makeknown(BAG_OF_RATS);
+            cobj->spe = 0;
+            check_unpaid(cobj);
         } else {
-            pline("%s emits a petulant squeaking noise, and refuses to open.",
+            pline("%s emits a petulant squeaking noise and snaps shut.",
                   The(xname(cobj)));
         }
         abort_looting = TRUE;

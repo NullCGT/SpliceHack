@@ -1535,7 +1535,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
 
             if (youattack && u.uswallow && mdef == u.ustuck)
                 return FALSE;
-            wepdesc = artilist[ART_VORPAL_BLADE].name;
+            wepdesc = artilist[otmp->oartifact == ART_VORPAL_BLADE ? ART_VORPAL_BLADE : ART_THIEFBANE].name;
             if (!youdefend) {
                 if (!has_head(mdef->data) || notonhead || u.uswallow) {
                     if (youattack)

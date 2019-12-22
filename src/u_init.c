@@ -1321,6 +1321,9 @@ register struct trobj *trop;
                    || (otyp == RIN_POISON_RESISTANCE && Race_if(PM_ORC))
                    /* Monks don't use weapons */
                    || (otyp == SCR_ENCHANT_WEAPON && Role_if(PM_MONK))
+                   /* Infernals already have regeneration and hate silver */
+                   || (otyp == RIN_REGENERATION && Role_if(PM_INFERNAL))
+                   || (objects[obj->otyp].oc_material == SILVER && Role_if(PM_INFERNAL))
                    /* wizard patch -- they already have one */
                    || (otyp == SPE_FORCE_BOLT && Role_if(PM_WIZARD))
                    /* powerful spells are either useless to

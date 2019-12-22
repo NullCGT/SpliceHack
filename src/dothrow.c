@@ -797,6 +797,9 @@ int x, y;
 {
     struct monst *mon = (struct monst *) arg;
 
+    if (DEADMONSTER(mon))
+        return FALSE;    
+
     /* TODO: Treat walls, doors, iron bars, pools, lava, etc. specially
      * rather than just stopping before.
      */
@@ -1608,11 +1611,13 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
     if (uarmg && uwep && objects[uwep->otyp].oc_skill == P_BOW) {
         switch (uarmg->otyp) {
         case GAUNTLETS_OF_POWER: /* metal */
+        case BOXING_GLOVES:
             tmp -= 2;
             break;
         case GAUNTLETS_OF_FUMBLING:
             tmp -= 3;
             break;
+        case ROGUES_GLOVES:
         case GLOVES:
         case GAUNTLETS_OF_DEXTERITY:
             break;
@@ -1815,7 +1820,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         }
 
     } else if ((otyp == EGG || otyp == CREAM_PIE || otyp == BLINDING_VENOM
-                || otyp == ACID_VENOM)
+                || otyp == ACID_VENOM || otyp == PINEAPPLE)
                && (guaranteed_hit || ACURR(A_DEX) > rnd(25))) {
         (void) hmon(mon, obj, hmode, dieroll);
         return 1; /* hmon used it up */
@@ -1829,7 +1834,6 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                && (guaranteed_hit || ACURR(A_DEX) > rnd(25))) {
         potionhit(mon, obj, POTHIT_HERO_THROW);
         return 1;
-
     } else if (befriend_with_obj(mon->data, obj)
                || (mon->mtame && dogfood(mon, obj) <= ACCFOOD)) {
         if (tamedog(mon, obj)) {

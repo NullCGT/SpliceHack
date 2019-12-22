@@ -3429,9 +3429,7 @@ int dmg;
         You_hear("a hoarse croak nearby.");
     }
 
-    /* Set mspec->mused */
     mtmp->mspec_used = mtmp->mspec_used + (dmg + rn2(6));
-
     if (cancelled || Deaf || Sonic_resistance)
         return FALSE;
 
@@ -3448,6 +3446,7 @@ int dmg;
         }
         Your("mind reels from the noise!");
         make_stunned((HStun & TIMEOUT) + (long) dmg, TRUE);
+        aggravate(); /* Nazgul scream VERY loudly */
         stop_occupation();
         break;
     default:

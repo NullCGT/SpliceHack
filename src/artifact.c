@@ -1407,19 +1407,19 @@ int dieroll; /* needed for Magicbane and vorpal blades */
    				otmp2->owornmask = 0L;
    				update_mon_intrinsics(mdef, otmp2, FALSE, FALSE);
    			}
+            if (otmp2->otyp == CORPSE &&
+                touch_petrifies(&mons[otmp2->corpsenm]) && !uarmg) {
+                char kbuf[BUFSZ];
+
+                Sprintf(kbuf, "stolen %s corpse", mons[otmp2->corpsenm].mname);
+                instapetrify(kbuf);
+            }
    			/* give the object to the character */
    			otmp2 = Role_if(PM_PIRATE) ?
    				hold_another_object(otmp2, "Ye snatched but dropped %s.",
    						   doname(otmp2), "Ye steal: ") :
    				hold_another_object(otmp2, "You snatched but dropped %s.",
    						   doname(otmp2), "You steal: ");
-   			if (otmp2->otyp == CORPSE &&
-   				touch_petrifies(&mons[otmp2->corpsenm]) && !uarmg) {
-   				char kbuf[BUFSZ];
-
-   				Sprintf(kbuf, "stolen %s corpse", mons[otmp2->corpsenm].mname);
-   				instapetrify(kbuf);
-   			}
    			/* more take-away handling, after theft message */
    			if (unwornmask & W_WEP) {		/* stole wielded weapon */
    				possibly_unwield(mdef, FALSE);
@@ -1535,7 +1535,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
 
             if (youattack && u.uswallow && mdef == u.ustuck)
                 return FALSE;
-            wepdesc = artilist[ART_VORPAL_BLADE].name;
+            wepdesc = artilist[otmp->oartifact == ART_VORPAL_BLADE ? ART_VORPAL_BLADE : ART_THIEFBANE].name;
             if (!youdefend) {
                 if (!has_head(mdef->data) || notonhead || u.uswallow) {
                     if (youattack)

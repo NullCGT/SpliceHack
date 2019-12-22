@@ -619,7 +619,7 @@ register struct monst *mtmp;
             register boolean m_sen = sensemon(mtmp);
 
             if ((m_sen || (Blind_telepat && rn2(2)) || !rn2(10)) &&
-                !(uarmh && uarmh->otyp == HELM_OF_OPAQUE_THOUGHTS)) {
+                !Psychic_resistance) {
                 int dmg;
                 pline("It locks on to your %s!",
                       m_sen ? "telepathy" : Blind_telepat ? "latent telepathy"

@@ -3887,6 +3887,8 @@ boolean force;
         obj->otyp = SCR_BLANK_PAPER;
         obj->dknown = 0;
         obj->spe = 0;
+        if (obj->corpsenm)
+            obj->corpsenm = NON_PM;
         if (carried(obj))
             update_inventory();
         return ER_DAMAGED;

@@ -714,6 +714,7 @@ doengrave()
                     Strcpy(post_engr_text,
                         "The wand issues a series of loud bangs!");
                 }
+                wake_nearto(u.ux, u.uy, 5 * 5);
                 break;
             case WAN_POLYMORPH:
                 if (oep) {

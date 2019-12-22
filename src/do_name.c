@@ -2397,7 +2397,8 @@ noveltitle(novidx, encyclopedia)
 int *novidx;
 boolean encyclopedia;
 {
-    int j, k = encyclopedia ? SIZE(encyclopedias) : SIZE(sir_Terry_novels);
+    int j = 0;
+    int k = encyclopedia ? SIZE(encyclopedias) : SIZE(sir_Terry_novels);
 
     j = rn2(k);
     if (novidx) {

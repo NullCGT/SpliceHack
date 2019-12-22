@@ -2548,6 +2548,7 @@ boolean was_swallowed; /* digestion */
                    function because otherwise the explosion destroys the egg */
                 obj = mksobj_at(EGG, mon->mx, mon->my, TRUE, FALSE);
                 obj->corpsenm = PM_PHOENIX;
+                obj->quan = 1;
             } else {
                 explode(mon->mx, mon->my, -1, tmp, MON_EXPLODE, EXPL_NOXIOUS);
             }

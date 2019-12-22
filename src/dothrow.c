@@ -797,6 +797,9 @@ int x, y;
 {
     struct monst *mon = (struct monst *) arg;
 
+    if (DEADMONSTER(mon))
+        return FALSE;    
+
     /* TODO: Treat walls, doors, iron bars, pools, lava, etc. specially
      * rather than just stopping before.
      */

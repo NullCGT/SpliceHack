@@ -1744,13 +1744,11 @@ dorub()
         } else
             pline1(nothing_happens);
     } else if (uwep->otyp == MOONSTONE) {
-        if (!uwep->in_use) {
+        if (!uwep->lamplit) {
             begin_burn(uwep, FALSE);
-            uwep->in_use = 1;
         } else {
             pline("%s glowing.", Yobjnam2(uwep, "stop"));
             end_burn(uwep, FALSE);
-            uwep->in_use = 0;
             return 1;
         }
         makeknown(MOONSTONE);

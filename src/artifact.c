@@ -1407,19 +1407,19 @@ int dieroll; /* needed for Magicbane and vorpal blades */
    				otmp2->owornmask = 0L;
    				update_mon_intrinsics(mdef, otmp2, FALSE, FALSE);
    			}
+            if (otmp2->otyp == CORPSE &&
+                touch_petrifies(&mons[otmp2->corpsenm]) && !uarmg) {
+                char kbuf[BUFSZ];
+
+                Sprintf(kbuf, "stolen %s corpse", mons[otmp2->corpsenm].mname);
+                instapetrify(kbuf);
+            }
    			/* give the object to the character */
    			otmp2 = Role_if(PM_PIRATE) ?
    				hold_another_object(otmp2, "Ye snatched but dropped %s.",
    						   doname(otmp2), "Ye steal: ") :
    				hold_another_object(otmp2, "You snatched but dropped %s.",
    						   doname(otmp2), "You steal: ");
-   			if (otmp2->otyp == CORPSE &&
-   				touch_petrifies(&mons[otmp2->corpsenm]) && !uarmg) {
-   				char kbuf[BUFSZ];
-
-   				Sprintf(kbuf, "stolen %s corpse", mons[otmp2->corpsenm].mname);
-   				instapetrify(kbuf);
-   			}
    			/* more take-away handling, after theft message */
    			if (unwornmask & W_WEP) {		/* stole wielded weapon */
    				possibly_unwield(mdef, FALSE);

@@ -3475,7 +3475,7 @@ struct permonst _mons2[] = {
           NO_ATTK),
         SIZ(WT_HUMAN, 400, MS_WERE, MZ_HUMAN), MR_POISON, 0,
         M1_HUMANOID | M1_POIS | M1_REGEN | M1_OMNIVORE,
-        M2_NOPOLY | M2_COLLECT,
+        M2_NOPOLY | M2_COLLECT | M2_HOSTILE,
         M3_INFRAVISIBLE, MH_HUMAN | MH_WERE, 6, CLR_BLUE),
     MON("werecockatrice", S_HUMAN, LVL(6, 8, 10, 20, -7), (G_NOGEN),
         A(ATTK(AT_WEAP, AD_PHYS, 2, 4), ATTK(AT_TUCH, AD_STON, 0, 0),

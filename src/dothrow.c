@@ -1820,7 +1820,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         }
 
     } else if ((otyp == EGG || otyp == CREAM_PIE || otyp == BLINDING_VENOM
-                || otyp == ACID_VENOM)
+                || otyp == ACID_VENOM || otyp == PINEAPPLE)
                && (guaranteed_hit || ACURR(A_DEX) > rnd(25))) {
         (void) hmon(mon, obj, hmode, dieroll);
         return 1; /* hmon used it up */
@@ -1834,7 +1834,6 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                && (guaranteed_hit || ACURR(A_DEX) > rnd(25))) {
         potionhit(mon, obj, POTHIT_HERO_THROW);
         return 1;
-
     } else if (befriend_with_obj(mon->data, obj)
                || (mon->mtame && dogfood(mon, obj) <= ACCFOOD)) {
         if (tamedog(mon, obj)) {

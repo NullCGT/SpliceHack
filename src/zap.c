@@ -1127,6 +1127,8 @@ register struct obj *obj;
             costly_alteration(obj, COST_CANCEL);
             obj->otyp = SCR_BLANK_PAPER;
             obj->spe = 0;
+            if (obj->corpsenm)
+                obj->corpsenm = NON_PM;
             break;
         case SPBOOK_CLASS:
             if (otyp != SPE_CANCELLATION && otyp != SPE_NOVEL

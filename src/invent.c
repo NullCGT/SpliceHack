@@ -3684,7 +3684,8 @@ register struct obj *otmp, *obj;
 
     if (obj->oclass == FOOD_CLASS
         && (obj->oeaten != otmp->oeaten || obj->orotten != otmp->orotten
-            || obj->odrained != otmp->odrained))
+            || obj->odrained != otmp->odrained || obj->oeroded != otmp->oeroded
+            || obj->oerodeproof != otmp->oerodeproof))
         return FALSE;
 
     if (obj->dknown != otmp->dknown

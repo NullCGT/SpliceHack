@@ -1562,6 +1562,7 @@ register const char *let, *word;
                          && otyp != TOWEL && otyp != LENSES && otyp != MASK)))
              || (!strcmp(word, "wield")
                  && (otmp->oclass == TOOL_CLASS && !is_weptool(otmp)))
+             || (!strcmp(word, "drink") && (otmp->oclass == TOOL_CLASS && otmp->otyp != KEG))
              || (!strcmp(word, "eat") && !is_edible(otmp))
              || (!strcmp(word, "sacrifice")
                  && (otyp != CORPSE && otyp != AMULET_OF_YENDOR

@@ -10,7 +10,8 @@
 boolean notonhead = FALSE;
 
 static NEARDATA int nothing, unkn;
-static NEARDATA const char beverages[] = { ALL_CLASSES, POTION_CLASS, 0 };
+static NEARDATA const char dippables[] = { POTION_CLASS, 0 };
+static NEARDATA const char beverages[] = { TOOL_CLASS, POTION_CLASS, 0 };
 
 STATIC_DCL long FDECL(itimeout, (long));
 STATIC_DCL long FDECL(itimeout_incr, (long, int));
@@ -2630,7 +2631,7 @@ dodip()
 
     /* "What do you want to dip <the object> into? [xyz or ?*] " */
     Sprintf(qbuf, "dip %s into", flags.verbose ? obuf : shortestname);
-    potion = getobj(beverages, qbuf);
+    potion = getobj(dippables, qbuf);
     if (!potion)
         return 0;
     if (potion == obj && potion->quan == 1L) {

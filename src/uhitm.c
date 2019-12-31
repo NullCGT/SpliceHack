@@ -721,7 +721,8 @@ struct attack *uattk;
             maybe_polyd(is_vampire(youmonst.data), Race_if(PM_VAMPIRE)) &&
             (is_rider(mon->data) ||
                 mon->data == &mons[PM_GRIM_REAPER] ||
-                mon->data == &mons[PM_GREEN_SLIME]))
+                mon->data == &mons[PM_GREEN_SLIME] ||
+                touch_petrifies(mon->data)))
             return malive;
         tmp = find_roll_to_hit(mon, AT_BITE, (struct obj *) 0, &attknum,
                                &armorpenalty);
@@ -2909,7 +2910,8 @@ register struct monst *mon;
 				maybe_polyd(is_vampire(youmonst.data), Race_if(PM_VAMPIRE)) &&
 				(is_rider(mon->data) ||
                  mon->data == &mons[PM_GRIM_REAPER] ||
-				 mon->data == &mons[PM_GREEN_SLIME]))
+				 mon->data == &mons[PM_GREEN_SLIME] ||
+                 touch_petrifies(mon->data)))
 			    break;
         case AT_KICK:
         case AT_STNG:

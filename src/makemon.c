@@ -1112,7 +1112,7 @@ register struct monst *mtmp;
             (void) mongets(mtmp, MUMMY_WRAPPING);
         break;
     case S_QUANTMECH:
-        if (!rn2(20)) {
+        if (!rn2(20) && mtmp->data == &mons[PM_QUANTUM_MECHANIC]) {
             struct obj *catcorpse;
 
             otmp = mksobj(LARGE_BOX, FALSE, FALSE);
@@ -2026,6 +2026,8 @@ rndmonst()
             if (Inhell && (ptr->geno & G_NOHELL))
                 continue;
             if (In_endgame(&u.uz) && (ptr->geno & G_NOPLANES))
+                continue;
+            if (!In_endgame(&u.uz) && (ptr->geno & G_PLANES))
                 continue;
             ct = (int) (ptr->geno & G_FREQ) + align_shift(ptr);
             if (ct < 0 || ct > 127)

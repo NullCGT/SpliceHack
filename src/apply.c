@@ -305,6 +305,7 @@ struct obj *obj;
     long draws;
     int index, pm, n;
     boolean goodcards = FALSE;
+    boolean badcards = FALSE;
     struct monst *mtmp;
     struct obj *otmp;
 
@@ -314,16 +315,18 @@ struct obj *obj;
     }
     if (obj->blessed || Role_if(PM_CARTOMANCER)) {
         goodcards = TRUE;
+    } else if (obj->cursed) {
+        badcards = TRUE;
     }
 
     if (obj->otyp == PLAYING_CARD_DECK) {
-        if ((obj->cursed && Luck == 13) || Luck <= 0) {
+        if ((badcards && Luck == 13) || Luck <= 0) {
             pline("You draw a hand of five cards. It's not very good...");
-        } else if ((obj->cursed && Luck >= 5) || Luck < 5) {
+        } else if ((badcards && Luck >= 5) || Luck < 5) {
             pline("You draw a hand of five cards. Two pair!");
-        } else if ((obj->cursed && Luck > 0) || Luck < 13) {
+        } else if ((badcards && Luck > 0) || Luck < 13) {
             pline("You draw a hand of five cards. Full house!");
-        } else if ((obj->cursed && Luck <= 0) || Luck == 13) {
+        } else if ((badcards && Luck <= 0) || Luck == 13) {
             pline("You draw a hand of five cards. Wow, a royal flush!");
         }
         /* if blessed, indicate the luck value directly. */
@@ -353,10 +356,9 @@ struct obj *obj;
     for ( ; draws > 0; draws--) {
         index = rnd(22);
         // wishes and disasters can be modified through BCU
-        if (obj->cursed && index > 1) {
+        if (badcards && index > 1) {
           index--;
-        }
-        if (goodcards && index < 22) {
+        } else if (goodcards && index < 22) {
           index++;
         }
         switch(index) {
@@ -1744,13 +1746,11 @@ dorub()
         } else
             pline1(nothing_happens);
     } else if (uwep->otyp == MOONSTONE) {
-        if (!uwep->in_use) {
+        if (!uwep->lamplit) {
             begin_burn(uwep, FALSE);
-            uwep->in_use = 1;
         } else {
             pline("%s glowing.", Yobjnam2(uwep, "stop"));
             end_burn(uwep, FALSE);
-            uwep->in_use = 0;
             return 1;
         }
         makeknown(MOONSTONE);
@@ -2254,6 +2254,8 @@ struct obj *obj;
         && !(u.uswallow
              && attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND)))
         prop_trouble(BLINDED);
+    if (TimedTrouble(HWithering))
+        prop_trouble(WITHERING);
     if (TimedTrouble(LarvaCarrier))
         prop_trouble(LARVACARRIER);
     if (TimedTrouble(HHallucination))
@@ -2323,6 +2325,11 @@ struct obj *obj;
         switch (idx) {
         case prop2trbl(SICK):
             make_sick(0L, (char *) 0, TRUE, SICK_ALL);
+            did_prop++;
+            break;
+        case prop2trbl(WITHERING):
+            You("are no longer withering away. Whew!");
+            set_itimeout(&HWithering, (long) 0);
             did_prop++;
             break;
         case prop2trbl(LARVACARRIER):

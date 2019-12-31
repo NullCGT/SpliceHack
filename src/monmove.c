@@ -619,7 +619,7 @@ register struct monst *mtmp;
             register boolean m_sen = sensemon(mtmp);
 
             if ((m_sen || (Blind_telepat && rn2(2)) || !rn2(10)) &&
-                !(uarmh && uarmh->otyp == HELM_OF_OPAQUE_THOUGHTS)) {
+                !Psychic_resistance) {
                 int dmg;
                 pline("It locks on to your %s!",
                       m_sen ? "telepathy" : Blind_telepat ? "latent telepathy"
@@ -681,13 +681,14 @@ register struct monst *mtmp;
     }
 
     /*      Look for other monsters to fight (at a distance) */
-    if (( attacktype(mtmp->data, AT_BREA) ||
+    if (((( attacktype(mtmp->data, AT_BREA) ||
           attacktype(mtmp->data, AT_GAZE) ||
           attacktype(mtmp->data, AT_SPIT) ||
+          attacktype(mtmp->data, AT_SCRE) ||
          (attacktype(mtmp->data, AT_MAGC) &&
           (((attacktype_fordmg(mtmp->data, AT_MAGC, AD_ANY))->adtyp
              <= AD_PSYC))
-          ) ||
+          )) && !mtmp->mspec_used) ||
          (attacktype(mtmp->data, AT_WEAP) &&
           select_rwep(mtmp) != 0) ||
           find_offensive(mtmp)) &&

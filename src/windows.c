@@ -1179,7 +1179,7 @@ boolean fullsubs; /* True -> full substitution for file name, False ->
                 else
                     Strcpy(tmpbuf, "{current date+time}");
                 break;
-            case 'v': /* version, eg. "3.6.3-0" */
+            case 'v': /* version, eg. "3.6.4-0" */
                 Sprintf(tmpbuf, "%s", version_string(verbuf));
                 break;
             case 'u': /* UID */
@@ -1965,16 +1965,20 @@ time_t now;
     char *fname = (char *)0;
 
     dumplog_now = now;
-#ifdef SYSCF
+/* #ifdef SYSCF
     if (!sysopt.dumplogfile)
         return;
     fname = dump_fmtstr(sysopt.dumplogfile, buf, TRUE);
-#else
+#else */
+#ifdef DUMPLOG
     fname = dump_fmtstr(DUMPLOG_FILE, buf, TRUE);
+    if (fname)
+        dumplog_file = fopen(fname, "w");
 #endif
 #ifdef DUMPHTML
     fname = dump_fmtstr(DUMPHTML_FILE, buf, TRUE);
-    if(fname) dumphtml_file = fopen(fname, "w");
+    if (fname)
+        dumphtml_file = fopen(fname, "w");
 #endif
     if (dumplog_file || dumphtml_file) {
         dumplog_windowprocs_backup = windowprocs;

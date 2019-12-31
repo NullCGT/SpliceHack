@@ -256,7 +256,7 @@ boolean resuming;
                         regen_hp(wtcap);
                     }
 
-                    if (Withering && !(HRegeneration || ERegeneration)) {
+                    if (Withering && !Regeneration) {
                         losehp(1, "withering away", KILLED_BY);
                         context.botl = TRUE;
                         interrupt_multi("You are slowly withering away.");
@@ -577,7 +577,7 @@ int wtcap;
                 if (!(moves % (long) ((MAXULEV + 12) / (u.ulevel + 2) + 1)))
                     heal = 1;
             }
-            if (Regeneration && !heal)
+            if (Regeneration && !Withering && !heal)
                 heal = 1;
 
             if (heal) {

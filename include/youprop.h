@@ -341,7 +341,7 @@
 
 #define HRegeneration u.uprops[REGENERATION].intrinsic
 #define ERegeneration u.uprops[REGENERATION].extrinsic
-#define Regeneration ((HRegeneration || ERegeneration) && !Withering)
+#define Regeneration ((HRegeneration || ERegeneration))
 
 #define HEnergy_regeneration u.uprops[ENERGY_REGENERATION].intrinsic
 #define EEnergy_regeneration u.uprops[ENERGY_REGENERATION].extrinsic

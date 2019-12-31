@@ -23,7 +23,7 @@ STATIC_DCL void FDECL(missmu, (struct monst *, BOOLEAN_P, struct attack *));
 STATIC_DCL void FDECL(mswings, (struct monst *, struct obj *));
 STATIC_DCL void FDECL(wildmiss, (struct monst *, struct attack *));
 STATIC_DCL void FDECL(hitmsg, (struct monst *, struct attack *));
-STATIC_DCL int FDECL(screamu, (struct monst*, struct attack*));
+STATIC_DCL int FDECL(screamu, (struct monst*, struct attack*, int));
 
 /* See comment in mhitm.c.  If we use this a lot it probably should be */
 /* changed to a parameter to mhitu. */
@@ -903,7 +903,8 @@ register struct monst *mtmp;
 
         case AT_SCRE:
     	    if (ranged) {
-    		      sum[i] = screamu(mtmp, mattk);
+    		      sum[i] = screamu(mtmp, mattk, 
+                    d((int) mattk->damn, (int) mattk->damd));
     	    }
     	    /* if you're nice and close, don't bother */
     	    break;
@@ -3400,35 +3401,41 @@ const char *str;
  * employs its gaze stun attack, which allows a bit more
  * fine-tuning --K2 */
 STATIC_OVL int
-screamu(mtmp, mattk)
+screamu(mtmp, mattk, dmg)
 struct monst *mtmp;
 struct attack *mattk;
+int dmg;
 {
     boolean cancelled = (mtmp->mcan != 0);
     /* assumes that hero has to hear the monster's scream in
        order to be affected */
-    if (Deaf)
-        cancelled = TRUE;
+        /* Only screams when a certain distance from our hero, can see them, and has the
+       available mspec */
+    if (distu(mtmp->mx,mtmp->my) > 85 
+        || !m_canseeu(mtmp) 
+        || mtmp->mspec_used 
+        || !rn2(5)) {
+        return FALSE;
+    }
+
+    if (canseemon(mtmp) && (Deaf || Sonic_resistance)) {
+        pline("It looks as if %s is yelling at you.", mon_nam(mtmp));
+    }
+    if (!cancelled && ((m_canseeu(mtmp) && Blind && Deaf) || Sonic_resistance)) {
+        You("sense a disturbing vibration in the air.");
+    } else if (m_canseeu(mtmp) && canseemon(mtmp) && !Deaf && cancelled) {
+        pline("%s croaks hoarsely.", Monnam(mtmp));
+    } else if (cancelled && !Deaf) {
+        You_hear("a hoarse croak nearby.");
+    }
+
+    mtmp->mspec_used = mtmp->mspec_used + (dmg + rn2(6));
+    if (cancelled || Deaf || Sonic_resistance)
+        return FALSE;
+
+    /* scream attacks */
     switch (mattk->adtyp) {
 	case AD_STUN:
-	/* Only screams when a certain distance from our hero */
-        if (distu(mtmp->mx,mtmp->my) > 85) {
-	    return FALSE;
-	}
-        if (m_canseeu(mtmp) && !mtmp->mspec_used && rn2(5)) {
-            if (m_canseeu(mtmp) && canseemon(mtmp) && (Deaf)) {
-                pline("It looks as if %s is yelling at you.", mon_nam(mtmp));
-            }
-            if (m_canseeu(mtmp) && (Blind) && (Deaf)) {
-                You("sense a disturbing vibration in the air.");
-            }
-	    if (m_canseeu(mtmp) && canseemon(mtmp) && (!Deaf)) {
-		pline("%s croaks hoarsely.", Monnam(mtmp));
-	    } else {
-		You_hear("a hoarse croak nearby.");
-	    }
-        } else {
-            int stun = d(2, 8);
         if (m_canseeu(mtmp)) {
             pline("%s lets out a bloodcurdling scream!", Monnam(mtmp));
         } else {
@@ -3437,11 +3444,10 @@ struct attack *mattk;
         if (u.usleep && m_canseeu(mtmp) && (!Deaf)) {
             unmul("You are frightened awake!");
         }
-            mtmp->mspec_used = mtmp->mspec_used + (stun + rn2(6));
-            Your("mind reels from the noise!");
-            make_stunned((HStun & TIMEOUT) + (long) stun, TRUE);
-            stop_occupation();
-            }
+        Your("mind reels from the noise!");
+        make_stunned((HStun & TIMEOUT) + (long) dmg, TRUE);
+        aggravate(); /* Nazgul scream VERY loudly */
+        stop_occupation();
         break;
     default:
         break;

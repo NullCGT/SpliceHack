@@ -1725,7 +1725,7 @@ tamedog(mtmp, (struct obj *) 0);
 		case T_CROWN_LAW:
 			You("call upon the seven heavens to enact holy justice upon your enemies!");
 			for(i = 0; i < 7; i++) {
-				mtmp = makemon(&mons[PM_MOVANIC_DEVA], u.ux, u.uy, MM_EDOG);
+				mtmp = makemon(&mons[PM_MOVANIC_DEVA], u.ux, u.uy, MM_EDOG | NO_MINVENT);
 				(void) tamedog(mtmp, (struct obj *) 0);
 				mtmp->mfading = 15 + techlev(tech_no);
 			}

@@ -943,6 +943,7 @@ SCROLL("enchant weapon",         "DAIYEN FOOELS",  1,  80,  60),
 SCROLL("create monster",       "LEP GEX VEN ZEA",  1,  45, 200),
 SCROLL("taming",                   "PRIRUTSENIE",  1,  10, 200),
 SCROLL("genocide",                  "ELBIB YLOH",  1,  10, 300),
+SCROLL("elementalism",          "4OFAE OF9 SCC9",  1,  10, 300), /* Voynich */
 SCROLL("light",                 "VERR YED HORRE",  1,  30,  50),
 SCROLL("warding words",         "DO NOT READ ME",  1,  40,  50),
 SCROLL("time",                   "TEMP USF UGIT",  1,  20, 100), /* tempus fugit */

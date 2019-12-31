@@ -1297,6 +1297,7 @@ E int FDECL(doseduce, (struct monst *));
 E void FDECL(newemin, (struct monst *));
 E void FDECL(free_emin, (struct monst *));
 E int FDECL(monster_census, (BOOLEAN_P));
+E int NDECL(rand_elemental);
 E int FDECL(msummon, (struct monst *));
 E void FDECL(summon_minion, (ALIGNTYP_P, BOOLEAN_P));
 E boolean FDECL(boss_entrance, (struct monst *));

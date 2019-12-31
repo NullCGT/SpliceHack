@@ -49,6 +49,12 @@ boolean spotted; /* seen|sensed vs all */
     return count;
 }
 
+/* returns a basic elemental */
+int
+rand_elemental() {
+    return PM_AIR_ELEMENTAL + rn2(PM_FUSION_ELEMENTAL - PM_AIR_ELEMENTAL);
+}
+
 /* mon summons a monster */
 int
 msummon(mon)
@@ -103,7 +109,7 @@ struct monst *mon;
         if (!rn2(6)) {
             switch (atyp) { /* see summon_minion */
             case A_NEUTRAL:
-                dtype = PM_AIR_ELEMENTAL + rn2(8);
+                dtype = rand_elemental();
                 break;
             case A_CHAOTIC:
             case A_NONE:
@@ -175,7 +181,7 @@ boolean talk;
         mnum = lminion();
         break;
     case A_NEUTRAL:
-        mnum = PM_AIR_ELEMENTAL + rn2(8);
+        mnum = rand_elemental();
         break;
     case A_CHAOTIC:
     case A_NONE:

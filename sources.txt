@@ -87,6 +87,10 @@
 - Being an awesome variant.
 - Dragonmaster changes.
 
+#Lethe Patch
+- Gehennom Levels
+- Scroll of Elementalism
+
 #DNetHack
 - Inspiration for Creeping Kudzu
 - Code for race fields and expanded races

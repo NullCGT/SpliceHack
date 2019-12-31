@@ -3,11 +3,18 @@
                     Upcoming Version
 
 Items
-- New Item: Wand of water
+- New Item: Wand of Water
   - Wands of water do a small amount of damage and will damage armor.
     Zapping a wand of water at a monster that likes fire will deal a
     very large amount of damage, zapping a water elemental will heal it,
     and zapping an earth elemental will turn it into a mud elemental.
+- New Item: Scroll of Elementalism
+  - Sourced from the Lethe Patch, with some minor changes. First, the
+    scroll is read less liberally by monsters, monsters no longer
+    randomly spawn with is as their defensive item, and the scroll can
+    create any type of elemental except fusion elementals.
+  - Additionally, partially de-spaghettified the code for summoning
+    elementals.
 
 Monsters
 - New Monster: Mud Elemental

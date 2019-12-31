@@ -1218,6 +1218,7 @@ struct attack *mattk;
         what = "already on fire";
         break;
     case PM_WATER_ELEMENTAL:
+    case PM_MUD_ELEMENTAL:
     case PM_FOG_CLOUD:
     case PM_STEAM_VORTEX:
         what = "boiling";

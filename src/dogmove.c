@@ -123,6 +123,7 @@ boolean check_if_better;
         otmp->otyp == SCR_REMOVE_CURSE ||
         otmp->otyp == SCR_FIRE ||
  	      otmp->otyp == WAN_DEATH ||
+          otmp->otyp == WAN_WATER ||
  	      otmp->otyp == WAN_DIGGING ||
  	      otmp->otyp == WAN_FIRE ||
  	      otmp->otyp == WAN_COLD ||

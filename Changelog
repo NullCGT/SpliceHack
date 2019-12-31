@@ -1,4 +1,22 @@
                         SpliceHack -- Changelog
+
+                    Upcoming Version
+
+Items
+- New Item: Wand of water
+  - Wands of water do a small amount of damage and will damage armor.
+    Zapping a wand of water at a monster that likes fire will deal a
+    very large amount of damage, zapping a water elemental will heal it,
+    and zapping an earth elemental will turn it into a mud elemental.
+
+Monsters
+- New Monster: Mud Elemental
+  - Mud Elementals are not randomly generated. They only appear when
+    an earth elemental is zapped with a wand of water, or as a minion of
+    a neutral deity.
+
+Bug Fixes
+- Water elementals can be neutral deific minions agian.
                     
                     Version 0.7.0: Stranger Days
 

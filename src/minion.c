@@ -175,7 +175,7 @@ boolean talk;
         mnum = lminion();
         break;
     case A_NEUTRAL:
-        mnum = PM_AIR_ELEMENTAL + rn2(5);
+        mnum = PM_AIR_ELEMENTAL + rn2(7);
         break;
     case A_CHAOTIC:
     case A_NONE:

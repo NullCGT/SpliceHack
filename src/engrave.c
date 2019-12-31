@@ -786,6 +786,13 @@ doengrave()
                 }
                 create_gas_cloud(u.ux, u.uy, 1, 4);
                 break;
+            case WAN_WATER:
+                if (!Blind)
+                    Sprintf(post_engr_text,
+                            "The bugs on the %s get washed away!", surface(u.ux, u.uy));
+                if (!oep || (oep->engr_type != BURN))
+                    break;
+                /*FALLTHRU*/
             case WAN_COLD:
                 if (!Blind)
                     Strcpy(post_engr_text,

@@ -61,6 +61,8 @@ struct permonst *ptr;
             return Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz);
         case PM_WATER_ELEMENTAL:
             return Is_waterlevel(&u.uz);
+        case PM_MUD_ELEMENTAL:
+            return Is_earthlevel(&u.uz) || Is_waterlevel(&u.uz);
         case PM_FUSION_ELEMENTAL:
             return Is_astralevel(&u.uz);
         }

@@ -2067,7 +2067,7 @@ NEARDATA struct permonst mons[] = {
         M1_NOEYES | M1_NOLIMBS | M1_NOHEAD | M1_MINDLESS | M1_BREATHLESS
             | M1_UNSOLID | M1_FLY,
         M2_STRONG | M2_NEUTER, 0, 0, 10, CLR_CYAN),
-    MON("storm elemental", S_ELEMENTAL, LVL(8, 12, 2, 30, 0), (G_NOCORPSE | 1),
+    MON("storm elemental", S_ELEMENTAL, LVL(8, 12, 2, 30, 0), (G_NOCORPSE | G_HELL | 1),
         A(ATTK(AT_CLAW, AD_ELEC, 2, 4), ATTK(AT_CLAW, AD_LOUD, 2, 4), NO_ATTK,
           NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(0, 0, MS_SILENT, MZ_HUGE),
@@ -2082,7 +2082,7 @@ NEARDATA struct permonst mons[] = {
         M1_NOEYES | M1_NOLIMBS | M1_NOHEAD | M1_MINDLESS | M1_BREATHLESS
             | M1_UNSOLID | M1_FLY | M1_NOTAKE,
         M2_STRONG | M2_NEUTER, M3_INFRAVISIBLE, 0, 10, CLR_YELLOW),
-    MON("magma elemental", S_ELEMENTAL, LVL(8, 6, 2, 30, 0), (G_NOCORPSE | 1),
+    MON("magma elemental", S_ELEMENTAL, LVL(8, 6, 2, 30, 0), (G_NOCORPSE | G_HELL | 1),
         A(ATTK(AT_CLAW, AD_FIRE, 4, 5), ATTK(AT_NONE, AD_FIRE, 0, 4), NO_ATTK,
           NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(0, 0, MS_SILENT, MZ_HUGE), MR_FIRE, 0,
@@ -2112,6 +2112,13 @@ NEARDATA struct permonst mons[] = {
         M1_NOEYES | M1_NOLIMBS | M1_NOHEAD | M1_MINDLESS | M1_BREATHLESS
             | M1_UNSOLID | M1_AMPHIBIOUS | M1_SWIM,
         M2_STRONG | M2_NEUTER, 0, 0, 10, CLR_BLUE),
+    MON("ice elemental", S_ELEMENTAL, LVL(8, 12, 2, 30, 0), (G_NOCORPSE | G_NOGEN),
+        A(ATTK(AT_CLAW, AD_PHYS, 5, 6), ATTK(AT_NONE, AD_COLD, 0, 4), 
+          NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(2500, 0, MS_SILENT, MZ_HUGE), MR_POISON | MR_STONE | MR_COLD, 0,
+        M1_NOEYES | M1_NOLIMBS | M1_NOHEAD | M1_MINDLESS | M1_BREATHLESS
+            | M1_UNSOLID | M1_AMPHIBIOUS | M1_SWIM,
+        M2_STRONG | M2_NEUTER, 0, 0, 11, CLR_WHITE),
     MON("fusion elemental", S_ELEMENTAL, LVL(25, 18, 2, 30, 0),
         (G_PLANES | G_NOCORPSE | G_GENO | 1),
         A(ATTK(AT_CLAW, AD_FIRE, 2, 6), ATTK(AT_CLAW, AD_PHYS, 2, 6),

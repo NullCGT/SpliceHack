@@ -59,6 +59,7 @@ struct permonst *ptr;
             return Is_firelevel(&u.uz);
         case PM_EARTH_ELEMENTAL:
             return Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz);
+        case PM_ICE_ELEMENTAL:
         case PM_WATER_ELEMENTAL:
             return Is_waterlevel(&u.uz);
         case PM_MUD_ELEMENTAL:

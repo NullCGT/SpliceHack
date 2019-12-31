@@ -103,7 +103,7 @@ struct monst *mon;
         if (!rn2(6)) {
             switch (atyp) { /* see summon_minion */
             case A_NEUTRAL:
-                dtype = PM_AIR_ELEMENTAL + rn2(5);
+                dtype = PM_AIR_ELEMENTAL + rn2(8);
                 break;
             case A_CHAOTIC:
             case A_NONE:
@@ -175,7 +175,7 @@ boolean talk;
         mnum = lminion();
         break;
     case A_NEUTRAL:
-        mnum = PM_AIR_ELEMENTAL + rn2(7);
+        mnum = PM_AIR_ELEMENTAL + rn2(8);
         break;
     case A_CHAOTIC:
     case A_NONE:

@@ -1224,6 +1224,7 @@ struct attack *mattk;
         what = "boiling";
         break;
     case PM_ICE_VORTEX:
+    case PM_ICE_ELEMENTAL:
     case PM_GLASS_GOLEM:
         what = "melting";
         break;

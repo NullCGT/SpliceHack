@@ -13,7 +13,14 @@ Monsters
 - New Monster: Mud Elemental
   - Mud Elementals are not randomly generated. They only appear when
     an earth elemental is zapped with a wand of water, or as a minion of
-    a neutral deity.
+    a neutral deity or angel.
+- New Monster: Ice Elemental
+  - Ice Elementals are not randomly generated. They appear only when as
+    a neutral minion.
+- Magma elementals and storm elementals only spawn in Gehennom.
+  - People have complained about these blocking access to dungeon corridors,
+    and it makes thematic sense for them to appear in Gehennom, at which
+    point the player has numerous methods to bypass magma.
 
 Bug Fixes
 - Water elementals can be neutral deific minions agian.

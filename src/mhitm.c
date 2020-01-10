@@ -1045,6 +1045,8 @@ register struct attack *mattk;
     case AD_WERE:
     case AD_HEAL:
     case AD_DSRM:
+    case AD_QUIL:
+    case AD_LUCK:
     case AD_PHYS:
  physical:
         /* this shade check is necessary in case any attacks which

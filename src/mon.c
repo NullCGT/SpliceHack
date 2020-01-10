@@ -804,6 +804,7 @@ void
 mcalcdistress()
 {
     struct monst *mtmp;
+    struct obj *obj, *otmp;
 
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
@@ -828,6 +829,13 @@ mcalcdistress()
         if (mtmp->mfading && mtmp->mfading == 1) {
             if canseemon(mtmp)
                 pline(Hallucination ? "%s explodes into multicolored polygons!" : "%s vanishes in a puff of smoke!", Monnam(mtmp));
+            for (obj = mtmp->minvent; obj; obj = otmp) {
+                otmp = obj->nobj;
+                obj_extract_self(obj);
+                if (mtmp->mx) {
+                    mdrop_obj(mtmp, obj, FALSE);
+                }
+            }
             mongone(mtmp);
         }
 

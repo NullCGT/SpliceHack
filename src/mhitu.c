@@ -214,7 +214,8 @@ struct attack *mattk;
     } else {
         return (mattk->aatyp == AT_TUCH) ? "contact"
                   : (mattk->aatyp == AT_GAZE) ? "gaze"
-                       : (mattk->aatyp == AT_BITE) ? "bite" : "sting";
+                       : (mattk->aatyp == AT_BITE) ? "bite"
+                            : (mattk->aatyp == AT_STNG) ? "sting" : "attack";
     }
 }
 
@@ -1329,6 +1330,7 @@ register struct attack *mattk;
         }
         break;
     case AD_QUIL:
+        hitmsg(mtmp, mattk);
         pline("Yeeowch! Spiky!");
         if (!thick_skinned(youmonst.data))
             dmg += rn2(4);

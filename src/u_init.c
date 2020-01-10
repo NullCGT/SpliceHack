@@ -1151,7 +1151,7 @@ u_init()
   					attkptr->adtyp == AD_PEST || attkptr->adtyp == AD_FAMN ||
             attkptr->adtyp == AD_HYDR || attkptr->adtyp == AD_QUIL ||
             attkptr->adtyp == AD_LUCK || attkptr->adtyp == AD_SKEL) {
-  			attkptr->adtyp = rn2(AD_HNGY);
+  			attkptr->adtyp = rn2(AD_CLRC);
   		}
   		attkptr->damn = 2;				/* we're almost sure to get this wrong first time */
   		attkptr->damd = 10;				/* either too high or too low */

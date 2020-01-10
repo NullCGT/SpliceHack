@@ -1210,6 +1210,7 @@ register struct attack *mattk;
             dmg = 0;
         break;
     case AD_WIND:
+        hitmsg(mtmp, mattk);
         if (uncancelled) {
             You("are blasted by wind!");
             hurtle(u.ux - mtmp->mx, u.uy - mtmp->my, dmg, TRUE);

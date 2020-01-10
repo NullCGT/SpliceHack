@@ -1150,7 +1150,7 @@ u_init()
   					attkptr->adtyp == AD_ENCH || attkptr->adtyp == AD_DISN ||
   					attkptr->adtyp == AD_PEST || attkptr->adtyp == AD_FAMN ||
             attkptr->adtyp == AD_HYDR || attkptr->adtyp == AD_DGST ||
-            attkptr->adtyp == AD_SKEL) {
+            attkptr->adtyp == AD_SKEL || attkptr->adtyp == AD_POTN) {
   			attkptr->adtyp = rn2(AD_CLRC);
   		}
   		attkptr->damn = 2;				/* we're almost sure to get this wrong first time */

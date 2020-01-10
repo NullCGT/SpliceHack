@@ -618,6 +618,7 @@ register struct monst *mtmp;
             if (!rn2(3))
                 (void) mongets(mtmp, ORCISH_RING_MAIL);
             break;
+        case PM_ORC_WARLORD:
         case PM_URUK_HAI:
             if (!rn2(3))
                 (void) mongets(mtmp, ORCISH_CLOAK);

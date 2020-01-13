@@ -1,4 +1,4 @@
-/* NetHack 3.6	extern.h	$NHDT-Date: 1573940539 2019/11/16 21:42:19 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.741 $ */
+/* NetHack 3.6	extern.h	$NHDT-Date: 1578895332 2020/01/13 06:02:12 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.785 $ */
 /* Copyright (c) Steve Creps, 1988.				  */
 /* NetHack may be freely redistributed.  See license for details. */
 /* Edited on 5/8/18 by NullCGT */
@@ -1380,8 +1380,9 @@ E void FDECL(new_omailcmd, (struct obj *, const char *));
 E void FDECL(free_omailcmd, (struct obj *));
 E struct obj *FDECL(mkobj_at, (CHAR_P, int, int, BOOLEAN_P));
 E struct obj *FDECL(mksobj_at, (int, int, int, BOOLEAN_P, BOOLEAN_P));
-E struct obj *FDECL(mksobj_migr_to_species, (int, unsigned, BOOLEAN_P, BOOLEAN_P));
-E struct obj *FDECL(mkobj, (CHAR_P, BOOLEAN_P));
+E struct obj *FDECL(mksobj_migr_to_species, (int, unsigned,
+                                             BOOLEAN_P, BOOLEAN_P));
+E struct obj *FDECL(mkobj, (int, BOOLEAN_P));
 E int NDECL(rndmonnum);
 E boolean FDECL(bogon_is_pname, (CHAR_P));
 E struct obj *FDECL(splitobj, (struct obj *, long));

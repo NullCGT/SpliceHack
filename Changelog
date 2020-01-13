@@ -1,6 +1,6 @@
                         SpliceHack -- Changelog
 
-                    New Version
+                    Version 0.7.1
 
 Monsters
 - New Monster: Thriae
@@ -43,9 +43,12 @@ Items
 Balance
 - Stop randomly generating penguins, since the fact that eating them makes the
   Gods angry is confusing.
+- Pirates can be gifted artifacts, but do not have increased artifact generation.
 
 Bug Fixes
 - Water elementals can be neutral deific minions agian.
+- Pets will now attack monsters that are always peaceful.
+- Shambling horror randomized stats are maintained when saving and reloading.
                     
                     Version 0.7.0: Stranger Days
 

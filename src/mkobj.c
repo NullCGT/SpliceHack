@@ -1,4 +1,4 @@
-/* NetHack 3.6	mkobj.c	$NHDT-Date: 1571531889 2019/10/20 00:38:09 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.157 $ */
+/* NetHack 3.6	mkobj.c	$NHDT-Date: 1578895344 2020/01/13 06:02:24 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.174 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -250,7 +250,7 @@ boolean init, artif;
    result is always non-Null */
 struct obj *
 mkobj(oclass, artif)
-char oclass;
+int oclass;
 boolean artif;
 {
     int tprob, i, prob;
@@ -263,7 +263,7 @@ boolean artif;
                                             : (const struct icp *) mkobjprobs;
 
         for (tprob = rnd(100); (tprob -= iprobs->iprob) > 0; iprobs++)
-            ;
+            continue;
         oclass = iprobs->iclass;
     }
 
@@ -275,10 +275,15 @@ boolean artif;
         total_prob += objects[i].oc_prob;
     }
 
-    prob = rnd(total_prob);
-    i = bases[(int) oclass];
-    while ((prob -= objects[i].oc_prob) > 0) {
-        i++;
+    if (oclass == SPBOOK_no_NOVEL) {
+        i = rnd_class(bases[SPBOOK_CLASS], SPE_BLANK_PAPER);
+        oclass = SPBOOK_CLASS; /* for sanity check below */
+    } else {
+        prob = rnd(total_prob);
+        i = bases[(int) oclass];
+        while ((prob -= objects[i].oc_prob) > 0) {
+            i++;
+        }
     }
 
     if (objects[i].oc_class != oclass || !OBJ_NAME(objects[i]))
@@ -1116,7 +1121,8 @@ boolean artif;
                 otmp->corpsenm = rndmonnum();
                 if (!verysmall(&mons[otmp->corpsenm])
                     && rn2(level_difficulty() / 2 + 10) > 10)
-                    (void) add_to_container(otmp, mkobj(SPBOOK_CLASS, FALSE));
+                    (void) add_to_container(otmp,
+                                            mkobj(SPBOOK_no_NOVEL, FALSE));
             }
             break;
         case COIN_CLASS:

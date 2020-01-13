@@ -776,9 +776,7 @@ register struct monst *mtmp;
             (void) mongets(mtmp, rn2(4) ? TRIDENT : BULLWHIP);
             break;
         case PM_DISPATER:
-            otmp = mksobj(rnd_class(SPE_DIG, SPE_FREEZE_SPHERE),
-                              FALSE, FALSE);
-            mpickobj(mtmp, otmp);
+            (void) mpickobj(mtmp, mkobj(SPBOOK_no_NOVEL, FALSE));
             break;
         case PM_KOSTCHTCHIE:
             (void) mongets(mtmp, CLUB);

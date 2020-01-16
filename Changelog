@@ -1,4 +1,19 @@
                         SpliceHack -- Changelog
+
+                    New Version
+
+Monsters
+- Orc Warlord
+  - Not randomly generated. Grown up form of an orc captain. The leader of the
+    orctown gang has been changed to an orc warlord.
+- Guard Dogs
+  - Dog counterpart to fat cats.
+- Tuxedo Penguin
+  - Penguin counterpart to fat cats.
+
+Balance
+- Stop randomly generating penguins, since the fact that eating them makes the
+  Gods angry is confusing.
                     
                     Version 0.7.0: Stranger Days
 

@@ -3,17 +3,45 @@
                     New Version
 
 Monsters
-- Orc Warlord
+- New Monster: Orc Warlord
   - Not randomly generated. Grown up form of an orc captain. The leader of the
     orctown gang has been changed to an orc warlord.
-- Guard Dogs
+- New Monster: Guard Dog
   - Dog counterpart to fat cats.
-- Tuxedo Penguin
+- New Monster: Tuxedo Penguin
   - Penguin counterpart to fat cats.
+- New Monster: Mud Elemental
+  - Mud Elementals are not randomly generated. They only appear when
+    an earth elemental is zapped with a wand of water, or as a minion of
+    a neutral deity or angel.
+- New Monster: Ice Elemental
+  - Ice Elementals are not randomly generated. They appear only when as
+    a neutral minion.
+- Magma elementals and storm elementals only spawn in Gehennom.
+  - People have complained about these blocking access to dungeon corridors,
+    and it makes thematic sense for them to appear in Gehennom, at which
+    point the player has numerous methods to bypass magma.
+
+Items
+- New Item: Wand of Water
+  - Wands of water do a small amount of damage and will damage armor.
+    Zapping a wand of water at a monster that likes fire will deal a
+    very large amount of damage, zapping a water elemental will heal it,
+    and zapping an earth elemental will turn it into a mud elemental.
+- New Item: Scroll of Elementalism
+  - Sourced from the Lethe Patch, with some minor changes. First, the
+    scroll is read less liberally by monsters, monsters no longer
+    randomly spawn with is as their defensive item, and the scroll can
+    create any type of elemental except fusion elementals.
+  - Additionally, partially de-spaghettified the code for summoning
+    elementals.
 
 Balance
 - Stop randomly generating penguins, since the fact that eating them makes the
   Gods angry is confusing.
+
+Bug Fixes
+- Water elementals can be neutral deific minions agian.
                     
                     Version 0.7.0: Stranger Days
 

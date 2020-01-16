@@ -304,6 +304,7 @@ struct obj *otmp;
 #define MUSE_POT_VAMPIRE_BLOOD 21
 #define MUSE_WAN_CREATE_HORDE 22
 #define MUSE_SCR_LIGHT 23
+#define MUSE_SCR_ELEMENTALISM 24
 /*
 #define MUSE_INNATE_TPT 9999
  * We cannot use this.  Since monsters get unlimited teleportation, if they
@@ -662,7 +663,7 @@ boolean force;
                 m.has_defense = MUSE_WAN_HEALING;
             }
             nomore(MUSE_POT_VAMPIRE_BLOOD);
-        		if(is_vampire(mtmp->data) && obj->otyp == POT_VAMPIRE_BLOOD) {
+        	if(is_vampire(mtmp->data) && obj->otyp == POT_VAMPIRE_BLOOD) {
         			m.defensive = obj;
         			m.has_defense = MUSE_POT_VAMPIRE_BLOOD;
         	}
@@ -684,6 +685,11 @@ boolean force;
                 m.has_defense = MUSE_WAN_CREATE_MONSTER;
             }
         }
+        nomore(MUSE_SCR_ELEMENTALISM);
+ 		if (obj->otyp == SCR_ELEMENTALISM) {
+ 		    m.defensive = obj;
+ 	    	m.has_defense = MUSE_SCR_ELEMENTALISM;
+  		}
         nomore(MUSE_SCR_CREATE_MONSTER);
         if (obj->otyp == SCR_CREATE_MONSTER) {
             m.defensive = obj;
@@ -936,6 +942,58 @@ struct monst *mtmp;
         m_useup(mtmp, otmp);
         return 2;
     }
+    case MUSE_SCR_ELEMENTALISM: {
+        coord cc;
+ 		struct permonst *pm = 0, *fish = 0;
+ 		int cnt = 1;
+ 		struct monst *mon;
+ 		boolean known = FALSE;
+ 
+ 		if (!rn2(73)) cnt += rnd(4);
+ 		if (mtmp->mconf || otmp->cursed) cnt += rn2(8);
+ 		if (mtmp->mconf) pm = fish = &mons[PM_MANES];
+ 		else if (is_pool(mtmp->mx, mtmp->my))
+ 		    fish = &mons[PM_WATER_ELEMENTAL];
+ 		mreadmsg(mtmp, otmp);
+ 		/* Pick an elemental time... */
+        if (mtmp->mconf) {
+            switch(rn2(4)) {
+                case  0:			/* Air */
+                    pm = &mons[PM_GAS_SPORE];
+                    break;
+                case  1:			/* Fire */
+                    pm = &mons[PM_FLAMING_SPHERE];
+                    break;
+                case  2:			/* Water */
+                    pm = &mons[PM_FREEZING_SPHERE];
+                    break;
+                case  3:			/* Earth */
+                    pm = &mons[PM_SHOCKING_SPHERE];
+                    break;
+            }
+        } else {
+            pm = &mons[rand_elemental()];
+        }
+ 		while(cnt--) {
+ 		    /* `fish' potentially gives bias towards water locations;
+ 		       `pm' is what to actually create (0 => random) */
+ 		    if (!enexto(&cc, mtmp->mx, mtmp->my, fish)) break;
+ 		    mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
+ 		    if (mon && canspotmon(mon)) known = TRUE;
+ 		}
+ 		/* The only case where we don't use oseen.  For wands, you
+ 		 * have to be able to see the monster zap the wand to know
+ 		 * what type it is.  For teleport scrolls, you have to see
+ 		 * the monster to know it teleported.
+ 		 */
+ 		if (known)
+ 		    makeknown(SCR_ELEMENTALISM);
+ 		else if (!objects[SCR_ELEMENTALISM].oc_name_known
+ 			&& !objects[SCR_ELEMENTALISM].oc_uname)
+ 		    docall(otmp);
+ 		m_useup(mtmp, otmp);
+ 		return 2;
+ 	}
     case MUSE_TRAPDOOR:
         /* trap doors on "bottom" levels of dungeons are rock-drop
          * trap doors, not holes in the floor.  We check here for
@@ -1218,6 +1276,7 @@ struct monst *mtmp;
 #define MUSE_POT_BLOOD_THROW 28
 #define MUSE_CAMERA 29
 #define MUSE_WAN_WINDSTORM 30
+#define MUSE_WAN_WATER 31
 
 /* Select an offensive item/action for a monster.  Returns TRUE iff one is
  * found.
@@ -1328,6 +1387,11 @@ struct monst *mtmp;
         if (obj->otyp == WAN_WINDSTORM && obj->spe > 0 && !rn2(3)) {
             m.offensive = obj;
             m.has_offense = MUSE_WAN_WINDSTORM;
+        }
+        nomore(MUSE_WAN_WATER);
+        if (obj->otyp == WAN_WATER && obj->spe > 0) {
+            m.offensive = obj;
+            m.has_offense = MUSE_WAN_WATER;
         }
 #if 0   /* use_offensive() has had some code to support wand of teleportation
          * for a long time, but find_offensive() never selected one;
@@ -1494,6 +1558,40 @@ register struct obj *otmp;
     case WAN_WINDSTORM:
         You("get blasted by hurricane-force winds!");
         hurtle(u.ux - mtmp->mx, u.uy - mtmp->my, 5 + rn2(5), TRUE);
+        break;
+    case WAN_WATER:
+        reveal_invis = TRUE;
+        if (mtmp == &youmonst) {
+            if (zap_oseen)
+                makeknown(WAN_WATER);
+            if (rnd(20) < 10 + u.uac) {
+                tmp = d(likes_fire(youmonst.data) ? 12 : 1, 6);
+                pline_The("jet of water hits you!");
+                erode_armor(&youmonst, ERODE_RUST);
+                losehp(tmp, "jet of water", KILLED_BY_AN);
+            } else
+                pline_The("jet of water misses you.");
+            stop_occupation();
+            nomul(0);
+        } else if (mtmp->data == &mons[PM_WATER_ELEMENTAL]) {
+            mtmp->mhp += d(6, 6);
+            if (mtmp->mhp > mtmp->mhpmax)
+                mtmp->mhp = mtmp->mhpmax;
+            if (canseemon(mtmp)) {
+                pline("%s looks a lot better.", Monnam(mtmp));
+            }
+        } else if (mtmp->data == &mons[PM_EARTH_ELEMENTAL]) {
+            if (canseemon(mtmp))
+                pline("%s turns into a roiling pile of mud!", Monnam(mtmp));
+            (void) newcham(mtmp, &mons[PM_MUD_ELEMENTAL], FALSE, FALSE);
+        } else if (rnd(20) < 10 + find_mac(mtmp)) {
+            tmp = d(likes_fire(mtmp->data) ? 12 : 1, 6);
+            hit("jet of water", mtmp, exclam(tmp));
+        } else {
+            miss("jet of water", mtmp);
+            if (cansee(mtmp->mx, mtmp->my) && zap_oseen)
+                makeknown(WAN_WATER);
+        }
         break;
 #if 0   /* disabled because find_offensive() never picks WAN_TELEPORTATION */
     case WAN_TELEPORTATION:
@@ -1705,6 +1803,7 @@ struct monst *mtmp;
     case MUSE_WAN_STRIKING:
     case MUSE_WAN_CANCELLATION:
     case MUSE_WAN_WINDSTORM:
+    case MUSE_WAN_WATER:
         zap_oseen = oseen;
         mzapwand(mtmp, otmp, FALSE);
         m_using = TRUE;
@@ -2087,22 +2186,22 @@ struct monst *mtmp;
             m.misc = obj;
             m.has_misc = MUSE_POT_POLYMORPH;
         }
-     		nomore(MUSE_SCR_REMOVE_CURSE);
-     		if(obj->otyp == SCR_REMOVE_CURSE)
-     		{
-            register struct obj *otmp;
-       			for (otmp = mtmp->minvent;
-       			     otmp; otmp = otmp->nobj)
-       			{
-       			    if (otmp->cursed &&
-       			        (otmp->otyp == LOADSTONE ||
-       				 otmp->owornmask))
-       			    {
-       			        m.misc = obj;
-       			        m.has_misc = MUSE_SCR_REMOVE_CURSE;
-       			    }
-       			}
-     		}
+        nomore(MUSE_SCR_REMOVE_CURSE);
+        if(obj->otyp == SCR_REMOVE_CURSE)
+        {
+        register struct obj *otmp;
+            for (otmp = mtmp->minvent;
+                    otmp; otmp = otmp->nobj)
+            {
+                if (otmp->cursed &&
+                    (otmp->otyp == LOADSTONE ||
+                    otmp->owornmask))
+                {
+                    m.misc = obj;
+                    m.has_misc = MUSE_SCR_REMOVE_CURSE;
+                }
+            }
+        }
     }
     return (boolean) !!m.has_misc;
 #undef nomore
@@ -2534,6 +2633,7 @@ struct obj *obj;
             || typ == WAN_CANCELLATION
             || typ == WAN_CREATE_HORDE
             || typ == WAN_WINDSTORM
+            || typ == WAN_WATER
             || typ == WAN_HEALING)
             return TRUE;
         break;
@@ -2554,7 +2654,7 @@ struct obj *obj;
     case SCROLL_CLASS:
         if (typ == SCR_TELEPORTATION || typ == SCR_CREATE_MONSTER
             || typ == SCR_EARTH || typ == SCR_FIRE || typ == SCR_REMOVE_CURSE
-            || typ == SCR_WEB || typ == SCR_LIGHT)
+            || typ == SCR_WEB || typ == SCR_LIGHT || typ == SCR_ELEMENTALISM)
             return TRUE;
         break;
     case RING_CLASS:

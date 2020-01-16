@@ -214,6 +214,42 @@ struct obj *otmp;
             miss(zap_type_text, mtmp);
         learn_it = TRUE;
         break;
+    case WAN_WATER:
+        You("fire off a powerful jet of water!");
+        zap_type_text = "jet of water";
+        reveal_invis = TRUE;
+        if (u.uswallow && mtmp->data == &mons[PM_ICE_VORTEX]) {
+            u.uhp = 0;
+            losehp(1, "turning into a block of ice", KILLED_BY);
+        } else if (u.uswallow) {
+            pline("Ugh! Now it's slippery in here!");
+        } else if (mtmp->data == &mons[PM_WATER_ELEMENTAL]) {
+            mtmp->mhp += d(6, 6);
+            if (mtmp->mhp > mtmp->mhpmax)
+                mtmp->mhp = mtmp->mhpmax;
+            if (canseemon(mtmp)) {
+                pline("%s looks a lot better.", Monnam(mtmp));
+            }
+        } else if (mtmp->data == &mons[PM_EARTH_ELEMENTAL]) {
+            if (canseemon(mtmp))
+                pline("%s turns into a roiling pile of mud!", Monnam(mtmp));
+            (void) newcham(mtmp, &mons[PM_MUD_ELEMENTAL], FALSE, FALSE);
+        } else if (rnd(20) < 10 + find_mac(mtmp)) {
+            erode_armor(mtmp, ERODE_RUST);
+            dmg = d(likes_fire(mtmp->data) ? 12 : 1, 6);
+            hit(zap_type_text, mtmp, exclam(dmg));
+            mtmp->mhp -= dmg;
+            if (DEADMONSTER(mtmp)) {
+                if (m_using)
+                    monkilled(mtmp, "", AD_RBRE);
+                else
+                    killed(mtmp);
+            }
+        } else {
+            miss(zap_type_text, mtmp);
+        }
+        learn_it = TRUE;
+        break;
     case WAN_SLOW_MONSTER:
     case SPE_SLOW_MONSTER:
         if (!resist(mtmp, otmp->oclass, 0, NOTELL)) {
@@ -2166,6 +2202,7 @@ struct obj *obj, *otmp;
         case WAN_SPEED_MONSTER:
         case WAN_NOTHING:
         case WAN_HEALING:
+        case WAN_WATER:
         case SPE_HEALING:
         case SPE_EXTRA_HEALING:
             res = 0;
@@ -2588,6 +2625,17 @@ boolean ordinary;
             pline("Whoosh!");
         }
         (void) create_gas_cloud(u.ux, u.uy, 1, 8);
+        break;
+
+    case WAN_WATER:
+        learn_it = TRUE;
+        if (uwep && uwep->otyp == RUBBER_HOSE)
+            You("hose yourself down!");
+        else
+            You("get drenched!");
+        if (!Race_if(PM_MERFOLK))
+            water_damage_chain(invent, FALSE);
+        uwatereffects();
         break;
 
     case WAN_SONICS:
@@ -3163,6 +3211,11 @@ struct obj *obj; /* wand or spell */
             You("scour the floor with wind!");
         }
         break;
+    case WAN_WATER:
+        if (u.dz > 0) {
+            pline("Rain? Here?");
+        }
+        break;
     case WAN_OPENING:
     case SPE_KNOCK:
         /* up or down, but at closed portcullis only */
@@ -3308,6 +3361,7 @@ struct obj *obj; /* wand or spell */
             case WAN_STRIKING:
             case SPE_FORCE_BOLT:
             case WAN_WINDSTORM:
+            case WAN_WATER:
                 wipe_engr_at(x, y, d(2, 4), TRUE);
                 break;
             default:
@@ -3680,6 +3734,10 @@ struct obj **pobj; /* object tossed/used, set to NULL
             case SPE_FORCE_BOLT:
                 if (typ != DRAWBRIDGE_UP)
                     destroy_drawbridge(x, y);
+                learn_it = TRUE;
+                break;
+            case WAN_WATER:
+                pline("Splash!");
                 learn_it = TRUE;
                 break;
             case WAN_WINDSTORM:

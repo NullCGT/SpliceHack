@@ -779,7 +779,7 @@ gcrownu()
     int sp_no;
 #define ok_wep(o) ((o) && ((o)->oclass == WEAPON_CLASS || is_weptool(o)))
 
-    HSee_invisible |= FROMOUTSIDE;
+    incr_itimeout(&HSee_invisible, rn1(1000, 1000));
     HFire_resistance |= FROMOUTSIDE;
     HCold_resistance |= FROMOUTSIDE;
     HShock_resistance |= FROMOUTSIDE;

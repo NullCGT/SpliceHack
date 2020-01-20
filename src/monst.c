@@ -2756,7 +2756,7 @@ struct permonst _mons2[] = {
         MR_COLD | MR_ELEC | MR_POISON | MR_ACID | MR_STONE,
         MR_COLD | MR_ELEC | MR_POISON,
         M1_BREATHLESS | M1_NOEYES | M1_NOLIMBS | M1_NOHEAD | M1_ACID | M1_SWIM,
-        M2_HOSTILE | M2_NEUTER, MH_FLAYER, 0, 21, HI_LORD),
+        M2_HOSTILE | M2_NEUTER | M2_NOPOLY, MH_FLAYER, 0, 21, HI_LORD),
     /*
      * Strange beings
      */
@@ -4024,7 +4024,7 @@ struct permonst _mons2[] = {
         SIZ(1500, 700, MS_ROAR, MZ_LARGE), MR_FIRE | MR_POISON, 0,
         M1_HUMANOID | M1_CARNIVORE | M1_POIS,
         M2_HOSTILE | M2_STRONG | M2_NASTY | M2_PNAME | M2_LORD | M2_MALE
-            | M2_COLLECT, 
+            | M2_COLLECT | M2_NOPOLY, 
         M3_INFRAVISIBLE | M3_INFRAVISION | M3_WANTSAMUL,
         MH_DEMON, 32, HI_LORD),
     MON("Orcus", S_DEMON, LVL(66, 9, -16, 85, -20),
@@ -4674,7 +4674,7 @@ struct permonst _mons2[] = {
         M2_NOPOLY | M2_PNAME | M2_PEACEFUL | M2_STRONG | M2_MALE
             | M2_COLLECT | M2_MAGIC,
         M3_CLOSE | M3_INFRAVISIBLE, MH_HUMAN, 23, HI_LORD),
-    MON("Drakemother", S_DRAGON, LVL(25, 18, -1, 20, -4), (G_GENO | G_NOGEN | 1),
+    MON("Drakemother", S_DRAGON, LVL(25, 18, -1, 20, -4), (G_NOGEN | 1),
         A(ATTK(AT_BREA, AD_FIRE, 6, 6), ATTK(AT_BITE, AD_PHYS, 3, 8),
           ATTK(AT_CLAW, AD_PHYS, 1, 4), ATTK(AT_CLAW, AD_CLOB, 1, 4), NO_ATTK,
           NO_ATTK),

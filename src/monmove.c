@@ -536,10 +536,8 @@ register struct monst *mtmp;
 
     /* Monsters that want to acquire things */
     /* may teleport, so do it before inrange is set */
-    if (is_covetous(mdat)) {
-        pline("YA %s", infravisible(mdat) ? "ye" : "na");
+    if (is_covetous(mdat))
         (void) tactics(mtmp);
-    }
 
     /* check distance and scariness of attacks */
     distfleeck(mtmp, &inrange, &nearby, &scared);

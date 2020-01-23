@@ -4352,7 +4352,7 @@ struct obj *no_wish;
                   materialnm[material]);
         }
         otmp->material = material;
-    } else {
+    } else if (!otmp->oartifact) {
         /* for now, material in wishes will always be base; this is to prevent
          * problems like wishing for arrows and getting glass arrows which will
          * shatter. */

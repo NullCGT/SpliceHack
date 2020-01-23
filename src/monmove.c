@@ -536,8 +536,10 @@ register struct monst *mtmp;
 
     /* Monsters that want to acquire things */
     /* may teleport, so do it before inrange is set */
-    if (is_covetous(mdat))
+    if (is_covetous(mdat)) {
+        pline("YA %s", infravisible(mdat) ? "ye" : "na");
         (void) tactics(mtmp);
+    }
 
     /* check distance and scariness of attacks */
     distfleeck(mtmp, &inrange, &nearby, &scared);
@@ -968,7 +970,7 @@ register int after;
         return 0; /* do not leave hiding place */
 
     /* Offering takes presedence over everything else.*/
-    if (IS_ALTAR(levl[mtmp->mx][mtmp->my].typ) && !is_demon(ptr)) {
+    if (IS_ALTAR(levl[mtmp->mx][mtmp->my].typ) && canseemon(mtmp)) {
         offer = moffer(mtmp);
         if (offer != 0) {
             return offer;

@@ -3,6 +3,10 @@
                     New Version
 
 Monsters
+- New Monster: Thriae
+  - Does not appear until the player is powerful enough to deal with them, but
+    can be potentially very nasty when summoned via summon insects, such as in
+    the endgame.
 - New Monster: Orc Warlord
   - Not randomly generated. Grown up form of an orc captain. The leader of the
     orctown gang has been changed to an orc warlord.

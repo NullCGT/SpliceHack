@@ -96,10 +96,10 @@
 #define notake(ptr) (((ptr)->mflags1 & M1_NOTAKE) != 0L)
 #define has_head(ptr) (((ptr)->mflags1 & M1_NOHEAD) == 0L)
 #define has_horns(ptr) (num_horns(ptr) > 0)
-#define has_beak(ptr)          (is_bird(ptr) || \
-                               (ptr) == &mons[PM_TENGU] || \
-                               (ptr) == &mons[PM_FELL_BEAST] || \
-                               (ptr) == &mons[PM_VROCK])
+#define has_beak(ptr) (is_bird(ptr) || \
+                        (ptr) == &mons[PM_TENGU] || \
+                        (ptr) == &mons[PM_FELL_BEAST] || \
+                        (ptr) == &mons[PM_VROCK])
 #define is_whirly(ptr) \
     ((ptr)->mlet == S_VORTEX || (ptr) == &mons[PM_AIR_ELEMENTAL] || \
       (ptr) == &mons[PM_TASMANIAN_DEVIL])
@@ -148,7 +148,7 @@
     ((ptr) == &mons[PM_BAT] || (ptr) == &mons[PM_GIANT_BAT] \
      || (ptr) == &mons[PM_VAMPIRE_BAT])
 #define is_bird(ptr) ((ptr)->mlet == S_BAT && !is_bat(ptr))
-# define is_rat(ptr)		((ptr) == &mons[PM_SEWER_RAT] || \
+# define is_rat(ptr) ((ptr) == &mons[PM_SEWER_RAT] || \
 				 (ptr) == &mons[PM_GIANT_RAT] || \
 				 (ptr) == &mons[PM_RABID_RAT] || \
 				 (ptr) == &mons[PM_ENORMOUS_RAT] || \

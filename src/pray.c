@@ -1335,6 +1335,8 @@ register struct monst *mtmp;
 {
     register struct obj *otmp;
     register struct obj *gift;
+    if (!IS_ALTAR(levl[mtmp->mx][mtmp->my].typ))
+        return 0;
     /* loop based on select_hwep */
     for (otmp = mtmp->minvent; otmp; otmp = otmp->nobj) {
         /* valid corpse and altar combination with which to sacrifice */
@@ -1376,8 +1378,10 @@ register struct monst *mtmp;
                 }
             return 3;
         /* if nothing else to offer, try offering the amulet of yendor. */
-      } else if (otmp->otyp == AMULET_OF_YENDOR && In_endgame(&u.uz) &&
-                 a_align(mtmp->mx, mtmp->my) == check_malign(mtmp)) {
+      } else if (otmp->otyp == AMULET_OF_YENDOR 
+                 && Is_astralevel(&u.uz)
+                 && levl[mtmp->mx][mtmp->my].altarmask & AM_SHRINE
+                 && a_align(mtmp->mx, mtmp->my) == check_malign(mtmp)) {
             /* This will ALSO hopefully never happen. */
             pline("%s raises the Amulet of Yendor high above the altar!",
                   Monnam(mtmp));
@@ -1395,7 +1399,6 @@ register struct monst *mtmp;
                 pline("Luckily for you, %s does not smite you with their newfound power, and you are allowed to live.",
                       mon_nam(mtmp));
             }
-            done(ESCAPED);
             return 3;
         }
     }

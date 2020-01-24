@@ -25,6 +25,8 @@ Monsters
   - People have complained about these blocking access to dungeon corridors,
     and it makes thematic sense for them to appear in Gehennom, at which
     point the player has numerous methods to bypass magma.
+- Mummies can now cause the player to start withering on hit.
+- Giant mummies can clobber the player, similar to giants.
 
 Items
 - New Item: Wand of Water

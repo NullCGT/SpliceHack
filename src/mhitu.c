@@ -1210,6 +1210,13 @@ register struct attack *mattk;
         if (!diseasemu(mdat))
             dmg = 0;
         break;
+    case AD_WTHR:
+        hitmsg(mtmp, mattk);
+        if (!rn2(3) && !is_undead(youmonst.data)) {
+            You("are withering away!");
+            incr_itimeout(&HWithering, rnd(dmg));
+        }
+        break;
     case AD_WIND:
         hitmsg(mtmp, mattk);
         if (uncancelled) {

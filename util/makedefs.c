@@ -55,7 +55,7 @@
 #endif
 
 #if defined(UNIX) && !defined(LINT) && !defined(GCC_WARN)
-static const char SCCS_Id[] UNUSED = "@(#)makedefs.c\t3.6\t2019/12/17";
+static const char SCCS_Id[] UNUSED = "@(#)makedefs.c\t3.6\t2020/01/18";
 #endif
 
 /* names of files to be generated */
@@ -1226,7 +1226,7 @@ const char *build_date;
     Strcpy(&subbuf[1], PORT_SUB_ID);
 #endif
 
-    Sprintf(outbuf, "%s SpliceHack%s Version %s - last %s %s.", PORT_ID,
+    Sprintf(outbuf, "%s SpliceHack%s Version %s%s - last %s %s.", PORT_ID,
             subbuf, version_string(versbuf, "."), statusbuf,
             date_via_env ? "revision" : "build", build_date);
     return outbuf;

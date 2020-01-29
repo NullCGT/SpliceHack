@@ -1517,7 +1517,7 @@ int how;
     Sprintf(pbuf, "%s %s the %s...", Goodbye(), plname,
             (how != ASCENDED)
                 ? rolename_gender(u.ugender)
-                : (const char *) (flags.gender == GEND_F ? "Demigoddess" : "Demigod" ""));
+                : (const char *) (flags.gender == GEND_F ? "Demigoddess" : "Demigod"));
 
 #if defined(DUMPLOG) || defined(DUMPHTML)
     dump_redirect(TRUE);

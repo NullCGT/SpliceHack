@@ -442,7 +442,7 @@ struct obj *corpse;
         uball->owornmask = uchain->owornmask = 0L;
     
     /* extinguish armor */
-	if(uarm->otyp == GOLD_DRAGON_SCALE_MAIL || uarm->otyp == GOLD_DRAGON_SCALES)
+	if (uarm && (uarm->otyp == GOLD_DRAGON_SCALE_MAIL || uarm->otyp == GOLD_DRAGON_SCALES))
 		end_burn(uarm,FALSE);
 
     /* dispose of your possessions, usually cursed */

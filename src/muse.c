@@ -1933,6 +1933,7 @@ struct monst *mtmp;
 #define MUSE_POT_BOOZE 13
 #define MUSE_CORPSE 14
 #define MUSE_WISH 15
+#define MUSE_BAG 16
 
 boolean
 find_misc(mtmp)
@@ -2087,22 +2088,29 @@ struct monst *mtmp;
             m.misc = obj;
             m.has_misc = MUSE_POT_POLYMORPH;
         }
-     		nomore(MUSE_SCR_REMOVE_CURSE);
-     		if(obj->otyp == SCR_REMOVE_CURSE)
-     		{
-            register struct obj *otmp;
-       			for (otmp = mtmp->minvent;
-       			     otmp; otmp = otmp->nobj)
-       			{
-       			    if (otmp->cursed &&
-       			        (otmp->otyp == LOADSTONE ||
-       				 otmp->owornmask))
-       			    {
-       			        m.misc = obj;
-       			        m.has_misc = MUSE_SCR_REMOVE_CURSE;
-       			    }
-       			}
-     		}
+        nomore(MUSE_SCR_REMOVE_CURSE);
+        if(obj->otyp == SCR_REMOVE_CURSE)
+        {
+        register struct obj *otmp;
+            for (otmp = mtmp->minvent;
+                    otmp; otmp = otmp->nobj)
+            {
+                if (otmp->cursed &&
+                    (otmp->otyp == LOADSTONE ||
+                    otmp->owornmask))
+                {
+                    m.misc = obj;
+                    m.has_misc = MUSE_SCR_REMOVE_CURSE;
+                }
+            }
+        }
+        nomore(MUSE_BAG);
+        if (Is_container(obj) && obj->otyp != BAG_OF_TRICKS && !rn2(5)
+            && !m.has_misc && Has_contents(obj)
+            && !obj->olocked && !obj->otrapped) {
+            m.misc = obj;
+            m.has_misc = MUSE_BAG;
+        }
     }
     return (boolean) !!m.has_misc;
 #undef nomore
@@ -2344,6 +2352,29 @@ struct monst *mtmp;
      		}
      		m_useup(mtmp, otmp);
      	  return 0;
+    case MUSE_BAG:
+        {
+            struct obj *xobj;
+            long count = 1;
+
+            /* FIXME: handle cursed bag of holding */
+            if (Is_mbag(otmp) && otmp->cursed)
+                return 0;
+            if (!Has_contents(otmp) || otmp->olocked)
+                return 0;
+
+            for (xobj = otmp->cobj; xobj; xobj = xobj->nobj) count++;
+            count = rn2(count);
+            for (xobj = otmp->cobj; xobj && count; xobj = xobj->nobj) count--;
+            if (xobj && can_carry(mtmp, xobj)) {
+                if (vismon)
+                    pline("%s rummages through something.", Monnam(mtmp));
+                obj_extract_self(xobj);
+                (void) mpickobj(mtmp, xobj);
+                return 2;
+            }
+        }
+        return 0;
     case MUSE_POLY_TRAP:
         if (vismon) {
             const char *Mnam = Monnam(mtmp);
@@ -2577,6 +2608,8 @@ struct obj *obj;
             return (obj->spe > 0 && can_blow(mon));
         if (typ == FIGURINE || typ == DRUM_OF_EARTHQUAKE
               || typ == EXPENSIVE_CAMERA)
+            return TRUE;
+        if (Is_container(obj) && !(Is_mbag(obj) && obj->cursed))
             return TRUE;
         break;
     case FOOD_CLASS:

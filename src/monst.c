@@ -3210,7 +3210,7 @@ struct permonst _mons2[] = {
         M1_BREATHLESS | M1_MINDLESS | M1_HUMANOID | M1_THICK_HIDE,
         M2_WANDER | M2_HOSTILE | M2_STRONG | M2_COLLECT
             | M2_NASTY,
-        M3_INFRAVISION, MH_UNDEAD, 14, CLR_WHITE),
+        M3_INFRAVISION, MH_UNDEAD, 7, CLR_WHITE),
     MON("draugr", S_ZOMBIE, LVL(5, 6, 8, 0, -3),
         (G_GENO | G_SGROUP | G_NOCORPSE | 2),
         A(ATTK(AT_WEAP, AD_PHYS, 1, 8), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,

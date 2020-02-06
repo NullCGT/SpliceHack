@@ -2418,7 +2418,7 @@ struct permonst _mons2[] = {
     MON("minotaur", S_GIANT, LVL(15, 15, 6, 0, 0), (G_GENO | G_NOGEN),
         A(ATTK(AT_CLAW, AD_PHYS, 3, 10), ATTK(AT_CLAW, AD_PHYS, 3, 10),
           ATTK(AT_BUTT, AD_CLOB, 2, 8), NO_ATTK, NO_ATTK, NO_ATTK),
-        SIZ(1500, 700, MS_SILENT, MZ_LARGE), 0, 0,
+        SIZ(1500, 700, MS_MOO, MZ_LARGE), 0, 0,
         M1_ANIMAL | M1_HUMANOID | M1_CARNIVORE,
         M2_HOSTILE | M2_STRONG | M2_NASTY, M3_INFRAVISIBLE | M3_INFRAVISION, 0,
         17, CLR_BROWN),

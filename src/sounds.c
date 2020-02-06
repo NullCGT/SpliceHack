@@ -907,7 +907,10 @@ register struct monst *mtmp;
         pline_msg = mtmp->mpeaceful ? "drones." : "buzzes angrily.";
         break;
     case MS_MOO:
-        pline_msg = "moos.";
+        if (!mtmp->mpeaceful)
+            pline_msg = "moos.";
+        else
+            pline_msg = "bellows!";
         break;
     case MS_GROAN:
         pline_msg = mtmp->mpeaceful ? "mutters \"brains!\"." : "groans.";

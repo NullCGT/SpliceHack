@@ -1198,11 +1198,10 @@ boolean ranged;
         || mtmp2->data==&mons[PM_PORCUPINE]) && rn2(10)) ||
 		(!ranged &&
 		 max_passive_dmg(mtmp2, mtmp) >= mtmp->mhp) ||
-		((mtmp->mhp*4 < mtmp->mhpmax
+		(mtmp->mhp*4 < mtmp->mhpmax
 		  || mtmp2->data->msound == MS_GUARDIAN
 		  || mtmp2->data->msound == MS_LEADER
-		  || always_peaceful(mtmp2->data)) &&
-		 mtmp2->mpeaceful && !Conflict) ||
+		  || always_peaceful(mtmp2->data)) ||
 		   (!ranged && touch_petrifies(mtmp2->data) &&
 			!resists_ston(mtmp)));
 }

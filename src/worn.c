@@ -418,9 +418,19 @@ boolean on, silently;
             in_mklev = save_in_mklev;
             break;
         }
+        //TODO: Find a better system for these.
         case DISPLACED:
+            mon->mextrinsics &= ~(MR2_DISPLACED);
+            break;
         case JUMPING:
+            mon->mextrinsics &= ~(MR2_JUMPING);
+            break;
         case WWALKING:
+            mon->mextrinsics &= ~(MR2_WATERWALK);
+            break;
+        case TELEPORT:
+            mon->mextrinsics &= ~(MR2_TELEPORT);
+            break;
         case FIRE_RES:
         case COLD_RES:
         case SLEEP_RES:

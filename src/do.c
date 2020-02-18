@@ -538,6 +538,10 @@ register struct obj *obj;
     case RIN_POISON_RESISTANCE:
         You("smell rotten %s.", makeplural(fruitname(FALSE)));
         break;
+    case RIN_SICKNESS_RESISTANCE:
+        pline("A flea-encrusted rat squirms out of the drainpipe!");
+        makemon(&mons[PM_RABID_RAT], u.ux, u.uy, NO_MM_FLAGS);
+        break;
     case RIN_AGGRAVATE_MONSTER:
         pline("Several %s buzz angrily around the sink.",
               Hallucination ? makeplural(rndmonnam(NULL)) : "flies");

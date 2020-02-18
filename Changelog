@@ -39,6 +39,7 @@ Items
     create any type of elemental except fusion elementals.
   - Additionally, partially de-spaghettified the code for summoning
     elementals.
+- New Item: Ring of Sickness Resistance
 
 Balance
 - Stop randomly generating penguins, since the fact that eating them makes the

@@ -49,6 +49,7 @@ Bug Fixes
 - Water elementals can be neutral deific minions agian.
 - Pets will now attack monsters that are always peaceful.
 - Shambling horror randomized stats are maintained when saving and reloading.
+- Decks of cards are destroyed by demon lords after playing against them.
                     
                     Version 0.7.0: Stranger Days
 

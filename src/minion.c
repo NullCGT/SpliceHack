@@ -394,6 +394,7 @@ register struct monst *mtmp;
                           Amonnam(mtmp));
                     mtmp->mpeaceful = 0;
                     set_malign(mtmp);
+                    useup(otmp);
                     return 0;
                 } else {
                     pline("You hand beats %s!", Amonnam(mtmp));
@@ -402,9 +403,9 @@ register struct monst *mtmp;
                     mongone(mtmp);
                     livelog_printf(LL_UMONST, "beat %s in a game of chance",
                                 Amonnam(mtmp));
+                    useup(otmp);
                     return (1);
                 }
-                useup(otmp);
             }
         }
     } else if (otmp) {

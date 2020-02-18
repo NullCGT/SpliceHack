@@ -20,6 +20,12 @@ baseball-cap-toting elemental
 -Nega-Antigulp
 horrific bug
 
+# Creepypasta
+white hand
++Ben Drowned
++Jeff
+Rake
+
 # Stuff that should never be in NetHack
 DLC
 
@@ -251,9 +257,6 @@ holloway
 funky monkey
 living bonfire
 cheese golem
-
-# ;)
-cuddly cutie
 
 # Quendor (Zork, &c.)
 grue

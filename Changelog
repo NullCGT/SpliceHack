@@ -40,6 +40,10 @@ Items
   - Additionally, partially de-spaghettified the code for summoning
     elementals.
 - New Item: Ring of Sickness Resistance
+  - Another source of sickness resistance.
+- New Item: Horn of Blasting
+  - Functions like a frost or fire horn, but releases sonic energy instead.
+  - Examining it reveals its subclass as "theoretically tonal instrument."
 
 Balance
 - Stop randomly generating penguins, since the fact that eating them makes the

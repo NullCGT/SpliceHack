@@ -2637,7 +2637,7 @@ boolean ordinary;
             water_damage_chain(invent, FALSE);
         uwatereffects();
         break;
-
+    case HORN_OF_BLASTING:
     case WAN_SONICS:
         learn_it = TRUE;
         /* FALLTHRU */

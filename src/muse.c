@@ -1279,6 +1279,7 @@ struct monst *mtmp;
 #define MUSE_CAMERA 29
 #define MUSE_WAN_WINDSTORM 30
 #define MUSE_WAN_WATER 31
+#define MUSE_HORN_OF_BLASTING 32
 
 /* Select an offensive item/action for a monster.  Returns TRUE iff one is
  * found.
@@ -1363,6 +1364,11 @@ struct monst *mtmp;
             if (obj->otyp == FROST_HORN && obj->spe > 0 && can_blow(mtmp)) {
                 m.offensive = obj;
                 m.has_offense = MUSE_FROST_HORN;
+            }
+            nomore(MUSE_HORN_OF_BLASTING);
+            if (obj->otyp == HORN_OF_BLASTING && obj->spe > 0 && can_blow(mtmp)) {
+                m.offensive = obj;
+                m.has_offense = MUSE_HORN_OF_BLASTING;
             }
             nomore(MUSE_WAN_LIGHTNING);
             if (obj->otyp == WAN_LIGHTNING && obj->spe > 0) {
@@ -1758,11 +1764,13 @@ struct monst *mtmp;
         return (DEADMONSTER(mtmp)) ? 1 : 2;
     case MUSE_FIRE_HORN:
     case MUSE_FROST_HORN:
+    case MUSE_HORN_OF_BLASTING:
         mplayhorn(mtmp, otmp, FALSE);
         m_using = TRUE;
-        buzz(-30 - ((otmp->otyp == FROST_HORN) ? AD_COLD - 1 : AD_FIRE - 1),
-             rn1(6, 6), mtmp->mx, mtmp->my, sgn(tbx),
-             sgn(tby));
+        buzz(-30 - ((otmp->otyp == FROST_HORN) ? AD_COLD - 1 : 
+                (otmp->otyp == HORN_OF_BLASTING) ? AD_LOUD - 1 : AD_FIRE - 1),
+                rn1(6, 6), mtmp->mx, mtmp->my, sgn(tbx),
+                sgn(tby));
         m_using = FALSE;
         return (DEADMONSTER(mtmp)) ? 1 : 2;
     case MUSE_MGC_FLUTE:
@@ -2806,7 +2814,8 @@ struct obj *obj;
             return (boolean) needspick(mon->data);
         if (typ == UNICORN_HORN)
             return (boolean) (!obj->cursed && !is_unicorn(mon->data));
-        if (typ == FROST_HORN || typ == FIRE_HORN || typ == MAGIC_FLUTE)
+        if (typ == FROST_HORN || typ == FIRE_HORN || typ == MAGIC_FLUTE
+            || typ == HORN_OF_BLASTING)
             return (obj->spe > 0 && can_blow(mon));
         if (typ == FIGURINE || typ == DRUM_OF_EARTHQUAKE
               || typ == EXPENSIVE_CAMERA)

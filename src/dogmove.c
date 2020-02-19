@@ -143,6 +143,7 @@ boolean check_if_better;
  	      otmp->otyp == POT_ACID ||
  	      otmp->otyp == FROST_HORN ||
  	      otmp->otyp == FIRE_HORN ||
+          otmp->otyp == HORN_OF_BLASTING ||
         otmp->otyp == MAGIC_HARP ||
         otmp->otyp == DRUM_OF_EARTHQUAKE ||
         otmp->otyp == EXPENSIVE_CAMERA ||

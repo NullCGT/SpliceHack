@@ -1,6 +1,6 @@
                         SpliceHack -- Changelog
 
-                    New Version
+                            Version 0.7.1
 
 Monsters
 - New Monster: Thriae
@@ -21,10 +21,6 @@ Monsters
 - New Monster: Ice Elemental
   - Ice Elementals are not randomly generated. They appear only when as
     a neutral minion.
-- Magma elementals and storm elementals only spawn in Gehennom.
-  - People have complained about these blocking access to dungeon corridors,
-    and it makes thematic sense for them to appear in Gehennom, at which
-    point the player has numerous methods to bypass magma.
 
 Items
 - New Item: Wand of Water
@@ -39,13 +35,33 @@ Items
     create any type of elemental except fusion elementals.
   - Additionally, partially de-spaghettified the code for summoning
     elementals.
+- New Item: Ring of Sickness Resistance
+  - Another source of sickness resistance.
+- New Item: Horn of Blasting
+  - Functions like a frost or fire horn, but releases sonic energy instead.
+  - Examining it reveals its subclass as "theoretically tonal instrument."
 
 Balance
 - Stop randomly generating penguins, since the fact that eating them makes the
   Gods angry is confusing.
+- Pirates can be gifted artifacts, but do not have increased artifact generation.
+- Magma elementals and storm elementals only spawn in Gehennom.
+  - People have complained about these blocking access to dungeon corridors,
+    and it makes thematic sense for them to appear in Gehennom, at which
+    point the player has numerous methods to bypass magma.
+- Only four headless horseman can appear each game.
+- Increased damage for barbed devil quills.
+- Ice devils can cause fumbling with their sting attack.
+
+Miscelaneous
+- Ported some 3.7 changes, including allowing monsters to rummage through
+  containers.
 
 Bug Fixes
 - Water elementals can be neutral deific minions agian.
+- Pets will now attack monsters that are always peaceful.
+- Shambling horror randomized stats are maintained when saving and reloading.
+- Decks of cards are destroyed by demon lords after playing against them.
                     
                     Version 0.7.0: Stranger Days
 

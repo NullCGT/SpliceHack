@@ -736,7 +736,7 @@ int
 Armor_on(VOID_ARGS)
 {
 
-    if(uarm->otyp == GOLD_DRAGON_SCALE_MAIL || uarm->otyp == GOLD_DRAGON_SCALES) {
+    if (uarm && (uarm->otyp == GOLD_DRAGON_SCALE_MAIL || uarm->otyp == GOLD_DRAGON_SCALES)) {
 		begin_burn(uarm,FALSE);
 		if(!Blind)
 			pline("%s to glow.",Tobjnam(uarm,"begin"));
@@ -755,7 +755,7 @@ Armor_on(VOID_ARGS)
 int
 Armor_off(VOID_ARGS)
 {
-    if(uarm->otyp == GOLD_DRAGON_SCALE_MAIL || uarm->otyp == GOLD_DRAGON_SCALES) {
+    if (uarm && (uarm->otyp == GOLD_DRAGON_SCALE_MAIL || uarm->otyp == GOLD_DRAGON_SCALES)) {
 		end_burn(uarm,FALSE);
 		if(!Blind)
 			pline("%s glowing.",Tobjnam(uarm,"stop"));
@@ -775,7 +775,7 @@ Armor_off(VOID_ARGS)
 int
 Armor_gone()
 {
-    if(uarm->otyp == GOLD_DRAGON_SCALE_MAIL || uarm->otyp == GOLD_DRAGON_SCALES)
+    if (uarm && (uarm->otyp == GOLD_DRAGON_SCALE_MAIL || uarm->otyp == GOLD_DRAGON_SCALES))
 		end_burn(uarm,FALSE);
     context.takeoff.mask &= ~W_ARM;
     setnotworn(uarm);
@@ -982,6 +982,7 @@ register struct obj *obj;
     case RIN_FIRE_RESISTANCE:
     case RIN_COLD_RESISTANCE:
     case RIN_SHOCK_RESISTANCE:
+    case RIN_SICKNESS_RESISTANCE:
     case RIN_CONFLICT:
     case RIN_TELEPORT_CONTROL:
     case RIN_POLYMORPH:
@@ -1098,6 +1099,7 @@ boolean gone;
     case RIN_FIRE_RESISTANCE:
     case RIN_COLD_RESISTANCE:
     case RIN_SHOCK_RESISTANCE:
+    case RIN_SICKNESS_RESISTANCE:
     case RIN_CONFLICT:
     case RIN_TELEPORT_CONTROL:
     case RIN_POLYMORPH:

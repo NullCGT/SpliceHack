@@ -315,6 +315,7 @@ pc_speaker(struct obj *instr, char *tune)
     case TOOLED_HORN:
     case FROST_HORN:
     case FIRE_HORN:
+    case HORN_OF_BLASTING:
         octave = 2; /* drop two octaves */
         break;
     case BUGLE:

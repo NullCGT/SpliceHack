@@ -791,7 +791,7 @@ register struct obj *obj;
 			obj->otyp = FLUTE;
 			break;
 		case TOOLED_HORN:
-			obj->otyp = rn1(HORN_OF_PLENTY - TOOLED_HORN, FROST_HORN);
+			obj->otyp = rn1(HORN_OF_PLENTY - TOOLED_HORN, HORN_OF_BLASTING);
 			obj->spe = rn1(5,10);
 			obj->known = 0;
 			break;

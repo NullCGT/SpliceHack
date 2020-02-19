@@ -1,4 +1,4 @@
-/* NetHack 3.6	muse.c	$NHDT-Date: 1561053256 2019/06/20 17:54:16 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.97 $ */
+/* NetHack 3.6	muse.c	$NHDT-Date: 1580685754 2020/02/02 23:22:34 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.119 $ */
 /*      Copyright (C) 1990 by Ken Arromdee                         */
 /* NetHack may be freely redistributed.  See license for details.  */
 
@@ -29,6 +29,8 @@ STATIC_PTR int FDECL(mbhitm, (struct monst *, struct obj *));
 STATIC_DCL void FDECL(mbhit, (struct monst *, int,
                               int FDECL((*), (MONST_P, OBJ_P)),
                               int FDECL((*), (OBJ_P, OBJ_P)), struct obj *));
+static int FDECL(mloot_container, (struct monst *mon, struct obj *,
+                                   BOOLEAN_P));
 void FDECL(you_aggravate, (struct monst *));
 STATIC_DCL void FDECL(mon_consume_unstone, (struct monst *, struct obj *,
                                             BOOLEAN_P, BOOLEAN_P));
@@ -1277,6 +1279,7 @@ struct monst *mtmp;
 #define MUSE_CAMERA 29
 #define MUSE_WAN_WINDSTORM 30
 #define MUSE_WAN_WATER 31
+#define MUSE_HORN_OF_BLASTING 32
 
 /* Select an offensive item/action for a monster.  Returns TRUE iff one is
  * found.
@@ -1361,6 +1364,11 @@ struct monst *mtmp;
             if (obj->otyp == FROST_HORN && obj->spe > 0 && can_blow(mtmp)) {
                 m.offensive = obj;
                 m.has_offense = MUSE_FROST_HORN;
+            }
+            nomore(MUSE_HORN_OF_BLASTING);
+            if (obj->otyp == HORN_OF_BLASTING && obj->spe > 0 && can_blow(mtmp)) {
+                m.offensive = obj;
+                m.has_offense = MUSE_HORN_OF_BLASTING;
             }
             nomore(MUSE_WAN_LIGHTNING);
             if (obj->otyp == WAN_LIGHTNING && obj->spe > 0) {
@@ -1756,11 +1764,13 @@ struct monst *mtmp;
         return (DEADMONSTER(mtmp)) ? 1 : 2;
     case MUSE_FIRE_HORN:
     case MUSE_FROST_HORN:
+    case MUSE_HORN_OF_BLASTING:
         mplayhorn(mtmp, otmp, FALSE);
         m_using = TRUE;
-        buzz(-30 - ((otmp->otyp == FROST_HORN) ? AD_COLD - 1 : AD_FIRE - 1),
-             rn1(6, 6), mtmp->mx, mtmp->my, sgn(tbx),
-             sgn(tby));
+        buzz(-30 - ((otmp->otyp == FROST_HORN) ? AD_COLD - 1 : 
+                (otmp->otyp == HORN_OF_BLASTING) ? AD_LOUD - 1 : AD_FIRE - 1),
+                rn1(6, 6), mtmp->mx, mtmp->my, sgn(tbx),
+                sgn(tby));
         m_using = FALSE;
         return (DEADMONSTER(mtmp)) ? 1 : 2;
     case MUSE_MGC_FLUTE:
@@ -2032,6 +2042,7 @@ struct monst *mtmp;
 #define MUSE_POT_BOOZE 13
 #define MUSE_CORPSE 14
 #define MUSE_WISH 15
+#define MUSE_BAG 16
 
 boolean
 find_misc(mtmp)
@@ -2085,12 +2096,23 @@ struct monst *mtmp;
     if (nohands(mdat) && !is_dragon(mdat))
         return 0;
 
-#define nomore(x)       if (m.has_misc == x) continue
+#define nomore(x)       if (m.has_misc == (x)) continue
     /*
      * [bug?]  Choice of item is not prioritized; the last viable one
      * in the monster's inventory will be chosen.
      * 'nomore()' is nearly worthless because it only screens checking
      * of duplicates when there is no alternate type in between them.
+     *
+     * MUSE_BAG issues:
+     * should allow looting floor container instead of needing the
+     * monster to have picked it up and now be carrying it which takes
+     * extra time and renders heavily filled containers immune;
+     * hero should have a chance to see the monster fail to open a
+     * locked container instead of monster always knowing lock state
+     * (may not be feasible to implement--requires too much per-object
+     * info for each monster);
+     * monster with key should be able to unlock a locked floor
+     * container and not know whether it is trapped.
      */
     for (obj = mtmp->minvent; obj; obj = obj->nobj) {
         /* Monsters shouldn't recognize cursed items; this kludge is
@@ -2202,6 +2224,13 @@ struct monst *mtmp;
                 }
             }
         }
+        nomore(MUSE_BAG);
+        if (Is_container(obj) && obj->otyp != BAG_OF_TRICKS && !rn2(5)
+            && !m.has_misc && Has_contents(obj)
+            && !obj->olocked && !obj->otrapped) {
+            m.misc = obj;
+            m.has_misc = MUSE_BAG;
+        }
     }
     return (boolean) !!m.has_misc;
 #undef nomore
@@ -2222,6 +2251,116 @@ struct monst *mon;
             return Dragon_mail_to_pm(m_armr);
     }
     return rndmonst();
+}
+
+static int
+mloot_container(mon, container, vismon)
+struct monst *mon;
+struct obj *container;
+boolean vismon;
+{
+    char contnr_nam[BUFSZ], mpronounbuf[20];
+    boolean nearby;
+    int takeout_indx, takeout_count, howfar, res = 0;
+
+    if (!container || !Has_contents(container) || container->olocked)
+        return res; /* 0 */
+    /* FIXME: handle cursed bag of holding */
+    if (Is_mbag(container) && container->cursed)
+        return res; /* 0 */
+
+    switch (rn2(10)) {
+    default: /* case 0, 1, 2, 3: */
+        takeout_count = 1;
+        break;
+    case 4: case 5: case 6:
+        takeout_count = 2;
+        break;
+    case 7: case 8:
+        takeout_count = 3;
+        break;
+    case 9:
+        takeout_count = 4;
+        break;
+    }
+    howfar = distu(mon->mx, mon->my);
+    nearby = (howfar <= 7 * 7);
+    contnr_nam[0] = mpronounbuf[0] = '\0';
+    if (vismon) {
+        /* do this once so that when hallucinating it won't change
+           from one item to the next */
+        Strcpy(mpronounbuf, mhe(mon));
+    }
+
+    for (takeout_indx = 0; takeout_indx < takeout_count; ++takeout_indx) {
+        struct obj *xobj;
+        int nitems;
+
+        if (!Has_contents(container)) /* might have removed all items */
+            break;
+        /* TODO?
+         *  Monster ought to prioritize on something it wants to use.
+         */
+        nitems = 0;
+        for (xobj = container->cobj; xobj != 0; xobj = xobj->nobj)
+            ++nitems;
+        /* nitems is always greater than 0 due to Has_contents() check;
+           throttle item removal as the container becomes less filled */
+        if (!rn2(nitems + 1))
+            break;
+        nitems = rn2(nitems);
+        for (xobj = container->cobj; nitems > 0; xobj = xobj->nobj)
+            --nitems;
+
+        container->cknown = 0; /* hero no longer knows container's contents
+                                * even if [attempted] removal is observed */
+        if (!*contnr_nam) {
+            /* xname sets dknown, distant_name doesn't */
+            Strcpy(contnr_nam, nearby ? xname(container)
+                                      : distant_name(container, xname));
+        }
+        /* this was originally just 'can_carry(mon, xobj)' which
+           covers objects a monster shouldn't pick up but also
+           checks carrying capacity; for that, it ended up counting
+           xobj's weight twice when container is carried; so take
+           xobj out, check whether it can be carried, and then put
+           it back (below) if it can't be */
+        obj_extract_self(xobj); /* this reduces container's weight */
+        /* check whether mon can handle xobj and whether weight of xobj plus
+           minvent (including container, now without xobj) can be carried */
+        if (can_carry(mon, xobj)) {
+            if (vismon) {
+                if (howfar > 2) /* not adjacent */
+                    Norep("%s rummages through %s.", Monnam(mon), contnr_nam);
+                else if (takeout_indx == 0) /* adjacent, first item */
+                    pline("%s removes %s from %s.", Monnam(mon),
+                          an(xname(xobj)), contnr_nam);
+                else /* adjacent, additional items */
+                    pline("%s removes %s.", upstart(mpronounbuf),
+                          an(xname(xobj)));
+            }
+            /* obj_extract_self(xobj); -- already done above */
+            (void) mpickobj(mon, xobj);
+            res = 2;
+        } else { /* couldn't carry xobj separately so put back inside */
+            /* an achievement prize (castle's wand?) might already be
+               marked nomerge (when it hasn't been in invent yet) */
+            boolean already_nomerge = xobj->nomerge != 0,
+                    just_xobj = !Has_contents(container);
+
+            /* this doesn't restore the original contents ordering
+               [shouldn't be a problem; even though this item didn't
+               give the rummage message, that's what mon was doing] */
+            xobj->nomerge = 1;
+            xobj = add_to_container(container, xobj);
+            if (!already_nomerge)
+                xobj->nomerge = 0;
+            container->owt = weight(container);
+            if (just_xobj)
+                break; /* out of takeout_count loop */
+        } /* can_carry */
+    } /* takeout_count */
+    return res;
 }
 
 int
@@ -2443,6 +2582,8 @@ struct monst *mtmp;
      		}
      		m_useup(mtmp, otmp);
      	  return 0;
+    case MUSE_BAG:
+        return mloot_container(mtmp, otmp, vismon);
     case MUSE_POLY_TRAP:
         if (vismon) {
             const char *Mnam = Monnam(mtmp);
@@ -2608,6 +2749,13 @@ struct obj *obj;
 {
     int typ = obj->otyp;
 
+    /* don't let monsters interact with protected items on the floor */
+    if ((obj->where == OBJ_FLOOR)
+        && (obj->ox == mon->mx) && (obj->oy == mon->my)
+        && onscary(obj->ox, obj->oy, mon)) {
+        return FALSE;
+    }
+
     if (is_animal(mon->data) || mindless(mon->data)
         || mon->data == &mons[PM_GHOST]) /* don't loot bones piles */
         return FALSE;
@@ -2673,10 +2821,13 @@ struct obj *obj;
             return (boolean) needspick(mon->data);
         if (typ == UNICORN_HORN)
             return (boolean) (!obj->cursed && !is_unicorn(mon->data));
-        if (typ == FROST_HORN || typ == FIRE_HORN || typ == MAGIC_FLUTE)
+        if (typ == FROST_HORN || typ == FIRE_HORN || typ == MAGIC_FLUTE
+            || typ == HORN_OF_BLASTING)
             return (obj->spe > 0 && can_blow(mon));
         if (typ == FIGURINE || typ == DRUM_OF_EARTHQUAKE
               || typ == EXPENSIVE_CAMERA)
+            return TRUE;
+        if (Is_container(obj) && !(Is_mbag(obj) && obj->cursed))
             return TRUE;
         break;
     case FOOD_CLASS:

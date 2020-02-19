@@ -1,4 +1,4 @@
-/* NetHack 3.6	pray.c	$NHDT-Date: 1573346192 2019/11/10 00:36:32 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.118 $ */
+/* NetHack 3.6	pray.c	$NHDT-Date: 1578895347 2020/01/13 06:02:27 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.138 $ */
 /* Copyright (c) Benson I. Margulies, Mike Stephenson, Steve Linhart, 1989. */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -1244,10 +1244,9 @@ aligntyp g_align;
             struct obj *otmp;
             int sp_no, trycnt = u.ulevel + 1;
 
-            /* not yet known spells given preference over already known ones
-             */
-            /* Also, try to grant a spell for which there is a skill slot */
-            otmp = mkobj(SPBOOK_CLASS, TRUE);
+            /* not yet known spells given preference over already known ones;
+               also, try to grant a spell for which there is a skill slot */
+            otmp = mkobj(SPBOOK_no_NOVEL, TRUE);
             while (--trycnt > 0) {
                 if (otmp->otyp != SPE_BLANK_PAPER) {
                     for (sp_no = 0; sp_no < MAXSPELL; sp_no++)

@@ -163,9 +163,7 @@ aligntyp alignment; /* target alignment, or A_NONE */
                 eligible[0] = m;
                 n = 1;
                 break; /* skip all other candidates */
-            } else if(by_align && Role_if(PM_PIRATE))
-                continue; /* pirates are not gifted artifacts */
-            else if (Hate_material(SILVER) && a->otyp == SABER)
+            } else if (Hate_material(SILVER) && a->otyp == SABER)
                 continue; /* kludge to stop silver-haters from getting silver */
             /* found something to consider for random selection */
             if (a->alignment != A_NONE || u.ugifts > 0) {

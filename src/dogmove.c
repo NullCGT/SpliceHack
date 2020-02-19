@@ -143,6 +143,7 @@ boolean check_if_better;
  	      otmp->otyp == POT_ACID ||
  	      otmp->otyp == FROST_HORN ||
  	      otmp->otyp == FIRE_HORN ||
+          otmp->otyp == HORN_OF_BLASTING ||
         otmp->otyp == MAGIC_HARP ||
         otmp->otyp == DRUM_OF_EARTHQUAKE ||
         otmp->otyp == EXPENSIVE_CAMERA ||
@@ -1206,9 +1207,7 @@ boolean ranged;
 		 max_passive_dmg(mtmp2, mtmp) >= mtmp->mhp) ||
 		((mtmp->mhp*4 < mtmp->mhpmax
 		  || mtmp2->data->msound == MS_GUARDIAN
-		  || mtmp2->data->msound == MS_LEADER
-		  || always_peaceful(mtmp2->data)) &&
-		 mtmp2->mpeaceful && !Conflict) ||
+		  || mtmp2->data->msound == MS_LEADER) && !Conflict) ||
 		   (!ranged && touch_petrifies(mtmp2->data) &&
 			!resists_ston(mtmp)));
 }

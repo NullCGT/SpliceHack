@@ -1136,6 +1136,9 @@ add_obj_info(winid datawin, short otyp)
         case MAGIC_HARP:
             subclass = "tonal instrument";
             break;
+        case HORN_OF_BLASTING:
+            subclass = "theoretically tonal instrument";
+            break;
         }
         Sprintf(buf, "%s%s.", (oc.oc_charged ? "chargeable " : ""), subclass);
         /* capitalize first letter of buf */

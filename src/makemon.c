@@ -1869,7 +1869,15 @@ int mndx;
      */
 
     /* assert(MAXMONNO < 255); */
-    return (mndx == PM_NAZGUL ? 9 : mndx == PM_ERINYS ? 3 : MAXMONNO);
+    switch (mndx) {
+    case PM_NAZGUL:
+        return 9;
+    case PM_ERINYS:
+        return 3;
+    case PM_HEADLESS_HORSEMAN:
+        return 4;
+    }
+    return MAXMONNO;
 }
 
 /* used for wand/scroll/spell of create monster */

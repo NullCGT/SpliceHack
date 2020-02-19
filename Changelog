@@ -1,6 +1,6 @@
                         SpliceHack -- Changelog
 
-                    Version 0.7.1
+                            Version 0.7.1
 
 Monsters
 - New Monster: Thriae
@@ -21,10 +21,6 @@ Monsters
 - New Monster: Ice Elemental
   - Ice Elementals are not randomly generated. They appear only when as
     a neutral minion.
-- Magma elementals and storm elementals only spawn in Gehennom.
-  - People have complained about these blocking access to dungeon corridors,
-    and it makes thematic sense for them to appear in Gehennom, at which
-    point the player has numerous methods to bypass magma.
 
 Items
 - New Item: Wand of Water
@@ -49,6 +45,11 @@ Balance
 - Stop randomly generating penguins, since the fact that eating them makes the
   Gods angry is confusing.
 - Pirates can be gifted artifacts, but do not have increased artifact generation.
+- Magma elementals and storm elementals only spawn in Gehennom.
+  - People have complained about these blocking access to dungeon corridors,
+    and it makes thematic sense for them to appear in Gehennom, at which
+    point the player has numerous methods to bypass magma.
+- Only four headless horseman can appear each game.
 
 Bug Fixes
 - Water elementals can be neutral deific minions agian.

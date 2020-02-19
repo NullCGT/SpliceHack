@@ -51,6 +51,10 @@ Balance
     point the player has numerous methods to bypass magma.
 - Only four headless horseman can appear each game.
 
+Miscelaneous
+- Ported some 3.7 changes, including allowing monsters to rummage through
+  containers.
+
 Bug Fixes
 - Water elementals can be neutral deific minions agian.
 - Pets will now attack monsters that are always peaceful.

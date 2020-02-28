@@ -138,6 +138,7 @@
 #define is_undead(ptr) (((ptr)->mhflags & MH_UNDEAD) != 0L)
 #define is_were(ptr) (((ptr)->mhflags & MH_WERE) != 0L)
 #define is_elf(ptr) (((ptr)->mhflags & MH_ELF) != 0L)
+#define is_changeling(ptr) (((ptr)->mhflags & MH_CHANGELING) != 0L)
 #define is_dwarf(ptr) (((ptr)->mhflags & MH_DWARF) != 0L)
 #define is_gnome(ptr) (((ptr)->mhflags & MH_GNOME) != 0L)
 #define is_orc(ptr) (((ptr)->mhflags & MH_ORC) != 0L)
@@ -224,7 +225,8 @@
 #define is_placeholder(ptr)                             \
     ((ptr) == &mons[PM_ORC] || (ptr) == &mons[PM_GIANT] \
      || (ptr) == &mons[PM_ELF] || (ptr) == &mons[PM_HUMAN] \
-     || (ptr) == &mons[PM_MINOR_ANGEL] || (ptr) == &mons[PM_INFERNAL])
+     || (ptr) == &mons[PM_MINOR_ANGEL] || (ptr) == &mons[PM_INFERNAL] \
+     || (ptr) == &mons[PM_CHANGELING])
 /* return TRUE if the monster tends to revive */
 #define is_reviver(ptr) (is_rider(ptr) || (ptr)->mlet == S_TROLL \
                          || (ptr) == &mons[PM_SLOTH])

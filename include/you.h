@@ -210,8 +210,8 @@ struct Race {
         zombienum; /* PM_ as a zombie */
 
     /*** Bitmasks ***/
-    short allow;    /* bit mask of allowed variations */
-    short selfmask, /* your own race's bit mask */
+    long allow;    /* bit mask of allowed variations */
+    long selfmask, /* your own race's bit mask */
         lovemask,   /* bit mask of always peaceful */
         hatemask;   /* bit mask of always hostile */
 

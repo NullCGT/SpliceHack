@@ -733,7 +733,7 @@ register struct monst *mtmp;
             bless(otmp);
             otmp->spe = rn2(4);
             /* Wrath always gets a deadly material */
-            if (Race_if(PM_ELF) || Race_if(PM_DROW)) {
+            if (Race_if(PM_ELF) || Race_if(PM_DROW) || Race_if(PM_CHANGELING)) {
                 otmp->material = IRON;
             } else if (Race_if(PM_INFERNAL)) {
                 otmp->material = SILVER;

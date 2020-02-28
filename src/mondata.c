@@ -334,6 +334,7 @@ int material;
     else if (material == IRON) {
         /* cold iron: fairy/fae creatures hate it */
         return (is_elf(ptr) || ptr->mlet == S_NYMPH
+                || ptr == &mons[PM_CHANGELING]
                 || ptr->mlet == S_IMP || ptr == &mons[PM_BAOBHAN_SITH]);
     }
     else if (material == COPPER) {

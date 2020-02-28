@@ -3546,6 +3546,13 @@ struct permonst _mons2[] = {
         M1_HUMANOID | M1_OMNIVORE,
         M2_NOPOLY | M2_STRONG | M2_HOSTILE, M3_INFRAVISIBLE, MH_HUMAN,
         12, CLR_YELLOW),
+    MON("changeling", S_HUMAN, LVL(8, 12, 10, 0, 0), G_NOGEN, /* for corpses */
+        A(ATTK(AT_WEAP, AD_PHYS, 1, 8), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
+          NO_ATTK),
+        SIZ(WT_HUMAN, 300, MS_IMITATE, MZ_HUMAN), 0, 0,
+        M1_HUMANOID | M1_OMNIVORE,
+        M2_NOPOLY | M2_SHAPESHIFTER | M2_STRONG | M2_COLLECT,
+        M3_INFRAVISIBLE, MH_CHANGELING, 2, HI_DOMESTIC),
     MON("elf", S_HUMAN, LVL(10, 12, 10, 2, -3), G_NOGEN, /* for corpses */
         A(ATTK(AT_WEAP, AD_PHYS, 1, 8), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
           NO_ATTK),

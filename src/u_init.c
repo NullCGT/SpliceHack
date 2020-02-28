@@ -279,6 +279,8 @@ static struct inv_sub {
     { PM_DROW, BOW, DARK_ELVEN_BOW },
     { PM_DROW, ARROW, DARK_ELVEN_ARROW },
     { PM_VAMPIRE, POT_FRUIT_JUICE, POT_BLOOD },
+    { PM_CHANGELING, RIN_POLYMORPH_CONTROL, RIN_ADORNMENT },
+    { PM_CHANGELING, RIN_POLYMORPH, RIN_ADORNMENT },
     { NON_PM, STRANGE_OBJECT, STRANGE_OBJECT }
 };
 
@@ -1055,6 +1057,7 @@ u_init()
         knows_object(DWARVISH_ROUNDSHIELD);
         break;
 
+    case PM_CHANGELING:
     case PM_MERFOLK:
     case PM_GNOME:
         break;

@@ -402,6 +402,8 @@
     (hates_material(youmonst.data, material) \
      || (material == SILVER && u.ulycn >= LOW_PM) \
      || (material == SILVER && !Upolyd && Race_if(PM_INFERNAL)) \
-     || (material == IRON && !Upolyd && Race_if(PM_ELF)))
+     || (material == IRON && !Upolyd && Race_if(PM_ELF)) \
+     || (material == IRON && !Upolyd && Race_if(PM_DROW)) \
+     || (material == IRON && !Upolyd && Race_if(PM_CHANGELING)))
 
 #endif /* YOUPROP_H */

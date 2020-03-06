@@ -185,7 +185,7 @@ static const struct innate_tech
 	dop_tech[] = { {   1, T_LIQUID_LEAP, 1},
 		       {   0, 0, 0} },
 	#endif
-	chn_tech[] = { {   7, T_LIQUID_LEAP, 1},
+	chn_tech[] = { {   1, T_LIQUID_LEAP, 1},
 				/* changelings learn other random techs on level up */
 		       {   0, 0, 0} },
 	dwa_tech[] = { {   1, T_RAGE, 1},
@@ -1973,6 +1973,13 @@ int oldlevel, newlevel;
 			You("lose the ability to perform %s!",
 			  tech_names[tech->tech_id]);
 		}
+
+		/* Changelings start with a random technique */
+		/* if (Race_if(PM_CHANGELING) && newlevel == 1) {
+			int randtech = rnd(T_CROWN_LAW);
+			You("remember how to perform %s!", tech_names[randtech]);
+			learntech(randtech, FROMRACE, 1);
+		}*/
 	}
 }
 

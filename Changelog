@@ -56,8 +56,8 @@ Balance
 Races
 - New Race: Changeling
   - #chat to a monster to polymorph into it. The monster's base level must be of 
-    no more than three levels higher than the player, and polymorphing costs 
-    energy equal to the base level of the monster.
+    no more than three levels higher than the player, and requires a large amount
+    of energy.
   - Liquid leap technique.
   - Do not passively gain hit points without a special source of regeneration,
     unless polymorphed.

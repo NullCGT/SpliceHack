@@ -149,7 +149,7 @@ unsigned long *colormasks;
 
     if (fldidx != BL_FLUSH) {
         if (fldidx < 0 || fldidx >= MAXBLSTATS) {
-            context.botlx = context.botl = FALSE; /* avoid another bot() */
+            g.context.botlx = g.context.botl = FALSE; /* avoid another bot() */
             panic("curses_status_update(%d)", fldidx);
         }
         changed_fields |= (1 << fldidx);
@@ -722,7 +722,7 @@ boolean border;
         time_and_score |= 2;
     cond_count = 0;
     if (curses_condition_bits) {
-        for (i = 0; i < BL_MASK_BITS; ++i)
+        for (i = 0; i < CONDITION_COUNT; ++i)
             if (curses_condition_bits & (1 << i))
                 ++cond_count;
     }
@@ -973,9 +973,10 @@ curs_HPbar(char *text, /* pre-padded with trailing spaces if short */
     waddch(win, ']');
 }
 
-/* valid_conditions[] is used primarily for parsing hilite_status rules, but
+/* conditions[] is used primarily for parsing hilite_status rules, but
    we can use it for condition names and mask bits, avoiding duplication */
-extern const struct condmap valid_conditions[]; /* botl.c */
+extern const struct conditions_t conditions[]; /* botl.c */
+extern int cond_idx[CONDITION_COUNT];
 
 static void
 curs_stat_conds(int vert_cond, /* 0 => horizontal, 1 => vertical */
@@ -984,7 +985,7 @@ curs_stat_conds(int vert_cond, /* 0 => horizontal, 1 => vertical */
                 boolean *nohilite) /* optional output; indicates whether -*/
 {                                  /*+ condbuf[] could be used as-is      */
     char condnam[20];
-    int i;
+    int i, ci;
     long bitmsk;
 
     if (condbuf) {
@@ -996,10 +997,11 @@ curs_stat_conds(int vert_cond, /* 0 => horizontal, 1 => vertical */
         condbuf[0] = '\0';
         if (nohilite)
             *nohilite = TRUE; /* assume ok */
-        for (i = 0; i < BL_MASK_BITS; ++i) {
-            bitmsk = valid_conditions[i].bitmask;
+        for (i = 0; i < CONDITION_COUNT; ++i) {
+            ci = cond_idx[i];
+            bitmsk = conditions[ci].mask;
             if (curses_condition_bits & bitmsk) {
-                Strcpy(condnam, valid_conditions[i].id);
+                Strcpy(condnam, conditions[ci].text[0]);
                 Strcat(strcat(condbuf, " "), upstart(condnam));
 #ifdef STATUS_HILITES
                 if (nohilite && *nohilite
@@ -1024,10 +1026,11 @@ curs_stat_conds(int vert_cond, /* 0 => horizontal, 1 => vertical */
 
         cond_bits = curses_condition_bits;
         /* show active conditions directly; for vertical, three per line */
-        for (i = 0; i < BL_MASK_BITS; ++i) {
-            bitmsk = valid_conditions[i].bitmask;
+        for (i = 0; i < CONDITION_COUNT; ++i) {
+            ci = cond_idx[i];
+            bitmsk = conditions[ci].mask;
             if (cond_bits & bitmsk) {
-                Strcpy(condnam, valid_conditions[i].id);
+                Strcpy(condnam, conditions[ci].text[0]);
                 cndlen = 1 + (int) strlen(condnam); /* count leading space */
                 if (!do_vert) {
                     getyx(win, cy, cx);
@@ -1815,7 +1818,7 @@ draw_horizontal(int x, int y, int hp, int hpmax)
     wmove(win, y, x);
 
     get_playerrank(rank);
-    sprintf(buf, "%s the %s", plname, rank);
+    sprintf(buf, "%s the %s", g.plname, rank);
 
     /* Use the title as HP bar (similar to hitpointbar) */
     draw_bar(TRUE, hp, hpmax, buf);
@@ -1845,7 +1848,7 @@ draw_horizontal(int x, int y, int hp, int hpmax)
 
     wprintw(win, "%s", buf);
 
-    print_statdiff("$", &prevau, money_cnt(invent), STAT_GOLD);
+    print_statdiff("$", &prevau, money_cnt(g.invent), STAT_GOLD);
 
     /* HP/Pw use special coloring rules */
     attr_t hpattr, pwattr;
@@ -1883,7 +1886,7 @@ draw_horizontal(int x, int y, int hp, int hpmax)
         print_statdiff(" Exp:", &prevlevel, u.ulevel, STAT_OTHER);
 
     if (flags.time)
-        print_statdiff(" T:", &prevtime, moves, STAT_TIME);
+        print_statdiff(" T:", &prevtime, g.moves, STAT_TIME);
 
     curses_add_statuses(win, FALSE, FALSE, NULL, NULL);
 }
@@ -1900,9 +1903,9 @@ draw_horizontal_new(int x, int y, int hp, int hpmax)
 
     get_playerrank(rank);
     char race[BUFSZ];
-    Strcpy(race, urace.adj);
+    Strcpy(race, g.urace.adj);
     race[0] = highc(race[0]);
-    wprintw(win, "%s the %s %s%s%s", plname,
+    wprintw(win, "%s the %s %s%s%s", g.plname,
             (u.ualign.type == A_CHAOTIC ? "Chaotic" :
              u.ualign.type == A_NEUTRAL ? "Neutral" : "Lawful"),
             Upolyd ? "" : race, Upolyd ? "" : " ",
@@ -1956,7 +1959,7 @@ draw_horizontal_new(int x, int y, int hp, int hpmax)
     wprintw(win, "Pw:");
     draw_bar(FALSE, u.uen, u.uenmax, NULL);
 
-    print_statdiff(" $", &prevau, money_cnt(invent), STAT_GOLD);
+    print_statdiff(" $", &prevau, money_cnt(g.invent), STAT_GOLD);
 
 #ifdef SCORE_ON_BOTL
     if (flags.showscore)
@@ -1964,7 +1967,7 @@ draw_horizontal_new(int x, int y, int hp, int hpmax)
 #endif /* SCORE_ON_BOTL */
 
     if (flags.time)
-        print_statdiff(" T:", &prevtime, moves, STAT_TIME);
+        print_statdiff(" T:", &prevtime, g.moves, STAT_TIME);
 
     curses_add_statuses(win, TRUE, FALSE, &x, &y);
 
@@ -2021,7 +2024,7 @@ draw_vertical(int x, int y, int hp, int hpmax)
 
     get_playerrank(rank);
     int ranklen = strlen(rank);
-    int namelen = strlen(plname);
+    int namelen = strlen(g.plname);
     int maxlen = 19;
 #ifdef STATUS_COLORS
     if (!iflags.hitpointbar)
@@ -2038,7 +2041,7 @@ draw_vertical(int x, int y, int hp, int hpmax)
         while ((ranklen + namelen) > maxlen)
             ranklen--; /* Still doesn't fit, strip rank */
     }
-    sprintf(buf, "%-*s the %-*s", namelen, plname, ranklen, rank);
+    sprintf(buf, "%-*s the %-*s", namelen, g.plname, ranklen, rank);
     draw_bar(TRUE, hp, hpmax, buf);
     wmove(win, y++, x);
     wprintw(win, "%s", dungeons[u.uz.dnum].dname);
@@ -2072,7 +2075,7 @@ draw_vertical(int x, int y, int hp, int hpmax)
         wprintw(win, "%d", depth(&u.uz));
     wmove(win, y++, x);
 
-    print_statdiff("Gold:          ", &prevau, money_cnt(invent), STAT_GOLD);
+    print_statdiff("Gold:          ", &prevau, money_cnt(g.invent), STAT_GOLD);
     wmove(win, y++, x);
 
     /* HP/Pw use special coloring rules */
@@ -2116,7 +2119,7 @@ draw_vertical(int x, int y, int hp, int hpmax)
     wmove(win, y++, x);
 
     if (flags.time) {
-        print_statdiff("Time:          ", &prevtime, moves, STAT_TIME);
+        print_statdiff("Time:          ", &prevtime, g.moves, STAT_TIME);
         wmove(win, y++, x);
     }
 

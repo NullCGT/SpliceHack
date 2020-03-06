@@ -100,7 +100,7 @@ functions:73 _dountrap _doup _doversion _dovspell _dowaterdemon _dowaternymph _d
 functions:74 _dowhatdoes _dowhatis _dowield _dowipe _down_gate _dowrite _dozap _dprince
 functions:75 _drag_ball _drag_down _drain_en _DrawCursor _drinkfountain _drinksink _drinkfurnace _drop _drop_ball
 functions:76 _drop_throw _drop_to _drop_upon_death _drop_weapon _dropped_container _dropx _dropy
-functions:77 _drown _dryup _dtoxy _dungeon_branch _dungeon_crumble _dunlev _dunlevs_in_dungeon _e_at _e_died
+functions:77 _drown _dryup _dtoxy _dungeon_branch _dunlev _dunlevs_in_dungeon _e_at _e_died
 functions:78 _e_jumps _e_missed _e_nam _E_phrase _e_survives_at _eataccessory _eatcorpse _eaten_stat
 functions:79 _eatfood _eatmdone _eatspecial _egg_type_from_parent _emergency_disrobe _enable_ctrlP _encumber_msg _end_burn
 functions:80 _end_engulf

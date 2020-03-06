@@ -136,14 +136,28 @@
 #define polyok(ptr) (((ptr)->mflags2 & M2_NOPOLY) == 0L)
 #define is_shapeshifter(ptr) (((ptr)->mflags2 & M2_SHAPESHIFTER) != 0L)
 #define is_undead(ptr) (((ptr)->mhflags & MH_UNDEAD) != 0L)
-#define is_were(ptr) (((ptr)->mhflags & MH_WERE) != 0L)
-#define is_elf(ptr) (((ptr)->mhflags & MH_ELF) != 0L)
-#define is_dwarf(ptr) (((ptr)->mhflags & MH_DWARF) != 0L)
-#define is_gnome(ptr) (((ptr)->mhflags & MH_GNOME) != 0L)
-#define is_orc(ptr) (((ptr)->mhflags & MH_ORC) != 0L)
-#define is_human(ptr) (((ptr)->mhflags & MH_HUMAN) != 0L)
-#define is_vampire(ptr)	(((ptr)->mhflags & MH_VAMPIRE) != 0L)
-#define your_race(ptr) (((ptr)->mhflags & urace.selfmask) != 0L)
+#define is_were(ptr) ((((ptr)->mhflags & MH_WERE) != 0L)     \
+                     || ((ptr) == g.youmonst.data &&       \
+                         !Upolyd && Race_if(PM_WEREWOLF)))
+#define is_vampire(ptr) ((((ptr)->mhflags & MH_VAMPIRE) != 0L)     \
+                     || ((ptr) == g.youmonst.data &&       \
+                         !Upolyd && Race_if(PM_VAMPIRE)))
+#define is_elf(ptr) ((((ptr)->mhflags & MH_ELF) != 0L)     \
+                     || ((ptr) == g.youmonst.data &&       \
+                         !Upolyd && Race_if(PM_ELF)))
+#define is_dwarf(ptr) ((((ptr)->mhflags & MH_DWARF) != 0L) \
+                     || ((ptr) == g.youmonst.data &&       \
+                         !Upolyd && Race_if(PM_DWARF)))
+#define is_gnome(ptr) ((((ptr)->mhflags & MH_GNOME) != 0L) \
+                     || ((ptr) == g.youmonst.data &&       \
+                         !Upolyd && Race_if(PM_GNOME)))
+#define is_orc(ptr) ((((ptr)->mhflags & MH_ORC) != 0L)     \
+                     || ((ptr) == g.youmonst.data &&       \
+                         !Upolyd && Race_if(PM_ORC)))
+#define is_human(ptr) ((((ptr)->mhflags & MH_HUMAN) != 0L) \
+                     || ((ptr) == g.youmonst.data &&       \
+                         !Upolyd && Race_if(PM_HUMAN)))
+#define your_race(ptr) (((ptr)->mhflags & g.urace.selfmask) != 0L)
 #define is_bat(ptr)                                         \
     ((ptr) == &mons[PM_BAT] || (ptr) == &mons[PM_GIANT_BAT] \
      || (ptr) == &mons[PM_VAMPIRE_BAT])
@@ -174,8 +188,8 @@
 #define is_wanderer(ptr) (((ptr)->mflags2 & M2_WANDER) != 0L)
 #define always_hostile(ptr) (((ptr)->mflags2 & M2_HOSTILE) != 0L)
 #define always_peaceful(ptr) (((ptr)->mflags2 & M2_PEACEFUL) != 0L)
-#define race_hostile(ptr) (((ptr)->mhflags & urace.hatemask) != 0L)
-#define race_peaceful(ptr) (((ptr)->mhflags & urace.lovemask) != 0L)
+#define race_hostile(ptr) (((ptr)->mhflags & g.urace.hatemask) != 0L)
+#define race_peaceful(ptr) (((ptr)->mhflags & g.urace.lovemask) != 0L)
 #define extra_nasty(ptr) (((ptr)->mflags2 & M2_NASTY) != 0L)
 #define strongmonst(ptr) (((ptr)->mflags2 & M2_STRONG) != 0L)
 #define can_breathe(ptr) attacktype(ptr, AT_BREA)

@@ -1,4 +1,4 @@
-/* NetHack 3.6	objects.c	$NHDT-Date: 1535422421 2018/08/28 02:13:41 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.51 $ */
+/* NetHack 3.6	objects.c	$NHDT-Date: 1578855624 2020/01/12 19:00:24 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.61 $ */
 /* Copyright (c) Mike Threepoint, 1989.                           */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -63,7 +63,7 @@ struct monst { struct monst *dummy; };  /* lint: struct obj's union */
                cost,sdam,ldam,oc1,oc2,nut,color)  { obj }
 #define None (char *) 0 /* less visual distraction for 'no description' */
 
-NEARDATA struct objdescr obj_descr[] =
+NEARDATA struct objdescr obj_descr_init[] =
 #else
 /* second pass -- object definitions */
 #define BITS(nmkn,mrg,uskn,ctnr,mgc,chrg,uniq,nwsh,big,tuf,dir,sub,mtrl) \
@@ -77,7 +77,7 @@ NEARDATA struct objdescr obj_descr[] =
 #define HARDGEM(n) (0)
 #endif
 
-NEARDATA struct objclass objects[] =
+NEARDATA struct objclass obj_init[] =
 #endif
 {
 /* dummy object[0] -- description [2nd arg] *must* be NULL */
@@ -179,10 +179,11 @@ WEAPON("stiletto", None,
 /* 3.6: worm teeth and crysknives now stack;
    when a stack of teeth is enchanted at once, they fuse into one crysknife;
    when a stack of crysknives drops, the whole stack reverts to teeth */
+/* 3.7: change crysknife from MINERAL to BONE and worm tooth from 0 to BONE */
 WEAPON("worm tooth", None,
        1, 1, 0,  0,  20,   2,  2,  2, 0, 0,   P_KNIFE, BONE, CLR_WHITE),
 WEAPON("crysknife", None,
-       1, 1, 0,  0,  20, 100, 10, 10, 3, P,   P_KNIFE, MINERAL, CLR_WHITE),
+       1, 1, 0,  0,  20, 100, 10, 10, 3, P,   P_KNIFE, BONE, CLR_WHITE),
 
 /* axes */
 WEAPON("axe", None,
@@ -792,8 +793,8 @@ TOOL("leather drum",      "drum", 0, 0, 0, 0,  4, 25, 25, LEATHER, HI_LEATHER),
 TOOL("drum of earthquake","drum", 0, 0, 1, 1,  2, 25, 25, LEATHER, HI_LEATHER),
 /* tools useful as weapons */
 WEPTOOL("pick-axe", None,
-        1, 0, 0, 20,  50,  50,  6,  3, WHACK,  P_PICK_AXE, IRON, HI_METAL),
-WEPTOOL("grappling hook", "hook",
+        1, 0, 0, 20, 100,  50,  6,  3, WHACK,  P_PICK_AXE, IRON, HI_METAL),
+WEPTOOL("grappling hook", None,
         0, 0, 0,  5,  30,  50,  2,  6, WHACK,  P_FLAIL,    IRON, HI_METAL),
 WEPTOOL("unicorn horn", None,
         1, 1, 1,  0,  20, 100, 12, 12, PIERCE, P_UNICORN_HORN,
@@ -1005,7 +1006,7 @@ SCROLL(None, "STRC PRST SKRZ KRK",  1,   0, 100), /* Czech and Slovak
                                                         tongue-twister */
     /* These must come last because they have special fixed descriptions.
      */
-#ifdef MAIL
+#ifdef MAIL_STRUCTURES
 SCROLL("mail",          "stamped",  0,   0,   0),
 #endif
 SCROLL("blank paper", "unlabeled",  0,  28,  60),
@@ -1046,7 +1047,7 @@ SPELL("fireball",        "ragged",
 SPELL("cone of cold",    "dog eared",
       P_ATTACK_SPELL,       5,  7, 4, 1, RAY, HI_PAPER),
 SPELL("sleep",           "mottled",
-      P_ENCHANTMENT_SPELL, 50,  1, 1, 1, RAY, HI_PAPER),
+      P_ENCHANTMENT_SPELL, 49,  1, 1, 1, RAY, HI_PAPER),
 SPELL("finger of death", "stained",
       P_ATTACK_SPELL,       5, 10, 7, 1, RAY, HI_PAPER),
 SPELL("lightning",       "rainbow",     
@@ -1141,7 +1142,7 @@ SPELL("blank paper", "plain", P_NONE, 9, 0, 0, 0, 0, HI_PAPER),
 /* tribute book for 3.6 */
 OBJECT(OBJ("novel", "paperback"),
        BITS(0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, P_NONE, PAPER),
-       0, SPBOOK_CLASS, 0, 0, 0, 20, 0, 0, 0, 1, 20, CLR_BRIGHT_BLUE),
+       0, SPBOOK_CLASS, 1, 0, 0, 20, 0, 0, 0, 1, 20, CLR_BRIGHT_BLUE),
 OBJECT(OBJ("encyclopedia", "hardback"),
       BITS(0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, P_NONE, PAPER),
       0, SPBOOK_CLASS, 9, 0, 0, 300, 0, 0, 0, 1, 20, CLR_RED),
@@ -1347,13 +1348,14 @@ OBJECT(OBJ(None, None),
 /* clang-format on */
 /* *INDENT-ON* */
 
-void NDECL(objects_init);
+struct objdescr obj_descr[SIZE(obj_descr_init)];
+struct objclass objects[SIZE(obj_init)];
 
-/* dummy routine used to force linkage */
 void
-objects_init()
+objects_globals_init()
 {
-    return;
+    memcpy(obj_descr, obj_descr_init, sizeof(obj_descr));
+    memcpy(objects, obj_init, sizeof(objects));
 }
 
 #endif /* !OBJECTS_PASS_2_ */

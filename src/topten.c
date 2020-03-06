@@ -1,4 +1,4 @@
-/* NetHack 3.6	topten.c	$NHDT-Date: 1450451497 2015/12/18 15:11:37 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.44 $ */
+/* NetHack 3.6	topten.c	$NHDT-Date: 1581322668 2020/02/10 08:17:48 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.64 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -13,11 +13,13 @@
 #include "patchlevel.h"
 #endif
 
-#ifdef VMS
-/* We don't want to rewrite the whole file, because that entails
-   creating a new version which requires that the old one be deletable. */
-#define UPDATE_RECORD_IN_PLACE
-#endif
+/* If UPDATE_RECORD_IN_PLACE is defined, we don't want to rewrite the 
+ * whole file, because that entails creating a new version which 
+ * requires that the old one be deletable. UPDATE_RECORD_IN_PLACE
+ * had to be defined more centrally in 3.7 to ensure that the 
+ * final_fpos field gets included in struct instance_globals aka 'g'.
+*/
+
 
 /*
  * Updating in place can leave junk at the end of the file in some
@@ -25,11 +27,8 @@
  * way to truncate it).  The trailing junk is harmless and the code
  * which reads the scores will ignore it.
  */
-#ifdef UPDATE_RECORD_IN_PLACE
-static long final_fpos;
-#endif
 
-#define done_stopprint program_state.stopprint
+#define done_stopprint g.program_state.stopprint
 
 #define newttentry() (struct toptenentry *) alloc(sizeof (struct toptenentry))
 #define dealloc_ttentry(ttent) free((genericptr_t) (ttent))
@@ -62,31 +61,29 @@ struct toptenentry {
    room for separating space or trailing newline plus string terminator */
 #define SCANBUFSZ (4 * (ROLESZ + 1) + (NAMSZ + 1) + (DTHSZ + 1) + 1)
 
-STATIC_DCL void FDECL(topten_print, (const char *));
-STATIC_DCL void FDECL(topten_print_bold, (const char *));
-STATIC_DCL void NDECL(outheader);
-STATIC_DCL void FDECL(outentry, (int, struct toptenentry *, BOOLEAN_P));
-STATIC_DCL void FDECL(discardexcess, (FILE *));
-STATIC_DCL void FDECL(readentry, (FILE *, struct toptenentry *));
-STATIC_DCL void FDECL(writeentry, (FILE *, struct toptenentry *));
+static void FDECL(topten_print, (const char *));
+static void FDECL(topten_print_bold, (const char *));
+static void NDECL(outheader);
+static void FDECL(outentry, (int, struct toptenentry *, BOOLEAN_P));
+static void FDECL(discardexcess, (FILE *));
+static void FDECL(readentry, (FILE *, struct toptenentry *));
+static void FDECL(writeentry, (FILE *, struct toptenentry *));
 #ifdef XLOGFILE
-STATIC_DCL void FDECL(writexlentry, (FILE *, struct toptenentry *, int));
-STATIC_DCL long NDECL(encodexlogflags);
-STATIC_DCL long NDECL(encodeconduct);
-STATIC_DCL long NDECL(encodeachieve);
+static void FDECL(writexlentry, (FILE *, struct toptenentry *, int));
+static long NDECL(encodexlogflags);
+static long NDECL(encodeconduct);
+static long FDECL(encodeachieve, (BOOLEAN_P));
 #endif
-STATIC_DCL void FDECL(free_ttlist, (struct toptenentry *));
-STATIC_DCL int FDECL(classmon, (char *, BOOLEAN_P));
-STATIC_DCL int FDECL(score_wanted, (BOOLEAN_P, int, struct toptenentry *, int,
+static void FDECL(free_ttlist, (struct toptenentry *));
+static int FDECL(classmon, (char *, BOOLEAN_P));
+static int FDECL(score_wanted, (BOOLEAN_P, int, struct toptenentry *, int,
                                     const char **, int));
 #ifdef NO_SCAN_BRACK
-STATIC_DCL void FDECL(nsb_mung_line, (char *));
-STATIC_DCL void FDECL(nsb_unmung_line, (char *));
+static void FDECL(nsb_mung_line, (char *));
+static void FDECL(nsb_unmung_line, (char *));
 #endif
 
-static winid toptenwin = WIN_ERR;
-
-/* "killed by",&c ["an"] 'killer.name' */
+/* "killed by",&c ["an"] 'g.killer.name' */
 void
 formatkiller(buf, siz, how, incl_helpless)
 char *buf;
@@ -116,12 +113,12 @@ boolean incl_helpless;
         "slaughtered by "
     };
     unsigned l;
-    char c, *kname = killer.name;
+    char c, *kname = g.killer.name;
 
     buf[0] = '\0'; /* lint suppression */
-    switch (killer.format) {
+    switch (g.killer.format) {
     default:
-        impossible("bad killer format? (%d)", killer.format);
+        impossible("bad killer format? (%d)", g.killer.format);
         /*FALLTHRU*/
     case NO_KILLER_PREFIX:
         break;
@@ -132,7 +129,7 @@ boolean incl_helpless;
         #ifdef UNIQDEATHS
         if (how == MURDERED)
             (void) strncat(buf,
-                murdered_by_msg[moves % SIZE(murdered_by_msg)], siz - 1);
+                murdered_by_msg[g.moves % SIZE(murdered_by_msg)], siz - 1);
         else
         #endif
             (void) strncat(buf, killed_by_prefix[how], siz - 1);
@@ -165,35 +162,35 @@ boolean incl_helpless;
     }
     *buf = '\0';
 
-    if (incl_helpless && multi) {
+    if (incl_helpless && g.multi) {
         /* X <= siz: 'sizeof "string"' includes 1 for '\0' terminator */
-        if (multi_reason && strlen(multi_reason) + sizeof ", while " <= siz)
-            Sprintf(buf, ", while %s", multi_reason);
-        /* either multi_reason wasn't specified or wouldn't fit */
+        if (g.multi_reason && strlen(g.multi_reason) + sizeof ", while " <= siz)
+            Sprintf(buf, ", while %s", g.multi_reason);
+        /* either g.multi_reason wasn't specified or wouldn't fit */
         else if (sizeof ", while helpless" <= siz)
             Strcpy(buf, ", while helpless");
         /* else extra death info won't fit, so leave it out */
     }
 }
 
-STATIC_OVL void
+static void
 topten_print(x)
 const char *x;
 {
-    if (toptenwin == WIN_ERR)
+    if (g.toptenwin == WIN_ERR)
         raw_print(x);
     else
-        putstr(toptenwin, ATR_NONE, x);
+        putstr(g.toptenwin, ATR_NONE, x);
 }
 
-STATIC_OVL void
+static void
 topten_print_bold(x)
 const char *x;
 {
-    if (toptenwin == WIN_ERR)
+    if (g.toptenwin == WIN_ERR)
         raw_print_bold(x);
     else
-        putstr(toptenwin, ATR_BOLD, x);
+        putstr(g.toptenwin, ATR_BOLD, x);
 }
 
 int
@@ -222,7 +219,7 @@ d_level *lev;
 }
 
 /* throw away characters until current record has been entirely consumed */
-STATIC_OVL void
+static void
 discardexcess(rfile)
 FILE *rfile;
 {
@@ -233,7 +230,7 @@ FILE *rfile;
     } while (c != '\n' && c != EOF);
 }
 
-STATIC_OVL void
+static void
 readentry(rfile, tt)
 FILE *rfile;
 struct toptenentry *tt;
@@ -253,7 +250,7 @@ struct toptenentry *tt;
 
 #ifdef UPDATE_RECORD_IN_PLACE
     /* note: input below must read the record's terminating newline */
-    final_fpos = tt->fpos = ftell(rfile);
+    g.final_fpos = tt->fpos = ftell(rfile);
 #endif
 #define TTFIELDS 13
     if (fscanf(rfile, fmt, &tt->ver_major, &tt->ver_minor, &tt->patchlevel,
@@ -316,7 +313,7 @@ struct toptenentry *tt;
     }
 }
 
-STATIC_OVL void
+static void
 writeentry(rfile, tt)
 FILE *rfile;
 struct toptenentry *tt;
@@ -354,8 +351,8 @@ struct toptenentry *tt;
 
 #ifdef XLOGFILE
 
-/* as tab is never used in eg. plname or death, no need to mangle those. */
-STATIC_OVL void
+/* as tab is never used in eg. g.plname or death, no need to mangle those. */
+static void
 writexlentry(rfile, tt, how)
 FILE *rfile;
 struct toptenentry *tt;
@@ -382,12 +379,13 @@ int how;
     formatkiller(tmpbuf, sizeof tmpbuf, how, FALSE);
     Fprintf(rfile, "%s%cname=%s%cdeath=%s",
             buf, /* (already includes separator) */
-            XLOG_SEP, plname, XLOG_SEP, tmpbuf);
-    if (multi)
+            XLOG_SEP, g.plname, XLOG_SEP, tmpbuf);
+    if (g.multi)
         Fprintf(rfile, "%cwhile=%s", XLOG_SEP,
-                multi_reason ? multi_reason : "helpless");
+                g.multi_reason ? g.multi_reason : "helpless");
     Fprintf(rfile, "%cconduct=0x%lx%cturns=%ld%cachieve=0x%lx", XLOG_SEP,
-            encodeconduct(), XLOG_SEP, moves, XLOG_SEP, encodeachieve());
+            encodeconduct(), XLOG_SEP, g.moves, XLOG_SEP,
+            encodeachieve(FALSE));
     Fprintf(rfile, "%crealtime=%ld%cstarttime=%ld%cendtime=%ld", XLOG_SEP,
             (long) urealtime.realtime, XLOG_SEP,
             (long) ubirthday, XLOG_SEP, (long) urealtime.finish_time);
@@ -399,7 +397,7 @@ int how;
 #undef XLOG_SEP
 }
 
-STATIC_OVL long
+static long
 encodexlogflags()
 {
     long e = 0L;
@@ -414,7 +412,7 @@ encodexlogflags()
     return e;
 }
 
-STATIC_OVL long
+static long
 encodeconduct()
 {
     long e = 0L;
@@ -453,62 +451,33 @@ encodeconduct()
     return e;
 }
 
-STATIC_OVL long
-encodeachieve()
+static long
+encodeachieve(secondlong)
+boolean secondlong; /* False: handle achievements 1..31, True: 32..62 */
 {
+    int i, achidx, offset;
     long r = 0L;
 
-    if (u.uachieve.bell)
-        r |= 1L << 0;
-    if (u.uachieve.enter_gehennom)
-        r |= 1L << 1;
-    if (u.uachieve.menorah)
-        r |= 1L << 2;
-    if (u.uachieve.book)
-        r |= 1L << 3;
-    if (u.uevent.invoked)
-        r |= 1L << 4;
-    if (u.uachieve.amulet)
-        r |= 1L << 5;
-    if (In_endgame(&u.uz))
-        r |= 1L << 6;
-    if (Is_astralevel(&u.uz))
-        r |= 1L << 7;
-    if (u.uachieve.ascended)
-        r |= 1L << 8;
-    if (u.uachieve.mines_luckstone)
-        r |= 1L << 9;
-    if (u.uachieve.finish_sokoban)
-        r |= 1L << 10;
-    if (u.uachieve.killed_medusa)
-        r |= 1L << 11;
-    if (u.uroleplay.blind)
-        r |= 1L << 12;
-    if (u.uroleplay.nudist)
-        r |= 1L << 13;
-    if (u.uachieve.killed_king)
-        r |= 1L << 14;
-    if (u.uachieve.killed_demogorgon)
-        r |= 1L << 15;
-    if (u.uroleplay.deaf)
-        r |= 1L << 16;
-    if (u.uroleplay.clumsy)
-        r |= 1L << 17;
-    if (u.uroleplay.hallu)
-        r |= 1L << 18;
-    if (u.uroleplay.illfated)
-        r |= 1L << 19;
-    if (u.uachieve.killed_reaper)
-        r |= 1L << 20;
-    if (u.uroleplay.marathon)
-        r |= 1L << 21;
-
+    /*
+     * 32: portable limit for 'long'.
+     * Force 32 even on configurations that are using 64 bit longs.
+     *
+     * We use signed long and limit ourselves to 31 bits since tools
+     * that post-process xlogfile might not be able to cope with
+     * 'unsigned long'.
+     */
+    offset = secondlong ? (32 - 1) : 0;
+    for (i = 0; u.uachieved[i]; ++i) {
+        achidx = u.uachieved[i] - offset;
+        if (achidx > 0 && achidx < 32) /* value 1..31 sets bit 0..30 */
+            r |= 1L << (achidx - 1);
+    }
     return r;
 }
 
 #endif /* XLOGFILE */
 
-STATIC_OVL void
+static void
 free_ttlist(tt)
 struct toptenentry *tt;
 {
@@ -554,15 +523,15 @@ time_t when;
      * topten uses alloc() several times, which will lead to
      * problems if the panic was the result of an alloc() failure.
      */
-    if (program_state.panicking)
+    if (g.program_state.panicking)
         return;
 
     if (iflags.toptenwin) {
-        toptenwin = create_nhwindow(NHW_TEXT);
+        g.toptenwin = create_nhwindow(NHW_TEXT);
     }
 
 #if defined(UNIX) || defined(VMS) || defined(__EMX__)
-#define HUP if (!program_state.done_hup)
+#define HUP if (!g.program_state.done_hup)
 #else
 #define HUP
 #endif
@@ -590,11 +559,11 @@ time_t when;
     t0->maxhp = u.uhpmax;
     t0->deaths = u.umortality;
     t0->uid = uid;
-    copynchars(t0->plrole, urole.filecode, ROLESZ);
-    copynchars(t0->plrace, urace.filecode, ROLESZ);
+    copynchars(t0->plrole, g.urole.filecode, ROLESZ);
+    copynchars(t0->plrace, g.urace.filecode, ROLESZ);
     copynchars(t0->plgend, genders[flags.gender].filecode, ROLESZ);
     copynchars(t0->plalign, aligns[1 - u.ualign.type].filecode, ROLESZ);
-    copynchars(t0->name, plname, NAMSZ);
+    copynchars(t0->name, g.plname, NAMSZ);
     formatkiller(t0->death, sizeof t0->death, how, TRUE);
     t0->birthdate = yyyymmdd(ubirthday);
     t0->deathdate = yyyymmdd(when);
@@ -719,7 +688,7 @@ time_t when;
     }
     if (flg) { /* rewrite record file */
 #ifdef UPDATE_RECORD_IN_PLACE
-        (void) fseek(rfile, (t0->fpos >= 0 ? t0->fpos : final_fpos),
+        (void) fseek(rfile, (t0->fpos >= 0 ? t0->fpos : g.final_fpos),
                      SEEK_SET);
 #else
         (void) fclose(rfile);
@@ -810,17 +779,17 @@ time_t when;
 
 showwin:
     if (iflags.toptenwin && !done_stopprint)
-        display_nhwindow(toptenwin, 1);
+        display_nhwindow(g.toptenwin, 1);
 destroywin:
     if (!t0_used)
         dealloc_ttentry(t0);
     if (iflags.toptenwin) {
-        destroy_nhwindow(toptenwin);
-        toptenwin = WIN_ERR;
+        destroy_nhwindow(g.toptenwin);
+        g.toptenwin = WIN_ERR;
     }
 }
 
-STATIC_OVL void
+static void
 outheader()
 {
     char linebuf[BUFSZ];
@@ -835,7 +804,7 @@ outheader()
 }
 
 /* so>0: standout line; so=0: ordinary line */
-STATIC_OVL void
+static void
 outentry(rank, t1, so)
 struct toptenentry *t1;
 int rank;
@@ -923,7 +892,7 @@ boolean so;
             }
             Sprintf(eos(linebuf), fmt, arg);
         } else {
-            Sprintf(eos(linebuf), " in %s", dungeons[t1->deathdnum].dname);
+            Sprintf(eos(linebuf), " in %s", g.dungeons[t1->deathdnum].dname);
             if (t1->deathdnum != knox_level.dnum)
                 Sprintf(eos(linebuf), " on level %d", t1->deathlev);
             if (t1->deathlev != t1->maxlvl)
@@ -998,7 +967,7 @@ boolean so;
         topten_print(linebuf);
 }
 
-STATIC_OVL int
+static int
 score_wanted(current_ver, rank, t1, playerct, players, uid)
 boolean current_ver;
 int rank;
@@ -1105,7 +1074,7 @@ char **argv;
             playerct = 0;
             players = (const char **) 0;
         } else {
-            player0 = plname;
+            player0 = g.plname;
             if (!*player0)
 #ifdef AMIGA
                 player0 = "all"; /* single user system */
@@ -1176,7 +1145,7 @@ char **argv;
         raw_print(pbuf);
         raw_printf("Usage: %s -s [-v] <playertypes> [maxrank] [playernames]",
 
-                   hname);
+                   g.hname);
         raw_printf("Player types are: [-p role] [-r race]");
     }
     free_ttlist(tt_head);
@@ -1191,7 +1160,7 @@ char **argv;
 #endif
 }
 
-STATIC_OVL int
+static int
 classmon(plch, fem)
 char *plch;
 boolean fem;
@@ -1264,7 +1233,7 @@ tt_name()
     struct toptenentry *tt;
     tt = get_rnd_toptenentry();
     if (!tt)
-        return (const char *) plname;
+        return (const char *) g.plname;
     else
         return tt->name;
 
@@ -1297,7 +1266,7 @@ struct obj *otmp;
 /* Lattice scanf isn't up to reading the scorefile.  What */
 /* follows deals with that; I admit it's ugly. (KL) */
 /* Now generally available (KL) */
-STATIC_OVL void
+static void
 nsb_mung_line(p)
 char *p;
 {
@@ -1305,7 +1274,7 @@ char *p;
         *p = '|';
 }
 
-STATIC_OVL void
+static void
 nsb_unmung_line(p)
 char *p;
 {

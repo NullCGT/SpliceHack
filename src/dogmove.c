@@ -9,25 +9,22 @@
 
 #include "mfndpos.h"
 
-extern boolean notonhead;
-extern struct obj *propellor;
-
 int FDECL(extra_pref, (struct monst *, struct obj *));
 
 extern boolean FDECL(would_prefer_hwep,(struct monst *,struct obj *));
 extern boolean FDECL(would_prefer_rwep,(struct monst *,struct obj *));
 
-STATIC_DCL boolean FDECL(dog_hunger, (struct monst *, struct edog *));
-STATIC_DCL int FDECL(dog_invent, (struct monst *, struct edog *, int));
-STATIC_DCL int FDECL(dog_goal, (struct monst *, struct edog *, int, int, int));
-STATIC_DCL struct monst *FDECL(find_targ, (struct monst *, int, int, int));
-STATIC_OVL int FDECL(find_friends, (struct monst *, struct monst *, int));
-STATIC_DCL struct monst *FDECL(best_target, (struct monst *));
-STATIC_DCL long FDECL(score_targ, (struct monst *, struct monst *));
-STATIC_DCL boolean FDECL(can_reach_location, (struct monst *, XCHAR_P,
+static boolean FDECL(dog_hunger, (struct monst *, struct edog *));
+static int FDECL(dog_invent, (struct monst *, struct edog *, int));
+static int FDECL(dog_goal, (struct monst *, struct edog *, int, int, int));
+static struct monst *FDECL(find_targ, (struct monst *, int, int, int));
+static int FDECL(find_friends, (struct monst *, struct monst *, int));
+static struct monst *FDECL(best_target, (struct monst *));
+static long FDECL(score_targ, (struct monst *, struct monst *));
+static boolean FDECL(can_reach_location, (struct monst *, XCHAR_P,
                                               XCHAR_P, XCHAR_P, XCHAR_P));
-STATIC_DCL boolean FDECL(could_reach_item, (struct monst *, XCHAR_P, XCHAR_P));
-STATIC_DCL void FDECL(quickmimic, (struct monst *));
+static boolean FDECL(could_reach_item, (struct monst *, XCHAR_P, XCHAR_P));
+static void FDECL(quickmimic, (struct monst *));
 
 /*
 * See if this armor is better than what we're wearing.
@@ -50,7 +47,7 @@ register struct obj *otmp;
         return FALSE;
 
     if (is_shield(otmp) &&
-        (mtmp == &youmonst) ? (uwep && bimanual(uwep))
+        (mtmp == &g.youmonst) ? (uwep && bimanual(uwep))
  	          : (MON_WEP(mtmp) && bimanual(MON_WEP(mtmp))))
               return FALSE;
 
@@ -66,7 +63,7 @@ register struct obj *otmp;
  	        num_horns(mtmp->data) > 0)
  	      return FALSE;
 
-    obj = (mtmp == &youmonst) ? invent : mtmp->minvent;
+    obj = (mtmp == &g.youmonst) ? g.invent : mtmp->minvent;
 
     for (; obj; obj = obj->nobj) {
         if (is_cloak(otmp)  && !is_cloak(obj) ) continue;
@@ -159,14 +156,14 @@ boolean check_if_better;
         if (likes_gold(mtmp->data))
             return TRUE;
         if (otmp->oclass == ARMOR_CLASS) {
- 	          return !check_if_better || !is_better_armor(&youmonst, otmp);
+ 	          return !check_if_better || !is_better_armor(&g.youmonst, otmp);
         } else if (otmp->oclass == WAND_CLASS && otmp->spe <= 0)
             return FALSE;  /* used charges or was cancelled? */
         else {
        	    /* Check if you've got one.
        	       If you don't, don't hoard it. */
             register struct obj *otmp2;
-       	    for(otmp2 = invent; otmp2; otmp2 = otmp2->nobj)
+       	    for(otmp2 = g.invent; otmp2; otmp2 = otmp2->nobj)
        	        if (otmp->otyp == otmp2->otyp ||
        	            (otmp->otyp == FOOD_CLASS && otmp2->otyp == FOOD_CLASS))
        	            return TRUE;
@@ -185,7 +182,7 @@ struct monst *mon;
     struct obj *obj, *wep, dummy, *pickaxe, *unihorn, *key, *hwep, *proj;
     const struct obj *rwep;
 
-    dummy = zeroobj;
+    dummy = cg.zeroobj;
     dummy.otyp = GOLD_PIECE; /* not STRANGE_OBJECT or tools of interest */
     dummy.oartifact = 1; /* so real artifact won't override "don't keep it" */
     pickaxe = unihorn = key = (struct obj *) 0;
@@ -196,7 +193,7 @@ struct monst *mon;
             ? select_rwep(mon) : (struct obj *)0;
 
     boolean intelligent = TRUE;
-    rwep = attacktype(mon->data, AT_WEAP) ? propellor : &zeroobj;
+    rwep = attacktype(mon->data, AT_WEAP) ? g.propellor : &cg.zeroobj;
 
     if (is_animal(mon->data) || mindless(mon->data)) {
         /* won't hang on to any objects of these types */
@@ -283,9 +280,9 @@ struct monst *mon;
          		    && obj != proj && obj != hwep
          		    && !would_prefer_hwep(mon, obj) /*cursed item in hand?*/
          		    && !would_prefer_rwep(mon, obj)
-         		    && ((rwep != &zeroobj) ||
+         		    && ((rwep != &cg.zeroobj) ||
          		        (!is_ammo(obj) && !is_launcher(obj)))
-         		    && (rwep == &zeroobj || !ammo_and_launcher(obj, rwep))
+         		    && (rwep == &cg.zeroobj || !ammo_and_launcher(obj, rwep))
          		    && !could_use_item(mon, obj, TRUE))))
      		            return obj;
     }
@@ -296,9 +293,8 @@ struct monst *mon;
 static NEARDATA const char nofetch[] = { BALL_CLASS, CHAIN_CLASS, ROCK_CLASS,
                                          0 };
 
-STATIC_VAR xchar gtyp, gx, gy; /* type and position of dog's current goal */
 
-STATIC_PTR void FDECL(wantdoor, (int, int, genericptr_t));
+static void FDECL(wantdoor, (int, int, genericptr_t));
 
 boolean
 cursed_object_at(x, y)
@@ -306,7 +302,7 @@ int x, y;
 {
     struct obj *otmp;
 
-    for (otmp = level.objects[x][y]; otmp; otmp = otmp->nexthere)
+    for (otmp = g.level.objects[x][y]; otmp; otmp = otmp->nexthere)
         if (otmp->cursed)
             return TRUE;
     return FALSE;
@@ -391,8 +387,8 @@ boolean devour;
     boolean vampiric = mtmp->data->mlet == S_VAMPIRE;
 
     objnambuf[0] = '\0';
-    if (edog->hungrytime < monstermoves)
-        edog->hungrytime = monstermoves;
+    if (edog->hungrytime < g.monstermoves)
+        edog->hungrytime = g.monstermoves;
     nutrit = dog_nutrition(mtmp, obj);
 
     deadmimic = (obj->otyp == CORPSE && (obj->corpsenm == PM_SMALL_MIMIC
@@ -482,7 +478,7 @@ boolean devour;
 #ifdef LINT
         edog->apport = 0;
 #else
-        edog->apport += (int) (200L / ((long) edog->dropdist + monstermoves
+        edog->apport += (int) (200L / ((long) edog->dropdist + g.monstermoves
                                        - edog->droptime));
 #endif
     if (mtmp->data == &mons[PM_RUST_MONSTER] && obj->oerodeproof) {
@@ -505,7 +501,7 @@ boolean devour;
 			obj = splitobj(obj, obj->quan - 1L);
 
 			freeinv(obj);
-			if (inv_cnt(TRUE) >= 52 && !merge_choice(invent, obj))
+			if (inv_cnt(TRUE) >= 52 && !merge_choice(g.invent, obj))
 			    dropy(obj);
 			else
 			    obj = addinv(obj); /* unlikely but a merge is possible */
@@ -649,7 +645,7 @@ boolean cooking;
 
 
 /* hunger effects -- returns TRUE on starvation */
-STATIC_OVL boolean
+static boolean
 dog_hunger(mtmp, edog)
 struct monst *mtmp;
 struct edog *edog;
@@ -681,9 +677,9 @@ struct edog *edog;
     	  }
     }
     #endif
-    if (monstermoves > edog->hungrytime + 500) {
+    if (g.monstermoves > edog->hungrytime + 500) {
         if (!carnivorous(mtmp->data) && !herbivorous(mtmp->data)) {
-            edog->hungrytime = monstermoves + 500;
+            edog->hungrytime = g.monstermoves + 500;
             /* but not too high; it might polymorph */
         } else if (!edog->mhpmax_penalty) {
             /* starving pets are limited in healing */
@@ -702,7 +698,7 @@ struct edog *edog;
             else
                 You_feel("worried about %s.", y_monnam(mtmp));
             stop_occupation();
-        } else if (monstermoves > edog->hungrytime + 750
+        } else if (g.monstermoves > edog->hungrytime + 750
                    || DEADMONSTER(mtmp)) {
  dog_died:
             if (mtmp->mleashed && mtmp != u.usteed)
@@ -722,7 +718,7 @@ struct edog *edog;
 /* do something with object (drop, pick up, eat) at current position
  * returns 1 if object eaten (since that counts as dog's move), 2 if died
  */
-STATIC_OVL int
+static int
 dog_invent(mtmp, edog, udist)
 register struct monst *mtmp;
 register struct edog *edog;
@@ -749,13 +745,13 @@ int udist;
                 if (edog->apport > 1)
                     edog->apport--;
                 edog->dropdist = udist; /* hpscdi!jon */
-                edog->droptime = monstermoves;
+                edog->droptime = g.monstermoves;
             }
         booldroppables = TRUE;
     } else {
-        if ((obj = level.objects[omx][omy]) != 0
+        if ((obj = g.level.objects[omx][omy]) != 0
             && !index(nofetch, obj->oclass)
-#ifdef MAIL
+#ifdef MAIL_STRUCTURES
             && obj->otyp != SCR_MAIL
 #endif
             ) {
@@ -796,7 +792,7 @@ int udist;
 
 /* set dog's goal -- gtyp, gx, gy;
    returns -1/0/1 (dog's desire to approach player) or -2 (abort move) */
-STATIC_OVL int
+static int
 dog_goal(mtmp, edog, after, udist, whappr)
 register struct monst *mtmp;
 struct edog *edog;
@@ -819,9 +815,9 @@ int after, udist, whappr;
     dog_has_minvent = (droppables(mtmp) != 0);
 
     if (!edog || mtmp->mleashed) { /* he's not going anywhere... */
-        gtyp = APPORT;
-        gx = u.ux;
-        gy = u.uy;
+        g.gtyp = APPORT;
+        g.gx = u.ux;
+        g.gy = u.uy;
     } else {
 #define DDIST(x, y) (dist2(x, y, omx, omy))
 #define SQSRCHRADIUS 5
@@ -829,8 +825,8 @@ int after, udist, whappr;
         register int nx, ny;
         boolean can_use = FALSE;
 
-        gtyp = UNDEF; /* no goal as yet */
-        gx = gy = 0;  /* suppress 'used before set' message */
+        g.gtyp = UNDEF; /* no goal as yet */
+        g.gx = g.gy = 0;  /* suppress 'used before set' message */
 
         if ((min_x = omx - SQSRCHRADIUS) < 1)
             min_x = 1;
@@ -848,7 +844,7 @@ int after, udist, whappr;
             if (nx >= min_x && nx <= max_x && ny >= min_y && ny <= max_y) {
                 otyp = dogfood(mtmp, obj);
                 /* skip inferior goals */
-                if (otyp > gtyp || otyp == UNDEF)
+                if (otyp > g.gtyp || otyp == UNDEF)
                     continue;
                 /* avoid cursed items unless starving */
                 if (cursed_object_at(nx, ny)
@@ -859,32 +855,32 @@ int after, udist, whappr;
                     || !can_reach_location(mtmp, mtmp->mx, mtmp->my, nx, ny))
                     continue;
                 if (otyp < MANFOOD) {
-                    if (otyp < gtyp || DDIST(nx, ny) < DDIST(gx, gy)) {
-                        gx = nx;
-                        gy = ny;
-                        gtyp = otyp;
+                    if (otyp < g.gtyp || DDIST(nx, ny) < DDIST(g.gx, g.gy)) {
+                        g.gx = nx;
+                        g.gy = ny;
+                        g.gtyp = otyp;
                     }
-                } else if (gtyp == UNDEF && in_masters_sight
+                } else if (g.gtyp == UNDEF && in_masters_sight
                            && ((can_use = could_use_item(mtmp, obj, TRUE))
                    			      || !dog_has_minvent)
                            && (!levl[omx][omy].lit || levl[u.ux][u.uy].lit)
                            && (otyp == MANFOOD || m_cansee(mtmp, nx, ny))
                            && (can_use || edog->apport > rn2(8))
                            && can_carry(mtmp, obj) > 0) {
-                    gx = nx;
-                    gy = ny;
-                    gtyp = APPORT;
+                    g.gx = nx;
+                    g.gy = ny;
+                    g.gtyp = APPORT;
                 }
             }
         }
     }
 
     /* follow player if appropriate */
-    if (gtyp == UNDEF || (gtyp != DOGFOOD && gtyp != APPORT
-                          && monstermoves < edog->hungrytime)) {
-        gx = u.ux;
-        gy = u.uy;
-        if (after && udist <= 4 && gx == u.ux && gy == u.uy)
+    if (g.gtyp == UNDEF || (g.gtyp != DOGFOOD && g.gtyp != APPORT
+                          && g.monstermoves < edog->hungrytime)) {
+        g.gx = u.ux;
+        g.gy = u.uy;
+        if (after && udist <= 4 && g.gx == u.ux && g.gy == u.uy)
             return -2;
         appr = (udist >= 9) ? 1 : (mtmp->mflee) ? -1 : 0;
         if (udist > 1) {
@@ -894,7 +890,7 @@ int after, udist, whappr;
         }
         /* if you have dog food it'll follow you more closely */
         if (appr == 0)
-            for (obj = invent; obj; obj = obj->nobj)
+            for (obj = g.invent; obj; obj = obj->nobj)
                 if (dogfood(mtmp, obj) == DOGFOOD) {
                     appr = 1;
                     break;
@@ -905,34 +901,34 @@ int after, udist, whappr;
         appr = 0;
 
 #define FARAWAY (COLNO + 2) /* position outside screen */
-    if (gx == u.ux && gy == u.uy && !in_masters_sight) {
+    if (g.gx == u.ux && g.gy == u.uy && !in_masters_sight) {
         register coord *cp;
 
         cp = gettrack(omx, omy);
         if (cp) {
-            gx = cp->x;
-            gy = cp->y;
+            g.gx = cp->x;
+            g.gy = cp->y;
             if (edog)
                 edog->ogoal.x = 0;
         } else {
             /* assume master hasn't moved far, and reuse previous goal */
             if (edog && edog->ogoal.x
                 && (edog->ogoal.x != omx || edog->ogoal.y != omy)) {
-                gx = edog->ogoal.x;
-                gy = edog->ogoal.y;
+                g.gx = edog->ogoal.x;
+                g.gy = edog->ogoal.y;
                 edog->ogoal.x = 0;
             } else {
                 int fardist = FARAWAY * FARAWAY;
-                gx = gy = FARAWAY; /* random */
+                g.gx = g.gy = FARAWAY; /* random */
                 do_clear_area(omx, omy, 9, wantdoor, (genericptr_t) &fardist);
 
                 /* here gx == FARAWAY e.g. when dog is in a vault */
-                if (gx == FARAWAY || (gx == omx && gy == omy)) {
-                    gx = u.ux;
-                    gy = u.uy;
+                if (g.gx == FARAWAY || (g.gx == omx && g.gy == omy)) {
+                    g.gx = u.ux;
+                    g.gy = u.uy;
                 } else if (edog) {
-                    edog->ogoal.x = gx;
-                    edog->ogoal.y = gy;
+                    edog->ogoal.x = g.gx;
+                    edog->ogoal.y = g.gy;
                 }
             }
         }
@@ -942,7 +938,7 @@ int after, udist, whappr;
     return appr;
 }
 
-STATIC_OVL struct monst *
+static struct monst *
 find_targ(mtmp, dx, dy, maxdist)
 register struct monst *mtmp;
 int dx, dy;
@@ -971,7 +967,7 @@ int maxdist;
             break;
 
         if (curx == mtmp->mux && cury == mtmp->muy)
-            return &youmonst;
+            return &g.youmonst;
 
         if ((targ = m_at(curx, cury)) != 0) {
             /* Is the monster visible to the pet? */
@@ -985,7 +981,7 @@ int maxdist;
     return targ;
 }
 
-STATIC_OVL int
+static int
 find_friends(mtmp, mtarg, maxdist)
 struct monst *mtmp, *mtarg;
 int    maxdist;
@@ -1031,7 +1027,7 @@ int    maxdist;
     return 0;
 }
 
-STATIC_OVL long
+static long
 score_targ(mtmp, mtarg)
 struct monst *mtmp, *mtarg;
 {
@@ -1062,7 +1058,7 @@ struct monst *mtmp, *mtarg;
             faith2 = FALSE;
 
         if (mtmp->data->mattk[0].aatyp == AT_EXPL && !(mtarg->mtame)
-            && !(mtarg == &youmonst))
+            && !(mtarg == &g.youmonst))
             return 5000L;
         /* Never target quest friendlies */
         if (mtarg->data->msound == MS_LEADER
@@ -1079,7 +1075,7 @@ struct monst *mtmp, *mtarg;
             return score;
         }
         /* Is the monster peaceful or tame? */
-        if (/*mtarg->mpeaceful ||*/ mtarg->mtame || mtarg == &youmonst) {
+        if (/*mtarg->mpeaceful ||*/ mtarg->mtame || mtarg == &g.youmonst) {
             /* Pets will never be targeted */
             score -= 3000L;
             return score;
@@ -1135,7 +1131,7 @@ struct monst *mtmp, *mtarg;
     return score;
 }
 
-STATIC_OVL struct monst *
+static struct monst *
 best_target(mtmp)
 struct monst *mtmp;   /* Pet */
 {
@@ -1233,7 +1229,7 @@ int after; /* this is extra fast monster movement */
     coord poss[9];
     long info[9], allowflags;
     char buf[BUFSZ];
-#define GDIST(x, y) (dist2(x, y, gx, gy))
+#define GDIST(x, y) (dist2(x, y, g.gx, g.gy))
 
     /*
      * Tame Angels have isminion set and an ispriest structure instead of
@@ -1267,7 +1263,7 @@ int after; /* this is extra fast monster movement */
         /* provide slow, passive energy regeneration */
         if (u.uen < u.uenmax) {
             u.uen += 1;
-            context.botl = 1;
+            g.context.botl = 1;
         }
         /* allow red dragons to cure sliming */
         if (Slimed && (mtmp->data == &mons[PM_RED_DRAGON] ||
@@ -1302,7 +1298,7 @@ int after; /* this is extra fast monster movement */
         else if (j == 1)
             goto newdogpos; /* eating something */
 
-        whappr = (monstermoves - edog->whistletime < 5);
+        whappr = (g.monstermoves - edog->whistletime < 5);
     } else
         whappr = 0;
 
@@ -1332,7 +1328,7 @@ int after; /* this is extra fast monster movement */
     }
 #if 0 /* [this is now handled in dochug()] */
     if (!Conflict && !mtmp->mconf
-        && mtmp == u.ustuck && !sticks(youmonst.data)) {
+        && mtmp == u.ustuck && !sticks(g.youmonst.data)) {
         unstuck(mtmp); /* swallowed case handled above */
         You("get released!");
     }
@@ -1371,11 +1367,11 @@ int after; /* this is extra fast monster movement */
        	      ) ||
        	     (attacktype(mtmp->data, AT_WEAP) &&
        	      select_rwep(mtmp))) &&
-       	    mtmp->mlstmv != monstermoves) {
+       	    mtmp->mlstmv != g.monstermoves) {
            	    struct monst *mon = mfind_target(mtmp);
-           	    if (mon && (mon != &youmonst) &&
+           	    if (mon && (mon != &g.youmonst) &&
            	        acceptable_pet_target(mtmp, mon, TRUE)) {
-           	        int res = (mon == &youmonst) ? mattacku(mtmp)
+           	        int res = (mon == &g.youmonst) ? mattacku(mtmp)
            		                             : mattackm(mtmp, mon);
            	        if (res & MM_AGR_DIED)
            		          return 2; /* died */
@@ -1412,7 +1408,7 @@ int after; /* this is extra fast monster movement */
         uncursedcnt++;
     }
 
-    better_with_displacing = should_displace(mtmp, poss, info, cnt, gx, gy);
+    better_with_displacing = should_displace(mtmp, poss, info, cnt, g.gx, g.gy);
 
     chcnt = 0;
     chi = -1;
@@ -1440,7 +1436,7 @@ int after; /* this is extra fast monster movement */
             if (after)
                 return 0; /* hit only once each move */
 
-            notonhead = 0;
+            g.notonhead = 0;
             mstatus = mattackm(mtmp, mtmp2);
 
             /* aggressor (pet) died */
@@ -1448,7 +1444,7 @@ int after; /* this is extra fast monster movement */
                 return 2;
 
             if ((mstatus & MM_HIT) && !(mstatus & MM_DEF_DIED) && rn2(4)
-                && mtmp2->mlstmv != monstermoves
+                && mtmp2->mlstmv != g.monstermoves
                 && !onscary(mtmp->mx, mtmp->my, mtmp2)
                 /* monnear check needed: long worms hit on tail */
                 && monnear(mtmp2, mtmp->mx, mtmp->my)) {
@@ -1496,12 +1492,12 @@ int after; /* this is extra fast monster movement */
         /* dog eschews cursed objects, but likes dog food */
         /* (minion isn't interested; `cursemsg' stays FALSE) */
         if (has_edog)
-            for (obj = level.objects[nx][ny]; obj; obj = obj->nexthere) {
+            for (obj = g.level.objects[nx][ny]; obj; obj = obj->nexthere) {
                 if (obj->cursed) {
                     cursemsg[i] = TRUE;
                 } else if ((otyp = dogfood(mtmp, obj)) < MANFOOD
                          && (otyp < ACCFOOD
-                             || edog->hungrytime <= monstermoves)) {
+                             || edog->hungrytime <= g.monstermoves)) {
                     /* Note: our dog likes the food so much that he
                      * might eat it even when it conceals a cursed object */
                     nix = nx;
@@ -1557,7 +1553,7 @@ int after; /* this is extra fast monster movement */
         if (!mtmp->isminion) {
             struct edog *dog = EDOG(mtmp);
 
-            hungry = (monstermoves > (dog->hungrytime + 300));
+            hungry = (g.monstermoves > (dog->hungrytime + 300));
         }
 
         /* Identify the best target in a straight line from the pet;
@@ -1570,7 +1566,7 @@ int after; /* this is extra fast monster movement */
         if (mtarg && (!hungry || !rn2(5))) {
             int mstatus;
 
-            if (mtarg == &youmonst) {
+            if (mtarg == &g.youmonst) {
                 if (mattacku(mtmp))
                     return 2;
             } else {
@@ -1585,7 +1581,7 @@ int after; /* this is extra fast monster movement */
                  * nothing will happen.
                  */
                 if ((mstatus & MM_HIT) && !(mstatus & MM_DEF_DIED)
-                    && rn2(4) && mtarg != &youmonst) {
+                    && rn2(4) && mtarg != &g.youmonst) {
 
                     /* Can monster see? If it can, it can retaliate
                      * even if the pet is invisible, since it'll see
@@ -1628,7 +1624,7 @@ int after; /* this is extra fast monster movement */
             /* describe top item of pile, not necessarily cursed item itself;
                don't use glyph_at() here--it would return the pet but we want
                to know whether an object is remembered at this map location */
-            struct obj *o = (!Hallucination && level.flags.hero_memory
+            struct obj *o = (!Hallucination && g.level.flags.hero_memory
                              && glyph_is_object(levl[nix][niy].glyph))
                                ? vobj_at(nix, niy) : 0;
             const char *what = o ? distant_name(o, doname) : something;
@@ -1686,7 +1682,7 @@ int after; /* this is extra fast monster movement */
 }
 
 /* check if a monster could pick up objects from a location */
-STATIC_OVL boolean
+static boolean
 could_reach_item(mon, nx, ny)
 struct monst *mon;
 xchar nx, ny;
@@ -1705,7 +1701,7 @@ xchar nx, ny;
  * Since the maximum food distance is 5, this should never be more than 5
  * calls deep.
  */
-STATIC_OVL boolean
+static boolean
 can_reach_location(mon, mx, my, fx, fy)
 struct monst *mon;
 xchar mx, my, fx, fy;
@@ -1741,7 +1737,7 @@ xchar mx, my, fx, fy;
 }
 
 /* do_clear_area client */
-STATIC_PTR void
+static void
 wantdoor(x, y, distance)
 int x, y;
 genericptr_t distance;
@@ -1749,13 +1745,13 @@ genericptr_t distance;
     int ndist, *dist_ptr = (int *) distance;
 
     if (*dist_ptr > (ndist = distu(x, y))) {
-        gx = x;
-        gy = y;
+        g.gx = x;
+        g.gy = y;
         *dist_ptr = ndist;
     }
 }
 
-static struct qmchoices {
+static const struct qmchoices {
     int mndx;             /* type of pet, 0 means any  */
     char mlet;            /* symbol of pet, 0 means any */
     unsigned mappearance; /* mimic this */
@@ -1787,7 +1783,7 @@ struct monst *mtmp;
     }
 }
 
-STATIC_OVL void
+static void
 quickmimic(mtmp)
 struct monst *mtmp;
 {

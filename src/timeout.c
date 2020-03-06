@@ -6,22 +6,21 @@
 /* Edited on 5/8/18 by NullCGT */
 
 #include "hack.h"
-#include "lev.h" /* for checking save modes */
 
-STATIC_DCL void NDECL(stoned_dialogue);
-STATIC_DCL void NDECL(phasing_dialogue);
-STATIC_DCL void NDECL(vomiting_dialogue);
-STATIC_DCL void NDECL(choke_dialogue);
-STATIC_DCL void NDECL(levitation_dialogue);
-STATIC_DCL void NDECL(larva_dialogue);
-STATIC_DCL void NDECL(slime_dialogue);
-STATIC_DCL void FDECL(slimed_to_death, (struct kinfo *));
-STATIC_DCL void NDECL(phaze_dialogue);
-STATIC_DCL void FDECL(done_timeout, (int, int));
-STATIC_DCL void NDECL(slip_or_trip);
-STATIC_DCL void FDECL(see_lamp_flicker, (struct obj *, const char *));
-STATIC_DCL void FDECL(lantern_message, (struct obj *));
-STATIC_DCL void FDECL(cleanup_burn, (ANY_P *, long));
+static void NDECL(stoned_dialogue);
+static void NDECL(phasing_dialogue);
+static void NDECL(vomiting_dialogue);
+static void NDECL(choke_dialogue);
+static void NDECL(levitation_dialogue);
+static void NDECL(larva_dialogue);
+static void NDECL(slime_dialogue);
+static void FDECL(slimed_to_death, (struct kinfo *));
+static void NDECL(phaze_dialogue);
+static void FDECL(done_timeout, (int, int));
+static void NDECL(slip_or_trip);
+static void FDECL(see_lamp_flicker, (struct obj *, const char *));
+static void FDECL(lantern_message, (struct obj *));
+static void FDECL(cleanup_burn, (ANY_P *, long));
 
 /* used by wizard mode #timeout and #wizintrinsic; order by 'interest'
    for timeout countdown, where most won't occur in normal play */
@@ -117,7 +116,7 @@ static NEARDATA const char *const stoned_texts[] = {
     "You are a statue."                 /* 1 */
 };
 
-STATIC_OVL void
+static void
 stoned_dialogue()
 {
     register long i = (Stoned & TIMEOUT);
@@ -126,14 +125,14 @@ stoned_dialogue()
         char buf[BUFSZ];
 
         Strcpy(buf, stoned_texts[SIZE(stoned_texts) - i]);
-        if (nolimbs(youmonst.data) && strstri(buf, "limbs"))
+        if (nolimbs(g.youmonst.data) && strstri(buf, "limbs"))
             (void) strsubst(buf, "limbs", "extremities");
         pline1(buf);
     }
     switch ((int) i) {
     case 5: /* slowing down */
         HFast = 0L;
-        if (multi > 0)
+        if (g.multi > 0)
             nomul(0);
         break;
     case 4: /* limbs stiffening */
@@ -141,14 +140,14 @@ stoned_dialogue()
            don't stop attempt to eat tin--might be lizard or acidic */
         if (!Popeye(STONED))
             stop_occupation();
-        if (multi > 0)
+        if (g.multi > 0)
             nomul(0);
         break;
     case 3: /* limbs turned to stone */
         stop_occupation();
         nomul(-3); /* can't move anymore */
-        multi_reason = "getting stoned";
-        nomovemsg = You_can_move_again; /* not unconscious */
+        g.multi_reason = "getting stoned";
+        g.nomovemsg = You_can_move_again; /* not unconscious */
         /* "your limbs have turned to stone" so terminate wounded legs */
         if (Wounded_legs && !u.usteed)
             heal_legs(2);
@@ -168,7 +167,7 @@ stoned_dialogue()
     exercise(A_DEX, FALSE);
 }
 
-STATIC_OVL void
+static void
 phasing_dialogue()
 {
     if (HPasses_walls == 15) {
@@ -197,7 +196,7 @@ static NEARDATA const char *const vomiting_texts[] = {
     "are about to vomit."            /* 2 */
 };
 
-STATIC_OVL void
+static void
 vomiting_dialogue()
 {
     const char *txt = 0;
@@ -219,7 +218,7 @@ vomiting_dialogue()
     /*FALLTHRU*/
     case 9:
         make_confused((HConfusion & TIMEOUT) + (long) d(2, 4), FALSE);
-        if (multi > 0)
+        if (g.multi > 0)
             nomul(0);
         break;
     case 8:
@@ -230,7 +229,7 @@ vomiting_dialogue()
         break;
     case 2:
         txt = vomiting_texts[4];
-        if (cantvomit(youmonst.data))
+        if (cantvomit(g.youmonst.data))
             txt = "gag uncontrollably.";
         else if (Hallucination)
             /* "hurl" is short for "hurl chunks" which is slang for
@@ -239,7 +238,7 @@ vomiting_dialogue()
         break;
     case 0:
         stop_occupation();
-        if (!cantvomit(youmonst.data)) {
+        if (!cantvomit(g.youmonst.data)) {
             morehungry(20);
             /* case 2 used to be "You suddenly vomit!" but it wasn't sudden
                since you've just been through the earlier messages of the
@@ -278,7 +277,7 @@ static NEARDATA const char *const choke_texts2[] = {
     "You suffocate."
 };
 
-STATIC_OVL void
+static void
 choke_dialogue()
 {
     register long i = (Strangled & TIMEOUT);
@@ -303,7 +302,7 @@ static NEARDATA const char *const levi_texts[] = {
     "You wobble unsteadily %s the %s."
 };
 
-STATIC_OVL void
+static void
 levitation_dialogue()
 {
     /* -1 because the last message comes via float_down() */
@@ -337,7 +336,7 @@ static NEARDATA const char *const larva_texts[] = {
     "%s burst from your body!"
 };
 
-STATIC_OVL void
+static void
 larva_dialogue()
 {
     register long i = (LarvaCarrier & TIMEOUT) / 2L;
@@ -366,7 +365,7 @@ static NEARDATA const char *const slime_texts[] = {
     "You have become %s."             /* 1 */
 };
 
-STATIC_OVL void
+static void
 slime_dialogue()
 {
     register long i = (Slimed & TIMEOUT) / 2L;
@@ -375,14 +374,14 @@ slime_dialogue()
         /* display as green slime during "You have become green slime."
            but don't worry about not being able to see self; if already
            mimicking something else at the time, implicitly be revealed */
-        youmonst.m_ap_type = M_AP_MONSTER;
-        youmonst.mappearance = PM_GREEN_SLIME;
+        g.youmonst.m_ap_type = M_AP_MONSTER;
+        g.youmonst.mappearance = PM_GREEN_SLIME;
     }
     if (((Slimed & TIMEOUT) % 2L) && i >= 0L && i < SIZE(slime_texts)) {
         char buf[BUFSZ];
 
         Strcpy(buf, slime_texts[SIZE(slime_texts) - i - 1L]);
-        if (nolimbs(youmonst.data) && strstri(buf, "limbs"))
+        if (nolimbs(g.youmonst.data) && strstri(buf, "limbs"))
             (void) strsubst(buf, "limbs", "extremities");
 
         if (index(buf, '%')) {
@@ -401,7 +400,7 @@ slime_dialogue()
         HFast = 0L; /* lose intrinsic speed */
         if (!Popeye(SLIMED))
             stop_occupation();
-        if (multi > 0)
+        if (g.multi > 0)
             nomul(0);
         break;
     case 2L: /* skin begins to peel */
@@ -426,24 +425,24 @@ burn_away_slime()
 }
 
 /* countdown timer for turning into green slime has run out; kill our hero */
-STATIC_OVL void
+static void
 slimed_to_death(kptr)
 struct kinfo *kptr;
 {
     uchar save_mvflags;
 
     /* redundant: polymon() cures sliming when polying into green slime */
-    if (Upolyd && youmonst.data == &mons[PM_GREEN_SLIME]) {
+    if (Upolyd && g.youmonst.data == &mons[PM_GREEN_SLIME]) {
         dealloc_killer(kptr);
         return;
     }
     /* more sure killer reason is set up */
     if (kptr && kptr->name[0]) {
-        killer.format = kptr->format;
-        Strcpy(killer.name, kptr->name);
+        g.killer.format = kptr->format;
+        Strcpy(g.killer.name, kptr->name);
     } else {
-        killer.format = NO_KILLER_PREFIX;
-        Strcpy(killer.name, "turned into green slime");
+        g.killer.format = NO_KILLER_PREFIX;
+        Strcpy(g.killer.name, "turned into green slime");
     }
     dealloc_killer(kptr);
 
@@ -459,22 +458,22 @@ struct kinfo *kptr;
      * [formerly implicit] change of form; polymon() takes care of that.
      * Temporarily ungenocide if necessary.
      */
-    if (emits_light(youmonst.data))
-        del_light_source(LS_MONSTER, monst_to_any(&youmonst));
-    save_mvflags = mvitals[PM_GREEN_SLIME].mvflags;
-    mvitals[PM_GREEN_SLIME].mvflags = save_mvflags & ~G_GENOD;
+    if (emits_light(g.youmonst.data))
+        del_light_source(LS_MONSTER, monst_to_any(&g.youmonst));
+    save_mvflags = g.mvitals[PM_GREEN_SLIME].mvflags;
+    g.mvitals[PM_GREEN_SLIME].mvflags = save_mvflags & ~G_GENOD;
     /* become a green slime; also resets youmonst.m_ap_type+.mappearance */
     (void) polymon(PM_GREEN_SLIME);
-    mvitals[PM_GREEN_SLIME].mvflags = save_mvflags;
+    g.mvitals[PM_GREEN_SLIME].mvflags = save_mvflags;
     done_timeout(TURNED_SLIME, SLIMED);
 
     /* life-saved; even so, hero still has turned into green slime;
        player may have genocided green slimes after being infected */
-    if ((mvitals[PM_GREEN_SLIME].mvflags & G_GENOD) != 0) {
+    if ((g.mvitals[PM_GREEN_SLIME].mvflags & G_GENOD) != 0) {
         char slimebuf[BUFSZ];
 
-        killer.format = KILLED_BY;
-        Strcpy(killer.name, "slimicide");
+        g.killer.format = KILLED_BY;
+        Strcpy(g.killer.name, "slimicide");
         /* vary the message depending upon whether life-save was due to
            amulet or due to declining to die in explore or wizard mode */
         Strcpy(slimebuf, "green slime has been genocided...");
@@ -504,7 +503,7 @@ static NEARDATA const char *const phaze_texts[] = {
     "You are feeling rather flabby.",
 };
 
-STATIC_OVL void
+static void
 phaze_dialogue()
 {
     long i = ((HPasses_walls & TIMEOUT) / 2L);
@@ -519,7 +518,7 @@ phaze_dialogue()
 /* when a status timeout is fatal, keep the status line indicator shown
    during end of game rundown (and potential dumplog);
    timeout has already counted down to 0 by the time we get here */
-STATIC_OVL void
+static void
 done_timeout(how, which)
 int how, which;
 {
@@ -530,7 +529,7 @@ int how, which;
 
     /* life-saved */
     *intrinsic_p &= ~I_SPECIAL;
-    context.botl = TRUE;
+    g.context.botl = TRUE;
 }
 
 void
@@ -547,7 +546,7 @@ nh_timeout()
         baseluck -= 1;
 
     if (u.uluck != baseluck
-        && moves % ((u.uhave.amulet || u.ugangr) ? 300 : 600) == 0) {
+        && g.moves % ((u.uhave.amulet || u.ugangr) ? 300 : 600) == 0) {
         /* Cursed luckstones stop bad luck from timing out; blessed luckstones
          * stop good luck from timing out; normal luckstones stop both;
          * neither is stopped if you don't have a luckstone.
@@ -586,8 +585,8 @@ nh_timeout()
     if (u.mtimedone && !--u.mtimedone) {
         if (Unchanging ||
             (ublindf && ublindf->otyp == MASK))
-            u.mtimedone = rnd(100 * youmonst.data->mlevel + 1);
-        else if (is_were(youmonst.data))
+            u.mtimedone = rnd(100 * g.youmonst.data->mlevel + 1);
+        else if (is_were(g.youmonst.data))
             you_unwere(FALSE); /* if polycontrl, asks whether to rehumanize */
         else
             rehumanize();
@@ -619,11 +618,11 @@ nh_timeout()
             switch (upp - u.uprops) {
             case STONED:
                 if (kptr && kptr->name[0]) {
-                    killer.format = kptr->format;
-                    Strcpy(killer.name, kptr->name);
+                    g.killer.format = kptr->format;
+                    Strcpy(g.killer.name, kptr->name);
                 } else {
-                    killer.format = NO_KILLER_PREFIX;
-                    Strcpy(killer.name, "killed by petrification");
+                    g.killer.format = NO_KILLER_PREFIX;
+                    Strcpy(g.killer.name, "killed by petrification");
                 }
                 dealloc_killer(kptr);
                 /* (unlike sliming, you aren't changing form here) */
@@ -646,20 +645,20 @@ nh_timeout()
             case SICK:
                 You("die from your illness.");
                 if (kptr && kptr->name[0]) {
-                    killer.format = kptr->format;
-                    Strcpy(killer.name, kptr->name);
+                    g.killer.format = kptr->format;
+                    Strcpy(g.killer.name, kptr->name);
                 } else {
-                    killer.format = KILLED_BY_AN;
-                    killer.name[0] = 0; /* take the default */
+                    g.killer.format = KILLED_BY_AN;
+                    g.killer.name[0] = 0; /* take the default */
                 }
                 dealloc_killer(kptr);
 
-                if ((m_idx = name_to_mon(killer.name)) >= LOW_PM) {
+                if ((m_idx = name_to_mon(g.killer.name)) >= LOW_PM) {
                     if (type_is_pname(&mons[m_idx])) {
-                        killer.format = KILLED_BY;
+                        g.killer.format = KILLED_BY;
                     } else if (mons[m_idx].geno & G_UNIQ) {
-                        Strcpy(killer.name, the(killer.name));
-                        killer.format = KILLED_BY;
+                        Strcpy(g.killer.name, the(g.killer.name));
+                        g.killer.format = KILLED_BY;
                     }
                 }
                 done_timeout(POISONING, SICK);
@@ -667,7 +666,7 @@ nh_timeout()
                 break;
             case WITHERING:
                 You("are no longer withering away.");
-                context.botl = TRUE;
+                g.context.botl = TRUE;
                 break;
             case REGENERATION:
                 You_feel("your metabolism returning to normal.");
@@ -702,7 +701,7 @@ nh_timeout()
             case DEAF:
                 set_itimeout(&HDeaf, 1L);
                 make_deaf(0L, TRUE);
-                context.botl = TRUE;
+                g.context.botl = TRUE;
                 if (!Deaf)
                     stop_occupation();
                 break;
@@ -747,7 +746,7 @@ nh_timeout()
             case FLYING:
                 /* timed Flying is via #wizintrinsic only */
                 if (was_flying && !Flying) {
-                    context.botl = 1;
+                    g.context.botl = 1;
                     You("land.");
                     spoteffects(TRUE);
                 }
@@ -755,11 +754,11 @@ nh_timeout()
             case WARN_OF_MON:
                 /* timed Warn_of_mon is via #wizintrinsic only */
                 if (!Warn_of_mon) {
-                    context.warntype.speciesidx = NON_PM;
-                    if (context.warntype.species) {
+                    g.context.warntype.speciesidx = NON_PM;
+                    if (g.context.warntype.species) {
                         You("are no longer warned about %s.",
-                            makeplural(context.warntype.species->mname));
-                        context.warntype.species = (struct permonst *) 0;
+                            makeplural(g.context.warntype.species->mname));
+                        g.context.warntype.species = (struct permonst *) 0;
                     }
                 }
                 break;
@@ -773,8 +772,8 @@ nh_timeout()
                 }
                 break;
             case STRANGLED:
-                killer.format = KILLED_BY;
-                Strcpy(killer.name,
+                g.killer.format = KILLED_BY;
+                Strcpy(g.killer.name,
                        (u.uburied) ? "suffocation" : "strangulation");
                 done_timeout(DIED, STRANGLED);
                 /* must be declining to die in explore|wizard mode;
@@ -790,8 +789,8 @@ nh_timeout()
                 if (u.umoved && !Levitation) {
                     slip_or_trip();
                     nomul(-2);
-                    multi_reason = "fumbling";
-                    nomovemsg = "";
+                    g.multi_reason = "fumbling";
+                    g.nomovemsg = "";
                     /* The more you are carrying the more likely you
                      * are to make noise when you fumble.  Adjustments
                      * to this number must be thoroughly play tested.
@@ -826,18 +825,18 @@ boolean wakeup_msg;
 {
     stop_occupation();
     nomul(how_long);
-    multi_reason = "sleeping";
+    g.multi_reason = "sleeping";
     /* generally don't notice sounds while sleeping */
-    if (wakeup_msg && multi == how_long) {
+    if (wakeup_msg && g.multi == how_long) {
         /* caller can follow with a direct call to Hear_again() if
            there's a need to override this when wakeup_msg is true */
         incr_itimeout(&HDeaf, how_long);
-        context.botl = TRUE;
-        afternmv = Hear_again; /* this won't give any messages */
+        g.context.botl = TRUE;
+        g.afternmv = Hear_again; /* this won't give any messages */
     }
     /* early wakeup from combat won't be possible until next monster turn */
-    u.usleep = monstermoves;
-    nomovemsg = wakeup_msg ? "You wake up." : You_can_move_again;
+    u.usleep = g.monstermoves;
+    g.nomovemsg = wakeup_msg ? "You wake up." : You_can_move_again;
 }
 
 /* Attach an egg hatch timeout to the given egg.
@@ -905,14 +904,14 @@ long timeout;
     mnum = big_to_little(egg->corpsenm);
     /* The identity of one's father is learned, not innate */
     yours = (egg->spe || (flags.gender == GEND_M && carried(egg) && !rn2(2)));
-    silent = (timeout != monstermoves); /* hatched while away */
+    silent = (timeout != g.monstermoves); /* hatched while away */
 
     /* only can hatch when in INVENT, FLOOR, MINVENT */
     if (get_obj_location(egg, &x, &y, 0)) {
         hatchcount = rnd((int) egg->quan);
         cansee_hatchspot = cansee(x, y) && !silent;
         if (!(mons[mnum].geno & G_UNIQ)
-            && !(mvitals[mnum].mvflags & (G_GENOD | G_EXTINCT))) {
+            && !(g.mvitals[mnum].mvflags & (G_GENOD | G_EXTINCT))) {
             for (i = hatchcount; i > 0; i--) {
                 if (!enexto(&cc, x, y, &mons[mnum])
                     || !(mon = makemon(&mons[mnum], cc.x, cc.y, NO_MINVENT)))
@@ -929,7 +928,7 @@ long timeout;
                 } else if (flags.gender == GEND_N && !silent) {
                     mon->mpeaceful = 1;
                 }
-                if (mvitals[mnum].mvflags & G_EXTINCT)
+                if (g.mvitals[mnum].mvflags & G_EXTINCT)
                     break;  /* just made last one */
                 mon2 = mon; /* in case makemon() fails on 2nd egg */
             }
@@ -989,7 +988,7 @@ long timeout;
             if (yours) {
                 pline("%s cries sound like \"%s%s\"",
                       siblings ? "Their" : "Its",
-                      flags.gender == GEND_F ? "mommy" : flags.gender == GEND_N ? plname : "daddy", egg->spe ? "." : "?");
+                      flags.gender == GEND_F ? "mommy" : flags.gender == GEND_N ? g.plname : "daddy", egg->spe ? "." : "?");
             } else if (flags.gender == GEND_N) {
                 pline("%s makes a curious noise.", siblings ? "They" : "It");
             } else if (mon->data->mlet == S_DRAGON && !Deaf) {
@@ -1058,7 +1057,7 @@ int mnum;
 {
     /* baby monsters hatch from grown-up eggs */
     mnum = little_to_big(mnum);
-    mvitals[mnum].mvflags |= MV_KNOWS_EGG;
+    g.mvitals[mnum].mvflags |= MV_KNOWS_EGG;
     /* we might have just learned about other eggs being carried */
     update_inventory();
 }
@@ -1083,7 +1082,7 @@ struct obj *figurine;
 }
 
 /* give a fumble message */
-STATIC_OVL void
+static void
 slip_or_trip()
 {
     struct obj *otmp = vobj_at(u.ux, u.uy), *otmp2;
@@ -1122,9 +1121,9 @@ slip_or_trip()
         }
         if (!uarmf && otmp->otyp == CORPSE
             && touch_petrifies(&mons[otmp->corpsenm]) && !Stone_resistance) {
-            Sprintf(killer.name, "tripping over %s corpse",
+            Sprintf(g.killer.name, "tripping over %s corpse",
                     an(mons[otmp->corpsenm].mname));
-            instapetrify(killer.name);
+            instapetrify(g.killer.name);
         }
     } else if (rn2(3) && is_ice(u.ux, u.uy)) {
         pline("%s %s%s on the ice.",
@@ -1174,7 +1173,7 @@ slip_or_trip()
 }
 
 /* Print a lamp flicker message with tailer. */
-STATIC_OVL void
+static void
 see_lamp_flicker(obj, tailer)
 struct obj *obj;
 const char *tailer;
@@ -1191,7 +1190,7 @@ const char *tailer;
 }
 
 /* Print a dimming message for brass lanterns. */
-STATIC_OVL void
+static void
 lantern_message(obj)
 struct obj *obj;
 {
@@ -1229,8 +1228,8 @@ long timeout;
     many = menorah ? obj->spe > 1 : obj->quan > 1L;
 
     /* timeout while away */
-    if (timeout != monstermoves) {
-        long how_long = monstermoves - timeout;
+    if (timeout != g.monstermoves) {
+        long how_long = g.monstermoves - timeout;
 
         if (how_long >= obj->age) {
             obj->age = 0;
@@ -1668,7 +1667,7 @@ long expire_time;
     del_light_source(LS_OBJECT, obj_to_any(obj));
 
     /* restore unused time */
-    obj->age += expire_time - monstermoves;
+    obj->age += expire_time - g.monstermoves;
 
     obj->lamplit = 0;
 
@@ -1710,12 +1709,12 @@ do_storms()
         /* Even if already deaf, we sense the thunder's vibrations. */
         pline("Kaboom!!!  Boom!!  Boom!!");
         incr_itimeout(&HDeaf, rn1(20, 30));
-        context.botl = TRUE;
+        g.context.botl = TRUE;
         if (!u.uinvulnerable) {
             stop_occupation();
             nomul(-3);
-            multi_reason = "hiding from thunderstorm";
-            nomovemsg = 0;
+            g.multi_reason = "hiding from thunderstorm";
+            g.nomovemsg = 0;
         }
     } else
         You_hear("a rumbling noise.");
@@ -1732,7 +1731,7 @@ do_storms()
  *  boolean start_timer(long timeout,short kind,short func_index,
  *                      anything *arg)
  *      Start a timer of kind 'kind' that will expire at time
- *      monstermoves+'timeout'.  Call the function at 'func_index'
+ *      g.monstermoves+'timeout'.  Call the function at 'func_index'
  *      in the timeout table using argument 'arg'.  Return TRUE if
  *      a timer was started.  This places the timer on a list ordered
  *      "sooner" to "later".  If an object, increment the object's
@@ -1751,13 +1750,13 @@ do_storms()
  *      Call timers that have timed out.
  *
  * Save/Restore:
- *  void save_timers(int fd, int mode, int range)
+ *  void save_timers(NHFILE *, int range)
  *      Save all timers of range 'range'.  Range is either global
  *      or local.  Global timers follow game play, local timers
  *      are saved with a level.  Object and monster timers are
  *      saved using their respective id's instead of pointers.
  *
- *  void restore_timers(int fd, int range, boolean ghostly, long adjust)
+ *  void restore_timers(NHFILE *, int range, long adjust)
  *      Restore timers of range 'range'.  If from a ghost pile,
  *      adjust the timeout by 'adjust'.  The object and monster
  *      ids are not restored until later.
@@ -1780,19 +1779,15 @@ do_storms()
  *      Check whether object has a timer of type timer_type.
  */
 
-STATIC_DCL const char *FDECL(kind_name, (SHORT_P));
-STATIC_DCL void FDECL(print_queue, (winid, timer_element *));
-STATIC_DCL void FDECL(insert_timer, (timer_element *));
-STATIC_DCL timer_element *FDECL(remove_timer,
+static const char *FDECL(kind_name, (SHORT_P));
+static void FDECL(print_queue, (winid, timer_element *));
+static void FDECL(insert_timer, (timer_element *));
+static timer_element *FDECL(remove_timer,
                                 (timer_element **, SHORT_P, ANY_P *));
-STATIC_DCL void FDECL(write_timer, (int, timer_element *));
-STATIC_DCL boolean FDECL(mon_is_local, (struct monst *));
-STATIC_DCL boolean FDECL(timer_is_local, (timer_element *));
-STATIC_DCL int FDECL(maybe_write_timer, (int, int, BOOLEAN_P));
-
-/* ordered timer list */
-static timer_element *timer_base; /* "active" */
-static unsigned long timer_id = 1;
+static void FDECL(write_timer, (NHFILE *, timer_element *));
+static boolean FDECL(mon_is_local, (struct monst *));
+static boolean FDECL(timer_is_local, (timer_element *));
+static int FDECL(maybe_write_timer, (NHFILE *, int, BOOLEAN_P));
 
 /* If defined, then include names when printing out the timer queue */
 #define VERBOSE_TIMER
@@ -1826,7 +1821,7 @@ static const ttable timeout_funcs[NUM_TIME_FUNCS] = {
 };
 #undef TTAB
 
-STATIC_OVL const char *
+static const char *
 kind_name(kind)
 short kind;
 {
@@ -1843,7 +1838,7 @@ short kind;
     return "unknown";
 }
 
-STATIC_OVL void
+static void
 print_queue(win, base)
 winid win;
 timer_element *base;
@@ -1884,12 +1879,12 @@ wiz_timeout_queue()
     if (win == WIN_ERR)
         return 0;
 
-    Sprintf(buf, "Current time = %ld.", monstermoves);
+    Sprintf(buf, "Current time = %ld.", g.monstermoves);
     putstr(win, 0, buf);
     putstr(win, 0, "");
     putstr(win, 0, "Active timeout queue:");
     putstr(win, 0, "");
-    print_queue(win, timer_base);
+    print_queue(win, g.timer_base);
 
     /* Timed properies:
      * check every one; the majority can't obtain temporary timeouts in
@@ -1943,7 +1938,7 @@ timer_sanity_check()
     timer_element *curr;
 
     /* this should be much more complete */
-    for (curr = timer_base; curr; curr = curr->next)
+    for (curr = g.timer_base; curr; curr = curr->next)
         if (curr->kind == TIMER_OBJECT) {
             struct obj *obj = curr->arg.a_obj;
 
@@ -1968,9 +1963,9 @@ run_timers()
      * any time.  The list is ordered, we are done when the first element
      * is in the future.
      */
-    while (timer_base && timer_base->timeout <= monstermoves) {
-        curr = timer_base;
-        timer_base = curr->next;
+    while (g.timer_base && g.timer_base->timeout <= g.monstermoves) {
+        curr = g.timer_base;
+        g.timer_base = curr->next;
 
         if (curr->kind == TIMER_OBJECT)
             (curr->arg.a_obj)->timed--;
@@ -1996,7 +1991,7 @@ anything *arg;
         panic("start_timer (%s: %d)", kind_name(kind), (int) func_index);
 
     /* fail if <arg> already has a <func_index> timer running */
-    for (dup = timer_base; dup; dup = dup->next)
+    for (dup = g.timer_base; dup; dup = dup->next)
         if (dup->kind == kind
             && dup->func_index == func_index
             && dup->arg.a_void == arg->a_void)
@@ -2016,8 +2011,8 @@ anything *arg;
     gnu = (timer_element *) alloc(sizeof *gnu);
     (void) memset((genericptr_t) gnu, 0, sizeof *gnu);
     gnu->next = 0;
-    gnu->tid = timer_id++;
-    gnu->timeout = monstermoves + when;
+    gnu->tid = g.timer_id++;
+    gnu->timeout = g.monstermoves + when;
     gnu->kind = kind;
     gnu->needs_fixup = 0;
     gnu->func_index = func_index;
@@ -2042,7 +2037,7 @@ anything *arg;
     timer_element *doomed;
     long timeout;
 
-    doomed = remove_timer(&timer_base, func_index, arg);
+    doomed = remove_timer(&g.timer_base, func_index, arg);
 
     if (doomed) {
         timeout = doomed->timeout;
@@ -2051,7 +2046,7 @@ anything *arg;
         if (timeout_funcs[doomed->func_index].cleanup)
             (*timeout_funcs[doomed->func_index].cleanup)(arg, timeout);
         free((genericptr_t) doomed);
-        return (timeout - monstermoves);
+        return (timeout - g.monstermoves);
     }
     return 0L;
 }
@@ -2066,7 +2061,7 @@ anything *arg;
 {
     timer_element *curr;
 
-    for (curr = timer_base; curr; curr = curr->next) {
+    for (curr = g.timer_base; curr; curr = curr->next) {
         if (curr->func_index == type && curr->arg.a_void == arg->a_void)
             return curr->timeout;
     }
@@ -2083,7 +2078,7 @@ struct obj *src, *dest;
     int count;
     timer_element *curr;
 
-    for (count = 0, curr = timer_base; curr; curr = curr->next)
+    for (count = 0, curr = g.timer_base; curr; curr = curr->next)
         if (curr->kind == TIMER_OBJECT && curr->arg.a_obj == src) {
             curr->arg.a_obj = dest;
             dest->timed++;
@@ -2103,10 +2098,10 @@ struct obj *src, *dest;
 {
     timer_element *curr, *next_timer = 0;
 
-    for (curr = timer_base; curr; curr = next_timer) {
+    for (curr = g.timer_base; curr; curr = next_timer) {
         next_timer = curr->next; /* things may be inserted */
         if (curr->kind == TIMER_OBJECT && curr->arg.a_obj == src) {
-            (void) start_timer(curr->timeout - monstermoves, TIMER_OBJECT,
+            (void) start_timer(curr->timeout - g.monstermoves, TIMER_OBJECT,
                                curr->func_index, obj_to_any(dest));
         }
     }
@@ -2122,13 +2117,13 @@ struct obj *obj;
 {
     timer_element *curr, *prev, *next_timer = 0;
 
-    for (prev = 0, curr = timer_base; curr; curr = next_timer) {
+    for (prev = 0, curr = g.timer_base; curr; curr = next_timer) {
         next_timer = curr->next;
         if (curr->kind == TIMER_OBJECT && curr->arg.a_obj == obj) {
             if (prev)
                 prev->next = curr->next;
             else
-                timer_base = curr->next;
+                g.timer_base = curr->next;
             if (timeout_funcs[curr->func_index].cleanup)
                 (*timeout_funcs[curr->func_index].cleanup)(&curr->arg,
                                                            curr->timeout);
@@ -2165,14 +2160,14 @@ short func_index;
     timer_element *curr, *prev, *next_timer = 0;
     long where = (((long) x << 16) | ((long) y));
 
-    for (prev = 0, curr = timer_base; curr; curr = next_timer) {
+    for (prev = 0, curr = g.timer_base; curr; curr = next_timer) {
         next_timer = curr->next;
         if (curr->kind == TIMER_LEVEL && curr->func_index == func_index
             && curr->arg.a_long == where) {
             if (prev)
                 prev->next = curr->next;
             else
-                timer_base = curr->next;
+                g.timer_base = curr->next;
             if (timeout_funcs[curr->func_index].cleanup)
                 (*timeout_funcs[curr->func_index].cleanup)(&curr->arg,
                                                            curr->timeout);
@@ -2195,7 +2190,7 @@ short func_index;
     timer_element *curr;
     long where = (((long) x << 16) | ((long) y));
 
-    for (curr = timer_base; curr; curr = curr->next) {
+    for (curr = g.timer_base; curr; curr = curr->next) {
         if (curr->kind == TIMER_LEVEL && curr->func_index == func_index
             && curr->arg.a_long == where)
             return curr->timeout;
@@ -2209,17 +2204,17 @@ xchar x, y;
 short func_index;
 {
     long expires = spot_time_expires(x, y, func_index);
-    return (expires > 0L) ? expires - monstermoves : 0L;
+    return (expires > 0L) ? expires - g.monstermoves : 0L;
 }
 
 /* Insert timer into the global queue */
-STATIC_OVL void
+static void
 insert_timer(gnu)
 timer_element *gnu;
 {
     timer_element *curr, *prev;
 
-    for (prev = 0, curr = timer_base; curr; prev = curr, curr = curr->next)
+    for (prev = 0, curr = g.timer_base; curr; prev = curr, curr = curr->next)
         if (curr->timeout >= gnu->timeout)
             break;
 
@@ -2227,10 +2222,10 @@ timer_element *gnu;
     if (prev)
         prev->next = gnu;
     else
-        timer_base = gnu;
+        g.timer_base = gnu;
 }
 
-STATIC_OVL timer_element *
+static timer_element *
 remove_timer(base, func_index, arg)
 timer_element **base;
 short func_index;
@@ -2252,46 +2247,51 @@ anything *arg;
     return curr;
 }
 
-STATIC_OVL void
-write_timer(fd, timer)
-int fd;
+static void
+write_timer(nhfp, timer)
+NHFILE *nhfp;
 timer_element *timer;
 {
     anything arg_save;
 
-    arg_save = zeroany;
+    arg_save = cg.zeroany;
     switch (timer->kind) {
     case TIMER_GLOBAL:
     case TIMER_LEVEL:
         /* assume no pointers in arg */
-        bwrite(fd, (genericptr_t) timer, sizeof(timer_element));
+        if (nhfp->structlevel)
+            bwrite(nhfp->fd, (genericptr_t) timer, sizeof(timer_element));
         break;
 
     case TIMER_OBJECT:
-        if (timer->needs_fixup)
-            bwrite(fd, (genericptr_t) timer, sizeof(timer_element));
-        else {
+        if (timer->needs_fixup) {
+            if (nhfp->structlevel)
+                bwrite(nhfp->fd, (genericptr_t)timer, sizeof(timer_element));
+        } else {
             /* replace object pointer with id */
             arg_save.a_obj = timer->arg.a_obj;
-            timer->arg = zeroany;
+            timer->arg = cg.zeroany;
             timer->arg.a_uint = (arg_save.a_obj)->o_id;
             timer->needs_fixup = 1;
-            bwrite(fd, (genericptr_t) timer, sizeof(timer_element));
+            if (nhfp->structlevel)
+                bwrite(nhfp->fd, (genericptr_t)timer, sizeof(timer_element));
             timer->arg.a_obj = arg_save.a_obj;
             timer->needs_fixup = 0;
         }
         break;
 
     case TIMER_MONSTER:
-        if (timer->needs_fixup)
-            bwrite(fd, (genericptr_t) timer, sizeof(timer_element));
-        else {
+        if (timer->needs_fixup) {
+            if (nhfp->structlevel)
+                bwrite(nhfp->fd, (genericptr_t)timer, sizeof(timer_element));
+        } else {
             /* replace monster pointer with id */
             arg_save.a_monst = timer->arg.a_monst;
-            timer->arg = zeroany;
+            timer->arg = cg.zeroany;
             timer->arg.a_uint = (arg_save.a_monst)->m_id;
             timer->needs_fixup = 1;
-            bwrite(fd, (genericptr_t) timer, sizeof(timer_element));
+            if (nhfp->structlevel)
+                bwrite(nhfp->fd, (genericptr_t)timer, sizeof(timer_element));
             timer->arg.a_monst = arg_save.a_monst;
             timer->needs_fixup = 0;
         }
@@ -2331,17 +2331,17 @@ struct obj *obj;
  * Return TRUE if the given monster will stay on the level when the
  * level is saved.
  */
-STATIC_OVL boolean
+static boolean
 mon_is_local(mon)
 struct monst *mon;
 {
     struct monst *curr;
 
-    for (curr = migrating_mons; curr; curr = curr->nmon)
+    for (curr = g.migrating_mons; curr; curr = curr->nmon)
         if (curr == mon)
             return FALSE;
-    /* `mydogs' is used during level changes, never saved and restored */
-    for (curr = mydogs; curr; curr = curr->nmon)
+    /* `g.mydogs' is used during level changes, never saved and restored */
+    for (curr = g.mydogs; curr; curr = curr->nmon)
         if (curr == mon)
             return FALSE;
     return TRUE;
@@ -2351,7 +2351,7 @@ struct monst *mon;
  * Return TRUE if the timer is attached to something that will stay on the
  * level when the level is saved.
  */
-STATIC_OVL boolean
+static boolean
 timer_is_local(timer)
 timer_element *timer;
 {
@@ -2373,37 +2373,36 @@ timer_element *timer;
  * Part of the save routine.  Count up the number of timers that would
  * be written.  If write_it is true, actually write the timer.
  */
-STATIC_OVL int
-maybe_write_timer(fd, range, write_it)
-int fd, range;
+static int
+maybe_write_timer(nhfp, range, write_it)
+NHFILE *nhfp;
+int range;
 boolean write_it;
 {
     int count = 0;
     timer_element *curr;
 
-    for (curr = timer_base; curr; curr = curr->next) {
+    for (curr = g.timer_base; curr; curr = curr->next) {
         if (range == RANGE_GLOBAL) {
             /* global timers */
 
             if (!timer_is_local(curr)) {
                 count++;
-                if (write_it)
-                    write_timer(fd, curr);
+                if (write_it) write_timer(nhfp, curr);
             }
-
         } else {
             /* local timers */
 
             if (timer_is_local(curr)) {
                 count++;
-                if (write_it)
-                    write_timer(fd, curr);
+                if (write_it) write_timer(nhfp, curr);
             }
         }
     }
 
     return count;
 }
+
 
 /*
  * Save part of the timer list.  The parameter 'range' specifies either
@@ -2419,30 +2418,33 @@ boolean write_it;
  *      + timeouts that stay with the level (obj & monst)
  */
 void
-save_timers(fd, mode, range)
-int fd, mode, range;
+save_timers(nhfp, range)
+NHFILE *nhfp;
+int range;
 {
     timer_element *curr, *prev, *next_timer = 0;
     int count;
 
-    if (perform_bwrite(mode)) {
-        if (range == RANGE_GLOBAL)
-            bwrite(fd, (genericptr_t) &timer_id, sizeof(timer_id));
-
-        count = maybe_write_timer(fd, range, FALSE);
-        bwrite(fd, (genericptr_t) &count, sizeof count);
-        (void) maybe_write_timer(fd, range, TRUE);
+    if (perform_bwrite(nhfp)) {
+        if (range == RANGE_GLOBAL) {
+            if (nhfp->structlevel)
+                bwrite(nhfp->fd, (genericptr_t) &g.timer_id, sizeof(g.timer_id));
+        }
+        count = maybe_write_timer(nhfp, range, FALSE);
+        if (nhfp->structlevel)
+            bwrite(nhfp->fd, (genericptr_t) &count, sizeof count);
+        (void) maybe_write_timer(nhfp, range, TRUE);
     }
 
-    if (release_data(mode)) {
-        for (prev = 0, curr = timer_base; curr; curr = next_timer) {
+    if (release_data(nhfp)) {
+        for (prev = 0, curr = g.timer_base; curr; curr = next_timer) {
             next_timer = curr->next; /* in case curr is removed */
 
             if (!(!!(range == RANGE_LEVEL) ^ !!timer_is_local(curr))) {
                 if (prev)
                     prev->next = curr->next;
                 else
-                    timer_base = curr->next;
+                    g.timer_base = curr->next;
                 free((genericptr_t) curr);
                 /* prev stays the same */
             } else {
@@ -2457,22 +2459,28 @@ int fd, mode, range;
  * monster pointers.
  */
 void
-restore_timers(fd, range, ghostly, adjust)
-int fd, range;
-boolean ghostly; /* restoring from a ghost level */
+restore_timers(nhfp, range, adjust)
+NHFILE *nhfp;
+int range;
 long adjust;     /* how much to adjust timeout */
 {
-    int count;
+    int count = 0;
     timer_element *curr;
+    boolean ghostly = (nhfp->ftype == NHF_BONESFILE); /* from a ghost level */
 
-    if (range == RANGE_GLOBAL)
-        mread(fd, (genericptr_t) &timer_id, sizeof timer_id);
+    if (range == RANGE_GLOBAL) {
+        if (nhfp->structlevel)
+            mread(nhfp->fd, (genericptr_t) &g.timer_id, sizeof g.timer_id);
+    }
 
     /* restore elements */
-    mread(fd, (genericptr_t) &count, sizeof count);
+    if (nhfp->structlevel)
+        mread(nhfp->fd, (genericptr_t) &count, sizeof count);
+       
     while (count-- > 0) {
         curr = (timer_element *) alloc(sizeof(timer_element));
-        mread(fd, (genericptr_t) curr, sizeof(timer_element));
+        if (nhfp->structlevel)
+            mread(nhfp->fd, (genericptr_t) curr, sizeof(timer_element));
         if (ghostly)
             curr->timeout += adjust;
         insert_timer(curr);
@@ -2490,7 +2498,7 @@ long *count, *size;
 
     Sprintf(hdrbuf, hdrfmt, (long) sizeof (timer_element));
     *count = *size = 0L;
-    for (te = timer_base; te; te = te->next) {
+    for (te = g.timer_base; te; te = te->next) {
         ++*count;
         *size += (long) sizeof *te;
     }
@@ -2504,7 +2512,7 @@ boolean ghostly;
     timer_element *curr;
     unsigned nid;
 
-    for (curr = timer_base; curr; curr = curr->next) {
+    for (curr = g.timer_base; curr; curr = curr->next) {
         if (curr->needs_fixup) {
             if (curr->kind == TIMER_OBJECT) {
                 if (ghostly) {

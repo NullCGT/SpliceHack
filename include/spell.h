@@ -20,9 +20,9 @@ struct spell {
 #define ALL_MAP 0x1
 #define ALL_SPELLS 0x2
 
-#define decrnknow(spell) spl_book[spell].sp_know--
-#define spellid(spell) spl_book[spell].sp_id
-#define spellknow(spell) spl_book[spell].sp_know
+#define decrnknow(spell) g.spl_book[spell].sp_know--
+#define spellid(spell) g.spl_book[spell].sp_id
+#define spellknow(spell) g.spl_book[spell].sp_know
 
 #define ZT_MAGIC_MISSILE (AD_MAGM - 1)
 #define ZT_FIRE (AD_FIRE - 1)

@@ -1,4 +1,4 @@
-/* NetHack 3.6	monst.c	$NHDT-Date: 1547118631 2019/01/10 11:10:31 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.62 $ */
+/* NetHack 3.6	monst.c	$NHDT-Date: 1577096800 2019/12/23 10:26:40 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.70 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2006. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -29,7 +29,6 @@
 #define C(color)
 #endif
 
-void NDECL(monst_init);
 /*
  *      Entry Format:   (from permonst.h)
  *
@@ -103,7 +102,7 @@ void NDECL(monst_init);
  */
 
 #ifndef SPLITMON_2
-NEARDATA struct permonst mons[] = {
+NEARDATA struct permonst mons_init[] = {
     /*
      * ants
      */
@@ -146,7 +145,7 @@ NEARDATA struct permonst mons[] = {
     MON("giant beetle", S_ANT, LVL(5, 6, 4, 0, 0), (G_GENO | 3),
         A(ATTK(AT_BITE, AD_PHYS, 3, 6), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
           NO_ATTK),
-        SIZ(10, 10, MS_SILENT, MZ_LARGE), MR_POISON, MR_POISON,
+        SIZ(200, 50, MS_SILENT, MZ_LARGE), MR_POISON, MR_POISON,
         M1_ANIMAL | M1_NOHANDS | M1_POIS | M1_CARNIVORE, M2_HOSTILE, 0, 0,
         6, CLR_BLACK),
     MON("bullet ant", S_ANT, LVL(4, 18, 3, 0, 0), (G_GENO | G_SGROUP | 2),
@@ -1223,7 +1222,7 @@ NEARDATA struct permonst mons[] = {
     MON("giant spider", S_SPIDER, LVL(5, 15, 4, 0, 0), (G_GENO | 1),
         A(ATTK(AT_BITE, AD_DRST, 2, 4), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
           NO_ATTK),
-        SIZ(100, 100, MS_SILENT, MZ_LARGE), MR_POISON, MR_POISON,
+        SIZ(200, 100, MS_SILENT, MZ_LARGE), MR_POISON, MR_POISON,
         M1_ANIMAL | M1_NOHANDS | M1_OVIPAROUS | M1_POIS | M1_CARNIVORE,
         M2_HOSTILE | M2_STRONG, 0, 0, 7, CLR_MAGENTA),
     MON("scorpion", S_SPIDER, LVL(5, 15, 3, 0, 0), (G_GENO | 2),
@@ -2417,7 +2416,7 @@ struct permonst _mons2[] = {
         M3_INFRAVISIBLE | M3_INFRAVISION, MH_GIANT, 27, CLR_MAGENTA),
     MON("minotaur", S_GIANT, LVL(15, 15, 6, 0, 0), (G_GENO | G_NOGEN),
         A(ATTK(AT_CLAW, AD_PHYS, 3, 10), ATTK(AT_CLAW, AD_PHYS, 3, 10),
-          ATTK(AT_BUTT, AD_CLOB, 2, 8), NO_ATTK, NO_ATTK, NO_ATTK),
+          ATTK(AT_BUTT, AD_PHYS, 2, 8), NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(1500, 700, MS_MOO, MZ_LARGE), 0, 0,
         M1_ANIMAL | M1_HUMANOID | M1_CARNIVORE,
         M2_HOSTILE | M2_STRONG | M2_NASTY, M3_INFRAVISIBLE | M3_INFRAVISION, 0,
@@ -3287,7 +3286,7 @@ struct permonst _mons2[] = {
      	  A(ATTK(AT_WEAP, AD_PHYS, 1, 6), NO_ATTK, NO_ATTK,
         NO_ATTK, NO_ATTK, NO_ATTK), SIZ(300, 5, MS_BONES, MZ_HUMAN),
         MR_COLD | MR_SLEEP | MR_POISON | MR_STONE, 0,
-        M1_BREATHLESS | M1_MINDLESS | M1_HUMANOID,
+        M1_BREATHLESS | M1_MINDLESS | M1_HUMANOID | M1_SWIM,
         M2_WANDER | M2_HOSTILE | M2_STRONG | M2_COLLECT | M2_NASTY,
       	M3_INFRAVISION, MH_UNDEAD, 7, CLR_WHITE),
     MON("giant zombie", S_ZOMBIE, LVL(8, 8, 6, 0, -4),
@@ -4194,7 +4193,7 @@ struct permonst _mons2[] = {
         0, 34, HI_LORD),
     /* other demons
      */
-#ifdef MAIL
+#ifdef MAIL_STRUCTURES
     MON("mail daemon", S_DEMON, LVL(56, 24, 10, 127, 0),
         (G_NOGEN | G_NOCORPSE),
         A(NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
@@ -4554,8 +4553,8 @@ struct permonst _mons2[] = {
           NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(WT_HUMAN, 400, MS_HUMANOID, MZ_HUMAN), 0, 0,
         M1_HUMANOID | M1_HERBIVORE,
-        M2_NOPOLY | M2_STRONG | M2_COLLECT | M2_MALE, MH_HUMAN,
-        M3_INFRAVISIBLE, 12, HI_DOMESTIC),
+        M2_NOPOLY | M2_STRONG | M2_COLLECT | M2_MALE,
+        M3_INFRAVISIBLE, MH_HUMAN, 12, HI_DOMESTIC),
     /* priests and priestesses are barred from casting spells for now to
        prevent the astral plane from being even more crazy */
     MON("priest", S_HUMAN, LVL(10, 12, 10, 2, 0), G_NOGEN,
@@ -5139,15 +5138,18 @@ struct permonst _mons2[] = {
 #endif /* !SPLITMON_1 */
 
 #ifndef SPLITMON_1
-/* dummy routine used to force linkage */
+
+struct permonst mons[SIZE(mons_init)];
+
 void
-monst_init()
+monst_globals_init()
 {
+    memcpy(mons, mons_init, sizeof(mons));
     return;
 }
 
-const struct attack sa_yes[NATTK] = SEDUCTION_ATTACKS_YES;
-const struct attack sa_no[NATTK] = SEDUCTION_ATTACKS_NO;
+const struct attack c_sa_yes[NATTK] = SEDUCTION_ATTACKS_YES;
+const struct attack c_sa_no[NATTK] = SEDUCTION_ATTACKS_NO;
 #endif
 
 /*monst.c*/

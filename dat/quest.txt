@@ -4605,7 +4605,7 @@ A pair of rabid mandrill heads, their eyes trained on you.
 Prince of Demons.
 
 Demogorgon.
-%E [Demogorgon appears!]
+%E [Demogorgon.]
 #
 #       Appearance messages for other high-level uniques
 #

@@ -1,4 +1,4 @@
-/* NetHack 3.6	youprop.h	$NHDT-Date: 1568831820 2019/09/18 18:37:00 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.27 $ */
+/* NetHack 3.6	youprop.h	$NHDT-Date: 1579655025 2020/01/22 01:03:45 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.30 $ */
 /* Copyright (c) 1989 Mike Threepoint				  */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -102,13 +102,13 @@
 /* ...means blind because of a cover */
 #define Blind                                     \
     ((u.uroleplay.blind || Blinded || Blindfolded \
-      || !haseyes(youmonst.data))                 \
+      || !haseyes(g.youmonst.data))                 \
      && !(ublindf && ublindf->oartifact == ART_EYES_OF_THE_OVERWORLD))
 /* ...the Eyes operate even when you really are blind
     or don't have any eyes */
 #define Blindfolded_only                                            \
     (Blindfolded && ublindf->oartifact != ART_EYES_OF_THE_OVERWORLD \
-     && !u.uroleplay.blind && !Blinded && haseyes(youmonst.data))
+     && !u.uroleplay.blind && !Blinded && haseyes(g.youmonst.data))
 /* ...blind because of a blindfold, and *only* that */
 
 #define Sick u.uprops[SICK].intrinsic
@@ -198,7 +198,7 @@
 /* Note: invisibility also hides inventory and steed */
 
 #define EDisplaced u.uprops[DISPLACED].extrinsic
-#define Displaced (EDisplaced || is_displaced(youmonst.data))
+#define Displaced (EDisplaced || is_displaced(g.youmonst.data))
 
 #define HStealth u.uprops[STEALTH].intrinsic
 #define EStealth u.uprops[STEALTH].extrinsic
@@ -220,7 +220,7 @@
 /*** Transportation ***/
 #define HJumping u.uprops[JUMPING].intrinsic
 #define EJumping u.uprops[JUMPING].extrinsic
-#define Jumping (HJumping || EJumping || is_jumper(youmonst.data))
+#define Jumping (HJumping || EJumping || is_jumper(g.youmonst.data))
 
 #define HTeleportation u.uprops[TELEPORT].intrinsic
 #define ETeleportation u.uprops[TELEPORT].extrinsic
@@ -269,11 +269,11 @@
 #define HMagical_breathing u.uprops[MAGICAL_BREATHING].intrinsic
 #define EMagical_breathing u.uprops[MAGICAL_BREATHING].extrinsic
 #define Amphibious \
-    (HMagical_breathing || EMagical_breathing || amphibious(youmonst.data))
+    (HMagical_breathing || EMagical_breathing || amphibious(g.youmonst.data))
 /* Get wet, may go under surface */
 
 #define Breathless \
-    (HMagical_breathing || EMagical_breathing || breathless(Upolyd ? youmonst.data : &mons[urace.malenum]))
+    (HMagical_breathing || EMagical_breathing || breathless(Upolyd ? g.youmonst.data : &mons[g.urace.malenum]))
 
 #define Underwater (u.uinwater)
 /* Note that Underwater and u.uinwater are both used in code.
@@ -395,13 +395,17 @@
 
 /* unconscious() includes u.usleep but not is_fainted(); the multi test is
    redundant but allows the function calls to be skipped most of the time */
-#define Unaware (multi < 0 && (unconscious() || is_fainted()))
+#define Unaware (g.multi < 0 && (unconscious() || is_fainted()))
 
 /* Whether the hero is in a form that dislikes a certain material */
 #define Hate_material(material) \
-    (hates_material(youmonst.data, material) \
+    (hates_material(g.youmonst.data, material) \
      || (material == SILVER && u.ulycn >= LOW_PM) \
      || (material == SILVER && !Upolyd && Race_if(PM_INFERNAL)) \
      || (material == IRON && !Upolyd && Race_if(PM_ELF)))
+
+/* _Hitchhikers_Guide_to_the_Galaxy_ on uses for 'towel': "wrap it round
+   your head to ward off noxious fumes" [we require it to be damp or wet] */
+#define Half_gas_damage (ublindf && ublindf->otyp == TOWEL && ublindf->spe > 0)
 
 #endif /* YOUPROP_H */

@@ -2,6 +2,21 @@
 
                             Version 0.7.1
 
+3.7.0
+- SpliceHack is now up to date with the development version of NetHack 3.7.0.
+- Due to the sweeping changes made by 3.7.0, many bugs are likely to have been
+  introduced. At the same time, merging 3.7.0 required a careful examination
+  of almost every file, leading to bug fixes for many unreported issues.
+- Due to the addition of vanilla's version of the flipped levels patch, more
+  levels are eligible for flipping, and less bugs should occur when exploring
+  a flipped level.
+- Splice-specific rooms and dungeon features are now supported in special levels,
+  thanks to the release of the new level coder.
+- Temporarily disabled random light status in car-loca due to lack of implementation
+  for random lighting in lua.
+- Dropped the castle and knox variants. They are not widely liked, and it seemed
+  easier just not to port them.
+
 Monsters
 - New Monster: Thriae
   - Does not appear until the player is powerful enough to deal with them, but
@@ -52,16 +67,26 @@ Balance
 - Only four headless horseman can appear each game.
 - Increased damage for barbed devil quills.
 - Ice devils can cause fumbling with their sting attack.
+- Astral is dark, instead of being lit. Players should have a light source by the
+  time they are ready to ascend ;)
+- Skeletal pirates can swim, making the pirate quest slightly harder.
 
-Miscelaneous
-- Ported some 3.7 changes, including allowing monsters to rummage through
-  containers.
-
-Bug Fixes
+Notable Bug Fixes
 - Water elementals can be neutral deific minions agian.
 - Pets will now attack monsters that are always peaceful.
 - Shambling horror randomized stats are maintained when saving and reloading.
+  Additionally, many more types of attacks are valid for shambling horrors.
+- King of the Hill now functions correctly for pirates.
 - Decks of cards are destroyed by demon lords after playing against them.
+- Fixed enemy monks acting covetous.
+- Fixed corrupted quotes in data.base, as well as potential monster lookup
+  crashes.
+- Support birds as a preferred pet, and remove the ability to set '@' as
+  a preferred pet. Game no longer complains when preferred pet is set to 'D.'
+- Fixed One-Eyed Sam being referred to oddly on gravestones.
+- Fixed an exploit that allowed pets to follow the player into the black market.
+  Now, nothing can follow you to the black market.
+- Many small grammatical fixes for quest text.
                     
                     Version 0.7.0: Stranger Days
 

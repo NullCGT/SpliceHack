@@ -1063,7 +1063,7 @@ long new_value;
 
     if (attr_rec->type == SV_LABEL) {
         if (attr_rec == &shown_stats[F_NAME]) {
-            Strcpy(buf, plname);
+            Strcpy(buf, g.plname);
             buf[0] = highc(buf[0]);
             Strcat(buf, " the ");
             if (Upolyd) {
@@ -1077,11 +1077,11 @@ long new_value;
                 }
                 Strcat(buf, mname);
             } else
-                Strcat(buf, rank_of(u.ulevel, pl_character[0], flags.gender));
+                Strcat(buf, rank_of(u.ulevel, g.pl_character[0], flags.gender));
 
         } else if (attr_rec == &shown_stats[F_DLEVEL]) {
             if (!describe_level(buf)) {
-                Strcpy(buf, dungeons[u.uz.dnum].dname);
+                Strcpy(buf, g.dungeons[u.uz.dnum].dname);
                 Sprintf(eos(buf), ", level %d", depth(&u.uz));
             }
         } else {
@@ -1368,7 +1368,7 @@ int i;
             val = (long) 0L;
             break; /* special */
         case F_GOLD:
-            val = money_cnt(invent);
+            val = money_cnt(g.invent);
             if (val < 0L)
                 val = 0L; /* ought to issue impossible() and discard gold */
             break;
@@ -1398,7 +1398,7 @@ int i;
             val = (long) u.ualign.type;
             break;
         case F_TIME:
-            val = flags.time ? (long) moves : 0L;
+            val = flags.time ? (long) g.moves : 0L;
             break;
         case F_SCORE:
 #ifdef SCORE_ON_BOTL

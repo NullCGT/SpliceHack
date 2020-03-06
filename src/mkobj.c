@@ -7,24 +7,24 @@
 
 #include "hack.h"
 
-STATIC_DCL void FDECL(mkbox_cnts, (struct obj *));
-STATIC_DCL unsigned FDECL(nextoid, (struct obj *, struct obj *));
-STATIC_DCL void FDECL(maybe_adjust_light, (struct obj *, int));
-STATIC_DCL void FDECL(obj_timer_checks, (struct obj *,
+static void FDECL(mkbox_cnts, (struct obj *));
+static unsigned FDECL(nextoid, (struct obj *, struct obj *));
+static void FDECL(maybe_adjust_light, (struct obj *, int));
+static void FDECL(obj_timer_checks, (struct obj *,
                                          XCHAR_P, XCHAR_P, int));
-STATIC_DCL void FDECL(container_weight, (struct obj *));
-STATIC_DCL struct obj *FDECL(burn_corpse, (struct obj *));
-STATIC_DCL struct obj *FDECL(save_mtraits, (struct obj *, struct monst *));
-STATIC_DCL void FDECL(objlist_sanity, (struct obj *, int, const char *));
-STATIC_DCL void FDECL(mon_obj_sanity, (struct monst *, const char *));
-STATIC_DCL const char *FDECL(where_name, (struct obj *));
-STATIC_DCL void FDECL(insane_object, (struct obj *, const char *,
+static void FDECL(container_weight, (struct obj *));
+static struct obj *FDECL(burn_corpse, (struct obj *));
+static struct obj *FDECL(save_mtraits, (struct obj *, struct monst *));
+static void FDECL(objlist_sanity, (struct obj *, int, const char *));
+static void FDECL(mon_obj_sanity, (struct monst *, const char *));
+static const char *FDECL(where_name, (struct obj *));
+static void FDECL(insane_object, (struct obj *, const char *,
                                       const char *, struct monst *));
-STATIC_DCL void FDECL(check_contained, (struct obj *, const char *));
-STATIC_DCL void FDECL(check_glob, (struct obj *, const char *));
-STATIC_DCL void FDECL(sanity_check_worn, (struct obj *));
-STATIC_DCL const struct icp* FDECL(material_list, (struct obj *));
-STATIC_DCL void FDECL(init_obj_material, (struct obj *));
+static void FDECL(check_contained, (struct obj *, const char *));
+static void FDECL(check_glob, (struct obj *, const char *));
+static void FDECL(sanity_check_worn, (struct obj *));
+static const struct icp* FDECL(material_list, (struct obj *));
+static void FDECL(init_obj_material, (struct obj *));
 
 struct icp {
     int iprob;   /* probability of an item type */
@@ -119,7 +119,7 @@ struct obj *otmp;
     if (!OMONST(otmp)) {
         struct monst *m = newmonst();
 
-        *m = zeromonst;
+        *m = cg.zeromonst;
         OMONST(otmp) = m;
     }
 }
@@ -268,19 +268,19 @@ boolean artif;
     }
 
     /* get total probability of objects in this class */
-    first_obj = bases[(int) oclass];
-    last_obj = bases[(int) oclass + 1] - 1;
+    first_obj = g.bases[(int) oclass];
+    last_obj = g.bases[(int) oclass + 1] - 1;
     total_prob = 0;
     for (i = first_obj; i <= last_obj; ++i) {
         total_prob += objects[i].oc_prob;
     }
 
     if (oclass == SPBOOK_no_NOVEL) {
-        i = rnd_class(bases[SPBOOK_CLASS], SPE_BLANK_PAPER);
+        i = rnd_class(g.bases[SPBOOK_CLASS], SPE_BLANK_PAPER);
         oclass = SPBOOK_CLASS; /* for sanity check below */
     } else {
         prob = rnd(total_prob);
-        i = bases[(int) oclass];
+        i = g.bases[(int) oclass];
         while ((prob -= objects[i].oc_prob) > 0) {
             i++;
         }
@@ -292,7 +292,7 @@ boolean artif;
     return mksobj(i, TRUE, artif);
 }
 
-STATIC_OVL void
+static void
 mkbox_cnts(box)
 struct obj *box;
 {
@@ -305,7 +305,7 @@ struct obj *box;
     switch (box->otyp) {
     case MEDICAL_KIT:	n = 60;
         /* Initial inventory, no empty medical kits */
-        if (moves <= 1 && !in_mklev) minn = 1;
+        if (g.moves <= 1 && !g.in_mklev) minn = 1;
         break;
     case KEG:   
         n = 20;
@@ -323,7 +323,7 @@ struct obj *box;
     case SACK:
     case OILSKIN_SACK:
         /* initial inventory: sack starts out empty */
-        if (moves <= 1 && !in_mklev) {
+        if (g.moves <= 1 && !g.in_mklev) {
             n = 0;
             break;
         }
@@ -434,9 +434,9 @@ struct obj *obj2, *obj1;
         OMONST(obj2)->mextra = (struct mextra *) 0;
         OMONST(obj2)->nmon = (struct monst *) 0;
 #if 0
-        OMONST(obj2)->m_id = context.ident++;
+        OMONST(obj2)->m_id = g.context.ident++;
         if (OMONST(obj2)->m_id) /* ident overflowed */
-            OMONST(obj2)->m_id = context.ident++;
+            OMONST(obj2)->m_id = g.context.ident++;
 #endif
         if (OMONST(obj1)->mextra)
             copy_mextra(OMONST(obj2), OMONST(obj1));
@@ -484,9 +484,10 @@ long num;
     obj->owt = weight(obj);
     otmp->quan = num;
     otmp->owt = weight(otmp); /* -= obj->owt ? */
+    otmp->lua_ref_cnt = 0;
 
-    context.objsplit.parent_oid = obj->o_id;
-    context.objsplit.child_oid = otmp->o_id;
+    g.context.objsplit.parent_oid = obj->o_id;
+    g.context.objsplit.child_oid = otmp->o_id;
     obj->nobj = otmp;
     /* Only set nexthere when on the floor, nexthere is also used */
     /* as a back pointer to the container object when contained. */
@@ -506,12 +507,12 @@ long num;
 
 /* when splitting a stack that has o_id-based shop prices, pick an
    o_id value for the new stack that will maintain the same price */
-STATIC_OVL unsigned
+static unsigned
 nextoid(oldobj, newobj)
 struct obj *oldobj, *newobj;
 {
     int olddif, newdif, trylimit = 256; /* limit of 4 suffices at present */
-    unsigned oid = context.ident - 1; /* loop increment will reverse -1 */
+    unsigned oid = g.context.ident - 1; /* loop increment will reverse -1 */
 
     olddif = oid_price_adjustment(oldobj, oldobj->o_id);
     do {
@@ -520,7 +521,7 @@ struct obj *oldobj, *newobj;
             ++oid;
         newdif = oid_price_adjustment(newobj, oid);
     } while (newdif != olddif && --trylimit >= 0);
-    context.ident = oid + 1; /* ready for next new object */
+    g.context.ident = oid + 1; /* ready for next new object */
     return oid;
 }
 
@@ -550,7 +551,7 @@ struct obj *obj;
     default:
         return (struct obj *) 0;
     case OBJ_INVENT:
-        list = invent;
+        list = g.invent;
         break;
     case OBJ_MINVENT:
         list = obj->ocarry->minvent;
@@ -561,17 +562,17 @@ struct obj *obj;
     }
 
     /* first try the expected case; obj is split from another stack */
-    if (obj->o_id == context.objsplit.child_oid) {
+    if (obj->o_id == g.context.objsplit.child_oid) {
         /* parent probably precedes child and will require list traversal */
         ochild = obj;
-        target_oid = context.objsplit.parent_oid;
+        target_oid = g.context.objsplit.parent_oid;
         if (obj->nobj && obj->nobj->o_id == target_oid)
             oparent = obj->nobj;
-    } else if (obj->o_id == context.objsplit.parent_oid) {
+    } else if (obj->o_id == g.context.objsplit.parent_oid) {
         /* alternate scenario: another stack was split from obj;
            child probably follows parent and will be found here */
         oparent = obj;
-        target_oid = context.objsplit.child_oid;
+        target_oid = g.context.objsplit.child_oid;
         if (obj->nobj && obj->nobj->o_id == target_oid)
             ochild = obj->nobj;
     }
@@ -600,7 +601,7 @@ struct obj *obj;
 void
 clear_splitobjs()
 {
-    context.objsplit.parent_oid = context.objsplit.child_oid = 0;
+    g.context.objsplit.parent_oid = g.context.objsplit.child_oid = 0;
 }
 
 /*
@@ -625,7 +626,7 @@ struct obj *otmp;
     case OBJ_INVENT:
         otmp->nobj = obj->nobj;
         obj->nobj = otmp;
-        extract_nobj(obj, &invent);
+        extract_nobj(obj, &g.invent);
         break;
     case OBJ_CONTAINED:
         otmp->nobj = obj->nobj;
@@ -647,7 +648,7 @@ struct obj *otmp;
         obj->nobj = otmp;
         obj->nexthere = otmp;
         extract_nobj(obj, &fobj);
-        extract_nexthere(obj, &level.objects[obj->ox][obj->oy]);
+        extract_nexthere(obj, &g.level.objects[obj->ox][obj->oy]);
         break;
     default:
         panic("replace_object: obj position");
@@ -701,9 +702,9 @@ register struct obj *otmp;
     *dummy = *otmp;
     dummy->oextra = (struct oextra *) 0;
     dummy->where = OBJ_FREE;
-    dummy->o_id = context.ident++;
+    dummy->o_id = g.context.ident++;
     if (!dummy->o_id)
-        dummy->o_id = context.ident++; /* ident overflowed */
+        dummy->o_id = g.context.ident++; /* ident overflowed */
     dummy->timed = 0;
     copy_oextra(dummy, otmp);
     if (has_omid(dummy))
@@ -818,11 +819,11 @@ boolean artif;
     char let = objects[otyp].oc_class;
 
     otmp = newobj();
-    *otmp = zeroobj;
-    otmp->age = monstermoves;
-    otmp->o_id = context.ident++;
+    *otmp = cg.zeroobj;
+    otmp->age = g.monstermoves;
+    otmp->o_id = g.context.ident++;
     if (!otmp->o_id)
-        otmp->o_id = context.ident++; /* ident overflowed */
+        otmp->o_id = g.context.ident++; /* ident overflowed */
     otmp->quan = 1L;
     otmp->oclass = let;
     otmp->otyp = otyp;
@@ -837,6 +838,8 @@ boolean artif;
     otmp->lknown = 0;
     otmp->cknown = 0;
     otmp->corpsenm = NON_PM;
+    otmp->lua_ref_cnt = 0;
+
     init_obj_material(otmp);
 
     if (init) {
@@ -871,11 +874,11 @@ boolean artif;
                 tryct = 50;
                 do
                     otmp->corpsenm = undead_to_corpse(rndmonnum());
-                while ((mvitals[otmp->corpsenm].mvflags & G_NOCORPSE)
+                while ((g.mvitals[otmp->corpsenm].mvflags & G_NOCORPSE)
                        && (--tryct > 0));
                 if (tryct == 0) {
                     /* perhaps rndmonnum() only wants to make G_NOCORPSE
-                       monsters on this level; create an adventurer's
+                       monsters on this g.level; create an adventurer's
                        corpse instead, then */
                     otmp->corpsenm = PM_HUMAN;
                 }
@@ -901,7 +904,7 @@ boolean artif;
                     for (tryct = 200; tryct > 0; --tryct) {
                         mndx = undead_to_corpse(rndmonnum());
                         if (mons[mndx].cnutrit
-                            && !(mvitals[mndx].mvflags & G_NOCORPSE)) {
+                            && !(g.mvitals[mndx].mvflags & G_NOCORPSE)) {
                             otmp->corpsenm = mndx;
                             set_tin_variety(otmp, RANDOM_TIN);
                             break;
@@ -910,7 +913,7 @@ boolean artif;
                 blessorcurse(otmp, 10);
                 break;
             case SLIME_MOLD:
-                otmp->spe = context.current_fruit;
+                otmp->spe = g.context.current_fruit;
                 flags.made_fruit = TRUE;
                 break;
             case KELP_FROND:
@@ -1029,7 +1032,7 @@ boolean artif;
             break;
         case AMULET_CLASS:
             if (otmp->otyp == AMULET_OF_YENDOR)
-                context.made_amulet = TRUE;
+                g.context.made_amulet = TRUE;
             if (rn2(10) && (otmp->otyp == AMULET_OF_STRANGULATION
                             || otmp->otyp == AMULET_OF_CHANGE
                             || otmp->otyp == AMULET_OF_RESTFUL_SLEEP
@@ -1045,7 +1048,7 @@ boolean artif;
             break;
         case POTION_CLASS: /* note: potions get some additional init below */
         case SCROLL_CLASS:
-#ifdef MAIL
+#ifdef MAIL_STRUCTURES
             if (otmp->otyp != SCR_MAIL)
 #endif
                 blessorcurse(otmp, 4);
@@ -1071,7 +1074,7 @@ boolean artif;
                 otmp = mk_artifact(otmp, (aligntyp) A_NONE);
             /* simulate lacquered armor for samurai */
             if (Role_if(PM_SAMURAI) && otmp->otyp == SPLINT_MAIL
-                && (moves <= 1 || In_quest(&u.uz))) {
+                && (g.moves <= 1 || In_quest(&u.uz))) {
 #ifdef UNIXPC
                 /* optimizer bitfield bug */
                 otmp->oerodeproof = 1;
@@ -1145,8 +1148,8 @@ boolean artif;
     case CORPSE:
         if (otmp->corpsenm == NON_PM) {
             otmp->corpsenm = undead_to_corpse(rndmonnum());
-            if (mvitals[otmp->corpsenm].mvflags & (G_NOCORPSE | G_GONE))
-                otmp->corpsenm = urole.malenum;
+            if (g.mvitals[otmp->corpsenm].mvflags & (G_NOCORPSE | G_GONE))
+                otmp->corpsenm = g.urole.malenum;
         }
         /*FALLTHRU*/
     case STATUE:
@@ -1264,8 +1267,8 @@ struct obj *body;
         return;
 
     action = ROT_CORPSE;             /* default action: rot away */
-    rot_adjust = in_mklev ? 25 : 10; /* give some variation */
-    corpse_age = monstermoves - body->age;
+    rot_adjust = g.in_mklev ? 25 : 10; /* give some variation */
+    corpse_age = g.monstermoves - body->age;
     if (corpse_age > ROT_AGE)
         when = rot_adjust;
     else
@@ -1310,7 +1313,7 @@ struct obj *body;
     (void) start_timer(when, TIMER_OBJECT, action, obj_to_any(body));
 }
 
-STATIC_OVL void
+static void
 maybe_adjust_light(obj, old_range)
 struct obj *obj;
 int old_range;
@@ -1486,7 +1489,7 @@ register struct obj *otmp;
  * counterpart, and things such as wooden plate mails were incredibly
  * overpowered by weighing about one-tenth as much as the iron counterpart.
  * Instead, use arbitrary units. */
-STATIC_DCL
+static
 const int matdensities[] = {
     0,   // will cause div/0 errors if anything is this material
     10,  // LIQUID
@@ -1521,7 +1524,7 @@ unsigned onoff; /* 1 or 0 */
 {
     if (obj->bknown != onoff) {
         obj->bknown = onoff;
-        if (obj->where == OBJ_INVENT && moves > 1L)
+        if (obj->where == OBJ_INVENT && g.moves > 1L)
             update_inventory();
     }
 }
@@ -1649,7 +1652,7 @@ struct obj * obj;
     return diff;
 }
 
-static int treefruits[] = { APPLE, ORANGE, PEAR, BANANA, EUCALYPTUS_LEAF };
+static const int treefruits[] = { APPLE, ORANGE, PEAR, BANANA, EUCALYPTUS_LEAF };
 
 /* called when a tree is kicked; never returns Null */
 struct obj *
@@ -1936,7 +1939,7 @@ register struct obj *otmp;
 }
 
 /*
- * These routines maintain the single-linked lists headed in level.objects[][]
+ * These routines maintain the single-linked lists headed in g.level.objects[][]
  * and threaded through the nexthere fields in the object-instance structure.
  */
 
@@ -1946,7 +1949,7 @@ place_object(otmp, x, y)
 register struct obj *otmp;
 int x, y;
 {
-    register struct obj *otmp2 = level.objects[x][y];
+    register struct obj *otmp2 = g.level.objects[x][y];
 
     if (!isok(x, y)) { /* validate location */
         void VDECL((*func), (const char *, ...)) PRINTF_F(1, 2);
@@ -1981,7 +1984,7 @@ int x, y;
     } else {
         /* put on top of current pile */
         otmp->nexthere = otmp2;
-        level.objects[x][y] = otmp;
+        g.level.objects[x][y] = otmp;
     }
 
     /* set the new object's location */
@@ -2008,12 +2011,12 @@ boolean do_buried;
 {
     struct obj *otmp;
 
-    for (otmp = level.objects[x][y]; otmp; otmp = otmp->nexthere) {
+    for (otmp = g.level.objects[x][y]; otmp; otmp = otmp->nexthere) {
         if (otmp->timed)
             obj_timer_checks(otmp, x, y, 0);
     }
     if (do_buried) {
-        for (otmp = level.buriedobjlist; otmp; otmp = otmp->nobj) {
+        for (otmp = g.level.buriedobjlist; otmp; otmp = otmp->nobj) {
             if (otmp->ox == x && otmp->oy == y) {
                 if (otmp->timed)
                     obj_timer_checks(otmp, x, y, 0);
@@ -2037,17 +2040,17 @@ struct obj *otmp;
 
     if (otmp->otyp == CORPSE && otmp->on_ice) {
         /* Adjust the age; must be same as obj_timer_checks() for off ice*/
-        age = monstermoves - otmp->age;
+        age = g.monstermoves - otmp->age;
         retval += age * (ROT_ICE_ADJUSTMENT - 1) / ROT_ICE_ADJUSTMENT;
         debugpline3(
           "The %s age has ice modifications: otmp->age = %ld, returning %ld.",
                     s_suffix(doname(otmp)), otmp->age, retval);
-        debugpline1("Effective age of corpse: %ld.", monstermoves - retval);
+        debugpline1("Effective age of corpse: %ld.", g.monstermoves - retval);
     }
     return retval;
 }
 
-STATIC_OVL void
+static void
 obj_timer_checks(otmp, x, y, force)
 struct obj *otmp;
 xchar x, y;
@@ -2085,8 +2088,8 @@ int force; /* 0 = no force so do checks, <0 = force off, >0 force on */
                later calculations behave as if it had been on ice during
                that time (longwinded way of saying this is the inverse
                of removing it from the ice and of peeking at its age). */
-            age = monstermoves - otmp->age;
-            otmp->age = monstermoves - (age * ROT_ICE_ADJUSTMENT);
+            age = g.monstermoves - otmp->age;
+            otmp->age = g.monstermoves - (age * ROT_ICE_ADJUSTMENT);
         }
 
     /* Check for corpses coming off ice */
@@ -2111,7 +2114,7 @@ int force; /* 0 = no force so do checks, <0 = force off, >0 force on */
             tleft /= ROT_ICE_ADJUSTMENT;
             restart_timer = TRUE;
             /* Adjust the age */
-            age = monstermoves - otmp->age;
+            age = g.monstermoves - otmp->age;
             otmp->age += age * (ROT_ICE_ADJUSTMENT - 1) / ROT_ICE_ADJUSTMENT;
         }
     }
@@ -2132,7 +2135,7 @@ register struct obj *otmp;
 
     if (otmp->where != OBJ_FLOOR)
         panic("remove_object: obj not on floor");
-    extract_nexthere(otmp, &level.objects[x][y]);
+    extract_nexthere(otmp, &g.level.objects[x][y]);
     extract_nobj(otmp, &fobj);
     /* update vision iff this was the only boulder at its spot */
     if (otmp->otyp == BOULDER && !sobj_at(BOULDER, x, y))
@@ -2178,7 +2181,8 @@ struct monst *mtmp;
  *      OBJ_MINVENT     monster's invent chain
  *      OBJ_MIGRATING   migrating chain
  *      OBJ_BURIED      level.buriedobjs chain
- *      OBJ_ONBILL      on billobjs chain
+ *      OBJ_ONBILL      on g.billobjs chain
+ *      OBJ_LUAFREE     obj is dealloc'd from core, but still used by lua
  */
 void
 obj_extract_self(obj)
@@ -2186,6 +2190,7 @@ struct obj *obj;
 {
     switch (obj->where) {
     case OBJ_FREE:
+    case OBJ_LUAFREE:
         break;
     case OBJ_FLOOR:
         remove_object(obj);
@@ -2203,13 +2208,13 @@ struct obj *obj;
         obj->ocarry = (struct monst *) 0; /* clear stale back-link */
         break;
     case OBJ_MIGRATING:
-        extract_nobj(obj, &migrating_objs);
+        extract_nobj(obj, &g.migrating_objs);
         break;
     case OBJ_BURIED:
-        extract_nobj(obj, &level.buriedobjlist);
+        extract_nobj(obj, &g.level.buriedobjlist);
         break;
     case OBJ_ONBILL:
-        extract_nobj(obj, &billobjs);
+        extract_nobj(obj, &g.billobjs);
         break;
     default:
         panic("obj_extract_self");
@@ -2333,8 +2338,8 @@ struct obj *obj;
         maybe_reset_pick(obj);
 
     obj->where = OBJ_MIGRATING;
-    obj->nobj = migrating_objs;
-    migrating_objs = obj;
+    obj->nobj = g.migrating_objs;
+    g.migrating_objs = obj;
 }
 
 void
@@ -2345,12 +2350,12 @@ struct obj *obj;
         panic("add_to_buried: obj not free");
 
     obj->where = OBJ_BURIED;
-    obj->nobj = level.buriedobjlist;
-    level.buriedobjlist = obj;
+    obj->nobj = g.level.buriedobjlist;
+    g.level.buriedobjlist = obj;
 }
 
 /* Recalculate the weight of this container and all of _its_ containers. */
-STATIC_OVL void
+static void
 container_weight(container)
 struct obj *container;
 {
@@ -2371,7 +2376,7 @@ void
 dealloc_obj(obj)
 struct obj *obj;
 {
-    if (obj->where != OBJ_FREE)
+    if (obj->where != OBJ_FREE && obj->where != OBJ_LUAFREE)
         panic("dealloc_obj: obj not free");
     if (obj->nobj)
         panic("dealloc_obj with nobj");
@@ -2390,16 +2395,23 @@ struct obj *obj;
      * list must track all objects that can have a light source
      * attached to it (and also requires lamplit to be set).
      */
-    if (obj_sheds_light(obj))
+    if (obj_sheds_light(obj)) {
         del_light_source(LS_OBJECT, obj_to_any(obj));
+        obj->lamplit = 0;
+    }
 
-    if (obj == thrownobj)
-        thrownobj = 0;
-    if (obj == kickedobj)
-        kickedobj = 0;
+    if (obj == g.thrownobj)
+        g.thrownobj = 0;
+    if (obj == g.kickedobj)
+        g.kickedobj = 0;
 
     if (obj->oextra)
         dealloc_oextra(obj);
+    if (obj->lua_ref_cnt) {
+        /* obj is referenced from a lua script, let lua gc free it */
+        obj->where = OBJ_LUAFREE;
+        return;
+    }
     free((genericptr_t) obj);
 }
 
@@ -2507,7 +2519,7 @@ obj_sanity_check()
        the floor list so container contents are skipped here */
     for (x = 0; x < COLNO; x++)
         for (y = 0; y < ROWNO; y++)
-            for (obj = level.objects[x][y]; obj; obj = obj->nexthere) {
+            for (obj = g.level.objects[x][y]; obj; obj = obj->nexthere) {
                 /* <ox,oy> should match <x,y>; <0,*> should always be empty */
                 if (obj->where != OBJ_FLOOR || x == 0
                     || obj->ox != x || obj->oy != y) {
@@ -2520,37 +2532,37 @@ obj_sanity_check()
                 }
             }
 
-    objlist_sanity(invent, OBJ_INVENT, "invent sanity");
-    objlist_sanity(migrating_objs, OBJ_MIGRATING, "migrating sanity");
-    objlist_sanity(level.buriedobjlist, OBJ_BURIED, "buried sanity");
-    objlist_sanity(billobjs, OBJ_ONBILL, "bill sanity");
+    objlist_sanity(g.invent, OBJ_INVENT, "invent sanity");
+    objlist_sanity(g.migrating_objs, OBJ_MIGRATING, "migrating sanity");
+    objlist_sanity(g.level.buriedobjlist, OBJ_BURIED, "buried sanity");
+    objlist_sanity(g.billobjs, OBJ_ONBILL, "bill sanity");
 
     mon_obj_sanity(fmon, "minvent sanity");
-    mon_obj_sanity(migrating_mons, "migrating minvent sanity");
+    mon_obj_sanity(g.migrating_mons, "migrating minvent sanity");
     /* monsters temporarily in transit;
        they should have arrived with hero by the time we get called */
-    if (mydogs) {
-        impossible("mydogs sanity [not empty]");
-        mon_obj_sanity(mydogs, "mydogs minvent sanity");
+    if (g.mydogs) {
+        impossible("g.mydogs sanity [not empty]");
+        mon_obj_sanity(g.mydogs, "mydogs minvent sanity");
     }
 
     /* objects temporarily freed from invent/floor lists;
        they should have arrived somewhere by the time we get called */
-    if (thrownobj)
-        insane_object(thrownobj, ofmt3, "thrownobj sanity",
+    if (g.thrownobj)
+        insane_object(g.thrownobj, ofmt3, "g.thrownobj sanity",
                       (struct monst *) 0);
-    if (kickedobj)
-        insane_object(kickedobj, ofmt3, "kickedobj sanity",
+    if (g.kickedobj)
+        insane_object(g.kickedobj, ofmt3, "g.kickedobj sanity",
                       (struct monst *) 0);
-    /* current_wand isn't removed from invent while in use, but should
+    /* g.current_wand isn't removed from invent while in use, but should
        be Null between moves when we're called */
-    if (current_wand)
-        insane_object(current_wand, ofmt3, "current_wand sanity",
+    if (g.current_wand)
+        insane_object(g.current_wand, ofmt3, "g.current_wand sanity",
                       (struct monst *) 0);
 }
 
 /* sanity check for objects on specified list (fobj, &c) */
-STATIC_OVL void
+static void
 objlist_sanity(objlist, wheretype, mesg)
 struct obj *objlist;
 int wheretype;
@@ -2602,7 +2614,7 @@ const char *mesg;
 }
 
 /* sanity check for objects carried by all monsters in specified list */
-STATIC_OVL void
+static void
 mon_obj_sanity(monlist, mesg)
 struct monst *monlist;
 const char *mesg;
@@ -2636,9 +2648,10 @@ const char *mesg;
 static const char *obj_state_names[NOBJ_STATES] = { "free",      "floor",
                                                     "contained", "invent",
                                                     "minvent",   "migrating",
-                                                    "buried",    "onbill" };
+                                                    "buried",    "onbill",
+                                                    "luafree" };
 
-STATIC_OVL const char *
+static const char *
 where_name(obj)
 struct obj *obj;
 {
@@ -2655,7 +2668,7 @@ struct obj *obj;
     return obj_state_names[where];
 }
 
-STATIC_OVL void
+static void
 insane_object(obj, fmt, mesg, mon)
 struct obj *obj;
 const char *fmt, *mesg;
@@ -2694,7 +2707,7 @@ short otyp;
 long oquan;
 {
      if (obj) {
-         *obj = zeroobj;
+         *obj = cg.zeroobj;
          obj->otyp = otyp;
          obj->oclass = objects[otyp].oc_class;
          /* obj->dknown = 0; */
@@ -2707,13 +2720,13 @@ long oquan;
          obj->corpsenm = NON_PM; /* suppress statue and figurine details */
          /* but suppressing fruit details leads to "bad fruit #0" */
          if (obj->otyp == SLIME_MOLD)
-             obj->spe = context.current_fruit;
+             obj->spe = g.context.current_fruit;
      }
      return obj;
 }
 
 /* obj sanity check: check objects inside container */
-STATIC_OVL void
+static void
 check_contained(container, mesg)
 struct obj *container;
 const char *mesg;
@@ -2761,7 +2774,7 @@ const char *mesg;
 }
 
 /* called when 'obj->globby' is set so we don't recheck it here */
-STATIC_OVL void
+static void
 check_glob(obj, mesg)
 struct obj *obj;
 const char *mesg;
@@ -2784,7 +2797,7 @@ const char *mesg;
 }
 
 /* check an object in hero's or monster's inventory which has worn mask set */
-STATIC_OVL void
+static void
 sanity_check_worn(obj)
 struct obj *obj;
 {
@@ -3074,10 +3087,10 @@ struct obj **obj1, **obj2;
             o2wt = otmp2->oeaten ? otmp2->oeaten : otmp2->owt;
             /* averaging the relative ages is less likely to overflow
                than averaging the absolute ages directly */
-            agetmp = (((moves - otmp1->age) * o1wt
-                       + (moves - otmp2->age) * o2wt)
+            agetmp = (((g.moves - otmp1->age) * o1wt
+                       + (g.moves - otmp2->age) * o2wt)
                       / (o1wt + o2wt));
-            otmp1->age = moves - agetmp; /* conv. relative back to absolute */
+            otmp1->age = g.moves - agetmp; /* conv. relative back to absolute */
             otmp1->owt += o2wt;
             if (otmp1->oeaten || otmp2->oeaten)
                 otmp1->oeaten = o1wt + o2wt;

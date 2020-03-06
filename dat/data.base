@@ -1,5 +1,5 @@
 # NetHack 3.6	data.base
-# $NHDT-Date: 1545359287 2018/12/21 02:28:07 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.87 $
+# $NHDT-Date: 1581206724 2020/02/09 00:05:24 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.93 $
 #	Copyright (c) 1994, 1995, 1996 by the NetHack Development Team
 #	Copyright (c) 1994 by Boudewijn Wayers
 #	NetHack may be freely redistributed.  See license for details.
@@ -1091,10 +1091,10 @@ charo*n
 	of-kin would place a coin under his tongue, to pay the ferry-
 	man.
 cheshire cat
-	“Alice asked the Cheshire Cat, who was sitting in a tree, “What road do I take?”
-	The cat asked, “Where do you want to go?”
-	“I don’t know,” Alice answered.
-	“Then,” said the cat, “it really doesn’t matter, does it?”
+	"Alice asked the Cheshire Cat, who was sitting in a tree, "What road do I take?"
+	The cat asked, "Where do you want to go?"
+	"I don’t know," Alice answered.
+	"Then," said the cat, "it really doesn’t matter, does it?"
 		[Alice in Wonderland, by Lewis Carrol ]
 chest
 large box
@@ -3000,7 +3000,7 @@ vorpal*
 	  The vorpal blade went snicker-snack!
 	He left it dead, and with its head
 	  He went galumphing back.
-				[ Jabberwocky, by Lewis Carroll ]
+	[ Jabberwocky, by Lewis Carroll ]
 jacinth*
 	Sweet in the rough weather
 	  The voice of the turtle-dove
@@ -4462,8 +4462,8 @@ pelias
 	soul."
 	    [ Conan the Usurper, by Robert E. Howard and L. Sprague de Camp ]
 phoenix
-	“Fawkes is a phoenix, Harry. Phoenixes burst into flame when it
-	is time for them to die and are reborn from the ashes.”
+	"Fawkes is a phoenix, Harry. Phoenixes burst into flame when it
+	is time for them to die and are reborn from the ashes."
 	    [ Harry Potter and the Chamber of Secrets, by J.K. Rowling ]
 pick*ax*
 broad pick
@@ -6237,9 +6237,9 @@ whistle
 		 'Oh, Whistle, and I'll Come to You My Lad']
 # werecritter -- see "lycanthrope"
 wings*
-	“The Guide says there is an art to flying", said Ford,
+	"The Guide says there is an art to flying", said Ford,
 	"or rather a knack. The knack lies in learning how to throw
-	yourself at the ground and miss.”
+	yourself at the ground and miss."
 		[Life, the Universe and Everything, by Douglas Adams]
 *wight
 	When he came to himself again, for a moment he could recall
@@ -6256,6 +6256,15 @@ wings*
 	bogs, swamps, or marshes. It resembles a flickering lamp and is said to
 	recede if approached, drawing travellers from the safe paths.
 		[ Wikipedia, the free encyclopedia ]
+win
+winner
+winning
+	... the rules of Brockian Ultra Cricket, as played in the higher
+	dimensions.  A full set of rules is so massively complicated ...
+	A brief summary, however, follows:
+	...
+	/Rule Six/:  The winning team shall be the first team that wins.
+	    [ Life, the Universe and Everything, by Douglas Adams ]
 # note: need to convert player character "gnomish wizard" into just "wizard"
 # in the lookup code to avoid conflict with the monster of that same name
 ~gnomish wizard

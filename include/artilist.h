@@ -3,9 +3,7 @@
 /*-Copyright (c) Robert Patrick Rankin, 2017. */
 /* NetHack may be freely redistributed.  See license for details. */
 
-/* File changed 5/3/18 by NullCGT */
-
-#ifdef MAKEDEFS_C
+#if defined(MAKEDEFS_C) || defined (MDLIB_C)
 /* in makedefs.c, all we care about is the list of names */
 
 #define A(nam, typ, s1, s2, mt, atk, dfn, cry, inv, al, cl, rac, cost, clr) nam
@@ -38,8 +36,8 @@ static const char *artifact_names[] = {
 #define     PLYS(a,b)   {0,AD_PLYS,a,b}         /* whip binding */
 /* clang-format on */
 
-STATIC_OVL NEARDATA struct artifact artilist[] = {
-#endif /* MAKEDEFS_C */
+static NEARDATA struct artifact artilist[] = {
+#endif /* MAKEDEFS_C || MDLIB_C */
 
     /* Artifact cost rationale:
      * 1.  The more useful the artifact, the better its cost.
@@ -501,7 +499,7 @@ A("The Palantir of Westernesse",        CRYSTAL_BALL,
 
 #undef A
 
-#ifndef MAKEDEFS_C
+#if !defined(MAKEDEFS_C) && !defined(MDLIB_C)
 #undef NO_ATTK
 #undef NO_DFNS
 #undef DFNS

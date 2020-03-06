@@ -1,4 +1,4 @@
-/* NetHack 3.6	monmove.c	$NHDT-Date: 1545439153 2018/12/22 00:39:13 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.110 $ */
+/* NetHack 3.6	monmove.c	$NHDT-Date: 1580633722 2020/02/02 08:55:22 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.129 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2006. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -8,15 +8,13 @@
 #include "mfndpos.h"
 #include "artifact.h"
 
-extern boolean notonhead;
-
-STATIC_DCL void FDECL(watch_on_duty, (struct monst *));
-STATIC_DCL int FDECL(disturb, (struct monst *));
-STATIC_DCL void FDECL(release_hero, (struct monst *));
-STATIC_DCL void FDECL(distfleeck, (struct monst *, int *, int *, int *));
-STATIC_DCL int FDECL(m_arrival, (struct monst *));
-STATIC_DCL boolean FDECL(stuff_prevents_passage, (struct monst *));
-STATIC_DCL int FDECL(vamp_shift, (struct monst *, struct permonst *,
+static void FDECL(watch_on_duty, (struct monst *));
+static int FDECL(disturb, (struct monst *));
+static void FDECL(release_hero, (struct monst *));
+static void FDECL(distfleeck, (struct monst *, int *, int *, int *));
+static int FDECL(m_arrival, (struct monst *));
+static boolean FDECL(stuff_prevents_passage, (struct monst *));
+static int FDECL(vamp_shift, (struct monst *, struct permonst *,
                                   BOOLEAN_P));
 
 #define a_align(x, y) ((aligntyp) Amask2align(levl[x][y].altarmask & AM_MASK))
@@ -81,7 +79,7 @@ const char *shout;
     }
 }
 
-STATIC_OVL void
+static void
 watch_on_duty(mtmp)
 register struct monst *mtmp;
 {
@@ -112,7 +110,7 @@ register struct monst *mtmp;
             }
         } else if (is_digging()) {
             /* chewing, wand/spell of digging are checked elsewhere */
-            watch_dig(mtmp, context.digging.pos.x, context.digging.pos.y,
+            watch_dig(mtmp, g.context.digging.pos.x, g.context.digging.pos.y,
                       FALSE);
         }
     }
@@ -123,12 +121,12 @@ dochugw(mtmp)
 register struct monst *mtmp;
 {
     int x = mtmp->mx, y = mtmp->my;
-    boolean already_saw_mon = !occupation ? 0 : canspotmon(mtmp);
+    boolean already_saw_mon = !g.occupation ? 0 : canspotmon(mtmp);
     int rd = dochug(mtmp);
 
     /* a similar check is in monster_nearby() in hack.c */
     /* check whether hero notices monster and stops current activity */
-    if (occupation && !rd && !Confusion && (!mtmp->mpeaceful || Hallucination)
+    if (g.occupation && !rd && !Confusion && (!mtmp->mpeaceful || Hallucination)
         /* it's close enough to be a threat */
         && distu(x, y) <= (BOLT_LIM + 1) * (BOLT_LIM + 1)
         /* and either couldn't see it before, or it was too far away */
@@ -212,7 +210,7 @@ mon_regen(mon, digest_meal)
 struct monst *mon;
 boolean digest_meal;
 {
-    if (mon->mhp < mon->mhpmax && (moves % 20 == 0 || regenerates(mon->data)))
+    if (mon->mhp < mon->mhpmax && (g.moves % 20 == 0 || regenerates(mon->data)))
         mon->mhp++;
     if (mon->mspec_used)
         mon->mspec_used--;
@@ -231,7 +229,7 @@ boolean digest_meal;
  * Possibly awaken the given monster.  Return a 1 if the monster has been
  * jolted awake.
  */
-STATIC_OVL int
+static int
 disturb(mtmp)
 register struct monst *mtmp;
 {
@@ -264,18 +262,35 @@ register struct monst *mtmp;
 }
 
 /* ungrab/expel held/swallowed hero */
-STATIC_OVL void
+static void
 release_hero(mon)
 struct monst *mon;
 {
     if (mon == u.ustuck) {
         if (u.uswallow) {
             expels(mon, mon->data, TRUE);
-        } else if (!sticks(youmonst.data)) {
+        } else if (!sticks(g.youmonst.data)) {
             unstuck(mon); /* let go */
             You("get released!");
         }
     }
+}
+
+struct monst *
+find_pmmonst(pm)
+int pm;
+{
+    struct monst *mtmp = 0;
+
+    if ((g.mvitals[pm].mvflags & G_GENOD) == 0)
+        for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
+            if (DEADMONSTER(mtmp))
+                continue;
+            if (mtmp->data == &mons[pm])
+                break;
+        }
+
+    return mtmp;
 }
 
 /* killer bee 'mon' is on a spot containing lump of royal jelly 'obj' and
@@ -287,16 +302,8 @@ struct monst *mon;
 struct obj *obj;
 {
     int m_delay;
-    struct monst *mtmp = 0;
+    struct monst *mtmp = find_pmmonst(PM_QUEEN_BEE);
 
-    /* find a queen bee */
-    if ((mvitals[PM_QUEEN_BEE].mvflags & G_GENOD) == 0)
-        for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
-            if (DEADMONSTER(mtmp))
-                continue;
-            if (mtmp->data == &mons[PM_QUEEN_BEE])
-                break;
-        }
     /* if there's no queen on the level, eat the royal jelly and become one */
     if (!mtmp) {
         m_delay = obj->blessed ? 3 : !obj->cursed ? 5 : 7;
@@ -377,7 +384,7 @@ boolean fleemsg;
     memset(mtmp->mtrack, 0, sizeof(mtmp->mtrack));
 }
 
-STATIC_OVL void
+static void
 distfleeck(mtmp, inrange, nearby, scared)
 register struct monst *mtmp;
 int *inrange, *nearby, *scared;
@@ -423,7 +430,7 @@ int *inrange, *nearby, *scared;
 
 /* perform a special one-time action for a monster; returns -1 if nothing
    special happened, 0 if monster uses up its turn, 1 if monster is killed */
-STATIC_OVL int
+static int
 m_arrival(mon)
 struct monst *mon;
 {
@@ -506,7 +513,7 @@ register struct monst *mtmp;
 
     /* check for warding words */
     if (!mtmp->msleeping && !mtmp->mblinded) {
-        if (ep && !strcmp(ep->engr_txt, explengr)) {
+        if (ep && !strcmp(ep->engr_txt, g.explengr)) {
               if (cansee(mtmp->mux, mtmp->muy))
                   pline("The engraving beneath %s explodes!", mon_nam(mtmp));
               explode(mtmp->mx, mtmp->my, 10, d(3,4), TOOL_CLASS, EXPL_MAGICAL);
@@ -538,7 +545,7 @@ register struct monst *mtmp;
 
     /* some monsters teleport */
     if (mtmp->mflee && !rn2(40) && teleporter(mtmp) && !mtmp->iswiz
-        && !level.flags.noteleport) {
+        && !g.level.flags.noteleport) {
         (void) rloc(mtmp, TRUE);
         return 0;
     }
@@ -605,7 +612,7 @@ register struct monst *mtmp;
             pline("%s whispers at thin air.",
                   cansee(mtmp->mux, mtmp->muy) ? Monnam(mtmp) : "It");
 
-            if (is_demon(youmonst.data)) {
+            if (is_demon(g.youmonst.data)) {
                 /* "Good hunting, brother" */
                 if (!tele_restrict(mtmp))
                     (void) rloc(mtmp, TRUE);
@@ -734,15 +741,15 @@ register struct monst *mtmp;
          (attacktype(mtmp->data, AT_WEAP) &&
           select_rwep(mtmp) != 0) ||
           find_offensive(mtmp)) &&
-        mtmp->mlstmv != monstermoves)
+        mtmp->mlstmv != g.monstermoves)
     {
         register struct monst *mtmp2 = mfind_target(mtmp);
         if (mtmp2 &&
-            (mtmp2 != &youmonst ||
+            (mtmp2 != &g.youmonst ||
     	 dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) > 2) &&
     	 (mtmp2 != mtmp))
         {
-          	res = (mtmp2 == &youmonst) ? mattacku(mtmp)
+          	res = (mtmp2 == &g.youmonst) ? mattacku(mtmp)
           	                           : mattackm(mtmp, mtmp2);
             if (res & MM_AGR_DIED)
     	          return 1; /* Oops. */
@@ -765,7 +772,7 @@ register struct monst *mtmp;
 
     if (!nearby || mtmp->mflee || scared || mtmp->mconf || mtmp->mstun
         || (mtmp->minvis && !rn2(3))
-        || (mdat->mlet == S_LEPRECHAUN && !findgold(invent, FALSE)
+        || (mdat->mlet == S_LEPRECHAUN && !findgold(g.invent, FALSE)
             && (findgold(mtmp->minvent, FALSE) || rn2(2)))
         || (is_wanderer(mdat) && !rn2(4)) || (Conflict && !mtmp->iswiz)
         || (!mtmp->mcansee && !rn2(4)) || mtmp->mpeaceful) {
@@ -775,22 +782,22 @@ register struct monst *mtmp;
         /* arbitrary distance restriction to keep monster far away
            from you from having cast dozens of sticks-to-snakes
            or similar spells by the time you reach it */
-        if (dist2(mtmp->mx, mtmp->my, u.ux, u.uy) <= 49
-            && !mtmp->mspec_used) {
+        if (!mtmp->mspec_used
+            && dist2(mtmp->mx, mtmp->my, u.ux, u.uy) <= 49) {
             struct attack *a;
 
             for (a = &mdat->mattk[0]; a < &mdat->mattk[NATTK]; a++) {
                 if (a->aatyp == AT_MAGC
                     && (a->adtyp == AD_SPEL || a->adtyp == AD_CLRC)) {
                     if (castmu(mtmp, a, FALSE, FALSE)) {
-                        tmp = 3;
+                        tmp = 3; /* bypass m_move() */
                         break;
                     }
                 }
             }
         }
 
-        if (mtmp->monmount != 1)
+        if (!tmp && mtmp->monmount != 1)
             tmp = m_move(mtmp, 0);
         else
             tmp = 0;
@@ -846,14 +853,18 @@ register struct monst *mtmp;
     /*  Now, attack the player if possible - one attack set per monst
      */
 
-    if (!mtmp->mpeaceful || (Conflict && !resist(mtmp, RING_CLASS, 0, 0))) {
-        if (inrange && !noattacks(mdat)
-            && (Upolyd ? u.mh : u.uhp) > 0 && !scared && tmp != 3)
+    if (tmp != 3 && (!mtmp->mpeaceful
+                     || (Conflict && !resist(mtmp, RING_CLASS, 0, 0)))) {
+        if (inrange && !scared && !noattacks(mdat)
+            /* [is this hp check really needed?] */
+            && (Upolyd ? u.mh : u.uhp) > 0) {
             if (mattacku(mtmp))
                 return 1; /* monster died (e.g. exploded) */
-
-        if (mtmp->wormno)
-            wormhitu(mtmp);
+        }
+        if (mtmp->wormno) {
+            if (wormhitu(mtmp))
+                return 1; /* worm died (poly'd hero passive counter-attack) */
+        }
     }
     /* special speeches for quest monsters */
     if (!mtmp->msleeping && mtmp->mcanmove && nearby)
@@ -863,6 +874,7 @@ register struct monst *mtmp;
         && couldsee(mtmp->mx, mtmp->my) && !mtmp->minvis && !rn2(5))
         cuss(mtmp);
 
+    /* note: can't get here when tmp==2 so this always returns 0 */
     return (tmp == 2);
 }
 
@@ -879,7 +891,7 @@ boolean
 itsstuck(mtmp)
 register struct monst *mtmp;
 {
-    if (sticks(youmonst.data) && mtmp == u.ustuck && !u.uswallow) {
+    if (sticks(g.youmonst.data) && mtmp == u.ustuck && !u.uswallow) {
         pline("%s cannot escape from you!", Monnam(mtmp));
         return TRUE;
     }
@@ -1074,7 +1086,7 @@ register int after;
          */
         if ((dist2(mtmp->mx, mtmp->my, tx, ty) < 2) && intruder
             && (intruder != mtmp)) {
-            notonhead = (intruder->mx != tx || intruder->my != ty);
+            g.notonhead = (intruder->mx != tx || intruder->my != ty);
             if (mattackm(mtmp, intruder) == 2)
                 return 2;
             mmoved = 1;
@@ -1093,7 +1105,7 @@ register int after;
         mmoved = 0;
     }
 
-#ifdef MAIL
+#ifdef MAIL_STRUCTURES
     if (ptr == &mons[PM_MAIL_DAEMON]) {
         if (!Deaf && canseemon(mtmp))
             verbalize("I'm late!");
@@ -1155,8 +1167,8 @@ register int after;
 
         if (!mtmp->mcansee
             || (should_see && Invis && !perceives(ptr) && rn2(11))
-            || is_obj_mappear(&youmonst,STRANGE_OBJECT) || u.uundetected
-            || (is_obj_mappear(&youmonst,GOLD_PIECE) && !likes_gold(ptr))
+            || is_obj_mappear(&g.youmonst,STRANGE_OBJECT) || u.uundetected
+            || (is_obj_mappear(&g.youmonst,GOLD_PIECE) && !likes_gold(ptr))
             || (mtmp->mpeaceful && !mtmp->isshk) /* allow shks to follow */
             || ((monsndx(ptr) == PM_STALKER || ptr->mlet == S_BAT
                  || ptr->mlet == S_LIGHT) && !rn2(3)))
@@ -1165,7 +1177,7 @@ register int after;
         if (monsndx(ptr) == PM_LEPRECHAUN && (appr == 1)
             && ((lepgold = findgold(mtmp->minvent, TRUE))
                 && (lepgold->quan
-                    > ((ygold = findgold(invent, TRUE)) ? ygold->quan : 0L))))
+                    > ((ygold = findgold(g.invent, TRUE)) ? ygold->quan : 0L))))
             appr = -1;
 
         if (!should_see && can_track(ptr)) {
@@ -1181,7 +1193,7 @@ register int after;
     if ((!mtmp->mpeaceful || !rn2(10)) && (!Is_rogue_level(&u.uz))) {
         boolean in_line = (lined_up(mtmp)
                && (distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy)
-                   <= (throws_rocks(youmonst.data) ? 20 : ACURRSTR / 2 + 1)));
+                   <= (throws_rocks(g.youmonst.data) ? 20 : ACURRSTR / 2 + 1)));
 
         if (appr != 1 || !in_line) {
             /* Monsters in combat won't pick stuff up, avoiding the
@@ -1335,7 +1347,7 @@ register int after;
         flag |= ALLOW_SANCT;
     /* unicorn may not be able to avoid hero on a noteleport level */
     if ((is_unicorn(ptr) || ptr == &mons[PM_MAD_ALCHEMIST])
-          && !level.flags.noteleport)
+          && !g.level.flags.noteleport)
         flag |= NOTONL;
     if (passes_walls(ptr))
         flag |= (ALLOW_WALL | ALLOW_ROCK);
@@ -1368,11 +1380,11 @@ register int after;
         chi = -1;
         nidist = dist2(nix, niy, gx, gy);
         /* allow monsters be shortsighted on some levels for balance */
-        if (!mtmp->mpeaceful && level.flags.shortsighted
+        if (!mtmp->mpeaceful && g.level.flags.shortsighted
             && nidist > (couldsee(nix, niy) ? 144 : 36) && appr == 1)
             appr = 0;
         if ((is_unicorn(ptr) || ptr == &mons[PM_MAD_ALCHEMIST])
-              && level.flags.noteleport) {
+              && g.level.flags.noteleport) {
             /* on noteleport levels, perhaps we cannot avoid hero */
             for (i = 0; i < cnt; i++)
                 if (!(info[i] & NOTONL))
@@ -1454,7 +1466,7 @@ register int after;
 
             mtmp2 = m_at(nix, niy);
 
-            notonhead = mtmp2 && (nix != mtmp2->mx || niy != mtmp2->my);
+            g.notonhead = mtmp2 && (nix != mtmp2->mx || niy != mtmp2->my);
             /* note: mstatus returns 0 if mtmp2 is nonexistent */
             mstatus = mattackm(mtmp, mtmp2);
 
@@ -1464,7 +1476,7 @@ register int after;
             if ((mstatus & MM_HIT) && !(mstatus & MM_DEF_DIED) && rn2(4)
                 && mtmp2->movement >= NORMAL_SPEED) {
                 mtmp2->movement -= NORMAL_SPEED;
-                notonhead = 0;
+                g.notonhead = 0;
                 mstatus = mattackm(mtmp2, mtmp); /* return attack */
                 if (mstatus & MM_DEF_DIED)
                     return 2;
@@ -1488,20 +1500,27 @@ register int after;
         if (!m_in_out_region(mtmp, nix, niy))
             return 3;
 
+        /* move a normal monster; for a long worm, remove_monster() and
+           place_monster() only manipulate the head; they leave tail as-is */
         remove_monster(omx, omy);
         place_monster(mtmp, nix, niy);
+        /* for a long worm, insert a new segment to reconnect the head
+           with the tail; worm_move() keeps the end of the tail if worm
+           is scheduled to grow, removes that for move-without-growing */
+        if (mtmp->wormno)
+            worm_move(mtmp);
+
         for (j = MTSZ - 1; j > 0; j--)
             mtmp->mtrack[j] = mtmp->mtrack[j - 1];
         mtmp->mtrack[0].x = omx;
         mtmp->mtrack[0].y = omy;
-        /* Place a segment at the old position. */
-        if (mtmp->wormno)
-            worm_move(mtmp);
     } else {
         if (is_unicorn(ptr) && rn2(2) && !tele_restrict(mtmp)) {
             (void) rloc(mtmp, TRUE);
             return 1;
         }
+        /* for a long worm, shrink it (by discarding end of tail) when
+           it has failed to move */
         if (mtmp->wormno)
             worm_nomove(mtmp);
     }
@@ -1801,7 +1820,7 @@ register struct monst *mtmp;
 {
     boolean notseen, gotu;
     register int disp, mx = mtmp->mux, my = mtmp->muy;
-    long umoney = money_cnt(invent);
+    long umoney = money_cnt(g.invent);
 
     /*
      * do cheapest and/or most likely tests first
@@ -1914,14 +1933,14 @@ xchar x, y; /* spot 'mtmp' is considering moving to */
  * Inventory prevents passage under door.
  * Used by can_ooze() and can_fog().
  */
-STATIC_OVL boolean
+static boolean
 stuff_prevents_passage(mtmp)
 struct monst *mtmp;
 {
     struct obj *chain, *obj;
 
-    if (mtmp == &youmonst) {
-        chain = invent;
+    if (mtmp == &g.youmonst) {
+        chain = g.invent;
     } else {
         chain = mtmp->minvent;
     }
@@ -1966,13 +1985,13 @@ boolean
 can_fog(mtmp)
 struct monst *mtmp;
 {
-    if (!(mvitals[PM_FOG_CLOUD].mvflags & G_GENOD) && is_vampshifter(mtmp)
+    if (!(g.mvitals[PM_FOG_CLOUD].mvflags & G_GENOD) && is_vampshifter(mtmp)
         && !Protection_from_shape_changers && !stuff_prevents_passage(mtmp))
         return TRUE;
     return FALSE;
 }
 
-STATIC_OVL int
+static int
 vamp_shift(mon, ptr, domsg)
 struct monst *mon;
 struct permonst *ptr;

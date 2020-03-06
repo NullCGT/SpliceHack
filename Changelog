@@ -16,6 +16,7 @@
   for random lighting in lua.
 - Dropped the castle and knox variants. They are not widely liked, and it seemed
   easier just not to port them.
+- Changed the ill-fated option to illfated.
 
 Monsters
 - New Monster: Thriae

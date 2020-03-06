@@ -2142,7 +2142,7 @@ xchar *rdgn;
     winid win = create_nhwindow(NHW_MENU);
 
     if (bymenu) {
-        start_menu(win);
+        start_menu(win, MENU_BEHAVE_STANDARD);
         lchoices.idx = 0;
         lchoices.menuletter = 'a';
     }

@@ -1,4 +1,4 @@
-/* NetHack 3.6	display.c	$NHDT-Date: 1574882660 2019/11/27 19:24:20 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.108 $ */
+/* NetHack 3.6	display.c	$NHDT-Date: 1583195581 2020/03/03 00:33:01 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.127 $ */
 /* Copyright (c) Dean Luick, with acknowledgements to Kevin Darcy */
 /* and Dave Cohrs, 1990.                                          */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1467,6 +1467,38 @@ redraw_map()
             print_glyph(WIN_MAP, x, y, glyph, get_bk_glyph(x, y));
         }
     flush_screen(1);
+}
+
+/*
+ * =======================================================
+ */
+void
+reglyph_darkroom()
+{
+    xchar x, y;
+
+    for (x = 1; x < COLNO; x++)
+        for (y = 0; y < ROWNO; y++) {
+            struct rm *lev = &levl[x][y];
+
+            if (!flags.dark_room || !iflags.use_color
+                || Is_rogue_level(&u.uz)) {
+                if (lev->glyph == cmap_to_glyph(S_darkroom))
+                    lev->glyph = lev->waslit ? cmap_to_glyph(S_room)
+                                             : GLYPH_NOTHING;
+            } else {
+                if (lev->glyph == cmap_to_glyph(S_room) && lev->seenv
+                    && lev->waslit && !cansee(x, y))
+                    lev->glyph = cmap_to_glyph(S_darkroom);
+                else if (lev->glyph == GLYPH_NOTHING
+                         && lev->typ == ROOM && lev->seenv && !cansee(x, y))
+                    lev->glyph = cmap_to_glyph(S_darkroom);
+            }
+        }
+    if (flags.dark_room && iflags.use_color)
+        g.showsyms[S_darkroom] = g.showsyms[S_room];
+    else
+        g.showsyms[S_darkroom] = g.showsyms[SYM_NOTHING + SYM_OFF_X];
 }
 
 /* ======================================================================== */

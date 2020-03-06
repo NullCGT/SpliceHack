@@ -82,7 +82,7 @@ gnome_init_nhwindows(int *argc, char **argv)
 #endif
 
     // gnome/gtk is not reentrant
-    set_option_mod_status("ignintr", DISP_IN_GAME);
+    set_option_mod_status("ignintr", set_gameview);
     flags.ignintr = TRUE;
 
     iflags.window_inited = TRUE;
@@ -663,7 +663,7 @@ gnome_display_file(const char *filename, BOOLEAN_P must_exist)
    be used for menus.
 */
 void
-gnome_start_menu(winid wid)
+gnome_start_menu(winid wid, unsigned long mbehavior)
 {
     if (wid != -1) {
         if (gnome_windowlist[wid].win == NULL

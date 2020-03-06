@@ -240,6 +240,7 @@ const struct instance_globals g_init = {
 #endif
     UNDEFINED_VALUES, /* cond_hilites */
     0, /* now_or_before_idx */
+    0, /* condmenu_sortorder */
 
     /* cmd.c */
     UNDEFINED_VALUES, /* Cmd */
@@ -471,8 +472,6 @@ const struct instance_globals g_init = {
     UNDEFINED_VALUES,
 
     /* makemon.c */
-    { -1, /* choice_count */
-     { 0 } }, /* mchoices */
 
     /* mhitm.c */
     UNDEFINED_VALUE, /* vis */

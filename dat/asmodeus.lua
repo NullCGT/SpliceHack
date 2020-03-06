@@ -4,7 +4,7 @@
 --
 des.level_init({ style="mazegrid", bg ="-" });
 
-des.level_flags("mazelevel", "noteleport", "hardfloor")
+des.level_flags("mazelevel", "hardfloor")
 -- First part
 des.map({ halign = "half-left", valign = "center", map = [[
                                           }}}}                          ----

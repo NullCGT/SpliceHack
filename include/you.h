@@ -166,6 +166,7 @@ struct u_roleplay {
     boolean clumsy; /* permanetnly fumbling */
     boolean nudist; /* has not worn any armor, ever */
     boolean illfated; /* massively increased dungeon danger */
+    boolean intrinsicswap; /* swap intrinsics when gaining from food */
     boolean marathon;  /* cannot heal, fixed high max hp */
     long numbones;  /* # of bones files loaded  */
 };

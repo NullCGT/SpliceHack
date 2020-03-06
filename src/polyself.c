@@ -1,4 +1,4 @@
-/* NetHack 3.6	polyself.c	$NHDT-Date: 1581886864 2020/02/16 21:01:04 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.150 $ */
+/* NetHack 3.6	polyself.c	$NHDT-Date: 1583073991 2020/03/01 14:46:31 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.152 $ */
 /*      Copyright (C) 1987, 1988, 1989 by Ken Arromdee */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -304,7 +304,6 @@ newman()
         change_sex();
 
     adjabil(oldlvl, (int) u.ulevel);
-    reset_rndmonst(NON_PM); /* new monster generation criteria */
 
     /* random experience points for the new experience level */
     u.uexp = rndexp(FALSE);
@@ -1250,7 +1249,7 @@ dospit()
             break;
         }
         otmp->spe = 1; /* to indicate it's yours */
-        throwit(otmp, 0L, FALSE);
+        throwit(otmp, 0L, FALSE, (struct obj *) 0);
     }
     return 1;
 }

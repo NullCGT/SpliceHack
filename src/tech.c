@@ -439,7 +439,7 @@ dotechmenu(how, tech_no)
 	anything any;
 
 	tmpwin = create_nhwindow(NHW_MENU);
-	start_menu(tmpwin);
+	start_menu(tmpwin, MENU_BEHAVE_STANDARD);
 	any.a_void = 0;         /* zero out all bits */
 
 	techs_useable = 0;
@@ -2243,7 +2243,7 @@ doblitzlist()
 	anything any;
 
 	tmpwin = create_nhwindow(NHW_MENU);
-	start_menu(tmpwin);
+	start_menu(tmpwin, MENU_BEHAVE_STANDARD);
 	any.a_void = 0;         /* zero out all bits */
 
         Sprintf(buf, "%16s %10s %-17s", "[LU = Left Up]", "[U = Up]", "[RU = Right Up]");

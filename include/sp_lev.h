@@ -41,7 +41,8 @@ enum lvlinit_types {
     LVLINIT_SOLIDFILL,
     LVLINIT_MAZEGRID,
     LVLINIT_MINES,
-    LVLINIT_ROGUE
+    LVLINIT_ROGUE,
+    LVLINIT_SWAMP
 };
 
 /* max. nested depth of subrooms */
@@ -166,12 +167,6 @@ typedef struct {
 } terrain;
 
 typedef struct {
-    xchar chance;
-    xchar x1, y1, x2, y2;
-    xchar fromter, toter, tolit;
-} replaceterrain;
-
-typedef struct {
     struct {
         xchar room;
         xchar wall;
@@ -187,12 +182,9 @@ typedef struct _room {
     xchar rtype, chance, rlit, filled, joined;
 } room;
 
-typedef struct {
-    schar zaligntyp;
-    schar keep_region;
-    schar halign, valign;
-    char xsize, ysize;
-    char **map;
-} mazepart;
+struct mapfragment {
+    int wid, hei;
+    char *data;
+};
 
 #endif /* SP_LEV_H */

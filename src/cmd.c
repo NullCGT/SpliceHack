@@ -1,4 +1,4 @@
-/* NetHack 3.6	cmd.c	$NHDT-Date: 1581886858 2020/02/16 21:00:58 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.400 $ */
+/* NetHack 3.6	cmd.c	$NHDT-Date: 1582594149 2020/02/25 01:29:09 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.406 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -361,7 +361,7 @@ doextlist(VOID_ARGS)
     while (redisplay) {
         redisplay = FALSE;
         any = cg.zeroany;
-        start_menu(menuwin);
+        start_menu(menuwin, MENU_BEHAVE_STANDARD);
         add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                  "Extended Commands List",
                  MENU_ITEMFLAGS_NONE);
@@ -580,7 +580,7 @@ extcmd_via_menu()
 
         /* otherwise... */
         win = create_nhwindow(NHW_MENU);
-        start_menu(win);
+        start_menu(win, MENU_BEHAVE_STANDARD);
         Sprintf(fmtstr, "%%-%ds", biggest + 15);
         prompt[0] = '\0';
         wastoolong = FALSE; /* True => had to wrap due to line width
@@ -1029,14 +1029,37 @@ wiz_level_tele(VOID_ARGS)
     return 0;
 }
 
-/* #wizlevelflip - randomly flip the current level.
-   Does not handle vision, player position, monst mtrack, levregions,
-   as flipping is normally done only during level creation.
- */
+/* #wizlevelflip - transpose the current level */
 static int
 wiz_level_flip(VOID_ARGS)
 {
-    if (wizard) flip_level_rnd(3);
+    static const char choices[] = "0123",
+        prmpt[] = "Flip 0=randomly, 1=vertically, 2=horizonally, 3=both:";
+
+    /*
+     * Does not handle
+     *   levregions,
+     *   monster mtrack,
+     *   migrating monsters aimed at returning to specific coordinates
+     *     on this level
+     * as flipping is normally done only during level creation.
+     */
+    if (wizard) {
+        char c = yn_function(prmpt, choices, '\0');
+
+        if (c && index(choices, c)) {
+            c -= '0';
+
+            if (!c)
+                flip_level_rnd(3, TRUE);
+            else
+                flip_level((int) c, TRUE);
+
+            docrt();
+        } else {
+            pline("%s", Never_mind);
+        }
+    }
     return 0;
 }
 
@@ -1507,7 +1530,7 @@ wiz_intrinsic(VOID_ARGS)
 
         any = cg.zeroany;
         win = create_nhwindow(NHW_MENU);
-        start_menu(win);
+        start_menu(win, MENU_BEHAVE_STANDARD);
         for (i = 0; (propname = propertynames[i].prop_name) != 0; ++i) {
             p = propertynames[i].prop_num;
             if (p == HALLUC_RES) {
@@ -1651,7 +1674,7 @@ doterrain(VOID_ARGS)
      *  a legend for the levl[][].typ codes dump
      */
     men = create_nhwindow(NHW_MENU);
-    start_menu(men);
+    start_menu(men, MENU_BEHAVE_STANDARD);
     any = cg.zeroany;
     any.a_int = 1;
     add_menu(men, NO_GLYPH, &any, 0, 0, ATR_NONE,
@@ -3754,7 +3777,7 @@ int x, y;
     struct monst *mtmp;
 
     win = create_nhwindow(NHW_MENU);
-    start_menu(win);
+    start_menu(win, MENU_BEHAVE_STANDARD);
 
     if (IS_DOOR(typ)) {
         boolean key_or_pick, card;
@@ -3855,7 +3878,7 @@ boolean doit;
     menu_item *picks = (menu_item *) 0;
 
     win = create_nhwindow(NHW_MENU);
-    start_menu(win);
+    start_menu(win, MENU_BEHAVE_STANDARD);
 
     if (IS_FOUNTAIN(typ) || IS_SINK(typ)) {
         Sprintf(buf, "Drink from the %s",

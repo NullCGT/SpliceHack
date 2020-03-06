@@ -12,6 +12,26 @@ static boolean FDECL(teleok, (int, int, BOOLEAN_P));
 static void NDECL(vault_tele);
 static void FDECL(mvault_tele, (struct monst *));
 
+/* teleporting is prevented on this level for this monster? */
+boolean
+noteleport_level(mon)
+struct monst *mon;
+{
+    struct monst *mtmp;
+
+    /* demon court in Gehennom prevent others from teleporting */
+    if (In_hell(&u.uz) && !(is_dlord(mon->data) || is_dprince(mon->data)))
+        for (mtmp = fmon; mtmp; mtmp = mtmp->nmon)
+            if (is_dlord(mtmp->data) || is_dprince(mtmp->data))
+                return TRUE;
+
+    /* natural no-teleport level */
+    if (g.level.flags.noteleport)
+        return TRUE;
+
+    return FALSE;
+}
+
 /*
  * Is (x,y) a good position of mtmp?  If mtmp is NULL, then is (x,y) good
  * for an object?
@@ -496,7 +516,7 @@ struct obj *scroll;
     boolean result = FALSE; /* don't learn scroll */
 
     /* Disable teleportation in stronghold && Vlad's Tower */
-    if (g.level.flags.noteleport) {
+    if (noteleport_level(&g.youmonst)) {
         if (!wizard) {
             pline("A mysterious force prevents you from teleporting!");
             return TRUE;
@@ -609,7 +629,7 @@ dotelecmd()
         int i, tmode;
 
         win = create_nhwindow(NHW_MENU);
-        start_menu(win);
+        start_menu(win, MENU_BEHAVE_STANDARD);
         any = cg.zeroany;
         for (i = 0; i < SIZE(tports); ++i) {
             any.a_int = (int) tports[i].menulet;
@@ -1326,7 +1346,7 @@ boolean
 tele_restrict(mon)
 struct monst *mon;
 {
-    if (g.level.flags.noteleport) {
+    if (noteleport_level(mon)) {
         if (canseemon(mon))
             pline("A mysterious force prevents %s from teleporting!",
                   mon_nam(mon));
@@ -1612,7 +1632,7 @@ boolean give_feedback;
         if (give_feedback)
             pline("%s resists your magic!", Monnam(mtmp));
         return FALSE;
-    } else if (g.level.flags.noteleport && u.uswallow && mtmp == u.ustuck) {
+    } else if (u.uswallow && mtmp == u.ustuck && noteleport_level(mtmp)) {
         if (give_feedback)
             You("are no longer inside %s!", mon_nam(mtmp));
         unstuck(mtmp);

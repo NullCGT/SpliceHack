@@ -3,8 +3,6 @@
 des.level_init({ style = "solidfill", fg = " " });
 
 des.level_flags("mazelevel");
-
-des.level_flags("noteleport")
 des.map([[
 -------.................................................LLLLLLLLLLLLLLLLLLL
 |.....|......--------------|--------------------------...LLLLLLLLLLLLLLLLLL

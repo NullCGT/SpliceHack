@@ -1073,8 +1073,9 @@ struct monst *mtmp;
     const char *onm;
 
     /* Rearranged beginning so monsters can use polearms not in a line */
+    /* TODO: Find a better fix for the monster weapon switching bug. */
     if ((mtmp->weapon_check == NEED_WEAPON && MON_WEP(mtmp) && !is_pole(MON_WEP(mtmp))) || !MON_WEP(mtmp)) {
-   	    if (dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 8) {
+   	    if (dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 3) {
    	        mtmp->weapon_check = NEED_HTH_WEAPON;
    	        if (mon_wield_item(mtmp) != 0) return;
    	    }

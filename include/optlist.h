@@ -489,6 +489,8 @@ pfx_##a,
     NHOPTB(timed_delay, 0, opt_in, set_in_game, Off, No, No, No, NoAlias,
                 (boolean *) 0)
 #endif
+    NHOPTB(tips, 0, opt_out, set_in_game, On, Yes, No, No, NoAlias,
+                &flags.tips)
     NHOPTB(tombstone, 0, opt_out, set_in_game, On, Yes, No, No, NoAlias,
                 &flags.tombstone)
     NHOPTB(toptenwin, 0, opt_in, set_in_game, Off, Yes, No, No, NoAlias,

@@ -347,6 +347,7 @@ struct obj *obj;
         return;
     }
     pline("You begin to draw from the deck of fate...");
+    record_achievement(ACH_DECK);
     /* It would make sense not to give messages if blind, but that would make
        this already long string of spaghetti code even longer :( */
     for ( ; draws > 0; draws--) {

@@ -2481,9 +2481,8 @@ register struct monst *mtmp;
         record_achievement(ACH_MEDU);
         livelog_write_string(LL_ACHIEVE|LL_UMONST, "killed Medusa");
     } else if (mtmp->data == &mons[PM_DEMOGORGON]) {
+        record_achievement(ACH_DEMO);
         livelog_write_string(LL_ACHIEVE|LL_UMONST, "slew Demogorgon");
-    } else if (mtmp->data == &mons[PM_GRIM_REAPER]) {
-        livelog_write_string(LL_ACHIEVE|LL_UMONST, "destroyed the Grim Reaper");
     } else if (unique_corpstat(mtmp->data))
         livelog_printf(LL_UMONST, "%s %s",
               nonliving(mtmp->data) ? "destroyed" : "killed",

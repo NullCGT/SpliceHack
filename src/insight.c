@@ -409,6 +409,10 @@ int final;
         enlght_out(buf);
     }
 
+    /* Display orientation */
+    Sprintf(buf, "%s", orientations[flags.orientation].adj);
+    you_are(buf, "");
+
     /* As of 3.6.2: dungeon level, so that ^X really has all status info as
        claimed by the comment below; this reveals more information than
        the basic status display, but that's one of the purposes of ^X;
@@ -1704,16 +1708,6 @@ int final;
         you_have_X(buf);
     }
 
-    if (flags.orientation == SEX_BI) {
-        you_have_been("bisexual");
-    } else if (flags.orientation == SEX_ACE) {
-        you_have_been("asexual");
-    } else if (flags.orientation == SEX_GAY) {
-        you_have_been("gay");
-    } else if (flags.orientation != SEX_STRAIGHT) {
-        you_have_been("straight");
-    }
-
     ngenocided = num_genocides();
     if (ngenocided == 0) {
         you_have_never("genocided any monsters");
@@ -1868,6 +1862,12 @@ int final; /* used "behind the curtain" by enl_foo() macros */
             break;
         case ACH_MEDU:
             you_have_X("defeated Medusa");
+            break;
+        case ACH_DEMO:
+            you_have_X("defeated Demogorgon");
+            break;
+        case ACH_DECK:
+            you_have_X("tested your luck with a deck of fate");
             break;
         case ACH_BELL:
             /* alternate phrasing for present vs past and also for

@@ -96,7 +96,9 @@ enum achivements {
     ACH_NOVL = 20, /* read at least one passage from a Discworld novel */
     ACH_SOKO = 21, /* entered Sokoban */
     ACH_BGRM = 22, /* entered Bigroom (not guaranteed to be in every dgn) */
-    /* 23..31, 9 available potential achievements; #32 currently off-limits */
+    ACH_DEMO = 23, /* killed demogorgon */
+    ACH_DECK = 24, /* drew from a deck of fate */
+    /* 24..31, 9 available potential achievements; #32 currently off-limits */
     N_ACH = 32     /* allocate room for 31 plus a slot for 0 terminator */
 };
     /*

@@ -104,6 +104,8 @@ Notable Bug Fixes
   Now, nothing can follow you to the black market.
 - Many small grammatical fixes for quest text.
 - Implemented a partial fix for the monster weapon switching bug.
+- Fixed some odd language with substance warpers / transmuters.
+- Fixed transmuters not updating inventory correctly.
                     
                     Version 0.7.0: Stranger Days
 

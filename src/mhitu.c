@@ -87,7 +87,7 @@ struct monst *mtmp;
                   mtmp->data->msound == MS_NEMESIS))) {
               if (Hallucination)
                   return hmonkattacks[rn2(SIZE(hmonkattacks))];
-              else if (rn2(5))
+              else if (mtmp->data->mlet == S_RUSTMONST || rn2(5))
                   return "strike";
               else
                   return monkattacks[rn2(SIZE(monkattacks))];
@@ -2050,6 +2050,7 @@ register struct attack *mattk;
             }
             if (obj && warp_material(obj, FALSE)) {
                 pline("That's odd, you don't remember putting on %s...", an(xname(obj)));
+                update_inventory();
             }
         }
         break;

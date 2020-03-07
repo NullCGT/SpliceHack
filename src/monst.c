@@ -2856,7 +2856,7 @@ struct permonst _mons2[] = {
         SIZ(1000, 250, MS_SILENT, MZ_MEDIUM), 0, 0,
         M1_SWIM | M1_ANIMAL | M1_NOHANDS | M1_METALLIVORE, M2_HOSTILE,
         M3_INFRAVISIBLE, 0, 8, CLR_BROWN),
-    MON("trasmuter", S_RUSTMONST, LVL(12, 12, 2, 0, 3),
+    MON("transmuter", S_RUSTMONST, LVL(12, 12, 2, 0, 3),
         (G_GENO | 1),
         A(ATTK(AT_CLAW, AD_MTRL, 2, 2), ATTK(AT_NONE, AD_MTRL, 0, 0), NO_ATTK,
           NO_ATTK, NO_ATTK, NO_ATTK),

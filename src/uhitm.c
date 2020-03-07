@@ -3546,9 +3546,8 @@ struct attack *mattk;     /* null means we find one internally */
         break;
     case AD_MTRL:
         if (!mon->mcan) {
-            if (warp_material(obj, TRUE) && carried(obj)
-                && (obj->oclass == ARMOR_CLASS)) {
-                pline("%s seems different than you remember.", Yobjnam2(obj, "seem"));
+            if (warp_material(obj, TRUE) && carried(obj)) {
+                pline("Your %s warps!", simpleonames(obj));
             }
         }
         break;

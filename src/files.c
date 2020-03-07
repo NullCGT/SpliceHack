@@ -4352,7 +4352,7 @@ reveal_paths(VOID_ARGS)
 #if defined(SYSCF) || !defined(UNIX) || defined(DLB)
     const char *filep;
 #ifdef SYSCF
-    const char *gamename = (g.hname && *g.hname) ? g.hname : "NetHack";
+    const char *gamename = (g.hname && *g.hname) ? g.hname : "SpliceHack";
 #endif
 #endif
 #if defined(PREFIXES_IN_USE)

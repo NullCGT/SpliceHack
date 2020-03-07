@@ -133,7 +133,7 @@ _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);*/
         run_from_desktop = FALSE;
     } else
 #endif
-        g.hname = "NetHack"; /* used for syntax messages */
+        g.hname = "SpliceHack"; /* used for syntax messages */
 
     choose_windows(DEFAULT_WINDOW_SYS);
 
@@ -142,7 +142,7 @@ _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);*/
      * the game is exited.
      */
     if (getcwd(orgdir, sizeof orgdir) == (char *) 0)
-        error("NetHack: current directory path too long");
+        error("SpliceHack: current directory path too long");
 #ifndef NO_SIGNAL
     signal(SIGINT,
            (SIG_RET_TYPE) nethack_exit); /* restore original directory */

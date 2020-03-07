@@ -833,7 +833,7 @@ const struct Race races[] = {
         PM_CHANGELING,
         NON_PM,
         NON_PM,
-        NON_PM,
+        PM_CHANGELING_MUMMY,
         NON_PM,
         MH_CHANGELING | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_LAWFUL,
         MH_CHANGELING,

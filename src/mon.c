@@ -152,6 +152,10 @@ undead_to_corpse(mndx)
 int mndx;
 {
     switch (mndx) {
+    case PM_CHANGELING_ZOMBIE:
+    case PM_CHANGELING_MUMMY:
+        mndx = PM_CHANGELING;
+        break;
     case PM_KOBOLD_ZOMBIE:
     case PM_KOBOLD_MUMMY:
         mndx = PM_KOBOLD;
@@ -374,6 +378,7 @@ unsigned corpseflags;
     case PM_ORC_MUMMY:
     case PM_ELF_MUMMY:
     case PM_HUMAN_MUMMY:
+    case PM_CHANGELING_MUMMY:
     case PM_GIANT_MUMMY:
     case PM_ETTIN_MUMMY:
     case PM_KOBOLD_ZOMBIE:
@@ -382,6 +387,7 @@ unsigned corpseflags;
     case PM_ORC_ZOMBIE:
     case PM_ELF_ZOMBIE:
     case PM_HUMAN_ZOMBIE:
+    case PM_CHANGELING_ZOMBIE:
     case PM_ZOMBIE_DRAGON:
     case PM_DRAUGR:
     case PM_GIANT_ZOMBIE:

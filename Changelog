@@ -50,6 +50,10 @@ New Monsters
   - Domestic and omnivorous, but make for poor pets.
   - Instantly eat all organic objects.
   - YAFM for pulling pigs out of pits.
+- New Monster: Changeling Mummy
+- New Monster: Changeling Zombie
+  - Both relatively unremarkable, aside from being shapeshifters. They are not
+    randomly generated, and generally appear in bones files.
 
 New Items
 - New Item: Wand of Water

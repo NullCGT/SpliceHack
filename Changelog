@@ -46,6 +46,9 @@ New Monsters
       - The chicken tile has been tweaked, so that it looks better.
       - Chicken sounds have been fleshed out and debugged.
       - Attacking one chicken angers all chickens within sight.
+- New Monster: Pig
+  - Domestic and omnivorous, but make for poor pets.
+  - YAFM for pulling pigs out of pits.
 
 New Items
 - New Item: Wand of Water
@@ -80,6 +83,7 @@ Misc. Changes
 - Changed the name of substance warpers to transmuters.
 - Changed the name of nova foxes to vulpenfernoes.
 - Changed the name of death maggots to corpseworms.
+- Circe's Witchstaff only transforms monsters into pigs now.
 
 Balance
 - Stop randomly generating penguins, since the fact that eating them makes the

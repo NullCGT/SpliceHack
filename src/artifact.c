@@ -1590,7 +1590,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 return TRUE;
             } else {
                 pline("%s blasts %s with magical power!", wepdesc, mon_nam(mdef));
-                newcham(mdef, &mons[!rn2(2) ? PM_BOAR : PM_COW], FALSE, TRUE);
+                newcham(mdef, &mons[PM_PIG], FALSE, TRUE);
                 return TRUE;
             }
         }

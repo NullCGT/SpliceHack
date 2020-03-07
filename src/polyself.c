@@ -567,7 +567,7 @@ int psflags;
         } else if (ismolydeus) {
             mntmp = PM_MANES;
         } else if (iscirce) {
-            mntmp = !rn2(2) ? PM_BOAR : PM_COW;
+            mntmp = PM_PIG;
         } else if (isvamp) {
  do_vampyr:
             if (mntmp < LOW_PM || (mons[mntmp].geno & G_UNIQ)) {

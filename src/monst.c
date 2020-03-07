@@ -1001,7 +1001,7 @@ NEARDATA struct permonst mons_init[] = {
     /*
      * quadrupeds
      */
-    MON("porcupine", S_QUADRUPED, LVL(0, 12, 0, 0, 0), (G_GENO | 3),
+    MON("porcupine", S_QUADRUPED, LVL(0, 12, 0, 0, 0), (G_GENO | 1),
         A(ATTK(AT_BITE, AD_PHYS, 1, 1), ATTK(AT_NONE, AD_QUIL, 2, 2),
           NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(300, 250, MS_BARK, MZ_SMALL), 0, 0,
@@ -1021,7 +1021,7 @@ NEARDATA struct permonst mons_init[] = {
         M1_ANIMAL | M1_NOHANDS | M1_OMNIVORE,
         M2_DOMESTIC, M3_INFRAVISIBLE, 0,
         2, HI_DOMESTIC),
-    MON("boar", S_QUADRUPED, LVL(2, 12, 7, 0, 0), (G_GENO | 1),
+    MON("boar", S_QUADRUPED, LVL(2, 12, 7, 0, 0), (G_GENO | 2),
         A(ATTK(AT_BUTT, AD_PHYS, 1, 4), ATTK(AT_BUTT, AD_PHYS, 1, 4),
           NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(200, 100, MS_PIG, MZ_MEDIUM), 0, 0,

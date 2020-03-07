@@ -3627,6 +3627,10 @@ boolean via_attack;
                     }
                     if (rn2(6))
                         monflee(mon, rn2(25) + 15, TRUE, !exclaimed);
+                } else if (mon->data == &mons[PM_CHICKEN]) {
+                    growl(mon);
+                    exclaimed = TRUE;
+                    mon->mpeaceful = 0;
                 }
             }
         }

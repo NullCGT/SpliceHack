@@ -348,4 +348,7 @@
      || (ptr) == &mons[PM_GLUTTONY] \
      || (ptr) == &mons[PM_PIG])
 
+#define avoids_player(ptr) \
+    (is_unicorn(ptr) \
+     || (ptr) == &mons[PM_MAD_ALCHEMIST])
 #endif /* MONDATA_H */

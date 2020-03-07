@@ -52,7 +52,7 @@ static boolean FDECL(maybe_cannibal, (int, BOOLEAN_P));
 #define nonrotting_corpse(mnum) \
     ((mnum) == PM_LIZARD || (mnum) == PM_LICHEN || \
      (mnum) == PM_LEGENDARY_LICHEN || \
-     (mnum) == PM_DEATH_MAGGOT || is_rider(&mons[mnum]))
+     (mnum) == PM_CORPSEWORM || is_rider(&mons[mnum]))
 
 /* non-rotting non-corpses; unlike lizard corpses, these items will behave
    as if rotten if they are cursed (fortune cookies handled elsewhere) */

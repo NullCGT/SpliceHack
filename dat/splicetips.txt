@@ -109,7 +109,7 @@ Anubites are capable of jumping.
 The main dungeon in SpliceHack is longer than one might expect.
 Gehennom has been compacted. It's quite a rush!
 SpliceHack is fully compatible with tiles, and comes with a tileset!
-Substance warpers can change the material of your items.
+Transmuters can change the material of your items.
 Rings of blood magic allow you to convert hit points to power.
 Merfolk have poor abilities, but begin the game with one of the most powerful techniques.
 You can encounter the big room up to three times.

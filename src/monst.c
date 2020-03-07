@@ -362,7 +362,7 @@ NEARDATA struct permonst mons_init[] = {
         SIZ(800, 250, MS_BARK, MZ_LARGE), 0, 0,
         M1_ANIMAL | M1_NOHANDS | M1_CARNIVORE, M2_STRONG | M2_DOMESTIC,
         M3_INFRAVISIBLE | M3_INFRAVISION, 0, 9, HI_DOMESTIC),
-    MON("nova fox", S_DOG, LVL(10, 16, 0, 5, 0), (G_GENO | 1),
+    MON("vulpenferno", S_DOG, LVL(10, 16, 0, 5, 0), (G_GENO | 1),
         A(ATTK(AT_KICK, AD_PHYS, 2, 3), ATTK(AT_TUCH, AD_ELEC, 1, 3),
           ATTK(AT_KICK, AD_PHYS, 2, 3), ATTK(AT_NONE, AD_FIRE, 0, 4),
           NO_ATTK, NO_ATTK),
@@ -1386,7 +1386,7 @@ NEARDATA struct permonst mons_init[] = {
     /*
      * worms
      */
-     MON("death maggot", S_WORM, LVL(1, 12, 5, 0, 0), (G_GENO | G_SGROUP | 2),
+     MON("corpseworm", S_WORM, LVL(1, 12, 5, 0, 0), (G_GENO | G_SGROUP | 2),
          A(ATTK(AT_BITE, AD_PHYS, 1, 3), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
            NO_ATTK),
          SIZ(50, 50, MS_SILENT, MZ_TINY), 0, 0,
@@ -2856,7 +2856,7 @@ struct permonst _mons2[] = {
         SIZ(1000, 250, MS_SILENT, MZ_MEDIUM), 0, 0,
         M1_SWIM | M1_ANIMAL | M1_NOHANDS | M1_METALLIVORE, M2_HOSTILE,
         M3_INFRAVISIBLE, 0, 8, CLR_BROWN),
-    MON("substance warper", S_RUSTMONST, LVL(12, 12, 2, 0, 3),
+    MON("trasmuter", S_RUSTMONST, LVL(12, 12, 2, 0, 3),
         (G_GENO | 1),
         A(ATTK(AT_CLAW, AD_MTRL, 2, 2), ATTK(AT_NONE, AD_MTRL, 0, 0), NO_ATTK,
           NO_ATTK, NO_ATTK, NO_ATTK),

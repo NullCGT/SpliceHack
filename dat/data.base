@@ -1450,8 +1450,9 @@ dart*
 	Turn to a golden staff.
 		[ Gifts, by Mary Coleridge ]
 death maggot
+corpseworm
 	Maggots are alive, but feast on the dead.
-	Death maggots are dead, but feast on the living.
+	Corpseworms are dead, but feast on the living.
 demogorgon
 	A terrible deity, whose very name was capable of producing the
 	most horrible effects.  He is first mentioned by the 4th-century
@@ -4146,10 +4147,11 @@ nosferatu
   of the vampire NOSFERATU.
     	[ from _Nosferatu_, written by Henrik Galeen, 1922 ]
 nova fox
-	Nova foxes hail from a world of fire and lightning. Their
-	shrill cry signals death for those that cannot keep up
-	with their speed. There are even rumors that they can turn
-	magical attacks back against the user.
+vulpenferno
+	Vulpenfernoes are elemental foxes that hail from a world 
+	of fire and lightning. Their shrill cry signals death for 
+	those that cannot keep up with their speed. There are even
+	rumors that they can turn magical attacks back against mages.
 nunchaku
 	A nunchaku is two sections of wood (or metal in modern
 	incarnations) connected by a cord or chain.  There is much
@@ -5635,6 +5637,7 @@ straw golem
 	pole stuck up its back.
 		[ The Wonderful Wizard of Oz, by L. Frank Baum ]
 substance warper
+transmuter
 	Ask not, what your items can do to it.  Ask what it can do
 	to your items.
 sunsword

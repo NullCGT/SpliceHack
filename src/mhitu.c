@@ -3590,7 +3590,7 @@ struct attack *mattk;
             /* No message */
         }
         return 1;
-    case AD_MTRL: /* change material (substance warper) */
+    case AD_MTRL: /* change material (transmuter) */
         if (mon_currwep) {
             /* by_you==True: passive counterattack to hero's action
                is hero's fault */

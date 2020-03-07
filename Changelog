@@ -18,7 +18,7 @@
   easier just not to port them.
 - Changed the ill-fated option to illfated.
 
-Monsters
+New Monsters
 - New Monster: Thriae
   - Does not appear until the player is powerful enough to deal with them, but
     can be potentially very nasty when summoned via summon insects, such as in
@@ -38,7 +38,7 @@ Monsters
   - Ice Elementals are not randomly generated. They appear only when as
     a neutral minion.
 
-Items
+New Items
 - New Item: Wand of Water
   - Wands of water do a small amount of damage and will damage armor.
     Zapping a wand of water at a monster that likes fire will deal a
@@ -57,7 +57,7 @@ Items
   - Functions like a frost or fire horn, but releases sonic energy instead.
   - Examining it reveals its subclass as "theoretically tonal instrument."
 
-Races
+New Race
 - New Race: Changeling
   - #chat to a monster to polymorph into it. The monster's base level must be of 
     no more than three levels higher than the player, and requires a large amount
@@ -66,6 +66,11 @@ Races
   - Do not passively gain hit points without a special source of regeneration,
     unless polymorphed.
   - Hate iron in their natural form.
+
+Misc. Changes
+- Changed the name of substance warpers to transmuters.
+- Changed the name of nova foxes to vulpenfernoes.
+- Changed the name of death maggots to corpseworms.
 
 Balance
 - Stop randomly generating penguins, since the fact that eating them makes the

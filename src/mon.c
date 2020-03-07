@@ -2454,9 +2454,9 @@ register struct monst *mtmp;
             You_hear("the slithering of many bodies.");
         }
         if (mtmp->data == &mons[PM_WORM_THAT_WALKS])
-            create_critters(rnd(10), &mons[PM_DEATH_MAGGOT], TRUE);
+            create_critters(rnd(10), &mons[PM_CORPSEWORM], TRUE);
         else
-            create_critters(rnd(20), &mons[PM_DEATH_MAGGOT], TRUE);
+            create_critters(rnd(20), &mons[PM_CORPSEWORM], TRUE);
     } else if (mtmp->data == &mons[PM_FUSION_ELEMENTAL]) {
         if (cansee(mtmp->mx, mtmp->my)) {
             pline_The("body of %s splits into its separate elements!",

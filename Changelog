@@ -37,6 +37,15 @@ New Monsters
 - New Monster: Ice Elemental
   - Ice Elementals are not randomly generated. They appear only when as
     a neutral minion.
+- New Monster: Chicken
+  - Chickens originally appear in SLASH'EM, and have been tweaked slightly for
+    SpliceHack. Yes, I take chickens very seriously.
+      - All chickens are now female, can fly, and can lay eggs.
+      - Chickens now use domestic coloring, in order to distinguish them from
+        cockatrices.
+      - The chicken tile has been tweaked, so that it looks better.
+      - Chicken sounds have been fleshed out and debugged.
+      - Attacking one chicken angers all chickens within sight.
 
 New Items
 - New Item: Wand of Water

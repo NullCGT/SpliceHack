@@ -220,6 +220,14 @@ NEARDATA struct permonst mons_init[] = {
     /*
      * cockatrice
      */
+    MON("chicken", S_COCKATRICE, LVL(2, 15, 8, 0, 0), 
+        (G_GENO | G_SGROUP | 1),
+        A(ATTK(AT_BITE, AD_PHYS, 1, 3), NO_ATTK, NO_ATTK,
+          NO_ATTK, NO_ATTK, NO_ATTK),
+	      SIZ(100, 50, MS_CHICKEN, MZ_SMALL), 0, 0,
+        M1_ANIMAL | M1_FLY | M1_NOHANDS | M1_HERBIVORE | M1_OVIPAROUS, 
+        M2_WANDER | M2_DOMESTIC | M2_FEMALE,
+        M3_INFRAVISIBLE, 0, 3, HI_DOMESTIC),
     MON("chickatrice", S_COCKATRICE, LVL(4, 4, 8, 30, 0),
         (G_GENO | G_SGROUP | 1),
         A(ATTK(AT_BITE, AD_PHYS, 1, 2), ATTK(AT_TUCH, AD_STON, 0, 0),

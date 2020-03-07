@@ -63,6 +63,7 @@
     - planetar (only appear in planes)
     - solar (only appear in planes)
     - weretiger (not randomly generated)
+    - chicken
   #Items
     - Plague Artifact
     - Doomblade Artifact

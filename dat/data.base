@@ -27,21 +27,19 @@ race angel
 	and demons will not bother to negotiate before trying to destroy you. Most
 	living beings, however, will see you as an ally, and your wings will allow you
 	to escape from many a deadly situation.
-
-	You are an angel, forceful yet gentle.
+race changeling
+	As a changeling, you live a life of constant adaptation. You can take the
+	form of a monster simply by chatting with them, and indeed are often forced
+	to do so: Changelings can only heal when they are shapeshifted.
 race drow
 	As a drow (or dark elf), you have many of the same traits as an elf, but also
 	have the ability to put enemies to sleep with your unarmed strikes.
 	Unfortunately, drow are not well-liked by many races, and even other elves
 	may view you as an enemy.
-
-	You are a drow, crafty and deadly.
 race dwarf
 	As a dwarf, you are very strong and hardy. You have access to a dangerous
 	technique that allows you to erupt with rage and lay waste to your enemies,
 	and you are very good at digging tunnels.
-
-	You are a dwarf, industrious and indomitable.
 race elf
 	As an elf, you are generally dextrous and intelligent, but somewhat frail.
 	The touch of iron is uncomfortable for you, and should be avoided when
@@ -49,66 +47,47 @@ race elf
 	artificially induced sleep.
 	Other elves will generally view you as an ally, while orcs will attack you on
 	sight.
-
-	You are an elf, noble and fair.
 race ghoul
 	As a ghoul, you have many natural advantages. You are immune to level drain
 	and poison, and can paralyze others with an unarmed attack.
 	However, you can only consume rotting corpses, and only other ghouls are
 	likely to keep you company.
-
-	You are a ghoul, ageless and immortal.
 race gnome
 	As a gnome, your brain and wits are your greatest assets. You have access to
 	a technique that allows you to vanish without a trace, and eventually learn
 	how to upgrade your items. Sadly, humans do not tend to take very kindly to
 	your creativity, but you can always find a welcoming gnomish community in the
 	local mines.
-
-	You are a gnome, inventive and flexible.
 race human
 	As a human, you are extremely well-rounded, and can excel at anything you
 	choose to focus on. With hard work, you are capable of increasing your
 	strength to incredible levels, and have few weaknesses.
-
-	You are a human, adaptable and resourceful.
 race infernal
 	As an infernal, you are extremely physically powerful. You are completely
 	immune to fire, and as you gain experience you will learn to quickly
 	regenerate from even the most deadly of injuries. These powers come with a
 	price, however. The touch of silver is incredibly deadly, and many monsters
 	have prepared for your presence in the dungeon.
-
-	You are an infernal, unstoppable and ruthless.
 race merfolk
 	As a merfolk, water is your home. You are an incredible swimmer, and
 	eventually will learn to breathe water. When you swim, your possessions are
 	protected from harm. This is particularly useful, since a large portion of the
 	dungeon has been flooded. You also have access to a powerful technique that
 	allows you to drown your enemies.
-
-	You are a merfolk, wily and willful.
 race orc
 	As an orc, you are quite strong, but lacking in intelligence and charisma.
 	You are decently hardy, and never have to fear being poisoned.
 	Other orcs will generally view you as an ally, but many races do not take
 	kindly to your presence, elves in particular.
-
-	You are an orc, powerful and proud.
-
 race werewolf
 	As a werewolf, you live a cursed life. You are unable to control your form,
 	and civilized humans are terrified of you. Physically, however, you are
 	unmatched, and have access to techniques which allow you to grow claws and
 	fly into a berserk rage.
-
-	You are a werewolf, full of primal fury.
-
 race vampire
 	As a vampire, blood means everything. You must drink blood to survive, and
 	take lives to live.
 
-	You are a vampire, child of night.
 role arc
 	You are an archeologist. You begin your adventure well-equipped for dungeon
 	delving, and are capable of using many unique weapons.
@@ -1082,6 +1061,12 @@ chameleon
 	with such ferocity that Bink's mirth abated.  If its malice
 	could strike him, he would be horribly dead.
 		[ A Spell for Chameleon, by Piers Anthony ]
+changeling
+shifter
+	She looked upon the child, with its perfect curly hair and
+	round, ebullient face, and she wept.
+
+	"That is not my son! What have you done with my son?"
 charo*n
 	When an ancient Greek died, his soul went to the nether world:
 	the Hades.  To reach the nether world, the souls had to cross

@@ -1461,6 +1461,21 @@ dochat()
         }
         return 0;
     }
+
+    if (Race_if(PM_CHANGELING) && canseemon(mtmp) && monsndx(mtmp->data) != u.umonnum
+            && polyok(mtmp->data)
+            && yn("Attempt to mimic?") == 'y') {
+        pline("You study %s as you speak to %s...", mon_nam(mtmp), mhim(mtmp));
+        if (mtmp->data->mlevel <= u.ulevel + 3 && u.uen >= mtmp->data->mlevel) {
+            u.uen = (u.uen - mtmp->data->mlevel) / 2;
+            polymon(monsndx(mtmp->data));
+            g.context.botl = TRUE;
+        } else if (u.uen < mtmp->data->mlevel) {
+            You("do not have enough energy to change form!");
+        } else {
+            pline("Unfortunately, that form is a bit beyond your capabilities.");
+        }
+    }
     return domonnoise(mtmp);
 }
 

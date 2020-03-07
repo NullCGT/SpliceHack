@@ -1287,6 +1287,7 @@ int cooking;
         if ((HConfusion & TIMEOUT) > 2)
             make_confused(2L, FALSE);
         break;
+    case PM_CHANGELING:
     case PM_CHAMELEON:
     case PM_DOPPELGANGER:
     case PM_SANDESTIN: /* moot--they don't leave corpses */

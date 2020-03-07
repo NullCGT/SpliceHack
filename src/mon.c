@@ -4115,6 +4115,7 @@ struct monst *mon;
         if (rn2(7))
             mndx = pick_nasty();
         break;
+    case PM_CHANGELING:
     case PM_DOPPELGANGER:
         if (!rn2(7)) {
             mndx = pick_nasty();

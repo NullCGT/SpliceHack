@@ -157,6 +157,9 @@
 #define is_human(ptr) ((((ptr)->mhflags & MH_HUMAN) != 0L) \
                      || ((ptr) == g.youmonst.data &&       \
                          !Upolyd && Race_if(PM_HUMAN)))
+#define is_changeling(ptr) ((((ptr)->mhflags & MH_CHANGELING) != 0L) \
+                     || ((ptr) == g.youmonst.data &&       \
+                         !Upolyd && Race_if(PM_CHANGELING)))
 #define your_race(ptr) (((ptr)->mhflags & g.urace.selfmask) != 0L)
 #define is_bat(ptr)                                         \
     ((ptr) == &mons[PM_BAT] || (ptr) == &mons[PM_GIANT_BAT] \
@@ -238,7 +241,8 @@
 #define is_placeholder(ptr)                             \
     ((ptr) == &mons[PM_ORC] || (ptr) == &mons[PM_GIANT] \
      || (ptr) == &mons[PM_ELF] || (ptr) == &mons[PM_HUMAN] \
-     || (ptr) == &mons[PM_MINOR_ANGEL] || (ptr) == &mons[PM_INFERNAL])
+     || (ptr) == &mons[PM_MINOR_ANGEL] || (ptr) == &mons[PM_INFERNAL] \
+     || (ptr) == &mons[PM_CHANGELING])
 /* return TRUE if the monster tends to revive */
 #define is_reviver(ptr) (is_rider(ptr) || (ptr)->mlet == S_TROLL \
                          || (ptr) == &mons[PM_SLOTH])

@@ -112,6 +112,10 @@ static const struct innate {
                  { 1, &HAggravate_monster, "", "" },
                  { 0, 0, 0, 0 } },
 
+  chn_abil[] = { { 1, &HInfravision, "", "" },
+                 { 30, &HPolymorph_control, "in full control of yourself", "anxious" },
+                 { 0, 0, 0, 0 } },
+
   dwa_abil[] = { { 1, &HInfravision, "", "" },
                  { 0, 0, 0, 0 } },
 
@@ -823,6 +827,10 @@ long frommask;
             break;
         case PM_MINOR_ANGEL:
             abil = ang_abil;
+            break;
+        case PM_CHANGELING:
+            abil = chn_abil;
+            break;
         default:
             break;
         }
@@ -1007,6 +1015,9 @@ int oldlevel, newlevel;
         break;
     case PM_ORC:
         rabil = orc_abil;
+        break;
+    case PM_CHANGELING:
+        rabil = chn_abil;
         break;
     case PM_HUMAN_WEREWOLF:
     case PM_HUMAN:

@@ -402,7 +402,9 @@
     (hates_material(g.youmonst.data, material) \
      || (material == SILVER && u.ulycn >= LOW_PM) \
      || (material == SILVER && !Upolyd && Race_if(PM_INFERNAL)) \
-     || (material == IRON && !Upolyd && Race_if(PM_ELF)))
+     || (material == IRON && !Upolyd && Race_if(PM_ELF)) \
+     || (material == IRON && !Upolyd && Race_if(PM_DROW)) \
+     || (material == IRON && !Upolyd && Race_if(PM_CHANGELING)))
 
 /* _Hitchhikers_Guide_to_the_Galaxy_ on uses for 'towel': "wrap it round
    your head to ward off noxious fumes" [we require it to be damp or wet] */

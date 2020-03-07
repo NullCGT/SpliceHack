@@ -57,6 +57,16 @@ Items
   - Functions like a frost or fire horn, but releases sonic energy instead.
   - Examining it reveals its subclass as "theoretically tonal instrument."
 
+Races
+- New Race: Changeling
+  - #chat to a monster to polymorph into it. The monster's base level must be of 
+    no more than three levels higher than the player, and requires a large amount
+    of energy.
+  - Liquid leap technique.
+  - Do not passively gain hit points without a special source of regeneration,
+    unless polymorphed.
+  - Hate iron in their natural form.
+
 Balance
 - Stop randomly generating penguins, since the fact that eating them makes the
   Gods angry is confusing.

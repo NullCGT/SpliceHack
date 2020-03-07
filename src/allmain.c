@@ -262,7 +262,7 @@ boolean resuming;
                     }
 
                     if (Withering && !Regeneration) {
-                        losehp(1, "withering away", KILLED_BY);
+                        losehp(1, "withered away", NO_KILLER_PREFIX);
                         g.context.botl = TRUE;
                         interrupt_multi("You are slowly withering away.");
                     }

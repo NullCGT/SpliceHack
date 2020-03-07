@@ -104,6 +104,9 @@ Balance
 - Astral is dark, instead of being lit. Players should have a light source by the
   time they are ready to ascend ;)
 - Skeletal pirates can swim, making the pirate quest slightly harder.
+- Mummies can now cause the player to start withering on hit.
+- Giant mummies can clobber the player, similar to giants.
+- High Priests resist death.
 
 Notable Bug Fixes
 - Water elementals can be neutral deific minions agian.

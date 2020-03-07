@@ -589,6 +589,7 @@ const struct conditions_t conditions[] = {
     { 20, BL_MASK_UNCONSC,   bl_unconsc,   { "Out",      "Out",   "KO"  } },
     { 20, BL_MASK_WOUNDEDL,  bl_woundedl,  { "Legs",     "Leg",   "Lg"  } },
     { 20, BL_MASK_HOLDING,   bl_holding,   { "UHold",    "UHld",  "UHd" } },
+    {  6, BL_MASK_WITHER,    bl_wither,    { "Wither",   "Wtr",   "Wr"  } },
 };
 
 struct condtests_t condtests[CONDITION_COUNT] = {
@@ -623,6 +624,7 @@ struct condtests_t condtests[CONDITION_COUNT] = {
     { bl_unconsc,   "unconscious", opt_in,  FALSE, FALSE, FALSE },
     { bl_woundedl,  "woundedlegs", opt_in,  FALSE, FALSE, FALSE },
     { bl_holding,   "holding",     opt_in,  FALSE, FALSE, FALSE },
+    { bl_wither,    "withering",   opt_out, TRUE, FALSE, FALSE },
 };
 /* condition indexing */
 int cond_idx[CONDITION_COUNT] = { 0 };
@@ -895,6 +897,7 @@ bot_via_windowport()
     condtests[bl_stone].test     = (Stoned) ? TRUE : FALSE;
     condtests[bl_strngl].test    = (Strangled) ? TRUE : FALSE;
     condtests[bl_stun].test      = (Stunned) ? TRUE : FALSE;
+    condtests[bl_wither].test    = (Withering) ? TRUE : FALSE;
     test_if_enabled(bl_elf_iron) = (FALSE);
     test_if_enabled(bl_bareh)    = (!uarmg && !uwep);
     test_if_enabled(bl_icy)      = levl[u.ux][u.uy].typ == ICE;

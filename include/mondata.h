@@ -55,6 +55,7 @@
      (ptr == &mons[PM_MONADIC_DEVA]) || \
      (ptr == &mons[PM_ASTRAL_DEVA]) || \
      (ptr == &mons[PM_PLANETAR]) || \
+     (ptr == &mons[PM_HIGH_PRIEST]) || \
      (ptr == &mons[PM_SOLAR]))
 
 #define is_lminion(mon) \

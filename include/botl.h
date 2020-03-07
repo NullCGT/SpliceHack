@@ -79,6 +79,7 @@ enum blconditions {
     bl_unconsc,
     bl_woundedl,
     bl_holding,
+    bl_wither,
 
     CONDITION_COUNT
 };

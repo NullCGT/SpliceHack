@@ -341,5 +341,11 @@
 
 #define is_blkmktstaff(ptr)	(Is_blackmarket(&u.uz) && \
 				  (ptr) == &mons[PM_ARMS_DEALER])
+/* instantly eats any organic object it comes into contact with */
+#define is_bigeater(ptr) \
+    ((ptr) == &mons[PM_GELATINOUS_CUBE] \
+     || (ptr) == &mons[PM_TASMANIAN_DEVIL] \
+     || (ptr) == &mons[PM_GLUTTONY] \
+     || (ptr) == &mons[PM_PIG])
 
 #endif /* MONDATA_H */

@@ -973,8 +973,7 @@ register struct obj *obj;
             return TABU;
         if (mon_hates_material(mon, obj->material))
             return TABU;
-        if ((mptr == &mons[PM_GELATINOUS_CUBE] ||
-             mptr == &mons[PM_TASMANIAN_DEVIL]) && is_organic(obj))
+        if (is_bigeater(mptr) && is_organic(obj))
             return ACCFOOD;
         if (metallivorous(mptr) && is_metallic(obj)
             && (is_rustprone(obj) || mptr != &mons[PM_RUST_MONSTER])) {

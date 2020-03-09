@@ -703,8 +703,8 @@ struct permonst * pm;
     /* Generation */
     if (uniq)
         Strcpy(buf, "Unique.");
-    else if (freq == 0)
-	Strcpy(buf, "Not randomly generated.");
+    else if (freq == 0 || gen & G_NOGEN)
+	    Strcpy(buf, "Not randomly generated.");
     else
         Sprintf(buf, "Normally %s%s, %s.",
                 hell ? "only appears in Gehennom" :

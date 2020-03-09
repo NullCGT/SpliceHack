@@ -54,6 +54,8 @@ New Monsters
 - New Monster: Changeling Zombie
   - Both relatively unremarkable, aside from being shapeshifters. They are not
     randomly generated, and generally appear in bones files.
+- New Monster: Winter Wolf Pup
+  - Not randomly generated. Pets for Valkyries.
 
 New Items
 - New Item: Wand of Water
@@ -83,6 +85,10 @@ New Race
   - Do not passively gain hit points without a special source of regeneration,
     unless polymorphed.
   - Hate iron in their natural form.
+
+Roles
+- Valkyries begin the game with a pet winter wolf pup. It is very weak initially,
+  but will grow up into a powerful pet.
 
 Misc. Changes
 - Changed the name of substance warpers to transmuters.

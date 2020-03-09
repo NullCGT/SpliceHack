@@ -703,7 +703,7 @@ const struct Role roles[NUM_ROLES+1] = {
       PM_VALKYRIE,
       NON_PM,
       NON_PM,
-      NON_PM /*PM_WINTER_WOLF_CUB*/,
+      PM_WINTER_WOLF_PUP,
       PM_NORN,
       PM_WARRIOR,
       PM_LORD_SURTUR,

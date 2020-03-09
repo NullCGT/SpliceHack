@@ -13,7 +13,7 @@ work in progress, and as such bugs and balance issues may exist. A wiki can
 be found on the github page and there are encyclopedia entries for some new
 additions, but as of this moment neither is complete.
 
-Installation is the same as installation for vanilla 3.6.2. Please note that
+Installation is the same as installation for vanilla 3.7. Please note that
 SpliceHack currently compiles to its own binary and uses splicehackdir instead
 of nethackdir on unix, but is untested on windows, and still compiles as nethack
 there. SpliceHack can be played online at https://www.hardfought.org.

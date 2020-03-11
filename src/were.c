@@ -31,6 +31,10 @@ register struct monst *mon;
                     howler = "chicken";
                     howl = "squawking";
                     break;
+                case PM_WEREPHANT:
+                    howler = "elephant";
+                    howl = "trumpeting";
+                    break;
                 case PM_WEREBEAR:
                     howler = "bear";
                     howl = "roaring";
@@ -93,6 +97,10 @@ int pm;
         return PM_HUMAN_WERECOCKATRICE;
     case PM_HUMAN_WERECOCKATRICE:
         return PM_WERECOCKATRICE;
+    case PM_WEREPHANT:
+        return PM_HUMAN_WEREPHANT;
+    case PM_HUMAN_WEREPHANT:
+        return PM_WEREPHANT;
     case PM_WERETIGER:
         return PM_HUMAN_WERETIGER;
     case PM_HUMAN_WERETIGER:
@@ -116,6 +124,9 @@ were_beastie(pm)
 int pm;
 {
     switch (pm) {
+    case PM_MUMAK:
+    case PM_WEREPHANT:
+        return PM_WEREPHANT;
     case PM_WERECOCKATRICE:
     case PM_COCKATRICE:
     case PM_CHICKATRICE:
@@ -226,6 +237,11 @@ char *genbuf;
             typ = rn2(3) ? PM_CHICKATRICE : rn2(3) ? PM_PYROLISK : PM_CHICKATRICE;
             if (genbuf)
                 Strcpy(genbuf, "cockatrice");
+            break;
+        case PM_WEREPHANT:
+            typ = PM_MUMAK;
+            if (genbuf)
+                Strcpy(genbuf, "elephant");
             break;
         case PM_WERETIGER:
             typ = PM_TIGER;

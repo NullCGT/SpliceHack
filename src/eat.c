@@ -1198,11 +1198,14 @@ int cooking;
     case PM_HUMAN_WEREBEAR:
         catch_lycanthropy = PM_WEREBEAR;
         break;
-    case PM_WERECOCKATRICE:
-        catch_lycanthropy = PM_COCKATRICE;
+    case PM_HUMAN_WERECOCKATRICE:
+        catch_lycanthropy = PM_WERECOCKATRICE;
         break;
-    case PM_WERETIGER:
+    case PM_HUMAN_WERETIGER:
         catch_lycanthropy = PM_WERETIGER;
+        break;
+    case PM_HUMAN_WEREPHANT:
+        catch_lycanthropy = PM_WEREPHANT;
         break;
     case PM_NURSE:
         if (Upolyd)

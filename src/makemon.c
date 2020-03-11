@@ -240,6 +240,9 @@ register struct monst *mtmp;
             case PM_WATCH_CAPTAIN:
                 w1 = rn2(2) ? LONG_SWORD : SABER;
                 break;
+            case PM_RONIN:
+                w1 = KATANA;
+                break;
             default:
                 if (!rn2(4))
                     w1 = DAGGER;
@@ -1043,6 +1046,19 @@ register struct monst *mtmp;
             (void) mongets(mtmp, SCR_EARTH);
             (void) mongets(mtmp, SCR_TELEPORTATION);
             (void) mongets(mtmp, EXPENSIVE_CAMERA);
+        } else if (ptr == &mons[PM_DARK_KNIGHT]) {
+            (void) mongets(mtmp, LARGE_SHIELD);
+            (void) mongets(mtmp, LOW_BOOTS);
+            (void) mongets(mtmp, GLOVES);
+            (void) mongets(mtmp, FLAIL);
+            (void) mongets(mtmp, PLATE_MAIL);
+        } else if (ptr == &mons[PM_NECROMANCER]) {
+            (void) mongets(mtmp, rn2(10) ? ATHAME : QUARTERSTAFF);
+        } else if (ptr == &mons[PM_ULSFARK]) {
+            (void) mongets(mtmp, rn2(2) ? BATTLE_AXE : AXE);
+            /* TODO: Implement pelts */
+        } else if (ptr == &mons[PM_RONIN]) {
+            (void) mongets(mtmp, SPLINT_MAIL);
         }
         break;
     case S_VAMPIRE:
@@ -1626,6 +1642,9 @@ int mmflags;
         switch (mndx) {
             case PM_KNIGHT:
                 mount_monster(mtmp, !rn2(2) ? PM_PONY : PM_HORSE);
+                break;
+            case PM_DARK_KNIGHT:
+                mount_monster(mtmp, Inhell ? PM_NIGHTMARE : PM_PONY);
                 break;
             case PM_DRAGONMASTER:
                 mount_monster(mtmp, PM_BABY_GRAY_DRAGON + 

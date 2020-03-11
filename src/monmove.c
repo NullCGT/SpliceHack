@@ -1115,7 +1115,7 @@ register int after;
 #endif
 
     /* jump toward the player if that lies in our nature */
-    if (can_jump(mtmp) || is_jumper(ptr)) {
+    if ((can_jump(mtmp) || is_jumper(ptr)) && !has_erid(mtmp)) {
         int dist = dist2(mtmp->mx, mtmp->my, u.ux, u.uy);
         if (!mtmp->mpeaceful && !rn2(3) && dist <= 20 && dist > 8) {
             int x = u.ux - mtmp->mx;

@@ -1719,8 +1719,16 @@ boolean at_stairs, falling, portal;
                 break;
 
         if (!ttrap) {
-            /* panic("goto_level: no corresponding portal!"); */
-            u_on_rndspot((up ? 1 : 0) | (was_in_W_tower ? 2 : 0));
+            if (u.uevent.qexpelled
+                && (Is_qstart(&u.uz0) || Is_qstart(&u.uz))) {
+                /* we're coming back from or going into the quest home level,
+                   after already getting expelled once. The portal back
+                   doesn't exist anymore - see expulsion(). */
+                u_on_rndspot(0);
+            } else {
+                /* TODO: Drop this once the void is redone. */
+                /* panic("goto_level: no corresponding portal!"); */
+            }
         } else {
             seetrap(ttrap);
             u_on_newpos(ttrap->tx, ttrap->ty);

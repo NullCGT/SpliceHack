@@ -1,4 +1,4 @@
-$NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.125 $ $NHDT-Date: 1583708535 2020/03/08 23:02:15 $
+$NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.127 $ $NHDT-Date: 1583881126 2020/03/10 22:58:46 $
 
 General Fixes and Modified Features
 -----------------------------------
@@ -70,6 +70,9 @@ generate objects (eg. statues) with genocided or extinct monster classes
 	in special levels, if requested
 if the orc-town version of mine town has been loaded, creation of orc zombies
 	or orc mummies would name them as part of the town raiding orc clan
+when punished, involuntarily teleporting and landing within chain range of
+	attached ball while encumbered worse than burdened could trigger
+	"remove_object: obj not on floor" panic on hero's next move
 
 
 Fixes to 3.7.0-x Problems that Were Exposed Via git Repository
@@ -109,6 +112,7 @@ reinstate ranked ordering of the status condition fields
 grammar for messages about a monster removing items from a container was bad
 some new status conditions didn't always update when they should
 fix flipping non-existent stairs and ladders (github #311)
+fix door created into random wall or position opening into solid wall
 
 
 Platform- and/or Interface-Specific Fixes

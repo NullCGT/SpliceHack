@@ -683,6 +683,8 @@ curses_print_glyph(winid wid, XCHAR_P x, XCHAR_P y, int glyph,
         if ((special & MG_STAIRS) && iflags.hilite_hidden_stairs) {
             color = 16 + (color * 2);
 
+        /* } else if (iflags.use_inverse) {
+	        attr = A_REVERSE; */
         } else {
 
             if ((special & MG_OBJPILE) && iflags.hilite_pile) {

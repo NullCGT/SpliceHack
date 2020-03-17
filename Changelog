@@ -93,6 +93,8 @@ Misc. Changes
 - Changed the name of death maggots to corpseworms.
 - Circe's Witchstaff only transforms monsters into pigs now.
 - Added many new demon and angel maledictions.
+- Many monsters are capable of charging at the player from a distance, allowing
+  them to cover large distances quickly.
 
 Balance
 - Stop randomly generating penguins, since the fact that eating them makes the

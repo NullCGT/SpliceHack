@@ -1139,6 +1139,17 @@ register int after;
         }
     }
 
+    /* charge the player, if we are able to do so */
+    if (!mtmp->mpeaceful && is_charger(mtmp->data) && !mintrap(mtmp) 
+        && !mtmp->mflee
+        && lined_up(mtmp) && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) >= 5) {
+        if (canseemon(mtmp)) {
+            pline(Hallucination ? "%s glomps%s!" : "%s charges%s!", Monnam(mtmp), 
+                (mtmp->mux = u.ux && mtmp->muy == u.uy) ? " you" : "");
+        }
+        mhurtle(mtmp, u.ux - mtmp->mx, u.uy - mtmp->my, 5);
+    }
+
     /* teleport if that lies in our nature */
     if (ptr == &mons[PM_TENGU] && !rn2(5) && !mtmp->mcan
         && !tele_restrict(mtmp)) {

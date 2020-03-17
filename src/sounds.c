@@ -418,6 +418,13 @@ callout_sound(mtmp)
 register struct monst *mtmp;
 {
     const char *ret;
+
+    static const char *const helpmsg[] = {
+        "Over here!",
+        "Someone help!",
+        "Allies, to me!",
+        "To me, friends!"
+    };
     switch (mtmp->data->msound) {
     case MS_BARK:
         ret = "howl";
@@ -453,9 +460,10 @@ register struct monst *mtmp;
         verbalize("Look, siblings: Fresh blood.");
         ret = NULL;
         break;
+    case MS_HUMANOID:
     case MS_SOLDIER:
     case MS_BRIBE:
-        pline("%s yells, \"Over here!\"", Monnam(mtmp));
+        pline("%s yells, \"%s\"", Monnam(mtmp), helpmsg[rn2(SIZE(helpmsg))]);
         ret = NULL;
         break;
     case MS_SELL:

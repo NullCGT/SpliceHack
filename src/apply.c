@@ -4164,6 +4164,8 @@ doapply()
     case HARP:
     case MAGIC_HARP:
     case BUGLE:
+    case LUTE:
+    case BAGPIPE:
     case LEATHER_DRUM:
     case DRUM_OF_EARTHQUAKE:
         res = do_play_instrument(obj);

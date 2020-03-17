@@ -3354,6 +3354,7 @@ struct obj* obj;
         case FLUTE:
         case MAGIC_FLUTE:
         case HARP:
+        case LUTE:
         case MAGIC_HARP:
             return resonant_materials;
         case TOOLED_HORN:

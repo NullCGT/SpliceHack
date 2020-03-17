@@ -405,6 +405,32 @@ boolean foundyou;
         } else
             dmg = d((int) mtmp->m_lev / 2 + 1, 6);
         break;
+    case AD_LAWS:
+        switch(rn2(4)) {
+        case 0:
+            pline("%s sues you!", Monnam(mtmp));
+            stealgold(mtmp);
+            dmg = 0;
+            break;
+        case 1:
+            pline("%s hits you with an injunction!", Monnam(mtmp));
+            break;
+        case 2:
+            pline("%s files a restraining order against you!", Monnam(mtmp));
+            if (Free_action) {
+                nomul(-rnd(mtmp->m_lev));
+                g.multi_reason = "restrained via restraining order";
+            } else {
+                shieldeff(u.ux, u.uy);
+                You("weasel your way out of it!");
+            }
+            break;
+        default:
+            pline("%s slaps you with a slap suit!", Monnam(mtmp));
+            make_stunned((HStun & TIMEOUT) + (long) rn2(10), TRUE);
+            break;
+        }
+        break;
     case AD_SPEL: /* wizard spell */
     case AD_CLRC: /* clerical spell */
     {
@@ -1172,6 +1198,11 @@ castmm(mtmp, mdef, mattk)
          		} else
                 dmg = d((int)mtmp->m_lev/2 + 1,6);
          		break;
+        case AD_LAWS:
+            if (canspotmon(mdef)) {
+                pline("%s get hit with a cease and desist!", Monnam(mdef));
+            }
+            break;
    	    case AD_SPEL:	/* wizard spell */
    	    case AD_CLRC: /* clerical spell */
    	    {

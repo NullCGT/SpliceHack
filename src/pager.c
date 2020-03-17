@@ -646,6 +646,7 @@ static const char * damagetypes[] = {
     "fumbling",
     "knockback",
     "withering",
+    "prosecution",
     "clerical",
     "arcane",
     "random breath",
@@ -1147,6 +1148,8 @@ add_obj_info(winid datawin, short otyp)
         case FROST_HORN:
         case HARP:
         case MAGIC_HARP:
+        case LUTE:
+        case BAGPIPE:
             subclass = "tonal instrument";
             break;
         case HORN_OF_BLASTING:

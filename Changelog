@@ -57,6 +57,15 @@ New Monsters
 - New Monster: Werephant
   - It's a were-elephant. I'm not sorry.
   - Unintentionally YAFM: "The werephant turns into a phant."
+- New Monster: Winter Wolf Pup
+  - Not randomly generated. Pets for Valkyries.
+- New Monster: Ulsfark
+- New Monster: Lawyer
+- New Monster: Ronin
+- New Monster: Ancient Thornswell
+- New Monster: Necromancer
+  - All of these monsters are role-specific, and generally not seen
+    when not playing those roles.
 
 New Items
 - New Item: Wand of Water
@@ -76,6 +85,13 @@ New Items
 - New Item: Horn of Blasting
   - Functions like a frost or fire horn, but releases sonic energy instead.
   - Examining it reveals its subclass as "theoretically tonal instrument."
+- New Item: Lute
+  - Starting musical instrument.
+  - Hard to play, but has a chance of removing confusion.
+- New Item: Bagpipes
+  - Starting musical instrument.
+  - Playing it aggravtes monsters, unless you play them well, in which case
+    it exercises charisma.
 
 New Race
 - New Race: Changeling
@@ -86,6 +102,29 @@ New Race
   - Do not passively gain hit points without a special source of regeneration,
     unless polymorphed.
   - Hate iron in their natural form.
+
+Roles
+- Valkyries begin the game with a pet winter wolf pup. It is very weak initially,
+  but will grow up into a powerful pet.
+- Each role has a speciifc monster associated with it. That monster goes from G_NOGEN
+  to be randomly generated when playing that role.
+    - Archaeologist: Bone beast
+    - Barbarian: Minotaur
+    - Caveman: T Rex
+    - Cartomancer: ????
+    - Convict: Water Moccasin
+    - Dragonmaster: Baby red dragon
+    - Healer: Necromancer
+    - Knight: Dark Knight
+    - Monk: ?????
+    - Priest: Skeleton 
+    - Pirate: Ninja
+    - Rogue: Lava demon
+    - Ranger: Ancient Thornswell
+    - Samurai: Ronin
+    - Tourist: Lawyer
+    - Valkyrie: Ulsfark
+    - Wizard: Baby red dragon
 
 Misc. Changes
 - Changed the name of substance warpers to transmuters.
@@ -113,6 +152,7 @@ Balance
 - Mummies can now cause the player to start withering on hit.
 - Giant mummies can clobber the player, similar to giants.
 - High Priests resist death.
+- T Rexes do not randomly spawn and are much much stronger.
 
 Notable Bug Fixes
 - Water elementals can be neutral deific minions agian.

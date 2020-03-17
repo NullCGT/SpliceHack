@@ -319,9 +319,11 @@ pc_speaker(struct obj *instr, char *tune)
         octave = 2; /* drop two octaves */
         break;
     case BUGLE:
+    case BAGPIPE:
         break;
     case PEA_WHISTLEHARP:
     case MAGIC_HARP:
+    case LUTE:
         length = 8;
         mtype = 'L'; /* fast, legato */
         break;

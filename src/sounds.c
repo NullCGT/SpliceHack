@@ -1587,7 +1587,9 @@ tiphat()
         /* if this monster is waiting for something, prod it into action */
         mtmp->mstrategy &= ~STRAT_WAITMASK;
 
-        if (vismon && humanoid(mtmp->data) && mtmp->mpeaceful && !Conflict) {
+        if (mtmp->data == &mons[PM_HEADLESS_HORSEMAN]) {
+            setmangry(mtmp, TRUE);
+        } else if (vismon && humanoid(mtmp->data) && mtmp->mpeaceful && !Conflict) {
             if ((otmp = which_armor(mtmp, W_ARMH)) == 0) {
                 pline("%s waves.", Monnam(mtmp));
             } else if (otmp->cursed) {

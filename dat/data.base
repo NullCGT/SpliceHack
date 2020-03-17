@@ -232,10 +232,6 @@ fused *
 merged *
 	These unstable hybrids are a combination of many different
 	monsters forcibly merged into a single body.
-antigulp
-	Creator of SpliceHack. Likes working with undocumented code
-	and making sandwiches. If your game crashes, you know who
-	to blame.
 amaterasu omikami
 	The Shinto sun goddess, Amaterasu Omikami is the central
 	figure of Shintoism and the ancestral deity of the imperial
@@ -300,6 +296,10 @@ amulet of yendor
 	immortality to the adventurer who can deliver it from the
 	depths of Moloch's Sanctum and offer it on the appropriate high
 	altar on the Astral Plane.
+ancient thornswell
+* thornswell
+	If a tree falls on someone in the forest and no one is around
+	to hear it, will anyone hear that person scream?
 angel*
 *angel
 avatar*
@@ -355,6 +355,10 @@ ant
 	fiercely as its small, distant cousin.  Various varieties
 	exist, and they are known and feared for their relentless
 	persecution of their victims.
+antigulp
+	Creator of SpliceHack. Likes working with undocumented code
+	and making sandwiches. If your game crashes, you know who
+	to blame.
 anu
 	Anu was the Babylonian god of the heavens, the monarch of
 	the north star.  He was the oldest of the Babylonian gods,
@@ -594,7 +598,14 @@ barghest
 	the tale. Some believe that they are an omen of bad luck,
 	while others believe the barghest to be a shapeshifter or
 	some type of gremlin.
+bar-lgura
+	When strong, avoid them. If of high morale, depress them. 
+	Seem humble to fill them with conceit. If at ease, exhaust them. 
+	If united, separate them. Attack their weaknesses. 
+	Emerge to their surprise.
+		[ The Art of War, by Sun Tzu ]
 baseball bat
+bat from hell
 	The sneer is gone from Casey’s lip, his teeth are clenched in hate,
 	He pounds with cruel violence his bat upon the plate;
 	And now the pitcher holds the ball, and now he lets it go,
@@ -693,6 +704,7 @@ blind io
 	own.  Several were currently hovering above the table.
 	    [ The Colour of Magic, by Terry Pratchett ]
 boar
+pig
 	My memory...hehe. King Robert Baratheon...murdered by a pig. 
 	Give me something for the pain, and let me die.
 		[ A Game of Thrones, by George R.R. Martin ]
@@ -1061,7 +1073,7 @@ chameleon
 	with such ferocity that Bink's mirth abated.  If its malice
 	could strike him, he would be horribly dead.
 		[ A Spell for Chameleon, by Piers Anthony ]
-changeling
+changeling *
 shifter
 	She looked upon the child, with its perfect curly hair and
 	round, ebullient face, and she wept.
@@ -1102,6 +1114,15 @@ large box
 	glittering cascade, they gave forth the sound of hail beating
 	against the windowpanes.
 		[ The Count of Monte Cristo, by Alexandre Dumas ]
+chicken
+	C - That's the way it begins
+	H - Is the next letter in
+	I - Is the middle of the word
+	C - You've already heard
+	K - That's the name of the hen
+	E - Now you're nearing the N
+	C - H - I - C - K - E - N, that's the way you spell chicken!
+		[Unknown]
 chih*sung*tzu
 	A character in Chinese mythology noted for bringing about the
 	end of a terrible drought which threatened the survival of
@@ -1424,7 +1445,6 @@ lord of the foocubi
 	For love is no part of the dreamworld. Love belongs to Desire,
 	and Desire is always cruel.
 		[ The Sandman, by Neil Gaiman ]
-
 dark one
 	... But he ruled rather by force and fear, if they might
 	avail; and those who perceived his shadow spreading over the
@@ -1682,6 +1702,9 @@ dread pirate roberts
  	Pirate Roberts either. His name was Cummerbund. The real
  	Roberts has been retired 15 years and living like a king in
  	Patagonia.'
+dream thief
+	To sleep, perchance, to dream.
+		[ Hamlet, by William Shakespeare ]
 drop bear
 	A drop bear (sometimes dropbear) is a hoax in contemporary 
 	Australian folklore featuring a predatory, carnivorous version of the koala.
@@ -1775,6 +1798,9 @@ earmuffs
 earthshark
 	Some sharks swim not through water, but through land. These beasts
 	are also notable for their uncommonly good jumping ability.
+echidna
+	The echidna enjoys flexing its muscles, but it has a strange aversion
+	to laughter. Natural enemies of the echidna include hedgehogs.
 eel
 giant eel
 	The behaviour of eels in fresh water extends the air of
@@ -1786,6 +1812,12 @@ giant eel
 	rather than dead creatures and are not habitual eaters of
 	carrion.
 	    [ Freshwater Fishes of Canada, by Scott and Crossman ]
+efreet
+	Efreeti are cousins of djinn that are native to the elemental plane
+	of Fire, and are particularly common in the City of Brass. Like djinn,
+	efreeti are capable of granting wishes. Unlike djinn, however, 
+	efreeti are not opposed to making their own wishes when their lives
+	are in danger.
 egg
 	But I asked why not keep it and let the hen sit on it till it
 	hatched, and then we could see what would come out of it.
@@ -1976,6 +2008,8 @@ eyes of the overworld
 	Usually, there is nothing to be seen.  However, the wearer
 	is also able to look back and see the area around herself,
 	much like looking on a map.  Why anyone would want to ...
+failure eidolon
+	Fbzrgvzrf, gur wbhearl bs n ureb vf phg fubeg.
 fedora
 	Some hats can only be worn if you're willing to be jaunty, to set
 	them at an angle and to walk beneath them with a spring in your
@@ -2288,6 +2322,8 @@ giant fly
 	These enormous insects are little threat to experienced
 	dungeoneers. The maddening buzz of their wings is quickly
 	silenced by the strike of a blade.
+glowing eye
+	The soul shines with a light that can pierce any darkness.
 gnoll*
 	These bipedal hyenas serve Yeenoghu, and are almost unmatched
 	in combat.
@@ -2593,6 +2629,11 @@ hermes
 hezrou
 	"Hezrou" is the common name for the type II demon.  It is
 	among the weaker of demons, but still quite formidable.
+hippo
+hippopo*
+	Hippos are deceptively dangerous animals, and should be
+	treated with great caution. Disturbing a hungry, hungry
+	animal is not to be treated lightly, after all.
 hippocrates
 	Greek physician, recognized as the father of medicine.  He
 	is believed to have been born on the island of Cos, to have
@@ -3236,6 +3277,9 @@ kos
 	dooms, by the brown bones of Nalgron my father and by his
 	sword Graywand here at my side!"
 	   [ Swords and Deviltry, by Fritz Leiber ]
+kostchtchie
+	Kostchtchie holds dominion over long forgotten, long frozen
+	wastes.
 koto
 	A Japanese harp.
 *kraken
@@ -3347,6 +3391,9 @@ lava
 	already hellish scene.  A dark, forboding passage exits to the
 	south.
 		[ Adventure, by Will Crowther and Don Woods. ]
+lawyer
+	If there were no bad people, there would be no good lawyers.
+		[ Charles Dickens ]
 leash
 	They had splendid heads, fine shoulders, strong legs, and
 	straight tails.  The spots on their bodies were jet-black and
@@ -4098,6 +4145,10 @@ neanderthal*
 	1.  Valley between Duesseldorf and Elberfeld in Germany,
 	where an ancient skull of a prehistoric ancestor to modern
 	man was found.  2.  Human(oid) of the race mentioned above.
+necromancer
+	I never had many friends, growing up. Then I went to the local
+	graveyard, and found all the friends I could ask for.
+		[]
 neferet
 neferet the green
 	Neferet the Green holds office in her hidden tower, only
@@ -4448,6 +4499,9 @@ pelias
 	Pelias cryptically.  "You see my fleshy guise, he saw my naked
 	soul."
 	    [ Conan the Usurper, by Robert E. Howard and L. Sprague de Camp ]
+* penguin
+	The answer to every problem involved penguins.
+		[ Throne of Fire, by Rick Riordan ]
 phoenix
 	"Fawkes is a phoenix, Harry. Phoenixes burst into flame when it
 	is time for them to die and are reborn from the ashes."
@@ -4580,6 +4634,8 @@ platinum yendorian express card
 	the carrier by half.  It also protects from magic missile
 	attacks.  Finally, its power is such that when invoked, it
 	can charge other objects.
+platypus
+	A creature of intense contradiction.
 # playing style, rather vague topic but these quotes are too apt to pass up
 player
 play* style
@@ -4991,6 +5047,9 @@ rock mole
 	eat anything they come across in their diggings, although it
 	is still unknown how they convert some of these things into
 	something of nutritional value.
+rodent of unusual size
+	Rodents of unusual size? I don't think they exist.
+		[The Princess Bride]
 rodent*
 	A gnawing mammal (order _Rodentia_) having in each jaw two
 	(rarely four) incisors, growing continually from persistent
@@ -5296,6 +5355,7 @@ shito
 *shopkeeper
 arms dealer
 one-eyed sam
+extraplanar merchant
 	There have been three general theories put forward to explain
 	the phenomenon of the wandering shops or, as they are
 	generically known, _tabernae vagantes._
@@ -5329,6 +5389,18 @@ screamer
 	its fetid bulk looming overhead... The monster was some kind of
 	great dark worm, but that was about all they were sure of.
 		[ The Adventurers, Epic IV, by Thomas A. Miller ]
+sin
+seven *sins
+wrath
+pride
+greed
+gluttony
+lust
+pride
+envy
+	You will always be fond of me. I represent to you all the sins
+	you never had the courage to commit.
+		[ A Portrait of Dorian Grey, by Oscar Wilde ]
 throwing star
 shuriken
 	You know, that's what I hate most about fighting against magic:
@@ -5720,6 +5792,9 @@ thug
 	for another 50 years or so.
 	In common parlance the word is used for any violent "tough".
 		[ Brewer's Concise Dictionary of Phrase and Fable ]
+thriae
+thriea
+	Trifling with bee maidens often leads to getting stung.
 tiger
 	1.  A well-known tropical predator (_Felis tigris_): a
 	feline.  It has a yellowish skin with darker spots or
@@ -5968,6 +6043,8 @@ tyr
 	at the place now called 'the wolf's joint;' and Tyr is one-
 	handed, and is not called a reconciler of men.
 			[ The Prose Edda, by Snorri Sturluson ]
+ulsfark
+	Ulsfarks are male berserkers clad in the pelts of wolves.
 *hulk
 	Umber hulks are powerful subterranean predators whose
 	iron-like claws allow them to burrow through solid stone in
@@ -6281,6 +6358,7 @@ wizard of yendor
 wolf
 *wolf
 *wolf cub
+*wolf pup
 	The ancestors of the modern day domestic dog, wolves are
 	powerful muscular animals with bushy tails.  Intelligent,
 	social animals, wolves live in family groups or packs made
@@ -6379,6 +6457,9 @@ fell beast
 	Later, all you will be able to remember are its eyes.  They
 	are rich mud-brown, and they hold your own without effort.
 		[ Hunter, In Darkness, by Andrew Plotkin ]
+*wurm
+	I vote for outer space. No way these are local boys.
+		[Earl Basset, Tremors]
 xan
 	They sent their friend the mosquito [xan] ahead of them to
 	find out what lay ahead.  "Since you are the one who sucks
@@ -6447,3 +6528,5 @@ zouthern animal
 zruty
 	The zruty are wild and gigantic beings, living in the
 	wildernesses of the Tatra mountains.
+*zuggotomoy
+	Demon queen of fungi and foe of Juiblex.

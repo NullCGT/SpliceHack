@@ -1473,6 +1473,7 @@ register struct attack *mattk;
                 pline("Your memories seem muddled for a moment.");
             }
             forget_objects(2); /* lose memory of 2% of objects */
+            forget_levels(2); /* lose memory of 2% of levels */
         }
         break;
     case AD_PLYS:

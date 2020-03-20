@@ -811,6 +811,8 @@ int mntmp;
             pline(use_thec, monsterc, "use your breath weapon");
         if (attacktype(g.youmonst.data, AT_SPIT))
             pline(use_thec, monsterc, "use your ranged attack");
+        if (attacktype(g.youmonst.data, AT_VOLY))
+            pline(use_thec, monsterc, "use your ranged attack");
         if (g.youmonst.data->mlet == S_NYMPH)
             pline(use_thec, monsterc, "remove an iron ball");
         if (attacktype(g.youmonst.data, AT_GAZE))
@@ -1222,6 +1224,36 @@ dobreathe()
 }
 
 int
+dovolley()
+{
+    struct obj *otmp;
+    struct attack *mattk;
+    int i;
+    int numattacks;
+
+    if (!getdir((char *) 0))
+        return 0;
+    mattk = attacktype_fordmg(g.youmonst.data, AT_VOLY, AD_ANY);
+    if (!mattk) {
+        impossible("bad spit attack?");
+    } else {
+        switch (mattk->adtyp) {
+        case AD_QUIL:
+            otmp = mksobj(SPIKE, TRUE, FALSE);
+            break;
+        default:
+            impossible("bad attack type in dovolley");
+            otmp = mksobj(SPIKE, TRUE, FALSE);
+        }
+        otmp->spe = 1; /* to indicate it's yours */
+        numattacks = d(mattk->damn, mattk->damd);
+        for (i = 0; i < numattacks; i++)
+            throwit(otmp, 0L, FALSE, (struct obj *) 0);
+    }
+    return 1;
+}
+
+int
 dospit()
 {
     struct obj *otmp;
@@ -1234,9 +1266,6 @@ dospit()
         impossible("bad spit attack?");
     } else {
         switch (mattk->adtyp) {
-        case AD_QUIL:
-            otmp = mksobj(QUILL, TRUE, FALSE);
-            break;
         case AD_BLND:
         case AD_DRST:
             otmp = mksobj(BLINDING_VENOM, TRUE, FALSE);

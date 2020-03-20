@@ -3149,6 +3149,7 @@ const char *verb = 0; /* verb or body part */
 
         case AT_BREA:
         case AT_SPIT:
+        case AT_VOLY:
         case AT_GAZE: /* all done using #monster command */
             dhit = 0;
             break;

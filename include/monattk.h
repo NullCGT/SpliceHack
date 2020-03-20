@@ -26,9 +26,10 @@
 #define AT_GAZE 13  /* gaze - ranged */
 #define AT_TENT 14  /* tentacles */
 #define AT_SCRE 15  /* scream - sonic attack */
+#define AT_VOLY 16  /* launch projectiles (ex. manticore spikes) */
 
-#define AT_WEAP 16 /* uses weapon */
-#define AT_MAGC 17 /* uses magic spell(s) */
+#define AT_WEAP 17 /* uses weapon */
+#define AT_MAGC 18 /* uses magic spell(s) */
 #define LAST_AT AT_MAGC
 
 /*	Add new damage types below.
@@ -82,7 +83,7 @@
 #define AD_CORR 42  /* corrode armor (black pudding) */
 #define AD_VOID 43  /* disintegrate the target (void dragon) */
 #define AD_MEMR 44  /* forget 1% of items (memory hound) */
-#define AD_QUIL 45  /* quills (porcupine and manticore) */
+#define AD_QUIL 45  /* quills and spikes (porcupine and manticore) */
 #define AD_PITS 46  /* cause an earthquake (Lord Surtur) */
 #define AD_CNCL 47  /* cancel the player (beholder) */
 #define AD_DSRM 48  /* disarm the player */

@@ -576,6 +576,7 @@ static const char * attacktypes[] = {
     "gaze",
     "tentacle",
     "scream",
+    "volley",
     "weapon",
     "spellcast"
 };

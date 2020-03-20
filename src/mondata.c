@@ -290,7 +290,7 @@ ranged_attk(ptr)
 struct permonst *ptr;
 {
     register int i, atyp;
-    long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_GAZE);
+    long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_VOLY) | (1L << AT_GAZE);
 
     /* was: (attacktype(ptr, AT_BREA) || attacktype(ptr, AT_WEAP)
      *       || attacktype(ptr, AT_SPIT) || attacktype(ptr, AT_GAZE)

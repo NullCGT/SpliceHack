@@ -515,8 +515,9 @@ register struct monst *magr, *mdef;
             break;
 
         case AT_SPIT:
+        case AT_VOLY:
             if (!monnear(magr, mdef->mx, mdef->my)) {
-                strike = spitmm(magr, mattk, mdef);
+                strike = mattk->adtyp == AT_VOLY ? volleymm(magr, mattk, mdef) : spitmm(magr, mattk, mdef);
 
                 /* We don't really know if we hit or not; pretend we did. */
                 if (strike)
@@ -2124,6 +2125,7 @@ int aatyp;
     switch (aatyp) {
     case AT_NONE:
     case AT_SPIT:
+    case AT_VOLY:
     case AT_EXPL:
     case AT_BOOM:
     case AT_GAZE:

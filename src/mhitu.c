@@ -861,6 +861,10 @@ register struct monst *mtmp;
                 sum[i] = spitmu(mtmp, mattk);
             /* Note: spitmu takes care of displacement */
             break;
+        case AT_VOLY:
+            if (range2)
+                sum[i] = volleymu(mtmp, mattk);
+            break;
         case AT_WEAP:
             if (range2) {
                 if (!Is_rogue_level(&u.uz))

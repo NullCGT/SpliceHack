@@ -1118,7 +1118,7 @@ struct obj *obj;
                           && (objects[obj->otyp].oc_dir & PIERCE))
                       /* special cases [might want to add AXE] */
                       || obj->otyp == WAR_HAMMER || obj->otyp == AKLYS
-                      || obj->otyp == THROWING_AXE);
+                      || obj->otyp == THROWING_AXE || obj->otyp == SPIKE);
 }
 
 /* the currently thrown object is returning to you (not for boomerangs) */
@@ -2194,7 +2194,7 @@ struct obj *obj;
     case SLICE_OF_CAKE:
     case ACID_VENOM:
     case BLINDING_VENOM:
-    case QUILL:
+    case SPIKE:
         return 1;
     default:
         return 0;

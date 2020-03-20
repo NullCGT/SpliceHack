@@ -1361,6 +1361,7 @@ int after; /* this is extra fast monster movement */
        	if (( attacktype(mtmp->data, AT_BREA) ||
        	      attacktype(mtmp->data, AT_GAZE) ||
        	      attacktype(mtmp->data, AT_SPIT) ||
+              attacktype(mtmp->data, AT_VOLY) ||
        	     (attacktype(mtmp->data, AT_MAGC) &&
        	      (((attacktype_fordmg(mtmp->data, AT_MAGC, AD_ANY))->adtyp
        	         <= AD_PSYC))

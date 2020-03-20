@@ -1329,9 +1329,9 @@ OBJECT(OBJ(None, "splash of steaming venom"),
       VENOM_CLASS, 0, 0, 1, 0, 0, 0, 0, 0, 0, CLR_ORANGE),
 #endif
 /* manticore quills */
-OBJECT(OBJ("quill", "bony quill"),
+OBJECT(OBJ("spike", None),
       BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, BONE), 0,
-      VENOM_CLASS, 0, 0, 1, 0, 0, 0, 0, 0, 0, HI_ORGANIC),
+      VENOM_CLASS, 0, 0, 1, 0, 6, 6, 0, 0, 0, HI_ORGANIC),
 
 /* fencepost, the deadly Array Terminator -- name [1st arg] *must* be NULL */
 OBJECT(OBJ(None, None),

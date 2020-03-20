@@ -1694,6 +1694,8 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     case SPE_WEB:
     case SCR_WEB: {
         coord cc;
+        int i;
+        int webs = sblessed ? rn1(3, 3) : rn1(1, 2);
         g.known = TRUE;
         register struct trap *trtmp;
         if (confused) {
@@ -1712,23 +1714,25 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             }
             cc.x = u.ux;
             cc.y = u.uy;
-            pline("Where do you want to place a web?");
             getpos_sethilite(display_stinking_cloud_positions, get_valid_stinking_cloud_pos);
-            if (getpos(&cc, TRUE, "the desired position") < 0) {
-                pline1(Never_mind);
-                break;
+            for (i = 0; i < webs; i++) {
+                pline("Where do you want to place a web?");
+                if (getpos(&cc, TRUE, "the desired position") < 0) {
+                    pline1(Never_mind);
+                    break;
+                }
+                if (!is_valid_stinking_cloud_pos(cc.x, cc.y, FALSE))
+                    break;
+                trtmp = maketrap(cc.x, cc.y, WEB);
+                if (sblessed && trtmp) {
+                    seetrap(trtmp);
+                }
+                if (MON_AT(cc.x, cc.y)) {
+                    mintrap(m_at(cc.x, cc.y));
+                }
             }
-            if (!is_valid_stinking_cloud_pos(cc.x, cc.y, FALSE))
-                break;
-            trtmp = maketrap(cc.x, cc.y, WEB);
-            if (sblessed && trtmp) {
-                seetrap(trtmp);
-            }
-            if (MON_AT(cc.x, cc.y)) {
-                mintrap(m_at(cc.x, cc.y));
-            }
-          }
-          break;
+        }
+        break;
     }
     case SCR_TELEPORTATION:
         if (confused || scursed) {

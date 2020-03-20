@@ -1678,7 +1678,9 @@ boolean at_stairs, falling, portal;
         }
         mklev();
         new = TRUE; /* made the level */
+
         livelog_printf (LL_DEBUG, "entered new level %d, %s.", dunlev(&u.uz), g.dungeons[u.uz.dnum].dname );
+        familiar = (find_ghost_with_name(g.plname) != (struct monst *) 0);
     } else {
         /* returning to previously visited level; reload it */
         nhfp = open_levelfile(new_ledger, whynot);
@@ -1821,6 +1823,7 @@ boolean at_stairs, falling, portal;
     else if (Is_firelevel(&u.uz))
         fumaroles();
 
+    /* level forgotten due to amnesia */
     if (g.level_info[new_ledger].flags & FORGOTTEN) {
         forget_map(ALL_MAP); /* forget the map */
         forget_traps();      /* forget all traps too */

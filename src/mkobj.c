@@ -1256,11 +1256,6 @@ struct obj *body;
     int rot_adjust;
     short action;
 
-#define TAINT_AGE (50L)        /* age when corpses go bad */
-#define TROLL_REVIVE_CHANCE 37 /* 1/37 chance for 50 turns ~ 75% chance */
-#define MOLDY_CHANCE 290       /* 1/290 chance for 200 turns ~ 50% chance */
-#define ROT_AGE (250L)         /* age when corpses rot away */
-
     /* lizards and lichen don't rot or revive */
     if (body->corpsenm == PM_LIZARD || body->corpsenm == PM_LICHEN ||
         body->corpsenm == PM_LEGENDARY_LICHEN)

@@ -2406,7 +2406,6 @@ const char *s;
     return mptr;
 }
 
-
 void
 forget_mapseen(ledger_num)
 int ledger_num;

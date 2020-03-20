@@ -997,11 +997,9 @@ int percent;
  * Forget some things (e.g. after reading a scroll of amnesia).  When called,
  * the following are always forgotten:
  *      - felt ball & chain
- *      - traps
- *      - part (6 out of 7) of the map
+ *      - skill training
  *
  * Other things are subject to flags:
- *      howmuch & ALL_MAP       = forget whole map
  *      howmuch & ALL_SPELLS    = forget all spells
  */
 static void
@@ -1014,30 +1012,11 @@ int howmuch;
     if (Punished)
         u.bc_felt = 0; /* forget felt ball&chain */
 
-    forget_map(howmuch);
-    forget_traps();
-
-    /* 1 in 3 chance of forgetting some levels */
-    if (!rn2(3))
-        forget_levels(rn2(25));
-
-    /* 1 in 3 chance of forgetting some objects */
-    if (!rn2(3))
-        forget_objects(rn2(25));
-
     if (howmuch & ALL_SPELLS)
         losespells();
-    /*
-     * Make sure that what was seen is restored correctly.  To do this,
-     * we need to go blind for an instant --- turn off the display,
-     * then restart it.  All this work is needed to correctly handle
-     * walls which are stone on one side and wall on the other.  Turning
-     * off the seen bits above will make the wall revert to stone,  but
-     * there are cases where we don't want this to happen.  The easiest
-     * thing to do is to run it through the vision system again, which
-     * is always correct.
-     */
-    docrt(); /* this correctly will reset vision */
+
+    /* Forget some skills. */
+    drain_weapon_skill(rnd(howmuch ? 5 : 3));
 }
 
 /* monster is hit by scroll of taming's effect */
@@ -1972,8 +1951,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         break;
     case SCR_AMNESIA:
         g.known = TRUE;
-        forget((!sblessed ? ALL_SPELLS : 0)
-               | (!confused || scursed ? ALL_MAP : 0));
+        forget((!sblessed ? ALL_SPELLS : 0));
         if (Hallucination) /* Ommmmmm! */
             Your("mind releases itself from mundane concerns.");
         else if (!strncmpi(g.plname, "Maud", 4))

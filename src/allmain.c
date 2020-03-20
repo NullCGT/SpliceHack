@@ -1,4 +1,4 @@
-/* NetHack 3.6	allmain.c	$NHDT-Date: 1580044340 2020/01/26 13:12:20 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.138 $ */
+/* NetHack 3.6	allmain.c	$NHDT-Date: 1584405115 2020/03/17 00:31:55 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.143 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -209,6 +209,9 @@ boolean resuming;
                     g.monstermoves++; /* [obsolete (for a long time...)] */
                     g.moves++;
 
+                    if (flags.time && !g.context.run)
+                        iflags.time_botl = TRUE; /* 'moves' just changed */
+
                     /********************************/
                     /* once-per-turn things go here */
                     /********************************/
@@ -220,9 +223,7 @@ boolean resuming;
 
                     if (u.ublesscnt)
                         u.ublesscnt--;
-                    u.ublesstim++;
-                    if (flags.time && !g.context.run)
-                        iflags.time_botl = TRUE;
+
 #ifdef EXTRAINFO_FN
                     if ((prev_dgl_extrainfo == 0) || (prev_dgl_extrainfo < (g.moves + 250))) {
                         prev_dgl_extrainfo = g.moves;
@@ -500,8 +501,6 @@ boolean resuming;
             if (!g.multi) {
                 /* lookaround may clear multi */
                 g.context.move = 0;
-                if (flags.time)
-                    g.context.botl = TRUE;
                 continue;
             }
             if (g.context.mv) {
@@ -521,9 +520,6 @@ boolean resuming;
         }
         if (u.utotype)       /* change dungeon level */
             deferred_goto(); /* after rhack() */
-        /* !g.context.move here: multiple movement command stopped */
-        else if (flags.time && (!g.context.move || !g.context.mv))
-            g.context.botl = TRUE;
 
         if (g.vision_full_recalc)
             vision_recalc(0); /* vision! */

@@ -1,4 +1,4 @@
-/* NetHack 3.6	sp_lev.c	$NHDT-Date: 1582592810 2020/02/25 01:06:50 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.162 $ */
+/* NetHack 3.6	sp_lev.c	$NHDT-Date: 1584655714 2020/03/19 22:08:34 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.181 $ */
 /*      Copyright (c) 1989 by Jean-Christophe Collet */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -90,6 +90,7 @@ static void FDECL(sel_set_wallify, (int, int, genericptr_t));
 #endif
 static void NDECL(spo_end_moninvent);
 static void NDECL(spo_pop_container);
+static int FDECL(l_create_stairway, (lua_State *, BOOLEAN_P));
 static void FDECL(spo_endroom, (struct sp_coder *));
 static void FDECL(l_table_getset_feature_flag, (lua_State *, int, int, const char *, int));
 static void FDECL(sel_set_ter, (int, int, genericptr_t));
@@ -449,13 +450,14 @@ boolean extras;
     struct monst *mtmp;
     struct engr *etmp;
     struct mkroom *sroom;
+    timer_element *timer;
 
     get_level_extends(&minx, &miny, &maxx, &maxy);
     /* get_level_extends() returns -1,-1 to COLNO,ROWNO at max */
     if (miny < 0)
         miny = 0;
-    if (minx < 0)
-        minx = 0;
+    if (minx < 1)
+        minx = 1;
     if (maxx >= COLNO)
         maxx = (COLNO - 1);
     if (maxy >= ROWNO)
@@ -489,6 +491,9 @@ boolean extras;
 
     /* traps */
     for (ttmp = g.ftrap; ttmp; ttmp = ttmp->ntrap) {
+        if (ttmp->tx < minx || ttmp->tx > maxx
+            || ttmp->ty < miny || ttmp->ty > maxy)
+            continue;
 	if (flp & 1) {
 	    ttmp->ty = FlipY(ttmp->ty);
 	    if (ttmp->ttyp == ROLLING_BOULDER_TRAP) {
@@ -513,6 +518,9 @@ boolean extras;
 
     /* objects */
     for (otmp = fobj; otmp; otmp = otmp->nobj) {
+        if (otmp->ox < minx || otmp->ox > maxx
+            || otmp->oy < miny || otmp->oy > maxy)
+            continue;
 	if (flp & 1)
 	    otmp->oy = FlipY(otmp->oy);
 	if (flp & 2)
@@ -521,6 +529,9 @@ boolean extras;
 
     /* buried objects */
     for (otmp = g.level.buriedobjlist; otmp; otmp = otmp->nobj) {
+        if (otmp->ox < minx || otmp->ox > maxx
+            || otmp->oy < miny || otmp->oy > maxy)
+            continue;
 	if (flp & 1)
 	    otmp->oy = FlipY(otmp->oy);
 	if (flp & 2)
@@ -705,11 +716,27 @@ boolean extras;
 	    }
     }
 
+    /* timed effects */
+    for (timer = g.timer_base; timer; timer = timer->next) {
+        if (timer->func_index == MELT_ICE_AWAY) {
+            long ty = ((long)timer->arg.a_void) & 0xFFFF;
+            long tx = (((long)timer->arg.a_void) >> 16) & 0xFFFF;
+            if (flp & 1)
+                ty = FlipY(ty);
+            if (flp & 2)
+                tx = FlipX(tx);
+            timer->arg.a_void = (genericptr_t)((tx << 16) | ty);
+        }
+    }
+
     if (extras) {
-        if (flp & 1)
-            u.uy = FlipY(u.uy), u.uy0 = FlipY(u.uy0);
-        if (flp & 2)
-            u.ux = FlipX(u.ux), u.ux0 = FlipX(u.ux0);
+        /* flip hero location only if inside the flippable area */
+        if (!(u.ux < minx || u.ux > maxx || u.uy < miny || u.uy > maxy)) {
+            if (flp & 1)
+                u.uy = FlipY(u.uy), u.uy0 = FlipY(u.uy0);
+            if (flp & 2)
+                u.ux = FlipX(u.ux), u.ux0 = FlipX(u.ux0);
+        }
     }
 
     fix_wall_spines(1, 0, COLNO - 1, ROWNO - 1);
@@ -1073,6 +1100,14 @@ register int humidity;
     if ((humidity & HOT) && is_lava(x, y))
         return TRUE;
     return FALSE;
+}
+
+boolean
+pm_good_location(x, y, pm)
+int x, y;
+struct permonst *pm;
+{
+    return is_ok_location(x, y, pm_to_humidity(pm));
 }
 
 static unpacked_coord
@@ -3732,23 +3767,16 @@ struct sp_coder *coder UNUSED;
     update_croom();
 }
 
-/* stair("up"); */
-/* stair({ dir = "down" }); */
-/* stair({ dir = "down", x = 4, y = 7 }); */
-/* stair({ dir = "down", coord = {x,y} }); */
-/* stair("down", 4, 7); */
-/* TODO: stair(selection, "down"); */
-/* TODO: stair("up", {x,y}); */
-int
-lspo_stair(L)
+static int
+l_create_stairway(L, using_ladder)
 lua_State *L;
+boolean using_ladder;
 {
+    static const char *const stairdirs[] = { "down", "up", NULL };
+    static const int stairdirs2i[] = { 0, 1 };
     int argc = lua_gettop(L);
     xchar x = -1, y = -1;
     struct trap *badtrap;
-
-    static const char *const stairdirs[] = { "down", "up", NULL };
-    static const int stairdirs2i[] = { 0, 1 };
 
     long scoord;
     int ax = -1, ay = -1;
@@ -3765,9 +3793,7 @@ lua_State *L;
         ay = luaL_checkinteger(L, 3);
     } else {
         lcheck_param_table(L);
-
         get_table_xy_or_coord(L, &ax, &ay);
-
         up = stairdirs2i[get_table_option(L, "dir", "down", stairdirs)];
     }
 
@@ -3782,10 +3808,37 @@ lua_State *L;
     get_location_coord(&x, &y, DRY, g.coder->croom, scoord);
     if ((badtrap = t_at(x, y)) != 0)
         deltrap(badtrap);
-    mkstairs(x, y, (char) up, g.coder->croom);
     SpLev_Map[x][y] = 1;
 
+    if (using_ladder) {
+        levl[x][y].typ = LADDER;
+        if (up) {
+            xupladder = x;
+            yupladder = y;
+            levl[x][y].ladder = LA_UP;
+        } else {
+            xdnladder = x;
+            ydnladder = y;
+            levl[x][y].ladder = LA_DOWN;
+        }
+    } else {
+        mkstairs(x, y, (char) up, g.coder->croom);
+    }
     return 0;
+}
+
+/* stair("up"); */
+/* stair({ dir = "down" }); */
+/* stair({ dir = "down", x = 4, y = 7 }); */
+/* stair({ dir = "down", coord = {x,y} }); */
+/* stair("down", 4, 7); */
+/* TODO: stair(selection, "down"); */
+/* TODO: stair("up", {x,y}); */
+int
+lspo_stair(L)
+lua_State *L;
+{
+    return l_create_stairway(L, FALSE);
 }
 
 /* ladder("down"); */
@@ -3795,58 +3848,7 @@ int
 lspo_ladder(L)
 lua_State *L;
 {
-    static const char *const stairdirs[] = { "down", "up", NULL };
-    static const int stairdirs2i[] = { 0, 1 };
-    int argc = lua_gettop(L);
-    xchar x = -1, y = -1;
-    struct trap *badtrap;
-
-    long scoord;
-    int ax = -1, ay = -1;
-    int up;
-    int ltype = lua_type(L, 1);
-
-    create_des_coder();
-
-    if (argc == 1 && ltype == LUA_TSTRING) {
-        up = stairdirs2i[luaL_checkoption(L, 1, "down", stairdirs)];
-    } else if (argc == 3 && ltype == LUA_TSTRING) {
-        up = stairdirs2i[luaL_checkoption(L, 1, "down", stairdirs)];
-        ax = luaL_checkinteger(L, 2);
-        ay = luaL_checkinteger(L, 3);
-    } else {
-        lcheck_param_table(L);
-
-        get_table_xy_or_coord(L, &ax, &ay);
-
-        up = stairdirs2i[get_table_option(L, "dir", "down", stairdirs)];
-    }
-
-    x = ax;
-    y = ay;
-
-    if (x == -1 && y == -1)
-        scoord = SP_COORD_PACK_RANDOM(0);
-    else
-        scoord = SP_COORD_PACK(ax, ay);
-
-    get_location_coord(&x, &y, DRY, g.coder->croom, scoord);
-
-    if ((badtrap = t_at(x, y)) != 0)
-        deltrap(badtrap);
-    levl[x][y].typ = LADDER;
-    SpLev_Map[x][y] = 1;
-    if (up) {
-        xupladder = x;
-        yupladder = y;
-        levl[x][y].ladder = LA_UP;
-    } else {
-        xdnladder = x;
-        ydnladder = y;
-        levl[x][y].ladder = LA_DOWN;
-    }
-
-    return 0;
+    return l_create_stairway(L, TRUE);
 }
 
 /* grave(); */

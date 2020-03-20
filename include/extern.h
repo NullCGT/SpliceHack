@@ -1,4 +1,4 @@
-/* NetHack 3.6	extern.h	$NHDT-Date: 1583073988 2020/03/01 14:46:28 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.809 $ */
+/* NetHack 3.6	extern.h	$NHDT-Date: 1584405113 2020/03/17 00:31:53 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.814 $ */
 /* Copyright (c) Steve Creps, 1988.				  */
 /* NetHack may be freely redistributed.  See license for details. */
 /* Edited on 5/8/18 by NullCGT */
@@ -942,6 +942,7 @@ E int NDECL(dopickup);
 E void NDECL(lookaround);
 E boolean FDECL(crawl_destination, (int, int));
 E int NDECL(monster_nearby);
+E void FDECL(end_running, (BOOLEAN_P));
 E void FDECL(nomul, (int));
 E void FDECL(unmul, (const char *));
 E void FDECL(losehp, (int, const char *, BOOLEAN_P));
@@ -1562,6 +1563,7 @@ E void NDECL(kill_genocided_monsters);
 E void FDECL(golemeffects, (struct monst *, int, int));
 E boolean FDECL(angry_guards, (BOOLEAN_P));
 E void NDECL(pacify_guards);
+E struct monst *FDECL(find_ghost_with_name, (char *));
 E void FDECL(decide_to_shapeshift, (struct monst *, int));
 E boolean FDECL(vamp_stone, (struct monst *));
 E void NDECL(monst_globals_init);
@@ -2570,6 +2572,7 @@ E void FDECL(selection_free, (struct selectionvar *, BOOLEAN_P));
 E void FDECL(set_selection_floodfillchk, (int FDECL((*), (int,int))));
 E void FDECL(selection_floodfill, (struct selectionvar *, int, int,
                                    BOOLEAN_P));
+E boolean FDECL(pm_good_location, (int, int, struct permonst *));
 E void FDECL(get_location_coord, (schar *, schar *, int, struct mkroom *,
                                   long));
 E void FDECL(selection_setpoint, (int, int, struct selectionvar *, XCHAR_P));
@@ -3067,6 +3070,7 @@ E void FDECL(unrestrict_weapon_skill, (int));
 E void FDECL(use_skill, (int, int));
 E void FDECL(add_weapon_skill, (int));
 E void FDECL(lose_weapon_skill, (int));
+E void FDECL(drain_weapon_skill, (int));
 E int FDECL(weapon_type, (struct obj *));
 E int NDECL(uwep_skill_type);
 E int FDECL(weapon_hit_bonus, (struct obj *));

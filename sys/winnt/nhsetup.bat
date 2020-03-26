@@ -98,14 +98,14 @@ SET MSVCVERSION=2015
 :fallback
 echo Using VS%MSVCVERSION%.
 set SRCPATH=%WIN32PATH%\vs%MSVCPROJ%
-echo NetHack VS%MSVCVERSION% project files are in %SRCPATH%
+echo SpliceHack VS%MSVCVERSION% project files are in %SRCPATH%
 goto :done
 
 :err_win
-echo Some of the files needed to build graphical NetHack
+echo Some of the files needed to build graphical SpliceHack
 echo for Windows are not in the expected places.
 echo Check "Install.nt" for a list of the steps required 
-echo to build NetHack.
+echo to build SpliceHack.
 goto :fini
 
 :err_dir

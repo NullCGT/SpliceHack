@@ -265,15 +265,15 @@ struct monst* mtmp;
         return TRUE;
     }
     else if (mondx == PM_WIZARD_OF_YENDOR) {
-        com_pager("wizard_of_yendor");
+        com_pager("Wizard_of_Yendor");
         return TRUE;
     }
     else if (mondx == PM_VLAD_THE_IMPALER) {
-        com_pager("vlad_the_impaler");
+        com_pager("Vlad_the_Impaler");
         return TRUE;
     }
     else if (mondx == PM_ENVY) {
-        com_pager("envy");
+        com_pager("Envy");
         return TRUE;
     }
 #if 0 /* Deferred because currently this would hardly ever happen. */
@@ -456,13 +456,17 @@ register struct monst *mtmp;
         if (mon_has_amulet(mtmp))
             demand = cash + (long) rn1(1000, 40);
 
+        pline("%s demands %ld %s for safe passage.", Amonnam(mtmp), demand,
+              currency(demand));
+
         offer = 0L;
-        if (!Deaf && ((offer = bribe(mtmp)) == demand + 1 || offer == demand)) {
+        if (!Deaf) offer = bribe(mtmp);
+        if (!Deaf && (offer == demand + 1 || offer == demand)) {
             pline("%s vanishes, commenting on the cheekiness of mortals.",
                   Amonnam(mtmp));
             livelog_printf(LL_UMONST, "bribed %s with %ld %s for safe passage",
                         Amonnam(mtmp), offer, currency(offer));
-        } else if (!Deaf && ((offer = bribe(mtmp)) >= demand)) {
+        } else if (!Deaf && (offer >= demand)) {
             pline("%s vanishes, laughing about cowardly mortals.",
                   Amonnam(mtmp));
             livelog_printf(LL_UMONST, "bribed %s with %ld %s for safe passage",

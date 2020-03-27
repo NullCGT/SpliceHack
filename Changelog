@@ -66,6 +66,10 @@ New Monsters
 - New Monster: Necromancer
   - All of these monsters are role-specific, and generally not seen
     when not playing those roles.
+- New Monster: Pazuzu
+  - Demon prince, can be summoned by other demons.
+  - Always starts out as peaceful and asks the player for a bribe, unlike
+    other unique demons.
 
 New Items
 - New Item: Wand of Water
@@ -183,6 +187,8 @@ Notable Bug Fixes
 - Implemented a partial fix for the monster weapon switching bug.
 - Fixed some odd language with substance warpers / transmuters.
 - Fixed transmuters not updating inventory correctly.
+- Fixed demon lords being con artists, and demanding money from the player 
+  several times in a row.
                     
                     Version 0.7.0: Stranger Days
 

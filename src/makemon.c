@@ -779,6 +779,10 @@ register struct monst *mtmp;
         case PM_DISPATER:
             (void) mpickobj(mtmp, mkobj(SPBOOK_no_NOVEL, FALSE));
             break;
+        case PM_PAZUZU:
+            (void) mongets(mtmp, !rn2(2) ? LONG_SWORD : SABER);
+            (void) mongets(mtmp, !rn2(2) ? LARGE_SHIELD : HIDE_SHIELD);
+            break;
         case PM_KOSTCHTCHIE:
             (void) mongets(mtmp, CLUB);
             (void) mongets(mtmp, BOULDER);

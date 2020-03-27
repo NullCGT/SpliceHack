@@ -10040,6 +10040,25 @@ Z = (195, 195, 195)
   ...ACHAAAHHA.AA.
   ..AHKKAAAKKHAAA.
 }
+# tile 514 (Pazuzu)
+{
+  ................
+  .......ZZ.......
+  ......ZZZZ......
+  .....HZZDZ......
+  .KK.HHHZZZ..KKK.
+  .KKKHHZZZZ.KKKK.
+  .KKKKKAZZAKKKKK.
+  .KKKKJJAAJJKKKK.
+  .KKKJJJJJJJJKKK.
+  .KKKJKJJJJKJKKK.
+  .KKKJAJJJJAJKKK.
+  .KAADAGFGFADAAK.
+  ....AAGAAFAAAAA.
+  ......FAAFAA.AA.
+  .....GFA.FGA....
+  ................
+}
 # tile 514 (Kostchtchie)
 {
   .....BEEEEAA....

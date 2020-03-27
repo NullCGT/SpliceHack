@@ -188,7 +188,7 @@ in the attempt.  Your hour of destiny has come.  For
 the sake of us all:  Go bravely with %d!
          ]],
       },
-      juiblex = {
+      Juiblex = {
          synopsis = "[Juiblex appears!]",
          output = "menu",
          text = [[
@@ -201,7 +201,7 @@ struggle not to let it push you back.
 Juiblex, the Faceless Lord, has arrived.
          ]],
       },
-      zuggotomoy = {
+      Zuggotomoy = {
          synopsis = "[Zuggotomoy appears!]",
          output = "menu",
          text = [[The thing that rises up in front of you is humanoid, but only just. Its skin
@@ -211,7 +211,7 @@ off into a mass of fungoid tendrils.
          
 Zuggotomoy, the Queen of Fungi, is here.]],
       },
-      buer = {
+      Buer = {
          synopsis = "[Buer appears!]",
          output = "menu",
          text = [[Before you is a bizarre creature. Most of its body is the head of an enormous
@@ -221,7 +221,16 @@ serrated teeth.
 
 Buer has come out to hunt.]],
       },
-      kostchtchie = {
+      Pazuzu = {
+         synopsis = "[Pazuzu appears!]",
+         output = "menu",
+         text = [[Your nose is filled with the scent of rotting flesh, and the sound of wing
+beats fills your ears. A voice whispers in your ear, "Perhaps, mortal, it is time for us to
+make a deal."
+
+Pazuzu alights next to you.]],
+      },
+      Kostchtchie = {
          synopsis = "[Kostchtchie storms in!]",
          output = "menu",
          text = [[An enormous giant stands before you, his skin slick with frost. His eyes bulge
@@ -231,7 +240,7 @@ with rage, which radiates off of him almost like heat from a furnace.
 
 Kostchtchie is itching for a fight.]],
       },
-      yeenoghu = {
+      Yeenoghu = {
          synopsis = "[Yeenoghu appears!]",
          output = "menu",
          text = [[The hulking humanoid that stands before you is covered nearly three meters tall
@@ -241,7 +250,7 @@ emerges could charitably be called a laugh.
 
 Yeenoghu has come to call.]],
       },
-      baphomet = {
+      Baphomet = {
          synopsis = "[Baphomet appears!]",
          output = "menu",
          text = [[The thing that stands in front of you has the head of a bull, but that is where
@@ -250,7 +259,7 @@ and his skin is slick with blood.
 
 "Fool! You dare trifle with Baphomet?!"]],
       },
-      orcus = {
+      Orcus = {
          synopsis = "[Orcus appears!]",
          output = "menu",
          text = [[Blackness cloaks the being in front of you. All you can see of them is a
@@ -259,7 +268,7 @@ clutches a skull-topped wand, about which a miasma of dark magic gathers.
 
 "I am Orcus, Lord of the Dead. Goodbye."]],
       },
-      geryon = {
+      Geryon = {
          synopsis = "[Geryon appears!]",
          output = "menu",
          text = [[The monster you now face is nothing short of horrifying. The upper body seems to
@@ -269,7 +278,7 @@ stinger. The hands of the monster end in wicked claws.
 
 "Greetings, Mortal. I am Geryon."]],
       },
-      dispater = {
+      Dispater = {
          synopsis = "[Dispater appears!]",
          output = "menu",
          text = [[The being in front of you sniffs in disdain and tosses his ram's horns. He is
@@ -280,7 +289,7 @@ shape.
 "Is this the one who seeks the Amulet of Yendor? How utterly pathetic. I,
 Dispater, shall dispatch you."]],
       },
-      malcanthet = {
+      Malcanthet = {
          synopsis = "[Malcanthet appears!]",
          output = "menu",
          text = [[A soft voice whispers in your ear.
@@ -294,7 +303,7 @@ and the cloud of writhing tendrils protruding from their back.
 
 Malcanthet is here."]],
       },
-      baalzebub = {
+      Baalzebub = {
          synopsis = "[Baalzebub appears!]",
          output = "menu",
          text = [[A maddening buzz fills your ears. Thousands of flies appear from everywhere,
@@ -303,7 +312,7 @@ continually spews torrents of insects as it expands.
 
 Baalzebub, Lord of the Flies approaches.]],
       },
-      mephisto = {
+      Mephisto = {
          synopsis = "[Mephisto appears!]",
          output = "menu",
          text = [[The area in front of you is suddenly consumed in a roaring wave of hellfire.
@@ -313,7 +322,7 @@ sight. Mephisto.
 "So, you are the latest pawn sent forth by %d. I hope you prove more
 entertaining than the previous guests I have entertained."]],
       },
-      asmodeus = {
+      Asmodeus = {
          synopsis = "[Asmodeus appears!]",
          output = "menu",
          text = [[The air around you is filled with a momentary hissing, before a figure appears
@@ -321,7 +330,7 @@ in a flash of frost. He grins at you, displaying a mouth full of fangs.
 
 "I am Asmodeus. Come to me, %r."]],
       },
-      demogorgon = {
+      Demogorgon = {
          synopsis = "[Demogorgon.]",
          output = "menu",
          text = [[A great beast drags itself from the earth in a shower of stone, roaring loudly
@@ -334,7 +343,7 @@ The cloying smell of mildew mixed with blood.
 A pair of rabid mandrill heads, their eyes trained on you.
 Prince of Demons.]],
       },
-      death = {
+      Death = {
          synopsis = "[You encounter Death.]",
          output = "menu",
          text = [[Blocking the way in front of you stands a huge horse, pale as the moon.
@@ -343,7 +352,7 @@ gleaming scythe. He turns to face you, revealing his head to be a grinning
 skull. Instead of eyes, two icy blue pinpoints of light shine as brightly
 as stars.]],
       },
-      pestilence = {
+      Pestilence = {
          synopsis = "[You encounter Pestilence.]",
          output = "menu",
          text = [[A disgusting stench assaults your nose as a blinding white horse thunders
@@ -352,7 +361,7 @@ of mildew and circled by several flies. A glittering crown, looking
 rather out of place, rests on his head. With a ghastly leer he extends a
 diseased finger toward you.]],
       },
-      famine = {
+      Famine = {
          synopsis = "[You encounter Famine.]",
          output = "menu",
          text = [[A horse, dark as midnight, rears up before you, with a hunched figure
@@ -361,7 +370,7 @@ black iron balance scales. He lowers his hood and glares at you, revealing
 a badly emaciated face. Under his fevered gaze, a pang of hunger goes
 through your stomach.]],
       },
-      wizard_of_yendor = {
+      Wizard_of_Yendor = {
          synopsis = "[You encounter the Wizard of Yendor!]",
          output = "menu",
          text = [[A man stands before you. He wears an elaborate robe trimmed with gold, and
@@ -370,7 +379,7 @@ a fell power, and sparks fly from his fingers.
 "Not since the fall of Yendor has a puny mortal dared to cross my path.
 Thou art a fool to challenge me. Prepare to die!"]],
       },
-      vlad_the_impaler = {
+      Vlad_the_Impaler = {
          synopsis = "[You encounter Vlad the Impaler!]",
          output = "menu",
          text = [[In a swirl of dark vapor, a tall figure appears, garbed in a high-collared black
@@ -378,7 +387,7 @@ velvet cloak. His skin is very pale, except for some disturbing red stains
 around his mouth.  His lips curl into a sneer, revealing long white fangs.
 "I am Vlad Dracula, the Impaler. Tonight I will feast on thy blood."]],
       },
-      envy = {
+      Envy = {
          synopsis = "[You encounter Envy!]",
          output = "menu",
          text = [[With a loud "crack" and a flash of emerald light, a horrifying being appears

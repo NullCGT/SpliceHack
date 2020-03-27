@@ -1876,6 +1876,7 @@ struct obj *otmp;
 
             pline("You drain the blood from %s.", buf);
             otmp->odrained = 1;
+            update_inventory();
 	    } else {
 	    	pline("The blood in this corpse has coagulated!");
 	    	return 3;

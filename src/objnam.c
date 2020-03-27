@@ -3524,7 +3524,8 @@ struct obj *no_wish;
         } else if (!strncmpi(bp, "partly eaten ", l = 13)
                    || !strncmpi(bp, "partially eaten ", l = 16)) {
             halfeaten = 1;
-        } else if (!strncmpi(bp, "partly drained ", l=15)) {
+        } else if (!strncmpi(bp, "partly drained ", l=15)
+                   || !strncmpi(bp, "partially drained ", l = 18)) {
 			isdrained = 1;
 			halfdrained = 1;
 		} else if (!strncmpi(bp, "drained ", l=8)) {

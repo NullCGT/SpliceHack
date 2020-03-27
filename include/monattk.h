@@ -96,7 +96,7 @@
 #define AD_TCKL 55	/* Tickle (Nightgaunts) */
 #define AD_POLY 56  /* Polymorph (Genetic Engineer) */
 #define AD_LARV 57  /* Inject Larvae (Brood Wasp) */
-#define AD_SKEL 58  /* Generate skeletons (Bone Beast) */
+#define AD_SKEL 58  /* Generate skeletons (crawling cemetery) */
 #define AD_HNGY 59 /* a mini version of FAMN, should fake a higher hunger rating instead  */
 #define AD_POTN 60 /* potion effect (gel) */
 #define AD_KDNP 61 /* kidnap (bar-lgura) */

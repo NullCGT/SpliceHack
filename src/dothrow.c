@@ -699,7 +699,7 @@ int x, y;
         && !(mon->mundetected && hides_under(mon) && (Flying || Levitation))
         && !(mon->mundetected &&
           mon->data->mlet == S_EEL && (Flying || Levitation || Wwalking))
-        && !(mon->data == &mons[PM_EARTHSHARK])
+        && !(mon->data == &mons[PM_landshark])
 #endif
         ) {
         const char *mnam, *pronoun;

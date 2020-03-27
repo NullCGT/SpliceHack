@@ -111,12 +111,15 @@ New Race
 Roles
 - Valkyries begin the game with a pet winter wolf pup. It is very weak initially,
   but will grow up into a powerful pet.
-- Merfolk can by valkyrie
+- Merfolk can by valkyrie.
 
 Misc. Changes
 - Changed the name of substance warpers to transmuters.
 - Changed the name of nova foxes to vulpenfernoes.
 - Changed the name of death maggots to corpseworms.
+- Changed the name of red caps to redcaps.
+- Changed the name of earthsharks to landsharks.
+- Changed the name of bone beasts to crawling cemeteries.
 - Circe's Witchstaff only transforms monsters into pigs now.
 - Added many new demon and angel maledictions.
 - Many monsters are capable of charging at the player from a distance, allowing
@@ -142,13 +145,17 @@ Balance
 - Mummies can now cause the player to start withering on hit.
 - Giant mummies can clobber the player, similar to giants.
 - High Priests resist death.
-- T Rexes do not randomly spawn and are much much stronger.
+- T Rexes do not randomly spawn and are much much more deadly. They can
+  swallow players whole and easily knock them back.
 - Memory hounds make the player forget 2% of levels, as well as objects.
 - Removed altar destruction nerf temporarily.
 - Majorly buffed scrolls of web. A single scroll of web allows a player to place
   many webs.
 - Manticores are much, much more dangerous. Instead of firing a single spike that
   does barely any damage, they fire a volley of painful spikes at enemies.
+- Buffed giant praying mantises, giant flies, skunks, kangaroos, tasmanian devils,
+  mad alchemists, cerastes, amphisbaena, and lemurs. All should be more of a
+  challenge.
 
 Notable Bug Fixes
 - Water elementals can be neutral deific minions agian.
@@ -171,7 +178,7 @@ Notable Bug Fixes
 - Fixed transmuters not updating inventory correctly.
 - Fixed demon lords being con artists, and demanding money from the player 
   several times in a row.
-- Bone beasts generate randomly now.
+- crawling cemeteries generate randomly now.
                     
                     Version 0.7.0: Stranger Days
 

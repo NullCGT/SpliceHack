@@ -3381,7 +3381,7 @@ boolean wep_was_destroyed;
                 }
             }
             break;
-        case AD_SKEL: /* generate skeletons (bone beast) */
+        case AD_SKEL: /* generate skeletons (crawling cemetery) */
             if (mhit && !mon->mcan && rn2(3)) {
                 pline("Bits of %s assemble into a skeleton!", mon_nam(mon));
                 makemon(&mons[PM_SHAMBLING_SKELETON], u.ux, u.uy, NO_MM_FLAGS);

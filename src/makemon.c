@@ -209,7 +209,7 @@ register struct monst *mtmp;
         }
         break;
     case S_IMP:
-        if (mm == PM_RED_CAP) {
+        if (mm == PM_REDCAP) {
             (void) mongets(mtmp, GRAIN_SCYTHE);
         }
         break;

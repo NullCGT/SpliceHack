@@ -45,7 +45,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       NON_PM,
-      PM_BONE_BEAST,
       PM_LORD_CARNARVON,
       PM_STUDENT,
       PM_MINION_OF_HUHETOTL,
@@ -91,7 +90,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       NON_PM,
-      PM_MINOTAUR,
       PM_PELIAS,
       PM_CHIEFTAIN,
       PM_THOTH_AMON,
@@ -136,7 +134,6 @@ const struct Role roles[NUM_ROLES+1] = {
       PM_CAVEWOMAN,
       PM_CAVEPERSON,
       PM_LITTLE_DOG,
-      PM_T_REX,
       PM_SHAMAN_KARNOV,
       PM_NEANDERTHAL,
       PM_CHROMATIC_DRAGON,
@@ -180,7 +177,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       PM_LITTLE_DOG,
-      NON_PM,
       PM_LORD_OF_THE_CARDS,
       PM_STUDENT, /* Reusing students to avoid redundancy */
       PM_DAL_ZETHIRE,
@@ -224,7 +220,6 @@ const struct Role roles[NUM_ROLES+1] = {
         NON_PM, 
         NON_PM,
         PM_SEWER_RAT,
-        PM_WATER_MOCCASIN,
         PM_ROBERT_THE_LIFER, 
         PM_INMATE, 
         PM_WARDEN_ARIANNA,
@@ -264,7 +259,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       NON_PM,
-      PM_BABY_RED_DRAGON,
       PM_DRAKEMOTHER,
       PM_DRAKE,
       PM_SLIPSCALE_THE_BETRAYER,
@@ -308,7 +302,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       NON_PM,
-      PM_NECROMANCER,
       PM_HIPPOCRATES,
       PM_ATTENDANT,
       PM_CYCLOPS,
@@ -352,7 +345,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       PM_PONY,
-      PM_DARK_KNIGHT,
       PM_KING_ARTHUR,
       PM_PAGE,
       PM_IXOTH,
@@ -396,7 +388,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       NON_PM,
-      PM_WERETIGER,
       PM_GRAND_MASTER,
       PM_ABBOT,
       PM_MASTER_KAEN,
@@ -441,7 +432,6 @@ const struct Role roles[NUM_ROLES+1] = {
       PM_PRIESTESS,
       PM_MINISTER,
       NON_PM,
-      PM_SKELETON,
       PM_ARCH_PRIEST,
       PM_ACOLYTE,
       PM_NALZOK,
@@ -487,7 +477,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       NON_PM,
-      PM_NINJA, /* Pirates versus Ninjas */
      	PM_MAYOR_CUMMERBUND,
       PM_PIRATE_BROTHER,
       PM_BLACKBEARD_S_GHOST,
@@ -527,7 +516,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       NON_PM,
-      PM_LAVA_DEMON,
       PM_MASTER_OF_THIEVES,
       PM_THUG,
       PM_MASTER_ASSASSIN,
@@ -586,7 +574,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       PM_LITTLE_DOG /* Orion & canis major */,
-      PM_ANCIENT_THORNSWELL,
       PM_ORION,
       PM_HUNTER,
       PM_SCORPIUS,
@@ -631,7 +618,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       PM_LITTLE_DOG,
-      PM_RONIN,
       PM_LORD_SATO,
       PM_ROSHI,
       PM_ASHIKAGA_TAKAUJI,
@@ -675,7 +661,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       NON_PM,
-      PM_LAWYER,
       PM_TWOFLOWER,
       PM_GUIDE,
       PM_MASTER_OF_THIEVES,
@@ -719,7 +704,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       PM_WINTER_WOLF_PUP,
-      PM_ULSFARK,
       PM_NORN,
       PM_WARRIOR,
       PM_LORD_SURTUR,
@@ -763,7 +747,6 @@ const struct Role roles[NUM_ROLES+1] = {
       NON_PM,
       NON_PM,
       PM_KITTEN,
-      PM_BABY_RED_DRAGON,
       PM_NEFERET_THE_GREEN,
       PM_APPRENTICE,
       PM_DARK_ONE,
@@ -2437,11 +2420,6 @@ role_init()
     /* Initialize g.urole and g.urace */
     g.urole = roles[flags.initrole];
     g.urace = races[flags.initrace];
-
-    /* Fix up the unique monster */
-    if (g.urole.uniqpmnum) {
-        mons[g.urole.uniqpmnum].geno &= ~G_NOGEN;
-    }
 
     /* Fix up the quest leader */
     if (g.urole.ldrnum != NON_PM) {

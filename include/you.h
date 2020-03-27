@@ -188,7 +188,6 @@ struct Role {
         femalenum, /* ...or as a female (NON_PM == same) */
         nbnum,     /* ...or as a nonbinary person */
         petnum,    /* PM_ of preferred pet (NON_PM == random) */
-        uniqpmnum, /* PM_ of unique randomly spawning monster */
         ldrnum,    /* PM_ of quest leader (questpgr.c) */
         guardnum,  /* PM_ of quest guardians (questpgr.c) */
         neminum,   /* PM_ of quest nemesis (questpgr.c) */

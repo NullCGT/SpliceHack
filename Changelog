@@ -64,8 +64,9 @@ New Monsters
 - New Monster: Ronin
 - New Monster: Ancient Thornswell
 - New Monster: Necromancer
-  - All of these monsters are role-specific, and generally not seen
-    when not playing those roles.
+- New Monster: Dark Knight
+  - All of these monsters are currently not randomly generated, and generally only
+    encountered via polytraps.
 - New Monster: Pazuzu
   - Demon prince, can be summoned by other demons.
   - Always starts out as peaceful and asks the player for a bribe, unlike
@@ -110,25 +111,7 @@ New Race
 Roles
 - Valkyries begin the game with a pet winter wolf pup. It is very weak initially,
   but will grow up into a powerful pet.
-- Each role has a speciifc monster associated with it. That monster goes from G_NOGEN
-  to be randomly generated when playing that role.
-    - Archaeologist: Bone beast
-    - Barbarian: Minotaur
-    - Caveman: T Rex
-    - Cartomancer: ????
-    - Convict: Water Moccasin
-    - Dragonmaster: Baby red dragon
-    - Healer: Necromancer
-    - Knight: Dark Knight
-    - Monk: ?????
-    - Priest: Skeleton 
-    - Pirate: Ninja
-    - Rogue: Lava demon
-    - Ranger: Ancient Thornswell
-    - Samurai: Ronin
-    - Tourist: Lawyer
-    - Valkyrie: Ulsfark
-    - Wizard: Baby red dragon
+- Merfolk can by valkyrie
 
 Misc. Changes
 - Changed the name of substance warpers to transmuters.
@@ -141,7 +124,6 @@ Misc. Changes
 - Added numerous database entries. Most creatures should now have some sort
   of entry associated.
 - Tipping your hat at a headless horseman makes him angry.
-- Merfolk can by valkyrie
 
 Balance
 - Stop randomly generating penguins, since the fact that eating them makes the
@@ -189,6 +171,7 @@ Notable Bug Fixes
 - Fixed transmuters not updating inventory correctly.
 - Fixed demon lords being con artists, and demanding money from the player 
   several times in a row.
+- Bone beasts generate randomly now.
                     
                     Version 0.7.0: Stranger Days
 

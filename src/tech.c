@@ -9,8 +9,8 @@
 
 /* #define DEBUG */		/* turn on for diagnostics */
 
-static boolean FDECL(gettech, (int *));
-static boolean FDECL(dotechmenu, (int, int *));
+static boolean FDECL(gettech, (int *, BOOLEAN_P));
+static boolean FDECL(dotechmenu, (int, int *, BOOLEAN_P));
 static void NDECL(doblitzlist);
 static int FDECL(get_tech_no,(int));
 static int FDECL(techeffects, (int));
@@ -62,9 +62,9 @@ static NEARDATA const char *tech_names[] = {
 	"sigil of discharge",
 	"raise zombies",
 	"revivification",
-	"ward against flame",
-	"ward against ice",
-	"ward against lightning",
+	"ashen ward",
+	"rime ward",
+	"tempest ward",
 	"tinker",
 	"rage eruption",
 	"blink",
@@ -83,15 +83,15 @@ static NEARDATA const char *tech_names[] = {
 	"dragon call",
 	"dragon blitz",
 	"undertow",
-	"soul of the cards",
+	"heart of the cards",
 	"treasure hunt",
 	"card combo",
 	"card capture",
-	"whirlwind",
+	"storm's eye",
 	"clobber",
 	"court of blades",
-	"perfect balance",
-	"end of the world"
+	"balanced fate",
+	"armageddon"
 };
 
 static const struct innate_tech
@@ -381,8 +381,9 @@ learntech(tech, mask, tlevel)
  * parameter.  Otherwise return FALSE.
  */
 static boolean
-gettech(tech_no)
+gettech(tech_no, check_time)
         int *tech_no;
+		boolean check_time;
 {
         int i, ntechs, idx;
 	char ilet, lets[BUFSZ], qbuf[QBUFSZ];
@@ -426,13 +427,14 @@ gettech(tech_no)
                 You("don't know that technique.");
 	    }
 	}
-        return dotechmenu(PICK_ONE, tech_no);
+        return dotechmenu(PICK_ONE, tech_no, check_time);
 }
 
 static boolean
-dotechmenu(how, tech_no)
-	int how;
-        int *tech_no;
+dotechmenu(how, tech_no, check_time)
+int how;
+int *tech_no;
+boolean check_time;
 {
 	winid tmpwin;
 	int i, n, len, longest, techs_useable, tlevel;
@@ -462,64 +464,64 @@ dotechmenu(how, tech_no)
 
 	for (i = 0; i < MAXTECH; i++) {
 	    if (techid(i) == NO_TECH)
-		continue;
+			continue;
 	    tlevel = techlev(i);
-	    if (!techtout(i) && tlevel > 0) {
-		/* Ready to use */
-		techs_useable++;
-		prefix = "";
-		any.a_int = i + 1;
+	    if ((!techtout(i) && tlevel > 0) || !check_time) {
+			/* Ready to use */
+			techs_useable++;
+			prefix = "";
+			any.a_int = i + 1;
 	    } else {
-		prefix = "    ";
-		any.a_int = 0;
+			prefix = "    ";
+			any.a_int = 0;
 	    }
 	    if (wizard)
-		if (!iflags.menu_tab_sep)
-		    Sprintf(buf, "%s%-*s %2d%c%c%c   %s(%i)",
-			    prefix, longest, techname(i), tlevel,
-			    g.tech_list[i].t_intrinsic & FROMEXPER ? 'X' : ' ',
-			    g.tech_list[i].t_intrinsic & FROMRACE ? 'R' : ' ',
-			    g.tech_list[i].t_intrinsic & FROMOUTSIDE ? 'O' : ' ',
-			    tech_inuse(techid(i)) ? "Active" :
-			    tlevel <= 0 ? "Beyond recall" :
-			    can_limitbreak() ? "LIMIT" :
-			    !techtout(i) ? "Prepared" :
-			    techtout(i) > 100 ? "Not Ready" : "Soon",
-			    techtout(i));
-		else
-		    Sprintf(buf, "%s%s\t%2d%c%c%c\t%s(%i)",
-			    prefix, techname(i), tlevel,
-			    g.tech_list[i].t_intrinsic & FROMEXPER ? 'X' : ' ',
-			    g.tech_list[i].t_intrinsic & FROMRACE ? 'R' : ' ',
-			    g.tech_list[i].t_intrinsic & FROMOUTSIDE ? 'O' : ' ',
-			    tech_inuse(techid(i)) ? "Active" :
-			    tlevel <= 0 ? "Beyond recall" :
-			    can_limitbreak() ? "LIMIT" :
-			    !techtout(i) ? "Prepared" :
-			    techtout(i) > 100 ? "Not Ready" : "Soon",
-			    techtout(i));
+			if (!iflags.menu_tab_sep)
+				Sprintf(buf, "%s%-*s %2d%c%c%c   %s(%i)",
+					prefix, longest, techname(i), tlevel,
+					g.tech_list[i].t_intrinsic & FROMEXPER ? 'X' : ' ',
+					g.tech_list[i].t_intrinsic & FROMRACE ? 'R' : ' ',
+					g.tech_list[i].t_intrinsic & FROMOUTSIDE ? 'O' : ' ',
+					tech_inuse(techid(i)) ? "Active" :
+					tlevel <= 0 ? "Beyond recall" :
+					can_limitbreak() ? "LIMIT" :
+					!techtout(i) ? "Prepared" :
+					techtout(i) > 100 ? "Not Ready" : "Soon",
+					techtout(i));
+			else
+				Sprintf(buf, "%s%s\t%2d%c%c%c\t%s(%i)",
+					prefix, techname(i), tlevel,
+					g.tech_list[i].t_intrinsic & FROMEXPER ? 'X' : ' ',
+					g.tech_list[i].t_intrinsic & FROMRACE ? 'R' : ' ',
+					g.tech_list[i].t_intrinsic & FROMOUTSIDE ? 'O' : ' ',
+					tech_inuse(techid(i)) ? "Active" :
+					tlevel <= 0 ? "Beyond recall" :
+					can_limitbreak() ? "LIMIT" :
+					!techtout(i) ? "Prepared" :
+					techtout(i) > 100 ? "Not Ready" : "Soon",
+					techtout(i));
 	    else
-	    if (!iflags.menu_tab_sep)
-		Sprintf(buf, "%s%-*s %5d   %s",
-			prefix, longest, techname(i), tlevel,
-			tech_inuse(techid(i)) ? "Active" :
-			tlevel <= 0 ? "Beyond recall" :
-			can_limitbreak() ? "LIMIT" :
-			!techtout(i) ? "Prepared" :
-			techtout(i) > 100 
-				? "Not Ready" : techtout(i) > 50 
-				? "Soon" : "Very Soon");
-	    else
-		Sprintf(buf, "%s%s\t%5d\t%s",
-			prefix, techname(i), tlevel,
-			tech_inuse(techid(i)) ? "Active" :
-			tlevel <= 0 ? "Beyond recall" :
-			can_limitbreak() ? "LIMIT" :
-			!techtout(i) ? "Prepared" :
-			techtout(i) > 100 ? "Not Ready" : "Soon");
+			if (!iflags.menu_tab_sep)
+				Sprintf(buf, "%s%-*s %5d   %s",
+					prefix, longest, techname(i), tlevel,
+					tech_inuse(techid(i)) ? "Active" :
+					tlevel <= 0 ? "Beyond recall" :
+					can_limitbreak() ? "LIMIT" :
+					!techtout(i) ? "Prepared" :
+					techtout(i) > 100 
+						? "Not Ready" : techtout(i) > 50 
+						? "Soon" : "Very Soon");
+			else
+				Sprintf(buf, "%s%s\t%5d\t%s",
+					prefix, techname(i), tlevel,
+					tech_inuse(techid(i)) ? "Active" :
+					tlevel <= 0 ? "Beyond recall" :
+					can_limitbreak() ? "LIMIT" :
+					!techtout(i) ? "Prepared" :
+					techtout(i) > 100 ? "Not Ready" : "Soon");
 
 	    add_menu(tmpwin, NO_GLYPH, &any,
-		    techtout(i) ? 0 : let, 0, ATR_NONE, buf, MENU_ITEMFLAGS_NONE);
+		    (techtout(i) || !check_time) ? 0 : let, 0, ATR_NONE, buf, MENU_ITEMFLAGS_NONE);
 	    if (let++ == 'z') let = 'A';
 	}
 
@@ -559,12 +561,22 @@ dotech()
 	int tech_no;
 	int ret = 0;
 
-	if (gettech(&tech_no))
+	if (gettech(&tech_no, TRUE))
 	    ret = techeffects(tech_no);
 	if (ret > 0) {
 		u.uconduct.notech++;
 	}
 	return ret;
+}
+
+const char*
+lookup_tech_name()
+{
+	int tech_no;
+	if (gettech(&tech_no, FALSE)) {
+		return techname(tech_no);
+	}
+	return NULL;
 }
 
 static NEARDATA const char kits[] = { TOOL_CLASS, 0 };
@@ -2525,7 +2537,7 @@ wiz_debug_cmd() /* in this case, allow controlled loss of techniques */
 {
 	int tech_no, id, n = 0;
 	long mask;
-	if (gettech(&tech_no)) {
+	if (gettech(&tech_no, FALSE)) {
 		id = techid(tech_no);
 		if (id == NO_TECH) {
 		    impossible("Unknown technique ([%d])?", tech_no);

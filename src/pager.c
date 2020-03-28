@@ -2048,6 +2048,13 @@ coord *click_cc;
             add_menu(win, NO_GLYPH, &any,
                      flags.lootabc ? 0 : any.a_char, 'n', ATR_NONE,
                      "something else (by symbol or name)", MENU_ITEMFLAGS_NONE);
+            any = cg.zeroany;
+            add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
+                         "", MENU_ITEMFLAGS_NONE);
+            any.a_char = 't';
+            add_menu(win, NO_GLYPH, &any,
+                     flags.lootabc ? 0 : any.a_char, 0, ATR_NONE,
+                     "a known technique", MENU_ITEMFLAGS_NONE);
             if (!u.uswallow && !Hallucination) {
                 any = cg.zeroany;
                 add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
@@ -2074,7 +2081,7 @@ coord *click_cc;
                          flags.lootabc ? 0 : any.a_char, 0, ATR_NONE,
                          "all objects shown on map", MENU_ITEMFLAGS_NONE);
             }
-            end_menu(win, "What do you want to look at:");
+            end_menu(win, "What do you want to know about:");
             if (select_menu(win, PICK_ONE, &pick_list) > 0) {
                 i = pick_list->item.a_char;
                 free((genericptr_t) pick_list);
@@ -2111,6 +2118,16 @@ coord *click_cc;
                 checkfile(out_str, pm, TRUE, TRUE, (char *) 0);
             return 0;
           }
+        case 't':
+            {
+                const char* tname = lookup_tech_name();
+                *out_str='\0';
+                if (tname) {
+                    strcpy(out_str, tname);
+                    checkfile(out_str, pm, TRUE, TRUE, (char *) 0);
+                }
+                return 0;
+            }
         case '?':
             from_screen = FALSE;
             getlin("Specify what? (type the word)", out_str);

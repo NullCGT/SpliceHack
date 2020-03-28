@@ -18,6 +18,21 @@
   easier just not to port them.
 - Changed the ill-fated option to illfated.
 
+User Friendliness / QOL Features
+- Technique information has been added to the database, and knwon techniques can be
+  quickly looked up using the whatis command.
+- The technique menu can be opened with '!' for quick access.
+- Added numerous database entries. Most creatures should now have some sort
+  of entry associated.
+- Stop randomly generating penguins, since the fact that eating them makes the
+  Gods angry confused many players.
+- Magma elementals and storm elementals only spawn in Gehennom.
+  - People have complained about these blocking access to dungeon corridors,
+    and it makes thematic sense for them to appear in Gehennom, at which
+    point the player has numerous methods to bypass magma.
+- Merfolk can by valkyrie.
+- Removed altar destruction nerf temporarily.
+
 New Monsters
 - New Monster: Thriae
   - Does not appear until the player is powerful enough to deal with them, but
@@ -108,11 +123,6 @@ New Race
     unless polymorphed.
   - Hate iron in their natural form.
 
-Roles
-- Valkyries begin the game with a pet winter wolf pup. It is very weak initially,
-  but will grow up into a powerful pet.
-- Merfolk can by valkyrie.
-
 Misc. Changes
 - Changed the name of substance warpers to transmuters.
 - Changed the name of nova foxes to vulpenfernoes.
@@ -120,22 +130,19 @@ Misc. Changes
 - Changed the name of red caps to redcaps.
 - Changed the name of earthsharks to landsharks.
 - Changed the name of bone beasts to crawling cemeteries.
+- Some techniques have had their names changed to be more interesting.
+- Techniques that made the player imobile now have death messages if killed while
+  immobile from them.
 - Circe's Witchstaff only transforms monsters into pigs now.
 - Added many new demon and angel maledictions.
 - Many monsters are capable of charging at the player from a distance, allowing
   them to cover large distances quickly.
-- Added numerous database entries. Most creatures should now have some sort
-  of entry associated.
 - Tipping your hat at a headless horseman makes him angry.
+- Valkyries begin the game with a pet winter wolf pup. It is very weak initially,
+  but will grow up into a powerful pet.
 
 Balance
-- Stop randomly generating penguins, since the fact that eating them makes the
-  Gods angry is confusing.
 - Pirates can be gifted artifacts, but do not have increased artifact generation.
-- Magma elementals and storm elementals only spawn in Gehennom.
-  - People have complained about these blocking access to dungeon corridors,
-    and it makes thematic sense for them to appear in Gehennom, at which
-    point the player has numerous methods to bypass magma.
 - Only four headless horseman can appear each game.
 - Increased damage for barbed devil quills.
 - Ice devils can cause fumbling with their sting attack.
@@ -148,7 +155,6 @@ Balance
 - T Rexes do not randomly spawn and are much much more deadly. They can
   swallow players whole and easily knock them back.
 - Memory hounds make the player forget 2% of levels, as well as objects.
-- Removed altar destruction nerf temporarily.
 - Majorly buffed scrolls of web. A single scroll of web allows a player to place
   many webs.
 - Manticores are much, much more dangerous. Instead of firing a single spike that

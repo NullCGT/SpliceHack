@@ -202,6 +202,12 @@ agate*
 	solution is slowly deposited into cavities and veins in older
 	rock.
 		[ The Columbia Encyclopedia, Sixth Edition ]
+air dash
+	This technique allows you to fling yourself forward twice the
+	normal amount in a turn.
+
+	This technique is considered a finisher for the chained blitz
+	techique. Motion: L,L / R,R
 aleax
 	Said to be a doppelganger sent to inflict divine punishment
 	for alignment violations.
@@ -422,6 +428,9 @@ arioch
 	the Swords, Lord of the Seven Darks, Lord of the Higher Hell
 	and many more names besides.
 		[ Elric of Melnibone, by Michael Moorcock ]
+armageddon
+	This technique strikes the area with an incredibly powerful
+	earthquake, courtesy of the forces of chaos.
 *arrow
 	I shot an arrow into the air,
 	It fell to earth, I knew not where;
@@ -523,6 +532,10 @@ b*lzebub
 	devil whose name suggests that he is devoted to decay,
 	destruction, demoralization, hysteria and panic...
 		[ Notes on _Lord of the Flies_, by E. L. Epstein ]
+balanced fate
+	This technique allows the user to call forth the power of neutrality.
+	All within sight (including the user) have their health set to
+	half of the maximum.
 balrog
 	...  It came to the edge of the fire and the light faded as
 	if a cloud had bent over it.  Then with a rush it leaped
@@ -681,6 +694,13 @@ bell of opening
 	* Old Tom was the single cracked bronze bell in the University
 	bell tower.
 		[ Eric, by Terry Pratchett ]
+berserk
+	This technique allows you to fly into a berserk rage, granting you
+	additional speed, damage, and accuracy for a short period of
+	time.
+blessing
+	Enacting a blessing allows you to bless an item, warding it against
+	curses and demonic foes.
 blindfold
 	The blindfolding was performed by binding a piece of the
 	yellowish linen whereof those of the Amahagger who condescended
@@ -708,6 +728,9 @@ pig
 	My memory...hehe. King Robert Baratheon...murdered by a pig. 
 	Give me something for the pain, and let me die.
 		[ A Game of Thrones, by George R.R. Martin ]
+blink
+	The blink technique alters the flow of time, temporarily granting
+	you a burst of alacrity.
 * blob
 ooze
 * ooze
@@ -888,6 +911,9 @@ cake
 slice of cake
 	The cake is a lie.
 		[ Portal ]
+calm steed
+	This technique can be used to calm a mount down, and soothe its
+	wild heart.
 *camaxtli
 	A classical Mesoamerican Aztec god, also known as Mixcoatl-
 	Camaxtli (the Cloud Serpent), Camaxtli is the god of war.  He
@@ -927,6 +953,12 @@ candy bar
 	so on.  And in this way, Charlie would make his ten-cent bar
 	of birthday chocolate last him for more than a month.
 		[ Charlie and the Chocolate Factory, by Roald Dahl ]
+card capture
+	This technique allows the user to instantly transform a single
+	monster into an equivalent spell card or scroll.
+card combo
+	This technique can be used to repeatedly play spell cards or
+	read scrolls in a single turn.
 carrot
 	In World War II, Britain's air ministry spread the word that
 	a diet of these vegetables helped pilots see Nazi bombers
@@ -1060,6 +1092,20 @@ kerberos
 	playing bewitching music on his lyre, and the other time when
 	Hercules confronted him and took him to the world of the
 	living (as his twelfth and last labor).
+chained blitz
+	Chained blitz is a complicated but powerful technique. It allows
+	you to chain together a series of known techniques by using key
+	combinations. Note that the same combination of keys cannot be
+	used twice in a row.
+	
+	Valid chained blitz techniues fall into three categories:
+	- Starter: Can be followed by any category.
+	- Chain: Can be followed by chains and finishers.
+	- Finisher: Can be followed only by finishers.
+
+	The number of techniques you can chain together starts out at
+	two, and increases for every multiple of ten levels, up to a
+	maximum of five at level 30. 
 chameleon
 	A small lizard perched on a brown stone.  Feeling threatened by
 	the approach of human beings along the path, it metamorphosed
@@ -1137,6 +1183,12 @@ chimera
 	three: The head of a dragon, the head of a lion, and the head
 	of a goat. Even more dangerous than one's heads, however,
 	is their venomous stinger.
+chi strike
+	By focusing your chi, you can use this technique to deal extra
+	damage with your physical strikes.
+
+	This technique is considered a starter for the chained blitz
+	techique. Motion: L,LD,D,R / L,LD,D,RD,D
 chromatic dragon
 tiamat
 	Tiamat is said to be the mother of evil dragonkind.  She is
@@ -1163,6 +1215,9 @@ cleaver
 	melancholies and gigantic mirth, to tread the jeweled
 	thrones of the Earth under his sandalled feet.
 		[ The Phoenix on the Sword, by Robert E. Howard ]
+clobber
+	The clobber technique knocks back and stuns an enemy, making
+	them easy to finish off.
 ~elven cloak
 ~oilskin cloak
 *cloak*
@@ -1281,6 +1336,9 @@ cornuthaum
 			[ The Elfin Ship, James P. Blaylock ]
 couatl
 	A mythical feathered serpent.  The couatl are very rare.
+court of blades
+	This technique gives the user the power to summon a legion of
+	angels to vanquish their enemy.
 cow
 	The duck goes quack! The cow says moo!
 coyote
@@ -1301,6 +1359,12 @@ cream pie
 	twelve, you could have gotten away with it then.  The cream pie
 	of justice flies one way," Miles snickered.
 		[ The Vor Game, by Lois McMaster Bujold ]
+critical strike
+	The critical strike technique allows you to strike your foe's 
+	vital organs for massive damage.
+
+	This technique is less powerful against monsters with bizarre
+	anatomies.
 *crocodile
 	A big animal with the appearance of a lizard, constituting
 	an order of the reptiles (_Loricata_ or _Crocodylia_), the
@@ -1366,6 +1430,11 @@ curse*
 	raise their Curses.  Your best source is to hide the Sword
 	or give it to someone you dislike.
 	  [ The Tough Guide to Fantasyland, by Diana Wynne Jones ]
+cutthroat
+	A strike to the throat is, in many cases, instantly fatal.
+
+	The cutthroat technique allows you to strike an enemy in
+	the throat, potentially killing them instantly.
 cwn*n
 	A pack of snow-white, red-eared spectral hounds which
 	sometimes took part in the kidnappings and raids the
@@ -1469,6 +1538,9 @@ dart*
 	I saw the thing that should have pierced his heart
 	Turn to a golden staff.
 		[ Gifts, by Mary Coleridge ]
+dazzle
+	The dazzle technique is innate to vampires. It allows them
+	to paralyze a single foe, making them easy prey.
 death maggot
 corpseworm
 	Maggots are alive, but feast on the dead.
@@ -1569,6 +1641,8 @@ dingo
 	introduced by the aborigines.
 		[ Webster's Encyclopedic Unabridged Dictionary
 		    of the English Language ]
+disarm
+	The disarm technique lets you deprive a foe of their weapon.
 disenchanter
 	Ask not, what your magic can do to it.  Ask what it can do
 	to your magic.
@@ -1679,11 +1753,27 @@ doppelganger
 	make of steel.
 		[ The Last Book of Swords: Shieldbreaker's Story,
 			by Fred Saberhagen ]
+dragon blitz
+	This technique grants all nearby tame dragons an enormous speed boost,
+	allowing them to tear their opponents apart.
+dragon call
+	The user of this technique calls all dragons on the level to their location,
+	and also can attract new dragons.
 draugr
 	Draugar live in their graves, often guarding treasure buried with
 	them in their burial mound. They are animated corpses—unlike ghosts
 	they have a corporeal body with similar physical abilities as in life.
 		[ Wikipedia, the free encyclopedia ]
+draw blood
+	Draw blood is a technique that allows a vampire to exchange experience
+	for potions of vampire blood.
+draw energy
+	This technique allows you to meditate and draw energy from
+	your surroundings. Make sure that you are not be interrupted
+	while gathering energy.
+	
+	Dungeon structures and natural features can be excellent 
+	sources of energy.
 dread pirate roberts
  	Finally, Roberts decided something. He said, "All right,
  	Westley, I've never had a valet. You can try it for tonight.
@@ -1862,6 +1952,13 @@ electric eel
 elementalism
  	The study of the elements and elemental beings, including the
  	risky art of summoning and binding such dangerous entities.
+elemental fist
+	By manipulating the chi in your body with this technnique, you
+	can deal elemental damage with your unarmed attacks, in addition
+	to physical damage.
+
+	This technique is considered a starter for the chained blitz
+	techique. Motion: U,U,R,RD,D,L / U,RU,R,RD,D,LD,L
 ~human or elf*
 ~elf ??m*
 *elf*
@@ -1955,6 +2052,11 @@ erinyes
 ettin
 	The two-headed giant, or ettin, is a vicious and unpredictable
 	hunter that stalks by night and eats any meat it can catch.
+eviscerate
+	This technique only works while you are bare-handed and free
+	of weapons. When activated, your hands turn into claws, and
+	each time you attack, there is a chance that you fly into a
+	berserk rage and tear your opponent apart!
 excalibur
 	At first only its tip was visible, but then it rose, straight,
 	proud, all that was noble and great and wondrous.  The tip of
@@ -2481,6 +2583,12 @@ grid bug
 	beam connection -- to which he'd given no thought whatsoever
 	until this moment -- was healthy and sound."
 	    [ Tron, novel by Brian Daley, story by Steven Lisberger ]
+ground slam
+	The ground slam technique allows you to bury your opponent in
+	the earth, by means of slamming them into the ground.
+
+	This technique is considered a finisher for the chained blitz
+	techique. Motion: D,D,D,D
 gugnir
 	The spear used by Odin. When thrown by the hands of a Valkyrie,
 	it will return to the wielder.
@@ -2562,6 +2670,10 @@ physician
 	PHYSICIAN, n.  One upon whom we set our hopes when ill and our
 	dogs when well.
 		[ The Devil's Dictionary, by Ambrose Bierce ]
+healing hands
+	With healing hands, you can heal yourself of bodily harm, as
+	well of as potentially deadly ailments, such as slime and
+	terminal illness.
 heart of ahriman
 	The other three drew in their breath sharply, and the dark,
 	powerful man who stood at the head of the sarcophagus whispered:
@@ -2582,6 +2694,12 @@ heart of ahriman
 	stood on the right, with a short, sardonic laugh.  "It is
 	ready to crumble at a touch.  We are fools ---"
 		[ Conan The Conqueror, by Robert E. Howard ]
+* of the cards
+	This technique takes the first spell card or scroll in the user's
+	inventory, transforms it into a new item, and instantly reads
+	it. The resulting item is dependent on the situation of the user,
+	but is generally useful in resolving any trouble.
+	- Other: Random
 hellbat
 	Not to be confused with the Bat from Hell.
 hellcat
@@ -2962,8 +3080,11 @@ iron bars
 		[ To Althea from Prison, by Richard Lovelace ]
 iron mantle
 metal cloak
-		A cloak made of sheets of interwoven metal, strong enough
-		to deflect blades.
+	A cloak made of sheets of interwoven metal, strong enough
+	to deflect blades.
+missile flurry
+	With this technique, you can temporarily increase the number
+	of missiles you are able to fire from your bow.
 ishtar
 	Ishtar (the star of heaven) is the Mesopotamian goddess of
 	fertility and war.  She is usually depicted with wings and
@@ -3159,6 +3280,11 @@ kelp*
 	I had studied on the _Nautilus_ -- but the fresh, living
 	specimens in their native setting.
 		[ 20,000 Leagues Under the Sea, by Jules Verne ]
+kiii
+kiiilll
+	When you use this technique, you shout a battle cry, aggravating
+	the monsters around you and granting you double damage and a 
+	bonus to accuracy for a short period of time.
 ki-rin
 	The ki-rin is a strange-looking flying creature.  It has
 	scales, a mane like a lion, a tail, hooves, and a horn.  It
@@ -3500,12 +3626,22 @@ light
 	Strange creatures formed from energy rather than matter,
 	lights are given to self-destructive behavior when battling
 	foes.
+limit
+limit break
+	When you are dangerously close to death, you can push yourself
+	past your normal limits. There is a chance that you will enter
+	LIMIT mode, during which you can use techniques without
+	expending them.
 lindorm
 knucker
 	A serpentine, dragon-like monster with a pair of front claws.
 lion
 	A lion doesn't concern itself with the opinion of sheep.
 		[ A Game of Thrones, by George R.R. Martin ]
+liquid leap
+	By using the liquid leap technique, you can transform yourself
+	into a ball of acid, allowing you to leap through iron bars,
+	obstacles, and even monsters.
 gecko
 iguana
 lizard
@@ -4760,6 +4896,13 @@ poseido*n
 		[ Big Trouble in Little China, directed by
 		  John Carpenter, written by Gary Goldman &
 		  David Z. Weinstein, adaptation by W. D. Richter ]
+power surge
+	The power surge technique allows the user to enter an enlightened state,
+	granting them a very large amount of power, at the exchange of
+	slowly losing that power over time.
+
+	This technique is considered a starter for the chained blitz
+	techique. Motion: D,D,R,RD,D,R,R / D,RD,RD,RD,R
 pray*
 	Whatever a man prays for, he prays for a miracle.  Every
 	prayer reduces itself to this:  Great God, grant that twice
@@ -4791,6 +4934,13 @@ paddle cactus
 	nopalli for the pads, or nostle, from the Nahuatl word nochtli
 	for the fruit; or paddle cactus.
 		[ Wikipedia, the free encyclopedia ]
+primal roar
+	When you use this technique, you force all nearby allies to
+	instantly evolve, becoming far more powerful for a short time
+	before regressing. Your own speed increases as well.
+
+	Beware, however, because your enemies are sure to take notice
+	of your actions...
 prisoner
 	Where am I?
 		In the Village.
@@ -4817,6 +4967,12 @@ ptah
 	consisting of a staff surmounted by the _ankh_ symbol of
 	life.  He is otherwise symbolized by his sacred animal, the
 	bull.
+pummel
+	The pummel technique allows you to unleash a flurry of
+	rapid attacks on your foes.
+
+	This technique is considered a chain for the chained blitz
+	techique. Motion: L,R,L / R,L,R
 *purple worm
 	A gargantuan version of the harmless rain-worm, the purple
 	worm poses a huge threat to the ordinary adventurer.  It is
@@ -4915,6 +5071,10 @@ quit*
 	          be cast into the Flaming Pit of Death.
 		[ Snow Day, directed by Chris Koch,
 		  written by Will McRobb and Chris Viscardi ]
+rage eruption
+	The rage eruption technique allows the user to enter a rage state,
+	granting them a very large amount of health, at the exchange of
+	slowly losing that health over time.
 raijin
 raiden
 	The Japanese god of thunder (rai) and lightning (den).  He
@@ -4925,6 +5085,9 @@ raiden
 	fond of eating human navels.  The only protection against him
 	is to hide under a mosquito net.
 		[ Encyclopedia Mythica, ed. M.F. Lindemans ]
+raise zombies
+	Users of this technique can enact rituals of mass zombification,
+	turning all nearby corpses into shambling undead monstrosities.
 ranger
 * ranger
 	"Lonely men are we, Rangers of the wild, hunters -- but hunters
@@ -4974,6 +5137,16 @@ raven
 red cap
 	Some say the cap is stained with blood. Others claim that he
 	simply loves the color red.
+reinforce memory
+	When straining to recall a spell, you can use a series of simple
+	mnemonics to bolster your memory of it.
+research
+	Using the research technique, you can attempt to glean more
+	information about one or more items in your pack.
+revification
+	At the cost of a large portion of their remaining life force, a user of
+	revification can do the impossible: Return the dead to life via
+	science.
 ~*invisibility
 ring
 * ring
@@ -5389,6 +5562,26 @@ screamer
 	its fetid bulk looming overhead... The monster was some kind of
 	great dark worm, but that was about all they were sure of.
 		[ The Adventurers, Epic IV, by Thomas A. Miller ]
+sigil of control
+	This mystic sigil allows you to control the manner in which ray
+	spells reboud.
+
+	Sigil of control can be used in conjunction with sigil of tempest
+	for controlled explosions.
+sigil of tempest
+	Sigil of tempest changes ray spells into explosions, which rain
+	down in the area around you.
+
+	Sigil of tempest can be used in conjunction with sigil of control
+	for controlled explosions.
+
+	Sigil of tempest can be used in conjunction with sigil of discharge
+	for more numerous explosions.
+sigil of discharge
+	Sigil of discharge causes ray spells to detonate in massive explosions.
+
+	Sigil of discharge can be used in conjunction with sigil of tempest
+	for more numerous explosions, which are focused around you.
 sin
 seven *sins
 wrath
@@ -5578,6 +5771,12 @@ spell card
 spiked chain
 	It's never fun when things are unfair, unless things are
 	unfair in your favor.
+spirit bomb
+	The spirit bomb technique creates a deadly explosion of
+	concentrated, destructive chi.
+
+	This technique is considered a finisher for the chained blitz
+	techique. Motion: D,U,D,U,U,D,D,D
 *spore
 *sphere
 	The attack by those who want to die -- this is the attack
@@ -5689,6 +5888,9 @@ stormbringer
 	heard men cry so when his salvation and his nemesis, his
 	great black battle-blade Stormbringer, drank their souls.
 		[ The Lands Beyond the World, by Michael Moorcock ]
+storm's eye
+	This technique creates a burst of concentrated air, knocking
+	back all nearby monsters.
 *strange object
 	He walked for some time through a long narrow corridor
 	without finding any one and was just going to call out,
@@ -5717,6 +5919,13 @@ sunsword
 	a weapon for vengeance.
 		[ Expedition to Castle Ravenloft,
 			by Bruce Cordell and James Wyatt ]
+surgery
+	With this technique, you can perform emergency field surgery
+	in order to heal yourself. This healing can be further bolstered
+	with the proper medical supplies.
+
+	If you posses a scalpel, you can perform painful surgery to
+	cure sickness and infections.
 susano*o
 	The Shinto chthonic and weather god and brother of the sun
 	goddess Amaterasu, he was born from the nose of the
@@ -5819,6 +6028,15 @@ tinning kit
 	gets thinner at both ends."
 	"Interesting point, Nobby.  I think-"
 		[ Soul Music, by Terry Pratchett ]
+tinker
+tinkerer
+	The tinker technique allows you to spend time upgrading an object
+	in your hands, turning it into a more useful item. Upgrading an
+	already powerful object, however, may transform it into something
+	less useful.
+
+	Note that if you are interrupted while tinkering, your creative
+	efforts will be wasted.
 tin opener
 	Less than thirty Cat tribes now survived, roaming the cargo
 	decks on their hind legs in a desperate search for food.
@@ -5934,6 +6152,9 @@ trapper or lurker above
 	its prey by remaining very still and blending into the
 	surrounding dungeon features, until an unsuspecting creature
 	passes by.  It wraps itself around its prey and digests it.
+treasure hunt
+	Using this technique will show you the location of nearby
+	gold.
 tree
 	I think that I shall never see
 	A poem lovely as a tree.
@@ -5977,6 +6198,9 @@ tripe ration
 	He clambered back on his feet and grinned at them.  The
 	waning faggot cast red light over his fangs.
 		[ Three Hearts and Three Lions, by Poul Anderson ]
+turn undead
+	Those with a pure, pious heart may call upon the gods to turn
+	back a tide of evil and death.
 *tsurugi of muramasa
 	This most ancient of swords has been passed down through the
 	leadership of the Samurai legions for hundreds of years.  It
@@ -6051,6 +6275,14 @@ ulsfark
 	search of prey.  They are tremendously strong; muscles bulge
 	beneath their thick, scaly hides and their powerful arms and
 	legs all end in great claws.
+undertow
+pull under
+	This technique allows a user to attempt to drown a monster.
+	If they succeed, and the monster needs to breathe air to
+	survive, it is killed instantly.
+
+	To use this technique, the user must be swimming or standing
+	on a fountain.
 *unicorn
 unicorn horn
 	Men have always sought the elusive unicorn, for the single
@@ -6119,6 +6351,10 @@ vampire lord
 	corpse), supposed to seek nourishment, or do harm, by sucking
 	the blood of sleeping persons. ..."
 		[]
+vanish
+	This technique makes you temporarily fleet of foot and
+	invisible to the naked eye -- perfect for last-minute escapes
+	and feats of derring-do.
 venus
 	Venus, the goddess of love and beauty, was the daughter of
 	Jupiter and Dione.  Others say that Venus sprang from the
@@ -6204,6 +6440,10 @@ warg
 	"True!" said Aragorn, loosening his sword in its sheath.  "But
 	where the warg howls, there also the orc prowls."
 		[ The Fellowship of the Ring, by J.R.R. Tolkien ]
+* ward
+	By manipulating the chi in their body, users of this technique
+	can completely ward themselves against elemental damage for a
+	period of time.
 ~mjollnir
 war*hammer
 	They had come together at the ford of the Trident while the
@@ -6275,6 +6515,10 @@ water troll
 weapon
 	A weapon is a device for making your enemy change his mind.
 		[ The Vor Game, by Lois McMaster Bujold ]
+weapon practice
+	By performing a complex series of weapon drills, you can improve
+	your skill with a weapon, as well as gain intimate knowledge of
+	its nature.
 web
 	Oh what a tangled web we weave,
 	When first we practise to deceive!

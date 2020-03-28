@@ -188,6 +188,8 @@ Notable Bug Fixes
   several times in a row.
 - Crawling cemeteries generate randomly now.
 - Fixed cheese being considered nonvegetarian.
+- Fixed a bug where monsters could rummage through kegs, making all dwarves in
+  the banquet hall incredibly drunk, and allowing for booze exploits.
                     
                     Version 0.7.0: Stranger Days
 

@@ -2260,7 +2260,8 @@ boolean vismon;
     boolean nearby;
     int takeout_indx, takeout_count, howfar, res = 0;
 
-    if (!container || !Has_contents(container) || container->olocked)
+    if (!container || !Has_contents(container) 
+        || container->olocked || container->otyp == KEG)
         return res; /* 0 */
     /* FIXME: handle cursed bag of holding */
     if (Is_mbag(container) && container->cursed)

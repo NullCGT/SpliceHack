@@ -186,7 +186,8 @@ Notable Bug Fixes
 - Fixed transmuters not updating inventory correctly.
 - Fixed demon lords being con artists, and demanding money from the player 
   several times in a row.
-- crawling cemeteries generate randomly now.
+- Crawling cemeteries generate randomly now.
+- Fixed cheese being considered nonvegetarian.
                     
                     Version 0.7.0: Stranger Days
 

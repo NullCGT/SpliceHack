@@ -336,6 +336,8 @@ struct obj *box;
         break;
     }
 
+    if (n < minn)
+        n = minn;
     for (n = rn1(n+1 - minn, minn); n > 0; n--) {
         if (box->otyp == MEDICAL_KIT) {
           int supplies[] = { PHIAL, BANDAGE, PILL };

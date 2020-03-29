@@ -1,4 +1,4 @@
-/* NetHack 3.6	sp_lev.c	$NHDT-Date: 1584655714 2020/03/19 22:08:34 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.181 $ */
+/* NetHack 3.6	sp_lev.c	$NHDT-Date: 1585361055 2020/03/28 02:04:15 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.183 $ */
 /*      Copyright (c) 1989 by Jean-Christophe Collet */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -434,6 +434,7 @@ flip_encoded_direction_bits(int flp, int val)
 
 #define FlipX(val) ((maxx - (val)) + minx)
 #define FlipY(val) ((maxy - (val)) + miny)
+#define inFlipArea(x,y) ((x) >= minx && (x) <= maxx && (y) >= miny && (y) <= maxy)
 
 /* transpose top with bottom or left with right or both; sometimes called
    for new special levels, or for any level via the #wizlevelflip command */
@@ -451,6 +452,8 @@ boolean extras;
     struct engr *etmp;
     struct mkroom *sroom;
     timer_element *timer;
+    boolean ball_active = (Punished && uball->where != OBJ_FREE);
+    boolean ball_fliparea;
 
     get_level_extends(&minx, &miny, &maxx, &maxy);
     /* get_level_extends() returns -1,-1 to COLNO,ROWNO at max */
@@ -462,6 +465,13 @@ boolean extras;
         maxx = (COLNO - 1);
     if (maxy >= ROWNO)
         maxy = (ROWNO - 1);
+
+    ball_fliparea = Punished
+     && inFlipArea(uball->ox, uball->oy) == inFlipArea(uchain->ox, uchain->oy)
+     && inFlipArea(uball->ox, uball->oy) == inFlipArea(u.ux, u.uy);
+
+    if (ball_active && extras && !ball_fliparea)
+        unplacebc();
 
     /* stairs and ladders */
     if (flp & 1) {
@@ -491,8 +501,7 @@ boolean extras;
 
     /* traps */
     for (ttmp = g.ftrap; ttmp; ttmp = ttmp->ntrap) {
-        if (ttmp->tx < minx || ttmp->tx > maxx
-            || ttmp->ty < miny || ttmp->ty > maxy)
+        if (!inFlipArea(ttmp->tx, ttmp->ty))
             continue;
 	if (flp & 1) {
 	    ttmp->ty = FlipY(ttmp->ty);
@@ -518,8 +527,7 @@ boolean extras;
 
     /* objects */
     for (otmp = fobj; otmp; otmp = otmp->nobj) {
-        if (otmp->ox < minx || otmp->ox > maxx
-            || otmp->oy < miny || otmp->oy > maxy)
+        if (!inFlipArea(otmp->ox, otmp->oy))
             continue;
 	if (flp & 1)
 	    otmp->oy = FlipY(otmp->oy);
@@ -529,8 +537,7 @@ boolean extras;
 
     /* buried objects */
     for (otmp = g.level.buriedobjlist; otmp; otmp = otmp->nobj) {
-        if (otmp->ox < minx || otmp->ox > maxx
-            || otmp->oy < miny || otmp->oy > maxy)
+        if (!inFlipArea(otmp->ox, otmp->oy))
             continue;
 	if (flp & 1)
 	    otmp->oy = FlipY(otmp->oy);
@@ -543,8 +550,7 @@ boolean extras;
         if (mtmp->isgd && mtmp->mx == 0)
             continue;
         /* skip the occasional earth elemental outside the flip area */
-        if (mtmp->mx < minx || mtmp->mx > maxx
-            || mtmp->my < miny || mtmp->my > maxy)
+        if (!inFlipArea(mtmp->mx, mtmp->my))
             continue;
 	if (flp & 1) {
 	    mtmp->my = FlipY(mtmp->my);
@@ -737,6 +743,8 @@ boolean extras;
             if (flp & 2)
                 u.ux = FlipX(u.ux), u.ux0 = FlipX(u.ux0);
         }
+        if (ball_active && !ball_fliparea)
+            placebc();
     }
 
     fix_wall_spines(1, 0, COLNO - 1, ROWNO - 1);
@@ -749,6 +757,7 @@ boolean extras;
 
 #undef FlipX
 #undef FlipY
+#undef inFlipArea
 
 /* randomly transpose top with bottom or left with right or both;
    caller controls which transpositions are allowed */
@@ -1788,6 +1797,9 @@ struct mkroom *croom;
     if (MON_AT(x, y) && enexto(&cc, x, y, pm))
         x = cc.x, y = cc.y;
 
+    if (croom && !inside_room(croom, x, y))
+        return;
+
     if (m->align != AM_SPLEV_RANDOM)
         mtmp = mk_roamer(pm, Amask2align(amask), x, y, m->peaceful);
     else if (PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD)
@@ -1975,7 +1987,7 @@ struct mkroom *croom;
         }
 
         if (m->has_invent) {
-            discard_minvent(mtmp);
+            discard_minvent(mtmp, TRUE);
             invent_carrying_monster = mtmp;
         }
     }

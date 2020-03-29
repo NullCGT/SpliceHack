@@ -916,7 +916,7 @@ makelevel()
         else if (u_depth > 16 && !rn2(8)
                  && !(g.mvitals[PM_COCKATRICE].mvflags & G_GONE))
             mkroom(COCKNEST);
-        else if (u_depth > 35 && !rn2(8)
+        else if (u_depth > 20 && !rn2(8)
  	             && !(g.mvitals[PM_LEMURE].mvflags & G_GONE)) 
             mkroom(LEMUREPIT);
     }

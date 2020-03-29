@@ -190,6 +190,7 @@ Notable Bug Fixes
 - Fixed cheese being considered nonvegetarian.
 - Fixed a bug where monsters could rummage through kegs, making all dwarves in
   the banquet hall incredibly drunk, and allowing for booze exploits.
+- Fixed lemurepits never appearing.
                     
                     Version 0.7.0: Stranger Days
 

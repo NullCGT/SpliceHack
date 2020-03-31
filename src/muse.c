@@ -95,7 +95,7 @@ struct obj *obj;
                 return 0;
             mquaffmsg(mon, obj);
             m_useup(mon, obj);
-            mtmp = makemon(&mons[PM_DJINNI], cc.x, cc.y, NO_MM_FLAGS);
+            mtmp = makemon(&mons[rn2(5) ? PM_DJINNI : PM_EFREET], cc.x, cc.y, NO_MM_FLAGS);
             if (!mtmp) {
                 if (vis)
                     pline1(empty);
@@ -2163,7 +2163,8 @@ struct monst *mtmp;
             g.m.has_misc = MUSE_POT_SPEED;
         }
         nomore(MUSE_WISH);
-        if (mtmp->data == &mons[PM_EFREET] && In_endgame(&u.uz) && !mtmp->mcan && m_canseeu(mtmp)) {
+        if (mtmp->data == &mons[PM_EFREET] && In_endgame(&u.uz) 
+            && !mtmp->mcan && m_canseeu(mtmp) && !mtmp->mpeaceful) {
             g.m.misc = NULL;
             g.m.has_misc = MUSE_WISH;
         }

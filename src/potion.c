@@ -3026,7 +3026,8 @@ struct obj *obj;
     struct monst *mtmp;
     int chance;
 
-    if (!(mtmp = makemon(&mons[PM_DJINNI], u.ux, u.uy, NO_MM_FLAGS))) {
+    if (!(mtmp = makemon(&mons[rn2(5) ? PM_DJINNI : PM_EFREET], 
+        u.ux, u.uy, NO_MM_FLAGS))) {
         pline("It turns out to be empty.");
         return;
     }

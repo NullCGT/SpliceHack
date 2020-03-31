@@ -2529,7 +2529,7 @@ boolean was_swallowed; /* digestion */
     if (mdat == &mons[PM_VLAD_THE_IMPALER] || mdat == &mons[PM_ALUCARD]
           || (mdat->mlet == S_LICH && 
                 (mdat != &mons[PM_WORM_THAT_WALKS] 
-                    || mdat != &mons[PM_LORD_OF_WORMS]))) {
+                    && mdat != &mons[PM_LORD_OF_WORMS]))) {
         if (cansee(mon->mx, mon->my) && !was_swallowed)
             pline("%s body crumbles into dust.", s_suffix(Monnam(mon)));
         return FALSE;

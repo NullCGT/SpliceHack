@@ -406,8 +406,7 @@ register struct monst *mtmp;
     if (uarmf && uarmf->otyp == STOMPING_BOOTS
         && !Levitation && verysmall(mtmp->data)) {
         You("stomp on %s!", mon_nam(mtmp));
-        (void) passive(mtmp, uarmf, FALSE, 1, AT_KICK, FALSE);
-        xkilled(mtmp, XKILL_NOMSG);
+        xkilled(mtmp, XKILL_GIVEMSG);
         wake_nearby();
         makeknown(uarmf->otyp);
         return TRUE;

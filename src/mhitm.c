@@ -322,7 +322,6 @@ register struct monst *magr, *mdef;
         } else if (!Deaf) {
             You_hear(mdef->data->mlet ? "a disgusting crunch." : "a loud squelch.");
         }
-        passivemm(magr, mdef, TRUE, !mdef, marmf);
         mondead(mdef);
         if (magr && DEADMONSTER(mdef)) {
             return MM_DEF_DIED;

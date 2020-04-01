@@ -704,6 +704,7 @@ int x, y;
         ) {
         const char *mnam, *pronoun;
         int glyph = glyph_at(x, y);
+        boolean stomping = (uarmf && uarmf->otyp == STOMPING_BOOTS && verysmall(mon->data));
 
         mon->mundetected = 0; /* wakeup() will handle mimic */
         mnam = a_monnam(mon); /* after unhiding */
@@ -712,16 +713,22 @@ int x, y;
             mnam = !strcmp(pronoun, "it") ? "something" : "someone";
         }
         if (!glyph_is_monster(glyph) && !glyph_is_invisible(glyph))
-            You("find %s by bumping into %s.", mnam, pronoun);
+            You("find %s by %s %s.", mnam, stomping ? "stomping on" : "bumping into", pronoun);
         else
-            You("bump into %s.", mnam);
+            You("%s %s.", stomping ? "stomp on" : "bump into", mnam);
         wakeup(mon, FALSE);
         if (!canspotmon(mon))
             map_invisible(mon->mx, mon->my);
         setmangry(mon, FALSE);
         wake_nearto(x, y, 10);
-        unmul((char *) 0);
-        return FALSE;
+        if (stomping && verysmall(mon->data)) {
+            xkilled(mon, XKILL_GIVEMSG);
+            makeknown(uarmf->otyp);
+            if (Hallucination) verbalize("Woohoo!");
+        } else {
+            unmul((char *) 0);
+            return FALSE;
+        }
     }
 
     if ((u.ux - x) && (u.uy - y)

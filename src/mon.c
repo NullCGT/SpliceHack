@@ -2184,6 +2184,10 @@ struct permonst *mptr; /* reflects mtmp->data _prior_ to mtmp's death */
         seemimic(mtmp);
     if (onmap)
         newsym(mtmp->mx, mtmp->my);
+    if (has_erid(mtmp)) {
+        ERID(mtmp)->m1->monmount = 0;
+        place_monster(ERID(mtmp)->m1, mtmp->mx, mtmp->my);
+    }
     unstuck(mtmp);
     if (onmap)
         fill_pit(mtmp->mx, mtmp->my);
@@ -3298,6 +3302,7 @@ struct monst *mtmp;
             }
         }
     }
+    update_monsteed(mtmp);
     return;
 }
 

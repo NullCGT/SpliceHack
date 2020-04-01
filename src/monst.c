@@ -4466,7 +4466,7 @@ struct permonst _mons2[] = {
     MON("swordfish", S_EEL, LVL(6, 20, 4, 0, 0), (G_GENO | G_NOGEN | G_SGROUP),
         A(ATTK(AT_CLAW, AD_PHYS, 3, 4), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
           NO_ATTK),
-        SIZ(80, 80, MS_SILENT, MZ_MEDIUM), 0, 0,
+        SIZ(80, 80, MS_SILENT, MZ_SMALL), 0, 0,
         M1_SWIM | M1_AMPHIBIOUS | M1_ANIMAL | M1_SLITHY | M1_NOLIMBS
             | M1_CARNIVORE | M1_OVIPAROUS | M1_NOTAKE,
         M2_HOSTILE, 0, 0, 8, CLR_ORANGE),

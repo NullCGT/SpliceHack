@@ -112,6 +112,12 @@ New Items
   - Starting musical instrument.
   - Playing it aggravtes monsters, unless you play them well, in which case
     it exercises charisma.
+- New Items: Stomping Boots
+  - Attacking a very small monster while wearing stomping boots will instantly
+    kill it and cause you to move into its space.
+  - You cannot randomly escape traps while wearing stomping boots.
+  - Stomping on a monster wakes up all nearby monsters, so they cannot be used
+    to casually stomp through an anthole or beehive with impunity.
 
 New Race
 - New Race: Changeling

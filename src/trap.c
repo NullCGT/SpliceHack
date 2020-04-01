@@ -1103,7 +1103,7 @@ unsigned trflags;
         }
         if (!Fumbling && ttype != MAGIC_PORTAL && ttype != VIBRATING_SQUARE
             && ttype != ANTI_MAGIC && !forcebungle && !plunged
-            && !conj_pit && !adj_pit
+            && !conj_pit && !adj_pit && uarmf->otyp != STOMPING_BOOTS
             && (!rn2(5) || (is_pit(ttype)
                             && is_clinger(g.youmonst.data)))) {
                 You("escape %s %s.", (ttype == ARROW_TRAP && !trap->madeby_u)

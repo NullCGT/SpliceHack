@@ -1823,7 +1823,7 @@ struct obj *obj;
             break;
         }
         case LION: {
-            verbalize("I call upon the for aid!");
+            verbalize("I call upon thee for aid!");
             pline("%s transforms into a glorious winged lion!",
                   xname(obj));
             mtmp = makemon(&mons[PM_LAMASSU], u.ux, u.uy, NO_MM_FLAGS);

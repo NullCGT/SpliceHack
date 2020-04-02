@@ -338,7 +338,7 @@ int mechanism;
     }
     line = getrumor(truth, buf, reading ? FALSE : TRUE);
     if (!*line)
-        line = "NetHack rumors file closed for renovation.";
+        line = "SpliceHack rumors file closed for renovation.";
     switch (mechanism) {
     case BY_ORACLE:
         /* Oracle delivers the rumor */

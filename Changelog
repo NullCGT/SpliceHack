@@ -207,6 +207,7 @@ Notable Bug Fixes
 - Fix many monster steed errors. Known bugs: Genociding or killing a monster
   steed before the rider will result in some odd, but not game-breaking
   behavior.
+- Fix "NetHack" appearing in dumplog and a few other places.
                     
                     Version 0.7.0: Stranger Days
 

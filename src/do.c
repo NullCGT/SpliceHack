@@ -1368,7 +1368,7 @@ currentlevel_rewrite()
     if (!savelev(nhfp, ledger_no(&u.uz))) {
         close_nhfile(nhfp);
         delete_levelfile(ledger_no(&u.uz));
-        pline("NetHack is out of disk space for making levels!");
+        pline("SpliceHack is out of disk space for making levels!");
         You("can save, quit, or continue playing.");
         return -1;
     }

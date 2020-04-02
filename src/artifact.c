@@ -2198,7 +2198,7 @@ struct obj *obj;
 
     line = getrumor(bcsign(obj), buf, TRUE);
     if (!*line)
-        line = "NetHack rumors file closed for renovation.";
+        line = "SpliceHack rumors file closed for renovation.";
     pline("%s:", Tobjnam(obj, "whisper"));
     verbalize1(line);
     return;

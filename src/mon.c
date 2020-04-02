@@ -110,7 +110,7 @@ mon_sanity_check()
             if (x != u.ux || y != u.uy)
                 impossible("steed (%s) claims to be at <%d,%d>?",
                            fmt_ptr((genericptr_t) mtmp), x, y);
-        } else if (mtmp->monmount) {
+        } else if (mtmp->rider_id) {
             /* TODO: clean up this case and make it into a more airtight check */
             continue;
         } else if (g.level.monsters[x][y] != mtmp) {
@@ -1984,7 +1984,7 @@ struct monst *mtmp, *mtmp2;
     relmon(mtmp, (struct monst **) 0);
 
     /* finish adding its replacement */
-    if (mtmp != u.usteed && mtmp->monmount != 1) /* don't place steed onto the map */
+    if (mtmp != u.usteed && !mtmp->rider_id) /* don't place steed onto the map */
         place_monster(mtmp2, mtmp2->mx, mtmp2->my);
     if (mtmp2->wormno)      /* update level.monsters[wseg->wx][wseg->wy] */
         place_wsegs(mtmp2, NULL); /* locations to mtmp2 not mtmp. */
@@ -2182,12 +2182,16 @@ struct permonst *mptr; /* reflects mtmp->data _prior_ to mtmp's death */
         del_light_source(LS_MONSTER, monst_to_any(mtmp));
     if (M_AP_TYPE(mtmp))
         seemimic(mtmp);
+    if (has_erid(mtmp)) {
+        separate_steed_and_rider(mtmp);
+    }
+    if (mtmp->rider_id) {
+        struct monst *mtmp2 = get_mon_rider(mtmp);
+        if (mtmp2) free_erid(mtmp2);
+        newsym(mtmp->mx, mtmp->my);
+    }
     if (onmap)
         newsym(mtmp->mx, mtmp->my);
-    if (has_erid(mtmp)) {
-        ERID(mtmp)->m1->monmount = 0;
-        place_monster(ERID(mtmp)->m1, mtmp->mx, mtmp->my);
-    }
     unstuck(mtmp);
     if (onmap)
         fill_pit(mtmp->mx, mtmp->my);
@@ -2377,15 +2381,6 @@ register struct monst *mtmp;
     /* Player is thrown from his steed when it dies */
     if (mtmp == u.usteed)
         dismount_steed(DISMOUNT_GENERIC);
-    /* Likewise, if it's a mon-steed */
-    if (mtmp->monmount) {
-        struct monst *mtmp2;
-        for (mtmp2 = fmon; mtmp2; mtmp2 = mtmp2->nmon)
-            if (get_mount(mtmp2) == mtmp) {
-                free_erid(mtmp2);
-                break;
-            }
-    }
     /* extinguish monster's armor */
 	if ( (otmp = which_armor(mtmp, W_ARM)) && 
 		(otmp->otyp==GOLD_DRAGON_SCALE_MAIL || otmp->otyp == GOLD_DRAGON_SCALES) )
@@ -2509,13 +2504,6 @@ boolean was_swallowed; /* digestion */
     struct permonst *mdat = mon->data;
     struct obj *obj = (struct obj *) 0;
     int i, tmp;
-    /* TODO: Move this somewhere more logical. If mounted, the mount appears
-       after death. */
-    if (mon->mextra && ERID(mon) && ERID(mon)->m1 != NULL) {
-        place_monster(ERID(mon)->m1, mon->mx, mon->my);
-        ERID(mon)->m1->monmount = 0;
-    }
-    free_erid(mon);
     /* The master of cats has nine lives, symbolized by going up in level 9
        times. */
     if (mdat == &mons[PM_MASTER_OF_CATS]) {
@@ -2618,7 +2606,6 @@ void
 monfried(mdef)
 register struct monst *mdef;
 {
-    struct monst *msteed = NULL;
 
     mondead(mdef);
     if (!DEADMONSTER(mdef))
@@ -2627,14 +2614,6 @@ register struct monst *mdef;
     if (corpse_chance(mdef, (struct monst *) 0, FALSE)
         && (accessible(mdef->mx, mdef->my) || is_pool(mdef->mx, mdef->my)))
         (void) make_corpse(mdef, CORPSTAT_BURNT);
-
-    if (mdef->mextra && ERID(mdef) && ERID(mdef)->m1 != NULL) {
-        msteed = ERID(mdef)->m1;
-        ERID(mdef)->m1->monmount = 0;
-        place_monster(msteed, mdef->mx, mdef->my);
-        newsym(mdef->mx, mdef->my);
-        free_erid(mdef);
-    }
 }
 
 /* drop (perhaps) a cadaver and remove monster */
@@ -2642,7 +2621,6 @@ void
 mondied(mdef)
 register struct monst *mdef;
 {
-    struct monst *msteed = NULL;
 
     mondead(mdef);
     if (!DEADMONSTER(mdef))
@@ -2651,14 +2629,6 @@ register struct monst *mdef;
     if (corpse_chance(mdef, (struct monst *) 0, FALSE)
         && (accessible(mdef->mx, mdef->my) || is_pool(mdef->mx, mdef->my)))
         (void) make_corpse(mdef, CORPSTAT_NONE);
-
-    if (mdef->mextra && ERID(mdef) && ERID(mdef)->m1 != NULL) {
-        msteed = ERID(mdef)->m1;
-        ERID(mdef)->m1->monmount = 0;
-        place_monster(msteed, mdef->mx, mdef->my);
-        newsym(mdef->mx, mdef->my);
-        free_erid(mdef);
-    }
 }
 
 /* monster disappears, not dies */

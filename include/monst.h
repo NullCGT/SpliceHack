@@ -87,6 +87,7 @@ struct monst {
     coord mtrack[MTSZ];   /* monster track */
     int mhp, mhpmax;
     unsigned mappearance; /* for undetected mimics and the wiz */
+    unsigned rider_id;    /* m_id for rider, can check if not ridden since g.context.ident is initialized at 1 */
     uchar m_ap_type;      /* what mappearance is describing, m_ap_types */
 
     schar mtame;                /* level of tameness, implies peaceful */
@@ -133,10 +134,9 @@ struct monst {
 
     Bitfield(iswiz, 1);     /* is the Wizard of Yendor */
     Bitfield(wormno, 5);    /* at most 31 worms on any level */
-    Bitfield(monmount, 1);  /* whether this monster is a mount of another */
     Bitfield(mwither, 1);   /* is withering */
     Bitfield(mtemplit, 1);  /* temporarily seen; only valid during bhit() */
-    /* 7 free bits */
+    /* 8 free bits */
 
 #define MAX_NUM_WORMS 32    /* should be 2^(wormno bitfield size) */
 

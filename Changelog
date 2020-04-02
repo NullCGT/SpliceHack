@@ -204,6 +204,9 @@ Notable Bug Fixes
   the banquet hall incredibly drunk, and allowing for booze exploits.
 - Fixed lemurepits never appearing.
 - Fixed a segfault with monster steeds affecting both EvilHack and SpliceHack.
+- Fix many monster steed errors. Known bugs: Genociding or killing a monster
+  steed before the rider will result in some odd, but not game-breaking
+  behavior.
                     
                     Version 0.7.0: Stranger Days
 

@@ -801,7 +801,8 @@ register struct monst *mtmp;
             }
         }
 
-        if (!tmp && mtmp->monmount != 1)
+        /* TODO: Update with a more elegant solution allowing for steed ranged attacks */
+        if (!tmp && !mtmp->rider_id)
             tmp = m_move(mtmp, 0);
         else
             tmp = 0;
@@ -1143,8 +1144,9 @@ register int after;
     }
 
     /* charge the player, if we are able to do so */
-    if (!mtmp->mpeaceful && is_charger(mtmp->data) && !mintrap(mtmp) 
-        && !mtmp->mflee
+    if (!mtmp->mpeaceful 
+        && (is_charger(mtmp->data) || (has_erid(mtmp) && (is_charger(ERID(mtmp)->m1->data))))
+        && !mintrap(mtmp) && !mtmp->mflee
         && lined_up(mtmp) && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) >= 5) {
         if (canseemon(mtmp)) {
             pline(Hallucination ? "%s glomps%s!" : "%s charges%s!", Monnam(mtmp), 

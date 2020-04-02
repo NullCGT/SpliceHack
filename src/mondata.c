@@ -1004,7 +1004,7 @@ boolean
 levl_follower(mtmp)
 struct monst *mtmp;
 {
-    if (mtmp == u.usteed || mtmp->monmount == 1)
+    if (mtmp == u.usteed || mtmp->rider_id)
         return TRUE;
 
     /* Wizard with Amulet won't bother trying to follow across levels */

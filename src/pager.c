@@ -299,7 +299,7 @@ int x, y;
             name);
     if (mtmp->mextra && ERID(mtmp) && ERID(mtmp)->m1)
         Sprintf(eos(buf), ", riding %s", a_monnam(ERID(mtmp)->m1));
-    if (mtmp->monmount)
+    if (mtmp->rider_id)
         Sprintf(eos(buf), ", being ridden");
     if (u.ustuck == mtmp) {
         if (u.uswallow || iflags.save_uswallow) /* monster detection */

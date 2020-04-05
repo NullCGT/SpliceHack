@@ -52,11 +52,51 @@ static NEARDATA struct artifact artilist[] = {
     /* SPLICE ARTIFACTS */
 
     /*
-    *      Gugnir also returns to the hand of the wielder when thrown if
-    *      the wielder is a Valkyrie, but there is no strength requirement.
+    *       Similar to the brands. Does not destroy items, but also resisted
+    *       by quite a few monsters.
     */
-    A("Gungnir", DWARVISH_SPEAR, (SPFX_RESTR | SPFX_ATTK), 0, 0, ELEC(7, 20),
-      NO_DFNS, NO_CARY, LIGHTNING_BOLT, A_NEUTRAL, PM_VALKYRIE, NON_PM, 4000L, NO_COLOR),
+    A("Acidfall", LONG_SWORD, (SPFX_RESTR | SPFX_ATTK | SPFX_DEFN), 0, 0,
+      ACID(5, 0), ACID(0, 0), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 3000L,
+      NO_COLOR),
+
+    /*
+    *       Can temporarily paralyze a target.
+    */
+    A("Anaconda", BULLWHIP, (SPFX_RESTR),
+      0, 0,
+      PLYS(7, 7), DRLI(0,0), NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 200L,
+      CLR_RED),
+
+    /*
+    *       This lance does a lot of damage, and also automatically unseats any
+    *       mounted person it hits.
+    */
+    A("Bradamante\'s Fury", LANCE, (SPFX_RESTR), 0, 0,
+      PHYS(5, 10), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 800L,
+      NO_COLOR),
+
+    /*
+    *       Some "worse" sacrifice gifts are needed to avoid making #offer
+    *       overpowered. Used to be PM_KNIGHT.
+    */
+    A("Carnwennan", KNIFE, (SPFX_RESTR | SPFX_SEARCH | SPFX_STLTH), 0, 0,
+      PHYS(3, 8), NO_DFNS, NO_CARY, INVIS, A_LAWFUL,
+      NON_PM, NON_PM, 400L, NO_COLOR),
+
+    /*
+    *     Staff of Circe. 1/20 chance of turning target into an animal.
+    */
+    A("Circe's Witchstaff", QUARTERSTAFF,
+      (SPFX_RESTR | SPFX_BEHEAD), 0, 0,
+      PHYS(4, 4), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 3500,
+      CLR_GREEN),
+
+    /*
+    *       If not granted through sacrifice, the Grim Reaper is generated
+    *       with this.
+    */
+    A("The End", GRAIN_SCYTHE, (SPFX_RESTR | SPFX_DEFN), 0, 0, COLD(3, 20),
+      DRLI(0, 0), NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 6000L, NO_COLOR),
 
     /*
     *      Gae Bulg can be thrown as a last resort. If it hits, the attack
@@ -84,39 +124,24 @@ static NEARDATA struct artifact artilist[] = {
       7000L, NO_COLOR),
 
     /*
-    *       Some "worse" sacrifice gifts are needed to avoid making #offer
-    *       overpowered. Used to be PM_KNIGHT.
+    *       Based on the bindings used to trap Fenrir. This hook can grapple
+    *       things regardless of size, and has a massive range.
     */
-    A("Carnwennan", KNIFE, (SPFX_RESTR | SPFX_SEARCH | SPFX_STLTH), 0, 0,
-      PHYS(3, 8), NO_DFNS, NO_CARY, INVIS, A_LAWFUL,
-      NON_PM, NON_PM, 400L, NO_COLOR),
+    A("Gleipnir", GRAPPLING_HOOK, (SPFX_RESTR), 0, 0, PHYS(5, 8),
+      NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 1700L, NO_COLOR),
 
     /*
-    *       Seafoam grants waterbreathing, and is generated rustproof.
+    *      Gugnir also returns to the hand of the wielder when thrown if
+    *      the wielder is a Valkyrie, but there is no strength requirement.
     */
-    A("Seafoam", TRIDENT, (SPFX_RESTR | SPFX_BREATHE), 0, 0, PHYS(3, 7),
-      NO_DFNS, NO_CARY, WWALKING, A_NONE, NON_PM, NON_PM, 1500L, NO_COLOR),
+    A("Gungnir", DWARVISH_SPEAR, (SPFX_RESTR | SPFX_ATTK), 0, 0, ELEC(7, 20),
+      NO_DFNS, NO_CARY, LIGHTNING_BOLT, A_NEUTRAL, PM_VALKYRIE, NON_PM, 4000L, NO_COLOR),
 
     /*
     *       Mesopatamian in origin.
     */
     A("Imhullu", GLAIVE, (SPFX_RESTR), 0, 0, WIND(4, 5), NO_DFNS, NO_CARY, SEFFECT,
       A_NEUTRAL, NON_PM, NON_PM, 2000L, NO_COLOR),
-
-    /*
-    *       May or may not be an obscure reference. Gains strength based
-    *       on moon phase, which I think is a feature of an artifact in
-    *       another variant.
-    */
-    A("Unlimited Moon", FLAIL, SPFX_RESTR, 0, 0, PHYS(2, 2), COLD(0, 0),
-      NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 1500L, NO_COLOR),
-
-    /*
-    *       Based on the bindings used to trap Fenrir. This hook can grapple
-    *       things regardless of size, and has a massive range.
-    */
-    A("Gleipnir", GRAPPLING_HOOK, (SPFX_RESTR), 0, 0, PHYS(5, 8),
-      NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 1700L, NO_COLOR),
 
     /*
     *       This bizarre weapon acts as a cursed luckstone regardless of its
@@ -130,42 +155,27 @@ static NEARDATA struct artifact artilist[] = {
       NO_COLOR),
 
     /*
-    *       This lance does a lot of damage, and also automatically unseats any
-    *       mounted person it hits.
+    *      Quarterstaff that grants teleport control, and also greatly increases
+    *      spellcasting ability (as a robe).
     */
-    A("Bradamante\'s Fury", LANCE, (SPFX_RESTR), 0, 0,
-      PHYS(5, 10), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 800L,
-      NO_COLOR),
+    A("Origin", QUARTERSTAFF,
+      (SPFX_RESTR | SPFX_TCTRL), 0, 0,
+      PHYS(2, 6), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 500L,
+      CLR_MAGENTA),
 
     /*
-    *       Can temporarily paralyze a target.
+    *      Shield of King Arthur.
     */
-    A("Anaconda", BULLWHIP, (SPFX_RESTR),
-      0, 0,
-      PLYS(7, 7), DRLI(0,0), NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 200L,
-      CLR_RED),
+    A("Pridwen", LARGE_SHIELD,
+      (SPFX_RESTR | SPFX_HPHDAM), 0, 0,
+      NO_ATTK, NO_DFNS, NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 1500L,
+      CLR_MAGENTA),
 
     /*
-    *       If not granted through sacrifice, the Grim Reaper is generated
-    *       with this.
+    *       Seafoam grants waterbreathing, and is generated rustproof.
     */
-    A("The End", GRAIN_SCYTHE, (SPFX_RESTR | SPFX_DEFN), 0, 0, COLD(3, 20),
-      DRLI(0, 0), NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 6000L, NO_COLOR),
-
-    /*
-    *       Definitely no canonical problems here.
-    */
-    A("War\'s Sword", TWO_HANDED_SWORD,
-      (SPFX_RESTR | SPFX_CONFLICT), 0, 0, PHYS(3, 7), NO_DFNS, NO_CARY, 0,
-      A_NONE, NON_PM, NON_PM, 7000L, NO_COLOR),
-
-    /*
-    *       Similar to the brands. Does not destroy items, but also resisted
-    *       by quite a few monsters.
-    */
-    A("Acidfall", LONG_SWORD, (SPFX_RESTR | SPFX_ATTK | SPFX_DEFN), 0, 0,
-      ACID(5, 0), ACID(0, 0), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 3000L,
-      NO_COLOR),
+    A("Seafoam", TRIDENT, (SPFX_RESTR | SPFX_BREATHE), 0, 0, PHYS(3, 7),
+      NO_DFNS, NO_CARY, WWALKING, A_NONE, NON_PM, NON_PM, 1500L, NO_COLOR),
 
     /*
     *       Resisted by very few monsters, but is a morning star and also
@@ -183,29 +193,12 @@ static NEARDATA struct artifact artilist[] = {
       NO_COLOR),
 
     /*
-    *      Shield of King Arthur.
+    *       May or may not be an obscure reference. Gains strength based
+    *       on moon phase, which I think is a feature of an artifact in
+    *       another variant.
     */
-    A("Pridwen", LARGE_SHIELD,
-      (SPFX_RESTR | SPFX_HPHDAM), 0, 0,
-      NO_ATTK, NO_DFNS, NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 1500L,
-      CLR_MAGENTA),
-
-    /*
-    *      Quarterstaff that grants teleport control, and also greatly increases
-    *      spellcasting ability (as a robe).
-    */
-    A("Origin", QUARTERSTAFF,
-      (SPFX_RESTR | SPFX_TCTRL), 0, 0,
-      PHYS(2, 6), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 500L,
-      CLR_MAGENTA),
-    
-    /*
-    *     Staff of Circe. 1/20 chance of turning target into an animal.
-    */
-    A("Circe's Witchstaff", QUARTERSTAFF,
-      (SPFX_RESTR | SPFX_BEHEAD), 0, 0,
-      PHYS(4, 4), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 3500,
-      CLR_GREEN),
+    A("Unlimited Moon", FLAIL, SPFX_RESTR, 0, 0, PHYS(2, 2), COLD(0, 0),
+      NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 1500L, NO_COLOR),
 
     /*
     *        Just for fun.
@@ -214,6 +207,13 @@ static NEARDATA struct artifact artilist[] = {
       (SPFX_NOGEN | SPFX_RESTR | SPFX_WARN | SPFX_DFLAGH), 0, MH_UNDEAD,
       PHYS(-5, -5), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 200L,
       CLR_MAGENTA),
+
+    /*
+    *       Definitely no canonical problems here.
+    */
+    A("War\'s Sword", TWO_HANDED_SWORD,
+      (SPFX_RESTR | SPFX_CONFLICT), 0, 0, PHYS(3, 7), NO_DFNS, NO_CARY, 0,
+      A_NONE, NON_PM, NON_PM, 7000L, NO_COLOR),
 
     /* PIRATE ARTIFACTS */
 

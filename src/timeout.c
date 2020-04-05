@@ -642,7 +642,7 @@ nh_timeout()
                 slimed_to_death(kptr); /* done_timeout(TURNED_SLIME,SLIMED) */
                 break;
             case VOMITING:
-                if (uamul && uamul->otyp == AMULET_OF_NAUSEA) {
+                if ((uamul && uamul->otyp == AMULET_OF_NAUSEA) || g.youmonst.data == &mons[PM_VOMITOUS_GHOUL]) {
                     make_vomiting((long) rnd(100), FALSE);
                 } else  {
                     make_vomiting(0L, TRUE);

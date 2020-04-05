@@ -1393,7 +1393,9 @@ struct monst* mtmp;
             if (flags.verbose)
                 pline("%s eats %s!", Monnam(mtmp), distant_name(otmp, doname));
         } else if (flags.verbose) {
-            if (is_ghoul(mtmp->data))
+            if (mtmp->data == &mons[PM_VOMITOUS_GHOUL])
+                You_hear("someone vomiting in reverse.");
+            else if (is_ghoul(mtmp->data))
                 You_hear("an awful gobbling noise!");
             else
                 You_hear("a masticating sound.");

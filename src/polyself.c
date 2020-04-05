@@ -716,6 +716,9 @@ int mntmp;
      */
     if (strongmonst(&mons[mntmp]))
         ABASE(A_STR) = AMAX(A_STR) = STR18(100);
+    
+    if (mntmp == PM_VOMITOUS_GHOUL)
+        make_vomiting((long) rnd(100), FALSE);
 
     if (Stone_resistance && Stoned) { /* parnes@eniac.seas.upenn.edu */
         make_stoned(0L, "You no longer seem to be petrifying.", 0,

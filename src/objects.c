@@ -979,6 +979,7 @@ SCROLL("stinking cloud",             "VELOX NEB",  1,  15, 300),
      * tilemap.c must be modified to match.
      */
 SCROLL(None,      "FOOBIE BLETCH",  1,   0, 100),
+SCROLL(None,            "OOP ACK",  1,   0, 100), /* bloom county */
 SCROLL(None,            "NYEHEHE",  1,   0, 100), /* laughing noise */
 SCROLL(None,      "ELPHE MONATER",  1,   0, 100), /* famous mistranslation */
 SCROLL(None,               "ABAJ",  1,   0, 100), /* famous mistranslation */

@@ -29,7 +29,7 @@ OPTIONS=color
 #OPTIONS=font_text:geneva,font_size_text:9
 
 # Don't make dark corridors look like lit corridors
-OPTIONS=!lit_corridor
+OPTIONS=lit_corridor
 
 # Enable sound and beeps
 OPTIONS=sound,!silent

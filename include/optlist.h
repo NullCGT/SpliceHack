@@ -254,7 +254,7 @@ pfx_##a,
                 &iflags.obsolete)
     NHOPTB(legacy, 0, opt_out, set_in_config, On, Yes, No, No, NoAlias,
                 &flags.legacy)
-    NHOPTB(lit_corridor, 0, opt_in, set_in_game, Off, Yes, No, No, NoAlias,
+    NHOPTB(lit_corridor, 0, opt_in, set_in_game, On, Yes, No, No, NoAlias,
                 &flags.lit_corridor)
     NHOPTB(lootabc, 0, opt_in, set_in_game, Off, Yes, No, No, NoAlias,
                 &flags.lootabc)

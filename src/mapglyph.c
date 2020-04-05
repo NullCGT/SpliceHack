@@ -164,10 +164,13 @@ unsigned mgflags;
         } else if (iflags.use_color && offset == S_litcorr
                    && g.showsyms[idx] == g.showsyms[S_corr + SYM_OFF_P]) {
             color = CLR_WHITE;
-        } else if (iflags.use_color &&
-              (offset == S_upstair || offset == S_dnstair) &&
-              (x == g.sstairs.sx && y == g.sstairs.sy)) {
-          color = CLR_YELLOW;
+         /* show branch stairs in a different color */	
+        } else if (iflags.use_color	
+                    && (offset == S_upstair || offset == S_dnstair)	
+                    && (x == g.sstairs.sx && y == g.sstairs.sy)	
+                    && (g.showsyms[idx] == g.showsyms[S_upstair + SYM_OFF_P]	
+                        || g.showsyms[idx] == g.showsyms[S_dnstair + SYM_OFF_P])) {
+            color = CLR_YELLOW;
         } else if (iflags.use_color && offset >= S_vwall && offset <= S_trwall) {
             if (*in_rooms(x,y,BEEHIVE))
         		    color = CLR_YELLOW;

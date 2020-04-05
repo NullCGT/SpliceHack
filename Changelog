@@ -30,8 +30,9 @@ User Friendliness / QOL Features
   - People have complained about these blocking access to dungeon corridors,
     and it makes thematic sense for them to appear in Gehennom, at which
     point the player has numerous methods to bypass magma.
-- Merfolk can by valkyrie.
+- Merfolk can be valkyrie.
 - Removed altar destruction nerf temporarily.
+- Lit corridors defaults to "On."
 
 New Monsters
 - New Monster: Thriae
@@ -122,6 +123,23 @@ New Items
     in your path and continue onward, making the boots somewhat useful for
     dealing with hordes of insects on the astral plane. Jumping on a monster while
     hallucinating yields YAFM.
+
+New Special Materials
+- Adamantine
+  - Exceedingly rare and expensive. 
+  - Adamantine armor has a higher than normal AC bonus. 
+  - Edged adamantine weapons deal +3 damage.
+- Cold Iron
+  - Sears fey for +1d20 damage.
+  - Vulnerable to rust, but immune to corrosion.
+- Shadowspun
+  - Does not impact spellcasting.
+  - Weighs practically nothing.
+  - Functions normally against shades.
+- Crystal
+  - Like EvilHack, gemstone material items are referred
+    to as "crystal" in game.
+  - Edged crystal weapons deal +3 damage.
 
 New Race
 - New Race: Changeling

@@ -2533,8 +2533,9 @@ eatspecial()
 static const char *foodwords[] = {
     "meal",    "liquid",  "wax",       "food", "meat",     "paper",
     "cloth",   "leather", "wood",      "bone", "scale",    "metal",
-    "metal",   "metal",   "silver",    "gold", "platinum", "mithril",
-    "plastic", "glass",   "rich food", "stone"
+    "metal",   "metal",   "silver",    "gold", "platinum", "adamantine", 
+    "chilled metal",      "mithril",   "plastic", "glass", "rich food", 
+    "shadow",  "stone",
 };
 
 static const char *

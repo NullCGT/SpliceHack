@@ -26,12 +26,15 @@ enum obj_material_types {
     SILVER      = 14, /* Ag */
     GOLD        = 15, /* Au */
     PLATINUM    = 16, /* Pt */
-    MITHRIL     = 17,
-    PLASTIC     = 18,
-    GLASS       = 19,
-    GEMSTONE    = 20,
-    MINERAL     = 21,
-    NUM_MATERIAL_TYPES = 21
+    ADAMANTINE  = 17,
+    COLD_IRON   = 18, /* Iron that has been cold-forged */
+    MITHRIL     = 19,
+    PLASTIC     = 20,
+    GLASS       = 21,
+    GEMSTONE    = 22,
+    SHADOW      = 23,
+    MINERAL     = 24,
+    NUM_MATERIAL_TYPES = 24
 };
 
 enum obj_armor_types {
@@ -85,7 +88,7 @@ struct objclass {
 
 /* primary damage: fire/rust/--- */
 /* is_flammable(otmp), is_rottable(otmp) in mkobj.c */
-#define is_rustprone(otmp) (otmp->material == IRON)
+#define is_rustprone(otmp) (otmp->material == IRON || otmp->material == COLD_IRON)
 
 /* secondary damage: rot/acid/acid */
 #define is_corrodeable(otmp)                   \

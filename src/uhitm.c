@@ -1480,7 +1480,7 @@ int dieroll;
         /* iron weapon using melee or polearm hit [3.6.1: metal weapon too;
            also allow either or both weapons to cause split when twoweap] */
         && obj && (obj == uwep || (u.twoweap && obj == uswapwep))
-        && ((obj->material == IRON
+        && ((obj->material == IRON || obj->material == COLD_IRON
              /* allow scalpel and tsurugi to split puddings */
              || obj->material == METAL)
             /* but not bashing with darts, arrows or ya */
@@ -1598,7 +1598,8 @@ struct obj *obj;
         || obj->otyp == IRON_CHAIN      /* dmgval handles those first three */
         || obj->otyp == MIRROR          /* silver in the reflective surface */
         || obj->otyp == CLOVE_OF_GARLIC /* causes shades to flee */
-        || obj->material == SILVER)
+        || obj->material == SILVER
+        || obj->material == SHADOW)
         return TRUE;
     return FALSE;
 }

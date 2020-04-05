@@ -2193,11 +2193,14 @@ const int matprices[] = {
     30, /* SILVER */
     30, /* GOLD */
     30, /* PLATINUM */
+    50, /* ADAMANTINE */
+    15, /* COLD_IRON */
     32, /* MITHRIL - mithril-coat to regular chain mail */
     10, /* PLASTIC */
     20, /* GLASS */
    500, /* GEMSTONE */
-    10  /* MINERAL */
+    15, /* SHADOW */
+    10, /* MINERAL */
 };
 
 /* calculate the value that the shk will charge for [one of] an object */

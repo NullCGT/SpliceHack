@@ -1196,7 +1196,7 @@ register struct attack *mattk;
                 if (tmp < 1)
                     tmp = 1;
                 if (u.mh - tmp > 1
-                    && (otmp->material == IRON
+                    && (otmp->material == IRON || otmp->material == COLD_IRON
                         /* relevant 'metal' objects are scalpel and tsurugi */
                         || otmp->material == METAL)
                     && (u.umonnum == PM_BLACK_PUDDING

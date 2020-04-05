@@ -1821,7 +1821,8 @@ int cindex, ccount; /* index of this container (1..N), number of them (N) */
     if (Hate_material(cobj->material)) {
         char kbuf[BUFSZ];
         pline("The %s lid %s!", materialnm[cobj->material],
-              cobj->material == SILVER ? "sears your flesh" : "hurts to touch");
+              (cobj->material == SILVER || cobj->material == COLD_IRON) 
+                ? "sears your flesh" : "hurts to touch");
         Sprintf(kbuf, "opening a %s container", materialnm[cobj->material]);
         losehp(rnd(sear_damage(cobj->material)), kbuf, KILLED_BY);
     }

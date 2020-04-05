@@ -1505,11 +1505,14 @@ const int matdensities[] = {
     90,  // SILVER
     60, /* GOLD */
     80, /* PLATINUM */
+    60,  // ADAMANTINE
+    80,  // COLD IRON
     50, /* MITHRIL */
     20,  // PLASTIC
     60,  // GLASS
     55,  // GEMSTONE
-    70   // MINERAL
+     1,  // SHADOW
+    70,  // MINERAL
 };
 
 
@@ -1627,11 +1630,14 @@ const int matac[] = {
      5,  // SILVER
      3,  // GOLD
      4,  // PLATINUM
+     7,  // ADAMANTINE
+     5,  // COLD IRON
      6,  // MITHRIL
      3,  // PLASTIC
      5,  // GLASS
      7,  // GEMSTONE
-     6   // MINERAL
+     5,  // SHADOW
+     6,  // MINERAL
 };
 
 /* Compute the bonus or penalty to AC an armor piece should get for being a
@@ -3196,113 +3202,130 @@ struct obj *otmp2;
 
 /* for objects which are normally iron or metal */
 static const struct icp metal_materials[] = {
-    {75, 0}, /* default to base type, iron or metal */
-    { 5, IRON},
-    { 5, WOOD},
-    { 5, SILVER},
-    { 3, COPPER},
-    { 3, MITHRIL},
-    { 1, GOLD},
-    { 1, BONE},
-    { 1, GLASS},
-    { 1, PLASTIC}
+    {747, 0}, /* default to base type, iron or metal */
+    { 49, IRON},
+    { 50, WOOD},
+    { 50, SILVER},
+    { 30, COPPER},
+    { 30, MITHRIL},
+    { 10, GOLD},
+    { 10, BONE},
+    { 10, GLASS},
+    { 10, PLASTIC},
+    {  1, ADAMANTINE},
+    {  1, SHADOW },
+    {  1, COLD_IRON},
+    {  1, GEMSTONE}
 };
 
 /* Reflectable items - the shield of reflection; anything
  * that can hold a polish */
 static const struct icp shiny_materials[] = {
-    {30, SILVER},
-    {22, COPPER},
-    {10, GOLD},
-    {12, IRON}, /* stainless steel */
-    {12, GLASS},
-    { 7, MITHRIL},
-    { 5, METAL}, /* aluminum, or similar */
-    { 2, PLATINUM}
+    {295, SILVER},
+    {220, COPPER},
+    {100, GOLD},
+    {120, IRON}, /* stainless steel */
+    {120, GLASS},
+    { 70, MITHRIL},
+    { 50, METAL}, /* aluminum, or similar */
+    { 20, PLATINUM},
+    {  5, ADAMANTINE}
+    /* Avoiding cold iron because a cold iron amulet in Sokoban would be
+       really nasty for elves. */
 };
 
 /* for objects which are normally wooden */
 static const struct icp wood_materials[] = {
-    {80, WOOD},
-    {10, MINERAL},
-    { 5, IRON},
-    { 3, BONE},
-    { 1, COPPER},
-    { 1, SILVER}
+    {800, WOOD},
+    {100, MINERAL},
+    { 50, IRON},
+    { 30, BONE},
+    { 10, COPPER},
+    { 10, SILVER}
 };
 
 /* for objects which are normally cloth */
 static const struct icp cloth_materials[] = {
-    {80, CLOTH},
-    {10, LEATHER},
-    { 7, PLASTIC},
-    { 3, PAPER}
+    {800, CLOTH},
+    {100, LEATHER},
+    { 70, PLASTIC},
+    { 28, PAPER},
+    {  2, SHADOW}
 };
 
 /* for objects which are normally leather */
 static const struct icp leather_materials[] = {
-    {75, LEATHER},
-    {17, CLOTH},
-    { 7, PLASTIC},
-    { 1, PAPER}
+    {750, LEATHER},
+    {170, CLOTH},
+    { 70, PLASTIC},
+    { 10, PAPER}
 };
 
 /* for objects of dwarvish make */
 static const struct icp dwarvish_materials[] = {
-    {85, IRON},
-    {10, MITHRIL},
-    { 2, COPPER},
-    { 1, SILVER},
-    { 1, GOLD},
-    { 1, PLATINUM}
+    {845, IRON},
+    { 98, MITHRIL},
+    { 20, COPPER},
+    { 10, SILVER},
+    { 10, GOLD},
+    { 10, PLATINUM},
+    {  5, GEMSTONE},
+    {  2, ADAMANTINE},
 };
 
 /* for armor-y objects of elven make - no iron!
  * Does not cover clothy items; those use the regular cloth probs. */
 static const struct icp elven_materials[] = {
-    {80, WOOD},
-    {10, COPPER},
-    { 5, MITHRIL},
-    { 3, SILVER},
-    { 2, GOLD}
+    {799, WOOD},
+    {100, COPPER},
+    { 50, MITHRIL},
+    { 30, SILVER},
+    { 20, GOLD},
+    {  1, SHADOW}
 };
 /* for bells and other tools, especially instruments, which are normally copper
  * or metal.  Wood and glass in other lists precludes us from using those. */
 static const struct icp resonant_materials[] = {
-    {55, 0}, /* use base material */
-    {25, COPPER},
-    { 6, SILVER},
-    { 5, IRON},
-    { 5, MITHRIL},
-    { 3, GOLD},
-    { 1, PLATINUM}
+    {544, 0}, /* use base material */
+    {250, COPPER},
+    { 60, SILVER},
+    { 50, IRON},
+    { 50, MITHRIL},
+    { 30, GOLD},
+    { 10, PLATINUM},
+    {  5, GEMSTONE},
+    {  1, ADAMANTINE}
 };
 /* for horns, currently. */
 static const struct icp horn_materials[] = {
-    {70, BONE},
-    {10, COPPER},
-    { 8, MITHRIL},
-    { 5, WOOD},
-    { 5, SILVER},
-    { 2, GOLD}
+    {685, BONE},
+    {100, COPPER},
+    { 80, MITHRIL},
+    { 50, WOOD},
+    { 50, SILVER},
+    { 20, GOLD},
+    {  5, SHADOW},
+    {  5, ADAMANTINE},
+    {  5, GEMSTONE}
 };
 /* hacks for specific objects... not great because it's a lot of data, but it's
  * a relatively clean solution */
 static const struct icp elvenhelm_materials[] = {
-    {70, LEATHER},
-    {20, COPPER},
-    {10, WOOD}
+    {700, LEATHER},
+    {200, COPPER},
+    { 99, WOOD},
+    {  1, SHADOW},
 };
 static const struct icp bow_materials[] = {
   /* assumes all bows will be wood by default, fairly safe assumption */
-    {75, WOOD},
-    { 7, IRON},
-    { 5, MITHRIL},
-    { 4, COPPER},
-    { 4, BONE},
-    { 2, SILVER},
-    { 2, PLASTIC},
-    { 1, GOLD}
+    {750, WOOD},
+    { 70, IRON},
+    { 50, MITHRIL},
+    { 40, COPPER},
+    { 40, BONE},
+    { 20, SILVER},
+    { 20, PLASTIC},
+    { 10, GOLD}
 };
 
 /* TODO: Orcish? */
@@ -3408,7 +3431,7 @@ boolean by_you;
 
     int j = 0;
     int newmat;
-    while (j < 100) {
+    while (j < 1000) {
         newmat = 1 + rn2(NUM_MATERIAL_TYPES);
         if (newmat != origmat && valid_obj_material(obj, newmat))
             break;
@@ -3438,7 +3461,7 @@ struct obj* obj;
     unsigned short otyp = obj->otyp;
 
     if (materials) {
-        int i = rnd(100);
+        int i = rnd(1000);
         while (i > 0) {
             if (i <= materials->iprob)
                 break;
@@ -3490,7 +3513,7 @@ int mat;
       materials = material_list(obj);
 
       if (materials) {
-        int i = 100; /* guarantee going through everything */
+        int i = 1000; /* guarantee going through everything */
         while (i > 0) {
             if (materials->iclass == mat)
                 return TRUE;

@@ -319,9 +319,10 @@ struct monst *mon;
     /* adjust for various materials */
 #define is_odd_material(obj, mat) \
     ((obj)->material == (mat) && !(objects[(obj)->otyp].oc_material == (mat)))
-    if (is_odd_material(otmp, GLASS)
+    if ((is_odd_material(otmp, GLASS) || is_odd_material(otmp, ADAMANTINE)
+         || is_odd_material(otmp, GEMSTONE))
         && (objects[otmp->otyp].oc_dir & (PIERCE | SLASH))) {
-        /* glass is sharp */
+        /* glass, crystal, and adamantine are sharp */
         tmp += 3;
     }
     else if (is_odd_material(otmp, GOLD) || is_odd_material(otmp, PLATINUM)) {
@@ -515,7 +516,7 @@ struct obj * obj; /* the offending item */
     }
     char* whom = mon_nam(mdef);
     shk_your(whose, obj);
-    if (mat == SILVER) { /* more dramatic effects than other materials */
+    if (mat == SILVER || mat == COLD_IRON) { /* more dramatic effects than other materials */
         /* note: s_suffix returns a modifiable buffer */
         if (!noncorporeal(mdef->data) && !amorphous(mdef->data))
             whom = strcat(s_suffix(whom), " flesh");

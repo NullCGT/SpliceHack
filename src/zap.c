@@ -1388,8 +1388,10 @@ int okind;
     /* some of these choices are arbitrary */
     switch (okind) {
     case IRON:
+    case COLD_IRON:
     case METAL:
     case MITHRIL:
+    case ADAMANTINE:
         pm_index = PM_IRON_GOLEM;
         material = "metal ";
         break;
@@ -1425,6 +1427,10 @@ int okind;
     case BONE:
         pm_index = PM_SKELETON; /* nearest thing to "bone golem" */
         material = "bony ";
+        break;
+    case SHADOW:
+        pm_index = PM_SHADE; /* nearest thing to "shadow golem" */
+        material = "shadowy ";
         break;
     case GOLD:
         pm_index = PM_GOLD_GOLEM;

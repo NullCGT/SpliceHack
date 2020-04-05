@@ -2437,7 +2437,7 @@ boolean loseit;    /* whether to drop it if hero can longer touch it */
 
         /* hero can't handle this object, but didn't get touch_artifact()'s
            "<obj> evades your grasp|control" message; give an alternate one */
-           if (!bane && !(hatemat && obj->material == SILVER)) {
+           if (!bane && !(hatemat && (obj->material == SILVER || obj->material == COLD_IRON))) {
                 pline("The %s of %s hurts to touch!", materialnm[obj->material],
                       yname(obj));
             }

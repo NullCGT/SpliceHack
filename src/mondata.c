@@ -340,7 +340,7 @@ int material;
                 || is_demon(ptr) || ptr == &mons[PM_SHADE]
                 || (ptr->mlet == S_IMP));
     }
-    else if (material == IRON) {
+    else if (material == IRON || material == COLD_IRON) {
         /* cold iron: fairy/fae creatures hate it */
         return (is_elf(ptr) || ptr->mlet == S_NYMPH
                 || ptr == &mons[PM_CHANGELING]
@@ -362,6 +362,7 @@ int material;
 {
     switch (material) {
     case SILVER:
+    case COLD_IRON:
         return 20;
     case IRON:
     default:

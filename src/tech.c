@@ -2006,6 +2006,7 @@ int monnum;
 	if (is_dwarf(&mons[monnum])) return PM_DWARF_ZOMBIE;
 	if (is_elf(&mons[monnum])) return PM_ELF_ZOMBIE;
 	if (is_human(&mons[monnum])) return PM_HUMAN_ZOMBIE;
+	if (is_changeling(&mons[monnum])) return PM_CHANGELING_ZOMBIE;
 	if (monnum == PM_ETTIN) return PM_ETTIN_ZOMBIE;
 	if (is_giant(&mons[monnum])) return PM_GIANT_ZOMBIE;
 	if (is_dragon(&mons[monnum])) return PM_ZOMBIE_DRAGON;

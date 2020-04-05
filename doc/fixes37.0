@@ -1,4 +1,4 @@
-$NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.144 $ $NHDT-Date: 1585361048 2020/03/28 02:04:08 $
+$NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.151 $ $NHDT-Date: 1585993266 2020/04/04 09:41:06 $
 
 General Fixes and Modified Features
 -----------------------------------
@@ -95,6 +95,27 @@ hero polymorphed into a hider and hiding was not unhidden when teleporting
 impose tighter restraints on 'summon nasties', both for spellcasting monsters
 	and post-Wizard harassment
 prevent swallowing monster ending up in a solid wall if it killed vault guard
+fix attached ball getting deallocated if swallowed, going down into a pit,
+	and saving
+level compiler creates correct novel with supplied name
+for farlook, describe water in the castle moat and in Juiblex's swamp as moat
+	and as swamp, respectively, rather than just as "water"
+make hezrous emit poison clouds when they move
+stepping from one type of terrain to another was triggering an unnecessary
+	status update
+make shriekers summon baby purple worms if purple worms would be too tough
+make non-tame (baby) purple worms eat corpses off the ground
+make baby purple worms attack shriekers
+make hero polymorphed into baby purple worm warned against shriekers
+confused scroll of light summons tame cancelled lights
+potions of hallucination can give enlightenment
+add a small chance of surviving food poisoning
+deliberate level teleporter activation ignores magic resistance
+auto-id scroll of remove curse when a known buc-state was changed
+demon lords hate Demonbane
+pets avoid eating shapeshifter corpses unless starving or nearly feral
+blessed scroll of teleportation gives a single controlled teleport
+allow opening a tin without interruption if slimed
 
 
 Fixes to 3.7.0-x Problems that Were Exposed Via git Repository
@@ -135,6 +156,8 @@ grammar for messages about a monster removing items from a container was bad
 some new status conditions didn't always update when they should
 fix flipping non-existent stairs and ladders (github #311)
 fix door created into random wall or position opening into solid wall
+'use_inverse' option was accidentally made Windows-only; change it back to
+	being more general; change its default to True
 
 
 Platform- and/or Interface-Specific Fixes

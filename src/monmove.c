@@ -1,4 +1,4 @@
-/* NetHack 3.6	monmove.c	$NHDT-Date: 1585361053 2020/03/28 02:04:13 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.133 $ */
+/* NetHack 3.6	monmove.c	$NHDT-Date: 1586091452 2020/04/05 12:57:32 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.137 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2006. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -766,6 +766,9 @@ register struct monst *mtmp;
     /*  Now the actual movement phase
      */
 
+    if (mtmp->data == &mons[PM_HEZROU]) /* stench */
+        create_gas_cloud(mtmp->mx, mtmp->my, 1, 8);
+
     if (mdat == &mons[PM_KILLER_BEE]
         /* could be smarter and deliberately move to royal jelly, but
            then we'd need to scan the level for queen bee in advance;
@@ -990,7 +993,7 @@ m_move(mtmp, after)
 register struct monst *mtmp;
 register int after;
 {
-    register int appr;
+    int appr, etmp;
     xchar gx, gy, nix, niy, chcnt;
     int chi; /* could be schar except for stupid Sun-2 compiler */
     boolean likegold = 0, likegems = 0, likeobjs = 0, likemagic = 0,
@@ -1208,8 +1211,8 @@ register int after;
     }
     if ((!mtmp->mpeaceful || !rn2(10)) && (!Is_rogue_level(&u.uz))) {
         boolean in_line = (lined_up(mtmp)
-               && (distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy)
-                   <= (throws_rocks(g.youmonst.data) ? 20 : ACURRSTR / 2 + 1)));
+             && (distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy)
+                 <= (throws_rocks(g.youmonst.data) ? 20 : ACURRSTR / 2 + 1)));
 
         if (appr != 1 || !in_line) {
             /* Monsters in combat won't pick stuff up, avoiding the
@@ -1741,11 +1744,16 @@ register int after;
 
             /* Maybe a cube ate just about anything */
             if (is_bigeater(ptr)) {
-                if (meatobj(mtmp) == 2)
-                    return 2; /* it died */
+                if ((etmp = meatobj(mtmp)) >= 2)
+                    return etmp; /* it died or got forced off the level */
             }
-
-            if (ptr == &mons[PM_GHOUL] || ptr == &mons[PM_GHAST]) meatcorpse(mtmp);
+            /* Maybe a purple worm ate a corpse */
+            if (ptr == &mons[PM_PURPLE_WORM]
+                || ptr == &mons[PM_BABY_PURPLE_WORM]
+                || is_ghoul(ptr)) {
+                if ((etmp = meatcorpse(mtmp)) >= 2)
+                    return etmp; /* it died or got forced off the level */
+            }
 
             if (ptr == &mons[PM_BROWN_MOLD_WARRIOR] ||
                 ptr == &mons[PM_GREEN_MOLD_WARRIOR] ||

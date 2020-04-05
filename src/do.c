@@ -211,7 +211,7 @@ boolean pushing;
             }
 
             if (fills_up && u.uinwater && distu(rx, ry) == 0) {
-                u.uinwater = 0;
+                set_uinwater(0); /* u.uinwater = 0 */
                 docrt();
                 g.vision_full_recalc = 1;
                 You("find yourself on dry land again!");
@@ -1207,6 +1207,14 @@ dodown()
         return 1; /* came out of hiding; might need '>' again to go down */
     }
 
+    if (u.ustuck) {
+        You("are %s, and cannot go down.",
+            !u.uswallow ? "being held" : is_animal(u.ustuck->data)
+                                             ? "swallowed"
+                                             : "engulfed");
+        return 1;
+    }
+
     if (!stairs_down && !ladder_down) {
         trap = t_at(u.ux, u.uy);
         if (trap && (uteetering_at_seen_pit(trap) || uescaped_shaft(trap))) {
@@ -1221,13 +1229,6 @@ dodown()
                 return 0;
             }
         }
-    }
-    if (u.ustuck) {
-        You("are %s, and cannot go down.",
-            !u.uswallow ? "being held" : is_animal(u.ustuck->data)
-                                             ? "swallowed"
-                                             : "engulfed");
-        return 1;
     }
     if (on_level(&valley_level, &u.uz) && !u.uevent.gehennom_entered) {
         You("are standing at the gate to Gehennom.");
@@ -1586,7 +1587,7 @@ boolean at_stairs, falling, portal;
     fill_pit(u.ux, u.uy);
     set_ustuck((struct monst *) 0); /* idem */
     u.uswallow = u.uswldtim = 0;
-    u.uinwater = 0;
+    set_uinwater(0); /* u.uinwater = 0 */
     u.uundetected = 0; /* not hidden, even if means are available */
     if (!Is_blackmarket(newlevel))
         keepdogs(FALSE, at_stairs);
@@ -1706,7 +1707,7 @@ boolean at_stairs, falling, portal;
         oinit(); /* reassign level dependent obj probabilities */
     }
     reglyph_darkroom();
-    u.uinwater = 0;
+    set_uinwater(0); /* u.uinwater = 0 */
     /* do this prior to level-change pline messages */
     vision_reset();         /* clear old level's line-of-sight */
     g.vision_full_recalc = 0; /* don't let that reenable vision yet */

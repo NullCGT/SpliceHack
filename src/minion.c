@@ -296,10 +296,10 @@ register struct monst *mtmp;
     struct obj *otmp = 0, *obj = 0;
     int n = 0;
 
-    /* amulet check moved to here because of potential issues with
-       disappearance. */
-    if ((uwep && uwep->oartifact == ART_EXCALIBUR) || mon_has_amulet(mtmp)
-        || Race_if(PM_MINOR_ANGEL)) {
+    if (uwep && (uwep->oartifact == ART_EXCALIBUR
+                 || uwep->oartifact == ART_DEMONBANE
+                 || mon_has_amulet(mtmp)
+                 || Race_if(PM_MINOR_ANGEL))) {
         pline("%s looks very angry.", Amonnam(mtmp));
         mtmp->mpeaceful = mtmp->mtame = 0;
         set_malign(mtmp);

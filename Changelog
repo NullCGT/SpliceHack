@@ -226,6 +226,7 @@ Notable Bug Fixes
   steed before the rider will result in some odd, but not game-breaking
   behavior.
 - Fix "NetHack" appearing in dumplog and a few other places.
+- All types of ghouls can eat corpses, not just basic ghouls and ghasts.
                     
                     Version 0.7.0: Stranger Days
 

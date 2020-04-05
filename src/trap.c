@@ -4137,7 +4137,7 @@ drown()
             placebc();
         }
         vision_recalc(2); /* unsee old position */
-        u.uinwater = 1;
+        set_uinwater(1); /* u.uinwater = 1 */
         under_water(1);
         g.vision_full_recalc = 1;
         return FALSE;
@@ -4203,7 +4203,7 @@ drown()
         /* still too much weight */
         pline("But in vain.");
     }
-    u.uinwater = 1;
+    set_uinwater(1); /* u.uinwater = 1 */
     You("drown.");
     /* [ALI] Vampires return to vampiric form on drowning.
 	 */
@@ -4230,7 +4230,7 @@ drown()
         pline("You're still drowning.");
     }
     if (u.uinwater) {
-        u.uinwater = 0;
+        set_uinwater(0); /* u.uinwater = 0 */
         You("find yourself back %s.",
             Is_waterlevel(&u.uz) ? "in an air bubble" : "on land");
     }
@@ -5755,6 +5755,7 @@ lava_effects()
             pline("You're still burning.");
         }
         You("find yourself back on solid %s.", surface(u.ux, u.uy));
+        iflags.last_msg = PLNMSG_BACK_ON_GROUND;
         return TRUE;
     } else if (!Wwalking && (!u.utrap || u.utraptype != TT_LAVA)) {
         boil_away = !Fire_resistance;

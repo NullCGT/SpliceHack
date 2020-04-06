@@ -984,6 +984,7 @@ E boolean NDECL(junethack);
 E boolean NDECL(halloween);
 E int NDECL(night);
 E int NDECL(midnight);
+E boolean NDECL(iseaster);
 E void FDECL(strbuf_init, (strbuf_t *));
 E void FDECL(strbuf_append, (strbuf_t *, const char *));
 E void FDECL(strbuf_reserve, (strbuf_t *, int));

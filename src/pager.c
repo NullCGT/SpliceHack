@@ -1879,6 +1879,7 @@ do_screen_description(coord cc, boolean looked, int sym, char *out_str,
                           : !(i == S_stone
                               || strcmp(x_str, "air") == 0
                               || strcmp(x_str, "land") == 0
+                              || strcmp(x_str, "grass") == 0
                               || water_or_lava);
 
             /* check if dark part of a room was already included above */

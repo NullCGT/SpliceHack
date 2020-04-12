@@ -922,6 +922,12 @@ int dx, dy, range;
     if (mon->data->msize >= MZ_HUGE || mon == u.ustuck || mon->mtrapped)
         return;
 
+    /* Is the monster riding another monster? */
+    if (has_erid(mon)) {
+        pline("%s is knocked straight off %s %s!", Monnam(mon), mhis(mon), mon_nam(ERID(mon)->m1));
+        separate_steed_and_rider(mon);
+    }
+
     /* Make sure dx and dy are [-1,0,1] */
     dx = sgn(dx);
     dy = sgn(dy);

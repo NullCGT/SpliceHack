@@ -1684,7 +1684,7 @@ int mmflags;
                 mount_monster(mtmp, PM_WHITE_HORSE);
                 break;
             case PM_NAZGUL:
-                mount_monster(mtmp, PM_NEWT);
+                mount_monster(mtmp, PM_FELL_BEAST);
                 break;
         }
     }

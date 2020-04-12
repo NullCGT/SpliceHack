@@ -228,6 +228,7 @@ Notable Bug Fixes
   behavior.
 - Fix "NetHack" appearing in dumplog and a few other places.
 - All types of ghouls can eat corpses, not just basic ghouls and ghasts.
+- Fixed monsters obsessing over chests stuck in walls.
                     
                     Version 0.7.0: Stranger Days
 

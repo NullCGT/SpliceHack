@@ -2312,7 +2312,7 @@ struct monst *mtmp;
         }
         nomore(MUSE_BAG);
         if (Is_container(obj) && obj->otyp != BAG_OF_TRICKS && !rn2(5)
-            && !g.m.has_misc && Has_contents(obj)
+            && !g.m.has_misc && Has_contents(obj) && !IS_ROCK(levl[obj->ox][obj->oy].typ)
             && !obj->olocked && !obj->otrapped) {
             g.m.misc = obj;
             g.m.has_misc = MUSE_BAG;

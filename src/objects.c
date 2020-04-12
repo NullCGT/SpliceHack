@@ -979,7 +979,6 @@ SCROLL("stinking cloud",             "VELOX NEB",  1,  15, 300),
      * tilemap.c must be modified to match.
      */
 SCROLL(None,      "FOOBIE BLETCH",  1,   0, 100),
-SCROLL(None,            "OOP ACK",  1,   0, 100), /* bloom county */
 SCROLL(None,            "NYEHEHE",  1,   0, 100), /* laughing noise */
 SCROLL(None,      "ELPHE MONATER",  1,   0, 100), /* famous mistranslation */
 SCROLL(None,               "ABAJ",  1,   0, 100), /* famous mistranslation */
@@ -1141,6 +1140,8 @@ SPELL("flame sphere",    "canvas",
       P_MATTER_SPELL,      10,  2, 1, 1, NODIR, CLR_BROWN),
 SPELL("freeze sphere",   "hardcover",
       P_MATTER_SPELL,      10,  2, 1, 1, NODIR, CLR_BROWN),
+SPELL("psi bolt",        "moth-eaten",
+      P_ATTACK_SPELL,       0,  3, 1, 1, IMMEDIATE, CLR_YELLOW),
 /* books with fixed descriptions
  */
 SPELL("blank paper", "plain", P_NONE, 9, 0, 0, 0, 0, HI_PAPER),

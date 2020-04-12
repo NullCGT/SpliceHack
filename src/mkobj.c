@@ -307,9 +307,6 @@ struct obj *box;
         /* Initial inventory, no empty medical kits */
         if (g.moves <= 1 && !g.in_mklev) minn = 1;
         break;
-    case KEG:   
-        n = 20;
-        break;
     case ICE_BOX:
         n = 20;
         break;
@@ -356,9 +353,6 @@ struct obj *box;
             }
             if (!rn2(5) && is_cookable(otmp))
                 otmp->oeroded = 1;
-        } else if (box->otyp == KEG) {
-            if (!(otmp = mksobj(POT_BOOZE, TRUE, TRUE)))
-                continue;
         } else {
             register int tprob;
             const struct icp *iprobs = boxiprobs;
@@ -983,8 +977,10 @@ boolean artif;
             case OILSKIN_SACK:
             case BAG_OF_HOLDING:
             case MEDICAL_KIT:
-            case KEG:
                 mkbox_cnts(otmp);
+                break;
+            case KEG:
+                otmp->spe = rn1(10, 5);
                 break;
             case EXPENSIVE_CAMERA:
             case TINNING_KIT:

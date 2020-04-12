@@ -4644,25 +4644,6 @@ Z = (195, 195, 195)
   ....KKKKKKJJA...
   ....AAAAAAAA....
 }
-# tile 242 (keg)
-{
-  ................
-  ................
-  ..CCCCCCCCCC....
-  .KCJJJJJJJJJCK..
-  .JKKCCCCCCCKKJ..
-  .JKKJKKKKKJKKJ..
-  .JKKJKKKKKJKKJ..
-  .JKKJKKKKKJKKJ..
-  .JKKJKKKKKJKKJ..
-  .JKKJKKKKKJKKJ..
-  .JKKJKKKKKJKKJ..
-  .JKKJKKKKKJKKJHH
-  .JKKJKKKKKJKKJ.H
-  .JKKJKKKKKJKKJAA
-  .AKKKJKKKJKKKAAA
-  ..AAAAAAAAAAAA..
-}
 # tile 242 (chest)
 {
   ................
@@ -5042,6 +5023,25 @@ Z = (195, 195, 195)
   ..KKKJA.........
   ..KKKJA.........
   ..AAAAA.........
+}
+# tile 242 (keg)
+{
+  ................
+  ................
+  ..CCCCCCCCCC....
+  .KCJJJJJJJJJCK..
+  .JKKCCCCCCCKKJ..
+  .JKKJKKKKKJKKJ..
+  .JKKJKKKKKJKKJ..
+  .JKKJKKKKKJKKJ..
+  .JKKJKKKKKJKKJ..
+  .JKKJKKKKKJKKJ..
+  .JKKJKKKKKJKKJ..
+  .JKKJKKKKKJKKJHH
+  .JKKJKKKKKJKKJ.H
+  .JKKJKKKKKJKKJAA
+  .AKKKJKKKJKKKAAA
+  ..AAAAAAAAAAAA..
 }
 # tile 262 (glass orb / crystal ball)
 {

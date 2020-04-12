@@ -2714,7 +2714,7 @@ boolean more_containers; /* True iff #loot multiple and this isn't last one */
         You("owe %ld %s for lost merchandise.", loss, currency(loss));
         g.current_container->owt = weight(g.current_container);
     }
-    if (g.current_container->otyp == MEDICAL_KIT || g.current_container->otyp == KEG) {
+    if (g.current_container->otyp == MEDICAL_KIT) {
   	    if (!Has_contents(g.current_container))
   		      pline("%s", emptymsg);
   	    else
@@ -3381,8 +3381,7 @@ struct obj *box; /* or bag */
             if (box->otyp == ICE_BOX) {
                 removed_from_icebox(otmp); /* resume rotting for corpse */
             } else if ((cursed_mbag && is_boh_item_gone()) ||
-              (otmp->otyp == PILL && box->otyp == MEDICAL_KIT) ||
-               box->otyp == KEG) {
+              (otmp->otyp == PILL && box->otyp == MEDICAL_KIT)) {
                 loss += mbag_item_gone(held, otmp);
                 /* abbreviated drop format is no longer appropriate */
                 terse = FALSE;

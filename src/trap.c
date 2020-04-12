@@ -3648,8 +3648,6 @@ xchar x, y;
         case ICE_BOX:
             return FALSE; /* Immune */
         case CHEST:
-        case KEG:
-            chance = 40;
             break;
         case LARGE_BOX:
             chance = 30;
@@ -3665,7 +3663,7 @@ xchar x, y;
         if (in_sight)
             pline("%s catches fire and burns.", Yname2(obj));
         if (contents) {
-            if (in_sight && obj->otyp != KEG)
+            if (in_sight)
                 pline("Its contents fall out.");
             for (otmp = obj->cobj; otmp; otmp = ncobj) {
                 ncobj = otmp->nobj;
@@ -3674,10 +3672,10 @@ xchar x, y;
                     place_object(otmp, x, y);
             }
         }
-        if (obj->otyp == KEG && contents) {
+        if (obj->otyp == KEG && obj->spe > 0) {
             if (in_sight)
                 pline("It explodes!");
-            explode(x, y, 11, d(6, 6), 0, EXPL_FIERY);
+            explode(x, y, 11, d(12, 6), 0, EXPL_FIERY);
         }
         setnotworn(obj);
         delobj(obj);

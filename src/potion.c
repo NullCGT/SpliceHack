@@ -731,11 +731,6 @@ register struct obj *obj;
 		case LARGE_BOX:
         case COFFIN:
 		case ICE_BOX:
-        case KEG:
-            /* Technically, this allows for a strat in which you upgrade your
-               keg to obtain a large number of potions of booze. This is silly
-               enough that I'm going to allow it. */
-			obj->otyp = CHEST;
 			break;
 		case CHEST:
 			obj->otyp = ICE_BOX;
@@ -1047,29 +1042,18 @@ dodrink()
             pline("Perhaps not.");
             return 0;
         }
-        if (otmp->cobj) {
-            struct obj *obj;
+        if (otmp->spe) {
             int quan = 0;
-            u.uconduct.alcohol++;
-            while (otmp->cobj) {
-                quan++;
-                for (obj = otmp->cobj; obj; obj = obj->nobj) {
-                    if (obj->otyp == POT_BOOZE)
-                        break;
-                }
-                check_unpaid(obj);
-                if (obj->quan > 1L) {
-                    obj->quan--;
-                    otmp->owt = weight(otmp);
-                } else {
-                    obj_extract_self(obj);
-                    obfree(obj, (struct obj *)0);
-                }
-                if (!obj->odiluted)
+            while (otmp->spe) {
+                u.uconduct.alcohol++;
+                consume_obj_charge(otmp, TRUE);
+                check_unpaid(otmp);
+                if (!otmp->cursed)
                     healup(1, 0, FALSE, FALSE);
-                if (!obj->blessed)
+                if (!otmp->blessed)
                     make_confused(itimeout_incr(HConfusion, d(3, 8)), FALSE);
-                u.uhunger += 10 * (2 + bcsign(obj));
+                u.uhunger += 10 * (2 + bcsign(otmp));
+                quan++;
             }
             You("down the entire keg! You are incredibly drunk!");
             if (quan > 5 && !maybe_polyd(is_dwarf(g.youmonst.data) || is_giant(g.youmonst.data), 

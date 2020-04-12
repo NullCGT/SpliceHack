@@ -177,7 +177,7 @@ char oclass;
      * would resolve the cat/corpse situation and convert to ordinary box.
      */
     if (Has_contents(obj) && !SchroedingersBox(obj)
-        && obj->otyp != MEDICAL_KIT && obj->otyp != KEG) {
+        && obj->otyp != MEDICAL_KIT) {
         for (otmp = obj->cobj; otmp; otmp = otmp->nobj)
             if (otmp->oclass == oclass)
                 return otmp;

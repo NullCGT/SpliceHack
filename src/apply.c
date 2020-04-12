@@ -4187,23 +4187,11 @@ doapply()
         res = do_play_instrument(obj);
         break;
     case KEG:
-        if (obj->cobj) {
-            struct obj *otmp;
-            for (otmp = obj->cobj; otmp; otmp = otmp->nobj)
-                if (otmp->otyp == POT_BOOZE)
-                    break;
-
-            check_unpaid(obj);
+        if (obj->spe > 0) {
+            consume_obj_charge(obj, TRUE);
             pseudo = mksobj(POT_BOOZE, FALSE, FALSE);
-            pseudo->blessed = otmp->blessed;
-            pseudo->cursed = otmp->cursed;
-            if (otmp->quan > 1L) {
-                otmp->quan--;
-                obj->owt = weight(obj);
-            } else {
-                obj_extract_self(otmp);
-          		obfree(otmp, (struct obj *)0);
-            }
+            pseudo->blessed = obj->blessed;
+            pseudo->cursed = obj->cursed;
             u.uconduct.alcohol++;
             You("chug some booze from %s.",
                     yname(obj));
@@ -4211,7 +4199,7 @@ doapply()
         } else if (Hallucination) 
             pline("Where has the rum gone?");
         else
-            You("seem to have run out of booze.");
+            pline("It's empty.");
         break;
     case MEDICAL_KIT:
     		if (Role_if(PM_HEALER)) can_use = TRUE;

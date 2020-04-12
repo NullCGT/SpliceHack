@@ -1,4 +1,4 @@
-/* NetHack 3.7	insight.c	$NHDT-Date: 1582321544 2020/02/21 21:45:44 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.7 $ */
+/* NetHack 3.7	insight.c	$NHDT-Date: 1586375531 2020/04/08 19:52:11 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.14 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -27,6 +27,7 @@ static void FDECL(basics_enlightenment, (int, int));
 static void FDECL(characteristics_enlightenment, (int, int));
 static void FDECL(one_characteristic, (int, int, int));
 static void FDECL(status_enlightenment, (int, int));
+static void FDECL(weapon_insight, (int));
 static void FDECL(attributes_enlightenment, (int, int));
 static void FDECL(show_achievements, (int));
 static int FDECL(CFDECLSPEC vanqsort_cmp, (const genericptr,
@@ -744,7 +745,7 @@ int mode;
 int final;
 {
     boolean magic = (mode & MAGICENLIGHTENMENT) ? TRUE : FALSE;
-    int cap, wtype;
+    int cap;
     char buf[BUFSZ], youtoo[BUFSZ];
     boolean Riding = (u.usteed
                       /* if hero dies while dismounting, u.usteed will still
@@ -1020,8 +1021,27 @@ int final;
            still useful though) */
         you_are("unencumbered", "");
     }
+    /* current weapon(s) and corresponding skill level(s) */
+    weapon_insight(final);
+    /* report 'nudity' */
+    if (!uarm && !uarmu && !uarmc && !uarms && !uarmg && !uarmf && !uarmh) {
+        if (u.uroleplay.nudist)
+            enl_msg(You_, "do", "did", " not wear any armor", "");
+        else
+            you_are("not wearing any armor", "");
+    }
+}
 
-    /* report being weaponless; distinguish whether gloves are worn */
+/* extracted from status_enlightenment() to reduce clutter there */
+static void
+weapon_insight(final)
+int final;
+{
+    char buf[BUFSZ];
+    int wtype;
+
+    /* report being weaponless; distinguish whether gloves are worn
+       [perhaps mention silver ring(s) when not wearning gloves?] */
     if (!uwep) {
         you_are(uarmg ? "empty handed" /* gloves imply hands */
                       : humanoid(g.youmonst.data)
@@ -1030,29 +1050,39 @@ int final;
                          /* alternate phrasing for paws or lack of hands */
                          : "not wielding anything",
                 "");
-    /* two-weaponing implies hands (can't be polymorphed) and
+
+    /* two-weaponing implies hands and
        a weapon or wep-tool (not other odd stuff) in each hand */
     } else if (u.twoweap) {
         you_are("wielding two weapons at once", "");
+
     /* report most weapons by their skill class (so a katana will be
-       described as a long sword, for instance; mattock and hook are
-       exceptions), or wielded non-weapon item by its object class */
+       described as a long sword, for instance; mattock, hook, and aklys
+       are exceptions), or wielded non-weapon item by its object class */
     } else {
         const char *what = weapon_descr(uwep);
+
+        /* [what about other silver items?] */
+        if (uwep->otyp == SHIELD_OF_REFLECTION)
+            what = shield_simple_name(uwep); /* silver|smooth shield */
+        else if (is_wet_towel(uwep))
+            what = /* (uwep->spe < 3) ? "moist towel" : */ "wet towel";
 
         if (!strcmpi(what, "armor") || !strcmpi(what, "food")
             || !strcmpi(what, "venom"))
             Sprintf(buf, "wielding some %s", what);
         else
+            /* [maybe include known blessed?] */
             Sprintf(buf, "wielding %s",
                     (uwep->quan == 1L) ? an(what) : makeplural(what));
         you_are(buf, "");
     }
+
     /*
      * Skill with current weapon.  Might help players who've never
      * noticed #enhance or decided that it was pointless.
      */
-    if ((wtype = uwep_skill_type()) != P_NONE) {
+    if ((wtype = weapon_type(uwep)) != P_NONE && (!uwep || !is_ammo(uwep))) {
         char sklvlbuf[20];
         int sklvl = P_SKILL(wtype);
         boolean hav = (sklvl != P_UNSKILLED && sklvl != P_SKILLED);
@@ -1065,25 +1095,147 @@ int final;
            or "you are unskilled/skilled in <skill>" */
         Sprintf(buf, "%s %s %s", sklvlbuf,
                 hav ? "skill with" : "in", skill_name(wtype));
-        if (can_advance(wtype, FALSE))
-            Sprintf(eos(buf), " and %s that",
-                    !final ? "can enhance" : "could have enhanced");
-        if (hav)
-            you_have(buf, "");
-        else
-            you_are(buf, "");
-    }
-    /* report 'nudity' */
-    if (!uarm && !uarmu && !uarmc && !uarms && !uarmg && !uarmf && !uarmh) {
-        if (u.uroleplay.nudist)
-            enl_msg(You_, "do", "did", " not wear any armor", "");
-        else
-            you_are("not wearing any armor", "");
-    }
-    /* report ill-fatedness */
-    if (u.uroleplay.illfated) {
-        you_are("going to meet a terrible fate", "");
-    }
+
+        if (!u.twoweap) {
+            if (can_advance(wtype, FALSE))
+                Sprintf(eos(buf), " and %s that",
+                        !final ? "can enhance" : "could have enhanced");
+            if (hav)
+                you_have(buf, "");
+            else
+                you_are(buf, "");
+
+        } else { /* two-weapon */
+            static const char also_[] = "also ";
+            char pfx[QBUFSZ], sfx[QBUFSZ],
+                sknambuf2[20], sklvlbuf2[20], twobuf[20];
+            const char *also = "", *also2 = "", *also3 = (char *) 0,
+                       *verb_present, *verb_past;
+            int wtype2 = weapon_type(uswapwep),
+                sklvl2 = P_SKILL(wtype2),
+                twoskl = P_SKILL(P_TWO_WEAPON_COMBAT);
+            boolean a1, a2, ab,
+                    hav2 = (sklvl2 != P_UNSKILLED && sklvl2 != P_SKILLED);
+
+            /* normally hero must have access to two-weapon skill in
+               order to initiate u.twoweap, but not if polymorphed into
+               a form which has multiple weapon attacks, so we need to
+               avoid getting bitten by unexpected skill value */
+            if (twoskl == P_ISRESTRICTED) {
+                twoskl = P_UNSKILLED;
+                /* restricted is the same as unskilled as far as bonus
+                   or penalty goes, and it isn't ordinarily seen so
+                   skill_level_name() returns "Unknown" for it */
+                Strcpy(twobuf, "restricted");
+            } else {
+                (void) lcase(skill_level_name(P_TWO_WEAPON_COMBAT, twobuf));
+            }
+
+            /* keep buf[] from above in case skill levels match */
+            pfx[0] = sfx[0] = '\0';
+            if (twoskl < sklvl) {
+                /* twoskil won't be restricted so sklvl is at least basic */
+                Sprintf(pfx, "Your skill in %s ", skill_name(wtype));
+                Sprintf(sfx, " limited by being %s with two weapons", twobuf);
+                also = also_;
+            } else if (twoskl > sklvl) {
+                /* sklvl might be restricted */
+                Strcpy(pfx, "Your two weapon skill ");
+                Strcpy(sfx, " limited by ");
+                if (sklvl > P_ISRESTRICTED)
+                    Sprintf(eos(sfx), "being %s", sklvlbuf);
+                else
+                    Sprintf(eos(sfx), "having no skill");
+                Sprintf(eos(sfx), " with %s", skill_name(wtype));
+                also2 = also_;
+            } else {
+                Strcat(buf, " and two weapons");
+                also3 = also_;
+            }
+            if (*pfx)
+                enl_msg(pfx, "is", "was", sfx, "");
+            else if (hav)
+                you_have(buf, "");
+            else
+                you_are(buf, "");
+
+            /* skip comparison between secondary and two-weapons if it is
+               identical to the comparison between primary and twoweap */
+            if (wtype2 != wtype) {
+                Strcpy(sknambuf2, skill_name(wtype2));
+                (void) lcase(skill_level_name(wtype2, sklvlbuf2));
+                verb_present = "is", verb_past = "was";
+                pfx[0] = sfx[0] = buf[0] = '\0';
+                if (twoskl < sklvl2) {
+                    /* twoskil is at least unskilled, sklvl2 at least basic */
+                    Sprintf(pfx, "Your skill in %s ", sknambuf2);
+                    Sprintf(sfx, " %slimited by being %s with two weapons",
+                            also, twobuf);
+                } else if (twoskl > sklvl2) {
+                    /* sklvl2 might be restricted */
+                    Strcpy(pfx, "Your two weapon skill ");
+                    Sprintf(sfx, " %slimited by ", also2);
+                    if (sklvl2 > P_ISRESTRICTED)
+                        Sprintf(eos(sfx), "being %s with", sklvlbuf2);
+                    else
+                        Strcat(eos(sfx), "having no skill");
+                    Sprintf(eos(sfx), " with %s", sknambuf2);
+                } else {
+                    /* equal; two-weapon is at least unskilled, so sklvl2 is
+                       too; "you [also] have basic/expert/master/grand-master
+                       skill with <skill>" or "you [also] are unskilled/
+                       skilled in <skill> */
+                    Sprintf(buf, "%s %s %s", sklvlbuf2,
+                            hav2 ? "skill with" : "in", sknambuf2);
+                    Strcat(buf, " and two weapons");
+                    if (also3) {
+                        Strcpy(pfx, "You also ");
+                        Sprintf(sfx, " %s", buf), buf[0] = '\0';
+                        verb_present = hav2 ? "have" : "are";
+                        verb_past = hav2 ? "had" : "were";
+                    }
+                }
+                if (*pfx)
+                    enl_msg(pfx, verb_present, verb_past, sfx, "");
+                else if (hav2)
+                    you_have(buf, "");
+                else
+                    you_are(buf, "");
+            } /* wtype2 != wtype */
+
+            /* if training and available skill credits already allow
+               #enhance for any of primary, secondary, or two-weapon,
+               tell the player; avoid attempting figure out whether
+               spending skill credits enhancing one might make either
+               or both of the others become ineligible for enhancement */
+            a1 = can_advance(wtype, FALSE);
+            a2 = (wtype2 != wtype) ? can_advance(wtype2, FALSE) : FALSE;
+            ab = can_advance(P_TWO_WEAPON_COMBAT, FALSE);
+            if (a1 || a2 || ab) {
+                static const char also_wik_[] = " and also with ";
+
+                /* for just one, the conditionals yield
+                   1) "skill with <that one>"; for more than one:
+                   2) "skills with <primary> and also with <secondary>" or
+                   3) "skills with <primary> and also with two-weapons" or
+                   4) "skills with <secondary> and also with two-weapons" or
+                   5) "skills with <primary>, <secondary>, and two-weapons"
+                   (no 'also's or extra 'with's for case 5); when primary
+                   and secondary use the same skill, only cases 1 and 3 are
+                   possible because 'a2' gets forced to False above */
+                Sprintf(sfx, " skill%s with %s%s%s%s%s",
+                        ((int) a1 + (int) a2 + (int) ab > 1) ? "s" : "",
+                        a1 ? skill_name(wtype) : "",
+                        ((a1 && a2 && ab) ? ", "
+                         : (a1 && (a2 || ab)) ? also_wik_ : ""),
+                        a2 ? skill_name(wtype2) : "",
+                        ((a1 && a2 && ab) ? ", and "
+                         : (a2 && ab) ? also_wik_ : ""),
+                        ab ? "two weapons" : "");
+                enl_msg(You_, "can enhance", "could have enhanced", sfx, "");
+            }
+        } /* two-weapon */
+    } /* skill applies */
 }
 
 /* attributes: intrinsics and the like, other non-obvious capabilities */
@@ -1834,7 +1986,7 @@ int final; /* used "behind the curtain" by enl_foo() macros */
             you_have_X("entered the Gnomish Mines");
             break;
         case ACH_TOWN:
-            you_have_X("entered Mine Town");
+            you_have_X("entered Minetown");
             break;
         case ACH_SHOP:
             you_have_X("entered a shop");

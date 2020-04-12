@@ -34,6 +34,7 @@ static void FDECL(flip_drawbridge_horizontal, (struct rm *));
 static void FDECL(flip_drawbridge_vertical, (struct rm *));
 static void FDECL(flip_visuals, (int, int, int, int, int));
 static int FDECL(flip_encoded_direction_bits, (int, int));
+static void FDECL(sel_set_wall_property, (int, int, genericptr_t));
 static void FDECL(set_wall_property, (XCHAR_P, XCHAR_P, XCHAR_P, XCHAR_P,
                                           int));
 static void NDECL(count_features);
@@ -94,10 +95,13 @@ static void NDECL(spo_pop_container);
 static int FDECL(l_create_stairway, (lua_State *, BOOLEAN_P));
 static void FDECL(spo_endroom, (struct sp_coder *));
 static void FDECL(l_table_getset_feature_flag, (lua_State *, int, int, const char *, int));
+static void FDECL(sel_set_lit, (int, int, genericptr_t));
+static void FDECL(selection_iterate, (struct selectionvar *, select_iter_func, genericptr_t));
 static void FDECL(sel_set_ter, (int, int, genericptr_t));
 static void FDECL(sel_set_door, (int, int, genericptr_t));
 static void FDECL(sel_set_feature, (int, int, genericptr_t));
 static int FDECL(get_coord, (lua_State *, int, int *, int *));
+static void FDECL(levregion_add, (lev_region *));
 static void FDECL(get_table_xy_or_coord, (lua_State *, int *, int *));
 static int FDECL(get_table_region, (lua_State *, const char *,
                                     int *, int *, int *, int *, BOOLEAN_P));
@@ -105,6 +109,20 @@ static void FDECL(set_wallprop_in_selection, (lua_State *, int));
 static int FDECL(floodfillchk_match_under, (int, int));
 static int FDECL(floodfillchk_match_accessible, (int, int));
 static void FDECL(l_push_wid_hei_table, (lua_State *, int, int));
+static int FDECL(get_table_align, (lua_State *));
+static int FDECL(get_table_monclass, (lua_State *));
+static int FDECL(find_montype, (lua_State *, const char *));
+static int FDECL(get_table_montype, (lua_State *));
+static int FDECL(get_table_int_or_random, (lua_State *, const char *, int));
+static int FDECL(get_table_buc, (lua_State *));
+static int FDECL(get_table_objclass, (lua_State *));
+static int FDECL(find_objtype, (lua_State *, const char *));
+static int FDECL(get_table_objtype, (lua_State *));
+static int FDECL(get_table_roomtype_opt, (lua_State *, const char *, int));
+static int FDECL(get_table_traptype_opt, (lua_State *, const char *, int));
+static int FDECL(get_traptype_byname, (const char *));
+static int FDECL(get_table_intarray_entry, (lua_State *, int, int));
+static struct sp_coder *NDECL(sp_level_coder_init);
 
 /* lua_CFunction prototypes */
 int FDECL(lspo_altar, (lua_State *));
@@ -843,7 +861,8 @@ boolean extras;
         flip_level(c, extras);
 }
 
-void
+
+static void
 sel_set_wall_property(x, y, arg)
 int x, y;
 genericptr_t arg;
@@ -2901,6 +2920,9 @@ lev_init *linit;
     case LVLINIT_MAZEGRID:
         lvlfill_maze_grid(2, 0, g.x_maze_max, g.y_maze_max, linit->bg);
         break;
+    case LVLINIT_MAZE:
+        create_maze(linit->corrwid, linit->wallthick, linit->rm_deadends);
+        break;
     case LVLINIT_ROGUE:
         makeroguerooms();
         break;
@@ -3003,7 +3025,7 @@ lua_State *L;
     return 0;  /* number of results */
 }
 
-int
+static int
 get_table_align(L)
 lua_State *L;
 {
@@ -3021,7 +3043,7 @@ lua_State *L;
     return a;
 }
 
-int
+static int
 get_table_monclass(L)
 lua_State *L;
 {
@@ -3034,7 +3056,7 @@ lua_State *L;
     return ret;
 }
 
-int
+static int
 find_montype(L, s)
 lua_State *L;
 const char *s;
@@ -3048,7 +3070,7 @@ const char *s;
     return NON_PM;
 }
 
-int
+static int
 get_table_montype(L)
 lua_State *L;
 {
@@ -3230,7 +3252,7 @@ lua_State *L;
 /* the hash key 'name' is an integer or "random",
    or if not existent, also return rndval.
  */
-int
+static int
 get_table_int_or_random(L, name, rndval)
 lua_State *L;
 const char *name;
@@ -3262,7 +3284,7 @@ int rndval;
     return ret;
 }
 
-int
+static int
 get_table_buc(L)
 lua_State *L;
 {
@@ -3276,7 +3298,7 @@ lua_State *L;
     return curse_state;
 }
 
-int
+static int
 get_table_objclass(L)
 lua_State *L;
 {
@@ -3289,7 +3311,7 @@ lua_State *L;
     return ret;
 }
 
-int
+static int
 find_objtype(L, s)
 lua_State *L;
 const char *s;
@@ -3329,7 +3351,7 @@ const char *s;
     return STRANGE_OBJECT;
 }
 
-int
+static int
 get_table_objtype(L)
 lua_State *L;
 {
@@ -3574,10 +3596,10 @@ lspo_level_init(L)
 lua_State *L;
 {
     static const char *const initstyles[] = {
-        "solidfill", "mazegrid", "rogue", "mines", "swamp", NULL
+        "solidfill", "mazegrid", "maze", "rogue", "mines", "swamp", NULL
     };
     static const int initstyles2i[] = {
-        LVLINIT_SOLIDFILL, LVLINIT_MAZEGRID, LVLINIT_ROGUE,
+        LVLINIT_SOLIDFILL, LVLINIT_MAZEGRID, LVLINIT_MAZE, LVLINIT_ROGUE,
         LVLINIT_MINES, LVLINIT_SWAMP, 0
     };
     lev_init init_lev;
@@ -3597,6 +3619,9 @@ lua_State *L;
     init_lev.lit = get_table_int_or_random(L, "lit", -1); /* TODO: allow lit=BOOL */
     init_lev.walled = get_table_boolean_opt(L, "walled", 0);
     init_lev.filling = get_table_mapchr_opt(L, "filling", init_lev.fg);
+    init_lev.corrwid = get_table_int_opt(L, "corrwid", -1);
+    init_lev.wallthick = get_table_int_opt(L, "wallthick", -1);
+    init_lev.rm_deadends = !get_table_boolean_opt(L, "deadends", 1);
 
     g.coder->lvl_is_joined = init_lev.joined;
 
@@ -3723,7 +3748,7 @@ static const struct {
     { 0, 0 }
 };
 
-int
+static int
 get_table_roomtype_opt(L, name, defval)
 lua_State *L;
 const char *name;
@@ -3990,7 +4015,7 @@ lua_State *L;
     int x, y;
     long acoord;
     int shrine;
-    int align;
+    int al;
 
     create_des_coder();
 
@@ -3998,7 +4023,7 @@ lua_State *L;
 
     get_table_xy_or_coord(L, &x, &y);
 
-    align = get_table_align(L);
+    al = get_table_align(L);
     shrine = shrines2i[get_table_option(L, "type", "altar", shrines)];
 
     if (x == -1 && y == -1)
@@ -4007,7 +4032,7 @@ lua_State *L;
         acoord = SP_COORD_PACK(x, y);
 
     tmpaltar.coord = acoord;
-    tmpaltar.align = align;
+    tmpaltar.align = al;
     tmpaltar.shrine = shrine;
 
     create_altar(&tmpaltar, g.coder->croom);
@@ -4044,7 +4069,7 @@ static const struct {
                    { "random", -1 },
                    { 0, NO_TRAP } };
 
-int
+static int
 get_table_traptype_opt(L, name, defval)
 lua_State *L;
 const char *name;
@@ -4077,7 +4102,7 @@ int ttyp;
     return NULL;
 }
 
-int
+static int
 get_traptype_byname(trapname)
 const char *trapname;
 {
@@ -4325,38 +4350,6 @@ struct selectionvar *s;
             selection_setpoint(x, y, s, selection_getpoint(x, y, s) ? 0 : 1);
 
     return s;
-}
-
-struct selectionvar *
-selection_logical_oper(s1, s2, oper)
-struct selectionvar *s1, *s2;
-char oper;
-{
-    struct selectionvar *ov;
-    int x, y;
-
-    ov = selection_new();
-    if (!ov)
-        return NULL;
-
-    for (x = 0; x < ov->wid; x++)
-        for (y = 0; y < ov->hei; y++) {
-            switch (oper) {
-            default:
-            case '|':
-                if (selection_getpoint(x, y, s1)
-                    || selection_getpoint(x, y, s2))
-                    selection_setpoint(x, y, ov, 1);
-                break;
-            case '&':
-                if (selection_getpoint(x, y, s1)
-                    && selection_getpoint(x, y, s2))
-                    selection_setpoint(x, y, ov, 1);
-                break;
-            }
-        }
-
-    return ov;
 }
 
 struct selectionvar *
@@ -4725,6 +4718,8 @@ long x, y, x2, y2, gtyp, mind, maxd, limit;
 
     switch (gtyp) {
     default:
+        impossible("Unrecognized gradient type! Defaulting to radial...");
+        /* FALLTHRU */
     case SEL_GRADIENT_RADIAL: {
         for (dx = 0; dx < COLNO; dx++)
             for (dy = 0; dy < ROWNO; dy++) {
@@ -4851,7 +4846,7 @@ struct selectionvar *ov;
     selection_setpoint(x2, y2, ov, 1);
 }
 
-void
+static void
 selection_iterate(ov, func, arg)
 struct selectionvar *ov;
 select_iter_func func;
@@ -4867,32 +4862,6 @@ genericptr_t arg;
         for (y = 0; y < ov->hei; y++)
             if (selection_getpoint(x, y, ov))
                 (*func)(x, y, arg);
-}
-
-
-void
-stackDump(L)
-lua_State *L;
-{
-    int i;
-    int top = lua_gettop(L);
-    for (i = 1; i <= top; i++) {  /* repeat for each level */
-        int t = lua_type(L, i);
-        switch (t) {
-        case LUA_TSTRING:  /* strings */
-            pline("%i:\"%s\"", i, lua_tostring(L, i));
-            break;
-        case LUA_TBOOLEAN:  /* booleans */
-            pline("%i:%s", i, lua_toboolean(L, i) ? "true" : "false");
-            break;
-        case LUA_TNUMBER:  /* numbers */
-            pline("%i:%g", i, lua_tonumber(L, i));
-            break;
-        default:  /* other values */
-            pline("%i:%s", i, lua_typename(L, t));
-            break;
-        }
-    }
 }
 
 static void
@@ -5381,7 +5350,7 @@ ensure_way_out()
     selection_free(ov, TRUE);
 }
 
-int
+static int
 get_table_intarray_entry(L, tableidx, entrynum)
 lua_State *L;
 int tableidx, entrynum;
@@ -5464,7 +5433,7 @@ int *x, *y;
     return 0;
 }
 
-void
+static void
 levregion_add(lregion)
 lev_region *lregion;
 {
@@ -5595,8 +5564,7 @@ lua_State *L;
     return 0;
 }
 
-
-void
+static void
 sel_set_lit(x, y, arg)
 int x, y;
 genericptr_t arg;
@@ -6040,8 +6008,6 @@ int
 lspo_map(L)
 lua_State *L;
 {
-    xchar tmpxstart, tmpystart, tmpxsize, tmpysize;
-
     /*
 TODO: allow passing an array of strings as map data
 TODO: handle if map lines aren't same length
@@ -6092,11 +6058,6 @@ TODO: g.coder->croom needs to be updated
         nhl_error(L, "Map data error");
         return 0;
     }
-
-    tmpxsize = g.xsize;
-    tmpysize = g.ysize;
-    tmpxstart = g.xstart;
-    tmpystart = g.ystart;
 
     g.xsize = mf->wid;
     g.ysize = mf->hei;
@@ -6228,11 +6189,6 @@ TODO: g.coder->croom needs to be updated
         lua_call(L, 1, 0);
     }
 
-    tmpxsize = g.xsize;
-    tmpysize = g.ysize;
-    tmpxstart = g.xstart;
-    tmpystart = g.ystart;
-
     return 0;
 }
 
@@ -6248,7 +6204,7 @@ update_croom()
         g.coder->croom = NULL;
 }
 
-struct sp_coder *
+static struct sp_coder *
 sp_level_coder_init()
 {
     int tmpi;

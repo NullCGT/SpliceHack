@@ -1,4 +1,4 @@
-/* NetHack 3.6	trap.c	$NHDT-Date: 1582799195 2020/02/27 10:26:35 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.353 $ */
+/* NetHack 3.6	trap.c	$NHDT-Date: 1586382778 2020/04/08 21:52:58 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.358 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -11,6 +11,8 @@ extern const char *const destroy_strings[][3]; /* from zap.c */
 
 static boolean FDECL(keep_saddle_with_steedcorpse, (unsigned, struct obj *,
                                                     struct obj *));
+static boolean FDECL(mu_maybe_destroy_web, (struct monst *, BOOLEAN_P,
+                                            struct trap *));
 static struct obj *FDECL(t_missile, (int, struct trap *));
 static char *FDECL(trapnote, (struct trap *, BOOLEAN_P));
 static int FDECL(steedintrap, (struct trap *, struct obj *));
@@ -966,7 +968,7 @@ struct obj *objchn, *saddle;
 
 /* monster or you go through and possibly destroy a web.
    return TRUE if could go through. */
-boolean
+static boolean
 mu_maybe_destroy_web(mtmp, domsg, trap)
 struct monst *mtmp;
 boolean domsg;
@@ -3734,6 +3736,10 @@ xchar x, y;
     struct obj *obj, *nobj;
     int num = 0;
 
+    /* erode_obj() relies on bhitpos if target objects aren't carried by
+       the hero or a monster, to check visibility controlling feedback */
+    g.bhitpos.x = x, g.bhitpos.y = y;
+
     for (obj = chain; obj; obj = nobj) {
         nobj = here ? obj->nexthere : obj->nobj;
         if (fire_damage(obj, force, x, y))
@@ -3994,11 +4000,20 @@ struct obj *obj;
 boolean here;
 {
     struct obj *otmp;
+    xchar x, y;
+
+    if (!obj)
+        return;
 
     /* initialize acid context: so far, neither seen (dknown) potions of
        acid nor unseen have exploded during this water damage sequence */
     g.acid_ctx.dkn_boom = g.acid_ctx.unk_boom = 0;
     g.acid_ctx.ctx_valid = TRUE;
+
+    /* erode_obj() relies on bhitpos if target objects aren't carried by
+       the hero or a monster, to check visibility controlling feedback */
+    if (get_obj_location(obj, &x, &y, CONTAINED_TOO))
+        g.bhitpos.x = x, g.bhitpos.y = y;
 
     for (; obj; obj = otmp) {
         otmp = here ? obj->nexthere : obj->nobj;

@@ -353,6 +353,10 @@ E void NDECL(unearth_you);
 E void NDECL(escape_tomb);
 E void FDECL(bury_obj, (struct obj *));
 #endif
+#ifdef DEBUG
+extern int NDECL(wiz_debug_cmd_bury);
+#endif
+
 
 /* ### display.c ### */
 
@@ -1382,6 +1386,7 @@ E boolean FDECL(litstate_rnd, (int));
 
 /* ### mkmaze.c ### */
 
+E void FDECL(create_maze, (int, int, BOOLEAN_P));
 E void FDECL(wallification, (int, int, int, int));
 E void FDECL(wall_extends, (int,int,int,int));
 E void FDECL(fix_wall_spines, (int, int, int, int));
@@ -2041,6 +2046,7 @@ E void NDECL(getlock);
 E int FDECL(collect_obj_classes, (char *, struct obj *, BOOLEAN_P,
                                   boolean FDECL((*), (OBJ_P)), int *));
 E boolean FDECL(rider_corpse_revival, (struct obj *, BOOLEAN_P));
+E void FDECL(deferred_decor, (BOOLEAN_P));
 E boolean FDECL(menu_class_present, (int));
 E void FDECL(add_valid_menu_class, (int));
 E boolean FDECL(allow_all, (struct obj *));
@@ -2575,6 +2581,7 @@ E boolean FDECL(load_special, (const char *));
 E xchar FDECL(selection_getpoint, (int, int, struct selectionvar *));
 E struct selectionvar *NDECL(selection_new);
 E void FDECL(selection_free, (struct selectionvar *, BOOLEAN_P));
+E struct selectionvar *FDECL(selection_clone, (struct selectionvar *));
 E void FDECL(set_selection_floodfillchk, (int FDECL((*), (int,int))));
 E void FDECL(selection_floodfill, (struct selectionvar *, int, int,
                                    BOOLEAN_P));
@@ -2596,6 +2603,8 @@ E struct selectionvar *FDECL(selection_filter_mapchar, (struct selectionvar *,
 E void FDECL(set_floodfillchk_match_under, (XCHAR_P));
 E void FDECL(selection_do_ellipse, (struct selectionvar *,
                                     int, int, int, int, int));
+E void FDECL(selection_do_gradient, (struct selectionvar *, long, long,
+                                     long, long, long, long, long, long));
 E void NDECL(update_croom);
 E const char *FDECL(get_trapname_bytype, (int));
 E void FDECL(l_register_des, (lua_State *));
@@ -3236,6 +3245,7 @@ E struct monst *FDECL(get_container_location,
 E struct monst *FDECL(montraits, (struct obj *, coord *, BOOLEAN_P));
 E struct monst *FDECL(revive, (struct obj *, BOOLEAN_P));
 E int FDECL(unturn_dead, (struct monst *));
+E void NDECL(unturn_you);
 E void FDECL(cancel_item, (struct obj *));
 E boolean FDECL(drain_item, (struct obj *, BOOLEAN_P));
 E struct obj *FDECL(poly_obj, (struct obj *, int));

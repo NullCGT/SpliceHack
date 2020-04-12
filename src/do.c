@@ -1,4 +1,4 @@
-/* NetHack 3.6	do.c	$NHDT-Date: 1582155879 2020/02/19 23:44:39 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.228 $ */
+/* NetHack 3.6	do.c	$NHDT-Date: 1586285681 2020/04/07 18:54:41 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.235 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -259,6 +259,8 @@ const char *verb;
 
     /* make sure things like water_damage() have no pointers to follow */
     obj->nobj = obj->nexthere = (struct obj *) 0;
+    /* erode_obj() needs this (called from water_damage() or lava_damage()) */
+    g.bhitpos.x = x, g.bhitpos.y = y;
 
     if (obj->otyp == BOULDER && boulder_hits_pool(obj, x, y, FALSE)) {
         return TRUE;
@@ -2328,6 +2330,11 @@ long timeout UNUSED;
 int
 donull()
 {
+    if (!iflags.menu_requested && !g.multi && monster_nearby()) {
+        Norep("Are you waiting to get hit?");
+        return 0;
+    }
+
     return 1; /* Do nothing, but let other things happen */
 }
 

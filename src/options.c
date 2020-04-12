@@ -292,7 +292,7 @@ static void FDECL(wc_set_font_name, (int, char *));
 static int FDECL(wc_set_window_colors, (char *));
 static boolean FDECL(illegal_menu_cmd_key, (CHAR_P));
 #ifndef CHANGE_COLOR
-int FDECL(optfn_palette, (int, BOOLEAN_P, BOOLEAN_P, char *, char *));
+int FDECL(optfn_palette, (int, int, BOOLEAN_P, char *, char *));
 #endif
 #ifdef CURSES_GRAPHICS
 extern int curses_read_attrs(const char *attrs);
@@ -2659,7 +2659,8 @@ char *op;
     return optn_ok;
 }
 
-int optfn_paranoid_confirmation(optidx, req, negated, opts, op)
+int
+optfn_paranoid_confirmation(optidx, req, negated, opts, op)
 int optidx;
 int req;
 boolean negated;

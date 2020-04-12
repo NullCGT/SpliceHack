@@ -42,14 +42,15 @@ OPTIONS=rawio,BIOS,symset:IBMGraphics_2,roguesymset:RogueEpyx
 # suit your personal preference.  If several people are to use the same
 # configuration, options like these should not be set.
 #
-#OPTIONS=name:Janet,role:Valkyrie,race:Human,gender:female,align:lawful
-#OPTIONS=dogname:Fido,catname:Morris,fruit:guava
-#OPTIONS=horsename:Silver
+#OPTIONS=name:Janet,role:Valkyrie,race:Human,gender:nonbinary,align:lawful
+#OPTIONS=dogname:Fido,catname:Morris,birdname:Topper,fruit:guava
+#OPTIONS=horsename:Silver,dragonname:Flame,
 #OPTIONS=autopickup,pickup_types:$"=/!?+
 #OPTIONS=packorder:")[%?+/=!(*0_`
 #OPTIONS=scores:10 top/2 around/own
 #OPTIONS=nolegacy,noverbose
 #OPTIONS=menustyle:traditional
+#OPTIONS=orientation:gay
 
 # If you wish to change the symbol used to display boulders use:
 OPTIONS=boulder:0

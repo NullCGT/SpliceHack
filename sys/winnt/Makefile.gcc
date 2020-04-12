@@ -157,7 +157,7 @@ LUATOP=../lib/lua-5.3.5
 #
 #==============================================================================
 
-SKIP_NETHACKW=Y
+SKIP_NETHACKW=N
 
 #==============================================================================
 
@@ -1038,7 +1038,8 @@ nhdat$(NHV):  $(U)dlb_main.exe $(DAT)/data $(DAT)/oracles $(OPTIONS_FILE) \
 	$(DAT)/rumors $(DAT)/help $(DAT)/hh $(DAT)/cmdhelp $(DAT)/keyhelp \
 	$(DAT)/history $(DAT)/opthelp $(DAT)/wizhelp \
 	$(DAT)/porthelp $(DAT)/license $(DAT)/engrave \
-	$(DAT)/epitaph $(DAT)/bogusmon $(DAT)/tribute $(O)sp_lev.tag
+	$(DAT)/epitaph $(DAT)/bogusmon $(DAT)/tribute \
+	$(DAT)/bogusmon $(O)sp_lev.tag
 	$(subst /,\,echo data >$(DAT)/dlb.lst)
 	$(subst /,\,echo oracles >>$(DAT)/dlb.lst)
 	$(subst /,\,if exist $(DAT)/options echo options >>$(DAT)/dlb.lst)
@@ -1057,6 +1058,7 @@ nhdat$(NHV):  $(U)dlb_main.exe $(DAT)/data $(DAT)/oracles $(OPTIONS_FILE) \
 	$(subst /,\,echo engrave >>$(DAT)/dlb.lst)
 	$(subst /,\,echo epitaph >>$(DAT)/dlb.lst)
 	$(subst /,\,echo bogusmon >>$(DAT)/dlb.lst)
+	$(subst /,\,echo splicetips >>$(DAT)/dlb.lst)
 	$(subst /,\,echo tribute >>$(DAT)/dlb.lst)
 	dir /l /b /-p $(subst /,\,$(DAT)/*.lua >>$(DAT)/dlb.lst)
 	$(subst /,\,$(U)dlb_main CcIf $(DAT) dlb.lst $(SRC)/nhdat)

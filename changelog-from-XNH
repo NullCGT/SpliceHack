@@ -13,6 +13,8 @@ Martial arts attacks now always include skill damage bonuses, instead of
 
  Hallucination protects you against all gaze attacks made by monsters.
 
-
 All wands that print an unambiguous message clue to their identity now
   automatically type-identify when engraved with.
+
+Reading a scroll of identify while confused will "identify yourself" and give
+  enlightenment.

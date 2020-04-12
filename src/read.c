@@ -1842,8 +1842,14 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
            perm_invent update; also simplifies empty invent check */
         useup(sobj);
         sobj = 0; /* it's gone */
-        if (confused)
-            You("identify this as an identify scroll.");
+        if (!already_known)
+            (void) learnscrolltyp(SCR_IDENTIFY); /* always identifies self */
+        if (confused) {
+            You("identify yourself...");
+            display_nhwindow(WIN_MESSAGE, FALSE);
+            enlightenment(MAGICENLIGHTENMENT, ENL_GAMEINPROGRESS);
+            break;
+        }
         else if (!already_known || !g.invent) {
             /* force feedback now if invent became
                empty after using up this scroll */
@@ -1851,8 +1857,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 pline("This is an identify card.");
             else
                 pline("This is an identify scroll.");
-        } if (!already_known)
-            (void) learnscrolltyp(SCR_IDENTIFY);
+        }
         /*FALLTHRU*/
     case SPE_IDENTIFY:
         cval = 1;

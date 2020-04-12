@@ -41,7 +41,6 @@ enum mcast_cleric_spells {
     CLC_GEYSER
 };
 
-static boolean FDECL(uniquespell, (struct monst*));
 static void FDECL(cursetxt, (struct monst *, BOOLEAN_P));
 static int FDECL(choose_magic_spell, (int));
 static int FDECL(choose_clerical_spell, (int));
@@ -56,58 +55,6 @@ static void FDECL(ucast_wizard_spell,(struct monst *,struct monst *,int,int));
 static void FDECL(ucast_cleric_spell,(struct monst *,struct monst *,int,int));
 
 extern const char *const flash_types[]; /* from zap.c */
-
-/* different types of psionic bolts for monsters */
-static
-boolean
-uniquespell(mtmp)
-struct monst *mtmp;
-{
-    register struct permonst *ptr = mtmp->data;
-    register int mm = monsndx(ptr);
-    switch(ptr->mlet) {
-    case S_ANGEL:
-        You("are being crushed under the weight of your sins!");
-        break;
-    case S_DRAGON:
-        Your("thoughts are whited out by an overwhelming presence!");
-        break;
-    case S_VAMPIRE:
-        pline("Suddenly, %s streams from your %s and %s!", body_part(BLOOD),
-            body_part(FACE), makeplural(body_part(EYE)));
-        break;
-    case S_NAGA:
-        You("are being crushed by telekinetic coils!");
-        break;
-    case S_GIANT:
-        You("are walloped by an enormous phantasmal warhammer!");
-        break;
-    case S_GNOME:
-        You("are bombarded by spectral fists!");
-        break;
-    case S_DEMON:
-        switch(mm) {
-            case PM_DEMOGORGON:
-                Your("body withers and decays!");
-                break;
-            case PM_ORCUS:
-                You("are torn apart by phantasmal skulls!");
-                break;
-            case PM_MARID:
-                Your("%s heaves as it is suddenly filled with water!",
-                      body_part(STOMACH));
-                break;
-            default:
-                You("are covered in ravenous insects!");
-                break;
-        }
-        break;
-    default:
-        return FALSE;
-        break;
-    }
-    return TRUE;
-}
 
 /* feedback when frustrated monster couldn't cast a spell */
 static
@@ -627,9 +574,7 @@ int spellnum;
             shieldeff(u.ux, u.uy);
             dmg = (dmg + 1) / 2;
         }
-        if (rn2(4) && uniquespell(mtmp))
-            break;
-        else if (dmg <= 5)
+        if (dmg <= 5)
             You("get a slight %sache.", body_part(HEAD));
         else if (dmg <= 10)
             Your("brain is on fire!");
@@ -1695,7 +1640,9 @@ int spellnum;
        	    shieldeff(mtmp->mx, mtmp->my);
        	    dmg = (dmg + 1) / 2;
        	}
-       	if (canseemon(mtmp))
+        if (dmg > mtmp->mhp && has_head(mtmp->data)) {
+            pline("%s's head explodes!", Monnam(mtmp));
+        } else if (canseemon(mtmp))
        	    pline("%s winces%s", Monnam(mtmp), (dmg <= 5) ? "." : "!");
        	break;
     default:

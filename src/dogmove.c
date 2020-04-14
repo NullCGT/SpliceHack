@@ -393,7 +393,8 @@ boolean devour;
 
     deadmimic = (obj->otyp == CORPSE && (obj->corpsenm == PM_SMALL_MIMIC
                                          || obj->corpsenm == PM_LARGE_MIMIC
-                                         || obj->corpsenm == PM_GIANT_MIMIC));
+                                         || obj->corpsenm == PM_GIANT_MIMIC
+                                         || obj->corpsenm == PM_KILLER_MIMIC));
     slimer = (obj->otyp == CORPSE && obj->corpsenm == PM_GREEN_SLIME);
     stunner = (obj->otyp == CORPSE && (obj->corpsenm == PM_GIANT_BAT
                                          || obj->corpsenm == PM_BAT

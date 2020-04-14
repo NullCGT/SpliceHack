@@ -2733,7 +2733,7 @@ register struct monst *mtmp;
         s_sym = syms[rn2((int) sizeof(syms))];
  assign_sym:
         if (s_sym == MAXOCLASSES) {
-            const int furnsyms[] = { S_upstair, S_dnstair, S_altar, S_grave, S_throne, S_sink };
+            const int furnsyms[] = { S_upstair, S_dnstair, S_altar, S_grave, S_throne, S_sink, S_furnace };
             ap_type = M_AP_FURNITURE;
             appear = furnsyms[rn2(SIZE(furnsyms))];
         } else {

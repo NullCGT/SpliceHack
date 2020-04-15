@@ -1909,6 +1909,12 @@ int specialdmg; /* blessed and/or material bonus against various things */
                   makeplural(stagger(pd, "stagger")));
         mdef->mstun = 1;
         goto physical;
+    case AD_CLOB:
+        if (tmp != 0 && !rn2(5)) {
+            You("knock %s back with an awesome blow!", mon_nam(mdef));
+            mhurtle(mdef, u.ux - mdef->mx, u.uy - mdef->my, rn1(3, 3));
+        }
+        goto physical;
     case AD_LEGS:
 #if 0
         if (u.ucancelled) {

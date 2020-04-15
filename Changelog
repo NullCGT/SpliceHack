@@ -178,6 +178,7 @@ Misc. Changes
 - Kegs weigh less and are no longer treated as containers. Also, keg explosions deal
   a very large amount of damage.
 - Mimics can mimic furnaces.
+- Fixed lack of implementation for monsters being clobbered.
 
 Balance
 - Pirates can be gifted artifacts, but do not have increased artifact generation.

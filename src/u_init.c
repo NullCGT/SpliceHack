@@ -68,6 +68,17 @@ static struct trobj Cave_man[] = {
     { LIGHT_ARMOR, 0, ARMOR_CLASS, 1, UNDEF_BLESS },
     { 0, 0, 0, 0, 0 }
 };
+static struct trobj Dancer[] = {
+    { SCIMITAR, 0, WEAPON_CLASS, 1, UNDEF_BLESS },
+    { MELON, 0, FOOD_CLASS, 1, 0 },
+    { PUMPKIN, 0, FOOD_CLASS, 1, 0 },
+    { APPLE, 0, FOOD_CLASS, 1, 0 },
+    { ORANGE, 0, FOOD_CLASS, 1, 0 },
+    { PEAR, 0, FOOD_CLASS, 1, 0 },
+    { UNDEF_TYP, UNDEF_SPE, SPBOOK_CLASS, 1, UNDEF_BLESS },
+    { UNDEF_TYP, UNDEF_SPE, SCROLL_CLASS, 1, UNDEF_BLESS },
+	{ 0, 0, 0, 0, 0 }
+};
 static struct trobj Dragonmaster[] = {
     { BROADSWORD, 1, WEAPON_CLASS, 1, UNDEF_BLESS },
     { SCALE_MAIL, 1, ARMOR_CLASS, 1, UNDEF_BLESS },
@@ -401,6 +412,26 @@ static const struct def_skill Skill_Con[] = {
     { P_COOKING, P_SKILLED },
     { P_NONE, 0 }
 };
+
+static const struct def_skill Skill_Dan[] = {
+    { P_AXE, P_BASIC },
+    { P_SHORT_SWORD, P_SKILLED },
+    { P_SCIMITAR, P_EXPERT },
+    { P_DAGGER, P_SKILLED },
+    { P_KNIFE, P_EXPERT },
+    { P_COOKING, P_SKILLED },
+    { P_FLAIL, P_SKILLED },
+    { P_POLEARMS, P_SKILLED },
+    { P_TWO_WEAPON_COMBAT, P_EXPERT },
+    { P_BARE_HANDED_COMBAT, P_EXPERT },
+    { P_HEALING_SPELL, P_BASIC },
+    { P_ENCHANTMENT_SPELL, P_SKILLED },
+    { P_ATTACK_SPELL, P_EXPERT },
+    { P_ESCAPE_SPELL, P_EXPERT },
+    { P_MATTER_SPELL, P_EXPERT },
+    { P_NONE, 0 }
+};
+
 static const struct def_skill Skill_D[] = {
     { P_DAGGER, P_BASIC },
     { P_KNIFE, P_BASIC },
@@ -868,6 +899,12 @@ u_init()
         ini_inv(Cartomancer);
         skill_init(Skill_Car);
         break;
+    case PM_DANCER:
+        ini_inv(Dancer);
+        knows_object(SPEED_BOOTS);
+        knows_object(DRUM_OF_EARTHQUAKE);
+        skill_init(Skill_Dan);
+        break;
     case PM_DRAGONMASTER:
         ini_inv(Dragonmaster);
         knows_class(WEAPON_CLASS);
@@ -1219,6 +1256,9 @@ int otyp;
         break;
     case PM_CARTOMANCER:
         skills = Skill_Car;
+        break;
+    case PM_DANCER:
+        skills = Skill_Dan;
         break;
     case PM_DRAGONMASTER:
         skills = Skill_D;

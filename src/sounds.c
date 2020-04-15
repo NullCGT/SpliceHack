@@ -1125,6 +1125,9 @@ register struct monst *mtmp;
             case PM_DRAGONMASTER:
                 verbl_msg = "The only authority I answer to is that of the wyrm.";
                 break;
+            case PM_DANCER:
+                verbl_msg = "Come, join in the dance without end!";
+                break;
             case PM_WALKING_OAK:
             case PM_WALKING_BIRCH:
             case PM_WALKING_WILLOW:

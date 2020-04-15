@@ -203,6 +203,12 @@ register boolean special;
                 weapon = BROADSWORD;
             armor = rnd_class(PLATE_MAIL, CHAIN_MAIL);
             break;
+        case PM_DANCER:
+            weapon = rn2(2) ? KNIFE : SCIMITAR;
+            cloak = rn2(2) ? CLOAK_OF_REFLECTION : CLOAK_OF_DISPLACEMENT;
+            armor = STRANGE_OBJECT;
+            shield = STRANGE_OBJECT;
+            break;
         case PM_PIRATE:
             if (rn2(4))
                 weapon = SCIMITAR;

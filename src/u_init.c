@@ -1190,7 +1190,8 @@ u_init()
   	}
   	shambler->mflags2 &= ~M2_MERC;				/* no guards */
   	shambler->mflags2 &= ~M2_PEACEFUL;			/* no peacefuls */
-  	/* shambler->mflags2 &= ~M2_WERE; */
+    shambler->mflags2 &= ~M2_SHAPESHIFTER;	    /* no shapeshifters */
+  	shambler->mhflags &= ~MH_WERE;              /* no werecreatures */
   	shambler->mflags2 &= ~M2_PNAME;				/* not a proper name */
     /* randomize race flag */
     for (i = 0; i < rnd(4); i++) {

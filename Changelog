@@ -180,6 +180,7 @@ Misc. Changes
 - Mimics can mimic furnaces.
 - Fixed lack of implementation for monsters being clobbered.
 - Fixed pets not attacking peaceful melee targets.
+- Fix shambling horrors being shapeshifters or werecreatures.
 
 Balance
 - Pirates can be gifted artifacts, but do not have increased artifact generation.

@@ -179,6 +179,7 @@ Misc. Changes
   a very large amount of damage.
 - Mimics can mimic furnaces.
 - Fixed lack of implementation for monsters being clobbered.
+- Fixed pets not attacking peaceful melee targets.
 
 Balance
 - Pirates can be gifted artifacts, but do not have increased artifact generation.

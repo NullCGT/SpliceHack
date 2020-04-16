@@ -181,6 +181,8 @@ Misc. Changes
 - Fixed lack of implementation for monsters being clobbered.
 - Fixed pets not attacking peaceful melee targets.
 - Fix shambling horrors being shapeshifters or werecreatures.
+- Due to a coding refinement, Nalzok is slightly less likely to summon demons than
+  previously.
 
 Balance
 - Pirates can be gifted artifacts, but do not have increased artifact generation.

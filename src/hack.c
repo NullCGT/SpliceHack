@@ -1885,10 +1885,7 @@ domove_core()
      * previous location using the same conditions as in attack().
      * there are special extenuating circumstances:
      * (1) if the pet dies then your god angers,
-     * (2) if the pet gets trapped then your god may disapprove,
-     * (3) if the pet was already trapped and you attempt to free it
-     * not only do you encounter the trap but you may frighten your
-     * pet causing it to go wild!  moral: don't abuse this privilege.
+     * (2) if the pet gets trapped then your god may disapprove.
      *
      * Ceiling-hiding pets are skipped by this section of code, to
      * be caught by the normal falling-monster code.
@@ -1919,11 +1916,9 @@ domove_core()
                     && !(verysmall(mtmp->data)
                          && (!mtmp->minvent || (curr_mon_load(mtmp) <= 600)))) {
             /* can't swap places when pet won't fit there with the boulder */
-            u.ux = u.ux0, u.uy = u.uy0; /* didn't move after all */
-            if (u.usteed)
-                u.usteed->mx = u.ux, u.usteed->my = u.uy;
             You("stop.  %s won't fit into the same spot that you're at.",
                  upstart(y_monnam(mtmp)));
+            didnt_move = TRUE;
         } else if (u.ux0 != x && u.uy0 != y && bad_rock(mtmp->data, x, u.uy0)
                    && bad_rock(mtmp->data, u.ux0, y)
                    && (bigmonst(mtmp->data) || (curr_mon_load(mtmp) > 600))) {
@@ -1931,19 +1926,16 @@ domove_core()
             You("stop.  %s won't fit through.", upstart(y_monnam(mtmp)));
             didnt_move = TRUE;
         } else if ((mtmp->mpeaceful || mtmp->mtame) && mtmp->mtrapped) {
-            /* aos: since peaceful monsters simply being unable to move out of
-             * traps was inconsistent with pets having it possible but being
-             * untamed in the process, extend this to pets as well. */
+            /* Since peaceful monsters simply being unable to move out of traps
+             * was inconsistent with pets being able to but being untamed in the
+             * process, apply this logic equally to pets and peacefuls. */
             You("stop.  %s can't move out of that trap.",
                 upstart(y_monnam(mtmp)));
             didnt_move = TRUE;
         } else if (mtmp->mpeaceful
                    && (!goodpos(u.ux0, u.uy0, mtmp, 0)
                        || t_at(u.ux0, u.uy0) != NULL
-                       || mtmp->ispriest
-                       || mtmp->isshk
-                       || mtmp->data == &mons[PM_ORACLE]
-                       || mtmp->m_id == g.quest_status.leader_m_id)) {
+                       || mundisplaceable(mtmp))) {
             /* displacing peaceful into unsafe or trapped space, or trying to
              * displace quest leader, Oracle, shopkeeper, or priest */
             You("stop.  %s doesn't want to swap places.",
@@ -2014,10 +2006,6 @@ domove_core()
             if (u.usteed)
                 u.usteed->mx = u.ux, u.usteed->my = u.uy;
         }
-
-        mtmp->mundetected = 0;
-        if (mtmp->m_ap_type)
-            seemimic(mtmp);
     }
 
     reset_occupations();

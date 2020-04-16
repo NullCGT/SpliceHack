@@ -145,7 +145,23 @@ New Special Materials
     to as "crystal" in game.
   - Edged crystal weapons deal +3 damage.
 
-New Race
+New Roles
+- New Role: Dancer
+  - The dancer is a glass cannon. They have low hit points and cannot wear suits of
+    armor (doing so would inhibit their dance moves) but are fast and capable of dishing
+    out large amounts of damage.
+  - Dances can be thought of as being similar to "stances," from fighting games. To
+    begin a new dance, simply use the technique associated with that dance. Whenever
+    you use a dance technique, your previous dance ends.
+  - Whenever you hit a monster, your combo counter increments by 1. 
+  - After a turn of not
+    hitting a monster, your combo counter resets to zero. If your combo is over a threshold
+    before it resets, you get a certain effect. The threshold and effect are dependent upon
+    the active dance.
+  - As you level up, you learn new dances.
+  - Start the game with a pet viper.
+
+New Races
 - New Race: Changeling
   - #chat to a monster to polymorph into it. The monster's base level must be of 
     no more than three levels higher than the player, and requires a large amount

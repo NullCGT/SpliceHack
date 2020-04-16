@@ -2942,6 +2942,13 @@ struct permonst _mons2[] = {
         M1_SWIM | M1_CONCEAL | M1_NOLIMBS | M1_ANIMAL | M1_SLITHY | M1_POIS
             | M1_OVIPAROUS | M1_CARNIVORE | M1_NOTAKE,
         M2_HOSTILE, 0, 0, 6, CLR_BROWN),
+    MON("viper", S_SNAKE, LVL(4, 15, 3, 0, 0), (G_GENO | G_NOGEN),
+        A(ATTK(AT_BITE, AD_DRST, 1, 6), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
+          NO_ATTK),
+        SIZ(100, 80, MS_HISS, MZ_SMALL), MR_POISON, MR_POISON,
+        M1_SWIM | M1_NOLIMBS | M1_ANIMAL | M1_SLITHY | M1_POIS
+            | M1_OVIPAROUS | M1_CARNIVORE,
+        M2_HOSTILE | M2_DOMESTIC, 0, 0, 6, CLR_GREEN),
     MON("water moccasin", S_SNAKE, LVL(4, 15, 3, 0, 0),
         (G_GENO | G_NOGEN | G_LGROUP),
         A(ATTK(AT_BITE, AD_DRST, 1, 6), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,

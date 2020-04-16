@@ -97,9 +97,10 @@ struct blitz_tab {
 #define T_CARD_CAPTURE 48
 #define T_WHIRLWIND 49
 #define T_CLOBBER 50
-#define T_CROWN_LAW 51
-#define T_CROWN_NEU 52
-#define T_CROWN_CHAOS 53
+#define T_DANCE_STORM 51
+#define T_CROWN_LAW 52
+#define T_CROWN_NEU 53
+#define T_CROWN_CHAOS 54
 
 #define MAXTECH 54
 

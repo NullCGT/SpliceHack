@@ -587,8 +587,33 @@ int dieroll;
         if(u.uconduct.weaphit && !oldweaphit)
             livelog_write_string(LL_CONDUCT,
                     "hit with a wielded weapon for the first time");
+
+        if (Role_if(PM_DANCER))
+            dance();
     }
     return malive;
+}
+
+void dance()
+{
+    struct obj* pseudo;
+    boolean done_dancing = FALSE;
+    if (!Dancing) {
+        make_dancing((long) 5L, FALSE);
+        You("channel the energy of your attack and enter into a dance.");
+    } else {
+        incr_itimeout(&Dancing, (long) rnd(2));
+    }
+
+    if (tech_inuse(T_DANCE_STORM)) {
+        pseudo = mksobj(WAN_LIGHTNING, FALSE, FALSE);
+        pseudo->blessed = pseudo->cursed = 0;
+        weffects(pseudo);
+        obfree(pseudo, NULL);
+        done_dancing = TRUE;
+    }
+    if (done_dancing)
+        make_dancing(0L, FALSE);
 }
 
 /* hit the monster next to you and the monsters to the left and right of it;

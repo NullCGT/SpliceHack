@@ -89,6 +89,7 @@ static NEARDATA const char *tech_names[] = {
 	"card capture",
 	"storm's eye",
 	"clobber",
+	"summer storm step",
 	"court of blades",
 	"balanced fate",
 	"armageddon"
@@ -106,6 +107,10 @@ static const struct innate_tech
 					 {  15, T_CARD_CAPTURE, 1},
 		       {   0, 0, 0} },
   cav_tech[] = { {   1, T_PRIMAL_ROAR, 1},
+		       {   0, 0, 0} },
+  dan_tech[] = {
+					 {   1, T_DASH, 1},
+					 {   1, T_DANCE_STORM, 1},
 		       {   0, 0, 0} },
   dra_tech[] = {
 					 {   1, T_DRAGON_BLITZ, 1},
@@ -1737,6 +1742,11 @@ tamedog(mtmp, (struct obj *) 0);
 				t_timeout = rn1(1000, 500);
 			}
 			break;
+		case T_DANCE_STORM:
+			You("begin performing the %s.", techname(tech_no));
+			techt_inuse(tech_no) = techlev(tech_no) + 50;
+			t_timeout = rn1(200, 50);
+			break;
 		case T_CROWN_LAW:
 			You("call upon the seven heavens to enact holy justice upon your enemies!");
 			for(i = 0; i < 7; i++) {
@@ -1851,6 +1861,8 @@ tech_timeout()
 			break;
 		    case T_CHI_HEALING:
 			You("feel the healing power dissipate.");
+			case T_DANCE_STORM:
+			pline("You finish your performance of the %s", techname(i));
 			break;
 	            default:
 	            	break;
@@ -1911,6 +1923,7 @@ role_tech()
 		case PM_BARBARIAN:	return (bar_tech);
 		case PM_CARTOMANCER: return (car_tech);
 		case PM_CAVEMAN:	return (cav_tech);
+		case PM_DANCER:		return (dan_tech);
 		case PM_DRAGONMASTER: return (dra_tech);
     #if 0
 		case PM_FLAME_MAGE:	return (fla_tech);

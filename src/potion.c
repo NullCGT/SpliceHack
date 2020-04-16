@@ -187,6 +187,23 @@ int type;
 }
 
 void
+make_dancing(xtime, talk)
+long xtime;
+boolean talk;
+{
+    long old = Dancing;
+
+    if (Unaware)
+        talk = FALSE;
+
+    set_itimeout(&Dancing, xtime);
+    g.context.botl = TRUE;
+    if (!xtime && old)
+        if (talk)
+            You("skid to an abrupt halt.");
+}
+
+void
 make_carrier(xtime, talk)
 long xtime;
 boolean talk;

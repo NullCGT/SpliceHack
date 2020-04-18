@@ -1495,6 +1495,10 @@ coord *tm;
                 if (!Inhell)
                     kind = NO_TRAP;
                 break;
+            case ICE_BLOCK_TRAP:
+                if (lvl < 8 || Inhell)
+                    kind = NO_TRAP;
+                break;
             case TELEP_TRAP:
                 if (g.level.flags.noteleport)
                     kind = NO_TRAP;

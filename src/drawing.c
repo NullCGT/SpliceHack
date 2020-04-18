@@ -190,6 +190,7 @@ const struct symdef defsyms[MAXPCHARS] = {
        { '^', "fire trap", C(CLR_ORANGE) },          /* trap */
        { '^', "buzzsaw trap", C(CLR_CYAN) },         /* trap */
        { '^', "whirlwind trap", C(CLR_WHITE) },      /* trap */
+       { '^', "ice block trap", C(CLR_BRIGHT_BLUE) },/* trap */
        { '^', "glyph of neutrality", C(CLR_GRAY) },  /* trap */
        { '^', "glyph of law", C(CLR_YELLOW) },       /* trap */
        { '^', "glyph of chaos", C(CLR_RED) },        /* trap */
@@ -709,6 +710,7 @@ const struct symparse loadsyms[] = {
     { SYM_PCHAR, S_fire_trap, "S_fire_trap" },
     { SYM_PCHAR, S_buzzsaw_trap, "S_buzzsaw_trap" },
     { SYM_PCHAR, S_whirlwind_trap, "S_whirlwind_trap"},
+    { SYM_PCHAR, S_ice_block_trap, "S_ice_block_trap" },
     { SYM_PCHAR, S_glyph_of_neutrality, "S_glyph_of_neutrality" },
     { SYM_PCHAR, S_glyph_of_law, "S_glyph_of_law" },
     { SYM_PCHAR, S_glyph_of_chaos, "S_glyph_of_chaos" },

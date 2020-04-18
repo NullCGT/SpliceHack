@@ -145,7 +145,7 @@ New Special Materials
     to as "crystal" in game.
   - Edged crystal weapons deal +3 damage.
 
-New Race
+New Races
 - New Race: Changeling
   - #chat to a monster to polymorph into it. The monster's base level must be of 
     no more than three levels higher than the player, and requires a large amount
@@ -154,6 +154,14 @@ New Race
   - Do not passively gain hit points without a special source of regeneration,
     unless polymorphed.
   - Hate iron in their natural form.
+
+New Traps
+- New Trap: Ice Block Trap
+  - Deals cold damage.
+  - If the player does not have free action and fails a dex save, they are
+    temporarily paralyzed.
+  - Can appear on chests.
+  - Does not generate in Gehennom.
 
 Misc. Changes
 - Changed the name of substance warpers to transmuters.

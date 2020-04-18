@@ -94,6 +94,7 @@ start: NHAccess
 	S_fire_trap: \094
 	S_buzzsaw_trap: \094
 	S_whirlwind_trap: \094
+	S_ice_block_trap: \094
 	S_glyph_of_neutrality: \094
 	S_glyph_of_law: \094
 	S_glyph_of_chaos: \094
@@ -163,11 +164,12 @@ start: Blank
         S_boomright: \032
         S_boulder: \032
         S_brcorn: \032
-				S_buzzsaw_trap: \032
-				S_whirlwind_trap: \032
-				S_glyph_of_neutrality: \032
-				S_glyph_of_law: \032
-				S_glyph_of_chaos: \032
+		S_buzzsaw_trap: \032
+		S_whirlwind_trap: \032
+		S_ice_block_trap: \032
+		S_glyph_of_neutrality: \032
+		S_glyph_of_law: \032
+		S_glyph_of_chaos: \032
         S_centaur: \032
         S_chain: \032
         S_cloud: \032

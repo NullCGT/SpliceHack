@@ -109,7 +109,6 @@ matrix:
       cat dat/options
   - name: windows-visualstudio
     os: windows
-    install: choco install winflexbison
     language: shell
     script:
     - "./win/win32/vs2017/travisci.sh"
@@ -147,7 +146,12 @@ deploy:
   provider: releases
   api_key:
     secure: R92q34lY8OQwTaLHwz9PLx1JwomksIbghlJX5jB+kHkhKm/oqT5vP1MtEnhsJs1DfMn32NBiPUeDDC/SOGgPlROgERY1AXFozSY7pG25YWFLy1gW7xKRAxLKDS0cLjJ6/+GHkSxNdhWuz/XEDN+m3VeRu6n4Ud/m69InSip30t19gb0rt/PBczIN61nE1b2Se6Y2hozkjnpsmTwUmfp2uEmYKvaUY8BHxofWghRWEqV2qKYcA85dK9BvFIrhFSx4NpUHJlq+LZqcFuGSVIReIEozhGrVjDhRv9A22oddz7fHd1fD8Q9tmYesHXko3IFlvFXqWYgceaNAhYmWYs1h1rkzWOFdYBKQJIYIsjeq0RxBH81j8moTfPByN/eZGSEfOS4eb0cDSPyZdlc5BEywq3rpmW+pfKAPSkcvYMIo81TFVjfNqV9OETh8j44ZPX8Nuhv+SNGrGcuRKoYmIPzhJuvAh9JDHcKgDTmd0vO4xa8O1Ytv+WfVm/YX12s9HX2erxnfpVBVtIfBbDCKdAQdqvD+zYUxSq1xmA/jAMQh/6LaJ92XY9lTxRz9PRbAroocM/rpHm89TOlCiykPfxGBH8O0LSc1jRM/YO5svfGFCvQAJHSUAjImx6iRJrk+ehulQf8XtxpSCkbkE0uEcYvG3Dkglxep9DUouQUgAtr/Fi0=
-  file: ''
+  file_glob: true
+  file:
+    - "$TRAVIS_TAG.x86.zip"
+  skip_cleanup: true
   on:
-    repo: NullCGT/SpliceHack
-    branch: development
+    tags: true
+  prerelease: true
+  name: "Test release build of SpliceHack 0.5.0"
+  body: "This is an auto generated test release build of SpliceHack 0.5.0"

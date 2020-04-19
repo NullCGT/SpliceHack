@@ -22,6 +22,7 @@ static int FDECL(mkroll_launch, (struct trap *, XCHAR_P, XCHAR_P,
 static boolean FDECL(isclearpath, (coord *, int, SCHAR_P, SCHAR_P));
 static void FDECL(doglyphtrap, (struct trap *, const char *));
 static void FDECL(dofiretrap, (struct obj *));
+static void FDECL(doiceblocktrap, (struct obj *));
 static void NDECL(domagictrap);
 static boolean FDECL(emergency_disrobe, (boolean *));
 static int FDECL(untrap_prob, (struct trap *));
@@ -923,6 +924,11 @@ xchar ttype;
             }
         }
         return (you ? 2 : 1);
+    case ICE_BLOCK_TRAP:
+        /* Technically we could run a full check for unknowon items granting
+           free action here, but it seems easier just to consider it unsafe
+           at all times. */
+        return 0;
     case MAGIC_PORTAL:
         /* never hurts monsters, but player is considered non-immune so they
          * can be asked about entering it */
@@ -1105,7 +1111,7 @@ unsigned trflags;
         }
         if (!Fumbling && ttype != MAGIC_PORTAL && ttype != VIBRATING_SQUARE
             && ttype != ANTI_MAGIC && !forcebungle && !plunged
-            && !conj_pit && !adj_pit && uarmf->otyp != STOMPING_BOOTS
+            && !conj_pit && !adj_pit && (uarmf && uarmf->otyp != STOMPING_BOOTS)
             && (!rn2(5) || (is_pit(ttype)
                             && is_clinger(g.youmonst.data)))) {
                 You("escape %s %s.", (ttype == ARROW_TRAP && !trap->madeby_u)
@@ -1348,6 +1354,11 @@ unsigned trflags;
     case FIRE_TRAP:
         seetrap(trap);
         dofiretrap((struct obj *) 0);
+        break;
+
+    case ICE_BLOCK_TRAP:
+        seetrap(trap);
+        doiceblocktrap((struct obj *) 0);
         break;
 
     case BUZZSAW_TRAP:
@@ -2676,6 +2687,32 @@ register struct monst *mtmp;
             if (see_it && t_at(mtmp->mx, mtmp->my))
                 seetrap(trap);
             break;
+        case ICE_BLOCK_TRAP:
+            if (in_sight)
+                pline("A block of ice rises up from the %s and encases %s!",
+                      surface(mtmp->mx, mtmp->my), mon_nam(mtmp));
+            else if (see_it) /* evidently `mtmp' is invisible */
+                You_see("a block of ice rise from the %s!",
+                        surface(mtmp->mx, mtmp->my));
+            if (resists_cold(mtmp)) {
+                if (in_sight) {
+                    shieldeff(mtmp->mx, mtmp->my);
+                    pline("%s is uninjured.", Monnam(mtmp));
+                }
+                mtmp->mcanmove = 0;
+            } else if (mtmp->data == &mons[PM_WATER_ELEMENTAL]) {
+                (void) newcham(mtmp, &mons[PM_ICE_ELEMENTAL], FALSE, FALSE);
+            } else {
+                mtmp->mcanmove = 0;
+                if (thitm(0, mtmp, (struct obj *) 0, d(2, 6), FALSE)) {
+                    trapkilled = TRUE;
+                }
+            }
+            if (rn2(3))
+                (void) destroy_mitem(mtmp, POTION_CLASS, AD_COLD);
+            if (see_it && t_at(mtmp->mx, mtmp->my))
+                seetrap(trap);
+            break;
         case BUZZSAW_TRAP:
             if (in_sight) {
                 pline("Spinning buzzsaws erupt from the %s under %s!",
@@ -3435,6 +3472,61 @@ const char *clr;
 }
 
 static void
+doiceblocktrap(box)
+struct obj *box; /* null for floor trap */
+{
+    boolean see_it = !Blind;
+    boolean freeze = TRUE;
+    int num = 0;
+
+    /* Bug: for box case, the equivalent of burn_floor_objects() ought
+     * to be done upon its contents.
+     */
+
+    if ((box && !carried(box)) ? is_pool(box->ox, box->oy) : Underwater) {
+        pline("A wave of intense cold erupts from %s!",
+              the(box ? xname(box) : surface(u.ux, u.uy)));
+        if (Cold_resistance)
+            You("are uninjured.");
+        else
+            losehp(rnd(3), "flash frost", KILLED_BY);
+        return;
+    }
+    if (see_it)
+        pline("An ice floe %s from %s!", box ? "surges forth" : "rises up",
+            the(box ? xname(box) : surface(u.ux, u.uy)));
+    else
+        pline("A wave of cold washes over you.");
+    if (Cold_resistance) {
+        shieldeff(u.ux, u.uy);
+        num = 1;
+        g.context.botl = 1;
+    } else if (Upolyd && u.umonnum == PM_WATER_ELEMENTAL) {
+        freeze = FALSE;
+        polymon(PM_ICE_ELEMENTAL);
+    } else {
+        num = d(2, 6);
+        g.context.botl = 1;
+    }
+    if (!num)
+        You("are uninjured.");
+    else
+        losehp(num, "turning into a block of ice", KILLED_BY);
+    if (freeze && !Free_action && ACURR(A_DEX) < rnd(25)) {
+            You("get encased in a block of ice!");
+            nomul(-rn1(5, 10));
+            g.multi_reason = "encased in ice";
+            g.nomovemsg = "The ice around you melts away.";
+    } else {
+        You("manage to escape the block of ice that threatens to encase you!");
+    }
+
+    if (rn2(3)) {
+        destroy_item(POTION_CLASS, AD_COLD);
+    }
+}
+
+static void
 dofiretrap(box)
 struct obj *box; /* null for floor trap */
 {
@@ -3548,8 +3640,8 @@ domagictrap()
         case 11:
             /* sometimes nothing happens */
             break;
-        case 12: /* a flash of fire */
-            dofiretrap((struct obj *) 0);
+        case 12: /* a flash of fire or block of ice */
+            rn2(2) ? dofiretrap((struct obj *) 0) : doiceblocktrap((struct obj *) 0) ;
             break;
 
         /* odd feelings */
@@ -5328,6 +5420,8 @@ boolean disarm;
             break;
         case 12:
         case 11:
+            doiceblocktrap(obj);
+            break;
         case 10:
         case 9:
             dofiretrap(obj);
@@ -5558,6 +5652,7 @@ register struct trap *ttmp;
     /* some of these are arbitrary -dlc */
     if (ttmp && ((ttmp->ttyp == SQKY_BOARD) || (ttmp->ttyp == BEAR_TRAP)
                  || (ttmp->ttyp == LANDMINE) || (ttmp->ttyp == FIRE_TRAP)
+                 || (ttmp->ttyp == ICE_BLOCK_TRAP)
                  || is_pit(ttmp->ttyp)
                  || is_hole(ttmp->ttyp)
                  || (ttmp->ttyp == TELEP_TRAP) || (ttmp->ttyp == LEVEL_TELEP)

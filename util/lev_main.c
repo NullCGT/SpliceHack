@@ -163,6 +163,7 @@ static struct {
                    { "fire", FIRE_TRAP },
                    { "buzzsaw", BUZZSAW_TRAP },
                    { "whirlwind", WHIRLWIND_TRAP },
+                   { "ice block", ICE_BLOCK_TRAP },
                    { "glyph of neutrality", GLYPH_OF_NEUTRALITY },
                    { "glyph of law", GLYPH_OF_LAW },
                    { "glyph of chaos", GLYPH_OF_CHAOS },

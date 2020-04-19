@@ -1191,7 +1191,8 @@ u_init()
   					attkptr->adtyp == AD_ENCH || attkptr->adtyp == AD_DISN ||
   					attkptr->adtyp == AD_PEST || attkptr->adtyp == AD_FAMN ||
             attkptr->adtyp == AD_HYDR || attkptr->adtyp == AD_DGST ||
-            attkptr->adtyp == AD_SKEL || attkptr->adtyp == AD_POTN) {
+            attkptr->adtyp == AD_SKEL || attkptr->adtyp == AD_POTN ||
+            attkptr->adtyp == AD_WERE) {
   			attkptr->adtyp = rn2(AD_CLRC);
   		}
   		attkptr->damn = 2;				/* we're almost sure to get this wrong first time */
@@ -1227,7 +1228,8 @@ u_init()
   	}
   	shambler->mflags2 &= ~M2_MERC;				/* no guards */
   	shambler->mflags2 &= ~M2_PEACEFUL;			/* no peacefuls */
-  	/* shambler->mflags2 &= ~M2_WERE; */
+    shambler->mflags2 &= ~M2_SHAPESHIFTER;	    /* no shapeshifters */
+  	shambler->mhflags &= ~MH_WERE;              /* no werecreatures */
   	shambler->mflags2 &= ~M2_PNAME;				/* not a proper name */
     /* randomize race flag */
     for (i = 0; i < rnd(4); i++) {

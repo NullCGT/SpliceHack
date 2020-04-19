@@ -1204,7 +1204,7 @@ boolean ranged;
 		 max_passive_dmg(mtmp2, mtmp) >= mtmp->mhp) ||
 		((mtmp->mhp*4 < mtmp->mhpmax
 		  || mtmp2->data->msound == MS_GUARDIAN
-		  || mtmp2->data->msound == MS_LEADER) && !Conflict) ||
+		  || mtmp2->data->msound == MS_LEADER) && !ranged && !Conflict) ||
 		   (!ranged && touch_petrifies(mtmp2->data) &&
 			!resists_ston(mtmp)));
 }

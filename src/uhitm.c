@@ -393,8 +393,8 @@ register struct monst *mtmp;
                 You("stop.  %s is in the way!", buf);
                 end_running(TRUE);
                 return TRUE;
-            } else if ((mtmp->mfrozen || (!mtmp->mcanmove)
-                        || (mtmp->data->mmove == 0)) && rn2(6)) {
+            } else if (mtmp->mfrozen || mtmp->msleeping || (!mtmp->mcanmove)
+                       || (mtmp->data->mmove == 0 && rn2(6))) {
                 pline("%s doesn't seem to move!", Monnam(mtmp));
                 end_running(TRUE);
                 return TRUE;
@@ -1933,6 +1933,12 @@ int specialdmg; /* blessed and/or material bonus against various things */
             pline("%s %s for a moment.", Monnam(mdef),
                   makeplural(stagger(pd, "stagger")));
         mdef->mstun = 1;
+        goto physical;
+    case AD_CLOB:
+        if (tmp != 0 && !rn2(5)) {
+            You("knock %s back with an awesome blow!", mon_nam(mdef));
+            mhurtle(mdef, u.ux - mdef->mx, u.uy - mdef->my, rn1(3, 3));
+        }
         goto physical;
     case AD_LEGS:
 #if 0

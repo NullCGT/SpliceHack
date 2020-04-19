@@ -171,6 +171,14 @@ New Races
     unless polymorphed.
   - Hate iron in their natural form.
 
+New Traps
+- New Trap: Ice Block Trap
+  - Deals cold damage.
+  - If the player does not have free action and fails a dex save, they are
+    temporarily paralyzed.
+  - Can appear on chests.
+  - Does not generate in Gehennom.
+
 Misc. Changes
 - Changed the name of substance warpers to transmuters.
 - Changed the name of nova foxes to vulpenfernoes.
@@ -194,6 +202,11 @@ Misc. Changes
 - Kegs weigh less and are no longer treated as containers. Also, keg explosions deal
   a very large amount of damage.
 - Mimics can mimic furnaces.
+- Fixed lack of implementation for monsters being clobbered.
+- Fixed pets not attacking peaceful melee targets.
+- Fix shambling horrors being shapeshifters or werecreatures.
+- Due to a coding refinement, Nalzok is slightly less likely to summon demons than
+  previously.
 
 Balance
 - Pirates can be gifted artifacts, but do not have increased artifact generation.

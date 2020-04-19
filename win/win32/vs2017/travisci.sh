@@ -40,6 +40,7 @@ test -d "lib/pdcurses" || echo "pdcurses fetch failed"
 test -d "lib/pdcurses" || exit 0
 test -d "lib/lua-$LUA_VERSION/src" || exit 0
 export ADD_CURSES=Y
+export SKIP_NETHACKW=N
 export PDCURSES_TOP=../lib/pdcurses
 export
 cd src

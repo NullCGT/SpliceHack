@@ -52,7 +52,7 @@ E void FDECL(use_mask, (struct obj **));
 E boolean FDECL(check_mon_jump, (struct monst *, int, int));
 E boolean FDECL(snuff_lit, (struct obj *));
 E boolean FDECL(catch_lit, (struct obj *));
-E void FDECL(use_unicorn_horn, (struct obj *));
+E void FDECL(use_unicorn_horn, (struct obj **));
 E boolean FDECL(tinnable, (struct obj *));
 E void NDECL(reset_trapset);
 E void FDECL(fig_transform, (ANY_P *, long));
@@ -1033,6 +1033,7 @@ E void FDECL(strbuf_empty, (strbuf_t *));
 E void FDECL(strbuf_nl_to_crlf, (strbuf_t *));
 E char *FDECL(nonconst, (const char *, char *));
 E int FDECL(swapbits, (int, int, int));
+E void FDECL(shuffle_int_array, (int *, int));
 
 /* ### insight.c ### */
 
@@ -1496,6 +1497,7 @@ E int FDECL(somex, (struct mkroom *));
 E int FDECL(somey, (struct mkroom *));
 E boolean FDECL(inside_room, (struct mkroom *, XCHAR_P, XCHAR_P));
 E boolean FDECL(somexy, (struct mkroom *, coord *));
+E boolean FDECL(somexyspace, (struct mkroom *, coord *));
 E void FDECL(mkundead, (coord *, BOOLEAN_P, int));
 E struct permonst *NDECL(courtmon);
 E void FDECL(save_rooms, (NHFILE *));
@@ -2565,6 +2567,7 @@ E void FDECL(sysopt_seduce_set, (int));
 
 /* ### sp_lev.c ### */
 #if !defined(CROSSCOMPILE) || defined(CROSSCOMPILE_TARGET)
+E void NDECL(create_des_coder);
 E struct mapfragment *FDECL(mapfrag_fromstr, (char *));
 E void FDECL(mapfrag_free, (struct mapfragment **));
 E schar FDECL(mapfrag_get, (struct mapfragment *, int, int));

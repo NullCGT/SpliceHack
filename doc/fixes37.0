@@ -1,4 +1,4 @@
-$NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.179 $ $NHDT-Date: 1586807928 2020/04/13 19:58:48 $
+$NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.184 $ $NHDT-Date: 1587110793 2020/04/17 08:06:33 $
 
 General Fixes and Modified Features
 -----------------------------------
@@ -134,6 +134,9 @@ male hero poly'd into nymph chooses charm vs seduce message based on being
 	using hardcoded pronouns She,her for target monster--wrong for male
 	target and noticable if "<mon> finishes taking off his suit" is given
 hostile monsters with launcher and ammo try to stay away from melee range
+allow displacing peaceful creatures
+unicorn horns don't restore attribute loss anymore
+when a shop is changed from food to health food, change room type to match
 
 
 Fixes to 3.7.0-x Problems that Were Exposed Via git Repository
@@ -181,6 +184,10 @@ fix crash in water_damage_chain
 teleport feedback "you materialize at another location" was given too soon
 'mention_decore' was repeatedly reporting "you are back on bottom" when
 	moving around underwater
+tty: redraw unexplored locations as S_unexplored rather than <space> after
+	map has been partially overwritten by popup menu or text display
+tty: previous change resulted in remnants of previous level being shown on
+	new level after level change when S_unexplored is <space>
 X11: was still initializing map to 'stone' instead of 'unexplored' after they
 	became separate glyphs
 X11: for text map without color, add support for black&white ice; draw it in
@@ -263,6 +270,8 @@ wizard mode #wizborn command
 include more skill information in ^X output when dual-wielding
 item-using monsters will zap wand of undead turning at corpse-wielding hero
 	when the corpse is harmful
+boiling a pool or fountain now creates a temporary cloud of steam
+random themed rooms in the dungeons of doom
 
 
 Platform- and/or Interface-Specific New Features

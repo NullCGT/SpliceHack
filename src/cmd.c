@@ -730,7 +730,7 @@ domonability(VOID_ARGS)
     } else if (u.umonnum == PM_CREEPING_KUDZU) {
         split_mon(&g.youmonst, (struct monst *) 0);
     } else if (is_unicorn(g.youmonst.data)) {
-        use_unicorn_horn((struct obj *) 0);
+        use_unicorn_horn((struct obj **) 0);
         return 1;
     } else if (g.youmonst.data->msound == MS_SHRIEK) {
         You("shriek.");

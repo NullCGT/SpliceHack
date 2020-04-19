@@ -597,6 +597,7 @@ struct {
 {S_fire_trap,            "fire trap", "fire trap"},
 {S_buzzsaw_trap,         "buzzsaw trap", "buzzsaw trap"},
 {S_whirlwind_trap,       "whirlwind trap", "whirlwind trap"},
+{S_ice_block_trap,       "ice block trap", "ice block trap"},
 {S_glyph_of_neutrality,  "glyph of neutrality", "glyph of neutrality"},
 {S_glyph_of_law,         "glyph of law", "glyph of law"},
 {S_glyph_of_chaos,       "glyph of chaos", "glyph of chaos"},

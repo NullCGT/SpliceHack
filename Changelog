@@ -191,8 +191,6 @@ Misc. Changes
 - Fix shambling horrors being shapeshifters or werecreatures.
 - Due to a coding refinement, Nalzok is slightly less likely to summon demons than
   previously.
-
-Balance
 - Pirates can be gifted artifacts, but do not have increased artifact generation.
 - Only four headless horseman can appear each game.
 - Increased damage for barbed devil quills.
@@ -215,6 +213,8 @@ Balance
   challenge.
 - Baobhan-sith only generate in hell, to prevent them from crowding morgues in
   the regular dungeon.
+- Racial werewolves gain massive strength when morphed. There have apparently been
+  rumors that you will break out of your armor, which are false.
 
 Notable Bug Fixes
 - Water elementals can be neutral deific minions agian.

@@ -613,6 +613,7 @@ E boolean FDECL(hurtle_step, (genericptr_t, int, int));
 #endif /* !MAKEDEFS_C && !MDLIB_C && !LEV_LEX_C */
 E int FDECL(def_char_to_objclass, (CHAR_P));
 E int FDECL(def_char_to_monclass, (CHAR_P));
+E int FDECL(def_char_is_furniture, (CHAR_P));
 #if !defined(MAKEDEFS_C) && !defined(MDLIB_C) && !defined(LEV_LEX_C)
 E void FDECL(switch_symbols, (int));
 E void FDECL(assign_graphics, (int));
@@ -1612,6 +1613,7 @@ E int FDECL(max_passive_dmg, (struct monst *, struct monst *));
 E boolean FDECL(same_race, (struct permonst *, struct permonst *));
 E int FDECL(monsndx, (struct permonst *));
 E int FDECL(name_to_mon, (const char *));
+E int FDECL(name_to_monplus, (const char *, const char **));
 E int FDECL(name_to_monclass, (const char *, int *));
 E int FDECL(gender, (struct monst *));
 E int FDECL(pronoun_gender, (struct monst *, unsigned));
@@ -2866,8 +2868,10 @@ E void NDECL(port_help);
 #endif
 E void FDECL(sethanguphandler, (void (*)(int)));
 E boolean NDECL(authorize_wizard_mode);
+E void FDECL(append_slash, (char *));
 E boolean FDECL(check_user_string, (char *));
 E char *NDECL(get_login_name);
+E unsigned long NDECL(sys_random_seed);
 #endif /* UNIX */
 
 /* ### unixtty.c ### */

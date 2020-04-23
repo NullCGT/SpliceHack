@@ -150,16 +150,15 @@ New Roles
   - The dancer is a glass cannon. They have low hit points and cannot wear suits of
     armor (doing so would inhibit their dance moves) but are fast and capable of dishing
     out large amounts of damage.
+  - Whenever you hit a monster, your combo counter starts. If the combo counter decreases
+    to zero without a manual reset, you faint and are paralyzed for a few turns.
   - Dances can be thought of as being similar to "stances," from fighting games. To
-    begin a new dance, simply use the technique associated with that dance. Whenever
-    you use a dance technique, your previous dance ends.
-  - Whenever you hit a monster, your combo counter increments by 1. 
-  - After a turn of not
-    hitting a monster, your combo counter resets to zero. If your combo is over a threshold
-    before it resets, you get a certain effect. The threshold and effect are dependent upon
+  - Whenever you hit a monster, your combo counter increases.
+  - If your combo crosses a numeric threshold, you get a certain effect and generally
+    the combo counter resets. The threshold and effect are dependent upon
     the active dance.
   - As you level up, you learn new dances.
-  - Start the game with a pet viper.
+  - Quest Nemesis is the Time Elemental.
 
 New Races
 - New Race: Changeling

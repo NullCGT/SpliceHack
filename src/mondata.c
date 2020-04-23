@@ -1263,6 +1263,9 @@ struct attack *mattk;
     case PM_ENERGY_VORTEX:
         what = "heating up";
         break;
+    case PM_TIME_ELEMENTAL:
+        what = "entropifying";
+        break;
     default:
         what = (mattk->aatyp == AT_HUGS) ? "being roasted" : "on fire";
         break;

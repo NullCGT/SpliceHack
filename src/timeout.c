@@ -718,6 +718,9 @@ nh_timeout()
             case REFLECTING:
                 You("are no longer as shiny.");
                 break;
+            case WWALKING:
+                You("feel heavier.");
+                break;
             case FAST:
                 if (!Very_fast)
                     You_feel("yourself slow down%s.",

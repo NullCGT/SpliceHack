@@ -22,7 +22,6 @@ static const struct innate_tech * NDECL(role_tech);
 static const struct innate_tech * NDECL(race_tech);
 static int NDECL(doblitz);
 static int NDECL(blitz_chi_strike);
-static int NDECL(blitz_e_fist);
 static int NDECL(blitz_pummel);
 static int NDECL(blitz_g_slam);
 static int NDECL(blitz_dash);
@@ -89,7 +88,13 @@ static NEARDATA const char *tech_names[] = {
 	"card capture",
 	"storm's eye",
 	"clobber",
+	"song of seasons",
+	"winterwake waltz",
 	"summer storm step",
+	"detonation dance",
+	"terran tango",
+	"flow breaker",
+	"spellstrike slide",
 	"court of blades",
 	"balanced fate",
 	"armageddon"
@@ -109,8 +114,13 @@ static const struct innate_tech
   cav_tech[] = { {   1, T_PRIMAL_ROAR, 1},
 		       {   0, 0, 0} },
   dan_tech[] = {
-					 {   1, T_DASH, 1},
-					 {   1, T_DANCE_STORM, 1},
+					 {   1, T_DANCE_E, 1},
+					 {   1, T_E_FIST, 1},
+					 {   3, T_DANCE_WWALK, 1},
+					 {   5, T_DASH, 1},
+					 {   7, T_DANCE_STOP, 1},
+					 {   9, T_DANCE_EARTH, 1},
+					 {   11, T_DANCE_STORM, 1},
 		       {   0, 0, 0} },
   dra_tech[] = {
 					 {   1, T_DRAGON_BLITZ, 1},
@@ -1742,10 +1752,20 @@ tamedog(mtmp, (struct obj *) 0);
 				t_timeout = rn1(1000, 500);
 			}
 			break;
+		case T_DANCE_STOP:
+			You("skid to a halt!");
+			set_itimeout(&Dancing, (long) 0);
+			t_timeout = rn1(500, 500);
+			break;
+		case T_DANCE_E:
+		case T_DANCE_SPELL:
+		case T_DANCE_EARTH:
+		case T_DANCE_EXPLODE:
+		case T_DANCE_WWALK:
 		case T_DANCE_STORM:
 			You("begin performing the %s.", techname(tech_no));
 			techt_inuse(tech_no) = techlev(tech_no) + 50;
-			t_timeout = rn1(200, 50);
+			t_timeout = rn1(50, 50);
 			break;
 		case T_CROWN_LAW:
 			You("call upon the seven heavens to enact holy justice upon your enemies!");
@@ -1861,7 +1881,12 @@ tech_timeout()
 			break;
 		    case T_CHI_HEALING:
 			You("feel the healing power dissipate.");
+			case T_DANCE_E:
+			case T_DANCE_SPELL:
+			case T_DANCE_WWALK:
 			case T_DANCE_STORM:
+			case T_DANCE_EXPLODE:
+			case T_DANCE_EARTH:
 			pline("You finish your performance of the %s", techname(i));
 			break;
 	            default:
@@ -2337,7 +2362,7 @@ blitz_chi_strike()
 	return(1);
 }
 
-static int
+int
 blitz_e_fist()
 {
 	int tech_no;

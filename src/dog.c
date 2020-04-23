@@ -84,8 +84,8 @@ pet_type()
         if (dragon_type == PM_BABY_BLACK_DRAGON)
             dragon_type = PM_BABY_GRAY_DRAGON;
         return dragon_type;
-    } else if (Role_if(PM_DANCER)) {
-        return PM_VIPER;
+/*    } else if (Role_if(PM_DANCER)) {
+        return PM_VIPER; */
     } else
         switch(rn2(3)) {
             case 0:

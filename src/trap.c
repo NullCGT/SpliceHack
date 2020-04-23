@@ -3582,8 +3582,10 @@ struct obj *box; /* null for floor trap */
     }
     if (!num)
         You("are uninjured.");
-    else
+    else {
         losehp(num, tower_of_flame, KILLED_BY_AN); /* fire damage */
+        if (Role_if(PM_DANCER)) learntech(T_DANCE_EXPLODE, FROMOUTSIDE, 1);
+    }
     burn_away_slime();
 
     if (burnarmor(&g.youmonst) || rn2(3)) {

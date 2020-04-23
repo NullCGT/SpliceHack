@@ -109,6 +109,10 @@ role dan
 	You are a dancer. You are a glass cannon that can strike foes quickly, but
 	cannot survive much in the way of injuries. By striking foes many times in
 	succession, you can unlock the mystical power of dances.
+
+	To learn a new dance, you must interact with the associated element and survive.
+	For example: To learn a fire dance, you might need to expose yourself to
+	a blazing inferno.
 role dra
 	You are a dragonmaster. You are capable of taming dragons, but the thought of
 	wearing their scales fills you with shame.
@@ -1588,6 +1592,12 @@ major demon
 	them difficult to deal with, even on the rare occasions when
 	they are friendly.
 	  [ The Tough Guide to Fantasyland, by Diana Wynne Jones ]
+detonation dance
+	This dance allows the user to engulf themself in a deadly
+	explosion.
+
+	Unlike similar dance techniques, reaching the required number
+	of steps does not end the dance.
 diamond
 	The hardest known mineral (with a hardness of 10 on Mohs' scale).
 	It is an allotropic form of pure carbon that has crystallized in
@@ -2208,6 +2218,9 @@ floating eye
 * fly
 	Flies are the dead man's revenge.
 		[ A Storm of Swords, by George R.R. Martin ]
+flow breaker
+	This technique allows you to prematurely end a dance
+	without any sort of adverse consequences.
 # also takes fog/vapor cloud
 fog* cloud
 	The fog comes
@@ -5721,6 +5734,9 @@ captain
 	and are fierce fighters.  Because of the load of their combat
 	gear, however, one can usually run away from them, and doing
 	so is considered a wise thing.
+song of seasons
+	This dance allows the user to focus the power of elements into
+	their attacks.
 *spear
 javelin
 	- they come together with great random, and a spear is brast,
@@ -5761,6 +5777,9 @@ javelin
 spell card
 	A collectible card containing powerful magic equivalent to that
 	of a scroll.
+spellstrike step
+	This technique allows a user to cast spells with no chance of
+	failure, but only while in the apex of their dance.
 *spider
 	Eight legged creature capable of spinning webs to trap prey.
 		[]
@@ -5919,6 +5938,9 @@ substance warper
 transmuter
 	Ask not, what your items can do to it.  Ask what it can do
 	to your items.
+summer storm step
+	Completing this long dance allows the user to project a lightning
+	bolt toward their enemies.
 sunsword
 	What you seek is a blade of light,
 	a weapon for vengeance.
@@ -6555,6 +6577,9 @@ wings*
 	"or rather a knack. The knack lies in learning how to throw
 	yourself at the ground and miss."
 		[Life, the Universe and Everything, by Douglas Adams]
+winterwake waltz
+	This dance sheathes your feat in ice, allowing you to tread on
+	water.
 *wight
 	When he came to himself again, for a moment he could recall
 	nothing except a sense of dread.  Then suddenly he knew that

@@ -598,20 +598,53 @@ void dance()
 {
     struct obj* pseudo;
     boolean done_dancing = FALSE;
+    long dsteps = (Dancing & TIMEOUT);
+
     if (!Dancing) {
         make_dancing((long) 5L, FALSE);
         You("channel the energy of your attack and enter into a dance.");
     } else {
-        incr_itimeout(&Dancing, (long) rnd(2));
+        incr_itimeout(&Dancing, (long) 2);
     }
-
-    if (tech_inuse(T_DANCE_STORM)) {
+    /* Dance effects */
+    /* TODO: De-spaghettifiy this code. */
+    if (tech_inuse(T_DANCE_E) && dsteps >= 5) {
+        blitz_e_fist();
+        done_dancing = TRUE;
+    }
+    if (tech_inuse(T_DANCE_WWALK) && dsteps >= 5) {
+        pline("Your %s are sheathed in ice!", makeplural(body_part(FOOT)));
+        incr_itimeout(&HWwalking, rn1(20, 30));
+        done_dancing = TRUE;
+    }
+    if (tech_inuse(T_DANCE_STORM) && dsteps >= 10) {
+        pline("KRAKOOM!");
         pseudo = mksobj(WAN_LIGHTNING, FALSE, FALSE);
         pseudo->blessed = pseudo->cursed = 0;
         weffects(pseudo);
         obfree(pseudo, NULL);
         done_dancing = TRUE;
     }
+    if (tech_inuse(T_DANCE_EARTH) && dsteps >= 15) {
+        You("stomp the ground as hard as you can!");
+        do_earthquake(3, u.ux, u.uy);
+        pseudo = mksobj(SCR_AIR, FALSE, FALSE);
+        pseudo->blessed = pseudo->cursed = 0;
+        weffects(pseudo);
+        obfree(pseudo, NULL);
+        done_dancing = TRUE;
+    }
+    if (tech_inuse(T_DANCE_EXPLODE) && dsteps >= 20) {
+        You("are engulfed in an inferno!");
+        explode(u.ux, u.uy, 11, d(2, 4), 0, EXPL_FIERY);
+        /* Does not immediately end */
+    }
+    if (tech_inuse(T_DANCE_SPELL) && dsteps >= 25) {
+        You("become a font of spiritual power!");
+        docast();
+        if (!rn2(3)) done_dancing = TRUE;
+    }
+    /* Done dancing */
     if (done_dancing)
         make_dancing(0L, FALSE);
 }

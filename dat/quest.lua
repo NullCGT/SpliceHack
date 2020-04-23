@@ -1758,6 +1758,182 @@ may be the last time you stand before %l.]],
          text = "\"Well met, %p.  How goeth thy search for the Amulet of Yendor?\"",
       },
    },
+   Dan = {
+      assignquest = {
+         synopsis = "[\"Take down %n and get %o back.\"]",
+         output = "text",
+         text = [["Excellent dancing, %p. Now, I shall fill you in.
+         
+In a fit of hubris, a number of our dancers performed a corrupted version of our usual ritual.
+The elemental they summoned was not of this reality. It slew them, and retreated deep within
+%i.
+
+%nC warps time itself around it, and turns elementals that would otherwise be our friends against us.
+If left unchecked, I fear it shall tear reality itself apart.
+
+I have already tried and failed to kill the Elemental. Where I have failed, however, you may
+succeed."
+
+%lC places a hand on your shoulder.
+
+"Go forth, %p, and become the dancer you are meant to be."]],
+      },
+      badalign = {
+         synopsis = "[You have danced off the path of %a.  Come back when you are ready.]",
+         output = "text",
+         text = [["%pC!  You have strayed from the light of the %a!
+I cannot in good conscience send you to fight %n.
+Go forth, and come back when you are more devout."]],
+      },
+      badlevel = {
+         synopsis = "[You are too slow. Come back when you are %Ra.]",
+         output = "text",
+         text = [["Pretty good, %p, but if you cannot keep up with me you will never
+defeat %n Come back when you have quciker feet!"]],
+      },
+      discourage = {
+         "\"Tick tock...\"",
+         "\"It's just a jump to the left...\"",
+         "\"The dance cannot last forever...\"",
+         "\"The end of the dance approaches...\"",
+         "\"All elements fade, in the end... Only time is left...\"",
+         "\"Goodbye, %p...\"",
+      },
+      encourage = {
+         "\"%nC is far more dangerous than you imagine.\"",
+         "\"%nC will try to trap you in a slower time stream. Try not to touch it!\"",
+         "\"The caves are dangerous. Stay light on your feet!\"",
+         "\"Be careful, %i is deadly to the unprepared.\"",
+         "\"Call upon %d if you are in need of aid.\"",
+         "\"It takes two to tango. Consider bringing a pet with you.\"",
+         "\"There is no pale moon or devil here, %p. %nC is far more than you imagine.\"",
+         "\"Beings of fire, wind, earth and water - Protect %p in this perilous time.\"",
+         "\"Do not lose hope! All of us will be there in spirt.\"",
+         "\"It is a great thing you are doing, %p.\"",
+      },
+      firsttime = {  
+         synopsis = "[You arrive at %H, but something is amiss.]",
+         output = "text",
+         text = [[You suddenly find yourself at %H.
+Something is amiss, however. Instead of the whooping of excited festival-goers,
+you hear screams of pain, and see beings of fire, water, earth, air, and other
+substances wandering through the trees.
+
+You ready yourself for the fight of your life.]],
+      },
+      goal_first = {
+         synopsis = "[You have located the lair of %n.]",
+         output = "text",
+         text = [[Time slows to a crawl when you enter the depths of %i. %nC
+must be very close.]],
+      },
+      goal_next = {
+         text = "You arrive back in the lair of %n.",
+      },
+      gotit = {
+         synopsis = "[You feel the power of %o flowing through you.]",
+         output = "text",
+         text = [[As you touch %o, you feel the power of it flow through your body.
+You feel that if you asked it to, it would fight at your side.]],
+      },
+      guardtalk_after = {
+         "\"Yahoo! Thank you, %p!\"",
+         "\"Come and dance with us, %p!\"",
+         "\"The time elemental is slain!\"",
+         "\"Let us dance in celebration.\"",
+         "\"We are saved! You watusi'd that wacky time warper!\"",
+      },
+      guardtalk_before = {
+         "\"Please, %p, help us!\"",
+         "\"My feet... please...\"",
+         "\"I feel like I just performed in cut time.\"",
+         "\"Ow.\"",
+         "\"The elements have turned against us!\"",
+      },
+      hasamulet = {
+         synopsis = "[Take the Amulet to the Astral Plane and deliver it to %d.]",
+         output = "text",
+         text = [["Congratulations, %p! You have found the Amulet of Yendor! Quickly now,
+sashay off to the Astral Plane, and offer it upon the altar to %d.
+
+We're all cheering for you, %p!"]],
+      },
+      killed_nemesis = {
+         synopsis = "[%nC is destroyed.]",
+         output = "text",
+         text = [[%nC discorporates, and the flow of time around you returns to normal.
+The world is once again safe.]],
+      },
+      leader_first = {
+         synopsis = "[You have returned in our hour of great need.]",
+         output = "text",
+         text = [["%pC! You have returned, and in our hour of need no less!
+
+Let us have a dance-off to determine if you are ready for this task."]],
+      },
+      leader_last = {
+         synopsis = "[You are a terrible dancer.]",
+         output = "text",
+         text = [["Truly, %pC? Have you learned nothing in your travels? %nC is obviously
+always going to be beyond your skills. Begone!"]],
+      },
+      leader_next = {
+         text = "\"%pC, welcome back. Ready for another dance?\"",
+      },
+      leader_other = {
+         text = "\"%pC. Back again. One last dance, for old time's sake?\"",
+      },
+      locate_first = {
+         synopsis = "[You have reached %i.]",
+         output = "text",
+         text = [[The air in %i is full of regular zephyrs, like the breath of a living being.
+The walls pulse with flashes of heat and cold, and the very ground underneath your feet shifts
+and trembles.]],
+      },
+      locate_next = {
+         text = "Again, you descend into %i.",
+      },
+      nemesis_first = {
+         synopsis = "[%nC is here.]",
+         output = "text",
+         text = [["Your time grows short... Your dance number has ended..."]],
+      },
+      nemesis_next = {
+         text = "\"TICK...\"",
+      },
+      nemesis_other = {
+         text = "\"...TOCK.\"",
+      },
+      nemesis_wantsit = {
+         text = [["Give... me... %o..."]],
+      },
+      nexttime = {
+         text = "You arrive again at %H. You need to talk to %l as fast as possible.",
+      },
+      offeredit = {
+         synopsis = "[%lC tells you to take %o on your quest.]",
+         output = "text",
+         text = [[%l applauds and smiles.
+
+    "Congratulations, %p. You have done what we could not, and defeated %n. Your dance skills
+    far exceed my own, and you are truly worthy of retrieving the Amulet of Yendor."
+    
+    "Go now. Continue to make me proud."]],
+      },
+      offeredit2 = {
+         synopsis = "[%lC refuses %o.  Return to %Z to search for the Amulet.]",
+         output = "text",
+         text = [[%lC looks at %o, then back at you.
+
+    "It's yours. You need it more than I."]],
+      },
+      othertime = {
+         text = [[For what may be the final time, you arrive at %H.]],
+      },
+      posthanks = {
+         text = "\"Great to see you, %p! How's it going?\"",
+      },
+   },
    Dra = {
       assignquest = {
          synopsis = "[\"Find %n, defeat %ni, and return %o to us.\"]",

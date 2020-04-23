@@ -82,7 +82,9 @@ char *nam;
         Strcpy(nam, fmlkind ? "Eve" : "Adam");
     else if (fmlkind && !!strcmp(devnam, "Janet"))
         Strcpy(nam, rn2(2) ? "Maud" : "Eve");
-    else
+    else if (mtmp->data == &mons[PM_DANCER] && !fmlkind && !rn2(5)) {
+        Strcpy(nam, "Johnny Steps");
+    } else
         Strcpy(nam, devnam);
 
     if (fmlkind || !strcmp(nam, "Janet"))

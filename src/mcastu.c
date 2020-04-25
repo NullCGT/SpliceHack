@@ -844,6 +844,9 @@ unsigned int adtyp;
 int spellnum;
 {
     if (adtyp == AD_SPEL) {
+        /* gas clouds on water level */
+        if (Is_waterlevel(&u.uz) && spellnum == MGC_GAS_CLOUD)
+            return TRUE;
       	/* haste self when already fast */
       	if (mtmp->permspeed == MFAST && spellnum == MGC_HASTE_SELF)
       	    return TRUE;
@@ -924,6 +927,9 @@ int spellnum;
         if (mtmp->mpeaceful
             && (spellnum == MGC_AGGRAVATION || spellnum == MGC_SUMMON_MONS
                 || spellnum == MGC_CLONE_WIZ))
+            return TRUE;
+        /* gas clouds on water level */
+        if (Is_waterlevel(&u.uz) && spellnum == MGC_GAS_CLOUD)
             return TRUE;
         /* haste self when already fast */
         if (mtmp->permspeed == MFAST && spellnum == MGC_HASTE_SELF)

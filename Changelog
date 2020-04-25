@@ -255,6 +255,7 @@ Notable Bug Fixes
 - Fixed pets not attacking peaceful melee targets.
 - Fix shambling horrors being shapeshifters or werecreatures.
 - Fix an exploit allowing for standard pets for pirates and dragonmasters.
+- Fixed monsters creating gas clouds on the plane of water.
                     
                     Version 0.7.0: Stranger Days
 

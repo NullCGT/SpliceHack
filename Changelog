@@ -193,9 +193,6 @@ Misc. Changes
 - Kegs weigh less and are no longer treated as containers. Also, keg explosions deal
   a very large amount of damage.
 - Mimics can mimic furnaces.
-- Fixed lack of implementation for monsters being clobbered.
-- Fixed pets not attacking peaceful melee targets.
-- Fix shambling horrors being shapeshifters or werecreatures.
 - Due to a coding refinement, Nalzok is slightly less likely to summon demons than
   previously.
 - Pirates can be gifted artifacts, but do not have increased artifact generation.
@@ -254,6 +251,10 @@ Notable Bug Fixes
 - Fix "NetHack" appearing in dumplog and a few other places.
 - All types of ghouls can eat corpses, not just basic ghouls and ghasts.
 - Fixed monsters obsessing over chests stuck in walls.
+- Fixed lack of implementation for monsters being clobbered.
+- Fixed pets not attacking peaceful melee targets.
+- Fix shambling horrors being shapeshifters or werecreatures.
+- Fix an exploit allowing for standard pets for pirates and dragonmasters.
                     
                     Version 0.7.0: Stranger Days
 

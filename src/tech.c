@@ -121,6 +121,7 @@ static const struct innate_tech
 					 {   7, T_DANCE_STOP, 1},
 					 {   9, T_DANCE_EARTH, 1},
 					 {   11, T_DANCE_STORM, 1},
+					 {   13, T_DANCE_EXPLODE, 1},
 		       {   0, 0, 0} },
   dra_tech[] = {
 					 {   1, T_DRAGON_BLITZ, 1},

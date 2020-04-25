@@ -2044,6 +2044,32 @@ struct obj *obj;
             obfree(pseudo, NULL);
         }
             break;
+        case ELEMENTS: {
+            verbalize("Fire, Water, Earth, Air!");
+            if (HFire_resistance & ~FROMOUTSIDE) {
+                pline("The %s beneath you erupts in flame.", surface(u.ux, u.uy));
+                HFire_resistance += rn1(100,100);
+            }
+            if (HCold_resistance & ~FROMOUTSIDE) {
+                pline("Ice covers your body.");
+                HCold_resistance += rn1(100,100);
+            }
+            if (HAcid_resistance & ~FROMOUTSIDE) {
+                pline("The world rumbles as tectonic plates shift.");
+                HAcid_resistance += rn1(100,100);
+            }
+            if (HShock_resistance & ~FROMOUTSIDE) {
+                pline("The air around you smells of ozone.");
+                HShock_resistance += rn1(100,100);
+            }
+            struct obj* pseudo = NULL;
+            pseudo = mksobj(SCR_ELEMENTALISM, FALSE, FALSE);
+            pseudo->blessed = TRUE;
+            pseudo->cursed = FALSE;
+            (void) seffects(pseudo);
+            obfree(pseudo, NULL);
+            break;
+        }
         case SEFFECT: {
             struct obj* pseudo = NULL;
             switch(artinum) {

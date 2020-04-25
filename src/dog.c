@@ -62,12 +62,6 @@ pet_type()
     
     if (g.urole.petnum != NON_PM)
         return  g.urole.petnum;
-    else if (g.preferred_pet == 'c')
-        return  PM_KITTEN;
-    else if (g.preferred_pet == 'd')
-        return  PM_LITTLE_DOG;
-    else if (g.preferred_pet == 'b')
-        return PM_PENGUIN;
     else if (Role_if(PM_PIRATE)) {
      		if (g.preferred_pet == 'B')
      			  return (PM_PARROT);
@@ -84,9 +78,13 @@ pet_type()
         if (dragon_type == PM_BABY_BLACK_DRAGON)
             dragon_type = PM_BABY_GRAY_DRAGON;
         return dragon_type;
-/*    } else if (Role_if(PM_DANCER)) {
-        return PM_VIPER; */
-    } else
+    } else if (g.preferred_pet == 'c')
+        return  PM_KITTEN;
+    else if (g.preferred_pet == 'd')
+        return  PM_LITTLE_DOG;
+    else if (g.preferred_pet == 'b')
+        return PM_PENGUIN;
+    else
         switch(rn2(3)) {
             case 0:
                 return PM_KITTEN;

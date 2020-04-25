@@ -1,4 +1,4 @@
-/* NetHack 3.6	mklev.c	$NHDT-Date: 1562455089 2019/07/06 23:18:09 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.63 $ */
+/* NetHack 3.6	mklev.c	$NHDT-Date: 1587291592 2020/04/19 10:19:52 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.85 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Alex Smith, 2017. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -260,6 +260,7 @@ makerooms()
                 g.dungeons[u.uz.dnum].themerms[0] = '\0';
                 lua_close(g.dungeons[u.uz.dnum].themelua);
                 g.dungeons[u.uz.dnum].themelua = NULL;
+                dothemes = FALSE;
             } else {
                 dothemes = TRUE;
             }
@@ -284,10 +285,13 @@ makerooms()
             if (dothemes) {
                 g.in_mk_themerooms = TRUE;
                 g.themeroom_failed = FALSE;
-                lua_getglobal(g.dungeons[u.uz.dnum].themelua, "themerooms_generate");
+                lua_getglobal(g.dungeons[u.uz.dnum].themelua,
+                              "themerooms_generate");
                 lua_call(g.dungeons[u.uz.dnum].themelua, 0, 0);
                 g.in_mk_themerooms = FALSE;
-                if (g.themeroom_failed && ((themeroom_tries++ > 10) || (g.nroom >= (MAXNROFROOMS / 6))))
+                if (g.themeroom_failed
+                    && ((themeroom_tries++ > 10)
+                        || (g.nroom >= (MAXNROFROOMS / 6))))
                     break;
             } else {
                 if (!create_room(-1, -1, -1, -1, -1, -1, OROOM, -1))
@@ -366,8 +370,8 @@ boolean nxcor;
     dest.x = tx;
     dest.y = ty;
 
-    if (!dig_corridor(&org, &dest, nxcor, g.level.flags.arboreal ? ROOM : CORR,
-                      STONE))
+    if (!dig_corridor(&org, &dest, nxcor,
+                      g.level.flags.arboreal ? ROOM : CORR, STONE))
         return;
 
     /* we succeeded in digging the corridor */
@@ -821,7 +825,7 @@ clear_level_structures()
 static void
 makelevel()
 {
-    register struct mkroom *croom, *troom;
+    register struct mkroom *croom;
     register int tryct;
     register int x, y;
     struct monst *tmonst; /* always put a web with a spider */
@@ -1282,25 +1286,10 @@ coord *mp;
     if (g.nroom == 0) {
         mazexy(mp); /* already verifies location */
     } else {
-        int cnt = 0;
-        /* not perfect - there may be only one stairway */
-        if (g.nroom > 2) {
-            int tryct = 0;
+        croom = generate_stairs_find_room();
 
-            do
-                croom = &g.rooms[rn2(g.nroom)];
-            while ((croom == g.dnstairs_room || croom == g.upstairs_room
-                    || (croom->rtype != OROOM && croom->rtype != THEMEROOM)) && (++tryct < 100));
-        } else
-            croom = &g.rooms[rn2(g.nroom)];
-
-        do {
-            if (!somexy(croom, mp))
-                impossible("Can't place branch!");
-        } while ((occupied(mp->x, mp->y)
-                 || (levl[mp->x][mp->y].typ != CORR
-                     && levl[mp->x][mp->y].typ != ICE
-                     && levl[mp->x][mp->y].typ != ROOM)) && (++cnt < 1000));
+        if (!somexyspace(croom, mp))
+            impossible("Can't place branch!");
     }
     return croom;
 }
@@ -1417,10 +1406,10 @@ xchar x, y;
     boolean near_door = bydoor(x, y);
 
     return ((levl[x][y].typ == HWALL || levl[x][y].typ == VWALL)
-            && (isok(x-1,y) && !IS_ROCK(levl[x-1][y].typ)
-                || isok(x+1,y) && !IS_ROCK(levl[x+1][y].typ)
-                || isok(x,y-1) && !IS_ROCK(levl[x][y-1].typ)
-                || isok(x,y+1) && !IS_ROCK(levl[x][y+1].typ))
+            && ((isok(x - 1, y) && !IS_ROCK(levl[x - 1][y].typ))
+                || (isok(x + 1, y) && !IS_ROCK(levl[x + 1][y].typ))
+                || (isok(x, y - 1) && !IS_ROCK(levl[x][y - 1].typ))
+                || (isok(x, y + 1) && !IS_ROCK(levl[x][y + 1].typ)))
             && g.doorindex < DOORMAX && !near_door);
 }
 

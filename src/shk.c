@@ -4719,7 +4719,7 @@ boolean altusage; /* some items have an "alternate" use with different cost */
     } else if (otmp->oclass == SPBOOK_CLASS) {
         tmp -= tmp / 5L;
     } else if (otmp->otyp == CAN_OF_GREASE || otmp->otyp == TINNING_KIT
-               || otmp->otyp == EXPENSIVE_CAMERA) {
+               || otmp->otyp == EXPENSIVE_CAMERA || otmp->otyp == SEWING_KIT) {
         tmp /= 10L;
     } else if (otmp->otyp == POT_OIL) {
         tmp /= 5L;

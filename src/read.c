@@ -307,6 +307,16 @@ doread()
     } else if (scroll->otyp == CAN_OF_GREASE) {
         pline("This %s has no label.", singular(scroll, xname));
         return 0;
+    } else if (scroll->otyp == SEWING_KIT) {
+        if (Blind)
+            You("feel the stitched words:");
+        if (flags.verbose)
+            You("read:");
+        pline("\"A stitch in time saves nine zorkmids.\"");
+        if(!u.uconduct.literate++)
+            livelog_write_string(LL_CONDUCT,
+                    "became literate by reading the back of a sewing kit");
+        return 1;
     } else if (scroll->otyp == MAGIC_MARKER) {
         if (Blind) {
             You_cant("feel any Braille writing.");
@@ -662,6 +672,7 @@ int curse_bless;
         case MAGIC_MARKER:
         case TINNING_KIT:
         case EXPENSIVE_CAMERA:
+        case SEWING_KIT:
             if (is_cursed)
                 stripspe(obj);
             else if (rechrg
@@ -722,17 +733,43 @@ int curse_bless;
             }
             break;
         case CRYSTAL_BALL:
+            if (obj->spe == -1) /* like wands, first uncancel */
+                obj->spe = 0;
+
             if (is_cursed) {
-                stripspe(obj);
+                /* cursed scroll removes charges and curses ball */
+                /*stripspe(obj); -- doesn't do quite what we want...*/
+                if (!obj->cursed) {
+                    p_glow2(obj, NH_BLACK);
+                    curse(obj);
+                } else {
+                    pline("%s briefly.", Yobjnam2(obj, "vibrate"));
+                }
+                if (obj->spe > 0)
+                    costly_alteration(obj, COST_UNCHRG);
+                obj->spe = 0;
             } else if (is_blessed) {
-                obj->spe = 6;
-                p_glow2(obj, NH_BLUE);
+                /* blessed scroll sets charges to max and blesses ball */
+                obj->spe = 7;
+                p_glow2(obj, !obj->blessed ? NH_LIGHT_BLUE : NH_BLUE);
+                if (!obj->blessed)
+                    bless(obj);
+                /* [shop price stays the same regardless of charges or BUC] */
             } else {
-                if (obj->spe < 5) {
-                    obj->spe++;
-                    p_glow1(obj);
-                } else
+                /* uncursed scroll increments charges and uncurses ball */
+                if (obj->spe < 7 || obj->cursed) {
+                    n = rnd(2);
+                    obj->spe = min(obj->spe + n, 7);
+                    if (!obj->cursed) {
+                        p_glow1(obj);
+                    } else {
+                        p_glow2(obj, NH_AMBER);
+                        uncurse(obj);
+                    }
+                } else {
+                    /* charges at max and ball not being uncursed */
                     pline1(nothing_happens);
+                }
             }
             break;
         case HORN_OF_PLENTY:
@@ -750,7 +787,7 @@ int curse_bless;
                     obj->spe = 50;
                 p_glow2(obj, NH_BLUE);
             } else {
-                obj->spe += rnd(5);
+                obj->spe += rn1(5, 2);
                 if (obj->spe > 50)
                     obj->spe = 50;
                 p_glow1(obj);

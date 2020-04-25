@@ -765,6 +765,7 @@ TOOL("towel",               None, 1, 0, 0, 0, 50,  2, 50, CLOTH, CLR_MAGENTA),
 TOOL("saddle",              None, 1, 0, 0, 0,  5,200,150, LEATHER, HI_LEATHER),
 TOOL("leash",               None, 1, 0, 0, 0, 35, 12, 20, LEATHER, HI_LEATHER),
 TOOL("stethoscope",         None, 1, 0, 0, 0, 25,  4, 75, IRON, HI_METAL),
+TOOL("sewing kit",          None, 1, 0, 0, 1, 15, 10, 30, CLOTH, CLR_GREEN),
 TOOL("tinning kit",         None, 1, 0, 0, 1, 15,100, 30, IRON, HI_METAL),
 TOOL("tin opener",          None, 1, 0, 0, 0, 25,  4, 30, IRON, HI_METAL),
 TOOL("can of grease",       None, 1, 0, 0, 1, 15, 15, 20, IRON, HI_METAL),
@@ -1353,6 +1354,8 @@ OBJECT(OBJ(None, None),
 
 /* clang-format on */
 /* *INDENT-ON* */
+
+void NDECL(objects_globals_init); /* in hack.h but we're using config.h */
 
 struct objdescr obj_descr[SIZE(obj_descr_init)];
 struct objclass objects[SIZE(obj_init)];

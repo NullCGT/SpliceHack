@@ -714,7 +714,7 @@ int mntmp;
     /* New stats for monster, to last only as long as polymorphed.
      * Currently only strength gets changed.
      */
-    if (strongmonst(&mons[mntmp]))
+    if (strongmonst(&mons[mntmp]) || (Race_if(PM_HUMAN_WEREWOLF) && u.umonnum == PM_WEREWOLF))
         ABASE(A_STR) = AMAX(A_STR) = STR18(100);
     
     if (mntmp == PM_VOMITOUS_GHOUL)

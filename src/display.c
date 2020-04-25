@@ -1,4 +1,4 @@
-/* NetHack 3.6	display.c	$NHDT-Date: 1587110793 2020/04/17 08:06:33 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.129 $ */
+/* NetHack 3.6	display.c	$NHDT-Date: 1587248921 2020/04/18 22:28:41 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.131 $ */
 /* Copyright (c) Dean Luick, with acknowledgements to Kevin Darcy */
 /* and Dave Cohrs, 1990.                                          */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -128,8 +128,8 @@
 #include "hack.h"
 
 static void FDECL(show_mon_or_warn, (int, int, int));
-static void FDECL(display_monster,
-                      (XCHAR_P, XCHAR_P, struct monst *, int, XCHAR_P));
+static void FDECL(display_monster, (XCHAR_P, XCHAR_P, struct monst *, int,
+                                    BOOLEAN_P));
 static int FDECL(swallow_to_glyph, (int, int));
 static void FDECL(display_warning, (struct monst *));
 
@@ -408,7 +408,7 @@ register xchar x, y;        /* display position */
 register struct monst *mon; /* monster to display */
 int sightflags;             /* 1 if the monster is physically seen;
                                2 if detected using Detect_monsters */
-xchar worm_tail;            /* mon is actually a worm tail */
+boolean worm_tail;          /* mon is actually a worm tail */
 {
     boolean mon_mimic = (M_AP_TYPE(mon) != M_AP_NOTHING);
     int sensed = (mon_mimic && (Protection_from_shape_changers
@@ -741,10 +741,10 @@ void
 newsym(x, y)
 register int x, y;
 {
-    register struct monst *mon;
+    struct monst *mon;
+    int see_it;
+    boolean worm_tail;
     register struct rm *lev = &(levl[x][y]);
-    register int see_it;
-    register xchar worm_tail;
 
     if (g.in_mklev)
         return;
@@ -788,13 +788,13 @@ register int x, y;
 
         /*
          * Normal region shown only on accessible positions, but
-         * poison clouds also shown above lava, pools and moats.
+         * poison clouds and steam clouds also shown above lava,
+         * pools and moats.
          * However, sensed monsters take precedence over all regions.
          */
         if (reg
             && (ACCESSIBLE(lev->typ)
-                || (reg->glyph == cmap_to_glyph(S_poisoncloud)
-                    && is_pool_or_lava(x, y)))
+                || (reg->visible && is_pool_or_lava(x, y)))
             && (!mon || worm_tail || !sensemon(mon))) {
             show_region(reg, x, y);
             return;
@@ -1616,7 +1616,6 @@ int x, y, glyph;
         }                                \
     }
 
-static const gbuf_entry nul_gbuf = { 1, GLYPH_UNEXPLORED };
 /*
  * Turn the 3rd screen into UNEXPLORED that needs to be refreshed.
  */
@@ -1624,7 +1623,14 @@ void
 clear_glyph_buffer()
 {
     register int x, y;
-    register gbuf_entry *gptr;
+    register gbuf_entry *gptr, nul_gbuf;
+    int ch = ' ', color = NO_COLOR;
+    unsigned special = 0;
+
+    (void) mapglyph(GLYPH_UNEXPLORED, &ch, &color, &special, 0, 0, 0);
+    nul_gbuf.gnew = (ch != ' ' || color != NO_COLOR
+                     || (special & ~MG_UNEXPL) != 0) ? 1 : 0;
+    nul_gbuf.glyph = GLYPH_UNEXPLORED;
 
     for (y = 0; y < ROWNO; y++) {
         gptr = &g.gbuf[y][0];

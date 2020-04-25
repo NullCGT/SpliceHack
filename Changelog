@@ -119,7 +119,7 @@ New Items
     it exercises charisma.
 - New Items: Stomping Boots
   - Attacking a very small monster while wearing stomping boots will instantly
-    kill it and cause you to move into its space.
+    kill it.
   - You cannot randomly escape traps while wearing stomping boots.
   - Stomping on a monster wakes up all nearby monsters, so they cannot be used
     to casually stomp through an anthole or beehive with impunity.
@@ -127,6 +127,9 @@ New Items
     in your path and continue onward, making the boots somewhat useful for
     dealing with hordes of insects on the astral plane. Jumping on a monster while
     hallucinating yields YAFM.
+- New Item: Sewing Kit
+  - Usable by ghouls for grafting purposes (see below)
+  - Can repair cloth and leather items.
 
 New Special Materials
 - Adamantine
@@ -160,7 +163,7 @@ New Roles
   - As you level up, you learn new dances.
   - Quest Nemesis is the Time Elemental.
 
-New Races
+Racial Changes
 - New Race: Changeling
   - #chat to a monster to polymorph into it. The monster's base level must be of 
     no more than three levels higher than the player, and requires a large amount
@@ -169,6 +172,10 @@ New Races
   - Do not passively gain hit points without a special source of regeneration,
     unless polymorphed.
   - Hate iron in their natural form.
+- Racial werewolves gain massive strength when morphed. There have apparently been
+  rumors that you will break out of your armor, which are false.
+- Ghouls can use sewing kits to sew a monster corpse onto themselves. On a critical
+  hit, they gain additional attacks as if they are that monster, but get hungrier. 
 
 New Traps
 - New Trap: Ice Block Trap
@@ -201,13 +208,8 @@ Misc. Changes
 - Kegs weigh less and are no longer treated as containers. Also, keg explosions deal
   a very large amount of damage.
 - Mimics can mimic furnaces.
-- Fixed lack of implementation for monsters being clobbered.
-- Fixed pets not attacking peaceful melee targets.
-- Fix shambling horrors being shapeshifters or werecreatures.
 - Due to a coding refinement, Nalzok is slightly less likely to summon demons than
   previously.
-
-Balance
 - Pirates can be gifted artifacts, but do not have increased artifact generation.
 - Only four headless horseman can appear each game.
 - Increased damage for barbed devil quills.
@@ -264,6 +266,10 @@ Notable Bug Fixes
 - Fix "NetHack" appearing in dumplog and a few other places.
 - All types of ghouls can eat corpses, not just basic ghouls and ghasts.
 - Fixed monsters obsessing over chests stuck in walls.
+- Fixed lack of implementation for monsters being clobbered.
+- Fixed pets not attacking peaceful melee targets.
+- Fix shambling horrors being shapeshifters or werecreatures.
+- Fix an exploit allowing for standard pets for pirates and dragonmasters.
                     
                     Version 0.7.0: Stranger Days
 

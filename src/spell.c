@@ -1904,6 +1904,10 @@ int spell;
     special = g.urole.spelheal;
     statused = ACURR(g.urole.spelstat);
 
+    /* Dancers in the final state of a spell dance have 100% spell success */
+    if (tech_inuse(T_DANCE_SPELL) && (Dancing & TIMEOUT) >= 25)
+        return 100;
+
     if (uarm && is_metallic(uarm))
         splcaster += (uarmc && uarmc->otyp == MYSTIC_ROBE) ? g.urole.spelarmr / 2
                                                            : g.urole.spelarmr;

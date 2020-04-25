@@ -2139,6 +2139,7 @@ E void FDECL(incr_itimeout, (long *, int));
 E void FDECL(make_confused, (long, BOOLEAN_P));
 E void FDECL(make_stunned, (long, BOOLEAN_P));
 E void FDECL(make_sick, (long, const char *, BOOLEAN_P, int));
+E void FDECL(make_dancing, (long, BOOLEAN_P));
 E void FDECL(make_carrier, (long, BOOLEAN_P));
 E void FDECL(make_slimed, (long, const char *));
 E void FDECL(make_stoned, (long, const char *, int, const char *));
@@ -2681,6 +2682,7 @@ E void FDECL(adjtech, (int,int));
 E int NDECL(dotech);
 E const char *NDECL(lookup_tech_name);
 E void NDECL(docalm);
+E int NDECL(blitz_e_fist);
 E int FDECL(tech_inuse, (int));
 E void NDECL(tech_timeout);
 E boolean FDECL(tech_known, (SHORT_P));
@@ -2846,6 +2848,7 @@ E void FDECL(check_caitiff, (struct monst *));
 E int FDECL(find_roll_to_hit, (struct monst *, UCHAR_P, struct obj *,
                                int *, int *));
 E boolean FDECL(attack, (struct monst *));
+E void NDECL(dance);
 E boolean FDECL(hmon, (struct monst *, struct obj *, int, int));
 E boolean FDECL(shade_miss, (struct monst *, struct monst *, struct obj *,
                              BOOLEAN_P, BOOLEAN_P));

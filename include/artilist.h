@@ -422,6 +422,11 @@ static NEARDATA struct artifact artilist[] = {
       NO_ATTK,	NO_DFNS,	CARY(AD_MAGM),
       PHASING,	A_NEUTRAL, PM_PRISONER, NON_PM, 5000L, NO_COLOR),
 
+    A("The Power Pole", QUARTERSTAFF, (SPFX_NOGEN | SPFX_RESTR | SPFX_INTEL),
+      (SPFX_LUCK | SPFX_PROTECT), 0,
+      PHYS(5, 0), NO_DFNS, CARY(AD_LOUD), ELEMENTS, 
+      A_NEUTRAL, PM_DANCER, NON_PM, 4000L, NO_COLOR),
+
 #if 0 /* OBSOLETE */
 A("The Palantir of Westernesse",        CRYSTAL_BALL,
         (SPFX_NOGEN|SPFX_RESTR|SPFX_INTEL),

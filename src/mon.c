@@ -2557,6 +2557,14 @@ register struct monst *mtmp;
         create_critters(1, &mons[PM_WATER_ELEMENTAL], TRUE);
         create_critters(1, &mons[PM_FIRE_ELEMENTAL], TRUE);
         create_critters(1, &mons[PM_AIR_ELEMENTAL], TRUE);
+    } else if (mtmp->data == &mons[PM_TIME_ELEMENTAL]) {
+        if (cansee(mtmp->mx, mtmp->my)) {
+            pline("%s discorporates!", Monnam(mtmp));
+        }
+        learntech(T_DANCE_SPELL, FROMOUTSIDE, 1);
+        for (tmp = PM_AIR_ELEMENTAL; tmp < PM_FUSION_ELEMENTAL; tmp++) {
+            if (rn2(3)) create_critters(rnd(2), &mons[tmp], TRUE);
+        }
     }
 
     /* Medusa falls into two livelog categories,

@@ -117,6 +117,7 @@
 #define Vomiting u.uprops[VOMITING].intrinsic
 #define Glib u.uprops[GLIB].intrinsic
 #define LarvaCarrier u.uprops[LARVACARRIER].intrinsic
+#define Dancing u.uprops[DANCING].intrinsic
 #define Slimed u.uprops[SLIMED].intrinsic /* [Tom] */
 
 /* Hallucination is solely a timeout */
@@ -255,8 +256,9 @@
      && !BFlying)
 /* May touch surface; does not override any others */
 
+#define HWwalking u.uprops[WWALKING].intrinsic
 #define EWwalking u.uprops[WWALKING].extrinsic
-#define Wwalking (EWwalking && !Is_waterlevel(&u.uz))
+#define Wwalking ((EWwalking || HWwalking) && !Is_waterlevel(&u.uz))
 /* Don't get wet, can't go under water; overrides others except levitation */
 /* Wwalking is meaningless on water level */
 

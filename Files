@@ -44,6 +44,7 @@ tower.des     tribute       wizhelp       yendor.des
 Arc-fila.lua  Arc-filb.lua  Arc-goal.lua  Arc-loca.lua  Arc-strt.lua
 Bar-fila.lua  Bar-filb.lua  Bar-goal.lua  Bar-loca.lua  Bar-strt.lua
 Cav-fila.lua  Cav-filb.lua  Cav-goal.lua  Cav-loca.lua  Cav-strt.lua
+Dan-fila.lua  Dan-filb.lua  Dan-goal.lua  Dan-loca.lua  Dan-strt.lua
 GENFILES      Hea-fila.lua  Hea-filb.lua  Hea-goal.lua  Hea-loca.lua
 Hea-strt.lua  Kni-fila.lua  Kni-filb.lua  Kni-goal.lua  Kni-loca.lua
 Kni-strt.lua  Mon-fila.lua  Mon-filb.lua  Mon-goal.lua  Mon-loca.lua

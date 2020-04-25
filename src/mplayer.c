@@ -82,7 +82,9 @@ char *nam;
         Strcpy(nam, fmlkind ? "Eve" : "Adam");
     else if (fmlkind && !!strcmp(devnam, "Janet"))
         Strcpy(nam, rn2(2) ? "Maud" : "Eve");
-    else
+    else if (mtmp->data == &mons[PM_DANCER] && !fmlkind && !rn2(5)) {
+        Strcpy(nam, "Johnny Steps");
+    } else
         Strcpy(nam, devnam);
 
     if (fmlkind || !strcmp(nam, "Janet"))
@@ -202,6 +204,12 @@ register boolean special;
             if (rn2(4))
                 weapon = BROADSWORD;
             armor = rnd_class(PLATE_MAIL, CHAIN_MAIL);
+            break;
+        case PM_DANCER:
+            weapon = rn2(2) ? KNIFE : SCIMITAR;
+            cloak = rn2(2) ? CLOAK_OF_REFLECTION : CLOAK_OF_DISPLACEMENT;
+            armor = STRANGE_OBJECT;
+            shield = STRANGE_OBJECT;
             break;
         case PM_PIRATE:
             if (rn2(4))

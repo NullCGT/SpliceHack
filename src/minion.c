@@ -198,6 +198,7 @@ boolean talk;
         mnum = ndemon(A_NONE);
         break;
     }
+    if (Role_if(PM_DANCER)) mnum = rand_elemental();
     if (mnum == NON_PM) {
         mon = 0;
     } else if (mnum == PM_ANGEL) {

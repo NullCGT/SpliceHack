@@ -1084,6 +1084,8 @@ struct obj *obj;
     if (ptr == &mons[PM_DRAGONMASTER] &&
         (Is_dragon_mail(obj) || Is_dragon_scales(obj)))
         return -1;
+    if (ptr == &mons[PM_DANCER] && is_suit(obj))
+        return -1;
     /*  return -1; */
 
     return 0;

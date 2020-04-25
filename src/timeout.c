@@ -12,6 +12,7 @@ static void NDECL(phasing_dialogue);
 static void NDECL(vomiting_dialogue);
 static void NDECL(choke_dialogue);
 static void NDECL(levitation_dialogue);
+static void NDECL(dance_dialogue);
 static void NDECL(larva_dialogue);
 static void NDECL(slime_dialogue);
 static void FDECL(slimed_to_death, (struct kinfo *));
@@ -31,6 +32,7 @@ const struct propname {
     { INVULNERABLE, "invulnerable" },
     { STONED, "petrifying" },
     { LARVACARRIER, "hosting monster eggs" },
+    { DANCING, "in the midst of a dance" },
     { SLIMED, "becoming slime" },
     { STRANGLED, "strangling" },
     { SICK, "fatally sick" },
@@ -334,6 +336,26 @@ levitation_dialogue()
     }
 }
 
+static NEARDATA const char *const dance_texts[] = {
+    "You are beginning to feel exhausted.",
+    "You collapse!",
+};
+
+static void
+dance_dialogue()
+{
+    register long i = (Dancing & TIMEOUT) / 2L;
+
+    if (((Dancing & TIMEOUT) % 2L) && i >= 0L && i < SIZE(dance_texts)) {
+        char buf[BUFSZ];
+        Strcpy(buf, dance_texts[SIZE(dance_texts) - i - 1L]);
+        pline1(buf);
+    }
+    if (i <= 1L) {
+        stop_occupation();
+    }
+}
+
 static NEARDATA const char *const larva_texts[] = {
     "You are feeling a little strange.",
     "Your skin is crawling.",
@@ -575,6 +597,8 @@ nh_timeout()
         return; /* things past this point could kill you */
     if (Stoned)
         stoned_dialogue();
+    if (Dancing)
+        dance_dialogue();
     if (LarvaCarrier)
         larva_dialogue();
     if (Slimed)
@@ -633,6 +657,11 @@ nh_timeout()
                 /* (unlike sliming, you aren't changing form here) */
                 done_timeout(STONING, STONED);
                 break;
+            case DANCING:
+                nomul(-rnd(2));
+                g.multi_reason = "exhaustion from dancing";
+                g.nomovemsg = "You recover from your bout of exhaustion.";
+                break;
             case LARVACARRIER:
                 /* must be in this order for bones files. */
                 create_critters(2 + rn2(3), &mons[PM_BABY_BROOD_WASP], TRUE);
@@ -688,6 +717,9 @@ nh_timeout()
                 break;
             case REFLECTING:
                 You("are no longer as shiny.");
+                break;
+            case WWALKING:
+                You("feel heavier.");
                 break;
             case FAST:
                 if (!Very_fast)

@@ -148,6 +148,25 @@ New Special Materials
     to as "crystal" in game.
   - Edged crystal weapons deal +3 damage.
 
+New Roles
+- New Role: Dancer
+  - The dancer is a glass cannon. They have low hit points and cannot wear suits of
+    armor (doing so would inhibit their dance moves) but are fast and capable of dishing
+    out large amounts of damage.
+  - Whenever you hit a monster, your combo counter starts. If the combo counter decreases
+    to zero without a manual reset, you faint and are paralyzed for a few turns.
+  - Dances can be thought of as being similar to "stances," from fighting games. To
+  - Whenever you hit a monster, your combo counter increases.
+  - If your combo crosses a numeric threshold, you get a certain effect and generally
+    the combo counter resets. The threshold and effect are dependent upon
+    the active dance.
+  - As you level up, you learn new dances.
+  - Quest Nemesis is the Time Elemental.
+  - Quest Artifact is the Power Pole. Grants luck, protection, and sonic resistance when
+    carried. Invoke to gain temporary fire, cold, acid, and shock resistance, as well as
+    the effects of a blessed scroll of elementalism.
+  - Minions appearing for dancers are always some type of elemental.
+
 Racial Changes
 - New Race: Changeling
   - #chat to a monster to polymorph into it. The monster's base level must be of 

@@ -1963,6 +1963,10 @@ boolean noisy;
             if (noisy)
                 already_wearing("some armor");
             err++;
+        } else if (Role_if(PM_DANCER)) {
+            if (noisy)
+                You("cannot wear something that would inhibit your ability to dance so!");
+            err++;
         } else if (Role_if(PM_DRAGONMASTER) &&
                    (Is_dragon_scales(otmp) || Is_dragon_mail(otmp))) {
             if (noisy)

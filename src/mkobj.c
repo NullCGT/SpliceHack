@@ -982,11 +982,12 @@ boolean artif;
             case KEG:
                 otmp->spe = rn1(10, 5);
                 break;
+            case SEWING_KIT:
+                otmp->spe = rn1(5, 5);
+                break;
             case EXPENSIVE_CAMERA:
             case TINNING_KIT:
             case MAGIC_MARKER:
-                otmp->spe = rn1(70, 30);
-                break;
             case CAN_OF_GREASE:
                 otmp->spe = rn1(21, 5); /* 0..20 + 5 => 5..25 */
                 blessorcurse(otmp, 10);

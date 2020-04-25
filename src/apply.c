@@ -2216,6 +2216,92 @@ struct obj *obj;
         impossible("Tinning failed.");
 }
 
+static NEARDATA const char stitchables[] = { ALL_CLASSES, ALLOW_NONE, 0 };
+
+static void
+use_sewing_kit(obj)
+struct obj *obj;
+{
+    struct obj *corpse, *otmp;
+
+    if (obj->spe <= 0) {
+        You("are fresh out of thread.");
+        return;
+    }
+    if (Glib || obj->cursed) {
+        You("fumble with the sewing kit and prick your finger! Ouch!");
+        losehp(1, "pricking a finger with a needle", KILLED_BY);
+        dropx(obj);
+        return;
+    }
+    /* Regular stuff */
+    if (yn("Sew up an item?") == 'y') {
+        otmp = getobj(stitchables, "sew");
+            if (!otmp)
+                return;
+            if (inaccessible_equipment(otmp, "sew up", FALSE))
+                return;
+        if (otmp->material != LEATHER && otmp->material != CLOTH) {
+            You("are unable to improve that with your sewing kit.");
+            return;
+        }
+        if (otmp->oeroded && !rn2(3)) {
+            otmp->oeroded -= 1;
+            You("repair %s with your needle and thread.", yname(otmp));
+            update_inventory();
+        } else if (!otmp->oeroded) {
+            You("practice your sewing with %s.", yname(otmp));
+        } else {
+            pline("Whoops! You prick your finger.");
+            losehp(1, "pricking a finger with a needle", KILLED_BY);
+        }
+        consume_obj_charge(obj, TRUE);
+        return;
+    } else if (Race_if(PM_GHOUL) && !Upolyd) {
+        /* Ghoul stuff */
+        if (!(corpse = floorfood("graft", 2)))
+            return;
+        if (corpse->oeaten || corpse->odrained) {
+            You("cannot sew %s which is partly eaten onto yourself.", something);
+            return;
+        }
+        if (touch_petrifies(&mons[corpse->corpsenm]) && !Stone_resistance
+            && !uarmg) {
+            char kbuf[BUFSZ];
+
+            if (poly_when_stoned(g.youmonst.data))
+                You("sitch up %s without wearing gloves.",
+                    an(mons[corpse->corpsenm].mname));
+            else {
+                pline("Sewing up %s without wearing gloves is a fatal mistake...",
+                    an(mons[corpse->corpsenm].mname));
+                Sprintf(kbuf, "trying to sew up %s without gloves",
+                        an(mons[corpse->corpsenm].mname));
+            }
+            instapetrify(kbuf);
+        }
+        if (is_rider(&mons[corpse->corpsenm])) {
+            if (revive_corpse(corpse, FALSE))
+                verbalize("You are growing to be quite a stitch in my side, War.");
+            else
+                pline_The("corpse evades your grasp.");
+            return;
+        }
+        if (mons[corpse->corpsenm].cnutrit == 0) {
+            pline("That's too insubstantial to sew.");
+            return;
+        }
+        if (unique_corpstat(&mons[corpse->corpsenm])) {
+            pline("That's just asking for trouble.");
+            return;
+        }
+        You("graft %s onto your body.", an(mons[corpse->corpsenm].mname));
+        u.ugrave_arise = corpse->corpsenm;
+        consume_obj_charge(obj, TRUE);
+        return;
+    }
+}
+
 void
 use_unicorn_horn(optr)
 struct obj **optr;
@@ -4043,6 +4129,9 @@ doapply()
         break;
     case TINNING_KIT:
         use_tinning_kit(obj);
+        break;
+    case SEWING_KIT:
+        use_sewing_kit(obj);
         break;
     case LEASH:
         res = use_leash(obj);

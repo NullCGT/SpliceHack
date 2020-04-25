@@ -737,6 +737,18 @@ struct attack *uattk;
             wakeup(mon, TRUE);
         }
     }
+    /* Ghouls hit as their stitched monster on a critical */
+    if (u.ugrave_arise != NON_PM && u.ugrave_arise != PM_GHOUL &&
+        malive && m_at(x, y) == mon && Race_if(PM_GHOUL) && !Upolyd
+        && !rn2(20)) {
+        pline("Your grafted limbs surge forth.");
+        g.youmonst.data = &mons[u.ugrave_arise];
+        u.umonnum = u.ugrave_arise;
+        hmonas(mon);
+        u.umonnum = u.umonster;
+        g.youmonst.data = &mons[u.umonnum];
+        morehungry(rn1(20, 10));
+    }
     return malive;
 }
 

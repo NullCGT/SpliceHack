@@ -217,6 +217,8 @@ static struct trobj Wizard[] = {
 
 static struct trobj Tinopener[] = { { TIN_OPENER, 0, TOOL_CLASS, 1, 0 },
                                     { 0, 0, 0, 0, 0 } };
+static struct trobj Sewingkit[] = { { SEWING_KIT, 0, TOOL_CLASS, 1, 0 },
+                                    { 0, 0, 0, 0, 0 } };
 static struct trobj Magicmarker[] = { { MAGIC_MARKER, UNDEF_SPE, TOOL_CLASS,
                                         1, 0 },
                                       { 0, 0, 0, 0, 0 } };
@@ -1061,6 +1063,11 @@ u_init()
     case PM_CHANGELING:
     case PM_MERFOLK:
     case PM_GNOME:
+        break;
+
+    case PM_GHOUL:
+        if (!Role_if(PM_CONVICT))
+            ini_inv(Sewingkit);
         break;
 
     case PM_ORC:

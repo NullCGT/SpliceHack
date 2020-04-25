@@ -307,6 +307,16 @@ doread()
     } else if (scroll->otyp == CAN_OF_GREASE) {
         pline("This %s has no label.", singular(scroll, xname));
         return 0;
+    } else if (scroll->otyp == SEWING_KIT) {
+        if (Blind)
+            You("feel the stitched words:");
+        if (flags.verbose)
+            You("read:");
+        pline("\"A stitch in time saves nine zorkmids.\"");
+        if(!u.uconduct.literate++)
+            livelog_write_string(LL_CONDUCT,
+                    "became literate by reading the back of a sewing kit");
+        return 1;
     } else if (scroll->otyp == MAGIC_MARKER) {
         if (Blind) {
             You_cant("feel any Braille writing.");
@@ -662,6 +672,7 @@ int curse_bless;
         case MAGIC_MARKER:
         case TINNING_KIT:
         case EXPENSIVE_CAMERA:
+        case SEWING_KIT:
             if (is_cursed)
                 stripspe(obj);
             else if (rechrg

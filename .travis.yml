@@ -44,24 +44,24 @@ matrix:
     - make fetch-lua
     - test -d "lib/lua-$LUA_VERSION/src" || exit 0
     - make install
-  - name: linux-xenial-gcc-qt5
-    os: linux
-    env: HINTS=linux-qt5 LUA_VERSION=5.3.5
-    compiler: gcc
-    addons:
-      apt:
-        packages:
-        - libx11-dev
-        - libxaw7-dev
-        - xfonts-utils
-        - qtbase5-dev
-        - qtmultimedia5-dev
-        - qtbase5-dev-tools
-    script:
-    - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
-    - make fetch-lua
-    - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-    - make QT_SELECT=5 MOC=moc install
+#  - name: linux-xenial-gcc-qt5
+#    os: linux
+#    env: HINTS=linux-qt5 LUA_VERSION=5.3.5
+#    compiler: gcc
+#    addons:
+#      apt:
+#        packages:
+#        - libx11-dev
+#        - libxaw7-dev
+#        - xfonts-utils
+#        - qtbase5-dev
+#        - qtmultimedia5-dev
+#        - qtbase5-dev-tools
+#    script:
+#    - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+#    - make fetch-lua
+#    - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+#    - make QT_SELECT=5 MOC=moc install
   - name: linux-bionic-gcc-x11
     os: linux
     env: HINTS=linux-x11 LUA_VERSION=5.3.5

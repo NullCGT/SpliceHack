@@ -2934,6 +2934,7 @@ static struct alt_spellings {
     { "mattock", DWARVISH_MATTOCK },
     { "amulet of poison resistance", AMULET_VERSUS_POISON },
     { "potion of sleep", POT_SLEEPING },
+    { "war juice", POT_ORCISH_WAR_JUICE },
     { "stone", ROCK },
     { "camera", EXPENSIVE_CAMERA },
     { "tee shirt", T_SHIRT },

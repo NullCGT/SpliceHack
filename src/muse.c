@@ -300,6 +300,7 @@ struct obj *otmp;
 #define MUSE_SCR_LIGHT 23
 #define MUSE_SCR_ELEMENTALISM 24
 #define MUSE_WAN_UNDEAD_TURNING 36 /* also an offensive item */
+#define MUSE_POT_ORCISH_WAR_JUICE 37
 /*
 #define MUSE_INNATE_TPT 9999
  * We cannot use this.  Since monsters get unlimited teleportation, if they
@@ -326,6 +327,11 @@ struct monst *mtmp;
     if ((obj = m_carrying(mtmp, POT_HEALING)) != 0) {
         g.m.defensive = obj;
         g.m.has_defense = MUSE_POT_HEALING;
+        return TRUE;
+    }
+    if (is_orc(mtmp->data) && (obj = m_carrying(mtmp, POT_HEALING)) != 0) {
+        g.m.defensive = obj;
+        g.m.has_defense = MUSE_POT_ORCISH_WAR_JUICE;
         return TRUE;
     }
     if ((obj = m_carrying(mtmp, WAN_HEALING)) != 0) {
@@ -668,6 +674,11 @@ boolean force;
             if (obj->otyp == POT_HEALING) {
                 g.m.defensive = obj;
                 g.m.has_defense = MUSE_POT_HEALING;
+            }
+            nomore(MUSE_POT_ORCISH_WAR_JUICE);
+            if (obj->otyp == POT_ORCISH_WAR_JUICE) {
+                g.m.defensive = obj;
+                g.m.has_defense = MUSE_POT_ORCISH_WAR_JUICE;
             }
             nomore(MUSE_WAN_HEALING);
             if (obj->otyp == WAN_HEALING) {
@@ -1133,6 +1144,22 @@ struct monst *mtmp;
             makeknown(POT_HEALING);
         m_useup(mtmp, otmp);
         return 2;
+    case MUSE_POT_ORCISH_WAR_JUICE:
+        mquaffmsg(mtmp, otmp);
+        i = d(6 + 2 * bcsign(otmp), 4);
+        mtmp->mhp += i;
+        if (mtmp->mhp > mtmp->mhpmax)
+            mtmp->mhp = ++mtmp->mhpmax;
+        if (!otmp->cursed && !mtmp->mcansee)
+            mcureblindness(mtmp, vismon);
+        mtmp->mconf = 0;
+        mtmp->mstun = 0;
+        if (vismon)
+            pline("%s bulks up!", Monnam(mtmp));
+        if (oseen)
+            makeknown(POT_ORCISH_WAR_JUICE);
+        m_useup(mtmp, otmp);
+        return 2;
     case MUSE_WAN_HEALING:
         mzapwand(mtmp, otmp, TRUE);
         i = d(6, 4);
@@ -1247,7 +1274,7 @@ struct monst *mtmp;
     case 2:
         return SCR_CREATE_MONSTER;
     case 3:
-        return POT_HEALING;
+        return (is_orc(mtmp->data) && rn2(2)) ? POT_ORCISH_WAR_JUICE : POT_HEALING;
     case 4:
         return POT_EXTRA_HEALING;
     case 5:
@@ -2904,6 +2931,8 @@ struct obj *obj;
             || typ == POT_HALLUCINATION || typ == POT_BLOOD)
             return TRUE;
         if (typ == POT_BLINDNESS && !attacktype(mon->data, AT_GAZE))
+            return TRUE;
+        if (typ == POT_ORCISH_WAR_JUICE && is_orc(mon->data))
             return TRUE;
         break;
     case SCROLL_CLASS:

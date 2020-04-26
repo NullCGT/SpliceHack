@@ -1365,6 +1365,28 @@ register struct obj *otmp;
             exercise(A_DEX, FALSE);
         }
         break;
+    case POT_ORCISH_WAR_JUICE:
+        if (is_orc(g.youmonst.data)) {
+            You_feel("unstoppable!");
+            healup(d(6 + 2 * bcsign(otmp), 4), !otmp->cursed ? 1 : 0,
+                !!otmp->blessed, !otmp->cursed);
+            adjattrib(A_STR, rnd(2), TRUE);
+            adjattrib(A_INT, -rnd(2), TRUE);
+            exercise(A_CON, TRUE);
+            exercise(A_DEX, TRUE);
+            exercise(A_WIS, FALSE);
+            exercise(A_CHA, FALSE);
+            make_blinded(0L, TRUE);
+            make_stunned(0L, TRUE);
+            make_confused(0L, TRUE);
+        } else {
+            pline("Your %s feels like it is trying to claw its way out of your body!", body_part(STOMACH));
+            losehp(d(3, 3), "consuming orcish war juice", KILLED_BY);
+            make_confused(itimeout_incr(HConfusion,
+                                    rn1(7, 16 - 8 * bcsign(otmp))),
+                      FALSE);
+        }
+        break;
     case POT_SLEEPING:
         if (Sleep_resistance || Free_action) {
             You("yawn.");
@@ -2152,6 +2174,15 @@ int how;
                 paralyze_monst(mon, rnd(25));
             }
             break;
+        case POT_ORCISH_WAR_JUICE:
+            if (canseemon(mon)) {
+                if (is_orc(mon->data)) {
+                    pline("%s grins ferally.", Monnam(mon));
+                    goto do_healing;
+                } else
+                    pline("%s looks disgusted.", Monnam(mon));
+            }
+            break;
         case POT_BLOOD:
         case POT_VAMPIRE_BLOOD:
             pline("%s is covered in blood!", Monnam(mon));
@@ -2411,6 +2442,16 @@ register struct obj *obj;
             exercise(A_DEX, FALSE);
         } else
             You("stiffen momentarily.");
+        break;
+    case POT_ORCISH_WAR_JUICE:
+        if (is_orc(g.youmonst.data)) {
+            pline("Something smells amazing!");
+            if (Upolyd && u.mh < u.mhmax)
+                u.mh++, g.context.botl = 1;
+            if (u.uhp < u.uhpmax)
+                u.uhp++, g.context.botl = 1;
+        } else
+            pline("Yuck! What a horrid smell!");
         break;
     case POT_SLEEPING:
         kn++;

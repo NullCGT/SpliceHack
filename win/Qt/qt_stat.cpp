@@ -533,4 +533,5 @@ void NetHackQtStatusWindow::checkTurnEvents()
 {
 }
 
+}
 } // namespace nethack_qt_

@@ -155,7 +155,7 @@ New Special Materials
     to as "crystal" in game.
   - Edged crystal weapons deal +3 damage.
 
-New Roles
+Role Changes
 - New Role: Dancer
   - The dancer is a glass cannon. They have low hit points and cannot wear suits of
     armor (doing so would inhibit their dance moves) but are fast and capable of dishing
@@ -173,6 +173,7 @@ New Roles
     carried. Invoke to gain temporary fire, cold, acid, and shock resistance, as well as
     the effects of a blessed scroll of elementalism.
   - Minions appearing for dancers are always some type of elemental.
+- Dramatically improve dragonmaster starting inventory.
 
 Racial Changes
 - New Race: Changeling

@@ -82,6 +82,9 @@ static struct trobj Dancer[] = {
 static struct trobj Dragonmaster[] = {
     { BROADSWORD, 1, WEAPON_CLASS, 1, UNDEF_BLESS },
     { SCALE_MAIL, 1, ARMOR_CLASS, 1, UNDEF_BLESS },
+    { GLOVES, 1, ARMOR_CLASS, 1, UNDEF_BLESS },
+    { HIGH_BOOTS, 0, ARMOR_CLASS, 1, 0 },
+    { POT_HEALING, 0, POTION_CLASS, 2, UNDEF_BLESS },
     { FOOD_RATION, 0, FOOD_CLASS, 2, 0 },
     { TRIPE_RATION, 0, FOOD_CLASS, 2, 0 },
     { 0, 0, 0, 0, 0 }
@@ -909,6 +912,10 @@ u_init()
         break;
     case PM_DRAGONMASTER:
         ini_inv(Dragonmaster);
+        ini_inv(Lamp);
+        ini_inv(Leash);
+        if (!rn2(10))
+            ini_inv(Magicmarker);
         knows_class(WEAPON_CLASS);
         knows_class(ARMOR_CLASS);
         skill_init(Skill_D);

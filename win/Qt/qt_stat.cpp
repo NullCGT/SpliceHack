@@ -431,7 +431,11 @@ void NetHackQtStatusWindow::updateStats()
     if (u.mtimedone) {
 	buf = nh_capitalize_words(mons[u.umonnum].mname);
     } else {
+	buf = rank_of(u.ulevel, g.pl_character[0], ::flags.female);
+    }
+    QString buf2;
     buf2.sprintf("%s the %s", g.plname, buf.toLatin1().constData());
+    name.setLabel(buf2, NetHackQtLabelledIcon::NoNum, u.ulevel);
 
     char buf3[BUFSZ];
     if (describe_level(buf3)) {
@@ -533,5 +537,4 @@ void NetHackQtStatusWindow::checkTurnEvents()
 {
 }
 
-}
- // namespace nethack_qt_
+} // namespace nethack_qt_

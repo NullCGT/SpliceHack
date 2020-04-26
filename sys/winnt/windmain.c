@@ -505,7 +505,7 @@ _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);*/
  */
     if (argc >= 1
         && !strcmpi(default_window_sys, "mswin")
-        && (strstri(argv[0], "nethackw.exe") || GUILaunched))
+        && (strstri(argv[0], "SpliceHackW.exe") || GUILaunched))
         iflags.windowtype_locked = TRUE;
     windowtype = default_window_sys;
 

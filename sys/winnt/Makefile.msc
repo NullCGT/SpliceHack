@@ -20,7 +20,7 @@
 #       SpliceHack.exe
 #
 #   A Win32 native port built on the Windows API, Graphical NetHack or
-#       NetHackW.exe
+#       SpliceHackW.exe
 #
 #   BEFORE YOU START, in addition to your C compiler and linker,
 #
@@ -856,7 +856,7 @@ default : install
 
 all :	install
 
-install: $(INCL)\nhlua.h $(O)envchk.tag $(O)obj.tag $(O)utility.tag $(GAMEDIR)\SpliceHack.exe $(GAMEDIR)\NetHackW.exe $(O)install.tag
+install: $(INCL)\nhlua.h $(O)envchk.tag $(O)obj.tag $(O)utility.tag $(GAMEDIR)\SpliceHack.exe $(GAMEDIR)\SpliceHackW.exe $(O)install.tag
 	 @echo Done.
 
 #==========================================
@@ -928,7 +928,7 @@ $(GAMEDIR)\SpliceHack.exe : $(O)gamedir.tag $(O)tile.o $(O)nttty.o $(O)guistub.o
 #    libs: $(LIBS) $(PDCLIB) $(LUALIB) $(guilibs) $(COMCTRL)
 #    objs: $(GAMEOBJ) $(GUIOBJ) $(O)tile.o $(O)ttystub.o
 
-$(GAMEDIR)\NetHackW.exe : $(O)gamedir.tag $(O)tile.o $(O)ttystub.o \
+$(GAMEDIR)\SpliceHackW.exe : $(O)gamedir.tag $(O)tile.o $(O)ttystub.o \
 			$(ALLOBJ) $(GUIOBJ) $(O)NetHackW.res \
 			$(O)gamedir.tag $(KEYDLLS) \
 			$(LUATARGETS)

@@ -3012,7 +3012,7 @@ for system administrators.
 Using a configuration file
 .pg
 .\" hw: don't hyphenate file names
-.hw .splicehackrc defaults.nh SpliceHack.exe nethackW.exe
+.hw .splicehackrc defaults.nh SpliceHack.exe SpliceHackW.exe
 The default name of the configuration file varies on different
 operating systems.
 .pg
@@ -3075,7 +3075,7 @@ OPTIONS=!legacy,autopickup,pickup_types:$\(dq=/!?+
 .ed
 .lp HACKDIR
 Default location of files NetHack needs. On Windows HACKDIR
-defaults to the location of the SpliceHack.exe or NetHackw.exe file
+defaults to the location of the SpliceHack.exe or SpliceHackW.exe file
 so setting HACKDIR to override that is not usually necessary or recommended.
 .lp LEVELDIR
 The location that in-progress level files are stored. Defaults to HACKDIR,

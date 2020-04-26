@@ -77,6 +77,9 @@ New Monsters
     other unique demons.
 - New Monster: Killer Mimic
   - Unlike other mimics, the killer mimic can bite, and is decently fast.
+- New Monster: Selkie
+  - Dangerous amphibious horse.
+  - Can drown the player and drain life.
 
 New Monsters (Less Notable)
 - New Monster: Ulsfark
@@ -130,6 +133,10 @@ New Items
 - New Item: Sewing Kit
   - Usable by ghouls for grafting purposes (see below)
   - Can repair cloth and leather items.
+- New Item: Orcish War Juice
+  - Heals orcs, removes stun / confusion, and increases strength, at the cost of
+    reducing dexterity.
+  - Damages non-orcs.
 
 New Special Materials
 - Adamantine

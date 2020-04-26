@@ -619,6 +619,8 @@ mkswamp() /* Michiel Huisjes & Fred de Wilde */
                                               ? &mons[PM_GIANT_EEL]
                                               : rn2(2)
                                                  ? &mons[PM_PIRANHA]
+                                                 : rn2(2)
+                                                 ? &mons[PM_SELKIE]
                                                  : &mons[PM_ELECTRIC_EEL],
                                            sx, sy, NO_MM_FLAGS);
                             eelct++;

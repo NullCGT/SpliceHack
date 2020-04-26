@@ -1679,7 +1679,10 @@ register struct attack *mattk;
                     dmg = 0;
                 } else {
                     set_ustuck(mtmp); /* before message, for botl update */
-                    pline("%s swings itself around you!", Monnam(mtmp));
+                    if (mtmp->data == &mons[PM_SELKIE])
+                        pline("%s latches onto you!", Monnam(mtmp));
+                    else
+                        pline("%s swings itself around you!", Monnam(mtmp));
                 }
             } else if (u.ustuck == mtmp) {
                 if (is_pool(mtmp->mx, mtmp->my) && !Swimming && !Amphibious) {

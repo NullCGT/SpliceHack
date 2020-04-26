@@ -34,7 +34,7 @@ WIZARDS=*
 #   %D current time, YYYYMMDDhhmmss format
 #   %n player name
 #   %N first character of player name
-#DUMPLOGFILE=nethack-%n-%d.log
+#DUMPLOGFILE=splicehack-%n-%d.log
 
 # Number of bones file pools.
 # The pool you belong to is determined at game start. You will
@@ -120,29 +120,29 @@ WIZARDS=*
 # point at must exist.  NetHack will not create them for you.
 #
 # Before adjusting, you can verify the default locations for files with:
-#       nethack --showpaths
+#       splicehack --showpaths
 #
 # The location that users can adjust their config file startup options
-#CONFIGDIR=%USERPROFILE%\NetHack
+#CONFIGDIR=%USERPROFILE%\SpliceHack
 #
 # The location that a record of game aborts and self-diagnosed game problems
 # is kept (default=HACKDIR, writeable)
-#TROUBLEDIR=%USERPROFILE%\NetHack\3.7
+#TROUBLEDIR=%USERPROFILE%\SpliceHack\3.7
 #
 # The location that documentation and helps files are placed
-#HACKDIR=%USERPROFILE%\NetHack\3.7
+#HACKDIR=%USERPROFILE%\SpliceHack\3.7
 #
 # The location that level files in progress are stored (writeable)
-#LEVELDIR=%USERPROFILE%\AppData\Local\NetHack\3.7
+#LEVELDIR=%USERPROFILE%\AppData\Local\SpliceHack\3.7
 #
 # The location where saved games are kept (writeable)
-#SAVEDIR=%USERPROFILE%\AppData\Local\NetHack\3.7
+#SAVEDIR=%USERPROFILE%\AppData\Local\SpliceHack\3.7
 #
 # The location that bones files are kept (writeable)
-#BONESDIR=c:\ProgramData\NetHack\3.7
+#BONESDIR=c:\ProgramData\SpliceHack\3.7
 #
 # The location that score files are kept (writeable)
-#SCOREDIR=c:\ProgramData\NetHack\3.7
+#SCOREDIR=c:\ProgramData\SpliceHack\3.7
 #
 # The location that file synchronization locks are stored (writeable)
-#LOCKDIR=c:\ProgramData\NetHack\3.7
+#LOCKDIR=c:\ProgramData\SpliceHack\3.7

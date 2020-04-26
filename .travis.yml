@@ -141,7 +141,6 @@ matrix:
     env: HINTS=macosx10.14
     compiler: clang
     script: cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../ && make install
-sudo: false
 deploy:
   provider: releases
   api_key:
@@ -153,5 +152,5 @@ deploy:
   on:
     tags: true
   prerelease: true
-  name: "Test release build of SpliceHack 0.5.0"
-  body: "This is an auto generated test release build of SpliceHack 0.5.0"
+  name: "Test release build of SpliceHack 0.7.1"
+  body: "This is an auto generated test release build of SpliceHack 0.7.1"

@@ -315,7 +315,7 @@ nttty.c         porthelp        stub-pdcscrn.c  stubs.c
 sysconf         win10.c         win10.h         win32api.h
 windmain.c      winnt.c         winos.h
 =======
-.nethackrc.template  Install.nt           Makefile.gcc
+.splicehackrc.template  Install.nt           Makefile.gcc
 Makefile.msc         console.rc           nethack.def
 nh340key.c           nhdefkey.c           nhico.uu
 nhraykey.c           nhsetup.bat          ntsound.c

@@ -3012,28 +3012,28 @@ for system administrators.
 Using a configuration file
 .pg
 .\" hw: don't hyphenate file names
-.hw .nethackrc defaults.nh nethack.exe nethackW.exe
+.hw .splicehackrc defaults.nh SpliceHack.exe nethackW.exe
 The default name of the configuration file varies on different
 operating systems.
 .pg
 On
 .UX ,
 Linux,
-and Mac OS X it is \(lq.nethackrc\(rq in the user's home directory.
+and Mac OS X it is \(lq.splicehackrc\(rq in the user's home directory.
 The file may not exist, but it is a normal ASCII text file and
 can be created with any text editor.
 .pg
-On Windows, it is \(lq.nethackrc\(rq in the folder
+On Windows, it is \(lq.splicehackrc\(rq in the folder
 \(lq\\%USERPROFILE%\\NetHack\\3.6\(rq.  The file may not exist,
 but it is a normal ASCII text file can can be created with any
 text editor.
 After running NetHack for the first time, you should find a default
-template for the configuration file named \(lq.nethackrc.template\(rq
+template for the configuration file named \(lq.splicehackrc.template\(rq
 in \(lq\\%USERPROFILE%\\NetHack\\3.6\(rq.
 If you had not created the configuration file, NetHack will create
 the configuration file for you using the default template file.
 .pg
-On MS-DOS, it is \(lqdefaults.nh\(rq in the same folder as nethack.exe.
+On MS-DOS, it is \(lqdefaults.nh\(rq in the same folder as SpliceHack.exe.
 .pg
 Any line in the configuration file starting with \(oq#\(cq is treated
 as a comment.
@@ -3075,7 +3075,7 @@ OPTIONS=!legacy,autopickup,pickup_types:$\(dq=/!?+
 .ed
 .lp HACKDIR
 Default location of files NetHack needs. On Windows HACKDIR
-defaults to the location of the NetHack.exe or NetHackw.exe file
+defaults to the location of the SpliceHack.exe or NetHackw.exe file
 so setting HACKDIR to override that is not usually necessary or recommended.
 .lp LEVELDIR
 The location that in-progress level files are stored. Defaults to HACKDIR,

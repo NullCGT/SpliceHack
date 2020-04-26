@@ -17,7 +17,7 @@
 #   This is used for building two distinct executables of NetHack:
 #
 #   A tty port utilizing the Win32 Console I/O subsystem, Console
-#       NetHack.exe
+#       SpliceHack.exe
 #
 #   A Win32 native port built on the Windows API, Graphical NetHack or
 #       NetHackW.exe
@@ -32,7 +32,7 @@
 #             https://www.lua.org/download.html
 #
 #       o If you want to include the curses Window port in the non-GUI
-#         NetHack.exe build, you will need a complete PDCurses source
+#         SpliceHack.exe build, you will need a complete PDCurses source
 #         tree parallel to your NetHack source tree. You can obtain the
 #         PDCurses source from here:
 #             https://sourceforge.net/projects/pdcurses/files/pdcurses/
@@ -94,7 +94,7 @@ GAMEDIR = ..\binary               # Default game build directory
 #
 # 2. Uncomment these and set them appropriately if you want to
 #    include curses port support alongside TTY support in your
-#    NetHack.exe binary.
+#    SpliceHack.exe binary.
 #
 #    You'll have to set PDCURSES_H to the correct location of the
 #    PDCurses header (.h) files and PDCURSES_C to the location
@@ -856,7 +856,7 @@ default : install
 
 all :	install
 
-install: $(INCL)\nhlua.h $(O)envchk.tag $(O)obj.tag $(O)utility.tag $(GAMEDIR)\NetHack.exe $(GAMEDIR)\NetHackW.exe $(O)install.tag
+install: $(INCL)\nhlua.h $(O)envchk.tag $(O)obj.tag $(O)utility.tag $(GAMEDIR)\SpliceHack.exe $(GAMEDIR)\NetHackW.exe $(O)install.tag
 	 @echo Done.
 
 #==========================================
@@ -903,7 +903,7 @@ GAMEOBJ=$(GAMEOBJ:^ =^
 #    objs: $(GAMEOBJ) $(TTYOBJ) $(O)tile.o $(O)guistub.o
 
 
-$(GAMEDIR)\NetHack.exe : $(O)gamedir.tag $(O)tile.o $(O)nttty.o $(O)guistub.o \
+$(GAMEDIR)\SpliceHack.exe : $(O)gamedir.tag $(O)tile.o $(O)nttty.o $(O)guistub.o \
 			$(ALLOBJ) $(TTYOBJ) $(O)console.res $(KEYDLLS) \
 			$(LUATARGETS) $(PDCLIB)
 	@if not exist $(GAMEDIR)\*.* mkdir $(GAMEDIR)
@@ -1023,7 +1023,7 @@ $(O)install.tag: 	$(DAT)\data	$(DAT)\rumors	$(DAT)\oracles \
 	if exist $(DOC)\nethack.txt copy $(DOC)\nethack.txt $(GAMEDIR)\NetHack.txt
 	@if exist $(GAMEDIR)\NetHack.PDB echo NOTE: You may want to remove $(GAMEDIR:\=/)/NetHack.PDB to conserve space
 	@if exist $(GAMEDIR)\NetHackW.PDB echo NOTE: You may want to remove $(GAMEDIR:\=/)/NetHackW.PDB to conserve space
-	-if exist $(MSWSYS)\.nethackrc.template copy $(MSWSYS)\.nethackrc.template   $(GAMEDIR)
+	-if exist $(MSWSYS)\.splicehackrc.template copy $(MSWSYS)\.splicehackrc.template   $(GAMEDIR)
 	-if not exist $(GAMEDIR)\record. goto>$(GAMEDIR)\record.
 	echo install done > $@
 
@@ -1607,7 +1607,7 @@ spotless: clean
 	if exist $(GAMEDIR)\nhdefkey.dll del $(GAMEDIR)\nhdefkey.dll
 	if exist $(GAMEDIR)\nh340key.dll del $(GAMEDIR)\nh340key.dll
 	if exist $(GAMEDIR)\nhraykey.dll del $(GAMEDIR)\nhraykey.dll
-	if exist $(GAMEDIR)\NetHack.exe  del $(GAMEDIR)\NetHack.exe
+	if exist $(GAMEDIR)\SpliceHack.exe  del $(GAMEDIR)\SpliceHack.exe
 	if exist $(GAMEDIR)\NetHack.pdb  del $(GAMEDIR)\NetHack.pdb
 	if exist $(GAMEDIR)\nhdat$(NHV)  del $(GAMEDIR)\nhdat$(NHV)
 ! ENDIF

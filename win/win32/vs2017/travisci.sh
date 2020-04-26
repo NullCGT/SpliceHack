@@ -44,6 +44,7 @@ export SKIP_NETHACKW=N
 export PDCURSES_TOP=../lib/pdcurses
 export
 cd src
+mkdir ../binary
 cp ../sys/winnt/Makefile.msc ./Makefile
 nmake install
 cd ..

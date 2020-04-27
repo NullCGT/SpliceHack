@@ -16,8 +16,6 @@ static char *FDECL(You_buf, (int));
 static void FDECL(execplinehandler, (const char *));
 #endif
 
-#if defined(DUMPLOG) || defined(DUMPHTML)
-
 /*Ben Collver's fixes*/
 const char *
 replace(st, orig, repl)
@@ -99,6 +97,8 @@ const char *orig;
 		orig = replace(orig,"Gold piece","Victory token");
 		return orig;
 }
+
+#if defined(DUMPLOG) || defined(DUMPHTML)
 
 /* keep the most recent DUMPLOG_MSG_COUNT messages */
 void

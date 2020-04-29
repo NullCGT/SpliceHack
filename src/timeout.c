@@ -338,7 +338,7 @@ levitation_dialogue()
 
 static NEARDATA const char *const dance_texts[] = {
     "You are beginning to feel exhausted.",
-    "You collapse!",
+    "Your dance slows to a stop.",
 };
 
 static void
@@ -658,9 +658,7 @@ nh_timeout()
                 done_timeout(STONING, STONED);
                 break;
             case DANCING:
-                nomul(-rnd(2));
-                g.multi_reason = "exhaustion from dancing";
-                g.nomovemsg = "You recover from your bout of exhaustion.";
+                You("are no longer dancing.");
                 break;
             case LARVACARRIER:
                 /* must be in this order for bones files. */

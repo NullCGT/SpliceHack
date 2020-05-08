@@ -198,8 +198,9 @@
 #define Invisible (Invis && !See_invisible)
 /* Note: invisibility also hides inventory and steed */
 
-#define EDisplaced u.uprops[DISPLACED].extrinsic
-#define Displaced (EDisplaced || is_displaced(g.youmonst.data))
+#define HDisplaced u.uprops[DISPLACED].intrinsic /* timed from corpse */
+#define EDisplaced u.uprops[DISPLACED].extrinsic /* worn cloak */
+#define Displaced (HDisplaced || EDisplaced || is_displaced(g.youmonst.data))
 
 #define HStealth u.uprops[STEALTH].intrinsic
 #define EStealth u.uprops[STEALTH].extrinsic

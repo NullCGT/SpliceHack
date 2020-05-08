@@ -768,7 +768,7 @@ boolean new_game; /* false => restoring an old game */
         u.uhpmax = 999;
     }
     if (new_game) {
-        (void) random_engraving(ebuf, FALSE);
+        get_rnd_text(ENGRAVEFILE, ebuf, rn2);
         memcpy(g.explengr, ebuf, BUFSZ);
     }
 

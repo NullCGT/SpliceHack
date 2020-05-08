@@ -361,7 +361,7 @@ register struct monst *mtmp;
      * you'll usually just swap places if this is a movement command
      */
     /* Intelligent chaotic weapons (Stormbringer) want blood */
-    if (is_safepet(mtmp) && !g.context.forcefight) {
+    if (is_safemon(mtmp) && !g.context.forcefight) {
         if (!uwep || uwep->oartifact != ART_STORMBRINGER) {
             /* There are some additional considerations: this won't work
              * if in a shop or Punished or you miss a random roll or
@@ -2456,23 +2456,15 @@ int specialdmg; /* blessed and/or material bonus against various things */
         /* if (negated) break; */
         break;
     case AD_POLY:
-        if (tmp < mdef->mhp) {
-            if (resists_magm(mdef)) {
-                /* magic resistance protects from polymorph traps,
-                 * so make it guard against involuntary polymorph
-                 * attacks too... */
-                shieldeff(mdef->mx, mdef->my);
-            } else if (g.youmonst.data == &mons[PM_MOLYDEUS]) {
+        if (!negated && tmp < mdef->mhp) {
+            if (g.youmonst.data == &mons[PM_MOLYDEUS]) {
                 pline("You inject horrific venom into %s!", mon_nam(mdef));
                 if (!rn2(3)) {
                     newcham(mdef, &mons[PM_MANES], FALSE, TRUE);
                     tmp = 0;
                 }
             } else {
-                newcham(mdef, (struct permonst *) 0, FALSE, TRUE);
-                /* prevent killing the monster again -
-                * could be killed in mon_poly */
-                tmp = 0;
+                tmp = mon_poly(&g.youmonst, mdef, tmp);
             }
         }
         break;

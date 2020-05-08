@@ -24,7 +24,7 @@ enum mcast_mage_spells {
     MGC_CLONE_WIZ,
     MGC_DEATH_TOUCH,
     MGC_SONIC_SCREAM,
-    MGC_GAS_CLOUD,
+    MGC_GAS_CLOUD
 };
 
 /* monster cleric spells */

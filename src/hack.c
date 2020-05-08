@@ -1410,6 +1410,7 @@ domove_core()
           ballx = 0, bally = 0;         /* ball&chain new positions */
     int bc_control = 0;                 /* control for ball&chain */
     boolean cause_delay = FALSE,        /* dragging ball will skip a move */
+            displaceu = FALSE,          /* involuntary swap */
             u_with_boulder = (sobj_at(BOULDER, u.ux, u.uy) != 0);
 
     if (g.context.travel) {
@@ -1433,8 +1434,8 @@ domove_core()
     }
     if (u.uswallow) {
         u.dx = u.dy = 0;
-        u.ux = x = u.ustuck->mx;
-        u.uy = y = u.ustuck->my;
+        x = u.ustuck->mx, y = u.ustuck->my;
+        u_on_newpos(x, y); /* set u.ux,uy and handle CLIPPING */
         mtmp = u.ustuck;
     } else {
         if (Is_airlevel(&u.uz) && rn2(4) && !Levitation && !Flying) {
@@ -1600,7 +1601,7 @@ domove_core()
         }
 
         mtmp = m_at(x, y);
-        if (mtmp && !is_safepet(mtmp)) {
+        if (mtmp && !is_safemon(mtmp)) {
             /* Don't attack if you're running, and can see it */
             /* It's fine to displace pets, though */
             /* We should never get here if forcefight */
@@ -1627,7 +1628,7 @@ domove_core()
         /* don't stop travel when displacing pets; if the
            displace fails for some reason, attack() in uhitm.c
            will stop travel rather than domove */
-        if (!is_safepet(mtmp) || g.context.forcefight)
+        if (!is_safemon(mtmp) || g.context.forcefight)
             nomul(0);
         /* only attack if we know it's there */
         /* or if we used the 'F' command to fight blindly */
@@ -1658,10 +1659,25 @@ domove_core()
         }
         if (g.context.forcefight || !mtmp->mundetected || sensemon(mtmp)
             || ((hides_under(mtmp->data) || mtmp->data->mlet == S_EEL)
-                && !is_safepet(mtmp))) {
-            /* try to attack; note that it might evade */
-            /* also, we don't attack tame when _safepet_ */
-            if (attack(mtmp))
+                && !is_safemon(mtmp))) {
+
+            /* target monster might decide to switch places with you... */
+            if (mtmp->data == &mons[PM_DISPLACER_BEAST] && !rn2(2)
+                && mtmp->mux == u.ux0 && mtmp->muy == u.uy0
+                && mtmp->mcanmove && !mtmp->msleeping && !mtmp->meating
+                && !mtmp->mtrapped && !u.utrap && !u.ustuck && !u.usteed
+                && !(u.dx && u.dy
+                     && (NODIAG(u.umonnum)
+                         || (bad_rock(mtmp->data, x, u.uy0)
+                             && bad_rock(mtmp->data, u.ux0, y))
+                         || (bad_rock(g.youmonst.data, u.ux0, y)
+                             && bad_rock(g.youmonst.data, x, u.uy0))))
+                && goodpos(u.ux0, u.uy0, mtmp, GP_ALLOW_U))
+                displaceu = TRUE;
+
+            /* try to attack; note that it might evade;
+               also, we don't attack tame when _safepet_ */
+            else if (attack(mtmp))
                 return;
         }
     }
@@ -1869,16 +1885,32 @@ domove_core()
     if (!in_out_region(x, y))
         return;
 
-    /* now move the hero */
     mtmp = m_at(x, y);
+    /* tentatively move the hero plus steed; leave CLIPPING til later */
     u.ux += u.dx;
     u.uy += u.dy;
-    /* Move your steed, too */
     if (u.usteed) {
         u.usteed->mx = u.ux;
         u.usteed->my = u.uy;
-        exercise_steed();
+        /* [if move attempt ends up being blocked, should training count?] */
+        exercise_steed(); /* train riding skill */
     }
+
+    if (displaceu && mtmp) {
+        remove_monster(u.ux, u.uy);
+        place_monster(mtmp, u.ux0, u.uy0);
+        newsym(u.ux, u.uy);
+        newsym(u.ux0, u.uy0);
+        /* monst still knows where hero is */
+        mtmp->mux = u.ux, mtmp->muy = u.uy;
+
+        pline("%s swaps places with you...", Monnam(mtmp));
+        /* monster chose to swap places; hero doesn't get any credit
+           or blame if something bad happens to it */
+        g.context.mon_moving = 1;
+        if (!minliquid(mtmp))
+            (void) mintrap(mtmp);
+        g.context.mon_moving = 0;
 
     /*
      * If safepet at destination then move the pet to the hero's
@@ -1890,7 +1922,8 @@ domove_core()
      * Ceiling-hiding pets are skipped by this section of code, to
      * be caught by the normal falling-monster code.
      */
-    if (is_safepet(mtmp) && !(is_hider(mtmp->data) && mtmp->mundetected)) {
+    } else if (is_safemon(mtmp)
+               && !(is_hider(mtmp->data) && mtmp->mundetected)) {
         /* if it turns out we can't actually move */
         boolean didnt_move = FALSE;
 
@@ -1913,8 +1946,8 @@ domove_core()
             You("stop.  %s can't move diagonally.", upstart(y_monnam(mtmp)));
             didnt_move = TRUE;
         } else if (u_with_boulder
-                    && !(verysmall(mtmp->data)
-                         && (!mtmp->minvent || curr_mon_load(mtmp) <= 600))) {
+                   && !(verysmall(mtmp->data)
+                        && (!mtmp->minvent || curr_mon_load(mtmp) <= 600))) {
             /* can't swap places when pet won't fit there with the boulder */
             You("stop.  %s won't fit into the same spot that you're at.",
                  upstart(y_monnam(mtmp)));
@@ -1932,7 +1965,7 @@ domove_core()
             You("stop.  %s can't move out of that trap.",
                 upstart(y_monnam(mtmp)));
             didnt_move = TRUE;
-        } else if (mtmp->mpeaceful
+        } else if (mtmp->mpeaceful && !mtmp->mtame
                    && (!goodpos(u.ux0, u.uy0, mtmp, 0)
                        || t_at(u.ux0, u.uy0) != NULL
                        || mundisplaceable(mtmp))) {
@@ -2004,10 +2037,15 @@ domove_core()
 
         if (didnt_move) {
             u.ux = u.ux0, u.uy = u.uy0; /* didn't move after all */
+            /* could skip this bit since we're about to call u_on_newpos() */
             if (u.usteed)
                 u.usteed->mx = u.ux, u.usteed->my = u.uy;
         }
     }
+    /* tentative move above didn't handle CLIPPING, in case there was a
+       monster in the way and the move attempt ended up being blocked;
+       do a full re-position now, possibly back to where hero started */
+    u_on_newpos(u.ux, u.uy);
 
     reset_occupations();
     if (g.context.run) {

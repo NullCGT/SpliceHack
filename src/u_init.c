@@ -787,6 +787,8 @@ u_init()
     struct attack* attkptr;
 
     flags.gender = flags.initgend;
+    if (flags.gender == GEND_N)
+        record_achievement(ACH_NBIN);
     flags.beginner = 1;
 
     /* WAC -- Clear Tech List since adjabil will init the 1st level techs*/

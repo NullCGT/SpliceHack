@@ -1305,6 +1305,7 @@ see_monsters()
         if (Warn_of_mon && (g.context.warntype.obj & mon->data->mhflags) != 0L)
             new_warn_obj_cnt++;
     }
+
     /*
      * Make Sting glow blue or stop glowing if required.
      */

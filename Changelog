@@ -290,9 +290,7 @@ Notable Bug Fixes
   the banquet hall incredibly drunk, and allowing for booze exploits.
 - Fixed lemurepits never appearing.
 - Fixed a segfault with monster steeds affecting both EvilHack and SpliceHack.
-- Fix many monster steed errors. Known bugs: Genociding or killing a monster
-  steed before the rider will result in some odd, but not game-breaking
-  behavior.
+- Fix MANY monster steed issues.
 - Fix "NetHack" appearing in dumplog and a few other places.
 - All types of ghouls can eat corpses, not just basic ghouls and ghasts.
 - Fixed monsters obsessing over chests stuck in walls.
@@ -301,7 +299,17 @@ Notable Bug Fixes
 - Fix shambling horrors being shapeshifters or werecreatures.
 - Fix an exploit allowing for standard pets for pirates and dragonmasters.
 - Fixed monsters creating gas clouds on the plane of water.
-                    
+- Fixed a bug where there was a 1/4 chance that explosive runes were initialized
+  to an empty string.
+- Fixed some bad code relating to nonbinary player rank names.
+
+Known Bugs:
+- Genociding or killing a monster steed before the rider will result in some odd, 
+  but not game-breaking behavior.
+- Nonbinary players should be referred to correctly in all instances, but it is
+  possible that I missed something in the 3.7 merge. Please, let me know.
+
+
                     Version 0.7.0: Stranger Days
 
 Cooking

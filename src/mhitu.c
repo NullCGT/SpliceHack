@@ -1054,6 +1054,7 @@ struct monst *mon;
     long wearmask;
     int armpro, mc = 0;
     boolean is_you = (mon == &g.youmonst),
+            via_amul = FALSE,
             gotprot = is_you ? (EProtection != 0L)
                              /* high priests have innate protection */
                              : (mon->data == &mons[PM_HIGH_PRIEST]);
@@ -1070,6 +1071,8 @@ struct monst *mon;
             }
             if (armpro > mc)
                 mc = armpro;
+        } else if ((o->owornmask & W_AMUL) != 0L) {
+            via_amul = TRUE;
         }
         /* if we've already confirmed Protection, skip additional checks */
         if (is_you || gotprot)
@@ -1084,9 +1087,10 @@ struct monst *mon;
     }
 
     if (gotprot) {
-        /* extrinsic Protection increases mc by 1 */
-        if (mc < 3)
-            mc += 1;
+        /* extrinsic Protection increases mc by 1; 2 for amulet */
+        mc += via_amul ? 2 : 1;
+        if (mc > 3)
+            mc = 3;
     } else if (mc < 1) {
         /* intrinsic Protection is weaker (play balance; obtaining divine
            protection is too easy); it confers minimum mc 1 instead of 0 */
@@ -1502,8 +1506,8 @@ register struct attack *mattk;
             You_feel("much calmer.");
         break;
     case AD_POLY:
-        hitmsg(mtmp, mattk);
         if (mtmp->data == &mons[PM_MOLYDEUS] && uncancelled && !Unchanging) {
+            hitmsg(mtmp, mattk);
             if (!rn2(Poison_resistance ? 3 : 2)) {
                 pline("%s injects horrific venom into you!", Monnam(mtmp));
                 if (Poison_resistance)
@@ -1511,11 +1515,8 @@ register struct attack *mattk;
                 polyself(4);
             } else
                 pline("You barely manage to fight off the venom of %s!", mon_nam(mtmp));
-        } else if (uncancelled && !Unchanging && !Antimagic) {
-            if (flags.verbose)
-          You("undergo a freakish metamorphosis!");
-            polyself(0);
-        }
+        } else if (uncancelled && Maybe_Half_Phys(dmg) < (Upolyd ? u.mh : u.uhp))
+            dmg = mon_poly(mtmp, &g.youmonst, dmg);
         break;
     case AD_MEMR:
         hitmsg(mtmp, mattk);

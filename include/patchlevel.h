@@ -14,7 +14,7 @@
  * Incrementing EDITLEVEL can be used to force invalidation of old bones
  * and save files.
  */
-#define EDITLEVEL 18
+#define EDITLEVEL 20
 
 #define COPYRIGHT_BANNER_A "SpliceHack, a NetHack variant by AntiGulp. Copyright 1985-2020"
 #define COPYRIGHT_BANNER_B \

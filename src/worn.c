@@ -487,9 +487,13 @@ register struct monst *mon;
     long mwflags = mon->misc_worn_check;
 
     for (obj = mon->minvent; obj; obj = obj->nobj) {
-        if (obj->owornmask & mwflags)
-            base -= ARM_BONUS(obj);
-        /* since ARM_BONUS is positive, subtracting it increases AC */
+        if (obj->owornmask & mwflags) {
+            if (obj->otyp == AMULET_OF_GUARDING)
+                base -= 2; /* fixed amount, not impacted by erosion */
+            else
+                base -= ARM_BONUS(obj);
+            /* since ARM_BONUS is positive, subtracting it increases AC */
+        }
     }
     return base;
 }
@@ -574,8 +578,8 @@ boolean racialexception;
     old = which_armor(mon, flag);
     if (old && old->cursed)
         return;
-    if (old && flag == W_AMUL)
-        return; /* no such thing as better amulets */
+    if (old && flag == W_AMUL && old->otyp != AMULET_OF_GUARDING)
+        return; /* no amulet better than life-saving or reflection */
     if (old && flag == W_RING)
         return;
     best = old;
@@ -586,10 +590,17 @@ boolean racialexception;
             if (obj->oclass != AMULET_CLASS
                 || (obj->otyp != AMULET_OF_LIFE_SAVING
                     && obj->otyp != AMULET_OF_REFLECTION
-                    && obj->otyp != AMULET_OF_REINCARNATION))
+                    && obj->otyp != AMULET_OF_GUARDING))
                 continue;
-            best = obj;
-            goto outer_break; /* no such thing as better amulets */
+            /* for 'best' to be non-Null, it must be an amulet of guarding;
+               life-saving and reflection don't get here due to early return
+               and other amulets of guarding can't be any better */
+            if (!best || obj->otyp != AMULET_OF_GUARDING) {
+                best = obj;
+                if (best->otyp != AMULET_OF_GUARDING)
+                    goto outer_break; /* life-saving or reflection; use it */
+            }
+            continue; /* skip post-switch armor handling */
         case W_RING:
             /* For now, wear all rings and see what happens */
             if (obj->oclass != RING_CLASS 
@@ -651,7 +662,7 @@ boolean racialexception;
             continue;
         best = obj;
     }
-outer_break:
+ outer_break:
     if (!best || best == old)
         return;
 
@@ -1030,7 +1041,7 @@ boolean polyspot;
         if (mon == u.usteed)
             goto noride;
     } else if (mon == u.usteed && !can_ride(mon)) {
-    noride:
+ noride:
         You("can no longer ride %s.", mon_nam(mon));
         if (touch_petrifies(u.usteed->data) && !Stone_resistance && rnl(3)) {
             char buf[BUFSZ];

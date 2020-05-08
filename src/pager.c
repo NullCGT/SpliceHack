@@ -1129,6 +1129,9 @@ add_obj_info(winid datawin, short otyp)
             break;
         case TALLOW_CANDLE:
         case WAX_CANDLE:
+        case CALLING_CANDLE:
+        case AUTOMATON_CANDLE:
+        case SPIRIT_CANDLE:
         case LANTERN:
         case OIL_LAMP:
         case MAGIC_LAMP:

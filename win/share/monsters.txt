@@ -4359,6 +4359,63 @@ Z = (195, 195, 195)
   ..BF.BBAABBAFB..
   ................
 }
+# tile 221 (Lawful Deific Avatar)
+{
+  ......HHHH......
+  .....HNNNNH.....
+  ....HN.JJ.NH....
+  ...HN.JJJJ.NH...
+  ..HN..JJJJ..NH..
+  .HN...NJJP...NH.
+  HNJBBBNNNPPPPJNH
+  HNJNNNNNNPPPPJNH
+  .HNN..BNNP..NNH.
+  ...HN.BNNP.NH...
+  ...HN.BNNP..NH..
+  ..HN.BNNNNP.NH..
+  .HN.BNNNNNP..NH.
+  .HN.BNNNNNNP.NH.
+  HN.BNNNNNNNNNPNH
+  ..NHNHNHHNHNHN..
+}
+# tile 221 (Neutral Deific Avatar)
+{
+  ......HHHH......
+  .....HBBBBH.....
+  ....HB.JJ.BH....
+  ...HB.JJJJ.BH...
+  ..HB..JJJJ..BH..
+  .HB...NJJP...BH.
+  HBJBBBNNNPPPPJBH
+  HBJNNNNNNPPPPJBH
+  .HBB..BNNP..BBH.
+  ...HB.BNNP.BH...
+  ...HB.BNNP..BH..
+  ..HB.BNNNNP.BH..
+  .HB.BNNNNNP..BH.
+  .HB.BNNNNNNP.BH.
+  HB.BNNNNNNNNNPBH
+  ..BHBHBHHBHBHB..
+}
+# tile 221 (Chaotic Deific Avatar)
+{
+  ......HHHH......
+  .....HDDDDH.....
+  ....HD.JJ.DH....
+  ...HD.JJJJ.DH...
+  ..HD..JJJJ..DH..
+  .HD...NJJP...DH.
+  HDJBBBNNNPPPPJDH
+  HDJNNNNNNPPPPJDH
+  .HDD..BNNP..DDH.
+  ...HD.BNNP.DH...
+  ...HD.BNNP..DH..
+  ..HD.BNNNNP.DH..
+  .HD.BNNNNNP..DH.
+  .HD.BNNNNNNP.DH.
+  HD.BNNNNNNNNNPDH
+  ..DHDHDHHDHDHD..
+}
 # tile 222 (bat)
 {
   ................

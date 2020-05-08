@@ -1182,6 +1182,11 @@ u_init()
         break;
     }
 
+    /* set up god names */
+    mons[PM_LAWFUL_DEIFIC_AVATAR].mname = (char *) align_gname(A_LAWFUL);
+    mons[PM_NEUTRAL_DEIFIC_AVATAR].mname = (char *) align_gname(A_NEUTRAL);
+    mons[PM_CHAOTIC_DEIFIC_AVATAR].mname = (char *) align_gname(A_CHAOTIC);
+
     /* what a horrible night to have a curse */
   	shambler->mlevel += rnd(12)-3;				/* shuffle level */
   	shambler->mmove = rn2(10)+9;				/* slow to very fast */

@@ -137,6 +137,22 @@ New Items
   - Heals orcs, removes stun / confusion, and increases strength, at the cost of
     reducing dexterity.
   - Damages non-orcs.
+- Magical Candles
+  - These candles all have powerful effects, which take place when the candle burns
+    out, regardless if it is in your inventory or not. Their appearances are
+    randomized, and they do not stack.
+    - New Item: Spirit Candle
+      - Calls a spectre of the past.
+      - The player can choose to ask the spectre for advice (castle tune, explosive
+        runes, etc.) or accept its aid.
+    - New Item: Automaton Candle
+      - Creates a golem if placed over a pile of objects. The golem may or may not
+        be tame.
+    - New Item: Calling Candle
+      - Allows the user to summon a minion.
+      - The more powerful the minion that the player tries to summon, the more likely
+        that the summoning is to go awry. Failed summonings may end up calling forth
+        a demon lord, or an angry deity.
 
 New Special Materials
 - Adamantine
@@ -244,6 +260,8 @@ Misc. Changes
   challenge.
 - Baobhan-sith only generate in hell, to prevent them from crowding morgues in
   the regular dungeon.
+- Monsters will occasionally wish for magical candles.
+- Monsters without infravision will use candles to light up dark places.
 
 Notable Bug Fixes
 - Water elementals can be neutral deific minions agian.

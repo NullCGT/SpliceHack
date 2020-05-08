@@ -2186,6 +2186,8 @@ E const char *FDECL(align_gname, (ALIGNTYP_P));
 E const char *FDECL(halu_gname, (ALIGNTYP_P));
 E const char *FDECL(align_gtitle, (ALIGNTYP_P));
 E void FDECL(altar_wrath, (int, int));
+E boolean FDECL(god_dead, (int));
+E void FDECL(godvoice, (ALIGNTYP_P, const char *));
 
 /* ### priest.c ### */
 
@@ -3248,6 +3250,7 @@ E int FDECL(dowrite, (struct obj *));
 
 E void FDECL(learnwand, (struct obj *));
 E int FDECL(bhitm, (struct monst *, struct obj *));
+E struct monst* FDECL(create_polymon, (struct obj *, int));
 E void FDECL(probe_monster, (struct monst *));
 E boolean FDECL(get_obj_location, (struct obj *, xchar *, xchar *, int));
 E boolean FDECL(get_mon_location, (struct monst *, xchar *, xchar *, int));

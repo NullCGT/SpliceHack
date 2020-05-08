@@ -237,6 +237,10 @@ int *lo_p, *hi_p; /* output: range that item belongs among */
         *lo_p = g.bases[ocls];
         *hi_p = g.bases[ocls + 1] - 1;
         break;
+    case TOOL_CLASS:
+        if (otyp >= SPIRIT_CANDLE && otyp <= CALLING_CANDLE)
+            *lo_p = SPIRIT_CANDLE, *hi_p = CALLING_CANDLE;
+        break;
     }
 
     /* artifact checking might ask about item which isn't part of any range
@@ -253,11 +257,12 @@ shuffle_all()
     /* entire classes; obj_shuffle_range() handles their exceptions */
     static char shuffle_classes[] = {
         AMULET_CLASS, POTION_CLASS, RING_CLASS,  SCROLL_CLASS,
-        SPBOOK_CLASS, WAND_CLASS,
+        SPBOOK_CLASS, WAND_CLASS
     };
     /* sub-class type ranges (one item from each group) */
     static short shuffle_types[] = {
         HELMET, GLOVES, CLOAK_OF_PROTECTION, MYSTIC_ROBE, SPEED_BOOTS, VENOM_CLASS,
+        SPIRIT_CANDLE,
     };
     int first, last, idx;
 

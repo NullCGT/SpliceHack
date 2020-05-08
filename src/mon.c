@@ -2567,6 +2567,13 @@ register struct monst *mtmp;
         }
     }
 
+    /* killing a god is a horrible sin */
+    if (mtmp->data == &mons[PM_LAWFUL_DEIFIC_AVATAR] ||
+        mtmp->data == &mons[PM_NEUTRAL_DEIFIC_AVATAR] ||
+        mtmp->data == &mons[PM_CHAOTIC_DEIFIC_AVATAR]) {
+        u.ualign.record -= 100;
+    }
+
     /* Medusa falls into two livelog categories,
      * we log one message flagged for both categories.
      */

@@ -22,6 +22,7 @@ static void NDECL(slip_or_trip);
 static void FDECL(see_lamp_flicker, (struct obj *, const char *));
 static void FDECL(lantern_message, (struct obj *));
 static void FDECL(cleanup_burn, (ANY_P *, long));
+static void FDECL(magic_candle_effects, (struct obj *));
 
 /* used by wizard mode #timeout and #wizintrinsic; order by 'interest'
    for timeout countdown, where most won't occur in normal play */
@@ -1431,6 +1432,9 @@ long timeout;
     case CANDELABRUM_OF_INVOCATION:
     case TALLOW_CANDLE:
     case WAX_CANDLE:
+    case CALLING_CANDLE:
+    case AUTOMATON_CANDLE:
+    case SPIRIT_CANDLE:
         switch (obj->age) {
         case 75:
             if (canseeit)
@@ -1513,6 +1517,9 @@ long timeout;
                                                    : "Its flame dies."));
                 }
             }
+
+            magic_candle_effects(obj);
+
             end_burn(obj, FALSE);
 
             if (menorah) {
@@ -1556,6 +1563,140 @@ long timeout;
         update_inventory();
 }
 
+static void
+magic_candle_effects(obj)
+struct obj* obj;
+{
+    struct monst *mtmp;
+    struct obj *otmp;
+    int i = 0;
+    int rand_align = rn2((int) A_LAWFUL + 2) - 1;
+    boolean vis = !Blind && cansee(obj->ox, obj->oy);
+    boolean yours = obj->where == OBJ_INVENT || (obj->ox == u.ux && obj->oy == u.uy);
+    boolean mishap = FALSE;
+
+    switch(obj->otyp) {
+    case CALLING_CANDLE:
+        if (!yours) {
+            You("smell rotting incense.");
+            makemon(&mons[rn2(3) ? PM_MINOR_ANGEL : PM_INFERNAL], obj->ox, obj->oy, NO_MM_FLAGS);
+            break;
+        }
+        if (yn("Attempt to call a minor extraplanar being?") == 'y') {
+            /* Always succeeds if uncursed */
+            mtmp = makemon(&mons[rn2(3) ? PM_MINOR_ANGEL : PM_INFERNAL], obj->ox, obj->oy, NO_MM_FLAGS);
+            if (mtmp && obj->cursed) {
+                mishap = TRUE;
+                setmangry(mtmp, FALSE);
+            } else if (mtmp) {
+                tamedog(mtmp, (struct obj *) 0);
+            }
+        } else if (yn("Attempt to call a greater extraplanar being?") == 'y') {
+            /* Some chance of success; failure summons angry minion */
+            if (!obj->cursed && u.ualign.record >= 14) {
+                mtmp = makemon(&mons[PM_ANGEL], obj->ox, obj->oy, NO_MM_FLAGS);
+                if (mtmp) tamedog(mtmp, (struct obj *) 0);
+            } else {
+                mishap = TRUE;
+                summon_minion(rand_align, FALSE);
+            }
+        } else if (yn("Attempt to contact a powerful entity?") == 'y') {
+            /* Small chance of success; minor failure summons Pazuzu, major failure summons angry deity */
+            if (!obj->cursed && !rn2(3)) {
+                switch(obj->blessed && u.ualign.record >= 14 ? u.ualign.type : rand_align) {
+                case A_LAWFUL:
+                    godvoice(A_CHAOTIC, "I am here.");
+                    mtmp = makemon(&mons[PM_LAWFUL_DEIFIC_AVATAR], obj->ox, obj->oy, NO_MM_FLAGS);
+                    break;
+                case A_NEUTRAL:
+                    godvoice(A_CHAOTIC, "I have arrived.");
+                    mtmp = makemon(&mons[PM_NEUTRAL_DEIFIC_AVATAR], obj->ox, obj->oy, NO_MM_FLAGS);
+                    break;
+                case A_CHAOTIC:
+                    godvoice(A_CHAOTIC, "Who dares to call me?");
+                    mtmp = makemon(&mons[PM_CHAOTIC_DEIFIC_AVATAR], obj->ox, obj->oy, NO_MM_FLAGS);
+                    break;
+                }
+                if (mtmp && !obj->blessed) {
+                    mishap = TRUE;
+                    setmangry(mtmp, FALSE);
+                } else if (mtmp) {
+                    mtmp->mfading = 25;
+                }
+            } else {
+                mishap = TRUE;
+                mtmp = makemon(&mons[PM_PAZUZU], obj->ox, obj->oy, NO_MM_FLAGS);
+                if (!mtmp)
+                    summon_minion(rand_align, FALSE);
+            }
+        } else {
+            pline("The candle melts!");
+            mishap = TRUE;
+            summon_minion(rand_align, FALSE); 
+        }
+        You("smell sweet incense.");
+        if (mishap)
+            pline("The ritual goes awry!");
+        stop_occupation();
+        break;
+    case AUTOMATON_CANDLE:
+        for (otmp = g.level.objects[obj->ox][obj->oy]; otmp; otmp = otmp->nexthere) {
+            if (!rn2(Luck + 45)) {
+                g.poly_zapped = otmp->material;
+                break;
+            }
+        }
+        if (yours)
+            mtmp = create_polymon(g.level.objects[u.ux][u.uy], g.poly_zapped);
+        else
+            mtmp = create_polymon(g.level.objects[obj->ox][obj->oy], g.poly_zapped);
+        g.poly_zapped = -1;
+        if (!mtmp) {
+            You("smell crude oil.");
+            break;
+        } else if (!obj->cursed && rnl(5 + i) > 5) {
+            tamedog(mtmp, (struct obj *) 0);
+        }
+        g.poly_zapped = -1;
+        stop_occupation();
+        break;
+    case SPIRIT_CANDLE:
+        g.level.flags.graveyard = 1;
+        mtmp = makemon(&mons[rn2(3) ? PM_SPECTRE : PM_SHADE], obj->ox, obj->oy, NO_MM_FLAGS);
+        if (!mtmp) {
+            You("smell a whiff of ectoplasm.");
+            break;
+        }
+        christen_monst(mtmp, tt_name());
+        if (vis)
+            pline("%s, a spirit of the past, appears before you...", noit_Monnam(mtmp));
+        if (!obj->cursed && rn2(5) && yours) {
+            verbalize("You have called me forth from beyond the grave... Is it guidance you seek?");
+            if(yn("Ask the spirit for guidance?") == 'y') {
+                verbalize("Listen to me, %s, and heed my advice.", g.plname);
+                if (!u.uevent.uheard_tune && !rn2(3)) {
+                    verbalize("When faced with an unopenable door, you would do well to consider, \"%s.\"", g.tune);
+                    u.uevent.uheard_tune = 2;
+                } else {
+                    verbalize("The following phrase brings ruin when inscribed upon a surface:");
+                    verbalize("\"%s\"", g.explengr);
+                }
+                verbalize("Farewell, %s...", g.plname);
+                mongone(mtmp);
+            } else {
+                verbalize("Very well... I shall grant you my aid instead...");
+                tamedog(mtmp, (struct obj *) 0);
+            }
+        } else {
+            verbalize("Who dares disturb my eternal rest...?");
+            setmangry(mtmp, FALSE);
+        }
+        stop_occupation();
+        break;
+    default:
+        break;
+    }
+}
 /*
  * Start a burn timeout on the given object. If not "already lit" then
  * create a light source for the vision system.  There had better not
@@ -1635,6 +1776,9 @@ boolean already_lit;
         break;
 
     case CANDELABRUM_OF_INVOCATION:
+    case CALLING_CANDLE:
+    case AUTOMATON_CANDLE:
+    case SPIRIT_CANDLE:
     case TALLOW_CANDLE:
     case WAX_CANDLE:
         /* magic times are 75, 15, and 0 */

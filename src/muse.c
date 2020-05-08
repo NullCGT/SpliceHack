@@ -2145,6 +2145,7 @@ struct monst *mtmp;
 #define MUSE_CORPSE 14
 #define MUSE_WISH 15
 #define MUSE_BAG 16
+#define MUSE_CANDLE 17
 
 boolean
 find_misc(mtmp)
@@ -2282,6 +2283,13 @@ struct monst *mtmp;
             && !mtmp->mcan && m_canseeu(mtmp) && !mtmp->mpeaceful) {
             g.m.misc = NULL;
             g.m.has_misc = MUSE_WISH;
+        }
+        nomore(MUSE_CANDLE);
+        if (Is_candle(obj) && !obj->lamplit && 
+            ((!levl[mtmp->mx][mtmp->my].lit && !infravision(mtmp->data))
+            || !objects[obj->otyp].oc_merge)) {
+            g.m.misc = NULL;
+            g.m.has_misc = MUSE_CANDLE;
         }
         nomore(MUSE_POT_BOOZE);
         if (obj->otyp == POT_BOOZE &&
@@ -2617,6 +2625,11 @@ struct monst *mtmp;
         mmake_wish(mtmp);
         mtmp->mcan = 1;
         return 2;
+    case MUSE_CANDLE:
+        if (vismon)
+            pline("%s lights %s.", Monnam(mtmp), an(xname(otmp)));
+        begin_burn(otmp, FALSE);
+        break;
     case MUSE_POT_BOOZE:
         mquaffmsg(mtmp, otmp);
         mtmp->mconf = 1;
@@ -2962,6 +2975,10 @@ struct obj *obj;
             return (obj->spe > 0 && can_blow(mon));
         if (typ == FIGURINE || typ == DRUM_OF_EARTHQUAKE
               || typ == EXPENSIVE_CAMERA)
+            return TRUE;
+        if (typ >= SPIRIT_CANDLE && typ <= CALLING_CANDLE)
+            return TRUE;
+        if (Is_candle(obj) && !infravision(mon->data))
             return TRUE;
         if (Is_container(obj) && !(Is_mbag(obj) && obj->cursed))
             return TRUE;
@@ -3555,6 +3572,12 @@ struct monst *mon;
                 wearable = TRUE;
                 break;
             }
+        case 5:
+            otmp = mksobj(rn2(5) ? CALLING_CANDLE : SPIRIT_CANDLE, FALSE, FALSE);
+            bless(otmp);
+            if (!mpickobj(mon, otmp))
+                begin_burn(otmp, FALSE);
+            break;
         /* FALLTHRU */
         default:
             /* Dragons don't have a use for wands of death */
@@ -3564,7 +3587,7 @@ struct monst *mon;
     if (otmp)
         str = an(xname(otmp));
     if (canseemon(mon)) {
-        pline("%s makes a wish for %s!", Monnam(mon), str);
+        pline("%s wishes for %s!", Monnam(mon), str);
     }
     m_dowear(mon, FALSE);
 }

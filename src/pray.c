@@ -14,7 +14,6 @@ static void FDECL(angrygods, (ALIGNTYP_P));
 static void FDECL(at_your_feet, (const char *));
 static void NDECL(gcrownu);
 static void FDECL(pleased, (ALIGNTYP_P));
-static void FDECL(godvoice, (ALIGNTYP_P, const char *));
 static void FDECL(god_zaps_you, (ALIGNTYP_P));
 static void FDECL(fry_by_god, (ALIGNTYP_P, BOOLEAN_P));
 static void FDECL(gods_angry, (ALIGNTYP_P));
@@ -591,8 +590,10 @@ int trouble;
 static void
 god_zaps_you(resp_god)
 aligntyp resp_god;
-{
-    if (u.uswallow) {
+{   
+    if (god_dead(resp_god)) {
+        pline("The heavens rumble weakly.");
+    } else if (u.uswallow) {
         pline(
           "Suddenly a bolt of lightning comes down at you from the heavens!");
         pline("It strikes %s!", mon_nam(u.ustuck));
@@ -1309,6 +1310,22 @@ boolean bless_water;
     return (boolean) (changed > 0L);
 }
 
+boolean
+god_dead(galign)
+int galign;
+{
+    switch(galign) {
+    case A_LAWFUL:
+        return g.mvitals[PM_LAWFUL_DEIFIC_AVATAR].mvflags & G_EXTINCT;
+    case A_NEUTRAL:
+        return g.mvitals[PM_NEUTRAL_DEIFIC_AVATAR].mvflags & G_EXTINCT;
+    case A_CHAOTIC:
+        return g.mvitals[PM_CHAOTIC_DEIFIC_AVATAR].mvflags & G_EXTINCT;
+    default:
+        return FALSE;
+    }
+}
+
 int
 check_malign(mtmp)
 register struct monst *mtmp;
@@ -1398,7 +1415,7 @@ register struct monst *mtmp;
     return 0;
 }
 
-static void
+void
 godvoice(g_align, words)
 aligntyp g_align;
 const char *words;
@@ -1486,6 +1503,11 @@ dosacrifice()
     otmp = floorfood("sacrifice", 1);
     if (!otmp)
         return 0;
+
+    if (god_dead(altaralign)) {
+        pline("Your offering is greeted by eerie silence.");
+        return 1;
+    }   
     /*
      * Was based on nutritional value and aging behavior (< 50 moves).
      * Sacrificing a food ration got you max luck instantly, making the
@@ -1680,7 +1702,20 @@ dosacrifice()
             else
                 useupf(otmp, 1L);
             You("offer the Amulet of Yendor to %s...", a_gname());
-            if (altaralign == A_NONE) {
+            if (altaralign == A_NONE && god_dead(A_LAWFUL) && god_dead(A_CHAOTIC)
+                && god_dead(A_NEUTRAL)) {
+                if (u.ualign.record > -99)
+                    u.ualign.record = -99;
+                pline(
+              "An invisible choir chants, and you are bathed in darkness...");
+                pline("%s laughs and invites you to serve at his side.", Moloch);
+                display_nhwindow(WIN_MESSAGE, FALSE);
+                verbalize(
+          "In return for thy service, I grant thee the gift of Immortality!");
+                You("ascend to the status of Demigod%s...",
+                    flags.gender == GEND_F ? "dess" : "");
+                done(ASCENDED);
+            } else if (altaralign == A_NONE) {
                 /* Moloch's high altar */
                 if (u.ualign.record > -99)
                     u.ualign.record = -99;
@@ -1703,9 +1738,13 @@ dosacrifice()
                 /* And the opposing team picks you up and
                    carries you off on their shoulders */
                 adjalign(-99);
-                pline("%s accepts your gift, and gains dominion over %s...",
-                      a_gname(), u_gname());
-                pline("%s is enraged...", u_gname());
+                if (god_dead(u.ualign.type)) {
+                    pline("%s accepts your gift, and congratulates you on your skills.", a_gname());
+                } else {
+                    pline("%s accepts your gift, and gains dominion over %s...",
+                        a_gname(), u_gname());
+                    pline("%s is enraged...", u_gname());
+                }
                 pline("Fortunately, %s permits you to live...", a_gname());
                 pline(cloud_of_smoke, hcolor(NH_ORANGE));
                 done(ESCAPED);
@@ -2072,6 +2111,10 @@ prayer_done() /* M. Stephenson (1.0.3b) */
     aligntyp alignment = g.p_aligntyp;
 
     u.uinvulnerable = FALSE;
+    if (god_dead(alignment)) {
+        pline("No one answers.");
+        return 0;
+    }
     if (g.p_type == -2) {
         /* praying at an unaligned altar, not necessarily in Gehennom */
         You("%s diabolical laughter all around you...",
@@ -2459,7 +2502,11 @@ register int x, y;
 {
     aligntyp altaralign = a_align(x, y);
 
-    if (u.ualign.type == altaralign && u.ualign.record > -rn2(4)) {
+
+    if (god_dead(altaralign)) {
+        You_feel("a deep sense of wrongness.");
+        u.ualign.record--;
+    } else if (u.ualign.type == altaralign && u.ualign.record > -rn2(4)) {
         godvoice(altaralign, "How darest thou desecrate my altar!");
         (void) adjattrib(A_WIS, -1, FALSE);
         u.ualign.record--;

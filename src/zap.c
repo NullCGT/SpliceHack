@@ -15,7 +15,6 @@
 #define MAGIC_COOKIE 1000
 
 static void FDECL(polyuse, (struct obj *, int, int));
-static void FDECL(create_polymon, (struct obj *, int));
 static int FDECL(stone_to_flesh_obj, (struct obj *));
 static boolean FDECL(zap_updown, (struct obj *));
 static void FDECL(zhitu, (int, int, const char *, XCHAR_P, XCHAR_P));
@@ -1418,7 +1417,7 @@ int mat, minwt;
  * Polymorph some of the stuff in this pile into a monster, preferably
  * a golem of the kind okind.
  */
-static void
+struct monst*
 create_polymon(obj, okind)
 struct obj *obj;
 int okind;
@@ -1439,7 +1438,7 @@ int okind;
 
     /* no golems if you zap only one object -- not enough stuff */
     if (!obj || (!obj->nexthere && obj->quan == 1L))
-        return;
+        return (struct monst *) 0;
 
     /* some of these choices are arbitrary */
     switch (okind) {
@@ -1521,6 +1520,7 @@ int okind;
         pline("Some %sobjects meld, and %s arises from the pile!", material,
               a_monnam(mtmp));
     }
+    return mtmp;
 }
 
 /* Assumes obj is on the floor. */

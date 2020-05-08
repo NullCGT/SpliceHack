@@ -905,6 +905,14 @@ boolean artif;
             break;
         case TOOL_CLASS:
             switch (otmp->otyp) {
+            case CALLING_CANDLE:
+            case AUTOMATON_CANDLE:
+            case SPIRIT_CANDLE:
+                otmp->spe = 1;
+                otmp->age = 20L * (long) objects[otmp->otyp].oc_cost;;
+                otmp->lamplit = 0;
+                blessorcurse(otmp, 5);
+                break;
             case TALLOW_CANDLE:
             case WAX_CANDLE:
                 otmp->spe = 1;

@@ -262,7 +262,7 @@ struct monst* mtmp;
     mtmp->mstrategy &= ~STRAT_APPEARMSG;
     if (is_dprince(mdat) || is_dlord(mdat) || is_rider(mdat)) {
         /* Assumes Juiblex is first defined demon lord */
-        com_pager(noit_mon_nam(mtmp));
+        com_pager(m_monnam(mtmp));
         return TRUE;
     }
     else if (mondx == PM_WIZARD_OF_YENDOR) {

@@ -4184,6 +4184,9 @@ doapply()
         break;
     case WAX_CANDLE:
     case TALLOW_CANDLE:
+    case CALLING_CANDLE:
+    case AUTOMATON_CANDLE:
+    case SPIRIT_CANDLE:
         use_candle(&obj);
         break;
     case OIL_LAMP:

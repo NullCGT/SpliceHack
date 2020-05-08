@@ -3300,7 +3300,6 @@
                The default name of the configuration file varies on differ-
           ent operating systems.
 
-<<<<<<< HEAD
                On UNIX, Linux, and Mac OS X it is ".splicehackrc" in  the  us-
           er's  home directory.  The file may not exist, but it is a normal
           ASCII text file and can be created with any text editor.
@@ -3313,8 +3312,6 @@
           in "\%USERPROFILE%\NetHack\3.6".  If you had not created the con-
           figuration file, NetHack will create the configuration  file  for
 
-=======
->>>>>>> d564fa8ac761616840ebc11914947eaae146e456
 
           NetHack 3.7                                         March 8, 2020
 

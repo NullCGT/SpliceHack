@@ -302,6 +302,7 @@ Notable Bug Fixes
 - Fixed a bug where there was a 1/4 chance that explosive runes were initialized
   to an empty string.
 - Fixed some bad code relating to nonbinary player rank names.
+- Fixed the game reading gender:nonbinary in the config file as !nbinary and complaining.
 
 Known Bugs:
 - Genociding or killing a monster steed before the rider will result in some odd, 

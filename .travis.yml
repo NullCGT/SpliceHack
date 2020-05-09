@@ -44,6 +44,24 @@ matrix:
     - make fetch-lua
     - test -d "lib/lua-$LUA_VERSION/src" || exit 0
     - make install
+#  - name: linux-xenial-gcc-qt5
+#    os: linux
+#    env: HINTS=linux-qt5 LUA_VERSION=5.3.5
+#    compiler: gcc
+#    addons:
+#      apt:
+#        packages:
+#        - libx11-dev
+#        - libxaw7-dev
+#        - xfonts-utils
+#        - qtbase5-dev
+#        - qtmultimedia5-dev
+#        - qtbase5-dev-tools
+#    script:
+#    - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+#    - make fetch-lua
+#    - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+#    - make QT_SELECT=5 MOC=moc install
   - name: linux-bionic-gcc-x11
     os: linux
     env: HINTS=linux-x11 LUA_VERSION=5.3.5
@@ -94,6 +112,19 @@ matrix:
     language: shell
     script:
     - "./win/win32/vs2017/travisci.sh"
+  #- name: windows-mingw
+  #  os: windows
+  #  script:
+  #  - export ADD_CURSES=Y
+  #  - export PDCURSES_TOP=../lib/pdcurses
+  #  - export LUA_VERSION=5.3.5
+  #  - export SKIP_NETHACKW=N
+  #  - sh sys/winnt/travis-gcc.sh
+  #  - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+  #  - test -d "lib/pdcurses" || exit 0
+  #  - cd src
+  #  - cp ../sys/winnt/Makefile.gcc ./Makefile
+  #  - mingw32-make install
   - name: msdos crosscompile on linux
     os: linux
     env: HINTS=linux LUA_VERSION=5.3.5
@@ -113,8 +144,13 @@ matrix:
 deploy:
   provider: releases
   api_key:
-    secure: lscTQRvnlyuNRbEmj4sMF1uO0vltFF1J5rLiYmqlbuLq3YRj8+1wLoM0cWqU5x/ZsWLDBPwo1VerGlwIdZw/+85z3tx/Cw+Cv+fSFqKQJFFVMA0iUJu3elPvshSK0mObgH+vTwGi8LSmaefutqnUq/5mKb6ALPWr9ai7Q5RH8TVKBfXp+gynfe6NS/ldVkfX+IrqlcrVzDv2APqfVGM5SLXBeJQP8y9q8emml36l/dJZqRXMqEN7pPTZlrLc8yNY70yLT3pJLEtANcu7qCNQauUNNzAjb5Gqh1FNmBer2/fLrTY7gMmWE2PvEcd0fWaypByFBByHR0l+L6NGy/HOiAQCs1GHkNY/9H7R/D+a7YTqLO9dlBGmUbWhkCKkOv27mzju6CUTHtHhfDfHXoNtnTCOawFzsNC9JXba8Dwl4EOpWCGOyt3Zm5esg3OQOMiQoFY0nFpY/Uw1Pz3DaYflfp5nriO8jXSKnmHRxKhvVtW8m2Ano5A/FaXfDUdh8HMCi0TGD398G+s9bIyAHlUMfWF3Bv5QJbpW82/8y9Og40tIPfuCoUanGmNDPLfTArgTQnd9NXu9KeWDQgwMaq5rfVBKpyVVeojzRfllCqY7hUboGohRb/XhwUvK4evyd50iCLG9Lt+OxglRqagQh50HXV+y4RTCW00OS7zbj847CSo=
-  file: spl-binaries.zip
+    secure: WIVExw/HKC+C1S3W8h3qJcx7RD5yfifHKB0mY5ST+ZZCifGHrCeqGfvAx31S+ofwSbZYCKH0zbC5mVnVymPPHQiO+9OPQTLB29cam+CTVyDZBXQSghuOegzciqVf+euwgUTHJbbOow5sSEG8/xiD2Nsbmov7sUSw28lQILZECrmYKR2CcIuJK323a1C65oWwhGPMXvFXAIxtrcEZ/AUqG2pf57bG0NiP7dpfdPXnTlOXNRR6JiRusSs9pqF7KRWgflPfy4g9b+1gf7xBe8hEsYp7wfyEnnaPgYUrYzVmwBZNJKXl+P8fSTd9K6XOMyyHVC7EXnTfF7k+728opvl8222mvkzLBzO2t0l0Hng7Su34pxvz/jHkZu8f0PVfRWbNp12SLc8owupXhwOsHTX9cvHAcnmp/L+u0Ac19Li4vrJNAgIax1e8ZGLqtqpoZrLEWpz8IavaKju6/tA5ROKRQm0tdqI4XTYPIiztG/+vZisX6st4o2HGT4ShuW5ekGqZX8BvQTUTtvQeRhmKnaVltz+Tvbyc3319iTF14+PioOLARejfgVl7lC0A6ekt2rpYQ+uZb4wEOrDzImUGa7C7TMBK+Azdpfb78WtcuwtwwGssF0NtwpPw/Rc0aIvz+rfK3B/YkMU9YXLhP2qBFemAP74wXWZmB91m2tgJ3VYa6hE=
+  file_glob: true
+  file:
+    - "$TRAVIS_TAG.x86.zip"
+  skip_cleanup: true
   on:
-    repo: NullCGT/SpliceHack
-    branch: development
+    tags: true
+  prerelease: true
+  name: "Test release build of SpliceHack 0.7.1"
+  body: "This is an auto generated test release build of SpliceHack 0.7.1"

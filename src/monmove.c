@@ -1770,6 +1770,8 @@ register int after;
                 ptr == &mons[PM_YELLOW_MOLD_WARRIOR] ||
                 ptr == &mons[PM_RED_MOLD_WARRIOR] ||
                 ptr == &mons[PM_ASPECT_OF_ZUGGOTOMOY] ||
+                ptr == &mons[PM_MYCONID_WARRIOR] ||
+                ptr == &mons[PM_MYCONID_ELDER] ||
                 ptr == &mons[PM_ZUGGOTOMOY])
                 minfestcorpse(mtmp);
 

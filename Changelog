@@ -220,6 +220,14 @@ New Traps
   - Can appear on chests.
   - Does not generate in Gehennom.
 
+Dungeon Changes
+- Shortened the dungeon slightly. The main dungeon is now five levels longer than
+  in vanilla, rather than ten.
+- Completely redesigned Mephisto's lair, since the old design was a total mess and
+  not fun at all to explore.
+- Revamped Malcanthet's layer slightly so that it is more challenging and more
+  fun to navigate.
+
 Misc. Changes
 - Changed the name of substance warpers to transmuters.
 - Changed the name of nova foxes to vulpenfernoes.

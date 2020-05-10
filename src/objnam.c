@@ -2943,7 +2943,7 @@ static struct alt_spellings {
     { "helm of esp", HELM_OF_TELEPATHY },
     { "gauntlets of ogre power", GAUNTLETS_OF_POWER },
     { "gauntlets of giant strength", GAUNTLETS_OF_POWER },
-    { "elven chain mail", ELVEN_MITHRIL_COAT },
+    { "elven chain mail", ELVEN_RING_MAIL },
     { "potion of sleep", POT_SLEEPING },
     { "war juice", POT_ORCISH_WAR_JUICE },
     { "stone", ROCK },

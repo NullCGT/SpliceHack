@@ -2551,6 +2551,13 @@ struct permonst _mons2[] = {
         M1_ANIMAL | M1_HUMANOID | M1_CARNIVORE,
         M2_HOSTILE | M2_STRONG | M2_NASTY, M3_INFRAVISIBLE | M3_INFRAVISION, 0,
         17, CLR_BROWN),
+    MON("goristro", S_GIANT, LVL(20, 15, 6, 60, -8), (G_GENO | G_HELL | 2),
+        A(ATTK(AT_CLAW, AD_PHYS, 4, 8), ATTK(AT_CLAW, AD_PHYS, 4, 8),
+          ATTK(AT_BUTT, AD_PHYS, 4, 8), NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(1500, 700, MS_MOO, MZ_LARGE), 0, 0,
+        M1_ANIMAL | M1_HUMANOID | M1_CARNIVORE,
+        M2_HOSTILE | M2_STRONG | M2_NASTY | M2_STALK, 
+        M3_INFRAVISIBLE | M3_INFRAVISION, MH_DEMON, 22, CLR_ORANGE),
     /*
      * Invisible
      * S_invisible=='I' is a visual marker for all invisible monsters

@@ -4898,6 +4898,8 @@ struct permonst *mdat;
         switch (mndx) {
         case PM_ROTHE:
         case PM_MINOTAUR:
+        case PM_COW:
+        case PM_GORISTRO:
             You("notice a bovine smell.");
             msg_given = TRUE;
             break;

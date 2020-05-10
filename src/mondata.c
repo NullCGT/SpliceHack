@@ -513,6 +513,7 @@ struct permonst *ptr;
     switch (monsndx(ptr)) {
     case PM_HORNED_DEVIL: /* ? "more than one" */
     case PM_MINOTAUR:
+    case PM_GORISTRO:
     case PM_ASMODEUS:
     case PM_MEPHISTO:
     case PM_BALROG:

@@ -255,7 +255,7 @@ char *genbuf;
                 Strcpy(genbuf, "bear");
             break;
         case PM_DRAUGLIR:
-            typ = rn2(2) ? PM_THOUGHT_HOUND : PM_MEMORY_HOUND;
+            typ = rn2(2) ? PM_WOLF : PM_MEMORY_HOUND;
             break;
         case PM_WEREWOLF:
         case PM_HUMAN_WEREWOLF:

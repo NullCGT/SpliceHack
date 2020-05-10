@@ -1210,7 +1210,7 @@ register struct obj *otmp;
 
 /* monster eats a pile of objects */
 int
-meatobj(mtmp) /* for gelatinous cubes */
+meatobj(mtmp) /* for gelatinous cubes and locusts */
 struct monst *mtmp;
 {
     struct obj *otmp, *otmp2;
@@ -1229,6 +1229,10 @@ struct monst *mtmp;
     for (otmp = g.level.objects[mtmp->mx][mtmp->my]; otmp; otmp = otmp2) {
         otmp2 = otmp->nexthere;
 
+        /* Locusts only eat organic matter */
+        if (mtmp->data == &mons[PM_LOCUST] && !is_organic(otmp)) {
+            continue;
+        }
         /* touch sensitive items */
         if (otmp->otyp == CORPSE && is_rider(&mons[otmp->corpsenm])) {
             int ox = otmp->ox, oy = otmp->oy;
@@ -1295,7 +1299,7 @@ struct monst *mtmp;
                     mon_givit(mtmp, &mons[otmp->corpsenm], otmp->oeroded);
             } else {
                 if (flags.verbose)
-                    You_hear("a slurping sound.");
+                    You_hear(mtmp->data == &mons[PM_LOCUST] ? "an ugly buzzing sound." :"a slurping sound.");
             }
             /* Heal up to the object's weight in hp */
             if (mtmp->mhp < mtmp->mhpmax) {
@@ -1331,6 +1335,9 @@ struct monst *mtmp;
             if (poly) {
                 if (newcham(mtmp, (struct permonst *) 0, FALSE, vis))
                     ptr = mtmp->data;
+            } else if (mtmp->data == &mons[PM_LOCUST]) {
+                if (canseemon(mtmp)) pline("%s starts swarming!", Monnam(mtmp));
+                if (!rn2(3)) clone_mon(mtmp, 0, 0);
             } else if (grow) {
                 ptr = grow_up(mtmp, (struct monst *) 0);
             } else if (heal) {
@@ -1351,6 +1358,9 @@ struct monst *mtmp;
     if (ecount > 0) {
         if (cansee(mtmp->mx, mtmp->my) && flags.verbose && buf[0])
             pline1(buf);
+        else if (mtmp->data == &mons[PM_LOCUST])
+           You_hear("%s buzzing sound%s.",
+                     (ecount == 1) ? "a" : "several", plur(ecount)); 
         else if (flags.verbose)
             You_hear("%s slurping sound%s.",
                      (ecount == 1) ? "a" : "several", plur(ecount));

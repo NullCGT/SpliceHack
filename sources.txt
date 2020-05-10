@@ -113,7 +113,11 @@
 #EvilHack
 - Updated Nazgul
 - Fixes to monster steeds
-- Monster amulet flight.
+- Monster amulet flight
+- Updated SporkHack monsters
+
+#SporkHack
+- Locusts
 
 #ChrisANG
 - Pirate Patch

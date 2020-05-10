@@ -96,10 +96,15 @@ New Monsters
   - Ported from Slash'em for increased early game challenge.
   - Unlike Slash'em these bugs can only move horizontally. This change was made to foster
     more strategic play early, and to offset the danger of these bugs.
+- EvilHack / SporkHack Monster: Locust
+  - Taken from EvilHack / SporkHack.
+  - Tile updated to distinguish it from other instects.
+  - Eats organic items, and multiplies whenever it does.
+- New Monster: Lawyer
+  - Hits the player with various law effects.
 
 New Monsters (Less Notable)
 - New Monster: Ulsfark
-- New Monster: Lawyer
 - New Monster: Ronin
 - New Monster: Ancient Thornswell
 - New Monster: Necromancer
@@ -244,6 +249,7 @@ Misc. Changes
 - Changed the name of red caps to redcaps.
 - Changed the name of earthsharks to landsharks.
 - Changed the name of bone beasts to crawling cemeteries.
+- Changed the name of thought hounds to thought eaters.
 - Some techniques have had their names changed to be more interesting.
 - Techniques that made the player imobile now have death messages if killed while
   immobile from them.
@@ -284,6 +290,8 @@ Misc. Changes
   challenge.
 - Baobhan-sith only generate in hell, to prevent them from crowding morgues in
   the regular dungeon.
+- Thought hounds spawn in small groups.
+- Revised difficulty of memory hounds.
 - Monsters will occasionally wish for magical candles.
 - Monsters without infravision will use candles to light up dark places.
 - Fungi cannot propagate on burnt corpses.

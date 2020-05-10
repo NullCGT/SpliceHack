@@ -364,7 +364,8 @@
 
 #define avoids_player(ptr) \
     (is_unicorn(ptr) \
-     || (ptr) == &mons[PM_MAD_ALCHEMIST])
+     || (ptr) == &mons[PM_MAD_ALCHEMIST] \
+     || (ptr) == &mons[PM_MAGICAL_EYE])
 
 #define horizontal_mover(ptr) \
     ((ptr) == &mons[PM_GRID_BUG] \

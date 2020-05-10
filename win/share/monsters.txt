@@ -1186,6 +1186,25 @@ Z = (195, 195, 195)
   ................
   ................
 }
+# tile 59 (magical eye)
+{
+  ....OA..OA......
+  ..OA.DADA.OA.OA.
+  ...DA.DADADADD..
+  ..OADDOOOODDADO.
+  ...DDHOAAOHDDA..
+  ...JDHOAAOHDDJ..
+  ...DDDOOOODDDD..
+  ...DDDDDDDDDDD..
+  ...JDAOAAAOADJ..
+  ....DDAAOAADD...
+  ....PDDDDDDDPAA.
+  ......JDDDJAAAA.
+  ......AAAAAAAAA.
+  .......AAAAAAA..
+  ................
+  ................
+}
 # tile 60 (kitten)
 {
   ................

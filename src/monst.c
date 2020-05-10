@@ -517,6 +517,14 @@ NEARDATA struct permonst mons_init[] = {
         M1_FLY | M1_BREATHLESS | M1_NOLIMBS | M1_NOHEAD | M1_MINDLESS,
         M2_NOPOLY | M2_HOSTILE | M2_NEUTER, M3_INFRAVISIBLE, 0, 13, CLR_BROWN),
 #endif
+    MON("magical eye", S_EYE, LVL(9, 6, 4, 90, -10), (G_GENO | 2),
+          A(ATTK(AT_GAZE, AD_SLOW, 0, 0), ATTK(AT_GAZE, AD_SLEE, 2, 6),
+            ATTK(AT_GAZE, AD_STUN, 0, 0), ATTK(AT_GAZE, AD_FIRE, 4, 6),
+            ATTK(AT_GAZE, AD_COLD, 2, 4), ATTK(AT_BITE, AD_PHYS, 2, 4)),
+          SIZ(10, 10, MS_SILENT, MZ_SMALL), MR_COLD | MR_FIRE | MR_ELEC, 0,
+          M1_FLY | M1_BREATHLESS | M1_NOLIMBS | M1_NOHEAD,
+          M2_NOPOLY | M2_HOSTILE | M2_NEUTER | M2_NASTY,
+          M3_INFRAVISIBLE | M3_INFRAVISION, 0, 14, HI_LORD),
     /*
      * felines
      */

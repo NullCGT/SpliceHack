@@ -2754,8 +2754,8 @@ struct attack *mattk;
         "stunned",               /* [1] */
         "puzzled",   "dazzled",  /* [2,3] */
         "irritated", "inflamed", /* [4,5] */
-        "tired",                 /* [6] */
-        "dulled",                /* [7] */
+        "chilly", "tired",       /* [6,7] */
+        "dulled",                /* [8] */
     };
     int react = -1;
     boolean cancelled = (mtmp->mcan != 0), already = FALSE;
@@ -2966,6 +2966,27 @@ struct attack *mattk;
             }
         }
         break;
+    case AD_COLD:
+        if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee
+            && !mtmp->mspec_used && rn2(5)) {
+            if (cancelled) {
+                react = 8; /* "chilly" */
+            } else {
+                int dmg = d(2, 6), lev = (int) mtmp->m_lev;
+
+                pline("%s attacks you with a chilling gaze!", Monnam(mtmp));
+                stop_occupation();
+                if (Cold_resistance) {
+                    pline_The("chilling gaze doesn't feel cold!");
+                    dmg = 0;
+                }
+                if (lev > rn2(20))
+                    destroy_item(POTION_CLASS, AD_COLD);
+                if (dmg)
+                    mdamageu(mtmp, dmg);
+            }
+        }
+        break;
     case AD_LUCK:
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee
             && !mtmp->mspec_used && !rn2(13) && !cancelled) {
@@ -2985,7 +3006,6 @@ struct attack *mattk;
                 tele();
         }
         break;
-#ifdef PM_BEHOLDER /* work in progress */
     case AD_SLEE:
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee
             && g.multi >= 0 && !rn2(5) && !Sleep_resistance) {
@@ -3007,11 +3027,14 @@ struct attack *mattk;
                 react = 7; /* "dulled" */
                 already = (mtmp->mspeed == MSLOW);
             } else {
+                pline("%s gaze makes you feel like you are moving in slow motion...",
+                     s_suffix(Monnam(mtmp)));
                 u_slow_down();
                 stop_occupation();
             }
         }
         break;
+#ifdef PM_BEHOLDER /* work in progress */
     case AD_DISN:
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee
             && g.multi >= 0 && !rn2(10) && !Disint_resistance) {

@@ -7104,7 +7104,7 @@ char **opp;
                                         != empty_optstr) {
         boolean val_negated = FALSE;
 
-        while ((*op == '!') || !strncmpi(op, "no", 2)) {
+        while ((*op == '!') || (!strncmpi(op, "no", 2) && strncmpi(op, "nonbin", 6))) {
             if (*op == '!')
                 op++;
             else

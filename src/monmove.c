@@ -752,9 +752,12 @@ register struct monst *mtmp;
         mtmp->mlstmv != g.monstermoves)
     {
         register struct monst *mtmp2 = mfind_target(mtmp);
+        /* the > value is important here - if it's not just right,
+           the attacking monster can get stuck in a loop switching
+           back and forth between its melee weapon and launcher */
         if (mtmp2 &&
             (mtmp2 != &g.youmonst ||
-    	 dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) > 2) &&
+    	 dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) > 4) &&
     	 (mtmp2 != mtmp))
         {
           	res = (mtmp2 == &g.youmonst) ? mattacku(mtmp)
@@ -808,8 +811,7 @@ register struct monst *mtmp;
             }
         }
 
-        /* TODO: Update with a more elegant solution allowing for steed ranged attacks */
-        if (!tmp && !mtmp->rider_id)
+        if (!tmp)
             tmp = m_move(mtmp, 0);
         else
             tmp = 0;
@@ -1028,7 +1030,7 @@ register int after;
     }
     ptr = mtmp->data; /* mintrap() can change mtmp->data -dlc */
 
-    if (ptr == &mons[PM_ANCIENT_BRAIN])
+    if (ptr == &mons[PM_ANCIENT_BRAIN] || mtmp->rider_id)
         return 0;
 
     if (mtmp->meating) {
@@ -1040,7 +1042,7 @@ register int after;
     if (hides_under(ptr) && OBJ_AT(mtmp->mx, mtmp->my) && rn2(10))
         return 0; /* do not leave hiding place */
 
-    /* Offering takes presedence over everything else.*/
+    /* Offering takes precedence over everything else.*/
     if (IS_ALTAR(levl[mtmp->mx][mtmp->my].typ) && canseemon(mtmp)) {
         offer = moffer(mtmp);
         if (offer != 0) {
@@ -1770,6 +1772,8 @@ register int after;
                 ptr == &mons[PM_YELLOW_MOLD_WARRIOR] ||
                 ptr == &mons[PM_RED_MOLD_WARRIOR] ||
                 ptr == &mons[PM_ASPECT_OF_ZUGGOTOMOY] ||
+                ptr == &mons[PM_MYCONID_WARRIOR] ||
+                ptr == &mons[PM_MYCONID_ELDER] ||
                 ptr == &mons[PM_ZUGGOTOMOY])
                 minfestcorpse(mtmp);
 

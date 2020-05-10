@@ -2316,8 +2316,8 @@ long timeout UNUSED;
     /* Weight towards non-motile fungi. */
     if (newpm->mmove)
         newpm = mkclass(S_FUNGUS, 0);
-    /* Mold warriors are exceedingly rare. */
-    while (newpm->mlevel >= 5 && count < 7) {
+    /* Powerful are exceedingly rare at low levels. */
+    while (newpm->mlevel >= 5 && count < 7 && u.uz.dnum < 15 && !u.uhave.amulet) {
         newpm = mkclass(S_FUNGUS, 0);
         count++;
     }

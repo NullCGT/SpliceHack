@@ -40,8 +40,8 @@ OPTIONS=symset:IBMGraphics_2,roguesymset:RogueEpyx
 # suit your personal preference.  If several people are to use the same
 # configuration, options like these should not be set.
 #
-#OPTIONS=name:Janet,role:Valkyrie,race:Human,gender:female,align:lawful
-#OPTIONS=dogname:Fido,catname:Morris,fruit:guava
+#OPTIONS=name:Janet,role:Valkyrie,race:Human,gender:nonbinary,align:lawful,orientation:gay
+#OPTIONS=dogname:Fido,catname:Morris,fruit:guava,dragonname:Draciel,birdname:topper
 #OPTIONS=horsename:Silver
 
 # Disable autopickup

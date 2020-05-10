@@ -3,7 +3,7 @@ dungeon = {
    {
       name = "The Dungeons of Doom",
       bonetag = "D",
-      base = 35,
+      base = 30,
       range = 5,
       alignment = "unaligned",
       themerooms = "themerms.lua",
@@ -114,7 +114,7 @@ dungeon = {
          {
             name = "bigrm",
             bonetag = "B",
-            base = 30,
+            base = 25,
             range = 3,
             chance = 40,
             nlevels = 10

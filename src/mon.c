@@ -1017,6 +1017,9 @@ movemon()
                 continue;
         }
 
+        if ((mtmp->data == &mons[PM_WIZARD_OF_YENDOR] && !rn2(5)) || !rn2(75))
+            if (mount_up(mtmp)) continue;
+
         /* continue if the monster died fighting */
         if (Conflict && !mtmp->iswiz && mtmp->mcansee) {
             /* Note:
@@ -1177,7 +1180,7 @@ register struct obj *otmp;
     /* Infest topmost corpse if it is there */
     for (otmp = g.level.objects[mtmp->mx][mtmp->my];
                   otmp; otmp = otmp->nexthere)
-        if (otmp->otyp == CORPSE) {
+        if (otmp->otyp == CORPSE && !otmp->oeroded) {
             /* touch sensitive items */
             if (otmp->otyp == CORPSE && is_rider(&mons[otmp->corpsenm])) {
                 /* Rider corpse isn't just inedible; can't engulf it either */
@@ -1194,7 +1197,9 @@ register struct obj *otmp;
                 You("hear an unsettling writhing noise.");
             mon_givit(mtmp, &mons[otmp->corpsenm], 0);
             if (mtmp->data == &mons[PM_ZUGGOTOMOY])
-                makemon(&mons[PM_ASPECT_OF_ZUGGOTOMOY], mtmp->mx, mtmp->my, NO_MM_FLAGS);
+                makemon(&mons[PM_ASPECT_OF_ZUGGOTOMOY], mtmp->mx, mtmp->my, NO_MINVENT);
+            else if (mtmp->data == &mons[PM_MYCONID_ELDER])
+                makemon(&mons[PM_MYCONID_ELDER], mtmp->mx, mtmp->my, NO_MINVENT);
             else
                 clone_mon(mtmp, 0, 0);
             delobj(otmp);

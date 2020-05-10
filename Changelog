@@ -80,6 +80,13 @@ New Monsters
 - New Monster: Selkie
   - Dangerous amphibious horse.
   - Can drown the player and drain life.
+- New Monster: Myconid Scout
+- New Monster: Myconid Warrior
+- New Monster: Myconid Reaver
+- New Monster: Myconid Elder
+  - A group of fungus class monsters. Their presence in later levels makes
+    loitering around and letting corpses mold over a bad idea.
+  - Myconid warriors and elders can infest nearby corpses, creating more myconid warriors.
 
 New Monsters (Less Notable)
 - New Monster: Ulsfark
@@ -213,6 +220,14 @@ New Traps
   - Can appear on chests.
   - Does not generate in Gehennom.
 
+Dungeon Changes
+- Shortened the dungeon slightly. The main dungeon is now five levels longer than
+  in vanilla, rather than ten.
+- Completely redesigned Mephisto's lair, since the old design was a total mess and
+  not fun at all to explore.
+- Revamped Malcanthet's layer slightly so that it is more challenging and more
+  fun to navigate.
+
 Misc. Changes
 - Changed the name of substance warpers to transmuters.
 - Changed the name of nova foxes to vulpenfernoes.
@@ -248,8 +263,8 @@ Misc. Changes
 - Mummies can now cause the player to start withering on hit.
 - Giant mummies can clobber the player, similar to giants.
 - High Priests resist death.
-- T Rexes do not randomly spawn and are much much more deadly. They can
-  swallow players whole and easily knock them back.
+- T Rexes are much much more deadly. They can swallow players whole and easily 
+  knock them back.
 - Memory hounds make the player forget 2% of levels, as well as objects.
 - Majorly buffed scrolls of web. A single scroll of web allows a player to place
   many webs.
@@ -262,6 +277,13 @@ Misc. Changes
   the regular dungeon.
 - Monsters will occasionally wish for magical candles.
 - Monsters without infravision will use candles to light up dark places.
+- Fungi cannot propagate on burnt corpses.
+- Powerful fungi can grow on corpses starting at level 15 and deeper. This will
+  hopefully incentivise cooking corpses / not leaving a mess.
+- Humanoids can very rarely mount nearby monsters, creating dynamic monster steeds.
+  The Wizard of Yendor is very aggressive about mounting monsters.
+- Monsters being ridden by other monsters can use breath weapons and take other
+  actions.
 
 Notable Bug Fixes
 - Water elementals can be neutral deific minions agian.
@@ -302,6 +324,7 @@ Notable Bug Fixes
 - Fixed a bug where there was a 1/4 chance that explosive runes were initialized
   to an empty string.
 - Fixed some bad code relating to nonbinary player rank names.
+- Fixed the game reading gender:nonbinary in the config file as !nbinary and complaining.
 
 Known Bugs:
 - Genociding or killing a monster steed before the rider will result in some odd, 

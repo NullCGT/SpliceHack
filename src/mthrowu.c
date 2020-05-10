@@ -942,7 +942,7 @@ struct attack *mattk;
                   s_suffix(mon_nam(mtmp)));
         return 0;
     }
-    if (m_lined_up(mtmp, mtarg)) {
+    if (m_lined_up(mtarg, mtmp)) {
         switch (mattk->adtyp) {
         case AD_BLND:
         case AD_DRST:
@@ -997,7 +997,7 @@ struct attack *mattk;
                   s_suffix(mon_nam(mtmp)));
         return 0;
     }
-    if (m_lined_up(mtmp, mtarg) && !rn2(BOLT_LIM-distmin(mtmp->mx,mtmp->my,mtarg->mx,mtarg->my))) {
+    if (m_lined_up(mtarg, mtmp) && !rn2(BOLT_LIM-distmin(mtmp->mx,mtmp->my,mtarg->mx,mtarg->my))) {
         for (i = 0; i < numattacks; i++) {
             switch (mattk->adtyp) {
             case AD_QUIL:
@@ -1034,7 +1034,7 @@ struct attack  *mattk;
     /* if new breath types are added, change AD_PSYC to max type */
     int typ = (mattk->adtyp == AD_RBRE) ? rnd(AD_PSYC) : mattk->adtyp ;
 
-    if (m_lined_up(mtmp, mtarg)) {
+    if (m_lined_up(mtarg, mtmp)) {
         if (mtmp->mcan) {
             if (!Deaf) {
                 if (canseemon(mtmp))

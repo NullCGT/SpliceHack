@@ -280,6 +280,10 @@ Misc. Changes
 - Fungi cannot propagate on burnt corpses.
 - Powerful fungi can grow on corpses starting at level 15 and deeper. This will
   hopefully incentivise cooking corpses / not leaving a mess.
+- Humanoids can very rarely mount nearby monsters, creating dynamic monster steeds.
+  The Wizard of Yendor is very aggressive about mounting monsters.
+- Monsters being ridden by other monsters can use breath weapons and take other
+  actions.
 
 Notable Bug Fixes
 - Water elementals can be neutral deific minions agian.

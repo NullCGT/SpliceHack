@@ -2642,6 +2642,7 @@ E struct obj *FDECL(findgold, (struct obj *, BOOLEAN_P));
 /* ### steed.c ### */
 
 E void FDECL(mount_monster, (struct monst *, int));
+E boolean FDECL(mount_up, (struct monst *));
 E void FDECL(update_monsteed, (struct monst *));
 E void FDECL(newerid, (struct monst *));
 E void FDECL(free_erid, (struct monst *));

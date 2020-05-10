@@ -87,6 +87,12 @@ New Monsters
   - A group of fungus class monsters. Their presence in later levels makes
     loitering around and letting corpses mold over a bad idea.
   - Myconid warriors and elders can infest nearby corpses, creating more myconid warriors.
+- Slash'Em Monster: Arc Bug
+- Slash'Em Monster: Spark Bug
+- Slash'Em Monster: Lightning Bug
+  - Ported from Slash'em for increased early game challenge.
+  - Unlike Slash'em these bugs can only move horizontally. This change was made to foster
+    more strategic play early, and to offset the danger of these bugs.
 
 New Monsters (Less Notable)
 - New Monster: Ulsfark

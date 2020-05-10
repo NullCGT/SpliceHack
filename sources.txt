@@ -64,6 +64,9 @@
     - solar (only appear in planes)
     - weretiger (not randomly generated)
     - chicken
+    - arc bug
+    - spark bug
+    - lightning bug
   #Items
     - Plague Artifact
     - Doomblade Artifact

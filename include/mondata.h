@@ -364,4 +364,10 @@
 #define avoids_player(ptr) \
     (is_unicorn(ptr) \
      || (ptr) == &mons[PM_MAD_ALCHEMIST])
+
+#define horizontal_mover(ptr) \
+    ((ptr) == &mons[PM_GRID_BUG] \
+     || (ptr) == &mons[PM_SPARK_BUG] \
+     || (ptr) == &mons[PM_ARC_BUG] \
+     || (ptr) == &mons[PM_LIGHTNING_BUG])
 #endif /* MONDATA_H */

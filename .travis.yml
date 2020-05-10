@@ -142,10 +142,6 @@ matrix:
     compiler: clang
     script: cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../ && make install
 sudo: false
-notifications:
-  email:
-    recipients:
-      - gtschoolbackup@gmail.com
 deploy:
   provider: releases
   api_key:

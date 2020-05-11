@@ -303,6 +303,9 @@ Misc. Changes
   The Wizard of Yendor is very aggressive about mounting monsters.
 - Monsters being ridden by other monsters can use breath weapons and take other
   actions.
+- As EvilHack and XNetHack do, calculate HP based on monster size. This includes many of
+  the relevant monster size changes from XNetHack, as well as a few changes to specific
+  SpliceHack monsters.
 
 Notable Bug Fixes
 - Water elementals can be neutral deific minions agian.

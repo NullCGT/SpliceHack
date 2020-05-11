@@ -24,6 +24,7 @@
 - Fixes to monster intrinsics.
 - Code for object probabilities
 - Mjollnir invocation.
+- Monster HP calculation.
 
 #Biodiversity Patch
 - Umbral Hulk

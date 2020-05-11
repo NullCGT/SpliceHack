@@ -786,7 +786,8 @@ somexyspace(struct mkroom* croom, coord *c)
             && (levl[c->x][c->y].typ == ROOM
                 || levl[c->x][c->y].typ == CORR
                 || levl[c->x][c->y].typ == ICE
-                || levl[c->x][c->y].typ == BRIDGE);
+                || levl[c->x][c->y].typ == BRIDGE
+                || levl[c->x][c->y].typ == GRASS);
     } while (trycnt++ < 100 && !okay);
     return okay;
 }

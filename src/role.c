@@ -1541,7 +1541,7 @@ int rolenum, racenum, gendnum, alignnum;
                 continue;
             allow = races[i].allow;
             if (rolenum >= 0 && rolenum < SIZE(roles) - 1
-                && !(allow & roles[rolenum].mhrace & races[racenum].selfmask))
+                && !(allow & roles[rolenum].mhrace & races[i].selfmask))
                 continue;
             if (gendnum >= 0 && gendnum < ROLE_GENDERS
                 && !(allow & genders[gendnum].allow & ROLE_GENDMASK))

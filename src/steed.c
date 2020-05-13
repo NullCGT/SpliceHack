@@ -66,7 +66,7 @@ struct monst *rider;
     register struct monst *steed, *nmon;
 
     if (rider->mtame || rider == u.ustuck || rider->mpeaceful || has_erid(rider) 
-        || !humanoid(rider->data) || rider->mtrapped)
+        || !humanoid(rider->data) || rider->mtrapped || rider->mtrapped)
         return FALSE;
 
     for (steed = fmon; steed; steed = nmon) {
@@ -75,7 +75,8 @@ struct monst *rider;
             nmon = rider->nmon;
         if (monnear(rider, steed->mx, steed->my) && can_saddle(steed) 
             && !is_covetous(steed->data) && !steed->mtame
-            && steed != u.ustuck && !rider->mtrapped) {
+            && steed != u.ustuck && steed->mcanmove
+            && !steed->msleeping && !steed->rider_id) {
             break;
         }
     }

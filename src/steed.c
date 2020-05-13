@@ -66,7 +66,7 @@ struct monst *rider;
     register struct monst *steed, *nmon;
 
     if (rider->mtame || rider == u.ustuck || rider->mpeaceful || has_erid(rider) 
-        || !humanoid(rider->data) || rider->mtrapped || rider->mtrapped)
+        || !humanoid(rider->data) || rider->mtrapped)
         return FALSE;
 
     for (steed = fmon; steed; steed = nmon) {

@@ -62,7 +62,7 @@ static NEARDATA const char *const odd_skill_names[] = {
     "enchantment spells", "clerical spells", "escape spells", "matter spells",
     "cooking",
 };
-/* indexed vis `is_martial() */
+/* indexed via is_martial() */
 static NEARDATA const char *const barehands_or_martial[] = {
     "bare handed combat", "martial arts"
 };

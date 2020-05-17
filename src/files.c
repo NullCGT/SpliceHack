@@ -3955,7 +3955,7 @@ const char *reason; /* explanation */
 {
 #ifdef PANICLOG
     FILE *lfile;
-    /* char buf[BUFSZ]; */
+    char buf[BUFSZ];
 
     if (!g.program_state.in_paniclog) {
         g.program_state.in_paniclog = 1;

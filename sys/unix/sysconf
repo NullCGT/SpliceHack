@@ -170,16 +170,10 @@ DUMPLOGFILE=/tmp/splicehack.%n.%d.log
 #PORTABLE_DEVICE_PATHS=0
 
 # Ordinary run-time options can be set here to override the builtin-in
-<<<<<<< HEAD
-# default values.  Unlike the SYSCF values above, individual users can
-# still choose their own option settings via NETHACKOPTIONS in their
-# environment or via ~/.splicehackrc run-time configuration file.
-=======
 # default values.  Unlike all the SYSCF values above, individual users
 # can override the overridden options set here by choosing their own
 # option settings via NETHACKOPTIONS in their environment or via
-# ~/.nethackrc run-time configuration file.
->>>>>>> ce4658abd64e04fb18098717bf57cfc6d8edacab
+# ~/.splicehackrc run-time configuration file.
 #OPTIONS=!autopickup,fruit:tomato,symset:DECgraphics
 # The following are the NAO defaults for 3.6.0 according to paxed
 OPTIONS=bones

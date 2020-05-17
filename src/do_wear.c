@@ -257,7 +257,7 @@ Boots_off(VOID_ARGS)
     case STOMPING_BOOTS:
         if (!Stealth && !Levitation && !Flying) {
             pline("Your footsteps become considerably less violent.");
-            makeknown(uarmf->otyp);
+            makeknown(otyp);
         }
         break;
     case ELVEN_BOOTS:

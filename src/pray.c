@@ -2503,7 +2503,7 @@ register int x, y;
     aligntyp altaralign = a_align(x, y);
 
 
-    if (god_dead(altaralign)) {
+    if (u.ualign.type == altaralign && god_dead(altaralign)) {
         You_feel("a deep sense of wrongness.");
         u.ualign.record--;
     } else if (u.ualign.type == altaralign && u.ualign.record > -rn2(4)) {

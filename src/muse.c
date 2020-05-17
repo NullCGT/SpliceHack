@@ -3524,7 +3524,6 @@ mmake_wish(mon)
 struct monst *mon;
 {
     register int cnt;
-    register boolean wearable = FALSE;
     register struct obj *otmp;
     const char* str;
 
@@ -3548,7 +3547,6 @@ struct monst *mon;
             otmp = mksobj(AMULET_OF_LIFE_SAVING, FALSE, FALSE);
             bless(otmp);
             (void) mpickobj(mon, otmp);
-            wearable = TRUE;
             break;
         case 3:
             /* This is fine for dragons, because an artifact would be a good
@@ -3557,10 +3555,15 @@ struct monst *mon;
             if (otmp) {
                 bless(otmp);
                 (void) mpickobj(mon, otmp);
-                wearable = TRUE;
             }
             break;
         case 4:
+            otmp = mksobj(rn2(5) ? CALLING_CANDLE : SPIRIT_CANDLE, FALSE, FALSE);
+            bless(otmp);
+            if (!mpickobj(mon, otmp))
+                begin_burn(otmp, FALSE);
+            break;
+        case 5:
             if (mon->mreflect == 1 || monsndx(mon->data) == PM_SILVER_DRAGON
                                    || monsndx(mon->data) == PM_BABY_SILVER_DRAGON) {
                 if (humanoid(mon->data))
@@ -3569,15 +3572,8 @@ struct monst *mon;
                     otmp = mksobj(AMULET_OF_REFLECTION, FALSE, FALSE);
                 bless(otmp);
                 (void) mpickobj(mon, otmp);
-                wearable = TRUE;
                 break;
             }
-        case 5:
-            otmp = mksobj(rn2(5) ? CALLING_CANDLE : SPIRIT_CANDLE, FALSE, FALSE);
-            bless(otmp);
-            if (!mpickobj(mon, otmp))
-                begin_burn(otmp, FALSE);
-            break;
         /* FALLTHRU */
         default:
             /* Dragons don't have a use for wands of death */

@@ -938,8 +938,9 @@ register int sh;
                 /* forbidden objects  */
             	if (typ==AMULET_OF_YENDOR || typ==CANDELABRUM_OF_INVOCATION ||
             	      typ==BELL_OF_OPENING  || typ==SPE_BOOK_OF_THE_DEAD ||
-            	      objects[typ].oc_nowish || typ==0)
+            	      objects[typ].oc_nowish || typ==0) {
             	    continue;
+                }
   	            otmp = mkobj_at(RANDOM_CLASS,sx,sy,TRUE);
                 /* generate multiple copies with decreasing probabilities */
                 /*        if (rn2(blkmar_gen[typ]+1) && i<49)  continue; */

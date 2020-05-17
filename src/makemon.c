@@ -524,6 +524,7 @@ register struct monst *mtmp;
             default:
                 break;
         }
+        break;
     case S_HUMANOID:
         if (mm == PM_HOBBIT) {
             switch (rn2(3)) {

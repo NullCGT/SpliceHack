@@ -175,12 +175,6 @@ struct obj *otmp;
 
     g.notonhead = (mtmp->mx != g.bhitpos.x || mtmp->my != g.bhitpos.y);
     skilled_spell = (otmp && otmp->oclass == SPBOOK_CLASS && otmp->blessed);
-    int skilldmg = 0;
-
-    if (objects[otyp].oc_class == SPBOOK_CLASS) {
-  	    /* Is a spell */
-  	    skilldmg = spell_damage_bonus(otyp);
-    }
 
     switch (otyp) {
     case WAN_STRIKING:

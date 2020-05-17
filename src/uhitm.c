@@ -854,7 +854,6 @@ int dieroll;
     boolean lightobj = FALSE;
     boolean valid_weapon_attack = FALSE;
     boolean unarmed = !uwep && !uarm && !uarms;
-    boolean not_melee_weapon = FALSE;
     boolean hand_to_hand = (thrown == HMON_MELEE
                             /* not grapnels; applied implies uwep */
                             || (thrown == HMON_APPLIED && is_pole(uwep)));
@@ -978,7 +977,6 @@ int dieroll;
                 || (is_ammo(obj) && (thrown != HMON_THROWN
                                      || !ammo_and_launcher(obj, uwep)))) {
                 /* then do only 1-2 points of damage */
-                not_melee_weapon = TRUE;
                 if (mdat == &mons[PM_SHADE] && !shade_glare(obj))
                     tmp = 0;
                 else
@@ -3004,6 +3002,7 @@ register struct monst *mon;
 				 mon->data == &mons[PM_GREEN_SLIME] ||
                  touch_petrifies(mon->data)))
 			    break;
+            /*FALLTHRU*/
         case AT_KICK:
         case AT_STNG:
         case AT_BUTT:

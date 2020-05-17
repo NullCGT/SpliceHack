@@ -1635,30 +1635,31 @@ int dieroll;
      	  if (g.vis)
      		    pline("%s reaches out with its deadly touch.",
      		          Monnam(magr));
-     		if (is_undead(mdef->data)) {
-     		    /* Still does normal damage */
-     	            if (g.vis)
-     		        pline("%s looks no deader than before.", Monnam(mdef));
-     		    break;
-     		}
-     		switch (rn2(20)) {
-     		case 19:
+        if (is_undead(mdef->data)) {
+            /* Still does normal damage */
+                if (g.vis)
+                pline("%s looks no deader than before.", Monnam(mdef));
+            break;
+        }
+        switch (rn2(20)) {
+        case 19:
         case 18:
         case 17:
-     		    if (!resists_magm(mdef) && !resist(mdef, 0, 0, 0)) {
-                    mdef->mhp = 0;
-                        monkilled(mdef, "", AD_DETH);
-                    tmp = 0;
-                    break;
-     		    } /* else FALLTHRU */
-     		default: /* case 16: ... case 5: */
-     		    if (g.vis)
-     		        pline("%s looks weaker!", Monnam(mdef));
-     		    mdef->mhpmax -= rn2(tmp / 2 + 1); /* mhp will then  */
-     		                                      /* still be less than  */
-     						      /* this value */
-     		    break;
-     		case 4:
+            if (!resists_magm(mdef) && !resist(mdef, 0, 0, 0)) {
+                mdef->mhp = 0;
+                    monkilled(mdef, "", AD_DETH);
+                tmp = 0;
+                break;
+            } 
+            /*FALLTHRU */
+        default: /* case 16: ... case 5: */
+            if (g.vis)
+                pline("%s looks weaker!", Monnam(mdef));
+            mdef->mhpmax -= rn2(tmp / 2 + 1); /* mhp will then  */
+                                                /* still be less than  */
+                                /* this value */
+            break;
+        case 4:
         case 3:
         case 2:
         case 1:

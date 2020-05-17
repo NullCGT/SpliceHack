@@ -1882,6 +1882,7 @@ tech_timeout()
 			break;
 		    case T_CHI_HEALING:
 			You("feel the healing power dissipate.");
+			break;
 			case T_DANCE_E:
 			case T_DANCE_SPELL:
 			case T_DANCE_WWALK:

@@ -906,7 +906,7 @@ xchar ttype;
          * for monsters, only replicates fire trap, so fall through */
         if (you)
             return 0;
-        /* else FALLTHRU */
+        /* FALLTHRU */
     case FIRE_TRAP: /* can always destroy items being carried */
         /* harmful if wearing anything burnable or if the monster isn't
          * resistant */

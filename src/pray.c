@@ -1558,7 +1558,7 @@ dosacrifice()
            too old (value==0) */
         if (otmp->oeroded > 0) {
             value = 0;
-        } else if (your_race(ptr) || (uwep->otyp == SACRIFICIAL_KNIFE && uwep->cursed)) {
+        } else if (your_race(ptr) || (uwep && uwep->otyp == SACRIFICIAL_KNIFE && uwep->cursed)) {
             if (is_demon(g.youmonst.data)) {
                 You("find the idea very satisfying.");
                 exercise(A_WIS, TRUE);

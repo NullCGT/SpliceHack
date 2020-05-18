@@ -2711,13 +2711,13 @@ char *origbuf;
                 free((genericptr_t) sysopt.debugfiles);
             sysopt.debugfiles = dupstr(bufp);
         }
-    } else if (in_sysconf && match_varname(buf, "DUMPLOGFILE", 122)) {
+    } else if (in_sysconf && match_varname(buf, "DUMPLOGFILE", 11)) {
 #ifdef DUMPLOG
         if (sysopt.dumplogfile)
             free((genericptr_t) sysopt.dumplogfile);
         sysopt.dumplogfile = dupstr(bufp);
 #endif
-    } else if (in_sysconf && match_varname(buf, "DUMPHTMLFILE", 7)) {
+    } else if (in_sysconf && match_varname(buf, "DUMPHTMLFILE", 12)) {
 #ifdef DUMPHTML
         if (sysopt.dumphtmlfile)
             free((genericptr_t) sysopt.dumphtmlfile);

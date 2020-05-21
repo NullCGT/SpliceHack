@@ -510,7 +510,7 @@ boolean devour;
 		}
 
 		/* Take away blood nutrition */
-	    obj->oeaten = drainlevel(obj);
+	    obj->oeaten = (int) drainlevel(obj);
 		obj->odrained = 1;
     } else if (obj == uball) {
         unpunish();

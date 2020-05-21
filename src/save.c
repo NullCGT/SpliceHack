@@ -934,7 +934,7 @@ register struct monst *mtmp;
     for (iter = 0; iter < nummons; iter++) {
         if (perform_bwrite(nhfp))
             if (nhfp->structlevel)
-                bwrite(nhfp->fd, (genericptr_t) &mons[iter] + namesize, sizeof(struct permonst) - namesize);
+                bwrite(nhfp->fd, (genericptr_t) ((char *) &mons[iter] + namesize), sizeof(struct permonst) - namesize);
     }
 }
 

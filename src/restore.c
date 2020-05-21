@@ -506,7 +506,7 @@ NHFILE *nhfp;
         impossible("Restmonchn: number of permonst stored doesn't match current NUMMONS. Using default permonst");
     } else {
         for (iter = 0; iter < NUMMONS; iter++) {
-            mread(nhfp->fd, (genericptr_t) &mons[iter] + namesize, sizeof(struct permonst) - namesize);
+            mread(nhfp->fd, (genericptr_t) ((char *) &mons[iter] + namesize), sizeof(struct permonst) - namesize);
         }
     }
 

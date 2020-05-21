@@ -903,6 +903,8 @@ register int sh;
     } */
 
     total = 0;
+    clp = goodcl;
+    lastclp = clp;
     for (clp=goodcl; *clp!=0; clp++)  {
         lastclp = clp;
         first = g.bases[*clp];

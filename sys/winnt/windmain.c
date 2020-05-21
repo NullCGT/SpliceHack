@@ -127,7 +127,7 @@ build_known_folder_path(
     if(!get_known_folder_path(folder_id, path, path_size))
         return FALSE;
 
-    strcat(path, "\\NetHack\\");
+    strcat(path, "\\SpliceHack\\");
     create_directory(path);
     if (versioned) {
         Sprintf(eos(path), "%d.%d\\", 
@@ -458,7 +458,7 @@ _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);*/
      * the game is exited.
      */
     if (getcwd(orgdir, sizeof orgdir) == (char *) 0)
-        error("NetHack: current directory path too long");
+        error("SpliceHack: current directory path too long");
 #endif
 
     set_default_prefix_locations(argv[0]);
@@ -513,9 +513,9 @@ _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);*/
         pline("%s\n%s\n%s\n%s\n\n",
               copyright_banner_line(1), copyright_banner_line(2),
               copyright_banner_line(3), copyright_banner_line(4));
-        pline("NetHack was unable to open the required file \"%s\"",DLBFILE);
+        pline("SpliceHack was unable to open the required file \"%s\"",DLBFILE);
         if (file_exists(DLBFILE))
-            pline("\nAre you perhaps trying to run NetHack within a zip utility?");
+            pline("\nAre you perhaps trying to run SpliceHack within a zip utility?");
         error("dlb_init failure.");
     }
 

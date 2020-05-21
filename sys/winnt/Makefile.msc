@@ -990,7 +990,7 @@ $(GAMEDIR)\nhraykey.dll : $(O)$(@B).o $(O)gamedir.tag $(O)$(@B).def
 $(O)install.tag: 	$(DAT)\data	$(DAT)\rumors	$(DAT)\oracles \
 		$(O)sp_lev.tag $(DLB)
 ! IF ("$(USE_DLB)"=="Y")
-	copy nhdat071          $(GAMEDIR)
+	copy nhdat$(NHV)          $(GAMEDIR)
 	copy $(DAT)\license       $(GAMEDIR)
 	copy $(DAT)\opthelp       $(GAMEDIR)
 ! ELSE

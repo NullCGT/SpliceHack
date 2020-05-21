@@ -125,16 +125,16 @@ matrix:
     - name: windows-mingw
       os: windows
 #     install: choco install mingw
-      script:
-        - export ADD_CURSES=Y
-        - export PDCURSES_TOP=../lib/pdcurses
-        - export LUA_VERSION=5.3.5
-        - sh sys/winnt/travis-gcc.sh
-        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-        - test -d "lib/pdcurses" || exit 0
-        - cd src
-        - cp ../sys/winnt/Makefile.gcc ./Makefile
-        - mingw32-make install
+#      script:
+#        - export ADD_CURSES=Y
+#        - export PDCURSES_TOP=../lib/pdcurses
+#        - export LUA_VERSION=5.3.5
+#        - sh sys/winnt/travis-gcc.sh
+#        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+#        - test -d "lib/pdcurses" || exit 0
+#        - cd src
+#        - cp ../sys/winnt/Makefile.gcc ./Makefile
+#        - mingw32-make install
     - name: msdos-linuxhost-crosscompile
       os: linux
       env: HINTS=linux LUA_VERSION=5.3.5

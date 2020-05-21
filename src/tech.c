@@ -1411,6 +1411,7 @@ tamedog(mtmp, (struct obj *) 0);
 			}
 			break;
 	    case T_DAZZLE:
+			mtmp = (struct monst *) 0;
 	    	/* Short range stun attack */
 	    	if (Blind) {
 	    		You("can't see anything!");

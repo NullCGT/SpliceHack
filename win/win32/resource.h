@@ -114,11 +114,12 @@
 #define IDC_PLSEL_ALIGN_CHAOTIC         1336
 #define IDC_PLSEL_GENDER_MALE           1337
 #define IDC_PLSEL_GENDER_FEMALE         1338
-#define IDC_PLSEL_NAME_GROUP            1339
-#define IDC_PLSEL_ROLE_GROUP            1340
-#define IDC_PLSEL_RACE_GROUP            1341
-#define IDC_PLSEL_ALIGNMENT_GROUP       1342
-#define IDC_PLSEL_GENDER_GROUP          1343
+#define IDC_PLSEL_GENDER_NONBINARY      1339
+#define IDC_PLSEL_NAME_GROUP            1340
+#define IDC_PLSEL_ROLE_GROUP            1341
+#define IDC_PLSEL_RACE_GROUP            1342
+#define IDC_PLSEL_ALIGNMENT_GROUP       1343
+#define IDC_PLSEL_GENDER_GROUP          1344
 #define IDM_SAVE                        32771
 #define IDM_HELP_LONG                   32772
 #define IDM_HELP_COMMANDS               32773

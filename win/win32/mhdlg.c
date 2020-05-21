@@ -294,6 +294,7 @@ enum player_selector_control {
     psc_chaotic_button,
     psc_male_button,
     psc_female_button,
+    psc_nonbinary_button,
     psc_play_button,
     psc_random_button,
     psc_quit_button,
@@ -314,6 +315,7 @@ static const s_psc_id[psc_control_count] = {
     IDC_PLSEL_ALIGN_CHAOTIC,
     IDC_PLSEL_GENDER_MALE,
     IDC_PLSEL_GENDER_FEMALE,
+    IDC_PLSEL_GENDER_NONBINARY,
     IDOK,
     IDC_PLSEL_RANDOM,
     IDCANCEL
@@ -429,7 +431,7 @@ calculate_player_selector_layout(plsel_data_t * data)
 
     control_t * gender_group = &data->controls[psc_gender_group];
     gender_group->size.cx = button_width + (2 * group_border);
-    gender_group->size.cy = (2 * button_height) + (2 * group_border);
+    gender_group->size.cy = (3 * button_height) + (2 * group_border);
 
     /* set control positions */
     control_t * name_group = &data->controls[psc_name_group];
@@ -463,7 +465,7 @@ calculate_player_selector_layout(plsel_data_t * data)
     gender_group->pos.x = alignment_group->pos.x;
     gender_group->pos.y = alignment_group->pos.y + alignment_group->size.cy + group_spacing;
 
-    for(int i = psc_male_button; i <= psc_female_button; i++) {
+    for(int i = psc_male_button; i <= psc_nonbinary_button; i++) {
         data->controls[i].pos.x = gender_group->pos.x + group_border;
         data->controls[i].pos.y = gender_group->pos.y + group_border + 
                                   ((i - psc_male_button)  * button_height);
@@ -485,7 +487,7 @@ calculate_player_selector_layout(plsel_data_t * data)
 
     control_t * quit_button = &data->controls[psc_quit_button];
     quit_button->pos.y = play_button->pos.y;
-    quit_button->pos.x = data->controls[psc_female_button].pos.x;
+    quit_button->pos.x = data->controls[psc_nonbinary_button].pos.x;
 
     data->client_size.cx = alignment_group->pos.x + alignment_group->size.cx;
     data->client_size.cy = quit_button->pos.y + quit_button->size.cy;
@@ -783,6 +785,7 @@ PlayerSelectorDlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         case IDC_PLSEL_GENDER_MALE:
         case IDC_PLSEL_GENDER_FEMALE:
+        case IDC_PLSEL_GENDER_NONBINARY:
             if (HIWORD(wParam) == BN_CLICKED) {
                 int i = LOWORD(wParam) - IDC_PLSEL_GENDER_MALE;
                 if (ok_gend(flags.initrole, flags.initrace, i, ROLE_RANDOM)) {

@@ -122,8 +122,8 @@ matrix:
       language: shell
       script:
         - ./win/win32/vs2017/travisci.sh
-    - name: windows-mingw
-      os: windows
+#    - name: windows-mingw
+#      os: windows
 #     install: choco install mingw
 #      script:
 #        - export ADD_CURSES=Y
@@ -135,17 +135,17 @@ matrix:
 #        - cd src
 #        - cp ../sys/winnt/Makefile.gcc ./Makefile
 #        - mingw32-make install
-    - name: msdos-linuxhost-crosscompile
-      os: linux
-      env: HINTS=linux LUA_VERSION=5.3.5
-      compiler: gcc
-      script:
-#        - export
-        - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
-        - make fetch-lua
-        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-        - cd lib/lua-$LUA_VERSION/src && make a && cd ../../.. 
-        - sh sys/msdos/msdos-cross-compile.sh
+#    - name: msdos-linuxhost-crosscompile
+#      os: linux
+#      env: HINTS=linux LUA_VERSION=5.3.5
+#      compiler: gcc
+#      script:
+##        - export
+#        - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+#        - make fetch-lua
+#        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+#        - cd lib/lua-$LUA_VERSION/src && make a && cd ../../.. 
+#        - sh sys/msdos/msdos-cross-compile.sh
   exclude:
   - os: osx
     osx_image: xcode10.2

@@ -600,8 +600,10 @@ plselInitDialog(struct plsel_data * data)
         lvitem.iSubItem = 0;
         lvitem.state = 0;
         lvitem.stateMask = LVIS_FOCUSED;
-        if (flags.female && roles[i].name.f)
+        if (flags.gender == GEND_F && roles[i].name.f)
             lvitem.pszText = NH_A2W(roles[i].name.f, wbuf, BUFSZ);
+        else if (flags.gender == GEND_N && roles[i].name.n)
+            lvitem.pszText = NH_A2W(roles[i].name.n, wbuf, BUFSZ);
         else
             lvitem.pszText = NH_A2W(roles[i].name.m, wbuf, BUFSZ);
         if (ListView_InsertItem(role_list->hWnd, &lvitem) == -1) {

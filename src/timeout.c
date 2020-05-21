@@ -1561,7 +1561,7 @@ static void
 magic_candle_effects(obj)
 struct obj* obj;
 {
-    struct monst *mtmp;
+    struct monst *mtmp = (struct monst *) 0;
     struct obj *otmp;
     int i = 0;
     int rand_align = rn2((int) A_LAWFUL + 2) - 1;

@@ -987,7 +987,7 @@ volleymm(mtmp, mattk, mtarg)
 struct monst *mtmp, *mtarg;
 struct attack *mattk;
 {
-    struct obj *otmp;
+    struct obj *otmp = (struct obj*) 0;
     int i;
     int numattacks = d(mattk->damn, mattk->damd);
 
@@ -1199,7 +1199,7 @@ volleymu(mtmp, mattk)
 struct monst *mtmp;
 struct attack *mattk;
 {
-    struct obj *otmp;
+    struct obj *otmp = (struct obj*) 0;
     int i;
     int numattacks = d(mattk->damn, mattk->damd);
 

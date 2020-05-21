@@ -937,10 +937,10 @@ $(DAT)/engrave: $(DAT)/engrave.txt $(U)makedefs.exe
 $(DAT)/epitaph: $(DAT)/epitaph.txt $(U)makedefs.exe
 	$(subst /,\,$(U)makedefs -s)
 
-$(DAT)/splicetips: $(DAT)/splicetips.txt $(U)makedefs.exe
+$(DAT)/bogusmon: $(DAT)/bogusmon.txt $(U)makedefs.exe
 	$(subst /,\,$(U)makedefs -s)
 
-$(DAT)/bogusmon: $(DAT)/bogusmon.txt $(U)makedefs.exe
+$(DAT)/splicetips: $(DAT)/splicetips.txt $(U)makedefs.exe
 	$(subst /,\,$(U)makedefs -s)
 
 #==========================================
@@ -1040,7 +1040,7 @@ nhdat$(NHV):  $(U)dlb_main.exe $(DAT)/data $(DAT)/oracles $(OPTIONS_FILE) \
 	$(DAT)/history $(DAT)/opthelp $(DAT)/wizhelp \
 	$(DAT)/porthelp $(DAT)/license $(DAT)/engrave \
 	$(DAT)/epitaph $(DAT)/bogusmon $(DAT)/tribute \
-	$(DAT)/bogusmon $(O)sp_lev.tag
+	$(DAT)/bogusmon $(O)sp_lev.tag $(DAT)/splicetips
 	$(subst /,\,echo data >$(DAT)/dlb.lst)
 	$(subst /,\,echo oracles >>$(DAT)/dlb.lst)
 	$(subst /,\,if exist $(DAT)/options echo options >>$(DAT)/dlb.lst)

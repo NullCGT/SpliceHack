@@ -544,7 +544,7 @@ typedef unsigned char uchar;
 
 /* Extra enhancements borrowed from nao343 and elsewhwere
    for dgamelaunch-based server play */
-#define DGAMELAUNCH
+/* #define DGAMELAUNCH */
 #ifdef DGAMELAUNCH
 #define EXTRAINFO_FN    "/dgldir/extrainfo-spl/%n.extrainfo"
 #define MAILCKFREQ 5  /* SIMPLE_MAIL is in unixconf.h */
@@ -571,9 +571,9 @@ typedef unsigned char uchar;
    whole thing, then type a new end for the text. */
 /* #define EDIT_GETLIN */
 
-#define WHEREIS_FILE "whereis/%n.whereis" /* Write out player's current location to player.whereis */
+/* #define WHEREIS_FILE "whereis/%n.whereis" */ /* Write out player's current location to player.whereis */
 
-#define DUMPLOG  /* End-of-game dump logs */
+/* #define DUMPLOG */  /* End-of-game dump logs */
 /* #define DUMPHTML */ /* End-of-game HTML dumps */
 #if defined(DUMPLOG) || defined(DUMPHTML)
 

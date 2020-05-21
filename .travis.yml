@@ -1,140 +1,151 @@
 language: c
 matrix:
   include:
-  - name: linux-xenial-gcc
-    os: linux
-    env: HINTS=linux LUA_VERSION=5.3.5
-    compiler: gcc
-    script:
-    - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
-    - make fetch-lua
-    - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-    - make install
-  - name: linux-bionic-gcc
-    os: linux
-    env: HINTS=linux LUA_VERSION=5.3.5
-    dist: bionic
-    compiler: gcc
-    script:
-    - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
-    - make fetch-lua
-    - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-    - make install
-  - name: linux-xenial-clang
-    os: linux
-    env: HINTS=linux LUA_VERSION=5.3.5
-    compiler: clang
-    script:
-    - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
-    - make fetch-lua
-    - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-    - make install
-  - name: linux-xenial-gcc-x11
-    os: linux
-    env: HINTS=linux-x11 LUA_VERSION=5.3.5
-    compiler: gcc
-    addons:
-      apt:
-        packages:
-        - libx11-dev
-        - libxaw7-dev
-        - xfonts-utils
-    script:
-    - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
-    - make fetch-lua
-    - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-    - make install
-#  - name: linux-xenial-gcc-qt5
-#    os: linux
-#    env: HINTS=linux-qt5 LUA_VERSION=5.3.5
-#    compiler: gcc
-#    addons:
-#      apt:
-#        packages:
-#        - libx11-dev
-#        - libxaw7-dev
-#        - xfonts-utils
-#        - qtbase5-dev
-#        - qtmultimedia5-dev
-#        - qtbase5-dev-tools
-#    script:
-#    - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
-#    - make fetch-lua
-#    - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-#    - make QT_SELECT=5 MOC=moc install
-  - name: linux-bionic-gcc-x11
-    os: linux
-    env: HINTS=linux-x11 LUA_VERSION=5.3.5
-    dist: bionic
-    compiler: gcc
-    addons:
-      apt:
-        packages:
-        - libx11-dev
-        - libxaw7-dev
-        - xfonts-utils
-    script:
-    - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
-    - make fetch-lua
-    - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-    - make install
-  - name: linux-xenial-gcc-minimal
-    os: linux
-    env: HINTS=linux-minimal LUA_VERSION=5.3.5
-    compiler: gcc
-    script: |
-      cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
-      sed -i '/^#define CLIPPING/d'       include/config.h
-      sed -i '/^#define COMPRESS/d'       include/config.h
-      #sed -i '/^#define DOAGAIN/d'        include/config.h
-      sed -i '/^#define DUMPLOG/d'        include/config.h
-      #sed -i '/^#define GDBPATH/d'        include/config.h
-      #sed -i '/^#define GREPPATH/d'       include/config.h
-      sed -i '/^#define INSURANCE/d'      include/config.h
-      sed -i '/^#define LOGFILE/d'        include/config.h
-      sed -i '/^#define NEWS/d'           include/config.h
-      sed -i '/^#define PANICLOG/d'       include/config.h
-      #sed -i '/^#define STATUS_HILITES/d' include/config.h
-      sed -i '/^#define SYSCF/d'          include/config.h
-      sed -i '/^#define USER_SOUNDS/d'    include/config.h
-      sed -i '/^#define XLOGFILE/d'       include/config.h
+    - name: linux-xenial-gcc
+      os: linux
+      env: HINTS=linux LUA_VERSION=5.3.5
+      compiler: gcc
+      script:
+        - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+        - make fetch-lua
+        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+        - make install
+    - name: linux-xenial-gcc-nocommon
+      os: linux
+      env: HINTS=linux LUA_VERSION=5.3.5
+      compiler: gcc
+      script:
+        - echo "CFLAGS+=-fno-common" >>sys/unix/hints/$HINTS
+        - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+        - make fetch-lua
+        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+        - make install
+    - name: linux-bionic-gcc
+      os: linux
+      env: HINTS=linux LUA_VERSION=5.3.5
+      dist: bionic
+      compiler: gcc
+      script:
+        - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+        - make fetch-lua
+        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+        - make install
+    - name: linux-xenial-clang
+      os: linux
+      env: HINTS=linux LUA_VERSION=5.3.5
+      compiler: clang
+      script:
+        - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+        - make fetch-lua
+        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+        - make install
+    - name: linux-xenial-gcc-x11
+      os: linux
+      env: HINTS=linux-x11 LUA_VERSION=5.3.5
+      compiler: gcc
+      addons:
+        apt:
+          packages:
+            - libx11-dev
+            - libxaw7-dev
+            - xfonts-utils
+      script:
+        - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+        - make fetch-lua
+        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+        - make install
+    - name: linux-xenial-gcc-qt5
+      os: linux
+      env: HINTS=linux-qt5 LUA_VERSION=5.3.5
+      compiler: gcc
+      addons:
+        apt:
+          packages:
+            - libx11-dev
+            - libxaw7-dev
+            - xfonts-utils
+            - qtbase5-dev
+            - qtmultimedia5-dev
+            - qtbase5-dev-tools
+      script:
+        - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+        - make fetch-lua
+        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+        - make QT_SELECT=5 MOC=moc install
+    - name: linux-bionic-gcc-x11
+      os: linux
+      env: HINTS=linux-x11 LUA_VERSION=5.3.5
+      dist: bionic
+      compiler: gcc
+      addons:
+        apt:
+          packages:
+            - libx11-dev
+            - libxaw7-dev
+            - xfonts-utils
+      script:
+        - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+        - make fetch-lua
+        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+        - make install
+    - name: linux-xenial-gcc-minimal
+      os: linux
+      env: HINTS=linux-minimal LUA_VERSION=5.3.5
+      compiler: gcc
+      script: |
+              cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+              sed -i '/^#define CLIPPING/d'       include/config.h
+              sed -i '/^#define COMPRESS/d'       include/config.h
+              #sed -i '/^#define DOAGAIN/d'        include/config.h
+              sed -i '/^#define DUMPLOG/d'        include/config.h
+              #sed -i '/^#define GDBPATH/d'        include/config.h
+              #sed -i '/^#define GREPPATH/d'       include/config.h
+              sed -i '/^#define INSURANCE/d'      include/config.h
+              sed -i '/^#define LOGFILE/d'        include/config.h
+              sed -i '/^#define NEWS/d'           include/config.h
+              sed -i '/^#define PANICLOG/d'       include/config.h
+              #sed -i '/^#define STATUS_HILITES/d' include/config.h
+              sed -i '/^#define SYSCF/d'          include/config.h
+              sed -i '/^#define USER_SOUNDS/d'    include/config.h
+              sed -i '/^#define XLOGFILE/d'       include/config.h
 
-      sed -i '/^#define MAIL/d'           include/unixconf.h
-      sed -i '/^#define SHELL/d'          include/unixconf.h
-      sed -i '/^#define SUSPEND/d'        include/unixconf.h
-      sed -i 's/^#define TEXTCOLOR//'     include/unixconf.h
-      make fetch-lua
-      test -d "lib/lua-$LUA_VERSION/src" || exit 0
-      make install
-      cat dat/options
-  - name: windows-visualstudio
-    os: windows
-    language: shell
-    script:
-    - "./win/win32/vs2017/travisci.sh"
-  #- name: windows-mingw
-  #  os: windows
-  #  script:
-  #  - export ADD_CURSES=Y
-  #  - export PDCURSES_TOP=../lib/pdcurses
-  #  - export LUA_VERSION=5.3.5
-  #  - export SKIP_NETHACKW=N
-  #  - sh sys/winnt/travis-gcc.sh
-  #  - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-  #  - test -d "lib/pdcurses" || exit 0
-  #  - cd src
-  #  - cp ../sys/winnt/Makefile.gcc ./Makefile
-  #  - mingw32-make install
-  - name: msdos crosscompile on linux
-    os: linux
-    env: HINTS=linux LUA_VERSION=5.3.5
-    compiler: gcc
-    script:
-    - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
-    - make fetch-lua
-    - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-    - cd lib/lua-$LUA_VERSION/src && make a && cd ../../..
-    - sh sys/msdos/msdos-cross-compile.sh
+              sed -i '/^#define MAIL/d'           include/unixconf.h
+              sed -i '/^#define SHELL/d'          include/unixconf.h
+              sed -i '/^#define SUSPEND/d'        include/unixconf.h
+              sed -i 's/^#define TEXTCOLOR//'     include/unixconf.h
+              make fetch-lua
+              test -d "lib/lua-$LUA_VERSION/src" || exit 0
+              make install
+              cat dat/options
+    - name: windows-visualstudio
+      os: windows
+      language: shell
+      script:
+        - ./win/win32/vs2017/travisci.sh
+    - name: windows-mingw
+      os: windows
+#     install: choco install mingw
+      script:
+        - export ADD_CURSES=Y
+        - export PDCURSES_TOP=../lib/pdcurses
+        - export LUA_VERSION=5.3.5
+        - sh sys/winnt/travis-gcc.sh
+        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+        - test -d "lib/pdcurses" || exit 0
+        - cd src
+        - cp ../sys/winnt/Makefile.gcc ./Makefile
+        - mingw32-make install
+    - name: msdos-linuxhost-crosscompile
+      os: linux
+      env: HINTS=linux LUA_VERSION=5.3.5
+      compiler: gcc
+      script:
+#        - export
+        - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+        - make fetch-lua
+        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+        - cd lib/lua-$LUA_VERSION/src && make a && cd ../../.. 
+        - sh sys/msdos/msdos-cross-compile.sh
   exclude:
   - os: osx
     osx_image: xcode10.2

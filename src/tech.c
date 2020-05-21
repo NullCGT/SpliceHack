@@ -15,7 +15,9 @@ static void NDECL(doblitzlist);
 static int FDECL(get_tech_no,(int));
 static int FDECL(techeffects, (int));
 static void FDECL(hurtmon, (struct monst *,int));
+#if 0
 static int FDECL(mon_to_zombie, (int));
+#endif
 static int NDECL(tinker);
 static int NDECL(draw_energy);
 static const struct innate_tech * NDECL(role_tech);
@@ -1131,6 +1133,7 @@ tamedog(mtmp, (struct obj *) 0);
 			break;
         case T_RAISE_ZOMBIES:
             You("chant the ancient curse...");
+			#if 0
 			for(i = -1; i <= 1; i++) for(j = -1; j <= 1; j++) {
 				int corpsenm;
 
@@ -1160,6 +1163,7 @@ tamedog(mtmp, (struct obj *) 0);
 				}
 				}
 			}
+			#endif
 			nomul(-2); /* You need to recover */
 			g.nomovemsg = 0;
 			t_timeout = rn1(1000,500);
@@ -1647,6 +1651,7 @@ tamedog(mtmp, (struct obj *) 0);
 			t_timeout = rn1(1000, 500);
 			break;
 		case T_HEART_CARDS:
+			otmp = (struct obj *) 0;
 			if (Slimed) {
 				j = SCR_FIRE;
 			} else if (critically_low_hp(FALSE)) {
@@ -1673,8 +1678,10 @@ tamedog(mtmp, (struct obj *) 0);
 			}
 			pline("With a flourish, you exchange your first card for one from beyond!");
 			You("shout the incantation on the card, and know with all your heart that this card is the one!");
-			(void) seffects(otmp);
-			useup(otmp);
+			if (otmp) {
+				(void) seffects(otmp);
+				useup(otmp);
+			}
 			u.uconduct.polypiles++;
 			t_timeout = rn1(1000, 500);
 			break;
@@ -2035,6 +2042,7 @@ int oldlevel, newlevel;
 	}
 }
 
+#if 0
 int
 mon_to_zombie(monnum)
 int monnum;
@@ -2056,6 +2064,7 @@ int monnum;
 	if (!rn2(4)) return PM_GHAST;
 	else return PM_GHOUL;
 }
+#endif
 
 
 /*WAC tinker code*/

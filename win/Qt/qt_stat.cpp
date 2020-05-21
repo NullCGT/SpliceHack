@@ -431,7 +431,7 @@ void NetHackQtStatusWindow::updateStats()
     if (u.mtimedone) {
 	buf = nh_capitalize_words(mons[u.umonnum].mname);
     } else {
-	buf = rank_of(u.ulevel, g.pl_character[0], ::flags.female);
+	buf = rank_of(u.ulevel, g.pl_character[0], ::flags.gender);
     }
     QString buf2;
     buf2.sprintf("%s the %s", g.plname, buf.toLatin1().constData());

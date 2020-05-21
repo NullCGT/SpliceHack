@@ -176,7 +176,7 @@ E void NDECL(bot);
 E void NDECL(timebot);
 E int FDECL(xlev_to_rank, (int));
 E int FDECL(rank_to_xlev, (int));
-E const char *FDECL(rank_of, (int, SHORT_P, BOOLEAN_P));
+E const char *FDECL(rank_of, (int, SHORT_P, int));
 E int FDECL(title_to_mon, (const char *, int *, int *));
 E void NDECL(max_rank_sz);
 #ifdef SCORE_ON_BOTL

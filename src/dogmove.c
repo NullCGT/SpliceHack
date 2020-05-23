@@ -527,6 +527,7 @@ boolean devour;
             /* delobj->obfree will handle actual shop billing update */
         }
         delobj(obj);
+        obj = NULL;
     }
 
 #if 0 /* pet is eating, so slime recovery is not feasible... */
@@ -564,7 +565,7 @@ boolean devour;
         else
             mtmp->perminvis = 1;
     }
-    if (obj->otyp == CORPSE)
+    if (obj && obj->otyp == CORPSE)
         mon_givit(mtmp, &mons[obj->corpsenm], obj->oeroded);
     return 1;
 }

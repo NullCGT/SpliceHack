@@ -75,6 +75,7 @@ struct monst *rider;
         if (nmon == rider)
             nmon = rider->nmon;
         if (monnear(rider, steed->mx, steed->my) && can_saddle(steed) 
+            && !DEADMONSTER(steed)
             && !is_covetous(steed->data) && !steed->mtame
             && steed != u.ustuck && steed->mcanmove
             && !steed->msleeping && !steed->rider_id) {

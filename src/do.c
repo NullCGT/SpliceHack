@@ -2133,7 +2133,7 @@ boolean moldy;
             if (is_uwep) {
                 if (moldy) {
                     pline_The("moldy corpse in your %s grows into %s!",
-                        body_part(HAND), canspotmon(mtmp) ? a_monnam(mtmp))
+                        body_part(HAND), canspotmon(mtmp) ? a_monnam(mtmp)
                                                           : "a monster");
                 }
                 else

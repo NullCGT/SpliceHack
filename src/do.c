@@ -2134,7 +2134,7 @@ boolean moldy;
                 if (moldy) {
                     pline_The("moldy corpse in your %s grows into %s!",
                         body_part(HAND), canspotmon(mtmp) ? a_monnam(mtmp))
-                                                          : "a monster";
+                                                          : "a monster");
                 }
                 else
                     pline_The("%s writhes out of your grasp!", cname);

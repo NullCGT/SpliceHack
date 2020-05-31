@@ -1028,7 +1028,7 @@ int dieroll;
         break;
     case AD_CLOB:
         if (tmp != 0 && !rn2(5)) {
-            You("%s knocks %s back with an awesome blow!", Monnam(magr), mon_nam(mdef));
+            pline("%s knocks %s back with an awesome blow!", Monnam(magr), mon_nam(mdef));
             mhurtle(magr, magr->mx - mdef->mx, magr->my - mdef->my, rn1(3, 3));
         }
         goto physical;

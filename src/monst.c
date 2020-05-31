@@ -2393,7 +2393,7 @@ NEARDATA struct permonst mons_init[] = {
           NO_ATTK, NO_ATTK),
         SIZ(1200, 300, MS_SILENT, MZ_LARGE), MR_POISON, MR_POISON,
         M1_BREATHLESS | M1_NOHEAD | M1_POIS,
-        M2_HOSTILE | M2_NEUTER | M2_COLLECT, 0, 0, 5, CLR_CYAN),
+        M2_HOSTILE | M2_NEUTER | M2_COLLECT, 0, 0, 7, CLR_CYAN),
      MON("myconid elder", S_FUNGUS, LVL(12, 11, 7, 0, 0), (G_GENO | 1),
         A(ATTK(AT_MAGC, AD_CLRC, 0, 0), ATTK(AT_WEAP, AD_PHYS, 3, 10), 
           ATTK(AT_TUCH, AD_STCK, 0, 0), NO_ATTK,
@@ -2401,7 +2401,7 @@ NEARDATA struct permonst mons_init[] = {
         SIZ(1300, 300, MS_SILENT, MZ_LARGE), MR_POISON, MR_POISON,
         M1_BREATHLESS | M1_NOHEAD | M1_POIS,
         M2_HOSTILE | M2_NEUTER | M2_LORD | M2_COLLECT | M2_MAGIC, 
-        0, 0, 5, HI_LORD),
+        0, 0, 14, HI_LORD),
     /*
      * Gnomes
      */

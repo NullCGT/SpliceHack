@@ -364,13 +364,15 @@ boolean foundyou;
             break;
         case 2:
             pline("%s files a restraining order against you!", Monnam(mtmp));
-            if (Free_action) {
-                nomul(-rnd(mtmp->m_lev));
+            if (!Free_action) {
+                nomul(-rnd(5));
                 g.multi_reason = "restrained via restraining order";
+                g.nomovemsg = You_can_move_again;
             } else {
                 shieldeff(u.ux, u.uy);
                 You("weasel your way out of it!");
             }
+            dmg = 0;
             break;
         default:
             pline("%s slaps you with a slap suit!", Monnam(mtmp));

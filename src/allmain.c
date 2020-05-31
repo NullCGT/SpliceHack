@@ -74,6 +74,8 @@ boolean resuming;
         pline("Happy pi day!");
     } else if (mayfourth()) {
         pline("May the fourth be with you!");
+    } else if (junethack()) {
+        pline("Happy Junethack!");
     }
 
     if (!resuming) { /* new game */

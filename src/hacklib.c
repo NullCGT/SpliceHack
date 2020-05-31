@@ -1198,8 +1198,15 @@ mayfourth()
 {
     register struct tm *lt = getlt();
 
-    /* tm_mon (month, 0-11) */
     return (boolean) (lt->tm_mday == 4 && lt->tm_mon == 4);
+}
+
+boolean
+junethack()
+{
+    register struct tm *lt = getlt();
+
+    return (boolean) (lt->tm_mon == 5);
 }
 
 boolean

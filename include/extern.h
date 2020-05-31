@@ -1014,6 +1014,7 @@ E int NDECL(phase_of_the_moon);
 E boolean NDECL(friday_13th);
 E boolean NDECL(pi_day);
 E boolean NDECL(mayfourth);
+E boolean NDECL(junethack);
 E boolean NDECL(halloween);
 E int NDECL(night);
 E int NDECL(midnight);

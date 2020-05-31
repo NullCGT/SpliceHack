@@ -776,7 +776,7 @@ boolean playing; /* < True if game is running */
 #endif
             g.urole.filecode,
             g.urace.filecode,
-            genders[flags.female].filecode,
+            genders[flags.gender].filecode,
             aligns[1 - u.ualign.type].filecode,
 #ifdef RECORD_CONDUCT
             encodeconduct(),

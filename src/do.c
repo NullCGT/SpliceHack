@@ -2132,8 +2132,9 @@ boolean moldy;
         case OBJ_INVENT:
             if (is_uwep) {
                 if (moldy) {
-                    pline_The("moldy %s in your hand grows into a %s!", cname,
-                              mon_nam(mtmp));
+                    pline_The("moldy corpse in your %s grows into %s!",
+                        body_part(HAND), canspotmon(mtmp) ? a_monnam(mtmp)
+                                                          : "a monster");
                 }
                 else
                     pline_The("%s writhes out of your grasp!", cname);
@@ -2148,7 +2149,7 @@ boolean moldy;
                 if (moldy)
                     pline("%s grows on a moldy corpse!", Amonnam(mtmp));
                 else if (pm == PM_DEATH) {
-                    pline("%s rises from the dead in a whirl of specral skulls!",
+                    pline("%s rises from the dead in a whirl of spectral skulls!",
                         Monnam(mtmp));
                 } else if (pm == PM_PESTILENCE) {
                     pline("%s rises from the dead in a churning pillar of flies!",

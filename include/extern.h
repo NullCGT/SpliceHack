@@ -1,4 +1,4 @@
-/* NetHack 3.6	extern.h	$NHDT-Date: 1588798973 2020/05/06 21:02:53 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.842 $ */
+/* NetHack 3.6	extern.h	$NHDT-Date: 1590904081 2020/05/31 05:48:01 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.847 $ */
 /* Copyright (c) Steve Creps, 1988.				  */
 /* NetHack may be freely redistributed.  See license for details. */
 /* Edited on 5/8/18 by NullCGT */
@@ -474,6 +474,7 @@ E char *FDECL(mon_nam_too, (struct monst *, struct monst *));
 E char *FDECL(monverbself, (struct monst *, char *,
                             const char *, const char *));
 E char *FDECL(minimal_monnam, (struct monst *, BOOLEAN_P));
+E char *FDECL(bogusmon, (char *, char *));
 E char *FDECL(rndmonnam, (char *));
 E const char *FDECL(hcolor, (const char *));
 E const char *NDECL(rndcolor);
@@ -2048,6 +2049,7 @@ E boolean FDECL(allow_category, (struct obj *));
 E boolean FDECL(is_worn_by_type, (struct obj *));
 E int FDECL(ck_bag, (struct obj *));
 E boolean FDECL(mbag_explodes, (struct obj *, int));
+E void FDECL(removed_from_icebox, (struct obj *));
 #ifdef USE_TRAMPOLI
 E int FDECL(in_container, (struct obj *));
 E int FDECL(out_container, (struct obj *));
@@ -2550,6 +2552,7 @@ E int NDECL(tiphat);
 #ifdef USER_SOUNDS
 E int FDECL(add_sound_mapping, (const char *));
 E void FDECL(play_sound_for_message, (const char *));
+E void NDECL(release_sound_mappings);
 #endif
 
 /* ### sp_lev.c ### */

@@ -34,10 +34,6 @@ early_init()
     sys_early_init();
 }
 
-#ifdef EXTRAINFO_FN
-static long prev_dgl_extrainfo = 0;
-#endif
-
 void
 moveloop(resuming)
 boolean resuming;

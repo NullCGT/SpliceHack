@@ -14,7 +14,7 @@
  * Incrementing EDITLEVEL can be used to force invalidation of old bones
  * and save files.
  */
-#define EDITLEVEL 21
+#define EDITLEVEL 20
 
 #define COPYRIGHT_BANNER_A "SpliceHack, a NetHack variant by AntiGulp. Copyright 1985-2020"
 #define COPYRIGHT_BANNER_B \
@@ -31,7 +31,7 @@
  * PP = patch level, ee = edit level, L = literal suffix "L",
  * with all four numbers specified as two hexadecimal digits.
  */
-#define VERSION_COMPATIBILITY 0x00070121L
+#define VERSION_COMPATIBILITY 0x00070100L
 
 /****************************************************************************/
 /* Version 3.7.x */

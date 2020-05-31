@@ -218,12 +218,6 @@
    (whose name can be overridden via #define in global.h if desired) */
 #define LOGFILE  "logfile"  /* larger file for debugging purposes */
 #define XLOGFILE "xlogfile" /* even larger logfile */
-#define LIVELOGFILE "livelog" /* in-game events recorded live */
-#ifdef LIVELOGFILE
-/* LL_flags defined in global.h. Value below is ignored if SYSCF is enabled */
-/* #define LIVELOG_DETAIL (LL_WISH|LL_ACHIEVE|LL_UMONST) */
-#define LIVELOG_DETAIL 0xFF
-#endif
 
 /* Can be commented out for JunetHack, in order to simplify cause of death. */
 #define UNIQDEATHS
@@ -542,14 +536,6 @@ typedef unsigned char uchar;
    but it isn't necessary for successful operation of the program */
 #define FREE_ALL_MEMORY             /* free all memory at exit */
 
-/* Extra enhancements borrowed from nao343 and elsewhwere
-   for dgamelaunch-based server play */
-/* #define DGAMELAUNCH */
-#ifdef DGAMELAUNCH
-#define EXTRAINFO_FN    "/dgldir/extrainfo-spl/%n.extrainfo"
-#define MAILCKFREQ 5  /* SIMPLE_MAIL is in unixconf.h */
-#endif
-
 /* EXTRA_SANITY_CHECKS adds extra impossible calls,
  * probably not useful for normal play */
 /* #define EXTRA_SANITY_CHECKS */
@@ -571,7 +557,26 @@ typedef unsigned char uchar;
    whole thing, then type a new end for the text. */
 /* #define EDIT_GETLIN */
 
-/* #define WHEREIS_FILE "whereis/%n.whereis" */ /* Write out player's current location to player.whereis */
+/* Extra server enhancements for
+   dgamelaunch-based server play */
+/* #define DGAMELAUNCH */
+#ifdef DGAMELAUNCH
+#define EXTRAINFO_FN    "/dgldir/extrainfo-spl/%n.extrainfo"
+#define MAILCKFREQ 5    /* SIMPLE_MAIL is in unixconf.h */
+#define WHEREIS_FILE    "whereis/%n.whereis" /* Write out player's current location to player.whereis */
+
+/* Live-logging - not particularly experimental, but very optional */
+/* #define LIVELOG_ENABLE */
+#ifdef LIVELOG_ENABLE
+#define LIVELOGFILE "livelog" /* in-game events recorded live */
+#ifdef LIVELOGFILE
+/* LL_flags defined in global.h. Value below is ignored if SYSCF is enabled */
+/* #define LIVELOG_DETAIL (LL_WISH | LL_ACHIEVE | LL_UMONST) */
+#define LIVELOG_DETAIL 0xFF
+#endif
+#endif /* LIVELOG_ENABLE */
+
+#endif /* DGAMELAUNCH */
 
 /* #define DUMPLOG */  /* End-of-game dump logs */
 /* #define DUMPHTML */ /* End-of-game HTML dumps */
@@ -605,14 +610,13 @@ typedef unsigned char uchar;
 
 #ifndef DUMPHTML_FILE
 #define DUMPHTML_FILE        "/tmp/splicehack.%n.%d.html"
-/* Placeholders as above 
+/* Placeholders as above
  * DUMPHTML_FILE is not used if SYSCF is defiined
  */
 
 #endif
 
 #endif /* DUMPHTML */
- 
 #endif /* DUMPLOG || DUMPHTML */
 
 #define USE_ISAAC64 /* Use cross-plattform, bundled RNG */

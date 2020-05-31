@@ -392,10 +392,10 @@ register struct obj *obj;
 
     if (obj->oclass != COIN_CLASS) {
         /* KMH, conduct */
-        if(!u.uconduct.gnostic++)
+        if (!u.uconduct.gnostic++)
             livelog_printf(LL_CONDUCT,
-                    "eschewed atheism, by dropping %s on an altar",
-                    doname(obj));
+                           "eschewed atheism, by dropping %s on an altar",
+                           doname(obj));
     } else {
         /* coins don't have bless/curse status */
         obj->blessed = obj->cursed = 0;
@@ -1591,6 +1591,10 @@ boolean at_stairs, falling, portal;
     /* digging context is level-aware and can actually be resumed if
        hero returns to the previous level without any intervening dig */
 
+#ifdef WHEREIS_FILE
+    touch_whereis();
+#endif
+
     if (falling) /* assuming this is only trap door or hole */
         impact_drop((struct obj *) 0, u.ux, u.uy, newlevel->dlevel);
 
@@ -1695,6 +1699,7 @@ boolean at_stairs, falling, portal;
         }
         mklev();
         new = TRUE; /* made the level */
+        livelog_printf (LL_DEBUG, "entered new level %d, %s.", dunlev(&u.uz), g.dungeons[u.uz.dnum].dname );
 
         livelog_printf (LL_DEBUG, "entered new level %d, %s.", dunlev(&u.uz), g.dungeons[u.uz.dnum].dname );
         familiar = (find_ghost_with_name(g.plname) != (struct monst *) 0);
@@ -1882,9 +1887,7 @@ boolean at_stairs, falling, portal;
             You_hear("groans and moans everywhere.");
         } else
             pline("It is hot here.  You smell smoke...");
-        if (record_achievement(ACH_HELL)) { /* reached Gehennom */
-            livelog_write_string(LL_ACHIEVE, "entered Gehennom");
-        }
+        record_achievement(ACH_HELL); /* reached Gehennom */
     }
     /* in case we've managed to bypass the Valley's stairway down */
     if (Inhell && !Is_valley(&u.uz))

@@ -221,9 +221,9 @@ doread()
             You("break up the cookie and throw away the pieces.");
         outrumor(bcsign(scroll), BY_COOKIE);
         if (!Blind)
-            if(!u.uconduct.literate++)
+            if (!u.uconduct.literate++)
                 livelog_write_string(LL_CONDUCT,
-                        "became literate by reading a fortune cookie");
+                                     "became literate by reading a fortune cookie");
         useup(scroll);
         return 1;
     } else if (scroll->otyp == T_SHIRT || scroll->otyp == ALCHEMY_SMOCK) {
@@ -241,9 +241,9 @@ doread()
                   suit_simple_name(uarm));
             return 0;
         }
-        if(!u.uconduct.literate++)
+        if (!u.uconduct.literate++)
             livelog_printf(LL_CONDUCT, "became literate by reading %s",
-                    (scroll->otyp == T_SHIRT) ? "a T-shirt" : "an apron");
+                           (scroll->otyp == T_SHIRT) ? "a T-shirt" : "an apron");
         /* populate 'buf[]' */
         mesg = (scroll->otyp == T_SHIRT) ? tshirt_text(scroll, buf)
                                          : apron_text(scroll, buf);
@@ -300,9 +300,11 @@ doread()
               (!((int) scroll->o_id % 3)),
               (((int) scroll->o_id * 7) % 10),
               (flags.verbose || Blind) ? "." : "");
-        if(!u.uconduct.literate++)
+        if (!u.uconduct.literate++)
             livelog_write_string(LL_CONDUCT,
-                    "became literate by reading a credit card");
+                                 Role_if(PM_CARTOMANCER) ? 
+                                    "became literate by reading a holographic card" :
+                                    "became literate by reading a credit card");
         return 1;
     } else if (scroll->otyp == CAN_OF_GREASE) {
         pline("This %s has no label.", singular(scroll, xname));
@@ -325,9 +327,9 @@ doread()
         if (flags.verbose)
             pline("It reads:");
         pline("\"Magic Marker(TM) Red Ink Marker Pen.  Water Soluble.\"");
-        if(!u.uconduct.literate++)
+        if (!u.uconduct.literate++)
             livelog_write_string(LL_CONDUCT,
-                    "became literate by reading a magic marker");
+                                 "became literate by reading a magic marker");
         return 1;
     } else if (scroll->oclass == COIN_CLASS) {
         if (Blind)
@@ -335,9 +337,9 @@ doread()
         else if (flags.verbose)
             You("read:");
         pline("\"1 Zorkmid.  857 GUE.  In Frobs We Trust.\"");
-        if(!u.uconduct.literate++)
+        if (!u.uconduct.literate++)
             livelog_write_string(LL_CONDUCT,
-                    "became literate by reading a coin's engravings");
+                                 "became literate by reading a coin's engravings");
         return 1;
     } else if (scroll->oartifact == ART_ORB_OF_FATE) {
         if (Blind)
@@ -345,9 +347,9 @@ doread()
         else
             pline("It is signed:");
         pline("\"Odin.\"");
-        if(!u.uconduct.literate++)
+        if (!u.uconduct.literate++)
             livelog_write_string(LL_CONDUCT,
-                    "became literate by reading the divine signature of Odin");
+                                 "became literate by reading the divine signature of Odin");
         return 1;
     } else if (scroll->otyp == CANDY_BAR) {
         static const char *wrapper_msgs[] = {
@@ -366,9 +368,9 @@ doread()
         }
         pline("The wrapper reads: \"%s\".",
               wrapper_msgs[scroll->o_id % SIZE(wrapper_msgs)]);
-        if(!u.uconduct.literate++)
+        if (!u.uconduct.literate++)
             livelog_write_string(LL_CONDUCT,
-                    "became literate by reading a candy bar wrapper");
+                                 "became literate by reading a candy bar wrapper");
         return 1;
     } else if (scroll->oclass != SCROLL_CLASS
                && scroll->oclass != SPBOOK_CLASS) {
@@ -415,10 +417,10 @@ doread()
     if (scroll->otyp != SPE_BOOK_OF_THE_DEAD
         && scroll->otyp != SPE_BLANK_PAPER && scroll->otyp != SCR_BLANK_PAPER
         && scroll->otyp != SPE_NOVEL)
-        if(!u.uconduct.literate++)
+        if (!u.uconduct.literate++)
             livelog_printf(LL_CONDUCT, "became literate by reading %s",
-                    scroll->oclass == SPBOOK_CLASS ? "a book" :
-                    scroll->oclass == SCROLL_CLASS ? "a scroll" : "something");
+                           scroll->oclass == SPBOOK_CLASS ? "a book" :
+                           scroll->oclass == SCROLL_CLASS ? "a scroll" : "something");
 
     if (scroll->oclass == SPBOOK_CLASS) {
         return study_book(scroll);
@@ -2665,13 +2667,13 @@ do_class_genocide()
                     /* This check must be first since player monsters might
                      * have G_GENOD or !G_GENO.
                      */
-                    if(!ll_done++) {
-                        if (!num_genocides()) {
-                            livelog_printf(LL_CONDUCT|LL_GENOCIDE,
-                                "performed %s first genocide (class %c)", uhis(), def_monsyms[class].sym);
-                        } else {
+                    if (!ll_done++) {
+                        if (!num_genocides())
+                            livelog_printf(LL_CONDUCT | LL_GENOCIDE,
+                                           "performed %s first genocide (class %c)",
+                                           uhis(), def_monsyms[class].sym);
+                        else
                             livelog_printf(LL_GENOCIDE, "genocided class %c", def_monsyms[class].sym);
-                        }
                     }
                     g.mvitals[i].mvflags |= (G_GENOD | G_NOCORPSE);
                     kill_genocided_monsters();
@@ -2850,11 +2852,11 @@ int how;
             which = !type_is_pname(ptr) ? "the " : "";
     }
     if (how & REALLY) {
-        if(!num_genocides())
-            livelog_printf(LL_CONDUCT|LL_GENOCIDE,
-                    "performed %s first genocide (%s)", uhis(), buf);
+        if (!num_genocides())
+            livelog_printf(LL_CONDUCT | LL_GENOCIDE,
+                           "performed %s first genocide (%s)", uhis(), makeplural(buf));
         else
-            livelog_printf(LL_GENOCIDE, "genocided %s", buf);
+            livelog_printf(LL_GENOCIDE, "genocided %s", makeplural(buf));
 
         /* setting no-corpse affects wishing and random tin generation */
         g.mvitals[mndx].mvflags |= (G_GENOD | G_NOCORPSE);

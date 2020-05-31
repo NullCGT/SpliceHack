@@ -1532,11 +1532,11 @@ dosacrifice()
         struct monst *mtmp;
 
         /* KMH, conduct */
-        if(!u.uconduct.gnostic++)
+        if (!u.uconduct.gnostic++)
             livelog_printf(LL_CONDUCT,
-                    "rejected atheism by offering %s on an altar of %s",
-                    corpse_xname(otmp, (const char *)0, CXN_ARTICLE),
-                    a_gname());
+                           "rejected atheism by offering %s on an altar of %s",
+                           corpse_xname(otmp, (const char *) 0, CXN_ARTICLE),
+                           a_gname());
 
         /* you're handling this corpse, even if it was killed upon the altar
          */
@@ -1974,10 +1974,9 @@ dosacrifice()
                     u.ublesscnt = rnz(300 + (50 * nartifacts));
                     exercise(A_WIS, TRUE);
                     livelog_printf (LL_DIVINEGIFT|LL_ARTIFACT,
-                            "had %s bestowed upon %s by %s",
-                            artiname(otmp->oartifact),
-                            uhim(),
-                            align_gname(u.ualign.type));
+                                    "had %s bestowed upon %s by %s",
+                                    artiname(otmp->oartifact),
+                                    uhim(), align_gname(u.ualign.type));
                     /* make sure we can use this weapon */
                     unrestrict_weapon_skill(weapon_type(otmp));
                     if (!Hallucination && !Blind) {
@@ -2073,7 +2072,7 @@ dopray()
     if (ParanoidPray && yn("Are you sure you want to pray?") != 'y')
         return 0;
 
-    if(!u.uconduct.gnostic++)
+    if (!u.uconduct.gnostic++)
         /* breaking conduct should probably occur in can_pray() at
          * "You begin praying to %s", as demons who find praying repugnant
          * should not break conduct.  Also we can add more detail to the
@@ -2213,7 +2212,8 @@ doturn()
         You("don't know how to turn undead!");
         return 0;
     }
-    u.uconduct.gnostic++;
+    if (!u.uconduct.gnostic++)
+        livelog_write_string(LL_CONDUCT, "rejected atheism by turning undead");
     Gname = halu_gname(u.ualign.type);
     if(!u.uconduct.gnostic++)
         livelog_write_string(LL_CONDUCT, "rejected atheism by turning undead");
@@ -2228,6 +2228,7 @@ doturn()
            move if this is the first time agnostic conduct has been broken */
         return (u.uconduct.gnostic == 1);
     }
+
     if ((u.ualign.type != A_CHAOTIC
          && (is_demon(g.youmonst.data)
              || is_undead(g.youmonst.data) || is_vampshifter(&g.youmonst)))

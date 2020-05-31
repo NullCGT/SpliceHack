@@ -1026,6 +1026,8 @@ unsigned long *colormasks UNUSED;
                 Strcpy(nb = eos(nb), " Fly");
             if (cond & BL_MASK_RIDE)
                 Strcpy(nb = eos(nb), " Ride");
+            if (cond & BL_MASK_WITHER)
+                Strcpy(nb = eos(nb), " Wither");
             break;
         default:
             Sprintf(status_vals[idx],
@@ -1666,6 +1668,26 @@ dump_render_status()
     long mask, bits;
     int i, idx, c, row, num_rows, coloridx = 0, attrmask = 0;
     char *text;
+    struct condition_t { /* auto, since this only gets called once */
+        long mask;
+        const char *text;
+    } conditions[] = {
+        /* The sequence order of these matters */
+        { BL_MASK_STONE,     "Stone"    },
+        { BL_MASK_SLIME,     "Slime"    },
+        { BL_MASK_STRNGL,    "Strngl"   },
+        { BL_MASK_FOODPOIS,  "FoodPois" },
+        { BL_MASK_TERMILL,   "TermIll"  },
+        { BL_MASK_BLIND,     "Blind"    },
+        { BL_MASK_DEAF,      "Deaf"     },
+        { BL_MASK_STUN,      "Stun"     },
+        { BL_MASK_CONF,      "Conf"     },
+        { BL_MASK_HALLU,     "Hallu"    },
+        { BL_MASK_LEV,       "Lev"      },
+        { BL_MASK_FLY,       "Fly"      },
+        { BL_MASK_RIDE,      "Ride"     },
+        { BL_MASK_WITHER,    "Wither"   }
+    };
 
     num_rows = (iflags.wc2_statuslines < 3) ? 2 : 3;
     for (row = 0; row < num_rows; ++row) {
@@ -1695,8 +1717,8 @@ dump_render_status()
                             dump_set_color_attr(coloridx, attrmask, TRUE);
                         }
 #endif
-                        putstr(NHW_STATUS, 0, conditions[c].text[1]);
-                        pad -= strlen(conditions[c].text[1]);
+                        putstr(NHW_STATUS, 0, conditions[c].text);
+                        pad -= strlen(conditions[c].text);
 #ifdef STATUS_HILITES
                         if (iflags.hilite_delta) {
                             dump_set_color_attr(coloridx, attrmask, FALSE);
@@ -1967,11 +1989,6 @@ time_t now;
     char *fname = (char *)0;
 
     dumplog_now = now;
-/* #ifdef SYSCF
-    if (!sysopt.dumplogfile)
-        return;
-    fname = dump_fmtstr(sysopt.dumplogfile, buf, TRUE);
-#else */
 #ifdef DUMPLOG
     fname = dump_fmtstr(DUMPLOG_FILE, buf, TRUE);
     if (fname)
@@ -2034,11 +2051,10 @@ const char *str;
         fprintf(dumplog_file, "%s\n", str);
 #ifdef DUMPHTML
     if (dumphtml_file && win != NHW_DUMPTXT) {
-        if (win == NHW_STATUS) {
+        if (win == NHW_STATUS)
             html_dump_str(dumphtml_file, str);
-        } else {
+        else
             html_dump_line(dumphtml_file, win, attr, str);
-        }
     }
 #endif
 }
@@ -2183,79 +2199,6 @@ boolean onoff_flag;
 }
 #endif
 
-#ifdef EXTRAINFO_FN
-/* This probably belongs in files.c, but it
- * uses dump_fmtstr() which is static here.
- */
-void
-mk_dgl_extrainfo()
-{
-    FILE *extrai = (FILE *)0;
-#ifdef UNIX
-    mode_t eimode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
-#endif
-    char new_fn[512];
-
-    dump_fmtstr(EXTRAINFO_FN,new_fn,TRUE);
-
-    extrai = fopen(new_fn, "w");
-    if (!extrai) {
-    } else {
-        int sortval = 0;
-        char tmpdng[16];
-        sortval += (u.uhave.amulet ? 1024 : 0);
-        if (Is_knox(&u.uz)) {
-            Sprintf(tmpdng, "%s", "Knx");
-            sortval += 245;
-        } else if (In_quest(&u.uz)) {
-            Sprintf(tmpdng, "%s%i", "Q", dunlev(&u.uz));
-            sortval += 250+(dunlev(&u.uz));
-        } else if (In_endgame(&u.uz)) {
-            Sprintf(tmpdng, "%s", "End");
-            sortval += 256;
-        } else if (In_tower(&u.uz)) {
-            Sprintf(tmpdng, "T%i", dunlev(&u.uz));
-            sortval += 235+(depth(&u.uz));
-        } else if (In_sokoban(&u.uz)) {
-            Sprintf(tmpdng, "S%i", dunlev(&u.uz));
-            sortval += 225+(depth(&u.uz));
-        } else if (In_mines(&u.uz)) {
-            Sprintf(tmpdng, "M%i", dunlev(&u.uz));
-            sortval += 215+(dunlev(&u.uz));
-        } else {
-            Sprintf(tmpdng, "D%i", depth(&u.uz));
-            sortval += (depth(&u.uz));
-        }
-#ifdef UNIX
-        chmod(new_fn, eimode);
-#endif
-        fprintf(extrai, "%i|%c %s", sortval, (u.uhave.amulet ? 'A' : ' '), tmpdng);
-        fclose(extrai);
-    }
-}
-#endif /* EXTRAINFO_FN */
-
-void
-livelog_dump_url(llflags)
-unsigned int llflags;
-{
-#ifdef DUMPLOG
-    char buf[BUFSZ];
-    char *dumpurl;
-
-#ifdef SYSCF
-    if (!sysopt.dumplogurl)
-        return;
-    dumpurl = dump_fmtstr(sysopt.dumplogurl, buf, TRUE);
-#else
-    dumpurl = dump_fmtstr(DUMPLOG_URL, buf, TRUE);
-#endif
-    livelog_write_string(llflags,dumpurl);
-#else
-    nhUse(llflags);
-#endif /*?DUMPLOG*/
-}
-
 #ifdef TTY_GRAPHICS
 #ifdef TEXTCOLOR
 #ifdef TOS
@@ -2278,6 +2221,78 @@ int color;
 #endif
 #endif
     );
+}
+
+#ifdef EXTRAINFO_FN
+/* This probably belongs in files.c, but it
+ * uses dump_fmtstr() which is static here.
+ */
+void
+mk_dgl_extrainfo()
+{
+    FILE *extrai = (FILE *) 0;
+#ifdef UNIX
+    mode_t eimode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+#endif
+    char new_fn[512];
+
+    dump_fmtstr(EXTRAINFO_FN, new_fn, TRUE);
+
+    extrai = fopen(new_fn, "w");
+    if (!extrai) {
+    } else {
+        int sortval = 0;
+        char tmpdng[16];
+        sortval += (u.uhave.amulet ? 1024 : 0);
+        if (Is_knox(&u.uz)) {
+            Sprintf(tmpdng, "%s", "Knx");
+            sortval += 245;
+        } else if (In_quest(&u.uz)) {
+            Sprintf(tmpdng, "%s%i", "Q", dunlev(&u.uz));
+            sortval += 250 + (dunlev(&u.uz));
+        } else if (In_endgame(&u.uz)) {
+            Sprintf(tmpdng, "%s", "End");
+            sortval += 256;
+        } else if (In_tower(&u.uz)) {
+            Sprintf(tmpdng, "T%i", dunlev(&u.uz));
+            sortval += 235 + (depth(&u.uz));
+        } else if (In_sokoban(&u.uz)) {
+            Sprintf(tmpdng, "S%i", dunlev(&u.uz));
+            sortval += 225 + (depth(&u.uz));
+        } else if (In_mines(&u.uz)) {
+            Sprintf(tmpdng, "M%i", dunlev(&u.uz));
+            sortval += 215 + (dunlev(&u.uz));
+        } else {
+            Sprintf(tmpdng, "D%i", depth(&u.uz));
+            sortval += (depth(&u.uz));
+        }
+#ifdef UNIX
+        chmod(new_fn, eimode);
+#endif
+        fprintf(extrai, "%i|%c %s", sortval, (u.uhave.amulet ? 'A' : ' '), tmpdng);
+        fclose(extrai);
+    }
+}
+#endif /* EXTRAINFO_FN */
+void
+livelog_dump_url(llflags)
+unsigned int llflags;
+{
+#ifdef DUMPLOG
+    char buf[BUFSZ];
+    char *dumpurl;
+
+#ifdef SYSCF
+    if (!sysopt.dumplogurl)
+        return;
+    dumpurl = dump_fmtstr(sysopt.dumplogurl, buf, TRUE);
+#else
+    dumpurl = dump_fmtstr(DUMPLOG_URL, buf, TRUE);
+#endif
+    livelog_write_string(llflags, dumpurl);
+#else
+    nhUse(llflags);
+#endif /*?DUMPLOG*/
 }
 
 /*windows.c*/

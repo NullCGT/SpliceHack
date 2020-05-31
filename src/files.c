@@ -693,7 +693,7 @@ clearlocks()
 #endif /* ?PC_LOCKING,&c */
 
 #ifdef WHEREIS_FILE
-	delete_whereis();
+    delete_whereis();
 #endif
 }
 
@@ -732,93 +732,93 @@ int fd;
 void
 set_whereisfile()
 {
-	char *p = (char *) strstr(whereis_file, "%n");
-	if (p) {
-		int new_whereis_len = strlen(whereis_file)+strlen(g.plname)-2; /* %n */
-		char *new_whereis_fn = (char *) alloc((unsigned)(new_whereis_len+1));
-		char *q = new_whereis_fn;
-		strncpy(q, whereis_file, p-whereis_file);
-		q += p-whereis_file;
-		strncpy(q, g.plname, strlen(g.plname) + 1);
-		regularize(q);
-		q[strlen(g.plname)] = '\0';
-		q += strlen(q);
-		p += 2;   /* skip "%n" */
-		strncpy(q, p, strlen(p));
-		new_whereis_fn[new_whereis_len] = '\0';
-		Sprintf(whereis_file,"%s", new_whereis_fn);
-		free(new_whereis_fn); /* clean up the pointer */
-	}
+    char *p = (char *) strstr(whereis_file, "%n");
+    if (p) {
+        int new_whereis_len = strlen(whereis_file) + strlen(g.plname) - 2; /* %n */
+        char *new_whereis_fn = (char *) alloc((unsigned)(new_whereis_len + 1));
+        char *q = new_whereis_fn;
+        strncpy(q, whereis_file, p - whereis_file);
+        q += p - whereis_file;
+        strncpy(q, g.plname, strlen(g.plname) + 1);
+        regularize(q);
+        q[strlen(g.plname)] = '\0';
+        q += strlen(q);
+        p += 2;   /* skip "%n" */
+        strncpy(q, p, strlen(p));
+        new_whereis_fn[new_whereis_len] = '\0';
+        Sprintf(whereis_file, "%s", new_whereis_fn);
+        free(new_whereis_fn); /* clean up the pointer */
+    }
 }
 
-/** Write out information about current game to plname.whereis. */
+/* Write out information about current game to plname.whereis */
 void
 write_whereis(playing)
-boolean playing; /**< True if game is running.  */
+boolean playing; /* < True if game is running */
 {
-	FILE* fp;
-	char whereis_work[511];
-	if (strstr(whereis_file, "%n")) set_whereisfile();
-	Sprintf(whereis_work,
-	        "player=%s:depth=%d:dnum=%d:dname=%s:hp=%d:maxhp=%d:turns=%ld:score=%ld:role=%s:race=%s:gender=%s:align=%s:conduct=0x%lx:amulet=%d:ascended=%d:playing=%d\n",
-	        g.plname,
-	        depth(&u.uz),
-	        u.uz.dnum,
-	        g.dungeons[u.uz.dnum].dname,
-	        u.uhp,
-	        u.uhpmax,
-	        g.moves,
+    FILE* fp;
+    char whereis_work[511];
+    if (strstr(whereis_file, "%n"))
+        set_whereisfile();
+    Sprintf(whereis_work,
+            "player=%s:depth=%d:dnum=%d:dname=%s:hp=%d:maxhp=%d:turns=%ld:score=%ld:role=%s:race=%s:gender=%s:align=%s:conduct=0x%lx:amulet=%d:ascended=%d:playing=%d\n",
+            g.plname,
+            depth(&u.uz),
+            u.uz.dnum,
+            g.dungeons[u.uz.dnum].dname,
+            u.uhp,
+            u.uhpmax,
+            g.moves,
 #ifdef SCORE_ON_BOTL
-	        botl_score(),
+            botl_score(),
 #else
-	        0L,
+            0L,
 #endif
-	        g.urole.filecode,
-	        g.urace.filecode,
-	        genders[flags.gender].filecode,
-	        aligns[1-u.ualign.type].filecode,
+            g.urole.filecode,
+            g.urace.filecode,
+            genders[flags.female].filecode,
+            aligns[1 - u.ualign.type].filecode,
 #ifdef RECORD_CONDUCT
-	        encodeconduct(),
+            encodeconduct(),
 #else
-	        0L,
+            0L,
 #endif
-	        u.uhave.amulet ? 1 : 0,
-	        u.uevent.ascended ? 2 : (g.killer.name != NULL) ? 1 : 0,
-	        playing);
+            u.uhave.amulet ? 1 : 0,
+            u.uevent.ascended ? 2 : g.killer.name ? 1 : 0,
+            playing);
 
-	fp = fopen_datafile(whereis_file,"w",LEVELPREFIX);
-	if (fp) {
+    fp = fopen_datafile(whereis_file,"w",LEVELPREFIX);
+    if (fp) {
 #ifdef UNIX
-		mode_t whereismode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
-		chmod(fqname(whereis_file, LEVELPREFIX, 2), whereismode);
+        mode_t whereismode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
+        chmod(fqname(whereis_file, LEVELPREFIX, 2), whereismode);
 #endif
-		fwrite(whereis_work,strlen(whereis_work),1,fp);
-		fclose(fp);
-	} else {
-		pline("Can't open %s for output.", whereis_file);
-		pline("No whereis file created.");
-	}
+        fwrite(whereis_work, strlen(whereis_work), 1, fp);
+        fclose(fp);
+    } else {
+        pline("Can't open %s for output.", whereis_file);
+        pline("No whereis file created.");
+    }
 }
 
 /** Signal handler to update whereis information. */
 void
 signal_whereis(sig_unused)
-int sig_unused;
+int sig_unused UNUSED;
 {
-  sig_unused = 0; /* temporary kludge to silence a warning TODO: Fix this. */
-	touch_whereis();
+    touch_whereis();
 }
 
 void
 touch_whereis()
 {
-	write_whereis(TRUE);
+    write_whereis(TRUE);
 }
 
 void
 delete_whereis()
 {
-	write_whereis(FALSE);
+    write_whereis(FALSE);
 }
 #endif /* WHEREIS_FILE */
 
@@ -2716,6 +2716,12 @@ char *origbuf;
         if (sysopt.dumplogfile)
             free((genericptr_t) sysopt.dumplogfile);
         sysopt.dumplogfile = dupstr(bufp);
+#endif
+    } else if (in_sysconf && match_varname(buf, "DUMPLOGURL", 10)) {
+#ifdef DUMPLOG
+        if (sysopt.dumplogurl)
+            free((genericptr_t) sysopt.dumplogurl);
+        sysopt.dumplogurl = dupstr(bufp);
 #endif
     } else if (in_sysconf && match_varname(buf, "DUMPHTMLFILE", 12)) {
 #ifdef DUMPHTML
@@ -4812,19 +4818,22 @@ const char *buffer;
 #define LLOG_SEP '\t' /* livelog field separator */
     FILE* livelogfile;
 
-    if(!(ll_type & sysopt.livelog)) return;
-    if((ll_type == LL_CONDUCT) && (g.moves < sysopt.ll_conduct_turns)) return;
-    if(lock_file(LIVELOGFILE, SCOREPREFIX, 10)) {
-        if(!(livelogfile = fopen_datafile(LIVELOGFILE, "a", SCOREPREFIX))) {
+    if (!(ll_type & sysopt.livelog))
+        return;
+    if ((ll_type == LL_CONDUCT) && (g.moves < sysopt.ll_conduct_turns))
+        return;
+    if (lock_file(LIVELOGFILE, SCOREPREFIX, 10)) {
+        if (!(livelogfile = fopen_datafile(LIVELOGFILE, "a", SCOREPREFIX))) {
             pline("Cannot open live log file!");
         } else {
-            char tmpbuf[1024+1];
-            char msgbuf[512+1];
+            char tmpbuf[1024 + 1];
+            char msgbuf[512 + 1];
             char *c1 = msgbuf;
             strncpy(msgbuf, buffer, 512);
             msgbuf[512] = '\0';
             while (*c1 != '\0') {
-                if (*c1 == LLOG_SEP) *c1 = '_';
+                if (*c1 == LLOG_SEP)
+                    *c1 = '_';
                 c1++;
             }
             snprintf(tmpbuf, 1024, "lltype=%d%cplayer=%s%crole=%s%crace=%s%cgender=%s%calign=%s%cturns=%ld%cstarttime=%ld%ccurtime=%ld%cmessage=%s\n",
@@ -4873,7 +4882,7 @@ VA_DECL2(unsigned int, ll_type, const char *, fmt)
 void
 livelog_write_string(log_type, buffer)
 unsigned int log_type UNUSED;
-char *buffer UNUSED;
+const char *buffer UNUSED;
 {
 }
 

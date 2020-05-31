@@ -584,9 +584,9 @@ int dieroll;
     		    }
   	    }
 
-        if(u.uconduct.weaphit && !oldweaphit)
+        if (u.uconduct.weaphit && !oldweaphit)
             livelog_write_string(LL_CONDUCT,
-                    "hit with a wielded weapon for the first time");
+                                 "hit with a wielded weapon for the first time");
 
         if (Role_if(PM_DANCER))
             dance();

@@ -21,6 +21,10 @@ static void FDECL(regen_hp, (int));
 static void FDECL(interrupt_multi, (const char *));
 static void FDECL(debug_fields, (const char *));
 
+#ifdef EXTRAINFO_FN
+static long prev_dgl_extrainfo = 0;
+#endif
+
 void
 early_init()
 {
@@ -99,11 +103,9 @@ boolean resuming;
     g.context.move = 0;
 
     g.program_state.in_moveloop = 1;
-
 #ifdef WHEREIS_FILE
     touch_whereis();
 #endif
-
     for (;;) {
 #ifdef SAFERHANGUP
         if (g.program_state.done_hup)

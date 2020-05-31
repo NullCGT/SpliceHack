@@ -421,7 +421,7 @@ int how;
         g.killer.format = KILLED_BY;
     }
     /* _the_ <invisible> <distorted> ghost of Dudley */
-    if (mptr == &mons[PM_GHOST] && has_mname(mtmp)) {
+    if (is_bones_monster(mptr) && has_mname(mtmp)) {
         Strcat(buf, "the ");
         g.killer.format = KILLED_BY;
     }
@@ -462,10 +462,8 @@ int how;
                                : "%s imitating %s",
                 realnm, shape);
         mptr = mtmp->data; /* reset for mimicker case */
-    } else if (mptr == &mons[PM_GHOST]) {
-        Strcat(buf, "ghost");
-        if (has_mname(mtmp))
-            Sprintf(eos(buf), " of %s", MNAME(mtmp));
+    } else if (is_bones_monster(mptr)) {
+        Strcpy(buf, m_monnam(mtmp));
     } else if (mtmp->isshk && mptr != &mons[PM_ARMS_DEALER]) {
         const char *shknm = shkname(mtmp),
                    *honorific = shkname_is_pname(mtmp) ? ""
@@ -1671,7 +1669,7 @@ int how;
         raw_print("");
         raw_print("");
     }
-    livelog_dump_url(LL_DUMP_ALL|(how == ASCENDED ? LL_DUMP_ASC : 0));
+    livelog_dump_url(LL_DUMP_ALL | (how == ASCENDED ? LL_DUMP_ASC : 0));
     nh_terminate(EXIT_SUCCESS);
 }
 

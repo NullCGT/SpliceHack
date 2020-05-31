@@ -13,7 +13,6 @@ extern const char *hu_stat[]; /* defined in eat.c */
 const char *const enc_stat[] = { "",         "Burdened",  "Stressed",
                                  "Strained", "Overtaxed", "Overloaded" };
 
-static const char *NDECL(rank);
 static void NDECL(bot_via_windowport);
 static void NDECL(stat_update_time);
 #ifdef STATUS_HILITES
@@ -22,6 +21,9 @@ static boolean FDECL(status_hilite_remove, (int));
 static boolean FDECL(status_hilite_menu_fld, (int));
 static void NDECL(status_hilites_viewall);
 #endif
+
+/* limit of the player's name in the status window */
+#define BOTL_NSIZ 16
 
 static char *
 get_strength_str()
@@ -60,7 +62,7 @@ do_statusline1()
     Strcpy(newbot1, g.plname);
     if ('a' <= newbot1[0] && newbot1[0] <= 'z')
         newbot1[0] += 'A' - 'a';
-    newbot1[10] = 0;
+    newbot1[BOTL_NSIZ] = '\0';
     Sprintf(nb = eos(newbot1), " the ");
 
     if (Upolyd) {
@@ -347,7 +349,7 @@ int gender;
     return "Player";
 }
 
-static const char *
+const char *
 rank()
 {
     return rank_of(u.ulevel, Role_switch, flags.gender);

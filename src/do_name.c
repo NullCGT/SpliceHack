@@ -1395,8 +1395,8 @@ const char *name;
             alter_cost(obj, 0L);
         if (g.via_naming) {
             /* violate illiteracy conduct since successfully wrote arti-name */
-            if(!u.uconduct.literate++)
-                livelog_printf(LL_CONDUCT|LL_ARTIFACT, "became literate by naming %s", bare_artifactname(obj));
+            if (!u.uconduct.literate++)
+                livelog_printf(LL_CONDUCT | LL_ARTIFACT, "became literate by naming %s", bare_artifactname(obj));
             else
                 livelog_printf(LL_ARTIFACT, "chose %s to be named \"%s\"", ansimpleoname(obj), bare_artifactname(obj));
         }
@@ -1887,9 +1887,14 @@ boolean called;
     } else if (do_name && has_mname(mtmp)) {
         char *name = MNAME(mtmp);
 
-        if (mdat == &mons[PM_GHOST]) {
-            Sprintf(eos(buf), "%s ghost", s_suffix(name));
-            name_at_start = TRUE;
+        if (is_bones_monster(mdat)) {
+            if (mdat == &mons[PM_GHOST]) {
+                Sprintf(eos(buf), "%s ghost", s_suffix(name));
+                name_at_start = TRUE;
+            } else {
+                Sprintf(eos(buf), "%s the %s", name, pm_name);
+                name_at_start = TRUE;
+            }
         } else if (called) {
             Sprintf(eos(buf), "%s called %s", pm_name, name);
             name_at_start = (boolean) type_is_pname(mdat);

@@ -2604,15 +2604,56 @@ register struct monst *mtmp;
     }
 
     /* Medusa falls into two livelog categories,
-     * we log one message flagged for both categories.
+     * we log one message flagged for both categories,
+     * but only for the first kill. Subsequent kills are not an achievement.
+     * record_achievement() now handles this.
      */
-    if (mtmp->data == &mons[PM_MEDUSA]) {
+    if (mtmp->data == &mons[PM_MEDUSA])
         record_achievement(ACH_MEDU);
-        livelog_write_string(LL_ACHIEVE|LL_UMONST, "killed Medusa");
-    } else if (unique_corpstat(mtmp->data))
-        livelog_printf(LL_UMONST, "%s %s",
-              nonliving(mtmp->data) ? "destroyed" : "killed",
-              noit_mon_nam(mtmp));
+    else if (mtmp->data == &mons[PM_DEATH]) {
+        switch (g.mvitals[tmp].died) {
+            case 1:
+                livelog_printf(LL_UMONST, "put %s down for a little nap",
+                               noit_mon_nam(mtmp));
+                break;
+            case 5:
+            case 10:
+            case 50:
+            case 100:
+            case 150:
+            case 200:
+            case 250:
+                livelog_printf(LL_UMONST, "put %s down for a little nap (%d times)",
+                               noit_mon_nam(mtmp), g.mvitals[tmp].died);
+                break;
+            default:
+                /* don't spam the log every time */
+                break;
+        }
+    } else if (unique_corpstat(mtmp->data)) {
+        switch (g.mvitals[tmp].died) {
+            case 1:
+                if (mtmp->data != &mons[PM_MEDUSA])
+                    livelog_printf(LL_UMONST, "%s %s",
+                               nonliving(mtmp->data) ? "destroyed" : "killed",
+                               noit_mon_nam(mtmp));
+                break;
+            case 5:
+            case 10:
+            case 50:
+            case 100:
+            case 150:
+            case 200:
+            case 250:
+                livelog_printf(LL_UMONST, "%s %s (%d times)",
+                               nonliving(mtmp->data) ? "destroyed" : "killed",
+                               noit_mon_nam(mtmp), g.mvitals[tmp].died);
+                break;
+            default:
+                /* don't spam the log every time */
+                break;
+        }
+    }
 
     if (glyph_is_invisible(levl[mtmp->mx][mtmp->my].glyph))
         unmap_object(mtmp->mx, mtmp->my);
@@ -2963,8 +3004,8 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
 
     mtmp->mhp = 0; /* caller will usually have already done this */
     if (!noconduct) /* KMH, conduct */
-        if(!u.uconduct.killer++)
-            livelog_write_string (LL_CONDUCT,"killed for the first time");
+        if (!u.uconduct.killer++)
+            livelog_write_string (LL_CONDUCT, "killed for the first time");
 
     if (!nomsg) {
         boolean namedpet = has_mname(mtmp) && !Hallucination;
@@ -3153,13 +3194,23 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
             You_hear("the studio audience applaud!");
         if (!unique_corpstat(mdat) && has_mname(mtmp)) {
             livelog_printf(LL_KILLEDPET, "murdered %s, %s faithful %s",
-                   mon_nam(mtmp), uhis(), mdat->mname);
+                           MNAME(mtmp), uhis(), mdat->mname);
         }
     } else if (mtmp->mpeaceful)
         adjalign(-5);
 
     /* malign was already adjusted for u.ualign.type and randomization */
     adjalign(mtmp->malign);
+
+    if (is_bones_monster(mtmp->data)
+        && strlen(mtmp->former_rank) > 0) {
+        if (mtmp->data == &mons[PM_GHOST])
+            livelog_printf(LL_UMONST, "destroyed %s, the former %s",
+                           noit_mon_nam(mtmp), mtmp->former_rank);
+        else
+            livelog_printf(LL_UMONST, "destroyed %s, and former %s",
+                           noit_mon_nam(mtmp), mtmp->former_rank);
+    }
 }
 
 /* changes the monster into a stone monster of the same type

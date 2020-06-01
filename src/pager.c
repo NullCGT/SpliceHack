@@ -673,6 +673,7 @@ struct permonst * pm;
     char buf[BUFSZ];
     char buf2[BUFSZ];
     int diff = mons[monsndx(pm)].difficulty;
+    const char* mname = pm->mname;
     int gen = pm->geno;
     int freq = (gen & G_FREQ);
     boolean uniq = !!(gen & G_UNIQ);
@@ -702,9 +703,12 @@ struct permonst * pm;
             Strcat(buf, ", ");                          \
         Strcat(buf, str);                               \
     }
-#define MONPUTSTR(str) putstr(datawin, ATR_BOLD, str)
+#define MONPUTSTR(str) putstr(datawin, ATR_NONE, str)
 
     /* Misc */
+    Sprintf(buf, "%s", mname);
+    putstr(datawin, ATR_INVERSE, mname);
+
     Sprintf(buf, "Difficulty %d, speed %d, base AC %d, magic saving throw %d, weight %d.",
             diff, pm->mmove, pm->ac, pm->mr, pm->cwt);
     MONPUTSTR(buf);
@@ -938,6 +942,10 @@ add_obj_info(winid datawin, short otyp)
         if (*buf) { Strcat(buf, ", "); }    \
         Strcat(buf, str);                   \
     }
+
+    /* Misc */
+    Sprintf(buf, "%s", oc.oc_name_known ? OBJ_NAME(oc) : OBJ_DESCR(oc));
+    putstr(datawin, ATR_INVERSE, buf);
 
     /* Object classes currently with no special messages here: amulets. */
     boolean weptool = (olet == TOOL_CLASS && oc.oc_skill != P_NONE);

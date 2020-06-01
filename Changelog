@@ -8,6 +8,10 @@ QOL
   in XNetHack, and then fixed in EvilHack. The 'i' inventory command now
   shows how full your inventory is, both in terms of weight/carrycap 
   and n/52 items.
+- Improve monster and object lookup UI. The most significant change is adding
+  headers to the information window, since it can sometimes be difficult to
+  remember what information you are viewing. The other, more minor change is
+  disabling the bolding in the monster display menu.
 
 
                             Version 0.7.1

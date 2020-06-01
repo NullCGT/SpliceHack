@@ -1879,9 +1879,6 @@ int final;
     if (!u.uconduct.gnostic)
         you_have_been("an atheist");
 
-    if (!u.uconduct.celibate)
-        you_have_been("celibate");
-
     if (!u.uconduct.weaphit) {
         you_have_never("hit with a wielded weapon");
     } else if (wizard) {
@@ -1913,6 +1910,14 @@ int final;
     } else {
         Sprintf(buf, "used special techniques %ld time%s", u.uconduct.notech,
                 plur(u.uconduct.notech));
+        you_have_X(buf);
+    }
+
+    if (u.uconduct.celibate == 0) {
+        you_have_been("celibate");
+    } else {
+        Sprintf(buf, "engaged in sensual activities %ld time%s", u.uconduct.celibate,
+                plur(u.uconduct.elbereth));
         you_have_X(buf);
     }
 

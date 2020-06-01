@@ -17,9 +17,14 @@ QOL
   terribly useful.
 - Change the SpliceHack tip of the day to an engraving in the dust.
 - Having earmuffs on will no longer cause enlightenment to display "sonic resistance."
+- Display the number of times that the player has violated the celibate conduct
+  in their conduct.
 
 Balance
 - Being deaf does not make you resistant to sonic attacks.
+
+Bug Fixes
+- Correctly track the celibate conduct.
 
 
                             Version 0.7.1

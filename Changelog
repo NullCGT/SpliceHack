@@ -1,5 +1,15 @@
                         SpliceHack -- Changelog
 
+                            Version 1.7.1
+
+QOL
+- Show the carrying capacity of a player and the number of slots in their
+  inventory. This is originally sourced from FIQHack, then updated to 3.6
+  in XNetHack, and then fixed in EvilHack. The 'i' inventory command now
+  shows how full your inventory is, both in terms of weight/carrycap 
+  and n/52 items.
+
+
                             Version 0.7.1
 
 3.7.0

@@ -25,6 +25,7 @@ Balance
 
 Bug Fixes
 - Correctly track the celibate conduct.
+- Correctly track sokoban guilt when liquid leaping.
 
 
                             Version 0.7.1

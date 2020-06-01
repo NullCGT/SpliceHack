@@ -158,6 +158,7 @@ struct u_conduct {     /* number of times... */
     long elbereth;     /* engraved Elbereth */
     long notech;       /* activated a technique */
     long celibate;     /* never have sex */
+    long cheated;      /* cheated at sokoban */
     /* genocides already listed at end of game */
 };
 

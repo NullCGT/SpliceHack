@@ -72,9 +72,8 @@ Fire resistance only halves the damage from Mephisto's hellfire.
 Beware Buer! He has some of the highest damage output in the game.
 A tryst with Malcanthet ends poorly as often as not.
 Wands of poison gas create poison gas when engraving.
-Meet a monster zapping a corrupted knife of poison gas? Please report this bug.
+Meet a monster zapping a corrupted knife of poison gas? Please report this.
 SpliceHack supports the curses UI! Try editing your config file.
-The Master of Cats must be killed nine times before truly dying.
 Extra wishes? Try wishing for Vladsbane.
 Extra wishes and feeling unlucky? Try wishing for Luckless Folly.
 Silver golems are especially deadly to infernal players.
@@ -146,6 +145,5 @@ Gleipnir can reel in monsters from very long distances.
 Eating a werecockatrice can be hazardous to your health.
 Barghests can steal your luck away just by meeting your eyes.
 Monsters can wear rings.
-Mind flayers may not cause amnesia, but they are still deadly foes.
 The higher your cooking skill, the less likely you are to burn your food.
 Overcooked food is not very satisfying.

@@ -2,6 +2,31 @@
 
                             Version 0.7.2
 
+QOL
+- Show the carrying capacity of a player and the number of slots in their
+  inventory. This is originally sourced from FIQHack, then updated to 3.6
+  in XNetHack, and then fixed in EvilHack. The 'i' inventory command now
+  shows how full your inventory is, both in terms of weight/carrycap 
+  and n/52 items.
+- Improve monster and object lookup UI. The most significant change is adding
+  headers to the information window, since it can sometimes be difficult to
+  remember what information you are viewing. The other, more minor change is
+  disabling the bolding in the monster display menu.
+- Removed the tips displayed about the role and race during the start of the
+  game. The way in which they were coded was a huge hack, and it was not
+  terribly useful.
+- Change the SpliceHack tip of the day to an engraving in the dust.
+- Having earmuffs on will no longer cause enlightenment to display "sonic resistance."
+- Display the number of times that the player has violated the celibate conduct
+  in their conduct.
+
+Balance
+- Being deaf does not make you resistant to sonic attacks.
+
+Bug Fixes
+- Correctly track the celibate conduct.
+- Correctly track sokoban guilt when liquid leaping.
+
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.
 - Add sounds for dilapidated armories, since they are dangerous enough that

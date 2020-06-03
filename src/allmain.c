@@ -753,8 +753,6 @@ boolean new_game; /* false => restoring an old game */
     char buf[BUFSZ];
     char tipbuf[BUFSZ];
     char ebuf[BUFSZ];
-    char racebuf[BUFSZ];
-    char rolebuf[BUFSZ];
     int currentgend = Upolyd ? u.ugender : flags.gender;
 
     /* skip "welcome back" if restoring a doomed character */
@@ -797,18 +795,9 @@ boolean new_game; /* false => restoring an old game */
           Hello((struct monst *) 0), g.plname, buf, g.urace.adj,
           rolename_gender(currentgend));
 
-    if (flags.tips) {
-        if (new_game) {
-            /* display race info */
-            Sprintf(racebuf, "race %s", g.urace.noun);
-            checkfile(racebuf, 0, TRUE, TRUE, (char *) 0);
-            /* display role info */
-            Sprintf(rolebuf, "role %s", g.urole.filecode);
-            checkfile(rolebuf, 0, TRUE, TRUE, (char *) 0);
-        }
-        /* Display tip of the day */
+    if (flags.tips && new_game) {
         get_rnd_text(SPLICETIPSFILE, tipbuf, rn2_on_display_rng);
-        pline("Splicehack Tip of the Day: %s", tipbuf);
+        make_engr_at(u.ux, u.uy, tipbuf, g.moves, DUST);
     }
 }
 

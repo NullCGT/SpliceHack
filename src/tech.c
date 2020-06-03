@@ -1073,8 +1073,7 @@ tamedog(mtmp, (struct obj *) 0);
 				}
 
 				/* A little Sokoban guilt... */
-				if (In_sokoban(&u.uz))
-				change_luck(-1);
+				sokoban_guilt();
 				You("reform!");
 				teleds(cc.x, cc.y, FALSE);
 				nomul(-1);

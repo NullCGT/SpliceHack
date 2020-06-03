@@ -3192,7 +3192,6 @@ struct monst *mon;
         pline("%s seems dismayed at your lack of response.", Monnam(mon));
         return 0;
     }
-    u.uconduct.celibate = 1;
     seewho = canseemon(mon);
     if (!seewho)
         pline("Someone caresses you...");
@@ -3358,6 +3357,7 @@ struct monst *mon;
     if (u.ualign.type == A_CHAOTIC)
         adjalign(1);
 
+    u.uconduct.celibate++;
     /* by this point you have discovered mon's identity, blind or not... */
     pline("Time stands still while you and %s lie in each other's arms...",
           noit_mon_nam(mon));

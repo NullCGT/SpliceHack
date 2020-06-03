@@ -1879,9 +1879,6 @@ int final;
     if (!u.uconduct.gnostic)
         you_have_been("an atheist");
 
-    if (!u.uconduct.celibate)
-        you_have_been("celibate");
-
     if (!u.uconduct.weaphit) {
         you_have_never("hit with a wielded weapon");
     } else if (wizard) {
@@ -1913,6 +1910,14 @@ int final;
     } else {
         Sprintf(buf, "used special techniques %ld time%s", u.uconduct.notech,
                 plur(u.uconduct.notech));
+        you_have_X(buf);
+    }
+
+    if (u.uconduct.celibate == 0) {
+        you_have_been("celibate");
+    } else {
+        Sprintf(buf, "engaged in sensual activities %ld time%s", u.uconduct.celibate,
+                plur(u.uconduct.elbereth));
         you_have_X(buf);
     }
 
@@ -1990,7 +1995,7 @@ show_achievements(final)
 int final; /* used "behind the curtain" by enl_foo() macros */
 {
     int i, achidx, absidx, acnt;
-    char title[QBUFSZ], buf[QBUFSZ];
+    char title[QBUFSZ], buf[QBUFSZ], sokobuf[QBUFSZ];
     winid awin = WIN_ERR;
 
     /* unfortunately we can't show the achievements (at least not all of
@@ -2064,7 +2069,13 @@ int final; /* used "behind the curtain" by enl_foo() macros */
             you_have_X("entered Sokoban");
             break;
         case ACH_SOKO_PRIZE: /* hard to reach guaranteed bag or amulet */
-            you_have_X("completed Sokoban");
+            if (!u.uconduct.cheated)
+                you_have_X("completed Sokoban");
+            else {
+                Sprintf(sokobuf, "completed Sokoban... by cheating (%ld times)", 
+                    u.uconduct.cheated);
+                you_have_X(sokobuf);
+            }
             break;
         case ACH_MINE_PRIZE: /* hidden guaranteed luckstone */
             you_have_X("completed the Gnomish Mines");

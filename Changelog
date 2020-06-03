@@ -1,5 +1,13 @@
                         SpliceHack -- Changelog
 
+                            Version 0.7.2
+
+Sounds
+- Add more sounds for monsters fighting than just noises in the distance.
+- Add sounds for dilapidated armories, since they are dangerous enough that
+  they deserver a warning.
+- Add a message for talking to Marids.
+
                             Version 0.7.1
 
 3.7.0

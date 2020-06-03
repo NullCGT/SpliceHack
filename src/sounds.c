@@ -297,6 +297,23 @@ dosounds()
             }
         }
     }
+    if (g.level.flags.has_armory && !rn2(200)) {
+        static const char *const armory_msg[3] = {
+            "the scraping of metal on metal.",
+            "chains clinking.", "the nearby ACME building!",
+        };
+        for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
+            if (DEADMONSTER(mtmp))
+                continue;
+            if ((mtmp->msleeping || 
+                mtmp->data->mlet == 'P' || 
+                mtmp->data->mlet == 'R')
+                && mon_in_room(mtmp, ARMORY)) {
+                You_hear1(armory_msg[rn2(2) + hallu]);
+                return;
+            }
+        }
+    }
     if (g.level.flags.has_shop && !rn2(200)) {
         if (!(sroom = search_special(ANY_SHOP))) {
             /* strange... */
@@ -1009,6 +1026,8 @@ register struct monst *mtmp;
                 pline_msg = "gurgles.";
             else if (ptr == &mons[PM_LAVA_DEMON])
                 pline_msg = "gargles.";
+            else if (ptr == &mons[PM_MARID])
+                pline_msg = "gorgles.";
             else if (ptr == &mons[PM_DESERT_JINN])
                 pline_msg = "discusses the nature of free will.";
             else

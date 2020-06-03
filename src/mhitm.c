@@ -30,14 +30,27 @@ noises(magr, mattk)
 register struct monst *magr;
 register struct attack *mattk;
 {
+    const char* noise;
     boolean farq = (distu(magr->mx, magr->my) > 15);
 
     if (!Deaf && (farq != g.far_noise || g.moves - g.noisetime > 10)) {
         g.far_noise = farq;
         g.noisetime = g.moves;
-        You_hear("%s%s.",
-                 (mattk->aatyp == AT_EXPL) ? "an explosion" : "some noises",
-                 farq ? " in the distance" : "");
+        switch(mattk->aatyp) {
+        case AT_VOLY:
+            noise = "a series of rapid impacts";
+            break;
+        case AT_SCRE:
+            noise = "a scream";
+            break;
+        case AT_EXPL:
+            noise = "an explosion";
+            break;
+        default:
+            noise = "some noises";
+            break;
+        }
+        You_hear("%s%s.", noise, farq ? " in the distance" : "");
     }
 }
 

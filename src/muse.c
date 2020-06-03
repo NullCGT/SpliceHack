@@ -2289,7 +2289,7 @@ struct monst *mtmp;
         if (Is_candle(obj) && !obj->lamplit && 
             ((!levl[mtmp->mx][mtmp->my].lit && !infravision(mtmp->data))
             || !objects[obj->otyp].oc_merge)) {
-            g.m.misc = NULL;
+            g.m.misc = obj;
             g.m.has_misc = MUSE_CANDLE;
         }
         nomore(MUSE_POT_BOOZE);

@@ -3563,8 +3563,7 @@ struct monst *mon;
         case 4:
             otmp = mksobj(rn2(5) ? CALLING_CANDLE : SPIRIT_CANDLE, FALSE, FALSE);
             bless(otmp);
-            if (!mpickobj(mon, otmp))
-                begin_burn(otmp, FALSE);
+            (void) mpickobj(mon, otmp)
             break;
         case 5:
             if (mon->mreflect == 1 || monsndx(mon->data) == PM_SILVER_DRAGON

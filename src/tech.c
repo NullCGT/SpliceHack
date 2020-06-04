@@ -2094,12 +2094,13 @@ tinker()
 /*	chance += PSKILL(P_TINKER); */
 	if (rnl(10) < chance) {
 		upgrade_obj(otmp);
+		You("now hold %s!", doname(otmp));
 	} else {
 		/* object downgrade  - But for now,  nothing :) */
+		pline("Unfortunately, you failed to produce any meaningful upgrade.");
 	}
 
 	setuwep(otmp);
-	You("now hold %s!", doname(otmp));
 	return(0);
 }
 

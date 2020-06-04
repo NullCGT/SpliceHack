@@ -2,6 +2,12 @@
 
                             Version 0.7.2
 
+New Monsters
+- Servals
+  - Low-level cats that are capable of leaping.
+  - Occasionally appear when trees are kicked.
+  - Their tile image is utterly adorable.
+
 AI
 - Monsters can light potions of oil, and hurl lit potions.
 - Monsters will use wands of teleportation offensively.
@@ -23,6 +29,9 @@ QOL
 - Having earmuffs on will no longer cause enlightenment to display "sonic resistance."
 - Display the number of times that the player has violated the celibate conduct
   in their conduct.
+
+Miscelaneous
+- Kicking a tree has a chance of spawning a serval or (very rarely) a jaguar.
 
 Balance
 - Being deaf does not make you resistant to sonic attacks.

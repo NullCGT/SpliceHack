@@ -1121,6 +1121,8 @@ dokick()
             if (rn2(3)) {
                 if (!rn2(6) && !(g.mvitals[PM_KILLER_BEE].mvflags & G_GONE))
                     You_hear("a low buzzing."); /* a warning */
+                else if (!rn2(6) && !(g.mvitals[PM_SERVAL].mvflags & G_GONE))
+                    You_hear("an angry hiss."); /* another warning */
                 goto ouch;
             }
             if (rn2(15) && !(g.maploc->looted & TREE_LOOTED)
@@ -1148,6 +1150,15 @@ dokick()
                 exercise(A_WIS, TRUE); /* discovered a new food source! */
                 newsym(x, y);
                 g.maploc->looted |= TREE_LOOTED;
+                return 1;
+            } else if (!(g.maploc->looted & TREE_SWARM) && !rn2(3)) {
+                makemon(&mons[rn2(15) ? PM_SERVAL : PM_JAGUAR], x, y, MM_ANGRY);
+                if (Blind && !Deaf) {
+                    You_hear("A yowl and a loud thump!");
+                } else if (!Blind) {
+                    pline("A very angry cat plummets out of the tree, yowling!");
+                }
+                g.maploc->looted |= TREE_SWARM;
                 return 1;
             } else if (!(g.maploc->looted & TREE_SWARM)) {
                 int cnt = rnl(4) + 2;

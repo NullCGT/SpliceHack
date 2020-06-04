@@ -529,11 +529,22 @@ register struct monst *magr, *mdef;
             else
                 strike = 0;
             break;
-
-        case AT_SPIT:
         case AT_VOLY:
             if (!monnear(magr, mdef->mx, mdef->my)) {
-                strike = mattk->adtyp == AT_VOLY ? volleymm(magr, mattk, mdef) : spitmm(magr, mattk, mdef);
+                strike = volleymm(magr, mattk, mdef);
+
+                /* We don't really know if we hit or not; pretend we did. */
+                if (strike)
+                    res[i] |= MM_HIT;
+                if (DEADMONSTER(mdef))
+                    res[i] = MM_DEF_DIED;
+                if (DEADMONSTER(magr))
+                    res[i] |= MM_AGR_DIED;
+            }
+            break;
+        case AT_SPIT:
+            if (!monnear(magr, mdef->mx, mdef->my)) {
+                strike = spitmm(magr, mattk, mdef);
 
                 /* We don't really know if we hit or not; pretend we did. */
                 if (strike)

@@ -1475,9 +1475,6 @@ struct monst *mtmp;
             g.m.offensive = obj;
             g.m.has_offense = MUSE_WAN_WATER;
         }
-#if 0   /* use_offensive() has had some code to support wand of teleportation
-         * for a long time, but find_offensive() never selected one;
-         * so for the time being, this is still disabled */
         nomore(MUSE_WAN_TELEPORTATION);
         if (obj->otyp == WAN_TELEPORTATION && obj->spe > 0
             /* don't give controlled hero a free teleport */
@@ -1492,7 +1489,6 @@ struct monst *mtmp;
             g.m.offensive = obj;
             g.m.has_offense = MUSE_WAN_TELEPORTATION;
         }
-#endif
         nomore(MUSE_POT_HALLUCINATION);
         if (obj->otyp == POT_HALLUCINATION && g.multi >= 0) {
             g.m.offensive = obj;
@@ -1673,7 +1669,6 @@ register struct obj *otmp;
                 makeknown(WAN_WATER);
         }
         break;
-#if 0   /* disabled because find_offensive() never picks WAN_TELEPORTATION */
     case WAN_TELEPORTATION:
         if (hits_you) {
             tele();
@@ -1688,7 +1683,6 @@ register struct obj *otmp;
                 (void) rloc(mtmp, TRUE);
         }
         break;
-#endif
     case WAN_CANCELLATION:
     case SPE_CANCELLATION:
         if (!Blind && mtmp == &g.youmonst)
@@ -2289,7 +2283,7 @@ struct monst *mtmp;
         if (Is_candle(obj) && !obj->lamplit && 
             ((!levl[mtmp->mx][mtmp->my].lit && !infravision(mtmp->data))
             || !objects[obj->otyp].oc_merge)) {
-            g.m.misc = NULL;
+            g.m.misc = obj;
             g.m.has_misc = MUSE_CANDLE;
         }
         nomore(MUSE_POT_BOOZE);
@@ -3563,8 +3557,7 @@ struct monst *mon;
         case 4:
             otmp = mksobj(rn2(5) ? CALLING_CANDLE : SPIRIT_CANDLE, FALSE, FALSE);
             bless(otmp);
-            if (!mpickobj(mon, otmp))
-                begin_burn(otmp, FALSE);
+            (void) mpickobj(mon, otmp);
             break;
         case 5:
             if (mon->mreflect == 1 || monsndx(mon->data) == PM_SILVER_DRAGON

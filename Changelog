@@ -2,6 +2,10 @@
 
                             Version 0.7.2
 
+AI
+- Monsters can light potions of oil, and hurl lit potions.
+- Monsters will use wands of teleportation offensively.
+
 QOL
 - Show the carrying capacity of a player and the number of slots in their
   inventory. This is originally sourced from FIQHack, then updated to 3.6

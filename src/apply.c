@@ -3181,7 +3181,7 @@ struct obj *obj;
         if (otmp) {
             char onambuf[BUFSZ];
             const char *mon_hand;
-            boolean gotit = proficient && (!Fumbling || !rn2(10) || obj->oartifact == ART_ANACONDA);
+            boolean gotit = proficient && (!Fumbling || !rn2(10));
 
             Strcpy(onambuf, cxname(otmp));
             if (gotit) {

@@ -1402,11 +1402,21 @@ const char *name;
         }
         /* set up specific materials for the artifact */
         switch(obj->oartifact) {
+        case ART_END:
+        case ART_WAR_S_SWORD:
+            obj->material = BONE;
+            break;
         case ART_CIRCE_S_WITCHSTAFF:
             obj->material = COPPER;
             break;
-        case ART_SHARUR:
+        case ART_TROLLSBANE:
+            obj->material = COLD_IRON;
+            break;
         case ART_SUNSWORD:
+            obj->material = GEMSTONE;
+            break;
+        case ART_SHARUR:
+        case ART_DRAGONBANE:
             obj->material = GOLD;
             break;
         case ART_WEREBANE:

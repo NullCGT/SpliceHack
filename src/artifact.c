@@ -494,6 +494,10 @@ long wp_mask;
         mask = &EPoison_resistance;
     else if (dtyp == AD_DRLI)
         mask = &EDrain_resistance;
+    else if (dtyp == AD_CLOB)
+        mask = &EStable;
+    else if (dtyp == AD_PSYC)
+        mask = &EPsychic_resistance;
 
     if (mask && wp_mask == W_ART && !on) {
         /* find out if some other artifact also confers this intrinsic;
@@ -649,12 +653,6 @@ long wp_mask;
         else
             EMagical_breathing &= ~wp_mask;
     }
-    /* if (spfx & SPFX_JUMP) {
-        if (on)
-            EJumping |= wp_mask;
-        else
-            EJumping &= ~wp_mask;
-    } */
 
     if (wp_mask == W_ART && !on && oart->inv_prop) {
         /* might have to turn off invoked power too */
@@ -841,6 +839,8 @@ struct monst *mtmp;
             return !(yours ? Cold_resistance : resists_sonic(mtmp));
         case AD_ACID:
             return !(yours ? Acid_resistance : resists_acid(mtmp));
+        case AD_WIND:
+            return !(yours ? (Stable && bigmonst(g.youmonst.data) ) : !bigmonst(mtmp->data));
         case AD_ELEC:
             return !(yours ? Shock_resistance : resists_elec(mtmp));
         case AD_MAGM:
@@ -854,6 +854,8 @@ struct monst *mtmp;
             return !(yours ? Stone_resistance : resists_ston(mtmp));
         case AD_PLYS:
             return !(yours ? Free_action : FALSE);
+        case AD_PSYC:
+            return !(yours ? Psychic_resistance : resists_psychic(mtmp));
         default:
             impossible("Weird weapon special attack.");
         }
@@ -1217,6 +1219,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     const char *wepdesc;
     static const char you[] = "you";
     char hittee[BUFSZ];
+    struct trap* trtmp;
 
     Strcpy(hittee, youdefend ? you : mon_nam(mdef));
 
@@ -1277,6 +1280,13 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                       !g.spec_dbon_applies ? '.' : '!');
         return realizes_damage;
     }
+    if (attacks(AD_PSYC, otmp)) {
+        if (realizes_damage)
+            pline_The("iridescent blade %s %s%c",
+                      !g.spec_dbon_applies ? "hits" : "psiblasts", hittee,
+                      !g.spec_dbon_applies ? '.' : '!');
+        return realizes_damage;
+    }
     if (attacks(AD_WIND, otmp)) {
         if (realizes_damage) {
             if (rn2(3))
@@ -1287,6 +1297,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                     hurtle(u.ux - magr->mx, u.uy - magr->my, 5 + rn2(7), TRUE);
                 else
                     mhurtle(mdef, mdef->mx - u.ux, mdef->my - u.uy, 5 + rn2(7));
+                *dmgptr += d(3, 4);
             }
         }
         return realizes_damage;
@@ -1341,19 +1352,53 @@ int dieroll; /* needed for Magicbane and vorpal blades */
         return Mb_hit(magr, mdef, otmp, dmgptr, dieroll, vis, hittee);
     }
 
-    if (attacks(AD_PLYS, otmp) && !rn2(7)) {
+    if (attacks(AD_PLYS, otmp) && !rn2(5)) {
         if (realizes_damage) {
-            pline_The("slithering whip wraps %s in its magic coils!", hittee);
+            pline_The("slithering chains bind %s!", hittee);
         }
         if (youdefend && Free_action) {
-            pline_The("whip cannot seem to keep a hold on you.");
+            pline_The("slithering chains cannot seem to keep a hold on you.");
         } else if (youdefend) {
-            nomul(-2);
-            g.multi_reason = "bound by a whip";
+            nomul(-4);
+            g.multi_reason = "bound by the Chains of Malcanthet";
             g.nomovemsg = You_can_move_again;
         } else if (mdef->mcanmove) {
-            paralyze_monst(mdef, 2);
+            paralyze_monst(mdef, rnd(4));
         }
+        return realizes_damage;
+    }
+    if (otmp->oartifact == ART_DRAGONBANE && !rn2(5)) {
+        if (realizes_damage) {
+            pline_The("golden broadswoard roars!");
+            if (youattack) {
+                dobuzz((int) (-20 - (rnd(AD_PSYC) - 1)), 3,
+                       u.ux, u.uy, u.dx, u.dy, TRUE);
+            } else {
+                dobuzz((int) (-20 - (rnd(AD_PSYC) - 1)), 3,
+                       magr->mx, magr->my, sgn(g.tbx), sgn(g.tby), TRUE);
+            }
+            
+        }
+        return realizes_damage;
+    }
+    if (otmp->oartifact == ART_OGRESMASHER && !rn2(8)) {
+        if (realizes_damage) {
+            pline_The("massive war hammer slams %s to the ground!", hittee);
+        }
+        if (youdefend) {
+            trtmp = maketrap(mdef->mx, mdef->my, PIT);
+            dotrap(trtmp, FORCETRAP);
+        } else {
+            trtmp = maketrap(mdef->mx, mdef->my, PIT);
+            if (trtmp) {
+                if (!is_flyer(mdef->data))
+                    mintrap(mdef);
+                trtmp->tseen = 1;
+                levl[u.ux + u.dx][u.uy + u.dy].doormask = 0;
+            }
+        }
+        *dmgptr += d(2, 5);
+        return realizes_damage;
     }
 
     if (otmp->oartifact != ART_THIEFBANE || !youdefend) {
@@ -1369,6 +1414,8 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 dismount_steed(DISMOUNT_THROWN);
                 return TRUE;
             }
+            if (!rn2(10))
+                make_stunned((HStun & TIMEOUT) + 10L, FALSE);
         } else {
             if (has_erid(mdef)) {
                 separate_steed_and_rider(mdef);
@@ -1377,6 +1424,8 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                     pline_The("powerful lance unseats %s!", mon_nam(mdef));
                 return TRUE;
             }
+            if (!rn2(10))
+                mdef->mstun = 1;
         }
     }
    	if(otmp->oartifact == ART_REAVER){
@@ -1639,8 +1688,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             return vis;
         } else {
             if (otmp->oartifact == ART_GAE_DEARG) {
-                  if (rnd(3) == 1 &&
-                      cancel_monst(&g.youmonst, otmp, TRUE, FALSE, FALSE)) {
+                  if (cancel_monst(&g.youmonst, otmp, TRUE, FALSE, FALSE)) {
                         if (Blind)
                             You_feel(" oddly empty.");
                         else
@@ -1665,6 +1713,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             make_blinded(Blinded + 17, FALSE);
             return TRUE;
         }
+        *dmgptr += d(1, 10);
     }
     if (otmp->oartifact == ART_DOOMBLADE && dieroll < 6) {
       if (youattack)
@@ -2152,6 +2201,7 @@ struct obj *obj;
             if (on) {
                 verbalize("Ocean, heed my will.");
                 Your("feet are surrounded by a swirl of foam!");
+                do_earthquake(7, u.ux, u.uy);
                 if (u.uinwater)
                     spoteffects(TRUE);
             } else {
@@ -2270,6 +2320,8 @@ long *abil;
         { &EDisint_resistance, AD_DISN },
         { &EPoison_resistance, AD_DRST },
         { &EDrain_resistance, AD_DRLI },
+        { &EStable, AD_CLOB },
+        { &EPsychic_resistance, AD_PSYC }
     };
     int k;
 
@@ -2301,7 +2353,6 @@ long *abil;
         { &EHalf_physical_damage, SPFX_HPHDAM },
         { &EReflecting, SPFX_REFLECT },
         { &EMagical_breathing, SPFX_BREATHE },
-        /* { &EJumping, SPFX_JUMP }, */
     };
     int k;
 
@@ -2414,6 +2465,7 @@ int orc_count; /* new count (warn_obj_cnt is old count); -1 is a flag value */
             || uwep->oartifact == ART_ORCRIST
             || uwep->oartifact == ART_GRIMTOOTH
             || uwep->oartifact == ART_VLADSBANE
+            || uwep->oartifact == ART_CHAINS_OF_MALCANTHET
             || uwep->oartifact == ART_GRIMTOOTH)) {
         int oldstr = glow_strength(g.warn_obj_cnt),
             newstr = glow_strength(orc_count);

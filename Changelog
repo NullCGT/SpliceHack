@@ -30,8 +30,84 @@ QOL
 - Display the number of times that the player has violated the celibate conduct
   in their conduct.
 
+New Artifacts
+- Idspike
+  - Unaligned athame.
+  - Grants psychic resistance.
+  - Deals double damage 
+- Chains of Malcanthet
+  - Bane of angels. Glows red in their presence.
+  - Can paralyze monsters when hitting them.
+  - Sets charisma to 25.
+
+Artifact Changes
+- Anaconda
+  - Removed.
+- Giantslayer
+  - Warns the player of giants.
+  - Makes the player stable, so they cannot be knocked back or hurtle in any way.
+- Demonbane
+  - Warns the player of demons.
+- Ogresmasher
+  - Randomly smashes monsters into the ground, dealing 2d5 extra damage and
+    trapping them in a pit.
+- Werebane
+  - Warns the player of werecreatures.
+  - Does not resist being held second to another weapon.
+- Dragonbane
+  - Made of gold.
+  - Warns the player of dragons.
+  - 1/5 chance to shoot rays of energy when attacking. Since these rays are
+    randomly chosen from all energy types, it is very possible to fire a
+    disintegration ray.
+- Sunsword
+  - Made of crystal (+3 damage).
+  - Warns the player of undead.
+  - Is more effective, since nosferatu and Drauglir hate light as well.
+- Trollsbane
+  - Made of cold iron.
+  - Warns the player of trolls.
+  - Provides hungerless regeneration when wielded.
+- Gae Dearg
+  - Buffed damage and to-hit.
+  - Fixed a bug where cancellation happened 1/9 times instead of 1/3 times.
+- Gae Buidhe
+  - Buffed damage.
+- Gae Bulg
+  - Buffed damage.
+- Bradamante's Fury
+  - Inflicts stun 1/10 times.
+- Circe's Witchstaff
+  - Can be invoked for taming.
+- Seafoam
+  - Change name to Poseidon's Trident
+  - Invoking it grants water walking and causes an earthquake.
+- Imhullu
+  - Grants stability.
+  - Hitting a monster with a tornado does 3d4 bonus damage, takes place 1/3 of
+    the time.
+  - Does not affect big monsters.
+- The End
+  - Made of bone.
+- War's Sword
+  - Bloodthirsty.
+  - Made of bone.
+  - Altered to-hit and damage.
+  - Conflict of any kind does not increase hunger when wielded.
+  - Gains a bonus to damage equal to the number of species you have genocided, up to
+    +20, and the number of species that are extinct.
+- Sunspot
+  - Prevents blinding.
+  - When blinding, does 1d10 extra damage.
+- Gungnir
+  - Can no longer be thrown.
+  - Changed damage.
+  - Has +100 to-hit.
+
+
 Miscelaneous
 - Kicking a tree has a chance of spawning a serval or (very rarely) a jaguar.
+- All mindless monsters resist all sources of psychic damage.
 
 Balance
 - Being deaf does not make you resistant to sonic attacks.

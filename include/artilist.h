@@ -34,6 +34,7 @@ static const char *artifact_names[] = {
 #define     WIND(a,b)   {0,AD_WIND,a,b}         /* wind blast */
 #define     VOID(a,b)   {0,AD_VOID,a,b}
 #define     PLYS(a,b)   {0,AD_PLYS,a,b}         /* whip binding */
+#define     PSYC(a,b)   {0,AD_PSYC,a,b}         /* psiblast */
 /* clang-format on */
 
 static NEARDATA struct artifact artilist[] = {
@@ -60,14 +61,6 @@ static NEARDATA struct artifact artilist[] = {
       NO_COLOR),
 
     /*
-    *       Can temporarily paralyze a target.
-    */
-    A("Anaconda", BULLWHIP, (SPFX_RESTR),
-      0, 0,
-      PLYS(7, 7), DRLI(0,0), NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 200L,
-      CLR_RED),
-
-    /*
     *       This lance does a lot of damage, and also automatically unseats any
     *       mounted person it hits.
     */
@@ -83,12 +76,18 @@ static NEARDATA struct artifact artilist[] = {
       PHYS(3, 8), NO_DFNS, NO_CARY, INVIS, A_LAWFUL,
       NON_PM, NON_PM, 400L, NO_COLOR),
 
+    
+    A("Chains of Malcanthet", SPIKED_CHAIN, 
+      (SPFX_RESTR | SPFX_WARN | SPFX_DFLAGH), 0, MH_ANGEL,
+      PLYS(6, 10), NO_DFNS, NO_CARY, 0, A_NONE,
+      NON_PM, NON_PM, 800L, CLR_RED),
+
     /*
     *     Staff of Circe. 1/20 chance of turning target into an animal.
     */
     A("Circe's Witchstaff", QUARTERSTAFF,
       (SPFX_RESTR | SPFX_BEHEAD), 0, 0,
-      PHYS(4, 4), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 3500,
+      PHYS(4, 4), NO_DFNS, NO_CARY, TAMING, A_NEUTRAL, NON_PM, NON_PM, 3500,
       CLR_GREEN),
 
     /*
@@ -105,7 +104,7 @@ static NEARDATA struct artifact artilist[] = {
     *      monsters attacking them with Gae Bulg.
     */
     A("Gae Bulg", JAVELIN, (SPFX_RESTR | SPFX_ATTK | SPFX_DRLI), 0, 0,
-      DRLI(2, 4), NO_DFNS, NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM,
+      DRLI(5, 5), NO_DFNS, NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM,
       9000L, NO_COLOR),
 
     /*
@@ -113,14 +112,14 @@ static NEARDATA struct artifact artilist[] = {
     *      should cancel their armor? This occurs 1/3 of the time.
     */
     A("Gae Dearg", ELVEN_SPEAR, (SPFX_RESTR | SPFX_ATTK | SPFX_CANC), 0, 0,
-      DRLI(2, 5), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM,
+      DRLI(3, 7), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM,
       7000L, NO_COLOR),
 
     /*
     *      Gae Buidhe inflicts cursed wounds (drains levels).
     */
     A("Gae Buidhe", ELVEN_SPEAR, (SPFX_RESTR | SPFX_ATTK | SPFX_DRLI), 0, 0,
-      DRLI(3, 5), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM,
+      DRLI(3, 7), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM,
       7000L, NO_COLOR),
 
     /*
@@ -134,14 +133,18 @@ static NEARDATA struct artifact artilist[] = {
     *      Gugnir also returns to the hand of the wielder when thrown if
     *      the wielder is a Valkyrie, but there is no strength requirement.
     */
-    A("Gungnir", DWARVISH_SPEAR, (SPFX_RESTR | SPFX_ATTK), 0, 0, ELEC(7, 20),
+    A("Gungnir", DWARVISH_SPEAR, (SPFX_RESTR), 0, 0, PHYS(100, 4),
       NO_DFNS, NO_CARY, LIGHTNING_BOLT, A_NEUTRAL, PM_VALKYRIE, NON_PM, 4000L, NO_COLOR),
+
+    A("Idspike", ATHAME, (SPFX_RESTR | SPFX_ATTK | SPFX_DEFN), 0, 0,
+      PSYC(5, 0), PSYC(0, 0), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 4000L,
+      NO_COLOR),
 
     /*
     *       Mesopatamian in origin.
     */
-    A("Imhullu", GLAIVE, (SPFX_RESTR), 0, 0, WIND(4, 5), NO_DFNS, NO_CARY, SEFFECT,
-      A_NEUTRAL, NON_PM, NON_PM, 2000L, NO_COLOR),
+    A("Imhullu", GLAIVE, (SPFX_RESTR), 0, 0, WIND(4, 5), DFNS(AD_CLOB), 
+      NO_CARY, SEFFECT, A_NEUTRAL, NON_PM, NON_PM, 2000L, NO_COLOR),
 
     /*
     *       This bizarre weapon acts as a cursed luckstone regardless of its
@@ -174,8 +177,8 @@ static NEARDATA struct artifact artilist[] = {
     /*
     *       Seafoam grants waterbreathing, and is generated rustproof.
     */
-    A("Seafoam", TRIDENT, (SPFX_RESTR | SPFX_BREATHE), 0, 0, PHYS(3, 7),
-      NO_DFNS, NO_CARY, WWALKING, A_NONE, NON_PM, NON_PM, 1500L, NO_COLOR),
+    A("Poseidon\'s Trident", TRIDENT, (SPFX_RESTR | SPFX_BREATHE), 0, 0, PHYS(3, 7),
+      NO_DFNS, NO_CARY, WWALKING, A_CHAOTIC, NON_PM, NON_PM, 1500L, NO_COLOR),
 
     /*
     *       Resisted by very few monsters, but is a morning star and also
@@ -189,7 +192,7 @@ static NEARDATA struct artifact artilist[] = {
     *      Blinding mace.
     */
     A("Sunspot", MACE, (SPFX_RESTR | SPFX_BLIND), 0, 0,
-      PHYS(5, 5), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 2000L,
+      PHYS(5, 5), DFNS(AD_BLND), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 2000L,
       NO_COLOR),
 
     /*
@@ -212,7 +215,7 @@ static NEARDATA struct artifact artilist[] = {
     *       Definitely no canonical problems here.
     */
     A("War\'s Sword", TWO_HANDED_SWORD,
-      (SPFX_RESTR | SPFX_CONFLICT), 0, 0, PHYS(3, 7), NO_DFNS, NO_CARY, 0,
+      (SPFX_RESTR | SPFX_CONFLICT), 0, 0, PHYS(5, 5), NO_DFNS, NO_CARY, 0,
       A_NONE, NON_PM, NON_PM, 7000L, NO_COLOR),
 
     /* PIRATE ARTIFACTS */
@@ -340,11 +343,11 @@ static NEARDATA struct artifact artilist[] = {
       PHYS(5, 0), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 500L,
       NO_COLOR),
 
-    A("Demonbane", LONG_SWORD, (SPFX_RESTR | SPFX_DFLAGH), 0, MH_DEMON,
+    A("Demonbane", LONG_SWORD, (SPFX_RESTR | SPFX_WARN | SPFX_DFLAGH), 0, MH_DEMON,
       PHYS(5, 0), NO_DFNS, NO_CARY, FLYING, A_LAWFUL, NON_PM, NON_PM, 2500L,
       NO_COLOR),
 
-    A("Werebane", SABER, (SPFX_RESTR | SPFX_DFLAGH), 0, MH_WERE,
+    A("Werebane", SABER, (SPFX_RESTR | SPFX_WARN | SPFX_DFLAGH), 0, MH_WERE,
       PHYS(5, 0), DFNS(AD_WERE), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 1500L,
       NO_COLOR),
 
@@ -352,16 +355,16 @@ static NEARDATA struct artifact artilist[] = {
       PHYS(5, 0), NO_DFNS, NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 8000L,
       NO_COLOR),
 
-    A("Giantslayer", LONG_SWORD, (SPFX_RESTR | SPFX_DFLAGH), 0, MH_GIANT,
-      PHYS(5, 0), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 200L,
-      NO_COLOR),
+    A("Giantslayer", LONG_SWORD, (SPFX_RESTR | SPFX_WARN | SPFX_DFLAGH), 
+      0, MH_GIANT, PHYS(5, 0), DFNS(AD_CLOB), NO_CARY, 0, A_NEUTRAL, 
+      NON_PM, NON_PM, 200L, CLR_ORANGE),
 
     A("Ogresmasher", WAR_HAMMER, (SPFX_RESTR | SPFX_DCLAS), 0, S_OGRE,
       PHYS(5, 0), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 200L,
       NO_COLOR),
 
-    A("Trollsbane", MORNING_STAR, (SPFX_RESTR | SPFX_DCLAS), 0, S_TROLL,
-      PHYS(5, 0), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 200L,
+    A("Trollsbane", MORNING_STAR, (SPFX_RESTR | SPFX_REGEN | SPFX_WARN | SPFX_DCLAS), 
+      0, S_TROLL, PHYS(5, 0), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 200L,
       NO_COLOR),
     /*
      *      Two problems:  1) doesn't let trolls regenerate heads,
@@ -382,7 +385,7 @@ static NEARDATA struct artifact artilist[] = {
     A("Snickersnee", KATANA, SPFX_RESTR, 0, 0, PHYS(0, 8), NO_DFNS, NO_CARY,
       0, A_LAWFUL, PM_SAMURAI, NON_PM, 1200L, NO_COLOR),
 
-    A("Sunsword", LONG_SWORD, (SPFX_RESTR | SPFX_DFLAGH), 0, MH_UNDEAD,
+    A("Sunsword", LONG_SWORD, (SPFX_RESTR | SPFX_WARN | SPFX_DFLAGH), 0, MH_UNDEAD,
       PHYS(5, 0), DFNS(AD_BLND), NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 1500L,
       NO_COLOR),
 

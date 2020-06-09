@@ -30,7 +30,8 @@
 #define resists_sonic(mon) \
     ((((mon)->data->mresists | (mon)->mextrinsics) & MR_SONIC) != 0)
 #define resists_psychic(mon) \
-     ((((mon)->data->mresists | (mon)->mextrinsics) & MR_PSYCHIC) != 0)
+     (((((mon)->data->mresists | (mon)->mextrinsics) & MR_PSYCHIC) != 0) \
+        || mindless(mon->data))
 
 #define has_telepathy(mon) \
     (telepathic((mon)->data) || ((mon)->mextrinsics & MR2_TELEPATHY) != 0)

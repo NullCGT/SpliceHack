@@ -1029,6 +1029,7 @@ E void FDECL(shuffle_int_array, (int *, int));
 
 /* ### insight.c ### */
 
+E int NDECL(num_extinct);
 E int NDECL(doattributes);
 E void FDECL(enlightenment, (int, int));
 E void FDECL(youhiding, (BOOLEAN_P, int));

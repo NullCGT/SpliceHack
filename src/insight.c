@@ -33,7 +33,6 @@ static void FDECL(show_achievements, (int));
 static int FDECL(CFDECLSPEC vanqsort_cmp, (const genericptr,
                                            const genericptr));
 static int NDECL(set_vanq_order);
-static int NDECL(num_extinct);
 
 extern const char *hu_stat[];  /* hunger status from eat.c */
 extern const char *enc_stat[]; /* encumbrance status from botl.c */
@@ -741,6 +740,8 @@ int mode, final, attrindx;
             hide_innate_value = TRUE;
         break;
     case A_CHA:
+        if (uwep && uwep->oartifact == ART_CHAINS_OF_MALCANTHET && uwep->cursed)
+            hide_innate_value = TRUE;
         break;
     default:
         return; /* impossible */
@@ -2563,7 +2564,7 @@ num_genocides()
     return n;
 }
 
-static int
+int
 num_extinct()
 {
     int i, n = 0;

@@ -111,8 +111,10 @@ register struct obj *obj;
             pline("%s shining.", Tobjnam(olduwep, "stop"));
     }
     if (uwep == obj
-        && ((uwep && uwep->oartifact == ART_OGRESMASHER)
-            || (olduwep && olduwep->oartifact == ART_OGRESMASHER)))
+        && (((uwep && uwep->oartifact == ART_OGRESMASHER)
+            || (olduwep && olduwep->oartifact == ART_OGRESMASHER)) ||
+            ((uwep && uwep->oartifact == ART_CHAINS_OF_MALCANTHET)
+            || (olduwep && olduwep->oartifact == ART_CHAINS_OF_MALCANTHET))))
         g.context.botl = 1;
     /* Note: Explicitly wielding a pick-axe will not give a "bashing"
      * message.  Wielding one via 'a'pplying it will.
@@ -722,7 +724,9 @@ can_twoweapon()
       !((uwep->oartifact == ART_GAE_DEARG
           && uswapwep->oartifact == ART_GAE_BUIDHE) ||
         (uwep->oartifact == ART_GAE_BUIDHE
-            && uswapwep->oartifact == ART_GAE_DEARG))) {
+            && uswapwep->oartifact == ART_GAE_DEARG) ||
+        (uwep->oartifact == ART_WEREBANE
+            || uswapwep->oartifact == ART_WEREBANE))) {
         pline("%s being held second to another weapon!",
               Yobjnam2(uswapwep, "resist"));
     } else if (uswapwep->otyp == CORPSE && cant_wield_corpse(uswapwep)) {

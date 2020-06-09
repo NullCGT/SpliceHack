@@ -116,7 +116,7 @@ int shotlimit;
 
     if (!canletgo(obj, "throw"))
         return 0;
-    if ((obj->oartifact == ART_MJOLLNIR || obj->oartifact == ART_GUNGNIR)
+    if ((obj->oartifact == ART_MJOLLNIR)
         && obj != uwep) {
         pline("%s must be wielded before it can be thrown.", The(xname(obj)));
         return 0;
@@ -868,6 +868,10 @@ boolean verbose;
         You_feel("a tug from the iron ball.");
         nomul(0);
         return;
+    } else if (Stable) {
+        pline("Your fortitude prevents you from moving.");
+        nomul(0);
+        return;
     } else if (u.utrap) {
         You("are anchored by the %s.",
             u.utraptype == TT_WEB
@@ -1217,7 +1221,6 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
     g.thrownobj->was_thrown = 1;
     iflags.returning_missile = ((obj->oartifact == ART_MJOLLNIR
                                  && Role_if(PM_VALKYRIE))
-                                || obj->oartifact == ART_GUNGNIR
                                 || tethered_weapon) ? (genericptr_t) obj
                                                     : (genericptr_t) 0;
     /* NOTE:  No early returns after this point or returning_missile

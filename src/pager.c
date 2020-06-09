@@ -389,7 +389,8 @@ int x, y;
                                         : (mW & MH_ELF & mh) ? "elf"
                                           : (mW & MH_ORC & mh) ? "orc"
                                             : (mW & MH_DEMON & mh) ? "demon"
-                                              : mtmp->data->mname);
+                                              : (mW & MH_GIANT & mh) ? "giant"
+                                                : mtmp->data->mname);
 
                     Sprintf(eos(monbuf), "warned of %s", makeplural(whom));
                 }
@@ -1244,6 +1245,7 @@ add_obj_info(winid datawin, short otyp)
                     case HALF_PHDAM:
                     case REGENERATION:
                     case WITHERING:
+                    case STABLE:
                     case ENERGY_REGENERATION:
                     case PROTECTION:
                     case PROT_FROM_SHAPE_CHANGERS:

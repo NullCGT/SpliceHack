@@ -2117,7 +2117,8 @@ register struct attack *mattk;
                 }
             }
             if (obj && warp_material(obj, FALSE)) {
-                pline("That's odd, you don't remember putting on %s...", an(xname(obj)));
+                pline("That's odd, you don't remember putting on %s...", 
+                    an(xname_forcemat(obj)));
                 update_inventory();
             }
         }

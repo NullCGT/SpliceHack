@@ -223,6 +223,8 @@ boolean resuming;
 
                     if (u.ublesscnt)
                         u.ublesscnt--;
+                    
+                    u.ublesstim++;
 
 #ifdef EXTRAINFO_FN
                     if ((prev_dgl_extrainfo == 0) || (prev_dgl_extrainfo < (g.moves + 250))) {

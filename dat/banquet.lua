@@ -46,7 +46,7 @@ des.monster("h")
 des.monster("H")
 des.monster("H")
 des.monster({id="storm giant", x=61, y=03,name="Lord Belaphius",peaceful=0})
-des.monster({id="storm giant", x=61, y=03,name="Vizer Dophomor",peaceful=0})
+des.monster({id="storm giant", x=61, y=03,name="Vizier Dophomor",peaceful=0})
 
 -- Treasure
 des.object({id="chest", x=61, y=03})

@@ -1472,8 +1472,8 @@ const int matdensities[] = {
     70,  // METAL
     85,  // COPPER
     90,  // SILVER
-    60, /* GOLD */
-    80, /* PLATINUM */
+   120, /* GOLD */
+   120, /* PLATINUM */
     60,  // ADAMANTINE
     80,  // COLD IRON
     50, /* MITHRIL */

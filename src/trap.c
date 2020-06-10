@@ -3492,7 +3492,7 @@ struct obj *box; /* null for floor trap */
         return;
     }
     if (see_it)
-        pline("An ice floe %s from %s!", box ? "surges forth" : "rises up",
+        pline("An mass of ice %s from %s!", box ? "surges forth" : "rises up",
             the(box ? xname(box) : surface(u.ux, u.uy)));
     else
         pline("A wave of cold washes over you.");

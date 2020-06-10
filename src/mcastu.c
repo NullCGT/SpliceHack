@@ -1142,10 +1142,11 @@ castmm(mtmp, mdef, mattk)
           }
           break;
       case AD_WIND:
-          pline("%s is blasted by wind!", Monnam(mtmp));
-          mhurtle(mdef, mtmp->mx - mdef->mx, mtmp->my - mdef->my, dmg);
-          dmg = 0;
-          break;
+        if (canspotmon(mdef))
+            pline("%s is blasted by wind!", Monnam(mtmp));
+        mhurtle(mdef, mtmp->mx - mdef->mx, mtmp->my - mdef->my, dmg);
+        dmg = 0;
+        break;
    	  case AD_MAGM:
             if (canspotmon(mdef))
          		    pline("%s is hit by a shower of missiles!", Monnam(mdef));

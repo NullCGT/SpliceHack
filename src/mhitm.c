@@ -1128,7 +1128,8 @@ int dieroll;
             tmp = 0;
             break;
         }
-        pline("%s is blasted by wind!", Monnam(mdef));
+        if (canseemon(mdef))
+            pline("%s is blasted by wind!", Monnam(mdef));
         mhurtle(mdef, mdef->mx - magr->mx, mdef->my - magr->my, tmp);
         tmp = 0;
         break;

@@ -1639,7 +1639,7 @@ tamedog(mtmp, (struct obj *) 0);
 					/* Monsters don't wear amulets of magical breathing */
 					if (is_swimmer(mtmp->data) || amphibious(mtmp->data))
 						pline("%s is perfectly comfortable underwater.", Monnam(mtmp));
-					else if (techlev(tech_no) > rn2(mtmp->m_lev))
+					else if (techlev(tech_no) > rn2(max(1, mtmp->m_lev)))
 						pline("%s manages to keep %s %s above water.", Monnam(mtmp), 
 							mhis(mtmp), mbodypart(mtmp, HEAD));
 					else  {

@@ -567,7 +567,7 @@ boolean devour;
             mtmp->perminvis = 1;
     }
     if (corpsenm != NON_PM)
-        mon_givit(mtmp, &mons[obj->corpsenm], obj->oeroded);
+        mon_givit(mtmp, &mons[corpsenm], obj->oeroded);
     return 1;
 }
 

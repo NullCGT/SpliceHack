@@ -1765,6 +1765,8 @@ const char *str;
     } else if (!strncmpi(str, "the ", 4) || !strcmpi(str, "molten lava")
                || !strcmpi(str, "iron bars") || !strcmpi(str, "ice")) {
         ; /* no article */
+    } else if (!strcmpi(str, "cheese")) {
+        Strcpy(outbuf, "some ");
     } else {
         if ((index(vowels, c0) && strncmpi(str, "one-", 4)
              && strncmpi(str, "eucalyptus", 10) && strncmpi(str, "unicorn", 7)

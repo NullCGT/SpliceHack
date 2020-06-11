@@ -863,6 +863,7 @@ register struct obj *obj;
 		default:
 			/* This object is not upgradable */
 			return 0;
+        update_inventory();
 	}
 
 	if ((!carried(obj) || obj->unpaid) &&

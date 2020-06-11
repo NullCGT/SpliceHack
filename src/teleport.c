@@ -1118,13 +1118,6 @@ struct trap *trap;
         vault_tele();
     } else
         tele();
-    /* Give the player a message when they trigger a teleport trap.  */
-    if (!In_endgame(&u.uz) && !Antimagic) {
-        if (!Blind)
-            pline("The air around you shimmers!");
-        else
-            You("are briefly feel dizzy.");
-    }
 }
 
 void

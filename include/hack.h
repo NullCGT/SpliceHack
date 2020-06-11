@@ -137,6 +137,7 @@ enum cost_alteration_types {
 #define CXN_PFX_THE 4   /* prefix with "the " (unless pname) */
 #define CXN_ARTICLE 8   /* include a/an/the prefix */
 #define CXN_NOCORPSE 16 /* suppress " corpse" suffix */
+#define CXN_FORCEMAT 32 /* force the material name */
 
 /* flags for look_here() */
 #define LOOKHERE_PICKED_SOME   1

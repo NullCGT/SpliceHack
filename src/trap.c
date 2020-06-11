@@ -2699,17 +2699,16 @@ register struct monst *mtmp;
                     shieldeff(mtmp->mx, mtmp->my);
                     pline("%s is uninjured.", Monnam(mtmp));
                 }
-                mtmp->mcanmove = 0;
             } else if (mtmp->data == &mons[PM_WATER_ELEMENTAL]) {
                 (void) newcham(mtmp, &mons[PM_ICE_ELEMENTAL], FALSE, FALSE);
             } else {
-                mtmp->mcanmove = 0;
+                paralyze_monst(mtmp, rn1(5, 10));
                 if (thitm(0, mtmp, (struct obj *) 0, d(2, 6), FALSE)) {
                     trapkilled = TRUE;
                 }
+                if (rn2(3))
+                    (void) destroy_mitem(mtmp, POTION_CLASS, AD_COLD);
             }
-            if (rn2(3))
-                (void) destroy_mitem(mtmp, POTION_CLASS, AD_COLD);
             if (see_it && t_at(mtmp->mx, mtmp->my))
                 seetrap(trap);
             break;
@@ -3493,7 +3492,7 @@ struct obj *box; /* null for floor trap */
         return;
     }
     if (see_it)
-        pline("An ice floe %s from %s!", box ? "surges forth" : "rises up",
+        pline("An mass of ice %s from %s!", box ? "surges forth" : "rises up",
             the(box ? xname(box) : surface(u.ux, u.uy)));
     else
         pline("A wave of cold washes over you.");

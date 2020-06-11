@@ -2406,7 +2406,8 @@ register struct monst *mtmp;
     struct permonst *mptr;
     struct obj* otmp;
     boolean be_sad;
-    int tmp;
+    int tmp, i;
+    coord cc;
 
     /* potential pet message; always clear global flag */
     be_sad = iflags.sad_feeling;
@@ -2416,6 +2417,34 @@ register struct monst *mtmp;
     lifesaved_monster(mtmp);
     if (!DEADMONSTER(mtmp))
         return;
+
+    if (mtmp->data == &mons[PM_WORM_THAT_WALKS] || mtmp->data == &mons[PM_LORD_OF_WORMS]) {
+        if (cansee(mtmp->mx, mtmp->my)) {
+            pline_The("body of %s dissolves into maggots!", mon_nam(mtmp));
+        } else {
+            You_hear("the slithering of many bodies.");
+        }
+        for (i = 0; i < (mtmp->data == &mons[PM_WORM_THAT_WALKS] ? rnd(10) : rnd(20)); i++) {
+            if (!enexto(&cc, mtmp->mx, mtmp->my, 0))
+                break;
+            makemon(&mons[PM_CORPSEWORM], cc.x, cc.y, NO_MINVENT);
+        }
+    } else if (mtmp->data == &mons[PM_FUSION_ELEMENTAL] 
+                || mtmp->data == &mons[PM_TIME_ELEMENTAL]) {
+        if (cansee(mtmp->mx, mtmp->my)) {
+            pline_The("body of %s splits into its separate elements!",
+                      mon_nam(mtmp));
+        }
+
+        for (i = PM_AIR_ELEMENTAL; i < PM_FUSION_ELEMENTAL; i++) {
+             if (!enexto(&cc, mtmp->mx, mtmp->my, 0))
+                break;
+            if (rn2(3)) makemon(&mons[i], cc.x, cc.y, MM_ANGRY);
+        }
+    }
+    if (mtmp->data == &mons[PM_TIME_ELEMENTAL]) {
+        learntech(T_DANCE_SPELL, FROMOUTSIDE, 1);
+    }
 
     if (is_vampshifter(mtmp)) {
         int mndx = mtmp->cham;
@@ -2566,35 +2595,6 @@ register struct monst *mtmp;
         nemdead();
     if (mtmp->data->msound == MS_LEADER)
         leaddead();
-
-    if (mtmp->data == &mons[PM_WORM_THAT_WALKS] || mtmp->data == &mons[PM_LORD_OF_WORMS]) {
-        if (cansee(mtmp->mx, mtmp->my)) {
-            pline_The("body of %s dissolves into maggots!", mon_nam(mtmp));
-        } else {
-            You_hear("the slithering of many bodies.");
-        }
-        if (mtmp->data == &mons[PM_WORM_THAT_WALKS])
-            create_critters(rnd(10), &mons[PM_CORPSEWORM], TRUE);
-        else
-            create_critters(rnd(20), &mons[PM_CORPSEWORM], TRUE);
-    } else if (mtmp->data == &mons[PM_FUSION_ELEMENTAL]) {
-        if (cansee(mtmp->mx, mtmp->my)) {
-            pline_The("body of %s splits into its separate elements!",
-                      mon_nam(mtmp));
-        }
-        create_critters(1, &mons[PM_EARTH_ELEMENTAL], TRUE);
-        create_critters(1, &mons[PM_WATER_ELEMENTAL], TRUE);
-        create_critters(1, &mons[PM_FIRE_ELEMENTAL], TRUE);
-        create_critters(1, &mons[PM_AIR_ELEMENTAL], TRUE);
-    } else if (mtmp->data == &mons[PM_TIME_ELEMENTAL]) {
-        if (cansee(mtmp->mx, mtmp->my)) {
-            pline("%s discorporates!", Monnam(mtmp));
-        }
-        learntech(T_DANCE_SPELL, FROMOUTSIDE, 1);
-        for (tmp = PM_AIR_ELEMENTAL; tmp < PM_FUSION_ELEMENTAL; tmp++) {
-            if (rn2(3)) create_critters(rnd(2), &mons[tmp], TRUE);
-        }
-    }
 
     /* killing a god is a horrible sin */
     if (mtmp->data == &mons[PM_LAWFUL_DEIFIC_AVATAR] ||

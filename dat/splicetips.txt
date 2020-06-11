@@ -102,7 +102,7 @@ Reading a scroll of cloning while polymorphed can be a frightful combination.
 Cheshire cats are difficult to pinpoint.
 Not sure what a monster does? Use ":" while hovering over them to look up all of their stats.
 Leprechauns love all types of gold, not just gold pieces.
-A demon lord summoned from Gehennom by the ascension ritual will no longer be covetous.
+A demon lord summoned from Gehennom by the invocation ritual will no longer be covetous.
 Zouthern monsters are slightly less tough in SpliceHack than in other variants.
 Anubites are capable of jumping.
 The main dungeon in SpliceHack is longer than one might expect.

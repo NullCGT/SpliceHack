@@ -2559,7 +2559,7 @@ struct monst *mtmp;
 {
     if (!has_mname(mtmp) && !(mtmp->data->geno & G_UNIQ)) {
         const char* name;
-        if (mtmp->data->mlet == S_NYMPH) {
+        if (mtmp->data->mlet == S_NYMPH || mtmp->data == &mons[PM_THRIAE]) {
             name = rnd_name(nymphnames);
         }
         else if (is_demon(mtmp->data)) {

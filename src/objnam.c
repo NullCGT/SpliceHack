@@ -444,6 +444,13 @@ struct obj *obj;
     return xname_flags(obj, CXN_NORMAL);
 }
 
+char *
+xname_forcemat(obj)
+struct obj *obj;
+{
+    return xname_flags(obj, CXN_NORMAL | CXN_FORCEMAT);
+}
+
 static char *
 xname_flags(obj, cxn_flags)
 register struct obj *obj;
@@ -457,6 +464,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
     const char *dn = OBJ_DESCR(*ocl);
     const char *un = ocl->oc_uname;
     boolean pluralize = (obj->quan != 1L) && !(cxn_flags & CXN_SINGULAR);
+    boolean forcemat = (cxn_flags & CXN_FORCEMAT);
     boolean known, dknown, bknown;
 
     buf = nextobuf() + PREFIX; /* leave room for "17 -3 " */
@@ -501,7 +509,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         goto nameit;
     switch (obj->oclass) {
     case AMULET_CLASS:
-        if (obj->material != objects[obj->otyp].oc_material) {
+        if (forcemat || obj->material != objects[obj->otyp].oc_material) {
             Strcat(buf, materialnm[obj->material]);
             Strcat(buf, " ");
         }
@@ -529,7 +537,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         else if (is_wet_towel(obj))
             Strcpy(buf, (obj->spe < 3) ? "moist " : "wet ");
 
-        if (obj->material != objects[obj->otyp].oc_material) {
+        if (forcemat || obj->material != objects[obj->otyp].oc_material) {
             Strcat(buf, materialnm[obj->material]);
             Strcat(buf, " ");
         }
@@ -565,7 +573,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         if (is_boots(obj) || is_gloves(obj))
             Strcpy(buf, "pair of ");
 
-        if (obj->material != objects[obj->otyp].oc_material) {
+        if (forcemat || obj->material != objects[obj->otyp].oc_material) {
             Strcat(buf, materialnm[obj->material]);
             Strcat(buf, " ");
         }
@@ -1757,6 +1765,8 @@ const char *str;
     } else if (!strncmpi(str, "the ", 4) || !strcmpi(str, "molten lava")
                || !strcmpi(str, "iron bars") || !strcmpi(str, "ice")) {
         ; /* no article */
+    } else if (!strcmpi(str, "cheese")) {
+        Strcpy(outbuf, "some ");
     } else {
         if ((index(vowels, c0) && strncmpi(str, "one-", 4)
              && strncmpi(str, "eucalyptus", 10) && strncmpi(str, "unicorn", 7)

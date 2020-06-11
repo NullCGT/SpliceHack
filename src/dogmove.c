@@ -380,7 +380,7 @@ int x, y; /* dog's starting location, might be different from current */
 boolean devour;
 {
     register struct edog *edog = EDOG(mtmp);
-    boolean poly, grow, heal, eyes, slimer, deadmimic, stunner, invis;
+    boolean poly, grow, heal, eyes, slimer, deadmimic, stunner, invis, eroded;
     int nutrit, res, corpsenm;
     long oprice;
     char objnambuf[BUFSZ];
@@ -405,6 +405,7 @@ boolean devour;
     heal = mhealup(obj);
     eyes = (obj->otyp == CARROT);
     corpsenm = (obj->otyp == CORPSE ? obj->corpsenm : NON_PM);
+    eroded = obj->oeroded ? TRUE : FALSE;
 
     if (devour) {
         if (mtmp->meating > 1)
@@ -566,8 +567,9 @@ boolean devour;
         else
             mtmp->perminvis = 1;
     }
-    if (corpsenm != NON_PM)
-        mon_givit(mtmp, &mons[corpsenm], obj->oeroded);
+    if (corpsenm != NON_PM) {
+        mon_givit(mtmp, &mons[corpsenm], eroded);
+    }
     return 1;
 }
 

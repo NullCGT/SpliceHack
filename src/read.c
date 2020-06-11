@@ -1723,8 +1723,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             || Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
             || IS_FOUNTAIN(levl[u.ux][u.uy].typ) || u.uswallow
             || !accessible(u.ux, u.uy)) {
-              strange_feeling(sobj,
-                  "You feel as if your vocabulary has been expanded.");
+              pline("You feel as if your vocabulary has been expanded.");
               break;
         }
         /* create the engraving */

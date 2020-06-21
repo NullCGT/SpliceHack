@@ -190,6 +190,10 @@ register boolean special;
             if (helm == HELM_OF_BRILLIANCE)
                 helm = STRANGE_OBJECT;
             break;
+        case PM_CONVICT:
+            if (rn2(2))
+                weapon = rn2(2) ? HEAVY_IRON_BALL : KNIFE;
+            break;
         case PM_HEALER:
             if (rn2(4))
                 weapon = QUARTERSTAFF;

@@ -116,6 +116,7 @@ Balance
 Bug Fixes
 - Correctly track the celibate conduct.
 - Correctly track sokoban guilt when liquid leaping.
+- Override beehive wall color in the wizard's tower.
 
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.

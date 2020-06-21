@@ -172,7 +172,7 @@ unsigned mgflags;
                        || g.showsyms[idx] == g.showsyms[S_dnstair + SYM_OFF_P])) {
             color = CLR_YELLOW;
         } else if (iflags.use_color && offset >= S_vwall && offset <= S_trwall) {
-            if (*in_rooms(x,y,BEEHIVE))
+            if (*in_rooms(x,y,BEEHIVE) && !On_W_tower_level(&u.uz))
         		    color = CLR_YELLOW;
             else if (In_sokoban(&u.uz))
                 color = CLR_BLUE;

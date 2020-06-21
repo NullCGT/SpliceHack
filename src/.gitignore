@@ -8,6 +8,7 @@ splicehack
 *.o
 tiles.bmp
 *.moc
+*.lnk
 graphicschk
 nhdat
 o

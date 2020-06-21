@@ -124,6 +124,7 @@ Bug Fixes
 - Fixed a few double livelog issues which could affect public servers.
 - Fixed a bad mplayer panic when spawning a convict player monster.
 - Fixed an impossible when spawning shambling horrors.
+- Minor potion of reflection feedback fix.
 
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.

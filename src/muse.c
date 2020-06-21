@@ -2657,7 +2657,7 @@ struct monst *mtmp;
     case MUSE_POT_REFLECT:
         mquaffmsg(mtmp, otmp);
         mtmp->mreflect = 1;
-        if (canspotmon(mtmp) && !Blind)
+        if (canseemon(mtmp) && !Blind)
             pline("%s is covered in a silvery sheen!", Monnam(mtmp));
         if (oseen)
             makeknown(POT_REFLECTION);

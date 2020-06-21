@@ -1219,7 +1219,7 @@ u_init()
   		attkptr->damn = 2;				/* we're almost sure to get this wrong first time */
   		attkptr->damd = 10;				/* either too high or too low */
   	}
-  	shambler->msize = rn2(MZ_GIGANTIC+1);			/* any size */
+  	shambler->msize = rn2(MZ_HUGE+1);			/* any size */
   	shambler->cwt = 20;					/* fortunately moot as it's flagged NOCORPSE */
   	shambler->cnutrit = 20;					/* see above */
   	shambler->msound = rn2(MS_HUMANOID);			/* any but the specials */

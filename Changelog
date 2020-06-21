@@ -117,6 +117,8 @@ Bug Fixes
 - Correctly track the celibate conduct.
 - Correctly track sokoban guilt when liquid leaping.
 - Override beehive wall color in the wizard's tower.
+- All vampiric monsters are harmed by silver, including the player and vampiric mind
+  flayers, which in previous versions were unaffected.
 
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.

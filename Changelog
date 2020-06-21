@@ -110,6 +110,9 @@ Miscelaneous
 - All mindless monsters resist all sources of psychic damage.
 - Remove artifact chants.
 - Pazuzu no longer leaves a corpse.
+- Hunger hulks provide a single point of nutrition. Since they take several turns to
+  eat, eating a hunger hulk corpse will actually make you hungrier. Fantastic YANI
+  from aosdict.
 
 Balance
 - Being deaf does not make you resistant to sonic attacks.

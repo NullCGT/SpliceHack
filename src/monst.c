@@ -3189,7 +3189,7 @@ struct permonst _mons2[] = {
     	A(ATTK(AT_CLAW, AD_PHYS, 3, 4), ATTK(AT_CLAW, AD_PHYS, 3, 4),
     	  ATTK(AT_BITE, AD_CONF, 2, 5), ATTK(AT_GAZE, AD_HNGY, 0, 0),
     	  NO_ATTK, NO_ATTK),
-    	SIZ(1200, 500, MS_SILENT, MZ_LARGE), 0, 0,
+    	SIZ(1200, 1, MS_SILENT, MZ_LARGE), 0, 0,
     	M1_CARNIVORE | M1_TUNNEL, M2_STRONG, M3_INFRAVISIBLE, 0, 15, CLR_RED),
     /*
      * Placeholder for the random creature...

@@ -2076,7 +2076,6 @@ mkinvokearea()
     mkstairs(u.ux, u.uy, 0, (struct mkroom *) 0); /* down */
     newsym(u.ux, u.uy);
     g.vision_full_recalc = 1; /* everything changed */
-    livelog_write_string(LL_ACHIEVE, "woke the rulers of Gehennom by performing the invocation");
 }
 
 /* Change level topology.  Boulders in the vicinity are eliminated.

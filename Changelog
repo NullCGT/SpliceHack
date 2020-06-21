@@ -119,6 +119,7 @@ Bug Fixes
 - Override beehive wall color in the wizard's tower.
 - All vampiric monsters are harmed by silver, including the player and vampiric mind
   flayers, which in previous versions were unaffected.
+- Fixed a few double livelog issues which could affect public servers.
 
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.

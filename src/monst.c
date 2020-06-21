@@ -4276,7 +4276,7 @@ struct permonst _mons2[] = {
             | M2_LORD | M2_MALE | M2_COLLECT,
         M3_WANTSAMUL | M3_INFRAVISIBLE | M3_INFRAVISION, MH_DEMON, 28, HI_LORD),
     MON("Pazuzu", S_DEMON, LVL(53, 18, -12, 65, 15),
-        (G_HELL | G_NOGEN | G_UNIQ),
+        (G_HELL | G_NOGEN | G_UNIQ | G_NOCORPSE),
         A(ATTK(AT_WEAP, AD_PHYS, 3, 6), ATTK(AT_WEAP, AD_PHYS, 3, 6), 
           ATTK(AT_BITE, AD_WIND, 2, 6), ATTK(AT_BREA, AD_DRST, 4, 6), 
           NO_ATTK, NO_ATTK),

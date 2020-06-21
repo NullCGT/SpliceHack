@@ -1872,7 +1872,6 @@ struct obj *obj;
             break;
         }
         case LION: {
-            verbalize("I call upon thee for aid!");
             pline("%s transforms into a glorious winged lion!",
                   xname(obj));
             mtmp = makemon(&mons[PM_LAMASSU], u.ux, u.uy, NO_MM_FLAGS);
@@ -1882,7 +1881,6 @@ struct obj *obj;
             break;
         }
         case HEALING: {
-            verbalize("Begone, sickness and corruption. Thou art banished.");
             int healamt = (u.uhpmax + 1 - u.uhp) / 2;
             long creamed = (long) u.ucreamed;
 
@@ -1908,7 +1906,6 @@ struct obj *obj;
             break;
         }
         case ENERGY_BOOST: {
-            verbalize("My thought is iron, my will is law.");
             int epboost = (u.uenmax + 1 - u.uen) / 2;
 
             if (epboost > 120)
@@ -1928,7 +1925,6 @@ struct obj *obj;
                 obj->age = 0; /* don't charge for changing their mind */
                 return 0;
             }
-            verbalize("Triggers, fail. Springs, snap. Machinations, be forgotten.");
             break;
         }
         case CHARGE_OBJ: {
@@ -1939,7 +1935,6 @@ struct obj *obj;
                 obj->age = 0;
                 return 0;
             }
-            verbalize("Be renewed!");
             b_effect = (obj->blessed && (oart->role == Role_switch
                                          || oart->role == NON_PM));
             recharge(otmp, b_effect ? 1 : obj->cursed ? -1 : 0);
@@ -1955,7 +1950,6 @@ struct obj *obj;
             winid tmpwin = create_nhwindow(NHW_MENU);
             anything any;
 
-            verbalize("Your sight creates my destiny!");
             if (Is_blackmarket(&u.uz) && *u.ushops) {
       		      You("feel very disoriented for a moment.");
       		      break;
@@ -2014,7 +2008,6 @@ struct obj *obj;
             break;
         }
         case ENLIGHTENING:
-            verbalize("Grant me a glimpse into the beyond!");
             enlightenment(MAGICENLIGHTENMENT, ENL_GAMEINPROGRESS);
             break;
         case CREATE_AMMO: {
@@ -2022,7 +2015,6 @@ struct obj *obj;
 
             if (!otmp)
                 goto nothing_special;
-            verbalize("Let my quiver be ever-filled, and let all foes before me suffer a thousand arrows.");
             otmp->blessed = obj->blessed;
             otmp->cursed = obj->cursed;
             otmp->bknown = obj->bknown;
@@ -2044,7 +2036,6 @@ struct obj *obj;
         case PHASING:   /* Walk through walls and stone like a xorn */
             if (Passes_walls) goto nothing_special;
             if (oart == &artilist[ART_IRON_BALL_OF_LIBERATION]) {
-                verbalize("Liberate me from this earthly prison!");
                 if (Punished && (obj != uball)) {
                     unpunish(); /* Remove a mundane heavy iron ball */
                 }
@@ -2070,14 +2061,12 @@ struct obj *obj;
             obj->age += HPasses_walls; /* Time begins after phasing ends */
             break;
         case OBJECT_DET:
-                verbalize("By my life, I swear that I am up to no good!");
          		object_detect(obj, 0);
          		artifact_detect(obj);
          		break;
         case LIGHTNING_BOLT: {
             struct obj* pseudo = mksobj(WAN_LIGHTNING, FALSE, FALSE);
             pseudo->blessed = pseudo->cursed = 0;
-            verbalize("Storm! In the name of the weapon I wield, heed my call!");
             /* type is a "spell of lightning bolt" which doesn't actually
              * exist: 10 + AD_ELEC - 1 */
             if(!getdir(NULL) || (!u.dx && !u.dy && !u.dz)) {
@@ -2094,7 +2083,6 @@ struct obj *obj;
         }
             break;
         case ELEMENTS: {
-            verbalize("Fire, Water, Earth, Air!");
             if (HFire_resistance & ~FROMOUTSIDE) {
                 pline("The %s beneath you erupts in flame.", surface(u.ux, u.uy));
                 HFire_resistance += rn1(100,100);
@@ -2123,11 +2111,9 @@ struct obj *obj;
             struct obj* pseudo = NULL;
             switch(artinum) {
             case ART_IMHULLU:
-                verbalize("Come forth, winds, and cleanse this place of foes!");
                 pseudo = mksobj(SCR_AIR, FALSE, FALSE);
                 break;
             case ART_STORMBRINGER:
-                verbalize("Flee before the coming storm, and bow to my path of destruction!");
                 pseudo = mksobj(SCR_SCARE_MONSTER, FALSE, FALSE);
                 break;
             default:
@@ -2192,14 +2178,12 @@ struct obj *obj;
             break;
         case FLYING:
             if (on) {
-                verbalize("Come, corruptors of all that is natural. Thou shalt fall before my sword.");
                 You("sprout three pairs of angelic wings!");
             } else
                 Your("wings vanish.");
             break;
         case WWALKING:
             if (on) {
-                verbalize("Ocean, heed my will.");
                 Your("feet are surrounded by a swirl of foam!");
                 do_earthquake(7, u.ux, u.uy);
                 if (u.uinwater)

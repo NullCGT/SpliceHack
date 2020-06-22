@@ -1130,12 +1130,11 @@ boolean atme;
         }
     }
 
+    boolean failed = 0;
     chance = percent_success(spell);
     if (confused || (rnd(100) > chance)) {
-        You("fail to cast the spell correctly.");
-        u.uen -= energy / 2;
-        g.context.botl = 1;
-        return 1;
+        energy /= 2;
+        failed = 1;
     }
 
     /* only can hit this case if using blood magic */
@@ -1151,6 +1150,12 @@ boolean atme;
         u.uen -= energy;
     }
     g.context.botl = 1;
+
+    if (failed) {
+        You("fail to cast the spell correctly.");
+        return 1;
+    }
+
     exercise(A_WIS, TRUE);
     /* pseudo is a temporary "false" object containing the spell stats */
     pseudo = mksobj(spellid(spell), FALSE, FALSE);

@@ -1005,6 +1005,7 @@ boolean atme;
     int otyp, skill, role_skill, res = 0;
     boolean confused = (Confusion != 0);
     boolean physical_damage = FALSE;
+    boolean failed = 0;
     struct obj *pseudo;
     struct monst *mtmp;
     coord cc;
@@ -1130,7 +1131,6 @@ boolean atme;
         }
     }
 
-    boolean failed = 0;
     chance = percent_success(spell);
     if (confused || (rnd(100) > chance)) {
         energy /= 2;

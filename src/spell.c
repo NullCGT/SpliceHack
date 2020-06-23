@@ -1005,7 +1005,7 @@ boolean atme;
     int otyp, skill, role_skill, res = 0;
     boolean confused = (Confusion != 0);
     boolean physical_damage = FALSE;
-    boolean failed = 0;
+    boolean failed = FALSE;
     struct obj *pseudo;
     struct monst *mtmp;
     coord cc;
@@ -1134,7 +1134,7 @@ boolean atme;
     chance = percent_success(spell);
     if (confused || (rnd(100) > chance)) {
         energy /= 2;
-        failed = 1;
+        failed = TRUE;
     }
 
     /* only can hit this case if using blood magic */

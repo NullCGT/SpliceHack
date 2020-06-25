@@ -2673,4 +2673,27 @@ int flag;
                 : g.urole.name.m;
 }
 
+void
+fallen_angel()
+{
+    struct permonst* fallen = &mons[PM_FALLEN_ANGEL];
+    if (!Race_if(PM_MINOR_ANGEL) || g.youmonst.data == &mons[PM_FALLEN_ANGEL])
+        return;
+    You("fall from grace...");
+    /* Change the fallen angel's stats to be similar to the player's */
+    fallen->mlevel = u.ulevel + rnd(5);
+    /* The fall... */
+    if (uarmh && uarmh->otyp == HALO)
+        (void) destroy_arm(uarmh);
+    (void) polymon(PM_FALLEN_ANGEL);
+    HUnchanging |= FROMOUTSIDE;
+
+    adjalign(-50);
+    if (In_endgame(&u.uz) && !Conflict) {
+        if (!Blind) pline("Angels swoop down to apprehend you!");
+        lose_guardian_angel((struct monst *) 0);
+    }
+    g.context.botl = TRUE;
+}
+
 /* role.c */

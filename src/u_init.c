@@ -233,6 +233,9 @@ static struct trobj Tinopener[] = { { TIN_OPENER, 0, TOOL_CLASS, 1, 0 },
                                     { 0, 0, 0, 0, 0 } };
 static struct trobj Sewingkit[] = { { SEWING_KIT, 0, TOOL_CLASS, 1, 0 },
                                     { 0, 0, 0, 0, 0 } };
+
+static struct trobj Halo[] = { { HALO, 0, ARMOR_CLASS, 1, UNDEF_BLESS },
+                                    { 0, 0, 0, 0, 0 } };
 static struct trobj Magicmarker[] = { { MAGIC_MARKER, UNDEF_SPE, TOOL_CLASS,
                                         1, 0 },
                                       { 0, 0, 0, 0, 0 } };
@@ -1144,6 +1147,10 @@ u_init()
     case PM_HUMAN_WEREWOLF:
         set_ulycn(PM_WEREWOLF);
         break;
+    
+    case PM_MINOR_ANGEL:
+        ini_inv(Halo);
+        break;
 
     default: /* impossible */
         break;
@@ -1478,6 +1485,14 @@ register struct trobj *trop;
         if (g.urace.malenum == PM_VAMPIRE && obj->otyp == FOOD_RATION) {
             dealloc_obj(obj);
             obj = mksobj(POT_VAMPIRE_BLOOD, TRUE, FALSE);
+        }
+
+        /* angels don't get helmets */
+        if (g.urace.malenum == PM_MINOR_ANGEL && is_helmet(obj) 
+            && obj->otyp != HALO) {
+            dealloc_obj(obj);
+            trop++;
+            continue;
         }
 
         /* nudist gets no armor */

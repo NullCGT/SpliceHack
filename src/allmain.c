@@ -730,6 +730,9 @@ newgame()
         flush_screen(1);
         if (Role_if(PM_CONVICT)) {
 		    com_pager("legacy_convict");
+        } else if (Race_if(PM_MINOR_ANGEL)) {
+            com_pager("legacy_angel");
+            com_pager("angel_edicts");
         } else {
 		    com_pager("legacy");
         }

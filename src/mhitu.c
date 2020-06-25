@@ -3482,6 +3482,10 @@ struct monst *mon;
             g.context.botl = 1;
         }
     }
+
+    if (Race_if(PM_MINOR_ANGEL) && is_demon(mon->data))
+        fallen_angel();
+
     if (!rn2(25))
         mon->mcan = 1; /* monster is worn out */
     if (!tele_restrict(mon))

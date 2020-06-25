@@ -1710,6 +1710,11 @@ int id;
         otmp->quan = 1L;
 
     switch (otmp->oclass) {
+    case ARMOR_CLASS:
+        if (otmp->otyp == HALO) {
+            otmp->otyp = HELMET;
+        }
+        break;
     case TOOL_CLASS:
         if (otmp->otyp == MAGIC_LAMP) {
             otmp->otyp = OIL_LAMP;

@@ -248,6 +248,9 @@ struct monst *mtmp;
         /* attacking peaceful creatures is bad for the samurai's giri */
         You("dishonorably attack the innocent!");
         adjalign(-1);
+    } else if (Race_if(PM_MINOR_ANGEL) && mtmp->mpeaceful) {
+        You("attack the innocent!");
+        fallen_angel();
     }
 }
 

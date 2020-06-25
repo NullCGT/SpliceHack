@@ -2864,7 +2864,11 @@ create_sin()
     int tryct = 0;
     int pm = 0;
     do {
-        pm = rn1(PM_ENVY - PM_WRATH + 1, PM_WRATH);
+        if (g.youmonst.data == &mons[PM_FALLEN_ANGEL] && Race_if(PM_ANGEL)) {
+            pm = rn1(PM_ARCHON - PM_AVENGER_ARCHON + 1, PM_AVENGER_ARCHON);
+        } else {
+            pm = rn1(PM_ENVY - PM_WRATH + 1, PM_WRATH);
+        }
         tryct++;
     } while ((g.mvitals[pm].mvflags & G_EXTINCT) && tryct < 100);
     if (!(g.mvitals[pm].mvflags & G_EXTINCT)) {

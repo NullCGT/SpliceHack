@@ -430,6 +430,7 @@ Helmet_on(VOID_ARGS)
     case HELM_OF_OPAQUE_THOUGHTS:
     case HELM_OF_BRILLIANCE:
     case PUMPKIN:
+    case HALO:
         adj_abon(uarmh, uarmh->spe);
         break;
     case CORNUTHAUM:
@@ -498,8 +499,8 @@ Helmet_off(VOID_ARGS)
     case ORCISH_HELM:
     case HELM_OF_OPAQUE_THOUGHTS:
     case PUMPKIN:
-        break;
     case DUNCE_CAP:
+    case HALO:
         g.context.botl = 1;
         break;
     case CORNUTHAUM:
@@ -1730,6 +1731,10 @@ struct obj *otmp;
         else
             You("can't.  %s cursed.", use_plural ? "They are" : "It is");
         set_bknown(otmp, 1);
+        return 1;
+    } else if (otmp->otyp == HALO) {
+        /* An obtuse hint that other monsters could steal your halo. */
+        You("can't remove your own halo!");
         return 1;
     }
     return 0;

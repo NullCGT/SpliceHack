@@ -193,6 +193,9 @@ boolean restore;
                 otmp->otyp = BELL;
                 otmp->material = COPPER;
                 curse(otmp);
+            } else if (otmp->otyp == HALO) {
+                otmp->otyp = HELMET;
+                curse(otmp);
             } else if (otmp->otyp == SPE_BOOK_OF_THE_DEAD) {
                 otmp->otyp = SPE_BLANK_PAPER;
                 curse(otmp);

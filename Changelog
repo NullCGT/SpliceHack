@@ -82,6 +82,7 @@ Artifact Changes
 - Seafoam
   - Change name to Poseidon's Trident
   - Invoking it grants water walking and causes an earthquake.
+  - No longer erodeproof.
 - Imhullu
   - Grants stability.
   - Hitting a monster with a tornado does 3d4 bonus damage, takes place 1/3 of
@@ -103,6 +104,30 @@ Artifact Changes
   - Can no longer be thrown.
   - Changed damage.
   - Has +100 to-hit.
+
+Race Changes
+- Angel
+  - Angels receive a number of edicts upon starting the game:
+    - Do not harm the innocent.
+    - Do not steal.
+    - Do not engage in amorous activities with demons.
+  - Shopkeepers refer to the player as "Radiant One." Fallen angels are referred to
+    as "fallen one."
+  - Angels and fallen angels receive slightly altered messages upon beginning the game
+    and upon ascending.
+  - Angel flight is now sourced from creature form, rather than an intrinsic racial trait.
+  - Angels receive a halo during character creation. Halos provide 1 AC, and protection.
+    It cannot be removed by the player, and it cannot be wished for or found in bones.
+  - Breaking an edict causes the player to fall from grace. Falling from grace has the
+    following effects:
+      - The player's halo, if any, is destroyed.
+      - The player polymorphs into a fallen angel, meaning that they can no longer fly.
+      - The player gains intrinsic unchanging.
+      - In the endgame, fallen angels are accosted by archons, rather than
+        sins.
+  - Falling from grace can actually be a strategic option. Fallen angels have multiple
+    weapon attacks, are always equal or greater to the level of the player when they fell,
+    and the player can wear headgear other than halos.
 
 
 Miscelaneous

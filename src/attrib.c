@@ -112,8 +112,7 @@ static const struct innate {
                  { 0, 0, 0, 0 } },
 
   /* Intrinsics conferred by race */
-  ang_abil[] = { { 1, &HFlying, "", "" },
-                 { 1, &HAggravate_monster, "", "" },
+  ang_abil[] = { { 1, &HAggravate_monster, "", "" },
                  { 0, 0, 0, 0 } },
 
   chn_abil[] = { { 1, &HInfravision, "", "" },

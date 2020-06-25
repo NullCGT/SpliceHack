@@ -1756,6 +1756,22 @@ dosacrifice()
                 pline("Fortunately, %s permits you to live...", a_gname());
                 pline(cloud_of_smoke, hcolor(NH_ORANGE));
                 done(ESCAPED);
+            } else if (Race_if(PM_ANGEL)) {
+                /* super big win */
+                adjalign(10);
+                pline(
+               "An invisible choir sings, and you are bathed in radiance...");
+                godvoice(altaralign, "Thou hast done well, my most faithful servant!!");
+                display_nhwindow(WIN_MESSAGE, FALSE);
+                if (g.youmonst.data == &mons[PM_FALLEN_ANGEL]) {
+                    verbalize("In return for thy service, I return thee thy rank!");
+                    You("are restored to your rightful place by the side of your deity...");
+                } else {
+                    verbalize("In return for thy service, I grant thee the gift of Immortality!");
+                    You("ascend to the status of Demigod%s...",
+                        flags.gender == GEND_F ? "dess" : "");
+                }
+                done(ASCENDED);
             } else {
                 u.uevent.ascended = 1;
                 /* just for fun */

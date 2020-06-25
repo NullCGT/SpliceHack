@@ -2373,6 +2373,7 @@ E const char *NDECL(sibling_gender);
 E const char *NDECL(child_gender);
 E int FDECL(monnum_gender, (int, BOOLEAN_P));
 E const char* FDECL(rolename_gender, (int));
+E void NDECL(fallen_angel);
 
 /* ### rumors.c ### */
 

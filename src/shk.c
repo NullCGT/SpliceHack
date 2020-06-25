@@ -605,6 +605,7 @@ struct monst *shkp;
                    shtypes[eshkp->shoptype - SHOPBASE].name);
     if (!Role_if(PM_ROGUE)) /* stealing is unlawful */
         adjalign(-sgn(u.ualign.type));
+    fallen_angel();
 
     hot_pursuit(shkp);
     return TRUE;
@@ -2905,6 +2906,10 @@ char *buf;
         Strcat(buf, (flags.gender == GEND_F) ? " dark lady" : (flags.gender == GEND_N) ? "dark liege" : " dark lord");
     else if (is_elf(g.youmonst.data))
         Strcat(buf, (flags.gender == GEND_F) ? " hiril" : (flags.gender == GEND_N) ? "mehtar" : " hir");
+    else if (maybe_polyd(is_angel(g.youmonst.data), Race_if(PM_MINOR_ANGEL)))
+        Strcat(buf, "radiant one");
+    else if (g.youmonst.data == &mons[PM_FALLEN_ANGEL])
+        Strcat(buf, "fallen one");
     else
         Strcat(buf, !is_human(g.youmonst.data) ? " creature"
                                              : (flags.gender == GEND_F) ? " lady"

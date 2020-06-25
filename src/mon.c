@@ -3152,6 +3152,7 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
         HTelepat &= ~INTRINSIC;
         change_luck(-2);
         You("murderer!");
+        fallen_angel();
         if (Blind && !Blind_telepat)
             see_monsters(); /* Can't sense monsters any more. */
     }

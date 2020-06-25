@@ -992,9 +992,6 @@ boolean artif;
             case DRUM_OF_EARTHQUAKE:
                 otmp->spe = rn1(5, 4);
                 break;
-            case ART_POSEIDON_S_TRIDENT:
-                otmp->oerodeproof = TRUE;
-                break;
             }
             break;
         case AMULET_CLASS:
@@ -1050,7 +1047,7 @@ boolean artif;
                 otmp->oerodeproof = otmp->rknown = 1;
 #endif
             }
-            if (otmp->otyp == ROBE_OF_STASIS) {
+            if (otmp->otyp == ROBE_OF_STASIS || otmp->otyp == HALO) {
                 otmp->oerodeproof = 1;
             }
             break;

@@ -86,6 +86,7 @@
     - Techniques Code
     - Various tiles
     - Vampire Race
+    - Shopkeeper services.
 
 #SliceHack
 - Various bug fixes.

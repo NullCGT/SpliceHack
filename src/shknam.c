@@ -18,6 +18,7 @@ static void FDECL(mkshobj_at, (const struct shclass *, int, int,
 static void FDECL(nameshk, (struct monst *, const char *const *));
 static int FDECL(shkinit, (const struct shclass *, struct mkroom *));
 static void FDECL(stock_blkmar, (struct mkroom *, int));
+static void FDECL(init_shk_services, (struct monst *));
 
 #define VEGETARIAN_CLASS (MAXOCLASSES + 1)
 
@@ -742,6 +743,8 @@ struct mkroom *sroom;
     eshkp->billct = eshkp->visitct = 0;
     eshkp->bill_p = (struct bill_x *) 0;
     eshkp->customer[0] = '\0';
+    /* WAC init services */
+	init_shk_services(shk);
     if (!Is_blackmarket(&u.uz))
         mkmonmoney(shk, 1000L + 30L * (long) rnd(100)); /* initial capital */
     else
@@ -968,6 +971,52 @@ register int sh;
      * Special monster placements (if any) should go here: that way,
      * monsters will sit on top of objects and not the other way around.
      */
+}
+
+
+static void
+init_shk_services(shk)
+struct monst *shk;
+{
+	ESHK(shk)->services = 0L;
+
+	/* KMH, balance patch 2 -- Increase probability of shopkeeper services.
+	 * Requested by Dave <mitch45678@aol.com>
+	 */
+	if (Is_blackmarket(&u.uz)) {
+		ESHK(shk)->services = 
+		    SHK_ID_BASIC|SHK_ID_PREMIUM|SHK_UNCURSE|SHK_APPRAISE|
+		    SHK_SPECIAL_A|SHK_SPECIAL_B|SHK_SPECIAL_C;
+		return;
+	}
+
+	/* Guarantee some form of identification
+	 * 1/3 		both Basic and Premium ID
+	 * 2/15 	Premium ID only
+	 * 8/15 	Basic ID only
+	 */
+	if (!rn2(2)) ESHK(shk)->services |= (SHK_ID_BASIC|SHK_ID_PREMIUM);
+	else if (!rn2(4)) ESHK(shk)->services |= SHK_ID_PREMIUM;
+	else ESHK(shk)->services |= SHK_ID_BASIC;
+
+	if (!rn2(3)) ESHK(shk)->services |= SHK_UNCURSE;
+
+	if (!rn2(3) && shk_class_match(WEAPON_CLASS, shk))
+		ESHK(shk)->services |= SHK_APPRAISE;
+
+	if ((shk_class_match(WEAPON_CLASS, shk) == SHK_MATCH) ||
+	(shk_class_match(ARMOR_CLASS, shk) == SHK_MATCH) ||
+	(shk_class_match(WAND_CLASS, shk) == SHK_MATCH) ||
+	(shk_class_match(TOOL_CLASS, shk) == SHK_MATCH) ||
+	(shk_class_match(SPBOOK_CLASS, shk) == SHK_MATCH) ||
+	(shk_class_match(RING_CLASS, shk) == SHK_MATCH)) {
+		if (!rn2(4/*5*/)) ESHK(shk)->services |= SHK_SPECIAL_A;
+		if (!rn2(4/*5*/)) ESHK(shk)->services |= SHK_SPECIAL_B;
+	}
+	if (!rn2(4/*5*/) && (shk_class_match(WEAPON_CLASS, shk) == SHK_MATCH))
+	 ESHK(shk)->services |= SHK_SPECIAL_C;
+
+	return;
 }
 
 

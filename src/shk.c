@@ -3836,8 +3836,6 @@ shk_uncurse(slang, shkp)
 **
 ** Appraise a weapon or armor
 */
-static const char basic_damage[] =
-	"Basic damage against small foes %s, against large foes %s.";
 
 static void
 shk_appraisal(slang, shkp)
@@ -3847,8 +3845,6 @@ shk_appraisal(slang, shkp)
 	struct obj *obj;                /* The object picked            */
 	int charge;                     /* How much for appraisal       */
 	boolean guesswork;              /* Shopkeeper unsure?           */
-	char ascii_wsdam[5];            /* Ascii form of damage         */
-	char ascii_wldam[5];
 
 
 	/* Pick object */
@@ -3859,13 +3855,6 @@ shk_appraisal(slang, shkp)
 	/* Smooth out the charge a bit */
 	shk_smooth_charge(&charge, 5, 50);
 
-	/* If not identified, complain. */
-	/* KMH -- Why should it matter? */
-/*	if ( ! (obj->known && objects[obj->otyp].oc_name_known) )
-	{
-		verbalize("This weapon needs to be identified first!");
-		return;
-	} else */
 	if (shk_class_match(WEAPON_CLASS, shkp) == SHK_MATCH){
 		verbalize("Ok, %s, let's see what we have here.", slang);
 		guesswork = FALSE;
@@ -3887,40 +3876,14 @@ shk_appraisal(slang, shkp)
 		return;
 	}
 
-	/* Convert damage to ascii */
-	Sprintf(ascii_wsdam, "%d", objects[obj->otyp].oc_wsdam);
-	Sprintf(ascii_wldam, "%d", objects[obj->otyp].oc_wldam);
-
 	/* Will shopkeeper be unsure? */
-	if (guesswork)
-	{
-		switch (rn2(10))
-		{
-		    case 1:
-			/* Shkp's an idiot */
-			verbalize("Sorry, %s, but I'm not certain.", slang);
-			break;
-
-		    case 2:
-			/* Not sure about large foes */
-			verbalize(basic_damage, ascii_wsdam, "?");
-			break;
-
-		    case 3:
-			/* Not sure about small foes */
-			verbalize(basic_damage, "?", ascii_wldam);
-			break;
-
-		    default:
-			verbalize(basic_damage, ascii_wsdam, ascii_wldam);
-			break;
-			
-		}
-	}
-	else
-	{
-		verbalize(basic_damage, ascii_wsdam, ascii_wldam);
-	}
+	if (guesswork && !rn2(10)) {
+        /* Shkp's an idiot */
+        verbalize("Sorry, %s, but I'm not certain.", slang);
+	} else {
+        verbalize("If someone were to swing this at you, they could deal roughly %d damage.", 
+            dmgval(obj, &g.youmonst) + guesswork ? rnd(30) : 0);
+    }
 }
 
 

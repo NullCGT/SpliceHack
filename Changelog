@@ -14,6 +14,8 @@ AI
 
 Shopkeepers
 - Shopkeeper services, originally from SLASH'EM, are now available.
+- Altered the appraisal service, since all weapon stats can be looked
+  up in game.
 
 QOL
 - Show the carrying capacity of a player and the number of slots in their

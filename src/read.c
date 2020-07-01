@@ -1881,13 +1881,14 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 losehp(d(3, 4), "scroll of air", KILLED_BY_AN);
             } else {
                 strange_feeling(sobj, "You feel oddly breathless.");
+                sobj = 0;
             }
             break;
         } else if (sblessed)
             i = 4;
         else
             i = 2;
-        /* Ideally this should remove poison gas as well. */
+        /* TODO: Remove poison gas as well. */
         pline("A tornado whips up around you!");
         g.known = TRUE;
         for (mtmp = fmon; mtmp; mtmp = mtmp2) {
@@ -1900,9 +1901,10 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         break;
     }
     case SCR_WARP_WEAPON:
-        if (!uwep)
+        if (!uwep) {
+            strange_feeling(sobj, "You itch for a weapon.");
             sobj = 0; /* nothing enchanted: strange_feeling -> useup */
-        else if (confused || scursed) {
+        } else if (confused || scursed) {
             pline("%s with a sickly green light!", Yobjnam2(uwep, "glow"));
             curse(uwep);
             uwep->oerodeproof = 0;

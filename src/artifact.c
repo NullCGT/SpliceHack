@@ -1884,8 +1884,10 @@ struct obj *obj;
             pline("%s transforms into a glorious winged lion!",
                   xname(obj));
             mtmp = makemon(&mons[PM_LAMASSU], u.ux, u.uy, NO_MM_FLAGS);
-            tamedog(mtmp, (struct obj *) 0);
-            christen_monst(mtmp, "Sharur");
+            if (mtmp) {
+                tamedog(mtmp, (struct obj *) 0);
+                christen_monst(mtmp, "Sharur");
+            }
             useup(obj);
             break;
         }
@@ -2129,10 +2131,12 @@ struct obj *obj;
                 impossible("bad artifact invocation seffect?");
                 break;
             }
-            pseudo->blessed = TRUE;
-            pseudo->cursed = FALSE;
-            (void) seffects(pseudo);
-            obfree(pseudo, NULL);
+            if (pseudo) {
+                pseudo->blessed = TRUE;
+                pseudo->cursed = FALSE;
+                if (!seffects(pseudo))
+                    obfree(pseudo, NULL);
+            }
         }
         }
     } else {

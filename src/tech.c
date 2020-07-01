@@ -642,7 +642,7 @@ int tech_no;
 {
 	/* These variables are used in various techs */
 	struct obj *obj, *otmp;
-	struct obj pseudo;
+	struct obj *pseudo;
 	const char *str;
 	struct monst *mtmp, *nextmon;;
 	int num;
@@ -751,42 +751,42 @@ int tech_no;
 			}
 			if (Sick || Slimed) {
 				if (carrying(SCALPEL)) {
-				pline("Using your scalpel (ow!), you cure your infection!");
-				make_sick(0L, (char *)0, TRUE, SICK_ALL);
-				Slimed = 0;
-				if (Upolyd) {
-					u.mh -= 5;
-					if (u.mh < 1)
-					rehumanize();
-				} else if (u.uhp > 6)
-					u.uhp -= 5;
-				else
-					u.uhp = 1;
-							t_timeout = rn1(500,500);
-				g.context.botl = TRUE;
-				break;
+					pline("Using your scalpel (ow!), you cure your infection!");
+					make_sick(0L, (char *)0, TRUE, SICK_ALL);
+					Slimed = 0;
+					if (Upolyd) {
+						u.mh -= 5;
+						if (u.mh < 1)
+						rehumanize();
+					} else if (u.uhp > 6)
+						u.uhp -= 5;
+					else
+						u.uhp = 1;
+								t_timeout = rn1(500,500);
+					g.context.botl = TRUE;
+					break;
 				} else pline("If only you had a scalpel...");
 			}
 			if (Upolyd ? u.mh < u.mhmax : u.uhp < u.uhpmax) {
 				otmp = use_medical_kit(BANDAGE, FALSE,
 					"dress your wounds with");
 				if (otmp) {
-				check_unpaid(otmp);
-				if (otmp->quan > 1L) {
-					otmp->quan--;
-					otmp->ocontainer->owt = weight(otmp->ocontainer);
+					check_unpaid(otmp);
+					pline("Using %s, you dress your wounds.", yname(otmp));
+					if (otmp->quan > 1L) {
+						otmp->quan--;
+						otmp->ocontainer->owt = weight(otmp->ocontainer);
+					} else {
+						obj_extract_self(otmp);
+						obfree(otmp, (struct obj *)0);
+					}
+					healup(techlev(tech_no) * (rnd(2)+1) + rn1(5,5),
+						0, FALSE, FALSE);
 				} else {
-					obj_extract_self(otmp);
-					obfree(otmp, (struct obj *)0);
+					You("strap your wounds as best you can.");
+					healup(techlev(tech_no) + rn1(5,5), 0, FALSE, FALSE);
 				}
-				pline("Using %s, you dress your wounds.", yname(otmp));
-				healup(techlev(tech_no) * (rnd(2)+1) + rn1(5,5),
-				0, FALSE, FALSE);
-				} else {
-				You("strap your wounds as best you can.");
-				healup(techlev(tech_no) + rn1(5,5), 0, FALSE, FALSE);
-				}
-						t_timeout = rn1(1000,500);
+				t_timeout = rn1(1000,500);
 				g.context.botl = TRUE;
 			} else You("don't need your healing powers!");
 			break;
@@ -835,8 +835,8 @@ int tech_no;
 			t_timeout = rn1(1000,500);
 			break;
 	    case T_CRIT_STRIKE:
-			if (!getdir((char *)0)) return(0);
-			if (!u.dx && !u.dy) {
+			if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return(0);
+			if ((!u.dx && !u.dy) || !isok(u.ux + u.dx, u.uy + u.dy)) {
 				/* Hopefully a mistake ;B */
 				You("decide against that idea.");
 				return(0);
@@ -875,7 +875,7 @@ int tech_no;
 				You("need a blade to perform cutthroat!");
 				return 0;
 			}
-				if (!getdir((char *)0)) return 0;
+			if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return 0;
 			if (!u.dx && !u.dy) {
 				/* Hopefully a mistake ;B */
 				pline("Things may be going badly, but that's extreme.");
@@ -1296,7 +1296,7 @@ tamedog(mtmp, (struct obj *) 0);
 					return(0);
 			}
 
-	    	if (!getdir((char *)0)) return(0);
+	    	if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return(0);
 			if (!u.dx && !u.dy) {
 				/* Hopefully a mistake ;B */
 				pline("Why don't you try wielding something else instead.");
@@ -1416,7 +1416,7 @@ tamedog(mtmp, (struct obj *) 0);
 	    		You("can't see anything!");
 	    		return(0);
 	    	}
-	    	if (!getdir((char *)0)) return(0);
+	    	if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return(0);
 			if (!u.dx && !u.dy) {
 				/* Hopefully a mistake ;B */
 				You("can't see yourself!");
@@ -1465,7 +1465,7 @@ tamedog(mtmp, (struct obj *) 0);
 				You("can't do this while holding a shield!");
 					return(0);
 	    	}
-			if (!getdir((char *)0)) return(0);
+			if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return(0);
 			if (!u.dx && !u.dy) {
 				You("flex your muscles.");
 				return(0);
@@ -1481,7 +1481,7 @@ tamedog(mtmp, (struct obj *) 0);
 				You("can't do this while holding a shield!");
 	    		return(0);
 	    	}
-			if (!getdir((char *)0)) return(0);
+			if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return(0);
 			if (!u.dx && !u.dy) {
 				You("flex your muscles.");
 				return(0);
@@ -1490,7 +1490,7 @@ tamedog(mtmp, (struct obj *) 0);
 			t_timeout = rn1(1000,500);
 			break;
         case T_DASH:
-			if (!getdir((char *)0)) return(0);
+			if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return(0);
 			if (!u.dx && !u.dy) {
 				You("stretch.");
 				return(0);
@@ -1510,13 +1510,13 @@ tamedog(mtmp, (struct obj *) 0);
 				You("can't do this while holding a shield!");
 	    		return(0);
 	    	}
-			if (!getdir((char *)0)) return(0);
+			if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return(0);
 					if (!blitz_spirit_bomb()) return(0);
 			t_timeout = rn1(1000,500);
 			break;
-			case T_DRAW_BLOOD:
+		case T_DRAW_BLOOD:
 			if (!maybe_polyd(is_vampire(g.youmonst.data),
-			Race_if(PM_VAMPIRE))) {
+				Race_if(PM_VAMPIRE))) {
 				/* ALI
 				* Otherwise we get problems with what we create:
 				* potions of vampire blood would no longer be
@@ -1532,13 +1532,6 @@ tamedog(mtmp, (struct obj *) 0);
 				You_cant("seem to find a vein.");
 				return 0;
 			}
-			check_unpaid(obj);
-			if (obj->quan > 1L)
-				obj->quan--;
-			else {
-				obj_extract_self(obj);
-				obfree(obj, (struct obj *)0);
-			}
 			pline("Using your medical kit, you draw off a phial of your blood.");
 			losexp("drawing blood");
 			if (u.uexp > 0)
@@ -1546,6 +1539,13 @@ tamedog(mtmp, (struct obj *) 0);
 			otmp = mksobj(POT_VAMPIRE_BLOOD, FALSE, FALSE);
 			otmp->cursed = obj->cursed;
 			otmp->blessed = obj->blessed;
+			check_unpaid(obj);
+			if (obj->quan > 1L)
+				obj->quan--;
+			else {
+				obj_extract_self(obj);
+				obfree(obj, (struct obj *)0);
+			}
 			(void) hold_another_object(otmp,
 				"You fill, but have to drop, %s!", doname(otmp),
 				(const char *)0);
@@ -1553,11 +1553,11 @@ tamedog(mtmp, (struct obj *) 0);
 			break;
 		case T_DRAGON_CALL:
 			if (!rn2(13))
-					mtmp = makemon(mkclass(S_DRAGON, 0), 0, 0, NO_MM_FLAGS);
+				mtmp = makemon(mkclass(S_DRAGON, 0), 0, 0, NO_MM_FLAGS);
 			else
-					mtmp = makemon(&mons[rn2(PM_BABY_YELLOW_DRAGON - PM_BABY_GRAY_DRAGON)], 
-						0, 0, NO_MM_FLAGS);
-			if (!rn2(2))
+				mtmp = makemon(&mons[rn2(PM_BABY_YELLOW_DRAGON - PM_BABY_GRAY_DRAGON)], 
+					0, 0, NO_MM_FLAGS);
+			if (!rn2(2) && mtmp)
 				mtmp->mpeaceful = 1;
 			pline("You let loose a mighty roar, calling all nearby dragons to your location!");
 			for (mtmp = fmon; mtmp; mtmp = nextmon) {
@@ -1573,10 +1573,6 @@ tamedog(mtmp, (struct obj *) 0);
 							mtmp->mtrapped = 0;
 							fill_pit(mtmp->mx, mtmp->my);
 					}
-					/* mimic must be revealed before we know whether it
-							actually moves because line-of-sight may change */
-					if (mtmp->m_ap_type)
-							seemimic(mtmp);
 					omx = mtmp->mx, omy = mtmp->my;
 					mnexto(mtmp);
 					if (mtmp->mx != omx || mtmp->my != omy) {
@@ -1665,7 +1661,7 @@ tamedog(mtmp, (struct obj *) 0);
 			}
 			/* find the spell crad */
 			for (i = 0, obj = g.invent; obj; obj = obj->nobj) {
-					if (obj->oclass == SCROLL_CLASS) {
+					if (obj->oclass == SCROLL_CLASS && !obj->oartifact) {
 							otmp = poly_obj(obj, j);
 							bless(otmp);
 							i++;
@@ -1673,13 +1669,12 @@ tamedog(mtmp, (struct obj *) 0);
 					}
 			}
 			if (i == 0) {
-					You("practice some card tricks.");
-					return 0;
+				You("practice some card tricks.");
+				return 0;
 			}
 			pline("With a flourish, you exchange your first card for one from beyond!");
 			You("shout the incantation on the card, and know with all your heart that this card is the one!");
-			if (otmp) {
-				(void) seffects(otmp);
+			if (otmp && !seffects(otmp)) {
 				useup(otmp);
 			}
 			u.uconduct.polypiles++;
@@ -1687,11 +1682,12 @@ tamedog(mtmp, (struct obj *) 0);
 			break;
 		case T_BOOTY:
 			pline("Arrrr! It be time to look for booty!");
-			pseudo = cg.zeroobj; /* neither cursed nor blessed,
-														and zero out oextra */
-			pseudo.otyp = SCR_GOLD_DETECTION;
+			pseudo = mksobj(SCR_GOLD_DETECTION, FALSE, FALSE);
+            pseudo->blessed = TRUE;
+            pseudo->cursed = FALSE;
 			HConfusion = 0L;
-			(void) seffects(&pseudo);
+            if (!seffects(pseudo))
+            	obfree(pseudo, NULL);
 			t_timeout = rn1(1000, 500);
 			break;
 		case T_CARD_COMBO:
@@ -1703,7 +1699,7 @@ tamedog(mtmp, (struct obj *) 0);
 			t_timeout = rn1(1000, 500);
 			break;
 		case T_CARD_CAPTURE:
-			if (!getdir((char *)0)) return(0);
+			if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return(0);
 			if (!u.dx && !u.dy) {
 				/* Hopefully a mistake ;B */
 				You("decide that you have enough cards already.");
@@ -1728,17 +1724,20 @@ tamedog(mtmp, (struct obj *) 0);
 			t_timeout = rn1(500, 400);
 			break;
 		case T_WHIRLWIND:
-            pseudo =
-                cg.zeroobj; /* neither cursed nor blessed, zero oextra too */
-            pseudo.otyp = SCR_AIR;
-            (void) seffects(&pseudo);
-			pseudo.otyp = POT_LEVITATION;
-			pseudo.blessed = 1;
-			(void) peffects(&pseudo);
+            pseudo = mksobj(SCR_AIR, FALSE, FALSE);
+            pseudo->blessed = TRUE;
+            pseudo->cursed = FALSE;
+            if (!seffects(pseudo))
+            	obfree(pseudo, NULL);
+			pseudo = mksobj(POT_LEVITATION, FALSE, FALSE);
+            pseudo->blessed = TRUE;
+            pseudo->cursed = FALSE;
+            peffects(pseudo);
+            obfree(pseudo, NULL);
 			t_timeout = rn1(1000, 500);
 			break;
 		case T_CLOBBER:
-			if (!getdir((char *)0)) return(0);
+			if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return(0);
 			if (!u.dx && !u.dy) {
 				You("cannot clobber yourself.");
 				return(0);
@@ -1779,8 +1778,10 @@ tamedog(mtmp, (struct obj *) 0);
 			You("call upon the seven heavens to enact holy justice upon your enemies!");
 			for(i = 0; i < 7; i++) {
 				mtmp = makemon(&mons[PM_MOVANIC_DEVA], u.ux, u.uy, MM_EDOG | NO_MINVENT);
-				(void) tamedog(mtmp, (struct obj *) 0);
-				mtmp->mfading = 15 + techlev(tech_no);
+				if (mtmp) {
+					(void) tamedog(mtmp, (struct obj *) 0);
+					mtmp->mfading = 15 + techlev(tech_no);
+				}
 			}
 			t_timeout = rn1(2000, 1000);
 			break;
@@ -1797,10 +1798,10 @@ tamedog(mtmp, (struct obj *) 0);
 				if (!canseemon(mtmp))
 					continue;
 				mtmp->mhp = mtmp->mhpmax / 2;
-				u.uhp = u.uhpmax / 2;
-				u.uen = u.uenmax / 2;
 				g.context.botl = TRUE;
 			}
+			u.uhp = u.uhpmax / 2;
+			u.uen = u.uenmax / 2;
 			t_timeout = rn1(2000, 1000);
 			break;
 	  default:
@@ -2209,7 +2210,7 @@ doblitz()
 
 	bp = buf;
 
-	if (!getdir((char *)0)) return(0);
+	if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return(0);
 	if (!u.dx && !u.dy) {
 		return(0);
 	}

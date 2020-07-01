@@ -158,6 +158,7 @@ Bug Fixes
 - Fixed a bad mplayer panic when spawning a convict player monster.
 - Fixed an impossible when spawning shambling horrors.
 - Minor potion of reflection feedback fix.
+- Fixed an enormous number of memory issues and crashes (thanks to Demo).
 
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.

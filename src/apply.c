@@ -381,7 +381,8 @@ struct obj *obj;
                 }
                 if ((pm = dlord(A_NONE)) != NON_PM) {
                     mtmp = makemon(&mons[pm], u.ux, u.uy, NO_MM_FLAGS);
-                    pline("%s appears from a cloud of noxious smoke!", Monnam(mtmp));
+                    if (mtmp) pline("%s appears from a cloud of noxious smoke!", Monnam(mtmp));
+                    else pline("Something stinks!");
                 }
                 draws = 0;
                 break;
@@ -443,7 +444,7 @@ struct obj *obj;
                     else
                         mtmp = makemon(&mons[PM_SUCCUBUS],
                                        u.ux, u.uy, NO_MM_FLAGS);
-                    mtmp->mpeaceful = 1;
+                    if (mtmp) mtmp->mpeaceful = 1;
                 }
                 if (!Deaf && mtmp) {
                     You_hear("infernal giggling.");
@@ -492,8 +493,8 @@ struct obj *obj;
                 unrestrict_weapon_skill(P_RIDING);
                 mtmp = makemon(&mons[PM_NIGHTMARE],
                                u.ux, u.uy, MM_EDOG);
-                (void) initedog(mtmp);
                 if (mtmp) {
+                    (void) initedog(mtmp);
                     otmp = mksobj(SADDLE, FALSE, FALSE);
                     put_saddle_on_mon(otmp, mtmp);
                     Your("steed arrives!");
@@ -2623,13 +2624,13 @@ struct obj **optr;
         return;
     }
     if (!Unchanging) {
+        polymon(obj->corpsenm);
         if (obj->cursed) {
             You1(shudder_for_moment);
             losehp(rnd(30), "system shock", KILLED_BY_AN);
             pline("%s, then splits in two!", Tobjnam(obj, "shudder"));
             useup(obj);
         }
-        polymon(obj->corpsenm);
     } else {
         pline("Unfortunately, no mask will hide what you truly are.");
     }
@@ -4251,6 +4252,7 @@ doapply()
             You("chug some booze from %s.",
                     yname(obj));
             (void) peffects(pseudo);
+            obfree(pseudo, (struct obj *) 0);
         } else if (Hallucination) 
             pline("Where has the rum gone?");
         else

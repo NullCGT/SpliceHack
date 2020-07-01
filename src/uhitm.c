@@ -1,4 +1,4 @@
-/* NetHack 3.6	uhitm.c	$NHDT-Date: 1591017421 2020/06/01 13:17:01 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.236 $ */
+/* NetHack 3.6	uhitm.c	$NHDT-Date: 1593306911 2020/06/28 01:15:11 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.237 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -2265,7 +2265,7 @@ int specialdmg; /* blessed and/or material bonus against various things */
     case AD_DRLI:
         if (!negated && !rn2(3) && !resists_drli(mdef)
             && !item_catches_drain(mdef)) {
-            int xtmp = d(2, 6);
+            tmp = d(2, 6);
 
             if (maybe_polyd(is_vampire(g.youmonst.data),
 			    Race_if(PM_VAMPIRE)) && mattk->aatyp == AT_BITE &&
@@ -2278,23 +2278,32 @@ int specialdmg; /* blessed and/or material bonus against various things */
 				   eating conducts. The draining of life is
 				   considered to be primarily a non-physical
 				   effect */
-				lesshungry(xtmp * 6);
+				lesshungry(tmp * 6);
 			}
 
-            pline("%s suddenly seems weaker!", Monnam(mdef));
-            mdef->mhpmax -= xtmp;
-            mdef->mhp -= xtmp;
+            if (mdef->mhpmax - tmp > (int) mdef->m_lev) {
+                mdef->mhpmax -= tmp;
+            } else {
+                /* limit floor of mhpmax reduction to current m_lev + 1;
+                   avoid increasing it if somehow already less than that */
+                if (mdef->mhpmax > (int) mdef->m_lev)
+                    mdef->mhpmax = (int) mdef->m_lev + 1;
+            }
+            mdef->mhp -= tmp;
             /* !m_lev: level 0 monster is killed regardless of hit points
-               rather than drop to level -1 */
+               rather than drop to level -1; note: some non-living creatures
+               (golems, vortices) are subject to life-drain */
             if (DEADMONSTER(mdef) || !mdef->m_lev) {
-                pline("%s dies!", Monnam(mdef));
+                pline("%s %s!", Monnam(mdef),
+                      nonliving(mdef->data) ? "expires" : "dies");
                 xkilled(mdef, XKILL_NOMSG);
             } else {
                 mdef->m_lev--;
-                if (pd == &mons[PM_HYDRA] && canseemon(mdef))
-                    pline("One of %s heads withers and dies!", s_suffix(mon_nam(mdef)));
             }
-            tmp = 0;
+            tmp = 0; /* damage has already been inflicted */
+
+            /* unlike hitting with Stormbringer, wounded hero doesn't
+               heal any from the drained life */
         }
         break;
     case AD_RUST:

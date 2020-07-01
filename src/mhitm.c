@@ -1,4 +1,4 @@
-/* NetHack 3.6	mhitm.c	$NHDT-Date: 1583608838 2020/03/07 19:20:38 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.132 $ */
+/* NetHack 3.6	mhitm.c	$NHDT-Date: 1593306906 2020/06/28 01:15:06 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.137 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1511,7 +1511,7 @@ int dieroll;
             }
         }
         break;
-    case AD_DRLI:
+    case AD_DRLI: /* drain life */
         if (!cancelled && magr->mtame && !magr->isminion &&
 			is_vampire(pa) && mattk->aatyp == AT_BITE &&
 			has_blood(pd))
@@ -1519,15 +1519,24 @@ int dieroll;
             
         if (!cancelled && !rn2(3) && !resists_drli(mdef)
             && !item_catches_drain(mdef)) {
-            tmp = d(2, 6);
+            tmp = d(2, 6); /* Stormbringer uses monhp_per_lvl(usually 1d8) */
             if (g.vis && canspotmon(mdef))
-                pline("%s suddenly seems weaker!", Monnam(mdef));
-            mdef->mhpmax -= tmp;
-            if (mdef->m_lev == 0)
+                pline("%s becomes weaker!", Monnam(mdef));
+            if (mdef->mhpmax - tmp > (int) mdef->m_lev) {
+                mdef->mhpmax -= tmp;
+            } else {
+                /* limit floor of mhpmax reduction to current m_lev + 1;
+                   avoid increasing it if somehow already less than that */
+                if (mdef->mhpmax > (int) mdef->m_lev)
+                    mdef->mhpmax = (int) mdef->m_lev + 1;
+            }
+            if (mdef->m_lev == 0) /* automatic kill if drained past level 0 */
                 tmp = mdef->mhp;
             else
                 mdef->m_lev--;
-            /* Automatic kill if drained past level 0 */
+
+            /* unlike hitting with Stormbringer, wounded attacker doesn't
+               heal any from the drained life */
         }
         break;
     case AD_HNGY:

@@ -1205,12 +1205,14 @@ dobreathe()
         return 0;
 
     mattk = attacktype_fordmg(g.youmonst.data, AT_BREA, AD_ANY);
+    int typ = (mattk->adtyp == AD_RBRE) ? rnd(AD_PSYC) : mattk->adtyp;
+
     if (!mattk)
         impossible("bad breath attack?"); /* mouthwash needed... */
     else if (!u.dx && !u.dy && !u.dz)
         ubreatheu(mattk);
     else
-        buzz((int) (20 + mattk->adtyp - 1), (int) mattk->damn, u.ux, u.uy,
+        buzz((int) (20 + typ - 1), (int) mattk->damn, u.ux, u.uy,
              u.dx, u.dy);
     return 1;
 }

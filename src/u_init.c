@@ -233,7 +233,6 @@ static struct trobj Tinopener[] = { { TIN_OPENER, 0, TOOL_CLASS, 1, 0 },
                                     { 0, 0, 0, 0, 0 } };
 static struct trobj Sewingkit[] = { { SEWING_KIT, 0, TOOL_CLASS, 1, 0 },
                                     { 0, 0, 0, 0, 0 } };
-
 static struct trobj Halo[] = { { HALO, 0, ARMOR_CLASS, 1, UNDEF_BLESS },
                                     { 0, 0, 0, 0, 0 } };
 static struct trobj Magicmarker[] = { { MAGIC_MARKER, UNDEF_SPE, TOOL_CLASS,
@@ -255,6 +254,8 @@ static struct trobj Wishing[] = { { WAN_WISHING, 3, WAND_CLASS, 1, 0 },
                                   { 0, 0, 0, 0, 0 } };
 static struct trobj Money[] = { { GOLD_PIECE, 0, COIN_CLASS, 1, 0 },
                                 { 0, 0, 0, 0, 0 } };
+static struct trobj Booze[] = { { POT_BOOZE, 0, POTION_CLASS, 1, 0 },
+				{0, 0, 0, 0, 0} };
 
 /* race-based substitutions for initial inventory;
    the weaker cloak for elven rangers is intentional--they shoot better */
@@ -289,8 +290,9 @@ static struct inv_sub {
     { PM_DWARF, SHORT_SWORD, DWARVISH_SHORT_SWORD },
     { PM_DWARF, HELMET, DWARVISH_HELM },
     /* { PM_DWARF, SMALL_SHIELD, DWARVISH_ROUNDSHIELD }, */
-    /* { PM_DWARF, PICK_AXE, DWARVISH_MATTOCK }, */
+    { PM_DWARF, PICK_AXE, DWARVISH_MATTOCK },
     { PM_DWARF, LEMBAS_WAFER, CRAM_RATION },
+    { PM_DWARF, POT_FRUIT_JUICE, POT_BOOZE },
     { PM_GNOME, BOW, CROSSBOW },
     { PM_GNOME, ARROW, CROSSBOW_BOLT },
     { PM_DROW, DAGGER, DARK_ELVEN_DAGGER },
@@ -1102,6 +1104,7 @@ u_init()
   	    break;
 
     case PM_DWARF:
+	ini_inv(Booze);
         /* Dwarves can recognize all dwarvish objects */
         knows_object(DWARVISH_SPEAR);
         knows_object(DWARVISH_SHORT_SWORD);
@@ -1110,6 +1113,7 @@ u_init()
         knows_object(DWARVISH_RING_MAIL);
         knows_object(DWARVISH_CLOAK);
         knows_object(DWARVISH_ROUNDSHIELD);
+	knows_object(POT_BOOZE);
         break;
 
     case PM_CHANGELING:

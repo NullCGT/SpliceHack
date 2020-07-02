@@ -1952,6 +1952,12 @@ const struct def_skill *class_skill;
         P_MAX_SKILL(P_TRIDENT) = P_EXPERT;
     }
 
+    /* All dwarves can use digging tools */
+    if (Race_if(PM_DWARF)) {
+        P_SKILL(P_PICK_AXE) = P_BASIC;
+        P_MAX_SKILL(P_PICK_AXE) = P_EXPERT;
+    }
+
     /*
      * Make sure we haven't missed setting the max on a skill
      * & set advance

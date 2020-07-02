@@ -498,6 +498,8 @@ long wp_mask;
         mask = &EStable;
     else if (dtyp == AD_PSYC)
         mask = &EPsychic_resistance;
+    else if (dtyp == AD_WTHR)
+        mask = &ERegeneration;
 
     if (mask && wp_mask == W_ART && !on) {
         /* find out if some other artifact also confers this intrinsic;
@@ -1428,6 +1430,23 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 mdef->mstun = 1;
         }
     }
+    if (otmp->oartifact == ART_BALMUNG) {
+        register struct obj *obj = some_armor(mdef);
+        if (youdefend) {
+            destroy_arm(some_armor(&g.youmonst));
+        } else if (obj) {
+            obj_extract_self(obj);
+            if (obj->owornmask) {
+                mdef->misc_worn_check &= ~obj->owornmask;
+                obj->owornmask = 0L;
+                update_mon_intrinsics(mdef, obj, FALSE, FALSE);
+                mdef->misc_worn_check |= I_SPECIAL;
+            }
+            if (vis)
+                pline("%s under the brown blade!", An(aobjnam(obj, "shred")));
+            obfree(obj, (struct obj *)0);
+        }
+    }
    	if(otmp->oartifact == ART_REAVER){
    	 if(youattack){
    	  if(mdef->minvent && (Role_if(PM_PIRATE) || !rn2(10) ) ){
@@ -1891,6 +1910,14 @@ struct obj *obj;
             useup(obj);
             break;
         }
+        case HPHEAL: {
+            if (Upolyd)
+                healup(u.mhmax / 2, 0, 0, 0);
+            else
+                healup(u.uhpmax / 2, 0, 0, 0);
+            pline("Avalon blazes with white light! Your wounds instantly seal!");
+            break;
+        }
         case HEALING: {
             int healamt = (u.uhpmax + 1 - u.uhp) / 2;
             long creamed = (long) u.ucreamed;
@@ -2076,23 +2103,37 @@ struct obj *obj;
          		artifact_detect(obj);
          		break;
         case LIGHTNING_BOLT: {
-            struct obj* pseudo = mksobj(WAN_LIGHTNING, FALSE, FALSE);
-            pseudo->blessed = pseudo->cursed = 0;
-            /* type is a "spell of lightning bolt" which doesn't actually
-             * exist: 10 + AD_ELEC - 1 */
-            if(!getdir(NULL) || (!u.dx && !u.dy && !u.dz)) {
-                int damage = zapyourself(pseudo, TRUE);
-                if (damage > 0) {
-                    losehp(damage, "struck by lightning", NO_KILLER_PREFIX);
+                struct obj* pseudo = mksobj(WAN_LIGHTNING, FALSE, FALSE);
+                pseudo->blessed = pseudo->cursed = 0;
+                /* type is a "spell of lightning bolt" which doesn't actually
+                * exist: 10 + AD_ELEC - 1 */
+                if(!getdir(NULL) || (!u.dx && !u.dy && !u.dz)) {
+                    int damage = zapyourself(pseudo, TRUE);
+                    if (damage > 0) {
+                        losehp(damage, "struck by lightning", NO_KILLER_PREFIX);
+                    }
                 }
+                else {
+                    /* don't use weffects - we want higher damage than that */
+                    buzz(9 + AD_ELEC, 8, u.ux, u.uy, u.dx, u.dy);
+                }
+                obfree(pseudo, NULL);
             }
-            else {
-                /* don't use weffects - we want higher damage than that */
-                buzz(9 + AD_ELEC, 8, u.ux, u.uy, u.dx, u.dy);
-            }
-            obfree(pseudo, NULL);
-        }
             break;
+        case HOLY_LANCE: {
+            struct obj* avalon = carrying(SCABBARD);
+            if (!avalon || avalon->oartifact != ART_AVALON) {
+                You("attempt to call on the power of Excalibur, but fail.");
+                pline("If only you had its scabbard...");
+            } else if(!getdir(NULL) || (!u.dx && !u.dy && !u.dz)) {
+                You("bask in holy light.");
+                break;
+            } else {
+                You("channel your faith, brandish Excalibur, then swing it as hard as you can!");
+                buzz(9 + AD_FIRE, 12, u.ux, u.uy, u.dx, u.dy);
+            }
+            break;
+        }
         case ELEMENTS: {
             if (HFire_resistance & ~FROMOUTSIDE) {
                 pline("The %s beneath you erupts in flame.", surface(u.ux, u.uy));
@@ -2252,8 +2293,7 @@ artifact_light(obj)
 struct obj *obj;
 {
     return (boolean) (get_artifact(obj) &&
-                        ((obj->oartifact == ART_SUNSWORD) ||
-                        (obj->oartifact == ART_UNLIMITED_MOON)));
+                        obj->oartifact == ART_SUNSWORD);
 }
 
 /* KMH -- Talking artifacts are finally implemented */

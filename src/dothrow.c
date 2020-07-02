@@ -202,6 +202,9 @@ int shotlimit;
             case PM_HUMAN:
             case PM_DWARF:
             default:
+                if (skill == -P_BOW && 
+                    uwep->oartifact && uwep->oartifact == ART_LONGBOW_OF_DIANA)
+                    multishot++;
                 break; /* No bonus */
             }
 
@@ -1748,6 +1751,8 @@ register struct obj *obj; /* g.thrownobj or g.kickedobj or uwep */
                     else if (Role_if(PM_SAMURAI) && uwep->otyp == YUMI)
                         tmp++;
                 }
+                if (uwep->oartifact && uwep->oartifact == ART_LONGBOW_OF_DIANA)
+                    tmp++;
             }
         } else { /* thrown non-ammo or applied polearm/grapnel */
             if (otyp == BOOMERANG) /* arbitrary */

@@ -210,7 +210,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
     if (flags.confirm && mtmp->mpeaceful
         && !Confusion && !Hallucination && !Stunned) {
         /* Intelligent chaotic weapons (Stormbringer) want blood */
-        if (wep && (wep->oartifact == ART_STORMBRINGER 
+        if (wep && (wep->oartifact == ART_STORMBRINGER
                     || wep->oartifact == ART_WAR_S_SWORD)) {
             g.override_confirmation = TRUE;
             return FALSE;
@@ -339,9 +339,6 @@ int *attk_count, *role_roll_penalty;
     if (weapon && weapon->oartifact &&
         weapon->oartifact == ART_LUCKLESS_FOLLY) {
         tmp -= 2 * Luck;
-    } else if (weapon && weapon->oartifact &&
-        weapon->oartifact == ART_UNLIMITED_MOON) {
-        tmp += (10 - abs(4 - phase_of_the_moon()));
     } else if (weapon && weapon->oartifact &&
         weapon->oartifact == ART_GUNGNIR) {
         tmp += 100;
@@ -1073,9 +1070,6 @@ int dieroll;
                 /* handle the damages of Luckless Folly and Unlimited moon */
                 if (obj->oartifact && obj->oartifact == ART_LUCKLESS_FOLLY) {
                     tmp -= 2 * Luck;
-                } else if (obj && obj->oartifact &&
-                    obj->oartifact == ART_UNLIMITED_MOON) {
-                    tmp += (10 - abs(4 - phase_of_the_moon()));
                 } else if (obj && obj->oartifact &&
                     obj->oartifact == ART_WAR_S_SWORD) {
                     tmp += (min(num_genocides(), 20) + num_extinct());

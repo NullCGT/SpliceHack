@@ -39,15 +39,29 @@ New Artifacts
 - Idspike
   - Unaligned athame.
   - Grants psychic resistance.
-  - Deals double damage 
+  - Deals double damage.
 - Chains of Malcanthet
   - Bane of angels. Glows red in their presence.
   - Can paralyze monsters when hitting them.
   - Sets charisma to 25.
+- Balmung
+  - Grants the wielder fire resistance.
+  - Automatically destroys a random piece of armor upon hitting an opponent.
+  - Resists all forms of damage and destruction.
+- Avalon
+  - Scabbard.
+  - Provides hungerless regeneration when carried.
+  - Can be invoked to heal half of current form's max hit points.
+  - Allows the user to invoke Excalibur.
 
 Artifact Changes
 - Anaconda
   - Removed.
+- Unlimited Moon
+  - Removed.
+- Excalibur
+  - Can be invoked for an incredibly powerful fire blast, but only when the user
+    is carrying Avalon.
 - Giantslayer
   - Warns the player of giants.
   - Makes the player stable, so they cannot be knocked back or hurtle in any way.
@@ -109,6 +123,9 @@ Artifact Changes
   - Can no longer be thrown.
   - Changed damage.
   - Has +100 to-hit.
+- Longbow of Diana
+  - Base material is silver.
+  - Always gives a +1 multishot and damage bonus to the user.
 
 Race Changes
 - Angel

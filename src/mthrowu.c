@@ -213,6 +213,9 @@ struct obj *otmp, *mwep;
         /* Elven Craftsmanship makes for light, quick bows */
         if (otmp->otyp == ELVEN_ARROW && !otmp->cursed)
             multishot++;
+        /* Longbow of Diana always gets a bonus */
+        if (otmp->oartifact && otmp->oartifact == ART_LONGBOW_OF_DIANA)
+            multishot++;
         /* for arrow, we checked bow&arrow when entering block, but for
            bow, so far we've only validated that otmp is a weapon stack;
            need to verify that it's a stack of arrows rather than darts */

@@ -1350,7 +1350,8 @@ int ochance, achance; /* percent chance for ordinary objects, artifacts */
         || obj->otyp == CANDELABRUM_OF_INVOCATION
         || obj->otyp == BELL_OF_OPENING
         || obj->otyp == ROBE_OF_STASIS
-        || (obj->otyp == CORPSE && is_rider(&mons[obj->corpsenm]))) {
+        || (obj->otyp == CORPSE && is_rider(&mons[obj->corpsenm]))
+        || (obj->oartifact && obj->oartifact == ART_BALMUNG)) {
         return TRUE;
     } else {
         int chance = rn2(100);

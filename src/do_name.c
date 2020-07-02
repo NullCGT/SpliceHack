@@ -1419,6 +1419,7 @@ const char *name;
         case ART_DRAGONBANE:
             obj->material = GOLD;
             break;
+        case ART_LONGBOW_OF_DIANA:
         case ART_WEREBANE:
         case ART_DEMONBANE:
         case ART_GRAYSWANDIR:

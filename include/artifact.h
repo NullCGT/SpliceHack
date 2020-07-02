@@ -80,7 +80,9 @@ enum invoke_prop_types {
     PHASING,
     LIGHTNING_BOLT,
     SEFFECT,
-    ELEMENTS
+    ELEMENTS,
+    HPHEAL,
+    HOLY_LANCE,
 };
 
 #endif /* ARTIFACT_H */

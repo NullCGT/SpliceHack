@@ -235,8 +235,11 @@ register struct monst *mtmp;
                 w1 = rn2(2) ? BROADSWORD : LONG_SWORD;
                 break;
             case PM_PRISON_GUARD:
+                w1 = rn2(2) ? LONG_SWORD : SABER;
+                break;
             case PM_CAPTAIN:
             case PM_WATCH_CAPTAIN:
+                (void) mongets(mtmp, rn2(2) ? FRAG_GRENADE : GAS_GRENADE);
                 w1 = rn2(2) ? LONG_SWORD : SABER;
                 break;
             case PM_RONIN:
@@ -623,6 +626,8 @@ register struct monst *mtmp;
                 (void) mongets(mtmp, ORCISH_RING_MAIL);
             break;
         case PM_ORC_WARLORD:
+            (void) mongets(mtmp, FRAG_GRENADE);
+            /* FALLTHRU */
         case PM_URUK_HAI:
             if (!rn2(3))
                 (void) mongets(mtmp, ORCISH_CLOAK);
@@ -749,14 +754,14 @@ register struct monst *mtmp;
     case S_DEMON:
         switch (mm) {
         case PM_DAMNED_PIRATE:
-     				otmp = mksobj(SCIMITAR, FALSE, FALSE);
-     				curse(otmp);
-     				(void) mpickobj(mtmp, otmp);
-     				otmp = mksobj(LIGHT_ARMOR, FALSE, FALSE);
-     				curse(otmp);
-     				otmp->oeroded = 1;
-     				(void) mpickobj(mtmp, otmp);
-     			  break;
+            otmp = mksobj(SCIMITAR, FALSE, FALSE);
+            curse(otmp);
+            (void) mpickobj(mtmp, otmp);
+            otmp = mksobj(LIGHT_ARMOR, FALSE, FALSE);
+            curse(otmp);
+            otmp->oeroded = 1;
+            (void) mpickobj(mtmp, otmp);
+            break;
         case PM_HEADLESS_HORSEMAN:
             (void) mongets(mtmp, LANCE);
             (void) mongets(mtmp, SCALE_MAIL);
@@ -1048,6 +1053,7 @@ register struct monst *mtmp;
               otmp = mksobj(AMULET_OF_LIFE_SAVING, FALSE, FALSE);
               mpickobj(mtmp, otmp);
               (void) mongets(mtmp,SKELETON_KEY);
+              m_initthrow(mtmp, GAS_GRENADE, 3);
         } else if (ptr->msound == MS_PRIEST
                    || quest_mon_represents_role(ptr, PM_PRIEST)) {
             (void) mongets(mtmp, rn2(7) ? MYSTIC_ROBE
@@ -1197,6 +1203,12 @@ register struct monst *mtmp;
         break;
     default:
         break;
+    }
+
+    if (is_pirate(ptr) && !rn2(2)) {
+        (void) mongets(mtmp, FRAG_GRENADE);
+    } else if (is_mercenary(ptr) && !rn2(6)) {
+        (void) mongets(mtmp, rn2(2) ? FRAG_GRENADE : GAS_GRENADE);
     }
 
     /* ordinary soldiers rarely have access to magic (or gold :-) */

@@ -1949,6 +1949,10 @@ const struct def_skill *class_skill;
         P_MAX_SKILL(P_TRIDENT) = P_EXPERT;
     }
 
+    /* All elves can use bows */
+    if (Race_if(PM_ELF))
+        P_MAX_SKILL(P_BOW) = P_EXPERT;
+
     /*
      * Make sure we haven't missed setting the max on a skill
      * & set advance

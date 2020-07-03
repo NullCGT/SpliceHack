@@ -854,4 +854,42 @@ int x, y;
     splatter_burning_oil(x, y, diluted_oil);
 }
 
+/*
+ * Note: obj is not valid after return
+ */
+
+void
+grenade_explode(obj, x, y, isyou)
+struct obj *obj;
+int x, y;
+boolean isyou;
+{
+    int ztype;
+    int otyp = obj->otyp;
+    
+    if (otyp == FRAG_GRENADE) {
+        ztype = isyou ? ZT_SPELL(ZT_FIRE) : -ZT_SPELL(ZT_FIRE);
+        explode(x, y, ztype, d(3,6), WEAPON_CLASS,
+            EXPL_FIERY);
+    } else if (otyp == GAS_GRENADE) {
+        ztype = isyou ? ZT_SPELL(ZT_POISON_GAS) : -ZT_SPELL(ZT_POISON_GAS);
+        explode(x, y, ztype, d(3,6), WEAPON_CLASS,
+            EXPL_NOXIOUS);
+    }
+    wake_nearto(x, y, 400);
+}
+
+void arm_bomb(obj, yours)
+struct obj *obj;
+boolean yours;
+{
+	if (is_grenade(obj) && !obj->oarmed) {
+		attach_bomb_blow_timeout(obj, 
+			    (obj->cursed ? rn2(5) + 2 : obj->blessed ? 4 : 
+			    	rn2(2) + 3)
+			     , yours);			
+	}
+	/* Otherwise, do nothing */
+}
+
 /*explode.c*/

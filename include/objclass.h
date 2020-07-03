@@ -77,6 +77,7 @@ struct objclass {
 #define PIERCE 0x1 /* for weapons & tools used as weapons */
 #define SLASH 0x2  /* (latter includes iron ball & chain) */
 #define WHACK 0x4
+#define EXPLODE 0x8
 
     /* 4 free bits */
 

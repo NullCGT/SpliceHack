@@ -596,6 +596,7 @@ int x;
 
 /* TODO: have monsters use aklys' throw-and-return */
 static NEARDATA const int rwep[] = {
+    FRAG_GRENADE, GAS_GRENADE,
     ORB_OF_PERMAFROST, DWARVISH_SPEAR, ELVEN_SPEAR, SPEAR,
     ORCISH_SPEAR, JAVELIN, WINDMILL_BLADE, THROWING_AXE,
     SHURIKEN, LIGHT_ARROW, 

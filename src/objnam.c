@@ -1165,6 +1165,9 @@ unsigned doname_flags;
             Strcat(prefix, sitoa(obj->spe));
             Strcat(prefix, " ");
         }
+
+        if (is_grenade(obj))
+		    if (obj->oarmed) Strcat(bp, " (armed)");
         break;
     case TOOL_CLASS:
         if (obj->owornmask & (W_TOOL | W_SADDLE)) { /* blindfold */
@@ -2925,6 +2928,7 @@ static NEARDATA const struct o_range o_ranges[] = {
     { "dragon scale mail", ARMOR_CLASS, GRAY_DRAGON_SCALE_MAIL,
       VOID_DRAGON_SCALE_MAIL },
     { "sword", WEAPON_CLASS, SHORT_SWORD, KATANA },
+    { "grenade", WEAPON_CLASS, FRAG_GRENADE, GAS_GRENADE },
     { "venom", VENOM_CLASS, BLINDING_VENOM, ACID_VENOM },
     { "gray stone", GEM_CLASS, LUCKSTONE, FLINT },
     { "grey stone", GEM_CLASS, LUCKSTONE, FLINT },
@@ -2982,6 +2986,8 @@ static struct alt_spellings {
     { "moon stone", MOONSTONE },
     { "touch stone", TOUCHSTONE },
     { "flintstone", FLINT },
+    /* grenades and firearms */
+    { "hand grenade", FRAG_GRENADE },
     { (const char *) 0, 0 },
 };
 

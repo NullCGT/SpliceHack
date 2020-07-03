@@ -1619,6 +1619,8 @@ register const char *let, *word;
                  /* Picks, axes, pole-weapons, bullwhips */
                  && ((otmp->oclass == WEAPON_CLASS
                       && !is_pick(otmp) && !is_axe(otmp)
+                      && otyp != FRAG_GRENADE
+		              && otyp != GAS_GRENADE
                       && !is_pole(otmp) && otyp != BULLWHIP
                       && otyp != RAZOR_WHIP)
                      || (otmp->oclass == POTION_CLASS
@@ -3750,6 +3752,10 @@ register struct obj *otmp, *obj;
         if (obj->corpsenm != otmp->corpsenm)
             return FALSE;
     }
+
+    /* armed grenades do not merge */
+	if ((obj->timed || otmp->timed) && is_grenade(obj))
+	    return FALSE;
 
     /* hatching eggs don't merge; ditto for revivable corpses */
     if ((obj->otyp == EGG && (obj->timed || otmp->timed))

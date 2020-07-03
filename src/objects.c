@@ -103,6 +103,11 @@ OBJECT(OBJ("strange object", None),
            BITS(kn, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, sub, metal),      \
            0, WEAPON_CLASS, prob, 0, wt,                            \
            cost, 2, 2, hitbon, 0, wt, color)
+#define BULLET(name,app,kn,prob,wt,cost,sdam,ldam,hitbon,typ,metal,sub,color) \
+	OBJECT( \
+		OBJ(name,app), BITS(kn,1,1,0,0,1,0,0,0,0,typ,sub,metal), 0, \
+		WEAPON_CLASS, prob, 0, \
+		wt, cost, sdam, ldam, hitbon, 0, wt, color )
 
 /* Note: for weapons that don't do an even die of damage (ex. 2-7 or 3-18)
    the extra damage is added on in weapon.c, not here! */
@@ -324,6 +329,12 @@ BOW("dark elven bow",  "black runed bow", 0, 1, 30, 60, 0, WOOD, P_BOW, CLR_BLAC
 BOW("yumi", "long bow",        0,  0, 30, 60, 0, WOOD, P_BOW, HI_WOOD),
 BOW("sling", None,             1, 40,  3, 20, 0, LEATHER, P_SLING, HI_LEATHER),
 BOW("crossbow", None,          1, 45, 50, 40, 0, WOOD, P_CROSSBOW, HI_WOOD),
+
+/* firearms */
+BULLET("frag grenade", None,
+	1,  0,  10, 20, 0, 0, 0,   B,   IRON,    P_NONE, CLR_GREEN),
+BULLET("gas grenade", None,
+	1,  0,  10, 20, 0, 0, 0,   B,   IRON,    P_NONE, CLR_ORANGE),
 
 #undef P
 #undef S

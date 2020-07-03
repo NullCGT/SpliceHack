@@ -89,6 +89,7 @@ struct obj {
 #define norevive oeroded2 /* frozen corpse */
     Bitfield(oerodeproof, 1); /* erodeproof weapon/armor */
 #define odrained olocked	/* drained corpse */
+#define oarmed olocked      /* armed explosive */
     Bitfield(olocked, 1);     /* object is locked */
     Bitfield(obroken, 1);     /* lock has been broken */
 #define degraded_horn obroken /* unicorn horn will poly to non-magic */
@@ -109,7 +110,8 @@ struct obj {
     Bitfield(bypass, 1); /* mark this as an object to be skipped by bhito() */
     Bitfield(cknown, 1); /* contents of container assumed to be known */
     Bitfield(lknown, 1); /* locked/unlocked status is known */
-    /* 7 free bits */
+    Bitfield(yours, 1);	/* obj is yours (eg. thrown by you) */
+    /* 6 free bits */
 
     int corpsenm;         /* type of corpse is mons[corpsenm] */
 #define leashmon corpsenm /* gets m_id of attached pet */
@@ -180,6 +182,8 @@ struct obj {
     ((otmp->oclass == WEAPON_CLASS || otmp->oclass == GEM_CLASS) \
      && objects[otmp->otyp].oc_skill >= -P_CROSSBOW              \
      && objects[otmp->otyp].oc_skill <= -P_BOW)
+#define is_grenade(otmp)	(otmp->otyp == FRAG_GRENADE || \
+                  otmp->otyp == GAS_GRENADE)
 #define matching_launcher(a, l) \
     ((l) && objects[(a)->otyp].oc_skill == -objects[(l)->otyp].oc_skill)
 #define ammo_and_launcher(a, l) (is_ammo(a) && matching_launcher(a, l))
@@ -207,6 +211,13 @@ struct obj {
 #define uslinging() (uwep && objects[uwep->otyp].oc_skill == P_SLING)
 /* 'is_quest_artifact()' only applies to the current role's artifact */
 #define any_quest_artifact(o) ((o)->oartifact >= ART_ORB_OF_DETECTION)
+
+/* firearms */
+#define is_firearm(otmp) \
+			((otmp)->oclass == WEAPON_CLASS && \
+			 objects[(otmp)->otyp].oc_skill == P_FIREARM)
+#define is_bullet(otmp)	((otmp)->oclass == WEAPON_CLASS && \
+			 objects[(otmp)->otyp].oc_skill == -P_FIREARM)
 
 /* Armor */
 #define is_shield(otmp)          \

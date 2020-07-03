@@ -150,6 +150,17 @@ int x, y;
         create = !rn2(3);
     else
         create = 1;
+    
+    /* Detonate rockets */
+	if (is_grenade(obj)) {
+		if (!ohit) {
+			create = 1; /* Don't destroy */
+			arm_bomb(obj, FALSE);
+		} else {
+            create = 0;
+			grenade_explode(obj, g.bhitpos.x, g.bhitpos.y, FALSE);
+		}
+	}
 
     if (create && !((mtmp = m_at(x, y)) != 0 && mtmp->mtrapped
                     && (t = t_at(x, y)) != 0
@@ -1427,6 +1438,7 @@ int whodidit;   /* 1==hero, 0=other, -1==just check whether it'll pass thru */
 
             hits = (oskill != -P_BOW && oskill != -P_CROSSBOW
                     && oskill != -P_DART && oskill != -P_SHURIKEN
+                    && oskill != -P_FIREARM
                     && oskill != P_SPEAR
                     && oskill != P_KNIFE); /* but not dagger */
             break;

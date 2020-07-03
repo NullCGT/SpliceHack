@@ -1370,9 +1370,7 @@ char *op;
     if (req == get_val) {
         if (!opts)
             return optn_err;
-        /* Sprintf(opts, "%s", rolestring(flags.initgend, genders, adj)); */
-        /* TODO: Fix me */
-        Sprintf(opts, "orientation??????????");
+        Sprintf(opts, "%s", rolestring(flags.initorientation, orientations, adj));
         return optn_ok;
     }
     return optn_ok;

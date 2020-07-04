@@ -1352,16 +1352,17 @@ char *op;
         return optn_ok;
     }
     if (req == do_set) {
-        /* gender:string */
+        /* orientation:string */
         if (parse_role_opts(optidx, negated, allopt[optidx].name, opts, &op)) {
             if ((flags.initorientation = str2orientation(op)) == ROLE_NONE) {
                 config_error_add("Unknown %s '%s'", allopt[optidx].name, op);
+                flags.orientation = flags.initorientation = SEX_STRAIGHT;
                 return optn_err;
             } else
                 flags.orientation = flags.initorientation;
         } else {
             /* TODO: Find way to make straight not the default. */
-            flags.orientation = SEX_STRAIGHT;
+            flags.orientation = flags.initorientation = SEX_STRAIGHT;
             return optn_silenterr;
         }
         return optn_ok;
@@ -1369,9 +1370,7 @@ char *op;
     if (req == get_val) {
         if (!opts)
             return optn_err;
-        /* Sprintf(opts, "%s", rolestring(flags.initgend, genders, adj)); */
-        /* TODO: Fix me */
-        Sprintf(opts, "orientation??????????");
+        Sprintf(opts, "%s", rolestring(flags.initorientation, orientations, adj));
         return optn_ok;
     }
     return optn_ok;

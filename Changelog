@@ -16,7 +16,6 @@ New Items
     - All Pirates: 1/2 chance of a frag grenade.
     - All Mercernaries: 1/6 chance of a random grenade.
 
-
 New Monsters
 - Servals
   - Low-level cats that are capable of leaping.
@@ -177,6 +176,7 @@ Miscelaneous
 - Hunger hulks provide a single point of nutrition. Since they take several turns to
   eat, eating a hunger hulk corpse will actually make you hungrier. Fantastic YANI
   from aosdict.
+- Prevent boulders from being pushed while running (RojjaCebolla)
 
 Balance
 - Being deaf does not make you resistant to sonic attacks.
@@ -193,6 +193,9 @@ Bug Fixes
 - Fixed an impossible when spawning shambling horrors.
 - Minor potion of reflection feedback fix.
 - Fixed an enormous number of memory issues and crashes (thanks to Demo).
+- Show correct orientation in options list (Entrez)
+- Fix edge case in blood magic (Entrez)
+- Fix selfpoly'd AD_RBRE (Entrez)
 
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.

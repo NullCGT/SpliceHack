@@ -1361,7 +1361,7 @@ const char *str;
 
     /* Is str valid? */
     if (!str || !str[0])
-        return SEX_STRAIGHT;
+        return ROLE_NONE;
 
     /* Match as much of str as is provided */
     len = strlen(str);
@@ -1375,7 +1375,7 @@ const char *str;
         return rn2(ROLE_ORIENTATIONS);
 
     /* Couldn't find anything appropriate */
-    return SEX_STRAIGHT;
+    return ROLE_NONE;
 }
 
 boolean

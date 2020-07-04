@@ -3052,10 +3052,16 @@ const char *str;
         if (str)
             pline(str, s_suffix(mon_nam(mon)), "body");
         return TRUE;
-    /* this REALLY needed a base case. Currently handles cartomancer artifact */
     } else {
-        if (str)
-            pline(str, mon_nam(mon), "");
+        /* check monster inventory for artifacts that grant reflection when
+         * carried; handles Void Lily */
+        for (orefl = mon->minvent; orefl; orefl = orefl->nobj) {
+            if (orefl->oartifact && arti_reflects(orefl)) {
+                if (str)
+                    pline(str, s_suffix(mon_nam(mon)), "body");
+                return TRUE;
+            }
+        }
     }
     return FALSE;
 }

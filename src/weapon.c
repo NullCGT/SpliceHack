@@ -28,14 +28,15 @@ static void FDECL(skill_advance, (int));
 #define PN_SABER (-5)
 #define PN_HAMMER (-6)
 #define PN_WHIP (-7)
-#define PN_ATTACK_SPELL (-8)
-#define PN_HEALING_SPELL (-9)
-#define PN_DIVINATION_SPELL (-10)
-#define PN_ENCHANTMENT_SPELL (-11)
-#define PN_CLERIC_SPELL (-12)
-#define PN_ESCAPE_SPELL (-13)
-#define PN_MATTER_SPELL (-14)
-#define PN_COOKING (-15)
+#define PN_FIREARMS	(-8)
+#define PN_ATTACK_SPELL (-9)
+#define PN_HEALING_SPELL (-10)
+#define PN_DIVINATION_SPELL (-11)
+#define PN_ENCHANTMENT_SPELL (-12)
+#define PN_CLERIC_SPELL (-13)
+#define PN_ESCAPE_SPELL (-14)
+#define PN_MATTER_SPELL (-15)
+#define PN_COOKING (-16)
 
 static void FDECL(give_may_advance_msg, (int));
 static int NDECL(practice);
@@ -48,7 +49,7 @@ static NEARDATA const short skill_names_indices[P_NUM_SKILLS] = {
     0, DAGGER, KNIFE, AXE, PICK_AXE, SHORT_SWORD, BROADSWORD, LONG_SWORD,
     TWO_HANDED_SWORD, SCIMITAR, PN_SABER, CLUB, MACE, MORNING_STAR, FLAIL,
     PN_HAMMER, QUARTERSTAFF, PN_POLEARMS, SPEAR, TRIDENT, LANCE, BOW, SLING,
-    CROSSBOW, DART, SHURIKEN, BOOMERANG, PN_WHIP, UNICORN_HORN,
+    CROSSBOW, PN_FIREARMS, DART, SHURIKEN, BOOMERANG, PN_WHIP, UNICORN_HORN,
     PN_ATTACK_SPELL, PN_HEALING_SPELL, PN_DIVINATION_SPELL,
     PN_ENCHANTMENT_SPELL, PN_CLERIC_SPELL, PN_ESCAPE_SPELL, PN_MATTER_SPELL,
     PN_BARE_HANDED, PN_TWO_WEAPONS, PN_RIDING, PN_COOKING
@@ -58,6 +59,7 @@ static NEARDATA const short skill_names_indices[P_NUM_SKILLS] = {
 static NEARDATA const char *const odd_skill_names[] = {
     "no skill", "bare hands", /* use barehands_or_martial[] instead */
     "two weapon combat", "riding", "polearms", "saber", "hammer", "whip",
+    "firearms",
     "attack spells", "healing spells", "divination spells",
     "enchantment spells", "clerical spells", "escape spells", "matter spells",
     "cooking",

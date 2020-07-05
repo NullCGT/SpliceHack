@@ -196,6 +196,7 @@ Bug Fixes
 - Show correct orientation in options list (Entrez)
 - Fix edge case in blood magic (Entrez)
 - Fix selfpoly'd AD_RBRE (Entrez)
+- Fix monster and player reflection edge cases and messages (Entrez)
 
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.

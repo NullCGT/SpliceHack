@@ -246,6 +246,9 @@ xchar x, y;
 
     else if (uarm && objects[uarm->otyp].oc_bulky && ACURR(A_DEX) < rnd(25))
         clumsy = TRUE;
+    
+    else if (mon->mtame)
+        clumsy = TRUE;
  doit:
     You("kick %s.", mon_nam(mon));
     if (!rn2(clumsy ? 3 : 4) && (clumsy || !bigmonst(mon->data))

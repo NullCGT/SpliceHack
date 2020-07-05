@@ -468,7 +468,8 @@ boolean force;      /* Quietly force this animal */
              uarm->oeroded ? "rusty" : "corroded", mon_nam(mtmp));
         return (FALSE);
     }
-    if (!force
+    if (!force 
+        && !(Role_if(PM_KNIGHT) || Role_if(PM_DRAGONMASTER))
         && (Confusion || Fumbling || Glib || Wounded_legs || otmp->cursed
             || (u.ulevel + mtmp->mtame < rnd(MAXULEV / 2 + 5)))) {
         if (Levitation) {

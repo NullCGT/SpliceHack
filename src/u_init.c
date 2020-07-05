@@ -1113,7 +1113,6 @@ u_init()
         knows_object(DWARVISH_RING_MAIL);
         knows_object(DWARVISH_CLOAK);
         knows_object(DWARVISH_ROUNDSHIELD);
-	knows_object(POT_BOOZE);
         break;
 
     case PM_CHANGELING:

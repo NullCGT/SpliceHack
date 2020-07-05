@@ -1943,7 +1943,7 @@ const struct def_skill *class_skill;
         P_SKILL(P_BARE_HANDED_COMBAT) = P_BASIC;
 
     /* Roles that start with a horse know how to ride it */
-    if (g.urole.petnum == PM_PONY)
+    if (g.urole.petnum == PM_PONY || Role_if(PM_DRAGONMASTER))
         P_SKILL(P_RIDING) = P_BASIC;
     
     /* All merfolk can use tridents */

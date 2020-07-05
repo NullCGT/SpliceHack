@@ -3052,10 +3052,16 @@ const char *str;
         if (str)
             pline(str, s_suffix(mon_nam(mon)), "body");
         return TRUE;
-    /* this REALLY needed a base case. Currently handles cartomancer artifact */
     } else {
-        if (str)
-            pline(str, mon_nam(mon), "");
+        /* check monster inventory for artifacts that grant reflection when
+         * carried; handles Void Lily */
+        for (orefl = mon->minvent; orefl; orefl = orefl->nobj) {
+            if (orefl->oartifact && arti_reflects(orefl)) {
+                if (str)
+                    pline(str, s_suffix(mon_nam(mon)), "body");
+                return TRUE;
+            }
+        }
     }
     return FALSE;
 }
@@ -3095,15 +3101,18 @@ const char *fmt, *str;
         if (fmt && str)
             pline(fmt, str, "scales");
         return TRUE;
-    } else if (HReflecting) {
-        if (fmt && str) {
+    } else if (g.youmonst.data == &mons[PM_SILVER_GOLEM]
+            || g.youmonst.data == &mons[PM_CRYSTAL_GOLEM]
+            || g.youmonst.data == &mons[PM_SAPPHIRE_GOLEM]) {
+        if (fmt && str)
             pline(fmt, str, "body");
-        }
-    /* this also really needed a base case. */
-    } else {
-        if (fmt && str) {
+        return TRUE;
+    } else if (Reflecting) {
+        /* intrinsic or extrinsic reflection from other source
+         * e.g. cartomancer artifact */
+        if (fmt && str)
             pline(fmt, str, "body");
-        }
+	return TRUE;
     }
     return FALSE;
 }

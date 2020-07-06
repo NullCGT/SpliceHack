@@ -1339,6 +1339,7 @@ char *supplemental_name;
     unsigned long txt_offset = 0L;
     winid datawin = WIN_ERR;
     short otyp;
+    int l, i;
 
     fp = dlb_fopen(DATAFILE, "r");
     if (!fp) {
@@ -1429,6 +1430,18 @@ char *supplemental_name;
         if (*dbase_str == ' ')
             ++dbase_str;
     }
+
+    /* remove material type */
+    for (i = 1; i < NUM_MATERIAL_TYPES; i++) {
+        l = strlen(materialnm[i]);
+        Strcpy(buf, materialnm[i]);
+        Strcat(buf, " ");
+        if (!strncmp(dbase_str, buf, ++l)) {
+            dbase_str += l;
+            break;
+        }
+    }
+
     /* "towel", "wet towel", and "moist towel" share one data.base entry;
        for "wet towel", we keep prefix so that the prompt will ask about
        "wet towel"; for "moist towel", we also want to ask about "wet towel".

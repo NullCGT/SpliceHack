@@ -1497,6 +1497,9 @@ char *supplemental_name;
         if (!alt)
             alt = makesingular(dbase_str);
 
+        /* generate alternate version with material name */
+        Strcat(material, dbase_str);
+
         pass1found_in_file = FALSE;
         for (pass = !strcmp(alt, dbase_str) ? 0 : 1; pass >= 0; --pass) {
             found_in_file = skipping_entry = FALSE;
@@ -1528,7 +1531,8 @@ char *supplemental_name;
                     /* if we match a key that begins with "~", skip
                        this entry */
                     chk_skip = (*buf == '~') ? 1 : 0;
-                    if ((pass == 0 && pmatch(&buf[chk_skip], dbase_str))
+                    if ((pass == 0 && ((pmatch(&buf[chk_skip], dbase_str) ||
+                                        pmatch(&buf[chk_skip], material))))
                         || (pass == 1 && alt && pmatch(&buf[chk_skip], alt))) {
                         if (chk_skip) {
                             skipping_entry = TRUE;
@@ -1563,9 +1567,6 @@ char *supplemental_name;
                     goto checkfile_done;
                 }
             }
-
-            /* generate alternate version with material name */
-            Strcat(material, dbase_str);
 
             /* monster lookup: try to parse as a monster */
             pm = NULL;

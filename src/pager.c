@@ -1339,7 +1339,7 @@ char *supplemental_name;
     unsigned long txt_offset = 0L;
     winid datawin = WIN_ERR;
     short otyp;
-    int l, i;
+    int i;
 
     fp = dlb_fopen(DATAFILE, "r");
     if (!fp) {
@@ -1432,6 +1432,7 @@ char *supplemental_name;
     }
 
     /* remove material type */
+    int l;
     for (i = 1; i <= NUM_MATERIAL_TYPES; i++) {
         l = strlen(materialnm[i]);
         Strcpy(buf, materialnm[i]);
@@ -1550,7 +1551,6 @@ char *supplemental_name;
             /* database entry should exist, now find where it is */
             long entry_offset, fseekoffset;
             int entry_count;
-            int i;
             if (found_in_file) {
                 /* skip over other possible matches for the info */
                 do {

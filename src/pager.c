@@ -1334,7 +1334,7 @@ boolean user_typed_name, without_asking;
 char *supplemental_name;
 {
     dlb *fp;
-    char buf[BUFSZ], newstr[BUFSZ], givenname[BUFSZ];
+    char buf[BUFSZ], newstr[BUFSZ], givenname[BUFSZ], material[BUFSZ];
     char *ep, *dbase_str;
     unsigned long txt_offset = 0L;
     winid datawin = WIN_ERR;
@@ -1434,9 +1434,9 @@ char *supplemental_name;
     /* remove material type */
     for (i = 1; i < NUM_MATERIAL_TYPES; i++) {
         l = strlen(materialnm[i]);
-        Strcpy(buf, materialnm[i]);
-        Strcat(buf, " ");
-        if (!strncmp(dbase_str, buf, ++l)) {
+        Strcpy(material, materialnm[i]);
+        Strcat(material, " ");
+        if (!strncmp(dbase_str, material, ++l)) {
             dbase_str += l;
             break;
         }
@@ -1563,16 +1563,26 @@ char *supplemental_name;
                 }
             }
 
+            /* generate alternate version with material name */
+            Strcat(material, dbase_str);
+
             /* monster lookup: try to parse as a monster */
             pm = NULL;
-            int mndx = name_to_mon(dbase_str);
+            /* first try with material */
+            int mndx = name_to_mon(material);
+            /* if no results, try base version */
+            if (mndx == NON_PM)
+                mndx = name_to_mon(dbase_str);
             if (mndx != NON_PM) {
                 pm = &mons[mndx];
             }
 
             /* object lookup: try to parse as an object */
-            otyp = name_to_otyp(dbase_str);
-
+            /* first try with material */
+            otyp = name_to_otyp(material);
+            /* if no results, try base version */
+            if (otyp == STRANGE_OBJECT)
+                otyp = name_to_otyp(dbase_str);
 
             /* prompt for more info (if using whatis to navigate the map) */
             yes_to_moreinfo = FALSE;

@@ -1568,20 +1568,16 @@ char *supplemental_name;
 
             /* monster lookup: try to parse as a monster */
             pm = NULL;
-            /* first try with material */
-            int mndx = name_to_mon(material);
-            /* if no results, try base version */
-            if (mndx == NON_PM)
+            /* first try with material, then try base version if no results */
+            int mndx;
+            if ((mndx = name_to_mon(material)) == NON_PM)
                 mndx = name_to_mon(dbase_str);
-            if (mndx != NON_PM) {
+            if (mndx != NON_PM)
                 pm = &mons[mndx];
-            }
 
             /* object lookup: try to parse as an object */
-            /* first try with material */
-            otyp = name_to_otyp(material);
-            /* if no results, try base version */
-            if (otyp == STRANGE_OBJECT)
+            /* as with monster lookup, first try material, then base version */
+            if ((otyp = name_to_otyp(material)) == STRANGE_OBJECT)
                 otyp = name_to_otyp(dbase_str);
 
             /* prompt for more info (if using whatis to navigate the map) */

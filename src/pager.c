@@ -1432,14 +1432,15 @@ char *supplemental_name;
     }
 
     /* remove material type */
-    for (i = 1; i < NUM_MATERIAL_TYPES; i++) {
+    for (i = 1; i <= NUM_MATERIAL_TYPES; i++) {
         l = strlen(materialnm[i]);
-        Strcpy(material, materialnm[i]);
-        Strcat(material, " ");
-        if (!strncmp(dbase_str, material, ++l)) {
+        Strcpy(buf, materialnm[i]);
+        Strcat(buf, " ");
+        if (!strncmp(dbase_str, buf, ++l)) {
+            Strcpy(material, buf);
             dbase_str += l;
             break;
-        }
+        } 
     }
 
     /* "towel", "wet towel", and "moist towel" share one data.base entry;

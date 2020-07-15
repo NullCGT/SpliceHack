@@ -614,6 +614,8 @@ E boolean FDECL(walk_path, (coord *, coord *,
                             boolean (*)(genericptr, int, int), genericptr_t));
 E boolean FDECL(hurtle_jump, (genericptr_t, int, int));
 E boolean FDECL(hurtle_step, (genericptr_t, int, int));
+E int FDECL(firearm_range, (int));
+E int FDECL(firearm_rof, (int));
 
 /* ### drawing.c ### */
 

@@ -15,6 +15,23 @@ New Items
     - Orcish Warlord: 1 frag grenade.
     - All Pirates: 1/2 chance of a frag grenade.
     - All Mercernaries: 1/6 chance of a random grenade.
+- Pistol
+- Shotgun
+- Auto shotgun
+- Submachine gun
+- Heavy machine gun
+- Rifle
+- Sniper rifle
+- Shotgun shell
+- Bullet
+  - Ported a subset of firearms form SLASH'EM.
+  - Shopkeepers are equipped with shotguns.
+  - A few differences:
+    - You can hear distant gunfire.
+    - Soldiers do not spawn with guns.
+    - Monsters will attempt to use pistols, shotguns, and auto
+      shotguns as melee weapons.
+    - Bullets and guns are affected by the object materials patch.
 
 New Monsters
 - Servals

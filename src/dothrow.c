@@ -216,8 +216,24 @@ int shotlimit;
         		if (((shotlimit <= 0) || (shotlimit >= multishot)) &&
         			(obj->quan >= multishot))
         		    You("let fly a volley of %s!", xname(obj));
-    	  }
-
+    	}
+        
+        /* Rate of fire is intrinsic to the weapon - cannot be user selected
+	     * except via altmode
+	     * Only for valid launchers 
+	     */
+	    if (uwep && is_firearm(uwep)) {
+            if (firearm_rof(uwep->otyp)) 
+                multishot += (firearm_rof(uwep->otyp) - 1);
+            if (uwep->altmode == WP_MODE_SINGLE)
+            /* weapons switchable b/w full/semi auto */
+                multishot = 1;
+            else if (uwep->altmode == WP_MODE_BURST)
+                multishot = ((multishot > 3) ? (multishot / 3) : 1);
+            /* else it is auto == no change */
+	    }
+	    if ((long )multishot > obj->quan) multishot = (int)obj->quan;
+        if (multishot < 1) multishot = 1;
         /* crossbows are slow to load and probably shouldn't allow multiple
            shots at all, but that would result in players never using them;
            instead, high strength is necessary to load and shoot quickly */
@@ -1173,7 +1189,7 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
 {
     register struct monst *mon;
     int range, urange;
-    boolean crossbowing, clear_thrownobj = FALSE,
+    boolean crossbowing, gunning, clear_thrownobj = FALSE,
             impaired = (Confusion || Stunned || Blind
                         || Hallucination || Fumbling),
             tethered_weapon = (obj->otyp == AKLYS && (wep_mask & W_WEP) != 0);
@@ -1287,6 +1303,8 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
         /* crossbow range is independent of strength */
         crossbowing = (ammo_and_launcher(obj, uwep)
                        && weapon_type(uwep) == P_CROSSBOW);
+        gunning = (ammo_and_launcher(obj, uwep)
+                       && weapon_type(uwep) == P_FIREARM);
         urange = (crossbowing ? 18 : (int) ACURRSTR) / 2;
         /* balls are easy to throw or at least roll;
          * also, this insures the maximum range of a ball is greater
@@ -1307,8 +1325,10 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
             range = 1;
 
         if (is_ammo(obj)) {
-            if (ammo_and_launcher(obj, uwep)) {
-                if (crossbowing)
+		    if (ammo_and_launcher(obj, uwep)) {
+                if (gunning) 
+				    range = firearm_range(uwep->otyp);
+                else if (crossbowing)
                     range = BOLT_LIM;
                 else
                     range++;
@@ -1386,11 +1406,6 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
     /* Handle grenades or rockets */
 	if (is_grenade(obj)) {
 	    arm_bomb(obj, TRUE);
-	} else if (is_bullet(obj) && (uwep && ammo_and_launcher(obj, uwep) &&
-		!is_grenade(obj))) {
-	    check_shop_obj(obj, g.bhitpos.x, g.bhitpos.y, TRUE);
-	    obfree(obj, (struct obj *)0);
-	    return;
 	}
 
     if (!g.thrownobj) {
@@ -1818,6 +1833,8 @@ register struct obj *obj; /* g.thrownobj or g.kickedobj or uwep */
                     broken = !rn2(4);
                 if (obj->blessed && !rnl(4))
                     broken = 0;
+                if (objects[otyp].oc_skill == -P_FIREARM)
+                    broken = 1;
 
                 if (broken) {
                     if (*u.ushops || obj->unpaid)
@@ -2216,6 +2233,8 @@ struct obj *obj;
     case ACID_VENOM:
     case BLINDING_VENOM:
     case SPIKE:
+    case BULLET:
+    case SHOTGUN_SHELL:
         return 1;
     default:
         return 0;
@@ -2249,6 +2268,9 @@ boolean in_view;
         else
             pline("%s shatter%s%s!", Doname2(obj),
                   (obj->quan == 1L) ? "s" : "", to_pieces);
+        break;
+    case BULLET:
+    case SHOTGUN_SHELL:
         break;
     case EGG:
     case MELON:
@@ -2398,6 +2420,61 @@ struct obj *obj;
     stackobj(obj);
     newsym(g.bhitpos.x, g.bhitpos.y);
     return 1;
+}
+
+/* 
+TODO: Find a better way to express range and rof.
+In SLASH'EM, range and rof are defined as small and large weapon
+damage. The problem is that this leads to weird melee attack
+damage for every single firearm. Rather than rewriting every single
+object struct and increasing their size by two bits, I thought it
+more prudent to pull out range and rof into external functions. While
+it hurts my coder brain to do so, this is NetHack, and sometimes
+ugly hacks are needed.
+*/
+
+int
+firearm_range(otyp)
+int otyp;
+{
+    switch(otyp) {
+    case SUBMACHINE_GUN:
+        return 10;
+    case HEAVY_MACHINE_GUN:
+        return 20;
+    case RIFLE:
+        return 22;
+    case AUTO_SHOTGUN:
+    case SHOTGUN:
+        return 3;
+    case SNIPER_RIFLE:
+        return 25;
+    case PISTOL:
+        return 15;
+    default:
+        return BOLT_LIM;
+    }
+}
+
+int
+firearm_rof(otyp)
+int otyp;
+{
+    switch(otyp) {
+    case SUBMACHINE_GUN:
+        return 3;
+    case HEAVY_MACHINE_GUN:
+        return 8;
+    case RIFLE:
+    case SHOTGUN:
+        return -1;
+    case AUTO_SHOTGUN:
+        return 2;
+    case SNIPER_RIFLE:
+        return -3;
+    default:
+        return 0;
+    }
 }
 
 /*dothrow.c*/

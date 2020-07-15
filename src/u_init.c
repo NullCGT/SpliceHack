@@ -589,6 +589,7 @@ static const struct def_skill Skill_Pir[] = {
     { P_TWO_WEAPON_COMBAT, P_SKILLED },
     { P_BARE_HANDED_COMBAT, P_EXPERT },
     { P_COOKING, P_EXPERT }, /* pirate chefs */
+    { P_FIREARM, P_EXPERT },
     { P_NONE, 0 }
 };
 static const struct def_skill Skill_R[] = {

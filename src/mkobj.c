@@ -3198,6 +3198,17 @@ static const struct icp metal_materials[] = {
     {  1, GEMSTONE}
 };
 
+/* for objects related to firearms */
+static const struct icp firearm_materials[] = {
+    {645, IRON},
+    {125, SILVER},
+    {125, COPPER},
+    { 75, MITHRIL},
+    { 10, GOLD},
+    { 10, PLATINUM},
+    { 10, ADAMANTINE},
+};
+
 /* Reflectable items - the shield of reflection; anything
  * that can hold a polish */
 static const struct icp shiny_materials[] = {
@@ -3374,11 +3385,11 @@ struct obj* obj;
      * list exists. */
     if (is_elven_obj(obj) && default_material != CLOTH) {
         return elven_materials;
-    }
-    else if (is_dwarvish_obj(obj) && default_material != CLOTH) {
+    } else if (is_dwarvish_obj(obj) && default_material != CLOTH) {
         return dwarvish_materials;
-    }
-    else if (obj->oclass == AMULET_CLASS && otyp != AMULET_OF_YENDOR
+    } else if (is_firearm(obj) || is_bullet(obj) || is_grenade(obj)) {
+        return firearm_materials;
+    } else if (obj->oclass == AMULET_CLASS && otyp != AMULET_OF_YENDOR
              && otyp != FAKE_AMULET_OF_YENDOR) {
         /* could use metal_materials too */
         return shiny_materials;

@@ -4336,6 +4336,13 @@ doapply()
     case TOUCHSTONE:
         use_stone(obj);
         break;
+	case AUTO_SHOTGUN:
+	case SUBMACHINE_GUN:		
+		if (obj->altmode == WP_MODE_AUTO) obj-> altmode = WP_MODE_SINGLE;
+		else obj->altmode = WP_MODE_AUTO;
+		You("switch %s to %s mode.", yname(obj), 
+			(obj->altmode ? "semi-automatic" : "full automatic"));
+		break;
     case FRAG_GRENADE:
 	case GAS_GRENADE:
 		if (!obj->oarmed) {

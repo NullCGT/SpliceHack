@@ -144,6 +144,7 @@ int x, y;
         You_feel("full of sorrow.");
         create = 0;
     } else if (obj->otyp == CREAM_PIE || obj->oclass == VENOM_CLASS
+        || (is_bullet(obj))
         || (ohit && obj->otyp == EGG))
         create = 0;
     else if (ohit && (is_multigen(obj) || obj->otyp == ROCK))
@@ -239,6 +240,10 @@ struct obj *otmp, *mwep;
         /* Some randomness */
         multishot = (long) rnd((int) multishot);
 
+        /* gunz */
+        if (mwep && is_firearm(mwep))
+	        multishot += firearm_rof(mwep->otyp);
+
         /* class bonus */
         multishot += multishot_class_bonus(monsndx(mtmp->data), otmp, mwep);
 
@@ -295,11 +300,12 @@ struct obj *otmp, *mwep;
         if (!strcmp(trgbuf, "it"))
             Strcpy(trgbuf, humanoid(mtmp->data) ? "someone" : something);
         pline("%s %s %s%s%s!", Monnam(mtmp),
-              g.m_shot.s ? "shoots" : "throws", onm,
+              g.m_shot.s ? is_bullet(otmp) ? "fires" : "shoots" : "throws", onm,
               mtarg ? " at " : "", trgbuf);
         g.m_shot.o = otmp->otyp;
     } else {
         g.m_shot.o = STRANGE_OBJECT; /* don't give multishot feedback */
+        if (is_bullet(otmp) && !Deaf) You("hear gunfire.");
     }
     g.m_shot.n = multishot;
     for (g.m_shot.i = 1; g.m_shot.i <= g.m_shot.n; g.m_shot.i++) {
@@ -902,6 +908,7 @@ struct monst *mtmp, *mtarg;
     struct obj *otmp, *mwep;
     register xchar x, y;
     boolean ispole;
+    int gun_range;
 
     /* Polearms won't be applied by monsters against other monsters */
     if (mtmp->weapon_check == NEED_WEAPON || !MON_WEP(mtmp)) {
@@ -921,6 +928,12 @@ struct monst *mtmp, *mtarg;
     y = mtmp->my;
 
     mwep = MON_WEP(mtmp); /* wielded weapon */
+    gun_range = firearm_range(mwep->otyp);
+
+    if (is_firearm(mwep) && ammo_and_launcher(otmp, mwep) && gun_range &&
+		dist2(mtmp->mx, mtmp->my, mtarg->mx, mtarg->my) >
+		gun_range * gun_range)
+	    return 0; /* Out of range */
 
     if (!ispole && m_lined_up(mtmp, mtarg)) {
         int chance = max(BOLT_LIM - distmin(x, y, mtarg->mx, mtarg->my), 1);
@@ -1140,6 +1153,7 @@ struct monst *mtmp;
     struct obj *otmp, *mwep;
     xchar x, y;
     const char *onm;
+    int gun_range;
 
     /* Rearranged beginning so monsters can use polearms not in a line */
     /* TODO: Find a better fix for the monster weapon switching bug. */
@@ -1203,6 +1217,13 @@ struct monst *mtmp;
         return;
 
     mwep = MON_WEP(mtmp); /* wielded weapon */
+    gun_range = firearm_range(mwep->otyp);
+
+    if (is_firearm(mwep) && ammo_and_launcher(otmp, mwep) && gun_range &&
+		dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) >
+		gun_range * gun_range)
+	    return; /* Out of range */
+
     monshoot(mtmp, otmp, mwep); /* multishot shooting or throwing */
     nomul(0);
 }

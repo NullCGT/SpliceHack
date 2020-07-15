@@ -2928,6 +2928,9 @@ static NEARDATA const struct o_range o_ranges[] = {
     { "dragon scale mail", ARMOR_CLASS, GRAY_DRAGON_SCALE_MAIL,
       VOID_DRAGON_SCALE_MAIL },
     { "sword", WEAPON_CLASS, SHORT_SWORD, KATANA },
+    { "firearm", 	WEAPON_CLASS, PISTOL, AUTO_SHOTGUN },
+	{ "gun", 	WEAPON_CLASS, PISTOL, AUTO_SHOTGUN },
+    { "machine gun", WEAPON_CLASS, SUBMACHINE_GUN, HEAVY_MACHINE_GUN },
     { "grenade", WEAPON_CLASS, FRAG_GRENADE, GAS_GRENADE },
     { "venom", VENOM_CLASS, BLINDING_VENOM, ACID_VENOM },
     { "gray stone", GEM_CLASS, LUCKSTONE, FLINT },
@@ -2987,7 +2990,11 @@ static struct alt_spellings {
     { "touch stone", TOUCHSTONE },
     { "flintstone", FLINT },
     /* grenades and firearms */
+    { "handgun", PISTOL },
+	{ "hand gun", PISTOL },
+	{ "revolver", PISTOL },
     { "hand grenade", FRAG_GRENADE },
+    { "shell", SHOTGUN_SHELL },
     { (const char *) 0, 0 },
 };
 

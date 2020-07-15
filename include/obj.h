@@ -55,6 +55,7 @@ struct obj {
     char oclass;    /* object class */
     char invlet;    /* designation in inventory */
     char oartifact; /* artifact array index */
+    schar 	altmode; 	/* alternate modes - eg. SMG, double Lightsaber */
 
     xchar where;        /* where the object thinks it is */
 #define OBJ_FREE 0      /* object not attached to anything */
@@ -67,6 +68,10 @@ struct obj {
 #define OBJ_ONBILL 7    /* object on shk bill */
 #define OBJ_LUAFREE 8   /* object has been dealloc'd, but is ref'd by lua */
 #define NOBJ_STATES 9
+
+#define WP_MODE_AUTO	0	/* Max firing speed */
+#define WP_MODE_BURST	1	/* 1/3 of max rate */
+#define WP_MODE_SINGLE 	2	/* Single shot */
     xchar timed; /* # of fuses (timers) attached to this obj */
 
     Bitfield(cursed, 1);
@@ -207,7 +212,8 @@ struct obj {
 #define is_poisonable(otmp)                         \
     (otmp->oclass == WEAPON_CLASS                   \
      && objects[otmp->otyp].oc_skill >= -P_SHURIKEN \
-     && objects[otmp->otyp].oc_skill <= -P_BOW)
+     && objects[otmp->otyp].oc_skill <= -P_BOW      \
+     && !is_unpoisonable_firearm_ammo(otmp))
 #define uslinging() (uwep && objects[uwep->otyp].oc_skill == P_SLING)
 /* 'is_quest_artifact()' only applies to the current role's artifact */
 #define any_quest_artifact(o) ((o)->oartifact >= ART_ORB_OF_DETECTION)
@@ -218,6 +224,8 @@ struct obj {
 			 objects[(otmp)->otyp].oc_skill == P_FIREARM)
 #define is_bullet(otmp)	((otmp)->oclass == WEAPON_CLASS && \
 			 objects[(otmp)->otyp].oc_skill == -P_FIREARM)
+#define is_unpoisonable_firearm_ammo(otmp)	\
+			 (is_bullet(otmp) || is_grenade(otmp))
 
 /* Armor */
 #define is_shield(otmp)          \

@@ -217,7 +217,12 @@ register struct monst *mtmp;
             (void) mongets(mtmp, TRIDENT);
         break;
     case S_HUMAN:
-        if (is_mercenary(ptr)) {
+        if (mm == PM_SHOPKEEPER) {
+            (void) mongets(mtmp,SHOTGUN);
+            m_initthrow(mtmp, SHOTGUN_SHELL, 20);
+            m_initthrow(mtmp, SHOTGUN_SHELL, 20);
+            m_initthrow(mtmp, SHOTGUN_SHELL, 20);
+        } else if (is_mercenary(ptr)) {
             w1 = w2 = 0;
             switch (mm) {
             case PM_WATCHMAN:
@@ -1009,7 +1014,7 @@ register struct monst *mtmp;
             switch (rn2(4)) {
             /* MAJOR fall through ... */
             case 0:
-                (void) mongets(mtmp, WAN_MAGIC_MISSILE);
+                (void) mongets(mtmp, POT_SPEED);
                 /*FALLTHRU*/
             case 1:
                 (void) mongets(mtmp, POT_EXTRA_HEALING);
@@ -1018,7 +1023,7 @@ register struct monst *mtmp;
                 (void) mongets(mtmp, POT_HEALING);
                 /*FALLTHRU*/
             case 3:
-                (void) mongets(mtmp, WAN_STRIKING);
+                (void) mongets(mtmp, POT_REFLECTION);
             }
         } else if (ptr == &mons[PM_EXTRAPLANAR_MERCHANT]) {
             (void) mongets(mtmp, SKELETON_KEY);

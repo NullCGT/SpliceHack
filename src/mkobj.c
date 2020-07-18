@@ -884,7 +884,8 @@ boolean artif;
                                  + (otmp->otyp - GLOB_OF_GRAY_OOZE);
             } else {
                 if (otmp->otyp != CORPSE && otmp->otyp != MEAT_RING
-                    && otmp->otyp != KELP_FROND && !rn2(6)) {
+                    && otmp->otyp != PUMPKIN && otmp->otyp != KELP_FROND
+                    && !rn2(6)) {
                     otmp->quan = 2L;
                 }
             }

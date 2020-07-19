@@ -4346,7 +4346,8 @@ doapply()
     case FRAG_GRENADE:
 	case GAS_GRENADE:
 		if (!obj->oarmed) {
-			You("arm %s.", yname(obj));
+            if (obj->oartifact == ART_HAND_GRENADE_OF_ANTIOCH) You("pull the holy pin.");
+			else You("arm %s.", yname(obj));
 			arm_bomb(obj, TRUE);
             update_inventory();
 		} else pline("It's already armed!");

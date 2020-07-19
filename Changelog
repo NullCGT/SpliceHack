@@ -84,6 +84,10 @@ New Artifacts
   - Provides hungerless regeneration when carried.
   - Can be invoked to heal half of current form's max hit points.
   - Allows the user to invoke Excalibur.
+- Hand Grenade of Antioch
+  - Lawful-aligned.
+  - Explodes for 50d6 magic damage.
+  - The fuse is ALWAYS three turns long. Not five.
 
 Artifact Changes
 - Anaconda

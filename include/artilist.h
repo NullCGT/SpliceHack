@@ -152,6 +152,12 @@ static NEARDATA struct artifact artilist[] = {
     A("Gungnir", DWARVISH_SPEAR, (SPFX_RESTR), 0, 0, PHYS(100, 4),
       NO_DFNS, NO_CARY, LIGHTNING_BOLT, A_NEUTRAL, PM_VALKYRIE, NON_PM, 4000L, NO_COLOR),
 
+    /* 
+    *       I cannot believe this hasn't been done yet.
+    */
+    A("Hand Grenade of Antioch", FRAG_GRENADE, (SPFX_RESTR), 0, 0, PHYS(1, 1),
+      NO_DFNS, NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 300L, NO_COLOR),
+
     A("Idspike", ATHAME, (SPFX_RESTR | SPFX_ATTK | SPFX_DEFN), 0, 0,
       PSYC(5, 0), PSYC(0, 0), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 4000L,
       NO_COLOR),

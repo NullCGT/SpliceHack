@@ -867,7 +867,11 @@ boolean isyou;
     int ztype;
     int otyp = obj->otyp;
     
-    if (otyp == FRAG_GRENADE) {
+    if (obj->oartifact == ART_HAND_GRENADE_OF_ANTIOCH) {
+        ztype = isyou ? ZT_SPELL(ZT_MAGIC_MISSILE) : -ZT_SPELL(ZT_MAGIC_MISSILE);
+        explode(x, y, ztype, d(50,6), WEAPON_CLASS,
+            EXPL_FIERY);
+    } else if (otyp == FRAG_GRENADE) {
         ztype = isyou ? ZT_SPELL(ZT_FIRE) : -ZT_SPELL(ZT_FIRE);
         explode(x, y, ztype, d(3,6), WEAPON_CLASS,
             EXPL_FIERY);
@@ -883,7 +887,13 @@ void arm_bomb(obj, yours)
 struct obj *obj;
 boolean yours;
 {
-	if (is_grenade(obj) && !obj->oarmed) {
+    /* Three shall be the number of the counting and the 
+       number of the counting shall be three. */
+    if (obj->oarmed)
+        return;
+	if (obj->oartifact == ART_HAND_GRENADE_OF_ANTIOCH) {
+        attach_bomb_blow_timeout(obj, 3, yours);
+    } else if (is_grenade(obj)) {
 		attach_bomb_blow_timeout(obj, 
 			    (obj->cursed ? rn2(5) + 2 : obj->blessed ? 4 : 
 			    	rn2(2) + 3)

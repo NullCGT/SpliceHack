@@ -928,9 +928,9 @@ struct monst *mtmp, *mtarg;
     y = mtmp->my;
 
     mwep = MON_WEP(mtmp); /* wielded weapon */
-    gun_range = firearm_range(mwep->otyp);
+    if (mwep) gun_range = firearm_range(mwep->otyp);
 
-    if (is_firearm(mwep) && ammo_and_launcher(otmp, mwep) && gun_range &&
+    if (mwep && is_firearm(mwep) && ammo_and_launcher(otmp, mwep) && gun_range &&
 		dist2(mtmp->mx, mtmp->my, mtarg->mx, mtarg->my) >
 		gun_range * gun_range)
 	    return 0; /* Out of range */
@@ -1217,9 +1217,9 @@ struct monst *mtmp;
         return;
 
     mwep = MON_WEP(mtmp); /* wielded weapon */
-    gun_range = firearm_range(mwep->otyp);
+    if (mwep) gun_range = firearm_range(mwep->otyp);
 
-    if (is_firearm(mwep) && ammo_and_launcher(otmp, mwep) && gun_range &&
+    if (mwep && is_firearm(mwep) && ammo_and_launcher(otmp, mwep) && gun_range &&
 		dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) >
 		gun_range * gun_range)
 	    return; /* Out of range */

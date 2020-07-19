@@ -1,4 +1,4 @@
-/* NetHack 3.7	insight.c	$NHDT-Date: 1586375531 2020/04/08 19:52:11 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.14 $ */
+/* NetHack 3.7	insight.c	$NHDT-Date: 1593771616 2020/07/03 10:20:16 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.18 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -1979,6 +1979,33 @@ int final;
                     " for any artifacts", "");
     }
 
+    /* only report Sokoban conduct if the Sokoban branch has been entered */
+    if (sokoban_in_play()) {
+        const char *presentverb = "have violated", *pastverb = "violated";
+
+        Strcpy(buf, " the special Sokoban rules ");
+        switch (u.uconduct.sokocheat) {
+        case 0L:
+            presentverb = "have not violated";
+            pastverb = "did not violate";
+            Strcpy(buf, " any of the special Sokoban rules");
+            break;
+        case 1L:
+            Strcat(buf, "once");
+            break;
+        case 2L:
+            Strcat(buf, "twice");
+            break;
+        case 3L:
+            Strcat(buf, "thrice");
+            break;
+        default:
+            Sprintf(eos(buf), "%ld times", u.uconduct.sokocheat);
+            break;
+        }
+        enl_msg(You_, presentverb, pastverb, buf, "");
+    }
+
     show_achievements(final);
 
     /* Pop up the window and wait for a key */
@@ -1996,7 +2023,7 @@ show_achievements(final)
 int final; /* used "behind the curtain" by enl_foo() macros */
 {
     int i, achidx, absidx, acnt;
-    char title[QBUFSZ], buf[QBUFSZ], sokobuf[QBUFSZ];
+    char title[QBUFSZ], buf[QBUFSZ];
     winid awin = WIN_ERR;
 
     /* unfortunately we can't show the achievements (at least not all of
@@ -2070,13 +2097,7 @@ int final; /* used "behind the curtain" by enl_foo() macros */
             you_have_X("entered Sokoban");
             break;
         case ACH_SOKO_PRIZE: /* hard to reach guaranteed bag or amulet */
-            if (!u.uconduct.cheated)
-                you_have_X("completed Sokoban");
-            else {
-                Sprintf(sokobuf, "completed Sokoban... by cheating (%ld times)", 
-                    u.uconduct.cheated);
-                you_have_X(sokobuf);
-            }
+            you_have_X("completed Sokoban");
             break;
         case ACH_MINE_PRIZE: /* hidden guaranteed luckstone */
             you_have_X("completed the Gnomish Mines");
@@ -2237,6 +2258,21 @@ int rank; /* 1..8 */
     if (flags.gender == GEND_F)
         achidx = -achidx;
     return achidx;
+}
+
+/* return True if sokoban branch has been entered, False otherwise */
+boolean
+sokoban_in_play()
+{
+    int achidx;
+
+    /* TODO? move this to dungeon.c and test furthest level reached of the
+       sokoban branch instead of relying on the entered-sokoban achievement */
+
+    for (achidx = 0; u.uachieved[achidx]; ++achidx)
+        if (u.uachieved[achidx] == ACH_SOKO)
+            return TRUE;
+    return FALSE;
 }
 
 /*

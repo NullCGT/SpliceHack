@@ -7,7 +7,6 @@
 extern "C" {
 #include "hack.h"
 }
-#include "patchlevel.h"
 #undef Invisible
 #undef Warning
 #undef index
@@ -18,10 +17,12 @@ extern "C" {
 #undef min
 #undef max
 
+#include "qt_pre.h"
 #include <QtGui/QtGui>
 #if QT_VERSION >= 0x050000
 #include <QtWidgets/QtWidgets>
 #endif
+#include "qt_post.h"
 #include "qt_main.h"
 #include "qt_main.moc"
 #include "qt_bind.h"
@@ -378,7 +379,7 @@ static const char * rest_xpm[] = {
 "     ....   ",
 "            "};
 /* XPM */
-static const char * cast_a_xpm[] = {
+static const char * cast_a_xpm[] UNUSED = {
 "12 13 3 1",
 " 	c None",
 ".	c #FFFF6DB60000",
@@ -397,7 +398,7 @@ static const char * cast_a_xpm[] = {
 "   .   X  X ",
 "   .   X  X "};
 /* XPM */
-static const char * cast_b_xpm[] = {
+static const char * cast_b_xpm[] UNUSED = {
 "12 13 3 1",
 " 	c None",
 ".	c #FFFF6DB60000",
@@ -416,7 +417,7 @@ static const char * cast_b_xpm[] = {
 "   .   X  X ",
 "   .   XXX  "};
 /* XPM */
-static const char * cast_c_xpm[] = {
+static const char * cast_c_xpm[] UNUSED = {
 "12 13 3 1",
 " 	c None",
 ".	c #FFFF6DB60000",

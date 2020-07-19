@@ -1,9 +1,12 @@
-/* NetHack 3.7	patchlevel.h	$NHDT-Date: 1581322658 2020/02/10 08:17:38 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.156 $ */
+/* NetHack 3.7	patchlevel.h	$NHDT-Date: 1593768081 2020/07/03 09:21:21 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.165 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
 
-/* SpliceHack 0.7.1 */
+#ifndef PATCHLEVEL_H
+#define PATCHLEVEL_H
+
+/* SpliceHack 0.7.x */
 #define VERSION_MAJOR 0
 #define VERSION_MINOR 7
 /*
@@ -15,6 +18,23 @@
  * and save files.
  */
 #define EDITLEVEL 21
+
+/*
+ * Development status possibilities.
+ */
+#define NH_STATUS_RELEASED    0         /* Released */
+#define NH_STATUS_WIP         1         /* Work in progress */
+#define NH_STATUS_BETA        2         /* BETA testing */
+#define NH_STATUS_POSTRELEASE 3         /* patch commit point only */
+
+/*
+ * Development status of this NetHack version.
+ */
+#define NH_DEVEL_STATUS NH_STATUS_WIP
+
+#ifndef DEBUG  /* allow tool chains to define without causing warnings */
+#define DEBUG
+#endif
 
 #define COPYRIGHT_BANNER_A "SpliceHack, a NetHack variant by AntiGulp. Copyright 1985-2020"
 #define COPYRIGHT_BANNER_B \
@@ -532,4 +552,5 @@
 
 /****************************************************************************/
 
+#endif /* PATHLEVEL_H */
 /*patchlevel.h*/

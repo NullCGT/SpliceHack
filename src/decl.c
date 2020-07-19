@@ -1,4 +1,4 @@
-/* NetHack 3.6	decl.c	$NHDT-Date: 1591017417 2020/06/01 13:16:57 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.213 $ */
+/* NetHack 3.6	decl.c	$NHDT-Date: 1594730611 2020/07/14 12:43:31 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.215 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2009. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -24,9 +24,6 @@ const schar zdir[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, -1 };
 
 NEARDATA struct flag flags;
 NEARDATA boolean has_strong_rngseed = FALSE;
-#ifdef SYSFLAGS
-NEARDATA struct sysflag sysflags;
-#endif
 NEARDATA struct instance_flags iflags;
 NEARDATA struct you u;
 NEARDATA time_t ubirthday;
@@ -355,13 +352,6 @@ const struct instance_globals g_init = {
 #ifdef MICRO
     UNDEFINED_VALUES, /* levels */
 #endif /* MICRO */
-#ifdef MFLOPPY
-    UNDEFINED_VALUES, /* permbones */
-    FALSE,     /*ramdisk */
-    TRUE, /* saveprompt */
-    "levels.*", /* alllevels */
-    "bones*.*", /* allbones */
-#endif
     UNDEFINED_VALUES, /* program_state */
 
     /* detect.c */
@@ -480,9 +470,10 @@ const struct instance_globals g_init = {
     /* makemon.c */
 
     /* mhitm.c */
-    UNDEFINED_VALUE, /* vis */
-    UNDEFINED_VALUE, /* far_noise */
-    UNDEFINED_VALUE, /* noisetime */
+    0L, /* noisetime */
+    FALSE, /* far_noise */
+    FALSE, /* vis */
+    FALSE, /* skipdrin */
 
     /* mhitu.c */
     UNDEFINED_VALUE, /* mhitu_dieroll */
@@ -753,9 +744,6 @@ decl_globals_init()
     g.subrooms = &g.rooms[MAXNROFROOMS + 1];
 
     ZERO(flags);
-#ifdef SYSFLAGS
-    ZERO(sysflags);
-#endif
     ZERO(iflags);
     ZERO(u);
     ZERO(ubirthday);

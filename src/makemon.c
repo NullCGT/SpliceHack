@@ -1,4 +1,4 @@
-/* NetHack 3.6	makemon.c	$NHDT-Date: 1591178397 2020/06/03 09:59:57 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.173 $ */
+/* NetHack 3.6	makemon.c	$NHDT-Date: 1594771378 2020/07/15 00:02:58 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.174 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1445,7 +1445,7 @@ uchar m_lev; /* not just a struct mon because polyself code also uses this */
          * way to fit in the 50..127 positive range of a signed character
          * above the 1..49 that indicate "normal" monster levels */
         return 2 * (ptr->mlevel - 6);
-    } else if (m_lev == 0) {
+    } else if (!m_lev) {
         return rnd(4);
     } else {
         int hpmax = d(m_lev, hd_size(ptr));
@@ -1469,6 +1469,13 @@ int mndx;
     if (ptr->mlevel > 49) {
         /* Second half of the "special" fixed hp monster code: adjust level */
         mon->m_lev = mon->mhp / 4; /* approximation */
+    }
+        /* if d(X,8) rolled a 1 all X times, give a boost;
+       most beneficial for level 0 and level 1 monsters, making mhpmax
+       and starting mhp always be at least 2 */
+    if (mon->mhpmax == 1) {
+        mon->mhpmax += 1;
+        mon->mhp = mon->mhpmax;
     }
 }
 

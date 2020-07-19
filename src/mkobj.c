@@ -884,7 +884,8 @@ boolean artif;
                                  + (otmp->otyp - GLOB_OF_GRAY_OOZE);
             } else {
                 if (otmp->otyp != CORPSE && otmp->otyp != MEAT_RING
-                    && otmp->otyp != KELP_FROND && !rn2(6)) {
+                    && otmp->otyp != PUMPKIN && otmp->otyp != KELP_FROND
+                    && !rn2(6)) {
                     otmp->quan = 2L;
                 }
             }
@@ -2923,7 +2924,7 @@ struct obj *obj;
            be wielded/alt-wielded/quivered, so tests on those are limited */
         what = 0;
         if (owornmask & W_ARMOR) {
-            if (obj->oclass != ARMOR_CLASS)
+            if (obj->oclass != ARMOR_CLASS && obj->otyp != PUMPKIN)
                 what = "armor";
             /* 3.6: dragon scale mail reverts to dragon scales when
                becoming embedded in poly'd hero's skin */

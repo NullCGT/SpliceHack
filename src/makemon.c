@@ -1451,8 +1451,6 @@ uchar m_lev; /* not just a struct mon because polyself code also uses this */
         int hpmax = d(m_lev, hd_size(ptr));
         if (is_home_elemental(ptr))
             hpmax *= 2;
-        if (hpmax < (int) ptr->mlevel + 1)
-            hpmax = (int) ptr->mlevel + 1;
         return hpmax;
     }
 }

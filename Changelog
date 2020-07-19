@@ -221,6 +221,8 @@ Bug Fixes
 - Fix edge case in blood magic (Entrez)
 - Fix selfpoly'd AD_RBRE (Entrez)
 - Fix monster and player reflection edge cases and messages (Entrez)
+- Fixed conflict taking effect regardless of LOS, but only when monsters are using
+  throwing weapons.
 
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.

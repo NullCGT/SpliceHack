@@ -50,7 +50,8 @@ register struct attack *mattk;
             noise = "some noises";
             break;
         }
-        You_hear("%s%s.", noise, farq ? " in the distance" : "");
+        if (noise)
+            You_hear("%s%s.", noise, farq ? " in the distance" : "");
     }
 }
 

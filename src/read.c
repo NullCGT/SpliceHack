@@ -483,17 +483,6 @@ doread()
         if (scroll->otyp != SCR_BLANK_PAPER  && !scroll->oartifact)
             useup(scroll);
     }
-    /* */
-    if (Role_if(PM_CARTOMANCER) && scroll->otyp != SCR_TIME) {
-        struct monst *mtmp, *mtmp2;
-        for (mtmp = fmon; mtmp; mtmp = mtmp2) {
-            mtmp2 = mtmp->nmon;
-            if (DEADMONSTER(mtmp) || mtmp->mpeaceful || mtmp->mtame
-                || distu(mtmp->mx, mtmp->my) > 16)
-                continue;
-            card_response(mtmp);
-        }
-    }
     return 1;
 }
 
@@ -1502,12 +1491,13 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     case SPE_CREATE_MONSTER: {
         register struct monst *mtmp;
         if (sobj->corpsenm != NON_PM) {
-            mtmp = makemon(&mons[sobj->corpsenm], u.ux, u.uy, MM_EDOG | MM_NOERID | NO_MINVENT);
+            mtmp = makemon(&mons[sobj->corpsenm], u.ux, u.uy, 
+                MM_EDOG | MM_NOERID | NO_MINVENT | MM_NOCOUNTBIRTH);
             if (!mtmp)
                 break;
             if (!scursed)
                 initedog(mtmp);
-            mtmp->mfading = Role_if(PM_CARTOMANCER) ? rn1(70 + 4 * u.ulevel, 30) : rn1(20, 30);
+            mtmp->mfading = Role_if(PM_CARTOMANCER) ? rn1(15, 4 * u.ulevel) : rn1(10, 5);
             g.known = TRUE;
             break;
         }

@@ -191,6 +191,12 @@ Race Changes
 Role Changes
 - Dragonmaster
   - All dragonmasters start with basic skill in riding.
+- Cartomancer
+  - Removed the card response feature, since it incentivized players not to use scrolls.
+  - Removed the chance not to use up scrolls when reading them.
+  - Any monster killed by a cartomancer has a 50% chance of dropping as a spell card.
+  - Fading monsters summoned by scrolls remain for a much shorter period of time.
+  - Updated summon card naming.
 
 Miscelaneous
 - Kicking a tree has a chance of spawning a serval or (very rarely) a jaguar.
@@ -223,6 +229,9 @@ Bug Fixes
 - Fix monster and player reflection edge cases and messages (Entrez)
 - Fixed conflict taking effect regardless of LOS, but only when monsters are using
   throwing weapons.
+- Fixed segfault caused by vanishing monsters.
+- Prevented cartomancer grinding via killing fading monsters repeatedly.
+- Do not count births of fading monsters.
 
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.

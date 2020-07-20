@@ -1743,7 +1743,6 @@ E boolean FDECL(hits_bars, (struct obj **, int, int, int, int, int, int));
 E boolean FDECL(find_defensive, (struct monst *, BOOLEAN_P));
 E int FDECL(use_defensive, (struct monst *));
 E int FDECL(rnd_defensive_item, (struct monst *));
-E void FDECL(card_response, (struct monst *));
 E boolean FDECL(find_offensive, (struct monst *));
 #ifdef USE_TRAMPOLI
 E int FDECL(mbhitm, (struct monst *, struct obj *));

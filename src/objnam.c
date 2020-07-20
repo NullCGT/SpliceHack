@@ -701,7 +701,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         if (!dknown)
             break;
         if (nn && obj->corpsenm != NON_PM) {
-            Strcat(buf, " of summon ");
+            Strcat(buf, " - ");
             Strcat(buf, mons[obj->corpsenm].mname);
         } else if (nn) {
             Strcat(buf, " of ");
@@ -4699,7 +4699,9 @@ Cartomancer_rarity(otyp)
 int otyp;
 {
     int price = objects[otyp].oc_cost;
-    if (price < 60) {
+    if (otyp == SCR_CREATE_MONSTER) {
+        return "monster card";
+    } else if (price < 60) {
         return "common spell card";
     } else if (price < 100) {
         return "uncommon spell card";

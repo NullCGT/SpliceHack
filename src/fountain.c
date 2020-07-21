@@ -709,10 +709,9 @@ int x, y;
 {
     if (cansee(x, y) || (x == u.ux && y == u.uy))
         pline_The("furnace breaks apart and spills its contents!");
-    g.level.flags.nfurnaces--;
-    levl[x][y].doormask = 0;
-    levl[x][y].typ = LAVAPOOL;
+    levl[x][y].typ = LAVAPOOL, levl[x][y].flags = 0;
     newsym(x, y);
+    g.level.flags.nfurnaces--;
 }
 
 void
@@ -721,9 +720,9 @@ int x, y;
 {
     if (cansee(x, y) || (x == u.ux && y == u.uy))
         pline_The("furnace rumbles, then explodes into smithereens!");
-    g.level.flags.nfurnaces--;
-    levl[x][y].doormask = 0;
+    levl[x][y].typ = ROOM, levl[x][y].flags = 0;
     newsym(x, y);
+    g.level.flags.nfurnaces--;
     explode(u.ux, u.uy, 11, rnd(30), TOOL_CLASS, EXPL_FIERY);
 }
 

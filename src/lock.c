@@ -210,10 +210,45 @@ boolean destroyit;
     }
 }
 
+/* Relative durability (likelihood of withstanding damage intact) of various
+ * materials. */
+static
+const int matdur[] = {
+     0,
+     1,  // LIQUID
+     1,  // WAX
+     1,  // VEGGY
+     3,  // FLESH
+     1,  // PAPER
+     2,  // CLOTH
+     3,  // LEATHER
+     4,  // WOOD
+     3,  // BONE
+     9,  // DRAGON_HIDE
+     7,  // IRON - de facto baseline for metal armor
+     7,  // METAL
+     5,  // COPPER
+     5,  // SILVER
+     4,  // GOLD
+     6,  // PLATINUM
+     8,  // ADAMANTINE
+     7,  // COLD IRON
+     8,  // MITHRIL
+     3,  // PLASTIC
+     2,  // GLASS
+     5,  // GEMSTONE
+     7,  // SHADOW
+     6,  // MINERAL
+};
+
 /* try to force a locked chest */
 static int
 forcelock(VOID_ARGS)
 {
+    float lockdur, lockdur_ratio;
+    lockdur = matdur[g.xlock.box->material];
+    lockdur_ratio = lockdur / matdur[objects[g.xlock.box->otyp].oc_material];
+
     if ((g.xlock.box->ox != u.ux) || (g.xlock.box->oy != u.uy))
         return ((g.xlock.usedtime = 0)); /* you or it moved */
 
@@ -225,11 +260,12 @@ forcelock(VOID_ARGS)
     }
 
     if (g.xlock.picktyp) { /* blade */
-        if (rn2(1000 - (int) uwep->spe) > (992 - greatest_erosion(uwep) * 10)
+        if ((rn2(1000 - (int) uwep->spe) * ((float) lockdur / matdur[uwep->material]))
+                > (992 - greatest_erosion(uwep) * 10)
             && !uwep->cursed && !obj_resists(uwep, 0, 99)) {
-            /* for a +0 weapon, probability that it survives an unsuccessful
-             * attempt to force the lock is (.992)^50 = .67
-             */
+            /* weapon breakage chance is based on the comparative material
+             * durabilities of the lockbox & the weapon, the weapon's
+             * enchantment, and the weapon's erosion level */
             pline("%sour %s broke!", (uwep->quan > 1L) ? "One of y" : "Y",
                   xname(uwep));
             useup(uwep);
@@ -245,10 +281,16 @@ forcelock(VOID_ARGS)
 
     You("succeed in forcing the lock.");
     exercise(g.xlock.picktyp ? A_DEX : A_STR, TRUE);
+    /* chance of box breakage is based on the durability of the container
+     * material vs the base material for that container type -- stronger
+     * materials like iron will have a better chance of withstanding a blow,
+     * while less durable materials like glass or plastic will have a lower
+     * chance of survival. */
+    breakchestlock(g.xlock.box, (boolean) (!g.xlock.picktyp
+                && !rn2((int) 3 * lockdur_ratio)));
     /* breakchestlock() might destroy g.xlock.box; if so, g.xlock context will
        be cleared (delobj -> obfree -> maybe_reset_pick); but it might not,
        so explicitly clear that manually */
-    breakchestlock(g.xlock.box, (boolean) (!g.xlock.picktyp && !rn2(3)));
     reset_pick(); /* lock-picking context is no longer valid */
 
     return 0;

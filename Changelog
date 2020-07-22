@@ -48,6 +48,11 @@ Shopkeepers
 - Altered the appraisal service, since all weapon stats can be looked
   up in game.
 
+Visual
+- Tiled mode now includes an indicator to denote if a monster is part of a rider/steed
+  pair.
+- Added a new splash screen to the Windows build.
+
 QOL
 - Show the carrying capacity of a player and the number of slots in their
   inventory. This is originally sourced from FIQHack, then updated to 3.6

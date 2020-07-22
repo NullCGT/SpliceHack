@@ -101,7 +101,7 @@ CFLAGS += -DNOTTYGRAPHICS
 endif	# !WANT_WIN_TTY
 
 ifdef WANT_WIN_X11
-VARDATND0 = x11tiles NetHack.ad pet_mark.xbm pilemark.xbm
+VARDATND0 = x11tiles NetHack.ad pet_mark.xbm riding_mark.xbm pilemark.xbm
 POSTINSTALL+= bdftopcf win/X11/nh10.bdf > $(HACKDIR)/nh10.pcf; ( cd $(HACKDIR); mkfontdir -x .lev );
 CFLAGS += -DX11_GRAPHICS
 # separate from CFLAGS so that we don't pass it to every file
@@ -127,7 +127,7 @@ WINLIB += $(shell PKG_CONFIG_PATH=$(QTDIR)/lib/pkgconfig pkg-config Qt5Gui Qt5Wi
 LINK=$(CXX)
 WINSRC += $(WINQTSRC)
 WINOBJ0 += $(WINQTOBJ)
-VARDATND0 = nhtiles.bmp rip.xpm nhsplash.xpm pet_mark.xbm pilemark.xbm
+VARDATND0 = nhtiles.bmp rip.xpm nhsplash.xpm pet_mark.xbm riding_mark.xbm pilemark.xbm
 MOC = moc
 
 # XXX if /Developer/qt exists and QTDIR not set, use that

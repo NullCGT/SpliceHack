@@ -283,6 +283,8 @@ typedef struct {
     int extcmd_height_delta;  /* bottom margin for extended command menu */
     String pet_mark_bitmap;   /* X11 bitmap file used to mark pets */
     Pixel pet_mark_color;     /* color of pet mark */
+    String riding_mark_bitmap; /* X11 bitmap file used to mark rider pairs */
+    Pixel riding_mark_color;  /* color of riding mark */
     String pilemark_bitmap;   /* X11 bitmap file used to mark item piles */
     Pixel pilemark_color;     /* color of item pile mark */
 #ifdef GRAPHIC_TOMBSTONE

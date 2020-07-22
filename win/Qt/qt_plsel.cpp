@@ -39,8 +39,8 @@ namespace nethack_qt_ {
 void centerOnMain( QWidget* w );
 // end temporary
 
-static const char nh_attribution[] = "<center><big>NetHack %1</big>"
-	"<br><small>by the NetHack DevTeam</small></center>";
+static const char nh_attribution[] = "<center><big>SpliceHack %1</big>"
+	"<br><small>by Antigulp</small></center>";
 
 class NhPSListViewItem : public QTableWidgetItem {
 public:

@@ -491,11 +491,11 @@ NetHackQtMainWindow::NetHackQtMainWindow(NetHackQtKeyBuffer& ks) :
     addToolBar(toolbar);
     menubar = menuBar();
 
-    QCoreApplication::setOrganizationName("The NetHack DevTeam");
-    QCoreApplication::setOrganizationDomain("nethack.org");
-    QCoreApplication::setApplicationName("NetHack");
+    QCoreApplication::setOrganizationName("Antigulp");
+    QCoreApplication::setOrganizationDomain("https://nethackwiki.com/wiki/SpliceHack");
+    QCoreApplication::setApplicationName("SpliceHack");
 
-    setWindowTitle("Qt NetHack");
+    setWindowTitle("Qt SpliceHack");
     if ( qt_compact_mode )
 	setWindowIcon(QIcon(QPixmap(nh_icon_small)));
     else
@@ -1031,8 +1031,8 @@ void NetHackQtMainWindow::keyPressEvent(QKeyEvent* event)
 void NetHackQtMainWindow::closeEvent(QCloseEvent* e)
 {
     if ( g.program_state.something_worth_saving ) {
-	switch ( QMessageBox::information( this, "NetHack",
-	    "This will end your NetHack session",
+	switch ( QMessageBox::information( this, "SpliceHack",
+	    "This will end your SpliceHack session",
 	    "&Save", "&Cancel", 0, 1 ) )
 	{
 	    case 0:

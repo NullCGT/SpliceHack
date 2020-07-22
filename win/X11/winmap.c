@@ -190,6 +190,7 @@ struct tile_annotation {
 };
 
 static struct tile_annotation pet_annotation;
+static struct tile_annotation riding_annotation;
 static struct tile_annotation pile_annotation;
 
 static void
@@ -251,6 +252,8 @@ post_process_tiles()
 
     init_annotation(&pet_annotation, appResources.pet_mark_bitmap,
                     appResources.pet_mark_color);
+    init_annotation(&riding_annotation, appResources.riding_mark_bitmap,
+                    appResources.riding_mark_color);
     init_annotation(&pile_annotation, appResources.pilemark_bitmap,
                     appResources.pilemark_color);
 }
@@ -1312,6 +1315,21 @@ boolean inverted;
                     XCopyPlane(dpy, pet_annotation.bitmap, XtWindow(wp->w),
                                tile_map->black_gc, 0, 0, pet_annotation.width,
                                pet_annotation.height, dest_x, dest_y, 1);
+                    XSetClipOrigin(dpy, tile_map->black_gc, 0, 0);
+                    XSetClipMask(dpy, tile_map->black_gc, None);
+                    XSetForeground(dpy, tile_map->black_gc,
+                                   BlackPixelOfScreen(screen));
+                }
+                if ((tile_map->glyphs[row][cur_col].special & MG_RIDDEN)) {
+                    /* draw riding annotation (a letter R) */
+                    XSetForeground(dpy, tile_map->black_gc,
+                                   riding_annotation.foreground);
+                    XSetClipOrigin(dpy, tile_map->black_gc, dest_x, dest_y);
+                    XSetClipMask(dpy, tile_map->black_gc,
+                                 riding_annotation.bitmap);
+                    XCopyPlane(dpy, riding_annotation.bitmap, XtWindow(wp->w),
+                               tile_map->black_gc, 0, 0, riding_annotation.width,
+                               riding_annotation.height, dest_x, dest_y, 1);
                     XSetClipOrigin(dpy, tile_map->black_gc, 0, 0);
                     XSetClipMask(dpy, tile_map->black_gc, None);
                     XSetForeground(dpy, tile_map->black_gc,

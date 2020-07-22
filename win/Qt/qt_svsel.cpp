@@ -36,7 +36,7 @@ NetHackQtSavedGameSelector::NetHackQtSavedGameSelector(const char** saved) :
     QLabel* logo = new QLabel(this); vbl->addWidget(logo);
     logo->setAlignment(Qt::AlignCenter);
     logo->setPixmap(QPixmap("nhsplash.xpm"));
-    QLabel* attr = new QLabel("by the NetHack DevTeam",this);
+    QLabel* attr = new QLabel("by Antigulp",this);
     attr->setAlignment(Qt::AlignCenter);
     vbl->addWidget(attr);
     vbl->addStretch(2);

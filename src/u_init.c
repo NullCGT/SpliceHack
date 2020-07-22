@@ -255,6 +255,8 @@ static struct trobj Wishing[] = { { WAN_WISHING, 3, WAND_CLASS, 1, 0 },
                                   { 0, 0, 0, 0, 0 } };
 static struct trobj Money[] = { { GOLD_PIECE, 0, COIN_CLASS, 1, 0 },
                                 { 0, 0, 0, 0, 0 } };
+static struct trobj Booze[] = { { POT_BOOZE, 0, POTION_CLASS, 1, 0 },
+				{0, 0, 0, 0, 0} };
 
 /* race-based substitutions for initial inventory;
    the weaker cloak for elven rangers is intentional--they shoot better */
@@ -289,8 +291,9 @@ static struct inv_sub {
     { PM_DWARF, SHORT_SWORD, DWARVISH_SHORT_SWORD },
     { PM_DWARF, HELMET, DWARVISH_HELM },
     /* { PM_DWARF, SMALL_SHIELD, DWARVISH_ROUNDSHIELD }, */
-    /* { PM_DWARF, PICK_AXE, DWARVISH_MATTOCK }, */
+    { PM_DWARF, PICK_AXE, DWARVISH_MATTOCK },
     { PM_DWARF, LEMBAS_WAFER, CRAM_RATION },
+    { PM_DWARF, POT_FRUIT_JUICE, POT_BOOZE },
     { PM_GNOME, BOW, CROSSBOW },
     { PM_GNOME, ARROW, CROSSBOW_BOLT },
     { PM_DROW, DAGGER, DARK_ELVEN_DAGGER },
@@ -1111,6 +1114,8 @@ u_init()
         knows_object(DWARVISH_RING_MAIL);
         knows_object(DWARVISH_CLOAK);
         knows_object(DWARVISH_ROUNDSHIELD);
+        /* Dwarves begin the game with booze */
+        ini_inv(Booze);
         break;
 
     case PM_CHANGELING:

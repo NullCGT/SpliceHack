@@ -706,6 +706,10 @@ struct permonst * pm;
     }
 #define MONPUTSTR(str) putstr(datawin, ATR_NONE, str)
 
+    Sprintf(buf, "Monster lookup for \"%s\":", pm->mname);
+    putstr(datawin, ATR_BOLD, buf);
+    MONPUTSTR("");
+
     /* Misc */
     Sprintf(buf, "%s", mname);
     putstr(datawin, ATR_INVERSE, mname);
@@ -943,6 +947,10 @@ add_obj_info(winid datawin, short otyp)
         if (*buf) { Strcat(buf, ", "); }    \
         Strcat(buf, str);                   \
     }
+
+    Sprintf(buf, "Object lookup for \"%s\":", safe_typename(otyp));
+    putstr(datawin, ATR_BOLD, buf);
+    OBJPUTSTR("");
 
     /* Misc */
     Sprintf(buf, "%s", oc.oc_name_known ? OBJ_NAME(oc) : OBJ_DESCR(oc));
@@ -1335,10 +1343,11 @@ char *supplemental_name;
 {
     dlb *fp;
     char buf[BUFSZ], newstr[BUFSZ], givenname[BUFSZ];
-    char *ep, *dbase_str;
+    char *ep, *dbase_str, *dbase_str_with_material;
     unsigned long txt_offset = 0L;
     winid datawin = WIN_ERR;
-    short otyp;
+    short otyp, mat;
+    int i;
 
     fp = dlb_fopen(DATAFILE, "r");
     if (!fp) {
@@ -1429,6 +1438,7 @@ char *supplemental_name;
         if (*dbase_str == ' ')
             ++dbase_str;
     }
+
     /* "towel", "wet towel", and "moist towel" share one data.base entry;
        for "wet towel", we keep prefix so that the prompt will ask about
        "wet towel"; for "moist towel", we also want to ask about "wet towel".
@@ -1437,6 +1447,28 @@ char *supplemental_name;
     if (!strncmp(dbase_str, "moist towel", 11))
         (void) strncpy(dbase_str += 2, "wet", 3); /* skip "mo" replace "ist" */
 
+    /* Remove material, if it exists, but store the original value in
+     * dbase_str_with_material. It should be cut out of dbase_str as a prefix
+     * in order for the alt handling below to function properly.
+     * Note that this assumes that material is always the last thing that needs
+     * to be stripped out (e.g. it will not strip things out if dbase_str is
+     * "silver +0 sword").
+     * This is clunky in how it adds a third possibility that needs to be
+     * pmatch()'ed; a better future refactor of this code would be to collect an
+     * arbitrary number of possible strings as needed, then iterate through
+     * them. */
+    dbase_str_with_material = dbase_str;
+    for (mat = 1; mat < NUM_MATERIAL_TYPES; ++mat) {
+        unsigned int len = strlen(materialnm[mat]);
+        /* check for e.g. "gold " without constructing it as a string */
+        if (!strncmp(dbase_str, materialnm[mat], len) && strlen(dbase_str) > len
+            && dbase_str[len] == ' ') {
+            dbase_str_with_material = dbase_str;
+            dbase_str += len + 1;
+            break;
+        }
+    }
+
     /* Make sure the name is non-empty. */
     if (*dbase_str) {
         long pass1offset = -1L;
@@ -1444,6 +1476,9 @@ char *supplemental_name;
         boolean yes_to_moreinfo, found_in_file, pass1found_in_file,
                 skipping_entry;
         char *sp, *ap, *alt = 0; /* alternate description */
+        char *encycl_matched = 0; /* which version of the string matched
+                                     (for later printing) */
+        char matcher[BUFSZ];      /* the string it matched against */
 
         /* adjust the input to remove "named " and "called " */
         if ((ep = strstri(dbase_str, " named ")) != 0) {
@@ -1514,13 +1549,25 @@ char *supplemental_name;
                     /* if we match a key that begins with "~", skip
                        this entry */
                     chk_skip = (*buf == '~') ? 1 : 0;
-                    if ((pass == 0 && pmatch(&buf[chk_skip], dbase_str))
-                        || (pass == 1 && alt && pmatch(&buf[chk_skip], alt))) {
+                    encycl_matched = (char *) 0;
+                    if (pass == 0) {
+                        if (pmatch(&buf[chk_skip], dbase_str_with_material)) {
+                            encycl_matched = dbase_str_with_material;
+                        }
+                        else if (pmatch(&buf[chk_skip], dbase_str)) {
+                            encycl_matched = dbase_str;
+                        }
+                    }
+                    else if (pass == 1 && alt && pmatch(&buf[chk_skip], alt)) {
+                        encycl_matched = alt;
+                    }
+                    if (encycl_matched) {
                         if (chk_skip) {
                             skipping_entry = TRUE;
                             continue;
                         } else {
                             found_in_file = TRUE;
+                            Strcpy(matcher, buf);
                             if (pass == 1)
                                 pass1found_in_file = TRUE;
                             break;
@@ -1532,7 +1579,6 @@ char *supplemental_name;
             /* database entry should exist, now find where it is */
             long entry_offset, fseekoffset;
             int entry_count;
-            int i;
             if (found_in_file) {
                 /* skip over other possible matches for the info */
                 do {
@@ -1550,16 +1596,21 @@ char *supplemental_name;
                 }
             }
 
-            /* monster lookup: try to parse as a monster */
+            /* monster lookup: try to parse as a monster
+             * use dbase_str_with_material here; if it differs from
+             * dbase_str, then it's likely that dbase_str stripped off the
+             * "iron" from "iron golem" or something. */
             pm = NULL;
-            int mndx = name_to_mon(dbase_str);
-            if (mndx != NON_PM) {
+            int mndx = name_to_mon(dbase_str_with_material);
+            if (mndx != NON_PM)
                 pm = &mons[mndx];
+
+            /* object lookup: try to parse as an object, and try the material
+             * version of the string first */
+            otyp = name_to_otyp(dbase_str_with_material);
+            if (otyp == STRANGE_OBJECT) {
+                otyp = name_to_otyp(dbase_str);
             }
-
-            /* object lookup: try to parse as an object */
-            otyp = name_to_otyp(dbase_str);
-
 
             /* prompt for more info (if using whatis to navigate the map) */
             yes_to_moreinfo = FALSE;
@@ -1606,12 +1657,20 @@ char *supplemental_name;
 
                     /* encyclopedia entry */
                     if (found_in_file) {
+                        char titlebuf[BUFSZ];
                         if (dlb_fseek(fp, (long) txt_offset + entry_offset,
                                         SEEK_SET) < 0) {
                             pline("? Seek error on 'data' file!");
                             (void) dlb_fclose(fp);
                             return;
                         }
+
+                        Sprintf(titlebuf,
+                                "Encyclopedia entry for \"%s\" (matched to \"%s\"):",
+                                encycl_matched, matcher);
+                        putstr(datawin, ATR_BOLD, titlebuf);
+                        putstr(datawin, ATR_NONE, "");
+
                         for (i = 0; i < entry_count; i++) {
                             /* room for 1-tab or 8-space prefix + BUFSZ-1 + \0 */
                             char tabbuf[BUFSZ + 8], *tp;
@@ -1654,7 +1713,7 @@ char *supplemental_name;
 
  bad_data_file:
     impossible("'data' file in wrong format or corrupted");
- checkfile_done:
+    checkfile_done:
     if (datawin != WIN_ERR)
         destroy_nhwindow(datawin);
     (void) dlb_fclose(fp);

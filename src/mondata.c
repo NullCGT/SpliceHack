@@ -320,6 +320,12 @@ int material;
     /* extra case: shapeshifted vampires still hate silver */
     if (material == SILVER && is_vampshifter(mon))
         return TRUE;
+
+    /* extra extra case: lycanthrope player (monster lycanthropes all fall under
+     * hates_material, and non-lycanthropes can't currently be infected) */
+    if (mon == &g.youmonst && material == SILVER && u.ulycn >= LOW_PM)
+        return TRUE;
+
     return FALSE;
 }
 
@@ -339,6 +345,7 @@ int material;
         return (is_were(ptr)
                 || is_vampire(ptr)
                 || is_demon(ptr) || ptr == &mons[PM_SHADE]
+                || (Race_if(PM_INFERNAL) && !Upolyd)
                 || (ptr->mlet == S_IMP));
     }
     else if (material == IRON || material == COLD_IRON) {
@@ -1339,6 +1346,45 @@ struct permonst *mdat;
         || mdat->mlet == S_LIGHT)
         return FALSE;
     return TRUE;
+}
+
+/* Return the material a monster is composed of.
+ * Don't get too specific; most monsters should return 0 from here. We're only
+ * interested if it's something unusual. */
+int
+monmaterial(mndx)
+int mndx;
+{
+    switch (mndx) {
+    case PM_GARGOYLE:
+    case PM_WINGED_GARGOYLE:
+    case PM_EARTH_ELEMENTAL:
+        return MINERAL;
+    case PM_SKELETON:
+        return BONE;
+    case PM_PAPER_GOLEM:
+        return PAPER;
+    case PM_GOLD_GOLEM:
+        return GOLD;
+    case PM_LEATHER_GOLEM:
+        return LEATHER;
+    case PM_WOOD_GOLEM:
+        return WOOD;
+    case PM_CLAY_GOLEM:
+    case PM_STONE_GOLEM:
+    case PM_RUBY_GOLEM:
+    case PM_SAPPHIRE_GOLEM:
+    case PM_CRYSTAL_GOLEM:
+        return MINERAL;
+    case PM_GLASS_GOLEM:
+        return GLASS;
+    case PM_IRON_GOLEM:
+        return IRON;
+    case PM_SILVER_GOLEM:
+        return SILVER;
+    default:
+        return 0;
+    }
 }
 
 /*mondata.c*/

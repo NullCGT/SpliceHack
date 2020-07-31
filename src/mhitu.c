@@ -1195,6 +1195,7 @@ register struct attack *mattk;
             if (mattk->aatyp == AT_WEAP && otmp) {
                 struct obj *marmg;
                 int tmp;
+                int wepmaterial = otmp->material;
 
                 if (otmp->otyp == CORPSE
                     && touch_petrifies(&mons[otmp->corpsenm])) {
@@ -1220,14 +1221,10 @@ register struct attack *mattk;
 
                 if (!dmg)
                     break;
-                if (Hate_material(otmp->material)) {
-                    if (otmp->material == SILVER)
-                        pline_The("silver sears your flesh!");
-                    else
-                        You("flinch at the touch of %s!",
-                            materialnm[otmp->material]);
+                if (Hate_material(wepmaterial)) {
+                    /* dmgval() already added extra damage */
+                    searmsg(mtmp, &g.youmonst, otmp, TRUE);
                     exercise(A_CON, FALSE);
-                    dmg += rnd(sear_damage(otmp->material));
                 }
                 /* this redundancy necessary because you have
                    to take the damage _before_ being cloned;
@@ -1256,14 +1253,6 @@ register struct attack *mattk;
             } else if (mattk->aatyp != AT_TUCH || dmg != 0
                        || mtmp != u.ustuck)
                 hitmsg(mtmp, mattk);
-        }
-        if (is_silver(mtmp->data) && Hate_material(SILVER)) {
-            struct obj *otmp = mon_currwep;
-            if (!otmp) {
-                pline_The("silver sears your flesh!");
-                exercise(A_CON, FALSE);
-                dmg += rnd(20);
-            }
         }
         if (mattk->adtyp == AD_CLOB && dmg != 0 && !rn2(5)) {
             pline("%s knocks you back with an awesome blow!", Monnam(mtmp));
@@ -2209,41 +2198,7 @@ register struct attack *mattk;
         dmg = 0;
         break;
     }
-    /* handle silver gloves for touch attacks */
-    switch(mattk->aatyp) {
-    case AT_WEAP:
-        if (mon_currwep)
-            break;
-        /* FALLTHRU */
-    case AT_CLAW:
-    case AT_TUCH:
-    case AT_HUGS:
-        {
-            struct obj *marmg = which_armor(mtmp, W_ARMG);
-            if (marmg && Hate_material(marmg->material)) {
-                /* assume that marmg is plural */
-                if (marmg->material == SILVER)
-                    pline("%s sear your flesh!", upstart(yname(marmg)));
-                else
-                    You("flinch at the touch of %s!", yname(marmg));
-                exercise(A_CON, FALSE);
-                dmg += rnd(sear_damage(marmg->material));
-            }
-        }
-        break;
-    case AT_KICK:
-        {
-            struct obj * marmf = which_armor(mtmp, W_ARMF);
-            if (marmf && Hate_material(marmf->material)) {
-                if (marmf->material == SILVER)
-                    pline("%s sear your flesh!", upstart(yname(marmf)));
-                else
-                    You("flinch at the touch of %s!", yname(marmf));
-                exercise(A_CON, FALSE);
-                dmg += rnd(sear_damage(marmf->material));
-            }
-        }
-    }
+
     if ((Upolyd ? u.mh : u.uhp) < 1) {
         /* already dead? call rehumanize() or done_in_by() as appropriate */
         mdamageu(mtmp, 1);
@@ -2257,6 +2212,16 @@ register struct attack *mattk;
         dmg -= rnd(-u.uac);
         if (dmg < 1)
             dmg = 1;
+    }
+
+    /* handle body/equipment made out of harmful materials for touch attacks */
+    /* should come after AC damage reduction */
+    long armask = attack_contact_slots(mtmp, mattk->aatyp);
+    struct obj* hated_obj;
+    dmg += special_dmgval(mtmp, &g.youmonst, armask, &hated_obj);
+    if (hated_obj) {
+        searmsg(mtmp, &g.youmonst, hated_obj, FALSE);
+        exercise(A_CON, FALSE);
     }
 
     if (dmg) {
@@ -3865,6 +3830,38 @@ cloneu()
     }
     g.context.botl = 1;
     return mon;
+}
+
+/* Given an attacking monster and the attack type it's currently attacking with,
+ * return a bitmask of W_ARM* values representing the gear slots that might be
+ * coming in contact with the defender.
+ * Intended to return worn items. Will not return W_WEP.
+ * Does not check to see whether slots are ineligible due to being covered by
+ * some other piece of gear. Usually special_dmgval() will handle that.
+ */
+long
+attack_contact_slots(magr, aatyp)
+struct monst *magr;
+int aatyp;
+{
+    struct obj* mwep = (magr == &g.youmonst ? uwep : magr->mw);
+    if (aatyp == AT_CLAW || aatyp == AT_TUCH || (aatyp == AT_WEAP && !mwep)
+        || (aatyp == AT_HUGS && hug_throttles(magr->data))) {
+        /* attack with hands; gloves and rings might touch */
+        return W_ARMG | W_RINGL | W_RINGR;
+    }
+    if (aatyp == AT_HUGS && !hug_throttles(magr->data)) {
+        /* bear hug which is not a strangling attack; gloves and rings might
+         * touch, but also all torso slots */
+        return W_ARMG | W_RINGL | W_RINGR | W_ARMC | W_ARM | W_ARMU;
+    }
+    if (aatyp == AT_KICK) {
+        return W_ARMF;
+    }
+    if (aatyp == AT_BUTT) {
+        return W_ARMH;
+    }
+    return 0;
 }
 
 /*mhitu.c*/

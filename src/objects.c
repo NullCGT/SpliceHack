@@ -860,8 +860,8 @@ OBJECT(OBJ("phial", None),
 OBJECT(OBJ("Candelabrum of Invocation", "candelabrum"),
        BITS(0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, P_NONE, GOLD),
        0, TOOL_CLASS, 0, 0, 10, 5000, 0, 0, 0, 0, 200, HI_GOLD),
-OBJECT(OBJ("Bell of Opening", "engraved platinum bell"),
-       BITS(0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, P_NONE, PLATINUM),
+OBJECT(OBJ("Bell of Opening", "engraved silver bell"),
+       BITS(0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, P_NONE, SILVER),
        0, TOOL_CLASS, 0, 0, 10, 5000, 0, 0, 0, 0, 50, HI_METAL),
 #undef TOOL
 #undef WEPTOOL

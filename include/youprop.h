@@ -405,12 +405,7 @@
 #define Unaware (g.multi < 0 && (unconscious() || is_fainted()))
 
 /* Whether the hero is in a form that dislikes a certain material */
-#define Hate_material(material) \
-    (hates_material(g.youmonst.data, material) \
-     || (material == SILVER && u.ulycn >= LOW_PM) \
-     || (material == SILVER && !Upolyd && Race_if(PM_INFERNAL)) \
-     || ((material == IRON || material == COLD_IRON) && !Upolyd \
-          && (Race_if(PM_ELF) || Race_if(PM_DROW) || Race_if(PM_CHANGELING))))
+#define Hate_material(material) mon_hates_material(&g.youmonst, material)
 
 /* _Hitchhikers_Guide_to_the_Galaxy_ on uses for 'towel': "wrap it round
    your head to ward off noxious fumes" [we require it to be damp or wet] */

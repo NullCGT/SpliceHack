@@ -694,29 +694,6 @@ int dieroll;
             }
             if (*buf)
                 pline("%s %s.", buf, mon_nam_too(mdef, magr));
-
-            if (weaponhit && mwep && mon_hates_material(mdef, mwep->material)) {
-                char *mdef_name = mon_nam_too(mdef, magr);
-
-                /* note: mon_nam_too returns a modifiable buffer; so
-                   does s_suffix, but it returns a single static buffer
-                   and we might be calling it twice for this message */
-                Strcpy(magr_name, s_suffix(magr_name));
-                if (!noncorporeal(mdef->data) && !amorphous(mdef->data)) {
-                    if (mdef != magr) {
-                        mdef_name = s_suffix(mdef_name);
-                    } else {
-                        (void) strsubst(mdef_name, "himself", "his own");
-                        (void) strsubst(mdef_name, "herself", "her own");
-                        (void) strsubst(mdef_name, "itself", "its own");
-                        (void) strsubst(mdef_name, "themself", "their own");
-                    }
-                    Strcat(mdef_name, " flesh");
-                }
-
-                pline("%s %s sears %s!", magr_name, /*s_suffix(magr_name), */
-                      simpleonames(mwep), mdef_name);
-            }
         }
     } else
         noises(magr, mattk);
@@ -1010,6 +987,14 @@ int dieroll;
     armpro = magic_negation(mdef);
     cancelled = magr->mcan || !(rn2(10) >= 3 * armpro);
 
+    /* check for special damage sources (e.g. hated material) */
+    long armask = attack_contact_slots(magr, mattk->aatyp);
+    struct obj* hated_obj;
+    tmp += special_dmgval(magr, mdef, armask, &hated_obj);
+    if (hated_obj) {
+        searmsg(magr, mdef, hated_obj, FALSE);
+    }
+
     switch (mattk->adtyp) {
     case AD_DGST:
         /* eating a Rider or its corpse is fatal */
@@ -1128,6 +1113,10 @@ int dieroll;
                 if (DEADMONSTER(mdef))
                     return (MM_DEF_DIED
                             | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
+            }
+            if (mon_hates_material(mdef, mwep->material)) {
+                /* extra damage already applied by dmgval() */
+                searmsg(magr, mdef, mwep, TRUE);
             }
             if (tmp)
                 rustm(mdef, mwep);

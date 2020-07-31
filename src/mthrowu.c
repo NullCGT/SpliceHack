@@ -104,14 +104,10 @@ const char *name; /* if null, then format `*objp' */
             *objp = obj = 0; /* potionhit() uses up the potion */
         } else {
             if (obj && Hate_material(obj->material)) {
-                /* extra damage already applied by dmgval() */
-                if (obj->material == SILVER) {
-                    pline_The("silver sears your flesh!");
-                }
-                else {
-                    You("flinch at the touch of %s!",
-                        materialnm[obj->material]);
-                }
+                /* extra damage already applied by dmgval();
+                 * dmgval is not called in this function but we assume that the
+                 * caller used it when constructing the dmg parameter */
+                searmsg((struct monst *) 0, &g.youmonst, obj, TRUE);
                 exercise(A_CON, FALSE);
             }
             if (is_acid)
@@ -559,24 +555,8 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
             }
         }
         if (mon_hates_material(mtmp, otmp->material)) {
-            boolean flesh = (!noncorporeal(mtmp->data)
-                             && !amorphous(mtmp->data));
             /* Extra damage is already handled in dmgval(). */
-            if (otmp->material == SILVER) {
-                if (vis) {
-                    char *m_name = mon_nam(mtmp);
-
-                    if (flesh) /* s_suffix returns a modifiable buffer */
-                        m_name = strcat(s_suffix(m_name), " flesh");
-                    pline_The("silver sears %s!", m_name);
-                } else if (verbose && !g.mtarget) {
-                    pline("%s is seared!", flesh ? "Its flesh" : "It");
-                }
-            }
-            else if (vis) {
-                pline("%s flinches at the touch of %s!", Monnam(mtmp),
-                      materialnm[otmp->material]);
-            }
+            searmsg((struct monst *) 0, mtmp, otmp, vis);
         }
         if (otmp->otyp == ACID_VENOM && cansee(mtmp->mx, mtmp->my)) {
             if (resists_acid(mtmp)) {

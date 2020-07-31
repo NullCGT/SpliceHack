@@ -242,6 +242,7 @@ Miscelaneous
 Balance
 - Being deaf does not make you resistant to sonic attacks.
 - War hammers deal d12 damage, instead of d4, buffing both Giantslayer and Mjollnir.
+- Bell of opening reverted to a silver bell.
 
 Bug Fixes
 - Correctly track the celibate conduct.
@@ -263,6 +264,7 @@ Bug Fixes
 - Fixed segfault caused by vanishing monsters.
 - Prevented cartomancer grinding via killing fading monsters repeatedly.
 - Do not count births of fading monsters.
+- Many fixes for the object materials patch.
 
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.

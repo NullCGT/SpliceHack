@@ -1285,7 +1285,8 @@ int dieroll;
                 case PINCH_OF_CATNIP:
                     tmp = 0;
                     if (is_feline(mdat)) {
-                        pline("%s chases their tail!", Monnam(mon));
+                        if (!Blind)
+                            pline("%s chases %s tail!", Monnam(mon), mhis(mon));
                         (void) tamedog(mon, (struct obj *) 0);
                         mon->mconf = 1;
                         if (thrown)
@@ -1294,7 +1295,7 @@ int dieroll;
                             useup(obj);
                         return FALSE;
                     } else {
-                        pline("Poof! Catnip flies everywhere!");
+                        You("%s catnip fly everywhere!", Blind ? "feel" : "see");
                         setmangry(mon, TRUE);
                     }
                     if (thrown)

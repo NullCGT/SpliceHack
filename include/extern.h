@@ -2659,6 +2659,7 @@ E boolean FDECL(stucksteed, (BOOLEAN_P));
 
 /* ### tech.c ### */
 
+E const char* FDECL(simple_tech_name, (int));
 E void FDECL(adjtech, (int,int));
 E int NDECL(dotech);
 E const char *NDECL(lookup_tech_name);

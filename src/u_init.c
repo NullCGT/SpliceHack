@@ -921,6 +921,7 @@ u_init()
         knows_object(SPEED_BOOTS);
         knows_object(DRUM_OF_EARTHQUAKE);
         skill_init(Skill_Dan);
+        u.ustance = T_DANCE_E;
         break;
     case PM_DRAGONMASTER:
         ini_inv(Dragonmaster);

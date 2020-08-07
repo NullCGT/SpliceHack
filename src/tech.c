@@ -272,6 +272,13 @@ static const struct innate_tech
         		  LB_BASE2) % LB_CYCLE) >> LB_STRIP) \
         		  % LB_HPMOD))))
 
+const char*
+simple_tech_name(tech)
+int tech;
+{
+	return tech_names[tech];
+}
+
 /* Whether you know the tech */
 boolean
 tech_known(tech)
@@ -1771,7 +1778,7 @@ tamedog(mtmp, (struct obj *) 0);
 		case T_DANCE_WWALK:
 		case T_DANCE_STORM:
 			You("begin performing the %s.", techname(tech_no));
-			techt_inuse(tech_no) = techlev(tech_no) + 50;
+			u.ustance = techid(tech_no);
 			t_timeout = rn1(50, 50);
 			break;
 		case T_CROWN_LAW:
@@ -1890,14 +1897,6 @@ tech_timeout()
 			break;
 		    case T_CHI_HEALING:
 			You("feel the healing power dissipate.");
-			break;
-			case T_DANCE_E:
-			case T_DANCE_SPELL:
-			case T_DANCE_WWALK:
-			case T_DANCE_STORM:
-			case T_DANCE_EXPLODE:
-			case T_DANCE_EARTH:
-			pline("You finish your performance of the %s.", techname(i));
 			break;
 	            default:
 	            	break;

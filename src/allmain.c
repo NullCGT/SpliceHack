@@ -800,6 +800,11 @@ boolean new_game; /* false => restoring an old game */
         get_rnd_text(SPLICETIPSFILE, tipbuf, rn2_on_display_rng);
         make_engr_at(u.ux, u.uy, tipbuf, g.moves, DUST);
     }
+
+    if (Role_if(PM_DANCER)) {
+        You("are currently performing the %s.", simple_tech_name(u.ustance));
+        if (new_game) pline("Use #technique to switch dances.");
+    }
 }
 
 #ifdef POSITIONBAR

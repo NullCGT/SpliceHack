@@ -339,7 +339,7 @@ levitation_dialogue()
 }
 
 static NEARDATA const char *const dance_texts[] = {
-    "You are beginning to feel exhausted.",
+    "You dance is slowing down.",
     "Your dance slows to a stop.",
 };
 
@@ -352,9 +352,6 @@ dance_dialogue()
         char buf[BUFSZ];
         Strcpy(buf, dance_texts[SIZE(dance_texts) - i - 1L]);
         pline1(buf);
-    }
-    if (i <= 1L) {
-        stop_occupation();
     }
 }
 

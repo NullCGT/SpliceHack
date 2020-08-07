@@ -207,6 +207,11 @@ Role Changes
   - Any monster killed by a cartomancer has a 50% chance of dropping as a spell card.
   - Fading monsters summoned by scrolls remain for a much shorter period of time.
   - Updated summon card naming.
+- Dancer
+  - Dances now function in a manner much more akin to a stance system, where a dance
+    can be active for an arbitrarily long amount of time.
+  - Dancers are no longer prevented from wearing body armor.
+  - Dancer messages are much less annoying now.
 
 Miscelaneous
 - Kicking a tree has a chance of spawning a serval or (very rarely) a jaguar.

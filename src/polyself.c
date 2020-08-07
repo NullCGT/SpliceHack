@@ -714,8 +714,8 @@ int mntmp;
     /* New stats for monster, to last only as long as polymorphed.
      * Currently only strength gets changed.
      */
-    if (strongmonst(&mons[mntmp]) || (Race_if(PM_HUMAN_WEREWOLF) && u.umonnum == PM_WEREWOLF))
-        ABASE(A_STR) = AMAX(A_STR) = STR18(100);
+    if (strongmonst(&mons[mntmp]) || (Race_if(PM_HUMAN_WERECAT) && u.umonnum == PM_WERECAT))
+        ABASE(A_STR) = AMAX(A_STR) = STR19(25);
     
     if (mntmp == PM_VOMITOUS_GHOUL)
         make_vomiting((long) rnd(100), FALSE);
@@ -933,8 +933,7 @@ static void
 break_armor()
 {
     register struct obj *otmp;
-    boolean controlled_change = (Race_if(PM_DOPPELGANGER) ||
-    		(Race_if(PM_HUMAN_WEREWOLF) && u.umonnum == PM_WEREWOLF));
+    boolean controlled_change = (Race_if(PM_HUMAN_WERECAT) && u.umonnum == PM_WERECAT);
 
     if (breakarm(g.youmonst.data)) {
         if ((otmp = uarm) != 0) {

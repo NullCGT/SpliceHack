@@ -745,6 +745,8 @@ domonability(VOID_ARGS)
  	                  &g.youmonst.data->mattk[attacktype(g.youmonst.data, AT_MAGC)]);
     } else if (Upolyd) {
         pline("Any special ability you may have is purely reflexive.");
+    } else if (Race_if(PM_HUMAN_WERECAT)) {
+        you_were();
     } else {
         You("don't have a special ability in your normal form!");
     }

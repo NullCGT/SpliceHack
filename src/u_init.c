@@ -1154,8 +1154,8 @@ u_init()
 	    change_luck(-1);
 	    break;
 
-    case PM_HUMAN_WEREWOLF:
-        set_ulycn(PM_WEREWOLF);
+    case PM_HUMAN_WERECAT:
+        set_ulycn(PM_WERECAT);
         break;
     
     case PM_MINOR_ANGEL:

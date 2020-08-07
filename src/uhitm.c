@@ -559,7 +559,7 @@ int dieroll;
         /* Lycanthropes sometimes go a little berserk!
   	     * If special is on,  they will multihit and stun!
   	     */
-  	    if ((Race_if(PM_HUMAN_WEREWOLF) && (mon->mhp > 0)) ||
+  	    if ((Race_if(PM_HUMAN_WERECAT) && (mon->mhp > 0)) ||
   				tech_inuse(T_EVISCERATE)) {
         		if (tech_inuse(T_EVISCERATE)) {
         		    /*make slashing message elsewhere*/

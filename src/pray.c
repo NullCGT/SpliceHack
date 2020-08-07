@@ -205,7 +205,7 @@ in_trouble()
         return TROUBLE_REGION;
     if (critically_low_hp(FALSE))
         return TROUBLE_HIT;
-    if (u.ulycn >= LOW_PM && !Race_if(PM_HUMAN_WEREWOLF))
+    if (u.ulycn >= LOW_PM && !Race_if(PM_HUMAN_WERECAT))
         return TROUBLE_LYCANTHROPE;
     if (near_capacity() >= EXT_ENCUMBER && AMAX(A_STR) - ABASE(A_STR) > 3)
         return TROUBLE_COLLAPSING;

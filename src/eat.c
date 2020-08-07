@@ -42,7 +42,7 @@ static boolean FDECL(maybe_cannibal, (int, BOOLEAN_P));
 
 /* also used to see if you're allowed to eat cats and dogs */
 #define CANNIBAL_ALLOWED() (Role_if(PM_CAVEMAN) || Race_if(PM_ORC) \
-    || Race_if(PM_HUMAN_WEREWOLF) || Race_if(PM_VAMPIRE))
+    || Race_if(PM_HUMAN_WERECAT) || Race_if(PM_VAMPIRE))
 
 /* monster types that cause hero to be turned into stone if eaten */
 #define flesh_petrifies(pm) (touch_petrifies(pm) || (pm) == &mons[PM_MEDUSA])
@@ -1203,6 +1203,9 @@ int cooking;
         break;
     case PM_HUMAN_WERECOCKATRICE:
         catch_lycanthropy = PM_WERECOCKATRICE;
+        break;
+    case PM_HUMAN_WERECAT:
+        catch_lycanthropy = PM_WERECAT;
         break;
     case PM_HUMAN_WERETIGER:
         catch_lycanthropy = PM_WERETIGER;

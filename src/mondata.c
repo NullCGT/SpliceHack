@@ -476,6 +476,8 @@ register struct permonst *ptr;
 {
     if (sliparm(ptr))
         return FALSE;
+    if (Race_if(PM_HUMAN_WERECAT) && ptr == &mons[PM_WERECAT])
+        return FALSE;
 
     return (boolean) (bigmonst(ptr)
                       || (ptr->msize > MZ_SMALL && !humanoid(ptr))
@@ -835,6 +837,7 @@ const char **remainder_p;
             { "human wererat", PM_HUMAN_WERERAT },
             { "human werejackal", PM_HUMAN_WEREJACKAL },
             { "human werewolf", PM_HUMAN_WEREWOLF },
+            { "human werecat", PM_HUMAN_WERECAT },
             /* for completeness */
             { "rat wererat", PM_WERERAT },
             { "jackal werejackal", PM_WEREJACKAL },

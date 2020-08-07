@@ -817,7 +817,7 @@ long frommask;
         case PM_ORC:
             abil = orc_abil;
             break;
-        case PM_HUMAN_WEREWOLF:
+        case PM_HUMAN_WERECAT:
             abil = lyc_abil;
             break;
         case PM_HUMAN:
@@ -1023,7 +1023,7 @@ int oldlevel, newlevel;
     case PM_CHANGELING:
         rabil = chn_abil;
         break;
-    case PM_HUMAN_WEREWOLF:
+    case PM_HUMAN_WERECAT:
     case PM_HUMAN:
     case PM_DWARF:
     case PM_GNOME:

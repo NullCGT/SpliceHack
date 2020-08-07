@@ -23,6 +23,10 @@ register struct monst *mon;
                 const char *howler, *howl;
 
                 switch (monsndx(mon->data)) {
+                case PM_WERECAT:
+                    howler = "cat";
+                    howl = "caterwauling";
+                    break;
                 case PM_WERETIGER:
                     howler = "tiger";
                     howl = "yowling";
@@ -89,6 +93,10 @@ int pm;
         return PM_HUMAN_WEREWOLF;
     case PM_HUMAN_WEREWOLF:
         return PM_WEREWOLF;
+    case PM_WERECAT:
+        return PM_HUMAN_WERECAT;
+    case PM_HUMAN_WERECAT:
+        return PM_WERECAT;
     case PM_WEREBEAR:
         return PM_HUMAN_WEREBEAR;
     case PM_HUMAN_WEREBEAR:
@@ -238,11 +246,19 @@ char *genbuf;
             if (genbuf)
                 Strcpy(genbuf, "cockatrice");
             break;
+        case PM_HUMAN_WEREPHANT:
         case PM_WEREPHANT:
             typ = PM_MUMAK;
             if (genbuf)
                 Strcpy(genbuf, "elephant");
             break;
+        case PM_HUMAN_WERECAT:
+        case PM_WERECAT:
+            typ = rn2(3) ? PM_HOUSECAT : rn2(3) ? PM_LARGE_CAT : PM_TIGER;
+            if (genbuf)
+                Strcpy(genbuf, "cat");
+            break;
+        case PM_HUMAN_WERETIGER:
         case PM_WERETIGER:
             typ = PM_TIGER;
             if (genbuf)
@@ -314,7 +330,7 @@ boolean purify;
     boolean in_wereform = (u.umonnum == u.ulycn);
     boolean controllable_poly = Polymorph_control && !(Stunned || Unaware);
     if (purify) {
-        if (Race_if(PM_HUMAN_WEREWOLF)) {
+        if (Race_if(PM_HUMAN_WERECAT)) {
             /* An attempt to purify you has been made! */
             if (in_wereform && Unchanging) {
                 g.killer.format = NO_KILLER_PREFIX;

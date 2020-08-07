@@ -1213,7 +1213,7 @@ register struct obj *otmp;
             if (otmp->blessed) {
                 pline("This burns like %s!", hliquid("acid"));
                 exercise(A_CON, FALSE);
-                if (u.ulycn >= LOW_PM && !Race_if(PM_HUMAN_WEREWOLF)) {
+                if (u.ulycn >= LOW_PM && !Race_if(PM_HUMAN_WERECAT)) {
                     Your("affinity to %s disappears!",
                          makeplural(mons[u.ulycn].mname));
                     if (g.youmonst.data == &mons[u.ulycn])
@@ -1235,7 +1235,7 @@ register struct obj *otmp;
                 make_sick(0L, (char *) 0, TRUE, SICK_ALL);
                 exercise(A_WIS, TRUE);
                 exercise(A_CON, TRUE);
-                if (u.ulycn >= LOW_PM  && !Race_if(PM_HUMAN_WEREWOLF))
+                if (u.ulycn >= LOW_PM  && !Race_if(PM_HUMAN_WERECAT))
                     you_unwere(TRUE); /* "Purified" */
                 /* make_confused(0L, TRUE); */
             } else {

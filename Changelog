@@ -38,6 +38,9 @@ New Monsters
   - Low-level cats that are capable of leaping.
   - Occasionally appear when trees are kicked.
   - Their tile image is utterly adorable.
+- Werecats
+  - Not randomly generated. Exist as a placeholder for the lycanthrope
+    race.
 
 AI
 - Monsters can light potions of oil, and hurl lit potions.
@@ -195,6 +198,17 @@ Race Changes
   - Falling from grace can actually be a strategic option. Fallen angels have multiple
     weapon attacks, are always equal or greater to the level of the player when they fell,
     and the player can wear headgear other than halos.
+- Lycanthrope
+  - Racial lycanthropes are now known as werecats, instead of werewolves.
+  - Racial lycanthropes never change into animal form randomly.
+  - Racial lycanthropes can use #monster to instantly transform.
+  - Racial lycanthropes have a strength of 25 in animal form.
+  - Racial lycanthropes only regenerate abnormally quickly when in animal form.
+  - Every time a racial lycanthrope levels up, they may choose one aspect of their creature
+    form to improve:
+      - +2 bite damage.
+      - -2 AC
+      - +1 speed.
 
 Role Changes
 - Dragonmaster

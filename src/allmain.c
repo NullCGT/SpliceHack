@@ -335,7 +335,7 @@ boolean resuming;
                                 stop_occupation();
                                 if (change == 1)
                                     polyself(0);
-                                else
+                                else if (!Race_if(PM_HUMAN_WERECAT))
                                     you_were();
                                 change = 0;
                             }
@@ -804,6 +804,8 @@ boolean new_game; /* false => restoring an old game */
     if (Role_if(PM_DANCER)) {
         You("are currently performing the %s.", simple_tech_name(u.ustance));
         if (new_game) pline("Use #technique to switch dances.");
+    } else if (Race_if(PM_HUMAN_WERECAT) && !Upolyd) {
+        pline("You may use #monster to enter feline form.");
     }
 }
 

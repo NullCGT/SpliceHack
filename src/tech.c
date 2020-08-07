@@ -1996,7 +1996,7 @@ race_tech()
 		case PM_VAMPIRE:	return (vam_tech);
 		case PM_MERFOLK:	return (mer_tech);
 		case PM_GNOME:		return (gno_tech);
-		case PM_HUMAN_WEREWOLF:	return (lyc_tech);
+		case PM_HUMAN_WERECAT:	return (lyc_tech);
 		default: 		return ((struct innate_tech *) 0);
 	}
 }

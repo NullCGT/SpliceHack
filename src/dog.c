@@ -59,6 +59,7 @@ static int
 pet_type()
 {
     int dragon_type;
+    uchar prop;
     
     if (g.urole.petnum != NON_PM)
         return  g.urole.petnum;
@@ -70,13 +71,15 @@ pet_type()
      		else
      			  return (rn2(2) ? PM_PARROT : PM_MONKEY);
     } else if (Role_if(PM_DRAGONMASTER)) {
-        /* baby black dragons are not chosen as starting pets, since
-           black dragons are arguably some of the most powerful pets
-           in SpliceHack. */
         dragon_type = PM_BABY_SILVER_DRAGON 
             + rn2(PM_BABY_YELLOW_DRAGON - PM_BABY_SILVER_DRAGON);
         if (dragon_type == PM_BABY_BLACK_DRAGON)
             dragon_type = PM_BABY_GRAY_DRAGON;
+        prop = objects[GRAY_DRAGON_SCALES + dragon_type - PM_BABY_GRAY_DRAGON].oc_oprop;
+        /* Dragonmasters resist the element of their pet */
+        if (prop == REFLECTING || prop == ANTIMAGIC)
+            prop = COLD_RES;
+        u.uprops[prop].intrinsic |= FROMOUTSIDE;
         return dragon_type;
     } else if (g.preferred_pet == 'c')
         return  PM_KITTEN;

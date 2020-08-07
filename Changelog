@@ -199,6 +199,8 @@ Race Changes
 Role Changes
 - Dragonmaster
   - All dragonmasters start with basic skill in riding.
+  - Dragonmasters start with an intrinsic depending on the type of dragon
+    they begin the game with.
 - Cartomancer
   - Removed the card response feature, since it incentivized players not to use scrolls.
   - Removed the chance not to use up scrolls when reading them.

@@ -10,7 +10,6 @@ Performing the invocation ritual will draw notice from the remaining royalty of 
 Luckless Folly becomes more powerful the more unlucky you are.
 The Amulet of Yendor now blocks all forms of teleportation.
 Wind attacks can push you into dangerous areas.
-Sonic attacks will not harm you if you are deaf.
 Sonic attacks can shatter anything made of glass or gemstones.
 Psionic attacks will not harm something without a mind.
 Psionic beams cannot be reflected.
@@ -129,7 +128,6 @@ A ghoulish monk is going to have a tough time staying fed.
 Sapphire, silver, and crystal golems are known for their reflective abilities.
 A hydra can become more powerful when attacked with a slashing weapon.
 Brood wasp stings can have delayed symptoms.
-Lycanthropes are a tough race for beginners.
 If you donate enough at a temple, the priest might just teach you how to perform a blessing.
 If you encounter a bug, please report it on the github page, or contact Antigulp on #hardfought.
 Steel golems can disenchant your items, so keep your distance.

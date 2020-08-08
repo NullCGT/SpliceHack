@@ -1,4 +1,4 @@
-/* NetHack 3.6	objects.c	$NHDT-Date: 1578855624 2020/01/12 19:00:24 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.61 $ */
+/* NetHack 3.7	objects.c	$NHDT-Date: 1596498192 2020/08/03 23:43:12 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.66 $ */
 /* Copyright (c) Mike Threepoint, 1989.                           */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -1352,10 +1352,10 @@ OBJECT(OBJ("iron chain", None),
 /* Venom is normally a transitory missile (spit by various creatures)
  * but can be wished for in wizard mode so could occur in bones data.
  */
-OBJECT(OBJ("blinding venom", "splash of noxious venom"),
+OBJECT(OBJ("splash of blinding venom", "splash of noxious venom"),
        BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, LIQUID), 0,
        VENOM_CLASS, 500, 0, 1, 0, 0, 0, 0, 0, 0, CLR_GREEN),
-OBJECT(OBJ("acid venom", "splash of sizzling venom"),
+OBJECT(OBJ("splash of acid venom", "splash of sizzling venom"),
        BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, LIQUID), 0,
        VENOM_CLASS, 500, 0, 1, 0, 6, 6, 0, 0, 0, CLR_YELLOW),
         /* +d6 small or large */

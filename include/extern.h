@@ -1,4 +1,4 @@
-/* NetHack 3.6	extern.h	$NHDT-Date: 1594168620 2020/07/08 00:37:00 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.851 $ */
+/* NetHack 3.7	extern.h	$NHDT-Date: 1596498536 2020/08/03 23:48:56 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.854 $ */
 /* Copyright (c) Steve Creps, 1988.				  */
 /* NetHack may be freely redistributed.  See license for details. */
 /* Edited on 5/8/18 by NullCGT */
@@ -1090,6 +1090,7 @@ E int FDECL(ggetobj, (const char *, int (*)(OBJ_P), int,
                       BOOLEAN_P, unsigned *));
 E int FDECL(askchain, (struct obj **, const char *, int, int (*)(OBJ_P),
                        int (*)(OBJ_P), int, const char *));
+E void FDECL(set_cknown_lknown, (struct obj *));
 E void FDECL(fully_identify_obj, (struct obj *));
 E int FDECL(identify, (struct obj *));
 E int FDECL(count_unidentified, (struct obj *));
@@ -2241,6 +2242,8 @@ E long NDECL(random);
 
 E void FDECL(learnscroll, (struct obj *));
 E char *FDECL(tshirt_text, (struct obj *, char *));
+E const char *FDECL(candy_wrapper_text, (struct obj *));
+E void FDECL(assign_candy_wrapper, (struct obj *));
 E int NDECL(doread);
 E boolean FDECL(is_chargeable, (struct obj *));
 E void FDECL(recharge, (struct obj *, int));

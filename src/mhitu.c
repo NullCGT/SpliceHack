@@ -1,4 +1,4 @@
-/* NetHack 3.6	mhitu.c	$NHDT-Date: 1593306907 2020/06/28 01:15:07 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.192 $ */
+/* NetHack 3.7	mhitu.c	$NHDT-Date: 1596498179 2020/08/03 23:42:59 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.194 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -746,6 +746,8 @@ register struct monst *mtmp;
     if (mtmp->data == &mons[PM_HYDRA]) {
         k = min(mtmp->m_lev - mtmp->data->mlevel + 1, 10);
     }
+    
+    g.skipdrin = FALSE; /* [see mattackm(mhitm.c)] */
 
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
@@ -755,7 +757,9 @@ register struct monst *mtmp;
         mon_currwep = (struct obj *)0;
         mattk = getmattk(mtmp, &g.youmonst, i, sum, &alt_attk);
         if ((u.uswallow && mattk->aatyp != AT_ENGL)
-            || (skipnonmagc && mattk->aatyp != AT_MAGC))
+            || (skipnonmagc && mattk->aatyp != AT_MAGC)
+            || (g.skipdrin && mattk->aatyp == AT_TENT
+                && mattk->adtyp == AD_DRIN))
             continue;
 
         switch (mattk->aatyp) {
@@ -1470,6 +1474,8 @@ register struct attack *mattk;
         hitmsg(mtmp, mattk);
         if (defends(AD_DRIN, uwep) || !has_head(g.youmonst.data)) {
             You("don't seem harmed.");
+            /* attacker should skip remaining AT_TENT+AD_DRIN attacks */
+            g.skipdrin = TRUE;
             /* Not clear what to do for green slimes */
             break;
         }

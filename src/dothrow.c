@@ -1891,6 +1891,13 @@ register struct obj *obj; /* g.thrownobj or g.kickedobj or uwep */
                && (guaranteed_hit || ACURR(A_DEX) > rnd(25))) {
         potionhit(mon, obj, POTHIT_HERO_THROW);
         return 1;
+    } else if (obj->otyp == PINCH_OF_CATNIP
+                && is_feline(mon->data)) {
+        if (!Blind)
+            pline("%s chases %s tail!", Monnam(mon), mhis(mon));
+        (void) tamedog(mon, (struct obj *) 0);
+        mon->mconf = 1;
+        return 1;
     } else if (befriend_with_obj(mon->data, obj)
                || (mon->mtame && dogfood(mon, obj) <= ACCFOOD)) {
         if (tamedog(mon, obj)) {

@@ -1284,7 +1284,7 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
         clear_thrownobj = TRUE;
         goto throwit_return;
 
-    } else if (obj->otyp == BOOMERANG && !Underwater) {
+    } else if ((obj->otyp == BOOMERANG || obj->otyp == CHAKRAM) && !Underwater) {
         if (Is_airlevel(&u.uz) || Levitation)
             hurtle(-u.dx, -u.dy, 1, TRUE);
         mon = boomhit(obj, u.dx, u.dy);
@@ -1782,7 +1782,7 @@ register struct obj *obj; /* g.thrownobj or g.kickedobj or uwep */
                     tmp++;
             }
         } else { /* thrown non-ammo or applied polearm/grapnel */
-            if (otyp == BOOMERANG) /* arbitrary */
+            if (otyp == BOOMERANG || otyp == CHAKRAM) /* arbitrary */
                 tmp += 4;
             else if (throwing_weapon(obj)) /* meant to be thrown */
                 tmp += 2;

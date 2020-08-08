@@ -464,7 +464,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
     const char *dn = OBJ_DESCR(*ocl);
     const char *un = ocl->oc_uname;
     boolean pluralize = (obj->quan != 1L) && !(cxn_flags & CXN_SINGULAR);
-    boolean forcemat = (cxn_flags & CXN_FORCEMAT);
+    boolean forcemat = ((cxn_flags & CXN_FORCEMAT) || obj->otyp == CHAKRAM);
     boolean known, dknown, bknown;
 
     buf = nextobuf() + PREFIX; /* leave room for "17 -3 " */

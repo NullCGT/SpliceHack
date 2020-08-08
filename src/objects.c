@@ -146,6 +146,8 @@ WEAPON("windmill blade", "giant throwing star",
        0, 1, 0, 0,   15,  30, 10,  8, 2, P,   -P_SHURIKEN, METAL, HI_METAL),
 WEAPON("boomerang", None,
        1, 1, 0, 15,   5,  20,  9,  9, 0, 0,   -P_BOOMERANG, WOOD, HI_WOOD),
+WEAPON("chakram", "circular blade",
+       1, 1, 0, 15,   5,  20,  9,  9, 0, S,   -P_BOOMERANG, SILVER, HI_SILVER),
 
 /* spears [note: javelin used to have a separate skill from spears,
    because the latter are primarily stabbing weapons rather than

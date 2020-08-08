@@ -3344,6 +3344,7 @@ struct obj* obj;
         case SHIELD_OF_RESONANCE:
         case SHIELD_OF_REFLECTION:
         case ORNATE_MACE:
+        case CHAKRAM:
             return shiny_materials;
         case BOW:
         case ELVEN_BOW:

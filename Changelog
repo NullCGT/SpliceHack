@@ -57,6 +57,7 @@ Visual
 - Tiled mode now includes an indicator to denote if a monster is part of a rider/steed
   pair.
 - Added a new splash screen to the Windows build.
+- Yellow lights and glowing dragons now emit quite a bit of light.
 
 QOL
 - Show the carrying capacity of a player and the number of slots in their

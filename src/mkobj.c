@@ -819,7 +819,7 @@ boolean artif;
             if (is_poisonable(otmp) && !rn2(100))
                 otmp->opoisoned = 1;
 
-            if (artif && !rn2(20))
+            if (artif && !rn2(Role_if(PM_PIRATE) ? 5 : 20))
                 otmp = mk_artifact(otmp, (aligntyp) A_NONE);
 
             if (!otmp->oartifact && !otmp->cursed
@@ -1047,7 +1047,7 @@ boolean artif;
                 otmp->spe = rne(3);
             } else
                 blessorcurse(otmp, 10);
-            if (artif && !rn2(40))
+            if (artif && !rn2(Role_if(PM_PIRATE) ? 10 : 40))
                 otmp = mk_artifact(otmp, (aligntyp) A_NONE);
             /* simulate lacquered armor for samurai */
             if (Role_if(PM_SAMURAI) && otmp->otyp == SPLINT_MAIL

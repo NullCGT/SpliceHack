@@ -864,7 +864,7 @@ gcrownu()
             }
     }
 
-	if( Role_if(PM_PIRATE) ){
+	if(Role_if(PM_PIRATE)){
 		if (class_gift != STRANGE_OBJECT) {
 			;		/* already got bonus above for some reason */
 		} else if (in_hand) {
@@ -883,8 +883,7 @@ gcrownu()
 		unrestrict_weapon_skill(P_SCIMITAR);
 		if (obj && obj->oartifact == ART_REAVER)
 			discover_artifact(ART_REAVER);
-	}
-	else {
+	} else {
     switch (u.ualign.type) {
     case A_LAWFUL:
         if (class_gift != STRANGE_OBJECT) {

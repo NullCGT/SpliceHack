@@ -1,4 +1,4 @@
-/* NetHack 3.6	do_wear.c	$NHDT-Date: 1592951498 2020/06/23 22:31:38 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.133 $ */
+/* NetHack 3.7	do_wear.c	$NHDT-Date: 1596498163 2020/08/03 23:42:43 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.134 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -2012,10 +2012,6 @@ boolean noisy;
         } else if (uarm) {
             if (noisy)
                 already_wearing("some armor");
-            err++;
-        } else if (Role_if(PM_DANCER)) {
-            if (noisy)
-                You("cannot wear something that would inhibit your ability to dance so!");
             err++;
         } else if (Role_if(PM_DRAGONMASTER) &&
                    (Is_dragon_scales(otmp) || Is_dragon_mail(otmp))) {

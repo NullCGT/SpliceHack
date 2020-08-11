@@ -1,4 +1,4 @@
-/* NetHack 3.6	mthrowu.c	$NHDT-Date: 1586567393 2020/04/11 01:09:53 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.99 $ */
+/* NetHack 3.7	mthrowu.c	$NHDT-Date: 1596498189 2020/08/03 23:43:09 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.102 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Pasi Kallinen, 2016. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -104,14 +104,10 @@ const char *name; /* if null, then format `*objp' */
             *objp = obj = 0; /* potionhit() uses up the potion */
         } else {
             if (obj && Hate_material(obj->material)) {
-                /* extra damage already applied by dmgval() */
-                if (obj->material == SILVER) {
-                    pline_The("silver sears your flesh!");
-                }
-                else {
-                    You("flinch at the touch of %s!",
-                        materialnm[obj->material]);
-                }
+                /* extra damage already applied by dmgval();
+                 * dmgval is not called in this function but we assume that the
+                 * caller used it when constructing the dmg parameter */
+                searmsg((struct monst *) 0, &g.youmonst, obj, TRUE);
                 exercise(A_CON, FALSE);
             }
             if (is_acid)
@@ -144,6 +140,7 @@ int x, y;
         You_feel("full of sorrow.");
         create = 0;
     } else if (obj->otyp == CREAM_PIE || obj->oclass == VENOM_CLASS
+        || (is_bullet(obj))
         || (ohit && obj->otyp == EGG))
         create = 0;
     else if (ohit && (is_multigen(obj) || obj->otyp == ROCK))
@@ -239,6 +236,10 @@ struct obj *otmp, *mwep;
         /* Some randomness */
         multishot = (long) rnd((int) multishot);
 
+        /* gunz */
+        if (mwep && is_firearm(mwep))
+	        multishot += firearm_rof(mwep->otyp);
+
         /* class bonus */
         multishot += multishot_class_bonus(monsndx(mtmp->data), otmp, mwep);
 
@@ -295,11 +296,12 @@ struct obj *otmp, *mwep;
         if (!strcmp(trgbuf, "it"))
             Strcpy(trgbuf, humanoid(mtmp->data) ? "someone" : something);
         pline("%s %s %s%s%s!", Monnam(mtmp),
-              g.m_shot.s ? "shoots" : "throws", onm,
+              g.m_shot.s ? is_bullet(otmp) ? "fires" : "shoots" : "throws", onm,
               mtarg ? " at " : "", trgbuf);
         g.m_shot.o = otmp->otyp;
     } else {
         g.m_shot.o = STRANGE_OBJECT; /* don't give multishot feedback */
+        if (is_bullet(otmp) && !Deaf) You("hear gunfire.");
     }
     g.m_shot.n = multishot;
     for (g.m_shot.i = 1; g.m_shot.i <= g.m_shot.n; g.m_shot.i++) {
@@ -335,7 +337,8 @@ struct obj *otmp, *mwep;
 
          struct monst *mat, *mret = (struct monst *)0, *oldmret = (struct monst *)0;
 
-         boolean conflicted = Conflict && !resist(mtmp, RING_CLASS, 0, 0);
+         boolean conflicted = Conflict && couldsee(mtmp->mx, mtmp->my) 
+            && !resist(mtmp, RING_CLASS, 0, 0);
 
          if (is_covetous(mtmp->data) && !mtmp->mtame)
          {
@@ -552,24 +555,8 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
             }
         }
         if (mon_hates_material(mtmp, otmp->material)) {
-            boolean flesh = (!noncorporeal(mtmp->data)
-                             && !amorphous(mtmp->data));
             /* Extra damage is already handled in dmgval(). */
-            if (otmp->material == SILVER) {
-                if (vis) {
-                    char *m_name = mon_nam(mtmp);
-
-                    if (flesh) /* s_suffix returns a modifiable buffer */
-                        m_name = strcat(s_suffix(m_name), " flesh");
-                    pline_The("silver sears %s!", m_name);
-                } else if (verbose && !g.mtarget) {
-                    pline("%s is seared!", flesh ? "Its flesh" : "It");
-                }
-            }
-            else if (vis) {
-                pline("%s flinches at the touch of %s!", Monnam(mtmp),
-                      materialnm[otmp->material]);
-            }
+            searmsg((struct monst *) 0, mtmp, otmp, vis);
         }
         if (otmp->otyp == ACID_VENOM && cansee(mtmp->mx, mtmp->my)) {
             if (resists_acid(mtmp)) {
@@ -617,7 +604,14 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
                                                                 : AT_WEAP),
                         otmp)) {
             if (vis && mtmp->mcansee)
-                pline("%s is blinded by %s.", Monnam(mtmp), the(xname(otmp)));
+                /* shorten object name to reduce redundancy in the
+                   two message [first via hit() above] sequence:
+                   "The {splash of venom,cream pie} hits <mon>."
+                   "<Mon> is blinded by the {venom,pie}." */
+                pline("%s is blinded by %s.", Monnam(mtmp),
+                      the((otmp->oclass == VENOM_CLASS) ? "venom"
+                          : (otmp->otyp == CREAM_PIE) ? "pie"
+                            : xname(otmp))); /* catchall; not used */
             mtmp->mcansee = 0;
             tmp = (int) mtmp->mblinded + rnd(25) + 20;
             if (tmp > 127)
@@ -902,6 +896,7 @@ struct monst *mtmp, *mtarg;
     struct obj *otmp, *mwep;
     register xchar x, y;
     boolean ispole;
+    int gun_range;
 
     /* Polearms won't be applied by monsters against other monsters */
     if (mtmp->weapon_check == NEED_WEAPON || !MON_WEP(mtmp)) {
@@ -921,6 +916,12 @@ struct monst *mtmp, *mtarg;
     y = mtmp->my;
 
     mwep = MON_WEP(mtmp); /* wielded weapon */
+    if (mwep) gun_range = firearm_range(mwep->otyp);
+
+    if (mwep && is_firearm(mwep) && ammo_and_launcher(otmp, mwep) && gun_range &&
+		dist2(mtmp->mx, mtmp->my, mtarg->mx, mtarg->my) >
+		gun_range * gun_range)
+	    return 0; /* Out of range */
 
     if (!ispole && m_lined_up(mtmp, mtarg)) {
         int chance = max(BOLT_LIM - distmin(x, y, mtarg->mx, mtarg->my), 1);
@@ -1140,6 +1141,7 @@ struct monst *mtmp;
     struct obj *otmp, *mwep;
     xchar x, y;
     const char *onm;
+    int gun_range;
 
     /* Rearranged beginning so monsters can use polearms not in a line */
     /* TODO: Find a better fix for the monster weapon switching bug. */
@@ -1203,6 +1205,13 @@ struct monst *mtmp;
         return;
 
     mwep = MON_WEP(mtmp); /* wielded weapon */
+    if (mwep) gun_range = firearm_range(mwep->otyp);
+
+    if (mwep && is_firearm(mwep) && ammo_and_launcher(otmp, mwep) && gun_range &&
+		dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) >
+		gun_range * gun_range)
+	    return; /* Out of range */
+
     monshoot(mtmp, otmp, mwep); /* multishot shooting or throwing */
     nomul(0);
 }

@@ -1,4 +1,4 @@
-/* NetHack 3.6	apply.c	$NHDT-Date: 1582155875 2020/02/19 23:44:35 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.318 $ */
+/* NetHack 3.7	apply.c	$NHDT-Date: 1596498148 2020/08/03 23:42:28 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.326 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1281,9 +1281,9 @@ struct obj **optr;
     struct monst *mtmp;
     boolean wakem = FALSE, learno = FALSE,
             ordinary = (obj->otyp != BELL_OF_OPENING || !obj->spe),
-            invoking =
-                (obj->otyp == BELL_OF_OPENING && invocation_pos(u.ux, u.uy)
-                 && !On_stairs(u.ux, u.uy));
+            invoking = (obj->otyp == BELL_OF_OPENING
+                        && invocation_pos(u.ux, u.uy)
+                        && !On_stairs(u.ux, u.uy));
 
     You("ring %s.", the(xname(obj)));
 
@@ -4087,13 +4087,13 @@ doapply()
         } else if (!ublindf) {
             Blindf_on(obj);
         } else {
-            You("are already %s.", ublindf->otyp == TOWEL
+            You("are already %s.", (ublindf->otyp == TOWEL)
                                        ? "covered by a towel"
-                                       : ublindf->otyp == BLINDFOLD
+                                       : (ublindf->otyp == BLINDFOLD)
                                              ? "wearing a blindfold"
-                                             : ublindf->otyp == EARMUFFS
+                                             : (ublindf->otyp == EARMUFFS)
                                              ? "wearing earmuffs"
-                                             : ublindf->otyp == LENSES
+                                             : (ublindf->otyp == LENSES)
                                              ? "wearing lenses"
                                              : "wearing a mask");
         }
@@ -4334,10 +4334,18 @@ doapply()
     case TOUCHSTONE:
         use_stone(obj);
         break;
+	case AUTO_SHOTGUN:
+	case SUBMACHINE_GUN:		
+		if (obj->altmode == WP_MODE_AUTO) obj-> altmode = WP_MODE_SINGLE;
+		else obj->altmode = WP_MODE_AUTO;
+		You("switch %s to %s mode.", yname(obj), 
+			(obj->altmode ? "semi-automatic" : "full automatic"));
+		break;
     case FRAG_GRENADE:
 	case GAS_GRENADE:
 		if (!obj->oarmed) {
-			You("arm %s.", yname(obj));
+            if (obj->oartifact == ART_HAND_GRENADE_OF_ANTIOCH) You("pull the holy pin.");
+			else You("arm %s.", yname(obj));
 			arm_bomb(obj, TRUE);
             update_inventory();
 		} else pline("It's already armed!");

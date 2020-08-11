@@ -3,6 +3,8 @@
                             Version 0.7.2
 
 New Items
+- Chakram
+  - Originally from DNetHack.
 - Scabbard
   - Base item type for Avalon.
 - Frag Grenade
@@ -15,12 +17,32 @@ New Items
     - Orcish Warlord: 1 frag grenade.
     - All Pirates: 1/2 chance of a frag grenade.
     - All Mercernaries: 1/6 chance of a random grenade.
+- Pistol
+- Shotgun
+- Auto shotgun
+- Submachine gun
+- Heavy machine gun
+- Rifle
+- Sniper rifle
+- Shotgun shell
+- Bullet
+  - Ported a subset of firearms form SLASH'EM.
+  - Shopkeepers are equipped with shotguns.
+  - A few differences:
+    - You can hear distant gunfire.
+    - Soldiers do not spawn with guns.
+    - Monsters will attempt to use pistols, shotguns, and auto
+      shotguns as melee weapons.
+    - Bullets and guns are affected by the object materials patch.
 
 New Monsters
 - Servals
   - Low-level cats that are capable of leaping.
   - Occasionally appear when trees are kicked.
   - Their tile image is utterly adorable.
+- Werecats
+  - Not randomly generated. Exist as a placeholder for the lycanthrope
+    race.
 
 AI
 - Monsters can light potions of oil, and hurl lit potions.
@@ -30,6 +52,12 @@ Shopkeepers
 - Shopkeeper services, originally from SLASH'EM, are now available.
 - Altered the appraisal service, since all weapon stats can be looked
   up in game.
+
+Visual
+- Tiled mode now includes an indicator to denote if a monster is part of a rider/steed
+  pair.
+- Added a new splash screen to the Windows build.
+- Yellow lights and glowing dragons now emit quite a bit of light.
 
 QOL
 - Show the carrying capacity of a player and the number of slots in their
@@ -67,6 +95,10 @@ New Artifacts
   - Provides hungerless regeneration when carried.
   - Can be invoked to heal half of current form's max hit points.
   - Allows the user to invoke Excalibur.
+- Hand Grenade of Antioch
+  - Lawful-aligned.
+  - Explodes for 50d6 magic damage.
+  - The fuse is ALWAYS three turns long. Not five.
 
 Artifact Changes
 - Anaconda
@@ -144,6 +176,9 @@ Artifact Changes
   - Grants teleport control.
 
 Race Changes
+- Dwarf
+  - Dwarves start all games with some booze.
+  - Dwarves receive mattocks instead of picks in starting inventories.
 - Angel
   - Angels receive a number of edicts upon starting the game:
     - Do not harm the innocent.
@@ -166,10 +201,37 @@ Race Changes
   - Falling from grace can actually be a strategic option. Fallen angels have multiple
     weapon attacks, are always equal or greater to the level of the player when they fell,
     and the player can wear headgear other than halos.
+- Lycanthrope
+  - Racial lycanthropes are now known as werecats, instead of werewolves.
+  - Racial lycanthropes never change into animal form randomly.
+  - Racial lycanthropes can use #monster to instantly transform.
+  - Racial lycanthropes have a strength of 25 in animal form.
+  - Racial lycanthropes only regenerate abnormally quickly when in animal form.
+  - Every time a racial lycanthrope levels up, they may choose one aspect of their creature
+    form to improve:
+      - +2 bite damage.
+      - -2 AC
+      - +1 speed.
 
 Role Changes
 - Dragonmaster
   - All dragonmasters start with basic skill in riding.
+  - Dragonmasters start with an intrinsic depending on the type of dragon
+    they begin the game with.
+- Cartomancer
+  - Removed the card response feature, since it incentivized players not to use scrolls.
+  - Removed the chance not to use up scrolls when reading them.
+  - Any monster killed by a cartomancer has a 50% chance of dropping as a spell card.
+  - Fading monsters summoned by scrolls remain for a much shorter period of time.
+  - Updated summon card naming.
+- Dancer
+  - Dances now function in a manner much more akin to a stance system, where a dance
+    can be active for an arbitrarily long amount of time.
+  - Dancers are no longer prevented from wearing body armor.
+  - Dancer messages are much less annoying now.
+- Pirate
+  - Changed to bring in line with dNetHack: Pirates cannot be gifted artifacts, but have
+    greatly increased artifact generation.
 
 Miscelaneous
 - Kicking a tree has a chance of spawning a serval or (very rarely) a jaguar.
@@ -184,6 +246,7 @@ Miscelaneous
 Balance
 - Being deaf does not make you resistant to sonic attacks.
 - War hammers deal d12 damage, instead of d4, buffing both Giantslayer and Mjollnir.
+- Bell of opening reverted to a silver bell.
 
 Bug Fixes
 - Correctly track the celibate conduct.
@@ -200,6 +263,12 @@ Bug Fixes
 - Fix edge case in blood magic (Entrez)
 - Fix selfpoly'd AD_RBRE (Entrez)
 - Fix monster and player reflection edge cases and messages (Entrez)
+- Fixed conflict taking effect regardless of LOS, but only when monsters are using
+  throwing weapons.
+- Fixed segfault caused by vanishing monsters.
+- Prevented cartomancer grinding via killing fading monsters repeatedly.
+- Do not count births of fading monsters.
+- Many fixes for the object materials patch.
 
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.

@@ -1,4 +1,4 @@
-/* NetHack 3.6	winX.c	$NHDT-Date: 1577063125 2019/12/23 01:05:25 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.79 $ */
+/* NetHack 3.7	winX.c	$NHDT-Date: 1596498377 2020/08/03 23:46:17 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.87 $ */
 /* Copyright (c) Dean Luick, 1992                                 */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -1443,6 +1443,12 @@ static XtResource resources[] = {
     { nhStr("pet_mark_color"), nhStr("Pet_mark_color"), XtRPixel,
       sizeof(XtRPixel), XtOffset(AppResources *, pet_mark_color), XtRString,
       nhStr("Red") },
+    { nhStr("riding_mark_bitmap"), nhStr("Riding_mark_bitmap"), XtRString,
+      sizeof(String), XtOffset(AppResources *, riding_mark_bitmap), XtRString,
+      nhStr("riding_mark.xbm") },
+    { nhStr("riding_mark_color"), nhStr("Riding_mark_color"), XtRPixel,
+      sizeof(XtRPixel), XtOffset(AppResources *, riding_mark_color), XtRString,
+      nhStr("Green") },
     { nhStr("pilemark_bitmap"), nhStr("Pilemark_bitmap"), XtRString,
       sizeof(String), XtOffset(AppResources *, pilemark_bitmap), XtRString,
       nhStr("pilemark.xbm") },

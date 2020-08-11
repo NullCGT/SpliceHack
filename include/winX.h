@@ -1,4 +1,4 @@
-/* NetHack 3.6	winX.h	$NHDT-Date: 1457079196 2016/03/04 08:13:16 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.23 $ */
+/* NetHack 3.7	winX.h	$NHDT-Date: 1596498574 2020/08/03 23:49:34 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.39 $ */
 /* Copyright (c) Dean Luick, 1992                                 */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -283,6 +283,8 @@ typedef struct {
     int extcmd_height_delta;  /* bottom margin for extended command menu */
     String pet_mark_bitmap;   /* X11 bitmap file used to mark pets */
     Pixel pet_mark_color;     /* color of pet mark */
+    String riding_mark_bitmap; /* X11 bitmap file used to mark rider pairs */
+    Pixel riding_mark_color;  /* color of riding mark */
     String pilemark_bitmap;   /* X11 bitmap file used to mark item piles */
     Pixel pilemark_color;     /* color of item pile mark */
 #ifdef GRAPHIC_TOMBSTONE

@@ -1,4 +1,4 @@
-/* NetHack 3.6	dig.c	$NHDT-Date: 1584350347 2020/03/16 09:19:07 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.138 $ */
+/* NetHack 3.7	dig.c	$NHDT-Date: 1596498156 2020/08/03 23:42:36 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.142 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -333,6 +333,11 @@ dig(VOID_ARGS)
                 else if (uarmf)
                     dmg = (dmg + 1) / 2;
                 You("hit yourself in the %s.", body_part(FOOT));
+                if (Hate_material(uwep->material)) {
+                    /* extra damage already applied by dmgval() */
+                    searmsg(&g.youmonst, &g.youmonst, uwep, FALSE);
+                    exercise(A_CON, FALSE);
+                }
                 Sprintf(kbuf, "chopping off %s own %s", uhis(),
                         body_part(FOOT));
                 losehp(Maybe_Half_Phys(dmg), kbuf, KILLED_BY);

@@ -1,4 +1,4 @@
-/* NetHack 3.6	potion.c	$NHDT-Date: 1581810073 2020/02/15 23:41:13 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.180 $ */
+/* NetHack 3.7	potion.c	$NHDT-Date: 1596498197 2020/08/03 23:43:17 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.182 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1213,7 +1213,7 @@ register struct obj *otmp;
             if (otmp->blessed) {
                 pline("This burns like %s!", hliquid("acid"));
                 exercise(A_CON, FALSE);
-                if (u.ulycn >= LOW_PM && !Race_if(PM_HUMAN_WEREWOLF)) {
+                if (u.ulycn >= LOW_PM && !Race_if(PM_HUMAN_WERECAT)) {
                     Your("affinity to %s disappears!",
                          makeplural(mons[u.ulycn].mname));
                     if (g.youmonst.data == &mons[u.ulycn])
@@ -1235,7 +1235,7 @@ register struct obj *otmp;
                 make_sick(0L, (char *) 0, TRUE, SICK_ALL);
                 exercise(A_WIS, TRUE);
                 exercise(A_CON, TRUE);
-                if (u.ulycn >= LOW_PM  && !Race_if(PM_HUMAN_WEREWOLF))
+                if (u.ulycn >= LOW_PM  && !Race_if(PM_HUMAN_WERECAT))
                     you_unwere(TRUE); /* "Purified" */
                 /* make_confused(0L, TRUE); */
             } else {

@@ -1,4 +1,4 @@
-$NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.234 $ $NHDT-Date: 1593309675 2020/06/28 02:01:15 $
+NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.277 $ $NHDT-Date: 1596841504 2020/08/07 23:05:04 $
 
 General Fixes and Modified Features
 -----------------------------------
@@ -199,6 +199,50 @@ attempting to read a novel while blind reported "you can't read the mystic
 don't let life draining reduce a monster's max HP below its level + 1
 report "<Mon> expires" rather than "<Mon> dies" if polymorphed hero kills a
 	non-living monster (golem, vortex) with life drain (vampire bite)
+allow hero in silver-hating form to ring the silver bell but only if on/over
+	the vibrating square
+reading the Book of the Dead while blind is allowed; doing so gives
+	"you turn the pages of the Book of the Dead" and the type of item
+	becomes discovered, but the object wasn't being flagged as 'dknown'
+	so if not seen yet it remained "a spellbook" in hero's inventory
+reading cursed Book of the Dead while blind gave feedback for sighted hero
+reading non-cursed Book of the Dead after prepping with the other tools gave
+	a message referring to those as "artifacts" if either of them were
+	cursed; those unique items aren't artifacts so use "relics" instead
+zapping a line of boulders with striking or force bolt was updating 'couldsee'
+	but deferring 'cansee', resulting in seeing the first boulder fracture
+	and only hearing that happen for the others despite coming into view
+the default engraving, epitaph, and bogus monster inserted by 'makedefs -s'
+	(3.6.6 fix for empty source data file) lacked terminating newline, so
+	when the corresponding file wasn't actually empty its first line ended
+	up concatenated; default portion of the bad combined entry would be
+	decrypted properly but the portion from the file's first line wouldn't
+if the Wizard of Yendor fled up the stairs on level 1, the game would behave
+	as if he was still in play, but he wouldn't be on migrating monsters
+	list so couldn't be brought back and wouldn't appear on Plane of Earth
+	(stale non-zero value for context.no_of_wizards)
+if a mind flayer's psychic blast targetted a hidden monster, feedback named
+	the monster but it wasn't brought out of hiding
+hero poly'd into a mind flayer who used #monster to emit a psychic blast was
+	able to harm mindless monsters with it
+some hero attacks that should have gotten a skill bonus or penalty didn't
+change internal name of "<foo> venom" to "splash of <foo> venom"
+singularize "splashes" to "splash" instead of "splashe"
+treat slinging gems and tossing or slinging stones at unicorns as attacks
+give rot-away timer instead of revive timer to corpses of cancelled trolls
+switch revive timer to rot-away timer if a troll corpse gets cancelled
+uncancel an ice troll if its corpse is put into an ice box; give corpse a
+	revive timer if later taken out
+splitting a stack of candy bars gave new wrapper text depending upon the
+	obj->o_id value assigned; keep existing text for both halves of stack
+	(side-effect: separate candy bars usually won't merge anymore)
+describing tin variety (deep fried, pureed, &c) relied on the 'contents known'
+	flag but object identification wasn't setting obj->cknown for tins
+wizard mode #wizintrinsic: setting Levitation wouldn't block Flying as
+	intended because the check for that was being made too soon
+chatting to the quest leader in wizard mode with sufficient experience level
+	and insufficient piety, player is asked whether alignment should be
+	boosted; answering 'n' resulted in being prompted a second time
 
 
 Fixes to 3.7.0-x Problems that Were Exposed Via git Repository
@@ -242,6 +286,7 @@ grammar for messages about a monster removing items from a container was bad
 some new status conditions didn't always update when they should
 fix flipping non-existent stairs and ladders (github #311)
 fix door created into random wall or position opening into solid wall
+handle gone portal when going back in quest
 'use_inverse' option was accidentally made Windows-only; change it back to
 	being more general; change its default to True
 change inconsistent achievement spelling of "Mine Town" to "Minetown"
@@ -261,11 +306,27 @@ only generate shop items on solid floor squares
 avoid gcc 10 warning by removing duplicate definition of 'head_engr'
 if a monster removed a corpse from an ice box, the corpse would never rot away
 monster creation on quest levels could make genocided creatures
+enabling wizard mode 'sanity_check' option would complain about invalid mhpmax
+	value for level N monsters created with a d8 value of 1 for all N d8's
+disable that extra check because gremlim HP split after cloning triggers it
+some versions of tiles processing (not X11's) complained about the rename of
+	"{acid,blinding} venom" to "splash of {acid,blinding} venom"
+wizard mode #timeout changed to show timed Displacement in 'can be timed in
+	normal play' section instead of 'timed via #wizintrinsic only' section
+the fix to make worm visibility checks work as intended forced the coordinates
+	of the extra tail segment co-located with the worm monster to match
+	the worm instead of leaving it off the map; place_worm_tail_randomly()
+	reverses the segments and can throw some away if there isn't room,
+	but throwing away the extra segment removed the worm from the map
 
+curses: 'msg_window' option wasn't functional for curses unless the binary
+	also included tty support
 tty: redraw unexplored locations as S_unexplored rather than <space> after
 	map has been partially overwritten by popup menu or text display
 tty: previous change resulted in remnants of previous level being shown on
 	new level after level change when S_unexplored is <space>
+Unix: after lua changes to Makefiles, 'make spotless' for dat subdirectory
+	left some generated data files which should have been deleted
 X11: was still initializing map to 'stone' instead of 'unexplored' after they
 	became separate glyphs
 X11: for text map without color, add support for black&white ice; draw it in
@@ -282,6 +343,26 @@ curses: for vertical status, line up conditions in columns; usually two but
 	used to align entries in their columns--that's a feature...]
 msdos: add -DSTATUES_LOOK_LIKE_MONSTERS to Makefile1.cross so the VESA mode
 	can display statue glyphs
+Qt: quit if can't load tiles file instead of continuing and then segfaulting
+Qt: use more columns for extended command selection dialog so that the number
+	of rows needed doesn't result in some commands being unaccessible
+Qt: suppress wizard mode commands from '#' handling when not in wizard mode
+Qt: organize extended command selection grid by columns instead of by rows
+	(first N entries down left column, next N entries down 2nd column, &c)
+Qt: when selecting an extended command by typing its name, support <delete>
+	(aka <rubout>) in addition to <backspace> to go back a character
+Qt: switch to fixed-width font for menus
+Qt: don't disable [cancel] button when viewing inventory or other pick-none
+	menus; ESC works to dismiss those and [cancel] should be the same
+Qt: bring status conditions up to 3.6 levels but new ones lack pictures
+Qt: fix control key on OSX
+Qt: clicking on the window's Close button brought up a dialog offering
+	choices of "Save" and "Cancel"; picking Cancel sent nethack into an
+	infinite loop with complaints about Qt's event loop already being
+	active; change dialog: offer "Save and exit" or "Quit without saving"
+	with no opportunity to try to back out of the Close operation
+Qt: add 3.6 status fields Stone, Slime, Strngl, Deaf, Lev, Fly, Ride
+Qt: add Attributes, Overview, and Annotate to the "Info" pull down menu
 tiles: add indicator of thonged portion to aklys tile
 tty: role and race selection menus weren't filtering out potential choices
 	which got excluded by OPTIONS=align:!lawful or !neutral or !chaotic
@@ -289,6 +370,10 @@ Unix: when user name is used as default character name, keep hyphenated value
 	intact instead stripping off dash and whatever follows as if that
 	specified role/race/&c (worked once upon a time; broken since 3.3.0)
 Unix: add "ec2-user" to the list of user names 'sysconf' classifies as generic
+user_sounds: move the message hook from inside individual window display ports
+	to the core where it allows MSGTYP_NOSHOW msgtyp's to still trigger
+	sounds to correct a reported github issue; also fixes a past reported
+	issue that the curses port on Windows not working with user_sounds
 Windows: update for new status condition fields
 Windows: include commented-out 'PORTABLE_DEVICE_PATHS' in sysconf.template
 X11: substantial overhaul of status display, both 'fancy' and 'tty-style'
@@ -358,6 +443,7 @@ for !fixinv option where inventory letters normally don't stick, try to put
 	thrown from; only works if it does return and is successfully caught
 wizard mode #wizborn command
 include more skill information in ^X output when dual-wielding
+include monk's to-hit penalty for worn suit in the status section of ^X output
 item-using monsters will zap wand of undead turning at corpse-wielding hero
 	when the corpse is harmful
 boiling a pool or fountain now creates a temporary cloud of steam
@@ -371,10 +457,27 @@ make camera flash which reveals previously unseen map features or objects or
 boolean options can optionally have the form "name:value" with value taken
 	from among "true", "yes", "on", or "false", "no", "off"
 record number of wishes and artifact wishes in xlogfile
+give feedback for '#chat' directed at walls
+add 'Sokoban' conduct, tracking the number of times the special Sokoban rules
+	which incur luck penalties have been violated; don't report it
+	unless/until Sokoban branch has been entered
+reduce verbosity when a mind flayer attacks a headless monster; when a
+	tentacle-to-head attack hits but fails to accomplish anything skip
+	remaining attacks (mind flayer has 3, master mind flayer has 5)
+add section marker [] support to run-time config file; CHOOSE section1,section2
+	followed by [section1] ... [section2] ... forced all the rest of the
+	file to be part of the last section; that still works the same, but []
+	can be used to terminate the last section and revert to common options
+	for the remainder of the file
 
 
 Platform- and/or Interface-Specific New Features
 ------------------------------------------------
+user_sounds: provide an experimental mechanism for terminal-side sounds similar
+	to the method used for vt_tiledata; new option vt_sounddata that also
+	requires compile-time definition of TTY_SOUND_ESCCODES (also requires
+	terminal-side code external to NetHack to recognize the sequence and
+	act on it)
 
 
 NetHack Community Patches (or Variation) Included
@@ -443,4 +546,15 @@ convert obj->oextra->omid from pointer to scalar
 get rid of unused obj->oextra->olong
 relocated unmaintained code to outdated folder, specifically sys/amiga, 
 	sys/atari, sys/be, sys/mac, sys/os2, sys/wince, win/Qt3, win/gem,
-	win/gnome
+	win/gnome, include/amiconf.h, include/beconf.h, include/def_os2.h,
+	include/os2conf.h, include/macconf.h, include/tosconf.h,
+	include/wceconf.h
+removed SYSFLAGS conditional code
+removed MFLOPPY conditional code
+get rid of 3.6.1 workaround needed to retain compatibility with 3.6.0 bones
+	files after fix for 3.3.0 through 3.6.0 bug for invalid 'bonesid'
+	designation in bones of quest levels
+add an additional note to mextra.h and obj.h comments that reminds people to
+	appropriately init new fields if they need to initialize to something
+	other than zero
+

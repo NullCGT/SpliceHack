@@ -1,4 +1,4 @@
-/* NetHack 3.6	objects.c	$NHDT-Date: 1578855624 2020/01/12 19:00:24 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.61 $ */
+/* NetHack 3.7	objects.c	$NHDT-Date: 1596498192 2020/08/03 23:43:12 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.66 $ */
 /* Copyright (c) Mike Threepoint, 1989.                           */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -103,11 +103,16 @@ OBJECT(OBJ("strange object", None),
            BITS(kn, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, sub, metal),      \
            0, WEAPON_CLASS, prob, 0, wt,                            \
            cost, 2, 2, hitbon, 0, wt, color)
-#define BULLET(name,app,kn,prob,wt,cost,sdam,ldam,hitbon,typ,metal,sub,color) \
+#define BULLET(name,app,kn,prob,wt,cost,sdam,ldam,hitbon,ammotyp,typ,metal,sub,color) \
 	OBJECT( \
 		OBJ(name,app), BITS(kn,1,1,0,0,1,0,0,0,0,typ,sub,metal), 0, \
 		WEAPON_CLASS, prob, 0, \
-		wt, cost, sdam, ldam, hitbon, 0, wt, color )
+		wt, cost, sdam, ldam, hitbon, ammotyp, wt, color )
+#define GUN(name,app,kn,bi,prob,wt,cost,hitbon,ammotyp,metal,sub,color) \
+	OBJECT( \
+		OBJ(name,app), BITS(kn,0,1,0,0,1,0,0,bi,0,0,sub,metal), 0, \
+		WEAPON_CLASS, prob, 0, \
+		wt, cost, 2, 2, hitbon, ammotyp, wt, color )
 
 /* Note: for weapons that don't do an even die of damage (ex. 2-7 or 3-18)
    the extra damage is added on in weapon.c, not here! */
@@ -141,6 +146,8 @@ WEAPON("windmill blade", "giant throwing star",
        0, 1, 0, 0,   15,  30, 10,  8, 2, P,   -P_SHURIKEN, METAL, HI_METAL),
 WEAPON("boomerang", None,
        1, 1, 0, 15,   5,  20,  9,  9, 0, 0,   -P_BOOMERANG, WOOD, HI_WOOD),
+WEAPON("chakram", "circular blade",
+       1, 1, 0, 15,   5,  20,  9,  9, 0, S,   -P_BOOMERANG, SILVER, HI_SILVER),
 
 /* spears [note: javelin used to have a separate skill from spears,
    because the latter are primarily stabbing weapons rather than
@@ -331,10 +338,21 @@ BOW("sling", None,             1, 40,  3, 20, 0, LEATHER, P_SLING, HI_LEATHER),
 BOW("crossbow", None,          1, 45, 50, 40, 0, WOOD, P_CROSSBOW, HI_WOOD),
 
 /* firearms */
+GUN("pistol", None,	   1,  0, 0,  20,  100,  0, WP_BULLET, IRON, P_FIREARM, HI_METAL),
+GUN("submachine gun", None,   1,  0, 0,  25,  250, -1, WP_BULLET, IRON, P_FIREARM, HI_METAL),
+GUN("heavy machine gun", None,1,  1, 0, 500, 2000, -4, WP_BULLET, IRON, P_FIREARM, HI_METAL),
+GUN("rifle", None,		   1,  1, 0,  30,  150,  1, WP_BULLET, IRON, P_FIREARM, HI_METAL),
+GUN("sniper rifle", None,	   1,  1, 0,  50, 4000,  4, WP_BULLET, IRON, P_FIREARM, HI_METAL),
+GUN("shotgun", None,	   1,  0, 0,  35,  200,  3,  WP_SHELL, IRON, P_FIREARM, HI_METAL),
+GUN("auto shotgun", None,	   1,  1, 0,  60, 1500,  0,  WP_SHELL, IRON, P_FIREARM, HI_METAL),
+BULLET("bullet", None,
+	1,  0,   1,   5, 20, 30, 0, WP_BULLET,   P,   IRON, -P_FIREARM, HI_METAL),
+BULLET("shotgun shell", None,
+	1,  0,   1,  10, 30, 45, 0,  WP_SHELL,   P,   IRON, -P_FIREARM, CLR_RED),
 BULLET("frag grenade", None,
-	1,  0,  10, 20, 0, 0, 0,   B,   IRON,    P_NONE, CLR_GREEN),
+	1,  0,  10, 20, 0, 0, 0, WP_GRENADE,   B,   IRON,    P_NONE, CLR_GREEN),
 BULLET("gas grenade", None,
-	1,  0,  10, 20, 0, 0, 0,   B,   IRON,    P_NONE, CLR_ORANGE),
+	1,  0,  10, 20, 0, 0, 0, WP_GRENADE,   B,   IRON,    P_NONE, CLR_ORANGE),
 
 #undef P
 #undef S
@@ -828,10 +846,10 @@ WEPTOOL("unicorn horn", None,
                                                            BONE, CLR_WHITE),
 
 /* Two pseudo tools. These can never exist outside of medical kits. */
-OBJECT(OBJ("bandage", (char *)0),
+OBJECT(OBJ("bandage", None),
 		BITS(1,1,0,0,0,0,0,1,0,0,0,P_NONE,CLOTH), 0,
 		TOOL_CLASS, 0, 0, 1, 1, 0, 0, 0, 0, 0, CLR_WHITE),
-OBJECT(OBJ("phial", (char *)0),
+OBJECT(OBJ("phial", None),
 		BITS(1,1,0,0,0,0,0,1,0,0,0,P_NONE,GLASS), 0,
 		TOOL_CLASS, 0, 0, 2, 1, 0, 0, 0, 0, 1, HI_GLASS),
 
@@ -842,8 +860,8 @@ OBJECT(OBJ("phial", (char *)0),
 OBJECT(OBJ("Candelabrum of Invocation", "candelabrum"),
        BITS(0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, P_NONE, GOLD),
        0, TOOL_CLASS, 0, 0, 10, 5000, 0, 0, 0, 0, 200, HI_GOLD),
-OBJECT(OBJ("Bell of Opening", "engraved platinum bell"),
-       BITS(0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, P_NONE, PLATINUM),
+OBJECT(OBJ("Bell of Opening", "engraved silver bell"),
+       BITS(0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, P_NONE, SILVER),
        0, TOOL_CLASS, 0, 0, 10, 5000, 0, 0, 0, 0, 50, HI_METAL),
 #undef TOOL
 #undef WEPTOOL
@@ -1334,10 +1352,10 @@ OBJECT(OBJ("iron chain", None),
 /* Venom is normally a transitory missile (spit by various creatures)
  * but can be wished for in wizard mode so could occur in bones data.
  */
-OBJECT(OBJ("blinding venom", "splash of noxious venom"),
+OBJECT(OBJ("splash of blinding venom", "splash of noxious venom"),
        BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, LIQUID), 0,
        VENOM_CLASS, 500, 0, 1, 0, 0, 0, 0, 0, 0, CLR_GREEN),
-OBJECT(OBJ("acid venom", "splash of sizzling venom"),
+OBJECT(OBJ("splash of acid venom", "splash of sizzling venom"),
        BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, LIQUID), 0,
        VENOM_CLASS, 500, 0, 1, 0, 6, 6, 0, 0, 0, CLR_YELLOW),
         /* +d6 small or large */

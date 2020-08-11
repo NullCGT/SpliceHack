@@ -1,4 +1,4 @@
-/* NetHack 3.6	you.h	$NHDT-Date: 1586375530 2020/04/08 19:52:10 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.44 $ */
+/* NetHack 3.7	you.h	$NHDT-Date: 1596498576 2020/08/03 23:49:36 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.48 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2016. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -158,7 +158,7 @@ struct u_conduct {     /* number of times... */
     long elbereth;     /* engraved Elbereth */
     long notech;       /* activated a technique */
     long celibate;     /* never have sex */
-    long cheated;      /* cheated at sokoban */
+    long sokocheat;    /* violated special 'rules' in Sokoban */
     /* genocides already listed at end of game */
 };
 
@@ -381,7 +381,7 @@ struct you {
     char ushops_entered[5]; /* ditto, shops entered this turn */
     char ushops_left[5];    /* ditto, shops exited this turn */
 
-    int uhunger;  /* refd only in eat.c and shk.c */
+    int uhunger;  /* refd only in eat.c and shk.c (also insight.c) */
     unsigned uhs; /* hunger state - see eat.c */
     boolean ukinghill; /* records if you are carying the pirate treasure
     (and are therefor king of the hill) */
@@ -481,6 +481,7 @@ struct you {
     int ugrave_arise;    /* you die and become something aside from a ghost */
     int weapon_slots;        /* unused skill slots */
     int skills_advanced;     /* # of advances made so far */
+    int ustance;             /* current stance or dance */
     xchar skill_record[P_SKILL_LIMIT]; /* skill advancements */
     struct skills weapon_skills[P_NUM_SKILLS];
     boolean twoweap;         /* KMH -- Using two-weapon combat */

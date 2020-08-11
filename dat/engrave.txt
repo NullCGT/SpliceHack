@@ -1,4 +1,4 @@
-# NetHack 3.6  engrave.txt       $NHDT-Date: 1581206725 2020/02/09 00:05:25 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.4 $
+# NetHack 3.7  engrave.txt       $NHDT-Date: 1596498240 2020/08/03 23:44:00 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.5 $
 # Copyright (c) 2015 by Pasi Kallinen
 # NetHack may be freely redistributed.  See license for details.
 # Random engravings on the floor
@@ -42,7 +42,7 @@ KRONOS
 # Dune
 The splice must flow.
 
-# Super creepy stuff
+# Generally creepy messages
 help help help help help
 my eyes
 they're after me
@@ -53,6 +53,7 @@ Hello? Anybody?
 
 # Creepypasta
 Watch the sky.
+Pale Luna smiles at you.
 
 # House of Leaves
 This is not for you.
@@ -161,3 +162,15 @@ If you can read these words then you are not only a nerd but probably dead.
 
 # Portal
 The cake is a lie
+
+# dril
+Face god and walk backwards into Gehennom
+
+# LOTR
+Speak, friend, and enter.
+
+# The Oracle
+Please stop by and take a look at my statues! Love, the Oracle.
+
+# SCP
+I am bees.

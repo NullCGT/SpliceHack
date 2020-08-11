@@ -1,4 +1,4 @@
-/* NetHack 3.6	artifact.c	$NHDT-Date: 1593306896 2020/06/28 01:14:56 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.157 $ */
+/* NetHack 3.7	artifact.c	$NHDT-Date: 1596498149 2020/08/03 23:42:29 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.159 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -157,6 +157,8 @@ aligntyp alignment; /* target alignment, or A_NONE */
                 eligible[0] = m;
                 n = 1;
                 break; /* skip all other candidates */
+            } else if (by_align && Role_if(PM_PIRATE)) {
+                continue; /* pirates are not gifted artifacts */
             } else if (Hate_material(SILVER) && a->otyp == SABER)
                 continue; /* kludge to stop silver-haters from getting silver */
             /* found something to consider for random selection */
@@ -2544,6 +2546,12 @@ struct obj **objp; /* might be destroyed or unintentionally dropped */
 boolean loseit;    /* whether to drop it if hero can longer touch it */
 {
     struct obj *obj = *objp;
+
+    /* allow hero in silver-hating form to try to perform invocation ritual */
+    if (obj->otyp == BELL_OF_OPENING
+        && invocation_pos(u.ux, u.uy) && !On_stairs(u.ux, u.uy)) {
+        return 1;
+    }
 
     if (touch_artifact(obj, &g.youmonst)) {
         char buf[BUFSZ];

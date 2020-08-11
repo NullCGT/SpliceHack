@@ -1,4 +1,4 @@
-/* NetHack 3.6	monmove.c	$NHDT-Date: 1586091452 2020/04/05 12:57:32 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.137 $ */
+/* NetHack 3.7	monmove.c	$NHDT-Date: 1596498186 2020/08/03 23:43:06 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.142 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2006. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -672,14 +672,28 @@ register struct monst *mtmp;
             && (!Conflict || resist(mtmp, RING_CLASS, 0, 0))) {
             pline("It feels quite soothing.");
         } else if (!u.uinvulnerable) {
-            register boolean m_sen = sensemon(mtmp);
+            int dmg;
+            boolean m_sen = sensemon(mtmp);
 
-            if ((m_sen || (Blind_telepat && rn2(2)) || !rn2(10)) &&
-                !Psychic_resistance) {
-                int dmg;
+            if ((m_sen || (Blind_telepat && rn2(2)) || !rn2(10)) 
+                && !Psychic_resistance) {
+                /* hiding monsters are brought out of hiding when hit by
+                   a psychic blast, so do the same for hiding poly'd hero */
+                if (u.uundetected) {
+                    u.uundetected = 0;
+                    newsym(u.ux, u.uy);
+                } else if (U_AP_TYPE != M_AP_NOTHING
+                           /* hero has no way to hide as monster but
+                              check for that theoretical case anyway */
+                           && U_AP_TYPE != M_AP_MONSTER) {
+                    g.youmonst.m_ap_type = M_AP_NOTHING;
+                    g.youmonst.mappearance = 0;
+                    newsym(u.ux, u.uy);
+                }
                 pline("It locks on to your %s!",
-                      m_sen ? "telepathy" : Blind_telepat ? "latent telepathy"
-                                                          : "mind");
+                      m_sen ? "telepathy"
+                      : Blind_telepat ? "latent telepathy"
+                        : "mind"); /* note: hero is never mindless */
                 dmg = rnd(15);
                 if (Half_spell_damage)
                     dmg = (dmg + 1) / 2;
@@ -698,13 +712,13 @@ register struct monst *mtmp;
                 continue;
             if ((has_telepathy(m2) && (rn2(2) || m2->mblinded))
                 || !rn2(10)) {
+                /* wake it up first, to bring hidden monster out of hiding */
+                wakeup(m2, FALSE);
                 if (cansee(m2->mx, m2->my))
                     pline("It locks on to %s.", mon_nam(m2));
                 m2->mhp -= rnd(15);
                 if (DEADMONSTER(m2))
                     monkilled(m2, "", AD_DRIN);
-                else
-                    m2->msleeping = 0;
             }
         }
     }
@@ -1984,7 +1998,7 @@ struct monst *mtmp;
 
         if (typ == COIN_CLASS && obj->quan > 100L)
             return TRUE;
-        if (obj->oclass != GEM_CLASS && !(typ >= ARROW && typ <= BOOMERANG)
+        if (obj->oclass != GEM_CLASS && !(typ >= ARROW && typ <= CHAKRAM)
             && !(typ >= DAGGER && typ <= CRYSKNIFE) && typ != SLING
             && !is_cloak(obj) && typ != FEDORA && !is_gloves(obj)
             && typ != JACKET && typ != CREDIT_CARD && !is_shirt(obj)

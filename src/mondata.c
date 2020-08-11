@@ -1,4 +1,4 @@
-/* NetHack 3.6	mondata.c	$NHDT-Date: 1581803740 2020/02/15 21:55:40 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.77 $ */
+/* NetHack 3.7	mondata.c	$NHDT-Date: 1596498186 2020/08/03 23:43:06 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.83 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -320,6 +320,12 @@ int material;
     /* extra case: shapeshifted vampires still hate silver */
     if (material == SILVER && is_vampshifter(mon))
         return TRUE;
+
+    /* extra extra case: lycanthrope player (monster lycanthropes all fall under
+     * hates_material, and non-lycanthropes can't currently be infected) */
+    if (mon == &g.youmonst && material == SILVER && u.ulycn >= LOW_PM)
+        return TRUE;
+
     return FALSE;
 }
 
@@ -339,6 +345,7 @@ int material;
         return (is_were(ptr)
                 || is_vampire(ptr)
                 || is_demon(ptr) || ptr == &mons[PM_SHADE]
+                || (Race_if(PM_INFERNAL) && !Upolyd)
                 || (ptr->mlet == S_IMP));
     }
     else if (material == IRON || material == COLD_IRON) {
@@ -475,6 +482,8 @@ breakarm(ptr)
 register struct permonst *ptr;
 {
     if (sliparm(ptr))
+        return FALSE;
+    if (Race_if(PM_HUMAN_WERECAT) && ptr == &mons[PM_WERECAT])
         return FALSE;
 
     return (boolean) (bigmonst(ptr)
@@ -835,6 +844,7 @@ const char **remainder_p;
             { "human wererat", PM_HUMAN_WERERAT },
             { "human werejackal", PM_HUMAN_WEREJACKAL },
             { "human werewolf", PM_HUMAN_WEREWOLF },
+            { "human werecat", PM_HUMAN_WERECAT },
             /* for completeness */
             { "rat wererat", PM_WERERAT },
             { "jackal werejackal", PM_WEREJACKAL },
@@ -1336,6 +1346,45 @@ struct permonst *mdat;
         || mdat->mlet == S_LIGHT)
         return FALSE;
     return TRUE;
+}
+
+/* Return the material a monster is composed of.
+ * Don't get too specific; most monsters should return 0 from here. We're only
+ * interested if it's something unusual. */
+int
+monmaterial(mndx)
+int mndx;
+{
+    switch (mndx) {
+    case PM_GARGOYLE:
+    case PM_WINGED_GARGOYLE:
+    case PM_EARTH_ELEMENTAL:
+        return MINERAL;
+    case PM_SKELETON:
+        return BONE;
+    case PM_PAPER_GOLEM:
+        return PAPER;
+    case PM_GOLD_GOLEM:
+        return GOLD;
+    case PM_LEATHER_GOLEM:
+        return LEATHER;
+    case PM_WOOD_GOLEM:
+        return WOOD;
+    case PM_CLAY_GOLEM:
+    case PM_STONE_GOLEM:
+    case PM_RUBY_GOLEM:
+    case PM_SAPPHIRE_GOLEM:
+    case PM_CRYSTAL_GOLEM:
+        return MINERAL;
+    case PM_GLASS_GOLEM:
+        return GLASS;
+    case PM_IRON_GOLEM:
+        return IRON;
+    case PM_SILVER_GOLEM:
+        return SILVER;
+    default:
+        return 0;
+    }
 }
 
 /*mondata.c*/

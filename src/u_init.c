@@ -1,4 +1,4 @@
-/* NetHack 3.6	u_init.c	$NHDT-Date: 1578855627 2020/01/12 19:00:27 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.67 $ */
+/* NetHack 3.7	u_init.c	$NHDT-Date: 1596498222 2020/08/03 23:43:42 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.70 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2017. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -255,6 +255,8 @@ static struct trobj Wishing[] = { { WAN_WISHING, 3, WAND_CLASS, 1, 0 },
                                   { 0, 0, 0, 0, 0 } };
 static struct trobj Money[] = { { GOLD_PIECE, 0, COIN_CLASS, 1, 0 },
                                 { 0, 0, 0, 0, 0 } };
+static struct trobj Booze[] = { { POT_BOOZE, 0, POTION_CLASS, 1, 0 },
+				{0, 0, 0, 0, 0} };
 
 /* race-based substitutions for initial inventory;
    the weaker cloak for elven rangers is intentional--they shoot better */
@@ -289,8 +291,9 @@ static struct inv_sub {
     { PM_DWARF, SHORT_SWORD, DWARVISH_SHORT_SWORD },
     { PM_DWARF, HELMET, DWARVISH_HELM },
     /* { PM_DWARF, SMALL_SHIELD, DWARVISH_ROUNDSHIELD }, */
-    /* { PM_DWARF, PICK_AXE, DWARVISH_MATTOCK }, */
+    { PM_DWARF, PICK_AXE, DWARVISH_MATTOCK },
     { PM_DWARF, LEMBAS_WAFER, CRAM_RATION },
+    { PM_DWARF, POT_FRUIT_JUICE, POT_BOOZE },
     { PM_GNOME, BOW, CROSSBOW },
     { PM_GNOME, ARROW, CROSSBOW_BOLT },
     { PM_DROW, DAGGER, DARK_ELVEN_DAGGER },
@@ -589,6 +592,7 @@ static const struct def_skill Skill_Pir[] = {
     { P_TWO_WEAPON_COMBAT, P_SKILLED },
     { P_BARE_HANDED_COMBAT, P_EXPERT },
     { P_COOKING, P_EXPERT }, /* pirate chefs */
+    { P_FIREARM, P_EXPERT },
     { P_NONE, 0 }
 };
 static const struct def_skill Skill_R[] = {
@@ -917,6 +921,7 @@ u_init()
         knows_object(SPEED_BOOTS);
         knows_object(DRUM_OF_EARTHQUAKE);
         skill_init(Skill_Dan);
+        u.ustance = T_DANCE_E;
         break;
     case PM_DRAGONMASTER:
         ini_inv(Dragonmaster);
@@ -1110,6 +1115,8 @@ u_init()
         knows_object(DWARVISH_RING_MAIL);
         knows_object(DWARVISH_CLOAK);
         knows_object(DWARVISH_ROUNDSHIELD);
+        /* Dwarves begin the game with booze */
+        ini_inv(Booze);
         break;
 
     case PM_CHANGELING:
@@ -1147,8 +1154,8 @@ u_init()
 	    change_luck(-1);
 	    break;
 
-    case PM_HUMAN_WEREWOLF:
-        set_ulycn(PM_WEREWOLF);
+    case PM_HUMAN_WERECAT:
+        set_ulycn(PM_WERECAT);
         break;
     
     case PM_MINOR_ANGEL:

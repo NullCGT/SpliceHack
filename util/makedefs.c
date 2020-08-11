@@ -1,4 +1,4 @@
-/* NetHack 3.6  makedefs.c  $NHDT-Date: 1587503038 2020/04/21 21:03:58 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.180 $ */
+/* NetHack 3.7  makedefs.c  $NHDT-Date: 1596498258 2020/08/03 23:44:18 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.184 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Kenneth Lorber, Kensington, Maryland, 2015. */
 /* Copyright (c) M. Stephenson, 1990, 1991.                       */
@@ -24,13 +24,6 @@
 #include "context.h"
 #include "flag.h"
 #include "dlb.h"
-
-/* version information */
-#ifdef SHORT_FILENAMES
-#include "patchlev.h"
-#else
-#include "patchlevel.h"
-#endif
 
 #include <ctype.h>
 #ifdef MAC
@@ -951,7 +944,7 @@ do_rnd_access_file(fname, deflt_content)
 const char *fname;
 const char *deflt_content;
 {
-    char *line;
+    char *line, buf[BUFSZ];
 
     Sprintf(filename, DATA_IN_TEMPLATE, fname);
     Strcat(filename, ".txt");
@@ -969,6 +962,10 @@ const char *deflt_content;
         exit(EXIT_FAILURE);
     }
     Fprintf(ofp, "%s", Dont_Edit_Data);
+    /* lines from the file include trailing newline so make sure that the
+       default one does too */
+    if (!index(deflt_content, '\n'))
+        deflt_content = strcat(strcpy(buf, deflt_content), "\n");
     /* write out the default content entry unconditionally instead of
        waiting to see whether there are no regular output lines; if it
        matches a regular entry (bogusmon "grue"), that entry will become
@@ -2091,8 +2088,18 @@ do_objs()
                 break;
             }
             /*FALLTHRU*/
+        case VENOM_CLASS:
+            /* fall-through from gem class is ok; objects[] used to have
+                { "{acid,blinding} venom", "splash of venom" }
+               but those have been changed to
+                { "splash of {acid,blinding} venom", "splash of venom" }
+               so strip the extra "splash of " off to keep same macros */
+            if (!strncmp(objnam, "SPLASH_OF_", 10))
+                objnam += 10;
+            /*FALLTHRU*/
         default:
             Fprintf(ofp, "#define\t");
+            break;
         }
         if (prefix >= 0)
             Fprintf(ofp, "%s\t%d\n", limit(objnam, prefix), i);

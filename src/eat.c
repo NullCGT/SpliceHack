@@ -1,4 +1,4 @@
-/* NetHack 3.6	eat.c	$NHDT-Date: 1590971980 2020/06/01 00:39:40 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.230 $ */
+/* NetHack 3.7	eat.c	$NHDT-Date: 1596498165 2020/08/03 23:42:45 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.231 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -42,7 +42,7 @@ static boolean FDECL(maybe_cannibal, (int, BOOLEAN_P));
 
 /* also used to see if you're allowed to eat cats and dogs */
 #define CANNIBAL_ALLOWED() (Role_if(PM_CAVEMAN) || Race_if(PM_ORC) \
-    || Race_if(PM_HUMAN_WEREWOLF) || Race_if(PM_VAMPIRE))
+    || Race_if(PM_HUMAN_WERECAT) || Race_if(PM_VAMPIRE))
 
 /* monster types that cause hero to be turned into stone if eaten */
 #define flesh_petrifies(pm) (touch_petrifies(pm) || (pm) == &mons[PM_MEDUSA])
@@ -1203,6 +1203,9 @@ int cooking;
         break;
     case PM_HUMAN_WERECOCKATRICE:
         catch_lycanthropy = PM_WERECOCKATRICE;
+        break;
+    case PM_HUMAN_WERECAT:
+        catch_lycanthropy = PM_WERECAT;
         break;
     case PM_HUMAN_WERETIGER:
         catch_lycanthropy = PM_WERETIGER;

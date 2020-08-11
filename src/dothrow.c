@@ -1,4 +1,4 @@
-/* NetHack 3.6	dothrow.c	$NHDT-Date: 1584398443 2020/03/16 22:40:43 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.184 $ */
+/* NetHack 3.7	dothrow.c	$NHDT-Date: 1596498161 2020/08/03 23:42:41 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.188 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -216,8 +216,24 @@ int shotlimit;
         		if (((shotlimit <= 0) || (shotlimit >= multishot)) &&
         			(obj->quan >= multishot))
         		    You("let fly a volley of %s!", xname(obj));
-    	  }
-
+    	}
+        
+        /* Rate of fire is intrinsic to the weapon - cannot be user selected
+	     * except via altmode
+	     * Only for valid launchers 
+	     */
+	    if (uwep && is_firearm(uwep)) {
+            if (firearm_rof(uwep->otyp)) 
+                multishot += (firearm_rof(uwep->otyp) - 1);
+            if (uwep->altmode == WP_MODE_SINGLE)
+            /* weapons switchable b/w full/semi auto */
+                multishot = 1;
+            else if (uwep->altmode == WP_MODE_BURST)
+                multishot = ((multishot > 3) ? (multishot / 3) : 1);
+            /* else it is auto == no change */
+	    }
+	    if ((long )multishot > obj->quan) multishot = (int)obj->quan;
+        if (multishot < 1) multishot = 1;
         /* crossbows are slow to load and probably shouldn't allow multiple
            shots at all, but that would result in players never using them;
            instead, high strength is necessary to load and shoot quickly */
@@ -650,8 +666,15 @@ int x, y;
             return FALSE;
         }
         if (levl[x][y].typ == IRONBARS) {
-            You("crash into some iron bars.  Ouch!");
+            You("crash into some iron bars.");
             dmg = rnd(2 + *range);
+            if (Hate_material(IRON)) {
+                pline("The iron hurts to touch!");
+                dmg += sear_damage(IRON);
+            }
+            else {
+                pline("Ouch!");
+            }
             losehp(Maybe_Half_Phys(dmg), "crashing into iron bars",
                    KILLED_BY);
             wake_nearto(x,y, 20);
@@ -1122,6 +1145,11 @@ boolean hitsroof;
             done(STONING);
             return obj ? TRUE : FALSE;
         }
+        else if (Hate_material(obj->material)) {
+            /* dmgval() already added extra damage */
+            searmsg(&g.youmonst, &g.youmonst, obj, FALSE);
+            exercise(A_CON, FALSE);
+        }
         hitfloor(obj, TRUE);
         g.thrownobj = 0;
         losehp(Maybe_Half_Phys(dmg), "falling object", KILLED_BY_AN);
@@ -1173,7 +1201,7 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
 {
     register struct monst *mon;
     int range, urange;
-    boolean crossbowing, clear_thrownobj = FALSE,
+    boolean crossbowing, gunning, clear_thrownobj = FALSE,
             impaired = (Confusion || Stunned || Blind
                         || Hallucination || Fumbling),
             tethered_weapon = (obj->otyp == AKLYS && (wep_mask & W_WEP) != 0);
@@ -1268,7 +1296,7 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
         clear_thrownobj = TRUE;
         goto throwit_return;
 
-    } else if (obj->otyp == BOOMERANG && !Underwater) {
+    } else if ((obj->otyp == BOOMERANG || obj->otyp == CHAKRAM) && !Underwater) {
         if (Is_airlevel(&u.uz) || Levitation)
             hurtle(-u.dx, -u.dy, 1, TRUE);
         mon = boomhit(obj, u.dx, u.dy);
@@ -1287,6 +1315,8 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
         /* crossbow range is independent of strength */
         crossbowing = (ammo_and_launcher(obj, uwep)
                        && weapon_type(uwep) == P_CROSSBOW);
+        gunning = (ammo_and_launcher(obj, uwep)
+                       && weapon_type(uwep) == P_FIREARM);
         urange = (crossbowing ? 18 : (int) ACURRSTR) / 2;
         /* balls are easy to throw or at least roll;
          * also, this insures the maximum range of a ball is greater
@@ -1307,8 +1337,10 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
             range = 1;
 
         if (is_ammo(obj)) {
-            if (ammo_and_launcher(obj, uwep)) {
-                if (crossbowing)
+		    if (ammo_and_launcher(obj, uwep)) {
+                if (gunning) 
+				    range = firearm_range(uwep->otyp);
+                else if (crossbowing)
                     range = BOLT_LIM;
                 else
                     range++;
@@ -1386,11 +1418,6 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
     /* Handle grenades or rockets */
 	if (is_grenade(obj)) {
 	    arm_bomb(obj, TRUE);
-	} else if (is_bullet(obj) && (uwep && ammo_and_launcher(obj, uwep) &&
-		!is_grenade(obj))) {
-	    check_shop_obj(obj, g.bhitpos.x, g.bhitpos.y, TRUE);
-	    obfree(obj, (struct obj *)0);
-	    return;
 	}
 
     if (!g.thrownobj) {
@@ -1687,7 +1714,13 @@ register struct obj *obj; /* g.thrownobj or g.kickedobj or uwep */
         tmp += 1000; /* Guaranteed hit */
     }
 
-    if (obj->oclass == GEM_CLASS && is_unicorn(mon->data)) {
+    /* throwing real gems to co-aligned unicorns boosts Luck,
+       to cross-aligned unicorns changes Luck by random amount;
+       throwing worthless glass doesn't affect Luck but doesn't anger them;
+       3.7: treat rocks and gray stones as attacks rather than like glass
+       and also treat gems or glass shot via sling as attacks */
+    if (obj->oclass == GEM_CLASS && is_unicorn(mon->data)
+        && objects[obj->otyp].oc_material != MINERAL && !uslinging()) {
         if (mon->msleeping || !mon->mcanmove) {
             tmiss(obj, mon, FALSE);
             return 0;
@@ -1704,8 +1737,8 @@ register struct obj *obj; /* g.thrownobj or g.kickedobj or uwep */
        at leader... (kicked artifact is ok too; HMON_APPLIED could
        occur if quest artifact polearm or grapnel ever gets added) */
     if (hmode != HMON_APPLIED && quest_arti_hits_leader(obj, mon)) {
-        /* AIS: changes to wakeup() means that it's now less inappropriate here
-           than it used to be, but the manual version works just as well */
+        /* AIS: changes to wakeup() means that it's now less inappropriate
+           here than it used to be, but manual version works just as well */
         mon->msleeping = 0;
         mon->mstrategy &= ~STRAT_WAITMASK;
 
@@ -1767,7 +1800,7 @@ register struct obj *obj; /* g.thrownobj or g.kickedobj or uwep */
                     tmp++;
             }
         } else { /* thrown non-ammo or applied polearm/grapnel */
-            if (otyp == BOOMERANG) /* arbitrary */
+            if (otyp == BOOMERANG || otyp == CHAKRAM) /* arbitrary */
                 tmp += 4;
             else if (throwing_weapon(obj)) /* meant to be thrown */
                 tmp += 2;
@@ -1818,6 +1851,8 @@ register struct obj *obj; /* g.thrownobj or g.kickedobj or uwep */
                     broken = !rn2(4);
                 if (obj->blessed && !rnl(4))
                     broken = 0;
+                if (objects[otyp].oc_skill == -P_FIREARM)
+                    broken = 1;
 
                 if (broken) {
                     if (*u.ushops || obj->unpaid)
@@ -1874,6 +1909,13 @@ register struct obj *obj; /* g.thrownobj or g.kickedobj or uwep */
                && (guaranteed_hit || ACURR(A_DEX) > rnd(25))) {
         potionhit(mon, obj, POTHIT_HERO_THROW);
         return 1;
+    } else if (obj->otyp == PINCH_OF_CATNIP
+                && is_feline(mon->data)) {
+        if (!Blind)
+            pline("%s chases %s tail!", Monnam(mon), mhis(mon));
+        (void) tamedog(mon, (struct obj *) 0);
+        mon->mconf = 1;
+        return 1;
     } else if (befriend_with_obj(mon->data, obj)
                || (mon->mtame && dogfood(mon, obj) <= ACCFOOD)) {
         if (tamedog(mon, obj)) {
@@ -1911,15 +1953,16 @@ gem_accept(mon, obj)
 register struct monst *mon;
 register struct obj *obj;
 {
+    static NEARDATA const char
+        nogood[]     = " is not interested in your junk.",
+        acceptgift[] = " accepts your gift.",
+        maybeluck[]  = " hesitatingly",
+        noluck[]     = " graciously",
+        addluck[]    = " gratefully";
     char buf[BUFSZ];
     boolean is_buddy = sgn(mon->data->maligntyp) == sgn(u.ualign.type);
     boolean is_gem = obj->material == GEMSTONE;
     int ret = 0;
-    static NEARDATA const char nogood[] = " is not interested in your junk.";
-    static NEARDATA const char acceptgift[] = " accepts your gift.";
-    static NEARDATA const char maybeluck[] = " hesitatingly";
-    static NEARDATA const char noluck[] = " graciously";
-    static NEARDATA const char addluck[] = " gratefully";
 
     Strcpy(buf, Monnam(mon));
     mon->mpeaceful = 1;
@@ -1939,7 +1982,8 @@ register struct obj *obj;
             Strcat(buf, nogood);
             goto nopick;
         }
-        /* making guesses */
+
+    /* making guesses */
     } else if (has_oname(obj) || objects[obj->otyp].oc_uname) {
         if (is_gem) {
             if (is_buddy) {
@@ -1953,7 +1997,8 @@ register struct obj *obj;
             Strcat(buf, nogood);
             goto nopick;
         }
-        /* value completely unknown to @ */
+
+    /* value completely unknown to @ */
     } else {
         if (is_gem) {
             if (is_buddy) {
@@ -2216,6 +2261,8 @@ struct obj *obj;
     case ACID_VENOM:
     case BLINDING_VENOM:
     case SPIKE:
+    case BULLET:
+    case SHOTGUN_SHELL:
         return 1;
     default:
         return 0;
@@ -2249,6 +2296,9 @@ boolean in_view;
         else
             pline("%s shatter%s%s!", Doname2(obj),
                   (obj->quan == 1L) ? "s" : "", to_pieces);
+        break;
+    case BULLET:
+    case SHOTGUN_SHELL:
         break;
     case EGG:
     case MELON:
@@ -2398,6 +2448,61 @@ struct obj *obj;
     stackobj(obj);
     newsym(g.bhitpos.x, g.bhitpos.y);
     return 1;
+}
+
+/* 
+TODO: Find a better way to express range and rof.
+In SLASH'EM, range and rof are defined as small and large weapon
+damage. The problem is that this leads to weird melee attack
+damage for every single firearm. Rather than rewriting every single
+object struct and increasing their size by two bits, I thought it
+more prudent to pull out range and rof into external functions. While
+it hurts my coder brain to do so, this is NetHack, and sometimes
+ugly hacks are needed.
+*/
+
+int
+firearm_range(otyp)
+int otyp;
+{
+    switch(otyp) {
+    case SUBMACHINE_GUN:
+        return 10;
+    case HEAVY_MACHINE_GUN:
+        return 20;
+    case RIFLE:
+        return 22;
+    case AUTO_SHOTGUN:
+    case SHOTGUN:
+        return 3;
+    case SNIPER_RIFLE:
+        return 25;
+    case PISTOL:
+        return 15;
+    default:
+        return BOLT_LIM;
+    }
+}
+
+int
+firearm_rof(otyp)
+int otyp;
+{
+    switch(otyp) {
+    case SUBMACHINE_GUN:
+        return 3;
+    case HEAVY_MACHINE_GUN:
+        return 8;
+    case RIFLE:
+    case SHOTGUN:
+        return -1;
+    case AUTO_SHOTGUN:
+        return 2;
+    case SNIPER_RIFLE:
+        return -3;
+    default:
+        return 0;
+    }
 }
 
 /*dothrow.c*/

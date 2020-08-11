@@ -1,4 +1,4 @@
-/* NetHack 3.6	zap.c	$NHDT-Date: 1593306912 2020/06/28 01:15:12 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.343 $ */
+/* NetHack 3.7	zap.c	$NHDT-Date: 1596498233 2020/08/03 23:43:53 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.346 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1254,6 +1254,19 @@ register struct obj *obj;
             break;
         }
     }
+    /* cancelling a troll's corpse prevents it from reviving (on its own;
+       does not affect undead turning induced revival) */
+    if (obj->otyp == CORPSE && obj->timed
+        && !is_rider(&mons[obj->corpsenm])) {
+        anything a = *obj_to_any(obj);
+        long timout = peek_timer(REVIVE_MON, &a);
+
+        if (timout) {
+            (void) stop_timer(REVIVE_MON, &a);
+            (void) start_timer(timout, TIMER_OBJECT, ROT_CORPSE, &a);
+        }
+    }
+
     unbless(obj);
     uncurse(obj);
     return;
@@ -4088,12 +4101,12 @@ int dx, dy;
             if (Fumbling || rn2(20) >= ACURR(A_DEX)) {
                 /* we hit ourselves */
                 (void) thitu(10 + obj->spe, dmgval(obj, &g.youmonst), &obj,
-                             "boomerang");
+                             obj->otyp == BOOMERANG ? "boomerang" : "chakram");
                 endmultishot(TRUE);
                 break;
             } else { /* we catch it */
                 tmp_at(DISP_END, 0);
-                You("skillfully catch the boomerang.");
+                You("skillfully catch the %s.", obj->otyp == BOOMERANG ? "boomerang" : "chakram");
                 return &g.youmonst;
             }
         }
@@ -5396,8 +5409,12 @@ register struct obj *obj; /* no texts here! */
     if (obj->where == OBJ_FLOOR) {
         obj_extract_self(obj); /* move rocks back on top */
         place_object(obj, obj->ox, obj->oy);
-        if (!does_block(obj->ox, obj->oy, &levl[obj->ox][obj->oy]))
+        if (!does_block(obj->ox, obj->oy, &levl[obj->ox][obj->oy])) {
             unblock_point(obj->ox, obj->oy);
+            /* need immediate update in case this is a striking/force bolt
+               zap that is about hit more things */
+            vision_recalc(0);
+        }
         if (cansee(obj->ox, obj->oy))
             newsym(obj->ox, obj->oy);
     }

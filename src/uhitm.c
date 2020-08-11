@@ -1,4 +1,4 @@
-/* NetHack 3.6	uhitm.c	$NHDT-Date: 1593306911 2020/06/28 01:15:11 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.237 $ */
+/* NetHack 3.7	uhitm.c	$NHDT-Date: 1596498221 2020/08/03 23:43:41 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.240 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -559,7 +559,7 @@ int dieroll;
         /* Lycanthropes sometimes go a little berserk!
   	     * If special is on,  they will multihit and stun!
   	     */
-  	    if ((Race_if(PM_HUMAN_WEREWOLF) && (mon->mhp > 0)) ||
+  	    if ((Race_if(PM_HUMAN_WERECAT) && (mon->mhp > 0)) ||
   				tech_inuse(T_EVISCERATE)) {
         		if (tech_inuse(T_EVISCERATE)) {
         		    /*make slashing message elsewhere*/
@@ -613,16 +613,16 @@ void dance()
     }
     /* Dance effects */
     /* TODO: De-spaghettifiy this code. */
-    if (tech_inuse(T_DANCE_E) && dsteps >= 5) {
+    if (u.ustance == T_DANCE_E && dsteps >= 5) {
         blitz_e_fist();
         done_dancing = TRUE;
     }
-    if (tech_inuse(T_DANCE_WWALK) && dsteps >= 5) {
+    if (u.ustance == T_DANCE_WWALK && dsteps >= 5) {
         pline("Your %s are sheathed in ice!", makeplural(body_part(FOOT)));
         incr_itimeout(&HWwalking, rn1(20, 30));
         done_dancing = TRUE;
     }
-    if (tech_inuse(T_DANCE_STORM) && dsteps >= 10) {
+    if (u.ustance == T_DANCE_STORM && dsteps >= 10) {
         pline("KRAKOOM!");
         pseudo = mksobj(WAN_LIGHTNING, FALSE, FALSE);
         pseudo->blessed = pseudo->cursed = 0;
@@ -630,7 +630,7 @@ void dance()
         obfree(pseudo, NULL);
         done_dancing = TRUE;
     }
-    if (tech_inuse(T_DANCE_EARTH) && dsteps >= 15) {
+    if (u.ustance == T_DANCE_EARTH && dsteps >= 15) {
         You("stomp the ground as hard as you can!");
         do_earthquake(3, u.ux, u.uy);
         pseudo = mksobj(SCR_AIR, FALSE, FALSE);
@@ -639,12 +639,12 @@ void dance()
         obfree(pseudo, NULL);
         done_dancing = TRUE;
     }
-    if (tech_inuse(T_DANCE_EXPLODE) && dsteps >= 20) {
+    if (u.ustance == T_DANCE_EXPLODE && dsteps >= 20) {
         You("are engulfed in an inferno!");
         explode(u.ux, u.uy, 11, d(2, 4), 0, EXPL_FIERY);
         /* Does not immediately end */
     }
-    if (tech_inuse(T_DANCE_SPELL) && dsteps >= 25) {
+    if (u.ustance == T_DANCE_SPELL && dsteps >= 25) {
         You("become a font of spiritual power!");
         docast();
         if (!rn2(3)) done_dancing = TRUE;
@@ -857,7 +857,7 @@ int dieroll;
     boolean ispoisoned = FALSE, needpoismsg = FALSE, poiskilled = FALSE,
             unpoisonmsg = FALSE;
     boolean lightobj = FALSE;
-    boolean valid_weapon_attack = FALSE;
+    boolean use_weapon_skill = FALSE, train_weapon_skill = FALSE;
     boolean unarmed = !uwep && !uarm && !uarms;
     boolean hand_to_hand = (thrown == HMON_MELEE
                             /* not grapnels; applied implies uwep */
@@ -873,16 +873,16 @@ int dieroll;
 
     wakeup(mon, TRUE);
     if (!obj) { /* attack with bare hands */
-        if (mdat == &mons[PM_SHADE])
+        if (mdat == &mons[PM_SHADE]) {
             tmp = 0;
-        else if (martial_bonus())
-            tmp = rnd(4); /* bonus for martial arts */
-        else
-            tmp = rnd(2);
-        /* It's unfair to martial arts users that whenever they roll a natural
-         * 1 on this d4, they get no bonuses and hit for just that one point of
-         * damage. */
-        valid_weapon_attack = TRUE;
+        } else {
+            /* note: 1..2 or 1..4 can be substantiallly increased by
+               strength bonus or skill bonus, usually both... */
+            tmp = rnd(!martial_bonus() ? 2 : 4);
+            use_weapon_skill = TRUE;
+            train_weapon_skill = (tmp > 1);
+        }
+
         /* Blessed gloves give bonuses when fighting 'bare-handed'.  So do
           rings or gloves made of a hated material.  Note:  rings are worn
           under gloves, so you don't get both bonuses, and two hated rings
@@ -984,7 +984,8 @@ int dieroll;
                 /* or throw a missile without the proper bow... */
                 || (is_ammo(obj) && (thrown != HMON_THROWN
                                      || !ammo_and_launcher(obj, uwep)))) {
-                /* then do only 1-2 points of damage */
+                /* then do only 1-2 points of damage and don't use or
+                   train weapon's skill */
                 if (mdat == &mons[PM_SHADE] && !shade_glare(obj))
                     tmp = 0;
                 else
@@ -1010,10 +1011,13 @@ int dieroll;
                         tmp++;
                 }
             } else {
+                /* "normal" weapon usage */
+                use_weapon_skill = TRUE;
                 tmp = dmgval(obj, mon);
                 /* a minimal hit doesn't exercise proficiency */
-                valid_weapon_attack = (tmp > 1);
-                if (!valid_weapon_attack || mon == u.ustuck || u.twoweap
+                train_weapon_skill = (tmp > 1);
+                /* special attack actions */
+                if (!train_weapon_skill || mon == u.ustuck || u.twoweap
                     /* Cleaver can hit up to three targets at once so don't
                        let it also hit from behind or shatter foes' weapons */
                     || (hand_to_hand && obj->oartifact == ART_CLEAVER)) {
@@ -1066,6 +1070,7 @@ int dieroll;
                        destroyed and they might do so */
                     if (DEADMONSTER(mon)) /* artifact killed monster */
                         return FALSE;
+                    /* perhaps artifact tried to behead a headless monster */
                     if (tmp == 0)
                         return TRUE;
                     hittxt = TRUE;
@@ -1079,8 +1084,8 @@ int dieroll;
                 }
 
                 if (mon_hates_material(mon, obj->material)) {
+                    /* dmgval() already added bonus damage */
                     hated_obj = obj;
-                    tmp += rnd(sear_damage(obj->material));
                 }
                 if (artifact_light(obj) && obj->lamplit
                     && mon_hates_light(mon))
@@ -1090,14 +1095,13 @@ int dieroll;
                     jousting = joust(mon, obj);
                     /* exercise skill even for minimal damage hits */
                     if (jousting)
-                        valid_weapon_attack = TRUE;
+                        train_weapon_skill = TRUE;
                 }
                 if (thrown == HMON_THROWN
                     && (is_ammo(obj) || is_missile(obj))) {
                     if (ammo_and_launcher(obj, uwep)) {
-                        /* Elves and Samurai do extra damage using
-                         * their bows&arrows; they're highly trained.
-                         */
+                        /* elves and samurai do extra damage using their own
+                           bows with own arrows; they're highly trained */
                         if (Role_if(PM_SAMURAI) && obj->otyp == YA
                             && uwep->otyp == YUMI)
                             tmp++;
@@ -1105,21 +1109,22 @@ int dieroll;
                                  && uwep->otyp == ELVEN_BOW) {
                             tmp++;
                             /* WAC Extra damage if in special ability*/
-                    				if (tech_inuse(T_FLURRY)) tmp += 2;
-                				} else if (objects[obj->otyp].oc_skill == P_BOW
-                					&& tech_inuse(T_FLURRY)) {
-                    				tmp++;
+                                if (tech_inuse(T_FLURRY)) tmp += 2;
+                            } else if (objects[obj->otyp].oc_skill == P_BOW
+                                && tech_inuse(T_FLURRY)) {
+                                tmp++;
                     		} else if (Race_if(PM_DROW)) {
-                    				if (obj->otyp == DARK_ELVEN_ARROW &&
-                    					uwep->otyp == DARK_ELVEN_BOW) {
-                    				    tmp += 2;
-                    				    /* WAC Mucho damage if in special ability*/
-                    				    if (tech_inuse(T_FLURRY)) tmp *= 2;
-                    				} else if (objects[obj->otyp].oc_skill == P_BOW
-                    					&& tech_inuse(T_FLURRY)) {
-                    				    tmp++;
-                    				}
+                                if (obj->otyp == DARK_ELVEN_ARROW &&
+                                    uwep->otyp == DARK_ELVEN_BOW) {
+                                    tmp += 2;
+                                    /* WAC Mucho damage if in special ability*/
+                                    if (tech_inuse(T_FLURRY)) tmp *= 2;
+                                } else if (objects[obj->otyp].oc_skill == P_BOW
+                                    && tech_inuse(T_FLURRY)) {
+                                    tmp++;
+                                }
               			    }
+                        train_weapon_skill = (tmp > 0);
                     }
                     if (obj->opoisoned && is_poisonable(obj))
                         ispoisoned = TRUE;
@@ -1143,6 +1148,8 @@ int dieroll;
                     break_glass_obj(some_armor(mon));
                 }
             }
+
+        /* attacking with non-weapons */
         } else if (obj->oclass == POTION_CLASS) {
             if (obj->quan > 1L)
                 obj = splitobj(obj, 1L);
@@ -1166,6 +1173,10 @@ int dieroll;
                 case HEAVY_IRON_BALL: /* 1d25 */
                 case IRON_CHAIN:      /* 1d4+1 */
                     tmp = dmgval(obj, mon);
+                    if (mon_hates_material(mon, obj->material)) {
+                        /* dmgval() already added damage, but track hated_obj */
+                        hated_obj = obj;
+                    }
                     break;
                 case MIRROR:
                     if (breaktest(obj)) {
@@ -1288,7 +1299,8 @@ int dieroll;
                 case PINCH_OF_CATNIP:
                     tmp = 0;
                     if (is_feline(mdat)) {
-                        pline("%s chases their tail!", Monnam(mon));
+                        if (!Blind)
+                            pline("%s chases %s tail!", Monnam(mon), mhis(mon));
                         (void) tamedog(mon, (struct obj *) 0);
                         mon->mconf = 1;
                         if (thrown)
@@ -1297,7 +1309,7 @@ int dieroll;
                             useup(obj);
                         return FALSE;
                     } else {
-                        pline("Poof! Catnip flies everywhere!");
+                        You("%s catnip fly everywhere!", Blind ? "feel" : "see");
                         setmangry(mon, TRUE);
                     }
                     if (thrown)
@@ -1344,10 +1356,17 @@ int dieroll;
                         pline(obj->otyp == CREAM_PIE ? "Splat!" : "Splash!");
                         setmangry(mon, TRUE);
                     }
-                    if (thrown)
-                        obfree(obj, (struct obj *) 0);
-                    else
-                        useup(obj);
+                    {
+                        boolean more_than_1 = (obj->quan > 1L);
+
+                        if (thrown)
+                            obfree(obj, (struct obj *) 0);
+                        else
+                            useup(obj);
+
+                        if (!more_than_1)
+                            obj = (struct obj *) 0;
+                    }
                     hittxt = TRUE;
                     get_dmg_bonus = FALSE;
                     tmp = 0;
@@ -1360,10 +1379,17 @@ int dieroll;
                         Your("venom burns %s!", mon_nam(mon));
                         tmp = dmgval(obj, mon);
                     }
-                    if (thrown)
-                        obfree(obj, (struct obj *) 0);
-                    else
-                        useup(obj);
+                    {
+                        boolean more_than_1 = (obj->quan > 1L);
+
+                        if (thrown)
+                            obfree(obj, (struct obj *) 0);
+                        else
+                            useup(obj);
+
+                        if (!more_than_1)
+                            obj = (struct obj *) 0;
+                    }
                     hittxt = TRUE;
                     get_dmg_bonus = FALSE;
                     break;
@@ -1397,17 +1423,62 @@ int dieroll;
         }
     }
 
-    /****** NOTE: perhaps obj is undefined!! (if !thrown && BOOMERANG)
-     *      *OR* if attacking bare-handed!! */
+    /*
+     ***** NOTE: perhaps obj is undefined! (if !thrown && BOOMERANG)
+     *      *OR* if attacking bare-handed!
+     * Note too: the cases where obj might get destroyed do not
+     *      set 'use_weapon_skill', bare-handed does.
+     */
 
-    if (get_dmg_bonus && tmp > 0) {
-        tmp += u.udaminc;
-        /* If you throw using a propellor, you don't get a strength
-         * bonus but you do get an increase-damage bonus.
+    if (tmp > 0) {
+        int dmgbonus = 0;
+
+        /*
+         * Potential bonus (or penalty) from worn ring of increase damage
+         * (or intrinsic bonus from eating same) or from strength.
          */
-        if (thrown != HMON_THROWN || !obj || !uwep
-            || !ammo_and_launcher(obj, uwep))
-            tmp += dbon();
+        if (get_dmg_bonus) {
+            dmgbonus = u.udaminc;
+            /* throwing using a propellor gets an increase-damage bonus
+               but not a strength one; other attacks get both */
+            if (thrown != HMON_THROWN
+                || !obj || !uwep || !ammo_and_launcher(obj, uwep))
+                dmgbonus += dbon();
+        }
+
+        /*
+         * Potential bonus (or penalty) from weapon skill.
+         * 'use_weapon_skill' is True for hand-to-hand ordinary weapon,
+         * applied or jousting polearm or lance, thrown missile (dart,
+         * shuriken, boomerang), or shot ammo (arrow, bolt, rock/gem when
+         * wielding corresponding launcher).
+         * It is False for hand-to-hand or thrown non-weapon, hand-to-hand
+         * polearm or lance when not mounted, hand-to-hand missile or ammo
+         * or launcher, thrown non-missile, or thrown ammo (including rocks)
+         * when not wielding corresponding launcher.
+         */
+        if (use_weapon_skill) {
+            struct obj *skillwep = obj;
+
+            if (PROJECTILE(obj) && ammo_and_launcher(obj, uwep))
+                skillwep = uwep;
+            dmgbonus += weapon_dam_bonus(skillwep);
+
+            /* hit for more than minimal damage (before being adjusted
+               for damage or skill bonus) trains the skill toward future
+               enhancement */
+            if (train_weapon_skill) {
+                /* [this assumes that `!thrown' implies wielded...] */
+                wtype = thrown ? weapon_type(skillwep) : uwep_skill_type();
+                use_skill(wtype, 1);
+            }
+        }
+
+        /* apply combined damage+strength and skill bonuses */
+        tmp += dmgbonus;
+        /* don't let penalty, if bonus is negative, turn a hit into a miss */
+        if (tmp < 1)
+            tmp = 1;
     }
 
     /*
@@ -1426,17 +1497,6 @@ int dieroll;
                     You("slash %s!", mon_nam(mon));
     		hittxt = TRUE;
   	}
-
-    if (valid_weapon_attack) {
-        struct obj *wep;
-
-        /* to be valid a projectile must have had the correct projector */
-        wep = PROJECTILE(obj) ? uwep : obj;
-        tmp += weapon_dam_bonus(wep);
-        /* [this assumes that `!thrown' implies wielded...] */
-        wtype = thrown ? weapon_type(wep) : uwep_skill_type();
-        use_skill(wtype, 1);
-    }
 
     if (ispoisoned) {
         int nopoison = (10 - (obj->owt / 10));
@@ -1480,12 +1540,13 @@ int dieroll;
         if (jousting < 0) {
             pline("%s shatters on impact!", Yname2(obj));
             /* (must be either primary or secondary weapon to get here) */
-            set_twoweap(FALSE); /* u.twoweap = FALSE; untwoweapon() is too verbose */
+            set_twoweap(FALSE); /* sets u.twoweap = FALSE;
+                                 * untwoweapon() is too verbose here */
             if (obj == uwep)
                 uwepgone(); /* set g.unweapon */
             /* minor side-effect: broken lance won't split puddings */
             useup(obj);
-            obj = 0;
+            obj = (struct obj *) 0;
         }
         /* avoid migrating a dead monster */
         if (mon->mhp > tmp) {
@@ -1566,9 +1627,9 @@ int dieroll;
             && !(is_ammo(obj) || is_missile(obj)))
         && hand_to_hand) {
         struct monst *mclone;
-        if ((mclone = clone_mon(mon, 0, 0)) != 0) {
-            char withwhat[BUFSZ];
+        char withwhat[BUFSZ];
 
+        if ((mclone = clone_mon(mon, 0, 0)) != 0) {
             withwhat[0] = '\0';
             if (u.twoweap && flags.verbose)
                 Sprintf(withwhat, " with %s", yname(obj));
@@ -1597,7 +1658,7 @@ int dieroll;
     }
 
     if (hated_obj) {
-        searmsg(&g.youmonst, mon, hated_obj);
+        searmsg(&g.youmonst, mon, hated_obj, FALSE);
     }
     if (lightobj) {
         const char *fmt;
@@ -2349,6 +2410,10 @@ int specialdmg; /* blessed and/or material bonus against various things */
 
         if (g.notonhead || !has_head(pd)) {
             pline("%s doesn't seem harmed.", Monnam(mdef));
+            /* hero should skip remaining AT_TENT+AD_DRIN attacks
+               because they'll be just as harmless as this one (and also
+               to reduce verbosity) */
+            g.skipdrin = TRUE;
             tmp = 0;
             if (!Unchanging && pd == &mons[PM_GREEN_SLIME]) {
                 if (!Slimed) {
@@ -2906,31 +2971,22 @@ register struct monst *mon;
 {
     struct attack *mattk, alt_attk;
     struct obj *weapon, **originalweapon;
-    boolean altwep = FALSE, weapon_used = FALSE, odd_claw = TRUE;
+    boolean altwep = FALSE, weapon_used = FALSE, stop_attacking = FALSE;
     int i, tmp, armorpenalty, sum[NATTK], nsum = 0, dhit = 0, attknum = 0;
-    int dieroll, multi_claw = 0;
+    int dieroll;
 
-    /* with just one touch/claw/weapon attack, both rings matter;
-       with more than one, alternate right and left when checking
-       whether silver ring causes successful hit */
+    g.skipdrin = FALSE; /* [see mattackm(mhitm.c)] */
+
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
         mattk = getmattk(&g.youmonst, mon, i, sum, &alt_attk);
-        if (mattk->aatyp == AT_WEAP
-            || mattk->aatyp == AT_CLAW || mattk->aatyp == AT_TUCH)
-            ++multi_claw;
-    }
-    multi_claw = (multi_claw > 1); /* switch from count to yes/no */
-
-    for (i = 0; i < NATTK; i++) {
-        /* sum[i] = 0; -- now done above */
-        mattk = getmattk(&g.youmonst, mon, i, sum, &alt_attk);
+        if (g.skipdrin && mattk->aatyp == AT_TENT && mattk->adtyp == AD_DRIN)
+            continue;
         weapon = 0;
         switch (mattk->aatyp) {
         case AT_WEAP:
             /* if (!uwep) goto weaponless; */
  use_weapon:
-            odd_claw = !odd_claw; /* see case AT_CLAW,AT_TUCH below */
             /* if we've already hit with a two-handed weapon, we don't
                get to make another weapon attack (note:  monsters who
                use weapons do not have this restriction, but they also
@@ -3046,29 +3102,24 @@ const char *verb = 0; /* verb or body part */
                     break;
                 }
                 wakeup(mon, TRUE);
-
-                specialdmg = 0; /* blessed and/or material bonus */
+                /* There used to be a bunch of code here to ensure that W_RINGL
+                 * and W_RINGR slots got chosen on alternating claw/touch
+                 * attacks. There's no such logic for monsters, and if you know
+                 * that the ring on one of your hands will be especially
+                 * effective, you'll probably keep hitting with that hand. So
+                 * just do the default and take whatever the most damaging piece
+                 * of gear is. */
+                specialdmg = special_dmgval(&g.youmonst, mon,
+                                            attack_contact_slots(&g.youmonst,
+                                                                 mattk->aatyp),
+                                            &hated_obj);
                 switch (mattk->aatyp) {
                 case AT_CLAW:
-                case AT_TUCH:
                     /* verb=="claws" may be overridden below */
-                    verb = (mattk->aatyp == AT_TUCH) ? "touch" : "claws";
-                    /* decide if material-hater will be hit by hated ring(s);
-                       for 'multi_claw' where attacks alternate right/left,
-                       assume 'even' claw or touch attacks use right hand
-                       or paw, 'odd' ones use left for ring interaction;
-                       even vs odd is based on actual attacks rather
-                       than on index into mon->dat->mattk[] so that {bite,
-                       claw,claw} instead of {claw,claw,bite} doesn't
-                       make poly'd hero mysteriously become left-handed */
-                    odd_claw = !odd_claw;
-                    specialdmg = special_dmgval(&g.youmonst, mon,
-                                                W_ARMG
-                                                | ((odd_claw || !multi_claw)
-                                                   ? W_RINGL : 0L)
-                                                | ((!odd_claw || !multi_claw)
-                                                   ? W_RINGR : 0L),
-                                                &hated_obj);
+                    verb = "claws";
+                    break;
+                case AT_TUCH:
+                    verb = "touch";
                     break;
                 case AT_TENT:
                     /* assumes mind flayer's tentacles-on-head rather
@@ -3077,16 +3128,9 @@ const char *verb = 0; /* verb or body part */
                     break;
                 case AT_KICK:
                     verb = "kick";
-                    specialdmg = special_dmgval(&g.youmonst, mon, W_ARMF,
-                                                &hated_obj);
                     break;
                 case AT_BUTT:
                     verb = "head butt"; /* mbodypart(mon,HEAD)=="head" */
-                    /* hypothetical; if any form with a head-butt attack
-                       could wear a helmet, it would hit shades when
-                       wearing a blessed (or hated) one */
-                    specialdmg = special_dmgval(&g.youmonst, mon, W_ARMH,
-                                                &hated_obj);
                     break;
                 case AT_BITE:
                     if (has_beak(g.youmonst.data))
@@ -3115,7 +3159,7 @@ const char *verb = 0; /* verb or body part */
                             verb = "hit"; /* not "claws" */
                         You("%s %s.", verb, mon_nam(mon));
                         if (hated_obj && flags.verbose)
-                            searmsg(&g.youmonst, mon, hated_obj);
+                            searmsg(&g.youmonst, mon, hated_obj, FALSE);
                     }
                     sum[i] = damageum(mon, mattk, specialdmg);
                 }
@@ -3148,11 +3192,9 @@ const char *verb = 0; /* verb or body part */
                already grabbed in a previous attack */
             dhit = 1;
             wakeup(mon, TRUE);
-            /* choking hug/throttling grab uses hands (gloves or rings);
-               normal hug uses outermost of cloak/suit/shirt */
             specialdmg = special_dmgval(&g.youmonst, mon,
-                                        byhand ? (W_ARMG | W_RINGL | W_RINGR)
-                                               : (W_ARMC | W_ARM | W_ARMU),
+                                        attack_contact_slots(&g.youmonst,
+                                                             AT_HUGS),
                                         &hated_obj);
             if (unconcerned) {
                 /* strangling something which can't be strangled */
@@ -3179,7 +3221,7 @@ const char *verb = 0; /* verb or body part */
                 if (specialdmg) {
                     You("%s %s%s", verb, mon_nam(mon), exclam(specialdmg));
                     if (hated_obj && flags.verbose)
-                        searmsg(&g.youmonst, mon, hated_obj);
+                        searmsg(&g.youmonst, mon, hated_obj, FALSE);
                     sum[i] = damageum(mon, mattk, specialdmg);
                 } else {
                     Your("%s passes harmlessly through %s.",
@@ -3194,14 +3236,14 @@ const char *verb = 0; /* verb or body part */
                       /* extra feedback for non-breather being choked */
                       unconcerned ? " but doesn't seem concerned" : "");
                 if (hated_obj && flags.verbose)
-                    searmsg(&g.youmonst, mon, hated_obj);
+                    searmsg(&g.youmonst, mon, hated_obj, FALSE);
                 sum[i] = damageum(mon, mattk, specialdmg);
                 if (u.ustuck && u.ustuck != mon)
                     uunstick();
                 You("grab %s!", mon_nam(mon));
                 set_ustuck(mon);
                 if (hated_obj && flags.verbose)
-                    searmsg(&g.youmonst, mon, hated_obj);
+                    searmsg(&g.youmonst, mon, hated_obj, FALSE);
                 sum[i] = damageum(mon, mattk, specialdmg);
             }
             break; /* AT_HUGS */

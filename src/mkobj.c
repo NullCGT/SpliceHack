@@ -1,4 +1,4 @@
-/* NetHack 3.6	mkobj.c	$NHDT-Date: 1593306908 2020/06/28 01:15:08 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.181 $ */
+/* NetHack 3.7	mkobj.c	$NHDT-Date: 1596498183 2020/08/03 23:43:03 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.186 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -72,16 +72,22 @@ static const struct icp hellprobs[] = { { 20, WEAPON_CLASS },
                                         { 8, RING_CLASS },
                                         { 4, AMULET_CLASS } };
 
+static const struct oextra zerooextra = DUMMY;
+
+static void
+init_oextra(oex)
+struct oextra *oex;
+{
+    *oex = zerooextra;
+}
+
 struct oextra *
 newoextra()
 {
     struct oextra *oextra;
 
     oextra = (struct oextra *) alloc(sizeof (struct oextra));
-    oextra->oname = 0;
-    oextra->omonst = 0;
-    oextra->omailcmd = 0;
-    oextra->omid = 0;
+    init_oextra(oextra);
     return oextra;
 }
 
@@ -813,7 +819,7 @@ boolean artif;
             if (is_poisonable(otmp) && !rn2(100))
                 otmp->opoisoned = 1;
 
-            if (artif && !rn2(20))
+            if (artif && !rn2(Role_if(PM_PIRATE) ? 5 : 20))
                 otmp = mk_artifact(otmp, (aligntyp) A_NONE);
 
             if (!otmp->oartifact && !otmp->cursed
@@ -875,6 +881,12 @@ boolean artif;
             case KELP_FROND:
                 otmp->quan = (long) rnd(2);
                 break;
+            case CANDY_BAR:
+                /* set otmp->spe */
+                assign_candy_wrapper(otmp);
+                break;
+            default:
+                break;
             }
             if (Is_pudding(otmp)) {
                 otmp->quan = 1L; /* for emphasis; glob quantity is always 1 */
@@ -884,7 +896,8 @@ boolean artif;
                                  + (otmp->otyp - GLOB_OF_GRAY_OOZE);
             } else {
                 if (otmp->otyp != CORPSE && otmp->otyp != MEAT_RING
-                    && otmp->otyp != KELP_FROND && !rn2(6)) {
+                    && otmp->otyp != PUMPKIN && otmp->otyp != KELP_FROND
+                    && !rn2(6)) {
                     otmp->quan = 2L;
                 }
             }
@@ -1034,7 +1047,7 @@ boolean artif;
                 otmp->spe = rne(3);
             } else
                 blessorcurse(otmp, 10);
-            if (artif && !rn2(40))
+            if (artif && !rn2(Role_if(PM_PIRATE) ? 10 : 40))
                 otmp = mk_artifact(otmp, (aligntyp) A_NONE);
             /* simulate lacquered armor for samurai */
             if (Role_if(PM_SAMURAI) && otmp->otyp == SPLINT_MAIL
@@ -1700,6 +1713,10 @@ unsigned corpstatflags;
 
         if (!ptr)
             ptr = mtmp->data;
+
+        /* don't give a revive timer to a cancelled troll's corpse */
+        if (mtmp->mcan && !is_rider(ptr))
+            otmp->norevive = 1;
     }
 
     /* when 'ptr' is non-null it comes from our caller or from 'mtmp';
@@ -1850,6 +1867,7 @@ boolean copyof;
             /* Never insert this returned pointer into mon chains! */
             mnew = mtmp;
         }
+        mnew->data = &mons[mnew->mnum];
     }
     return mnew;
 }
@@ -2923,7 +2941,7 @@ struct obj *obj;
            be wielded/alt-wielded/quivered, so tests on those are limited */
         what = 0;
         if (owornmask & W_ARMOR) {
-            if (obj->oclass != ARMOR_CLASS)
+            if (obj->oclass != ARMOR_CLASS && obj->otyp != PUMPKIN)
                 what = "armor";
             /* 3.6: dragon scale mail reverts to dragon scales when
                becoming embedded in poly'd hero's skin */
@@ -3198,6 +3216,17 @@ static const struct icp metal_materials[] = {
     {  1, GEMSTONE}
 };
 
+/* for objects related to firearms */
+static const struct icp firearm_materials[] = {
+    {645, IRON},
+    {125, SILVER},
+    {125, COPPER},
+    { 75, MITHRIL},
+    { 10, GOLD},
+    { 10, PLATINUM},
+    { 10, ADAMANTINE},
+};
+
 /* Reflectable items - the shield of reflection; anything
  * that can hold a polish */
 static const struct icp shiny_materials[] = {
@@ -3332,6 +3361,7 @@ struct obj* obj;
         case SHIELD_OF_RESONANCE:
         case SHIELD_OF_REFLECTION:
         case ORNATE_MACE:
+        case CHAKRAM:
             return shiny_materials;
         case BOW:
         case ELVEN_BOW:
@@ -3374,11 +3404,11 @@ struct obj* obj;
      * list exists. */
     if (is_elven_obj(obj) && default_material != CLOTH) {
         return elven_materials;
-    }
-    else if (is_dwarvish_obj(obj) && default_material != CLOTH) {
+    } else if (is_dwarvish_obj(obj) && default_material != CLOTH) {
         return dwarvish_materials;
-    }
-    else if (obj->oclass == AMULET_CLASS && otyp != AMULET_OF_YENDOR
+    } else if (is_firearm(obj) || is_bullet(obj) || is_grenade(obj)) {
+        return firearm_materials;
+    } else if (obj->oclass == AMULET_CLASS && otyp != AMULET_OF_YENDOR
              && otyp != FAKE_AMULET_OF_YENDOR) {
         /* could use metal_materials too */
         return shiny_materials;

@@ -177,6 +177,7 @@
     <UUFiles Include = "$(WinWin32Dir)mnselcnt.uu"/>
     <UUFiles Include = "$(WinWin32Dir)mnunsel.uu"/>
     <UUFiles Include = "$(WinWin32Dir)petmark.uu"/>
+    <UUFiles Include = "$(WinWin32Dir)ridingmark.uu"/>
     <UUFiles Include = "$(WinWin32Dir)pilemark.uu"/>
     <UUFiles Include = "$(WinWin32Dir)splash.uu"/>
     <UUFiles Include = "$(WinWin32Dir)rip.uu"/>
@@ -193,6 +194,7 @@
     <BmpFiles Include = "$(WinWin32Dir)mnselcnt.bmp"/>
     <BmpFiles Include = "$(WinWin32Dir)mnunsel.bmp"/>
     <BmpFiles Include = "$(WinWin32Dir)petmark.bmp"/>
+    <BmpFiles Include = "$(WinWin32Dir)ridingmark.bmp"/>
     <BmpFiles Include = "$(WinWin32Dir)pilemark.bmp"/>
     <BmpFiles Include = "$(WinWin32Dir)rip.bmp"/>
     <BmpFiles Include = "$(WinWin32Dir)splash.bmp"/>

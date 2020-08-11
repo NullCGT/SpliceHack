@@ -1,5 +1,5 @@
 #	NetHack Makefile (VMS) - data files: special levels and other data.
-#	NetHack 3.6	Makefile.dat	$NHDT-Date: 1542388601 2018/11/16 17:16:41 $	$NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.10 $
+#	NetHack 3.7	Makefile.dat	$NHDT-Date: 1596498300 2020/08/03 23:45:00 $	$NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.12 $
 # Copyright (c) 2015 by Mike Stephenson
 # NetHack may be freely redistributed.  See license for details.
 
@@ -101,6 +101,9 @@ $(X11TILES) : $(TILE2X11) \
 
 pet_mark.xbm : $(WINX11)pet_mark.xbm
 	copy $(WINX11)pet_mark.xbm pet_mark.xbm
+
+riding_mark.xbm : $(WINX11)riding_mark.xbm
+	copy $(WINX11)riding_mark.xbm riding_mark.xbm
 
 rip.xpm : $(WINX11)rip.xpm
 	copy $(WINX11)rip.xpm rip.xpm

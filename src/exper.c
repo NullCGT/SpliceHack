@@ -1,4 +1,4 @@
-/* NetHack 3.6	exper.c	$NHDT-Date: 1562114352 2019/07/03 00:39:12 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.33 $ */
+/* NetHack 3.7	exper.c	$NHDT-Date: 1596498167 2020/08/03 23:42:47 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.43 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2007. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -9,6 +9,7 @@
 #endif
 
 static int FDECL(enermod, (int));
+static void NDECL(improve_lycanthrope_form);
 
 long
 newuexp(lev)
@@ -346,6 +347,8 @@ boolean incr; /* true iff via incremental experience growth */
         pline("Welcome %sto experience level %d.",
               (u.ulevelmax < u.ulevel) ? "" : "back ",
               u.ulevel);
+        if (Race_if(PM_HUMAN_WERECAT) && u.ulevelmax < u.ulevel)
+            improve_lycanthrope_form();
         if (u.ulevelmax < u.ulevel)
             u.ulevelmax = u.ulevel;
         adjabil(u.ulevel - 1, u.ulevel); /* give new intrinsics */
@@ -383,6 +386,58 @@ boolean gaining; /* gaining XP via potion vs setting XP for polyself */
             result = u.uexp;
     }
     return result;
+}
+
+void
+improve_lycanthrope_form()
+{
+    struct permonst* mdat = &mons[PM_WERECAT];
+    anything any = cg.zeroany;
+    menu_item *pick_list = (menu_item *) 0;
+    int i = '\0';
+    winid win;
+
+    win = create_nhwindow(NHW_MENU);
+    start_menu(win, MENU_BEHAVE_STANDARD);
+
+    any.a_char = 'o';
+    add_menu(win, NO_GLYPH, &any,
+                flags.lootabc ? 0 : any.a_char, 'o', ATR_NONE,
+                "Natural weapons", MENU_ITEMFLAGS_NONE);
+    any.a_char = 'd';
+    add_menu(win, NO_GLYPH, &any,
+                flags.lootabc ? 0 : any.a_char, 'd', ATR_NONE,
+                "Natural armor", MENU_ITEMFLAGS_NONE);
+    any.a_char = 's';
+    add_menu(win, NO_GLYPH, &any,
+                flags.lootabc ? 0 : any.a_char, 's', ATR_NONE,
+                "Speed", MENU_ITEMFLAGS_NONE);
+    end_menu(win, "Choose an attribute of your animal form to improve:");
+    if (select_menu(win, PICK_ONE, &pick_list) > 0) {
+        i = pick_list->item.a_char;
+        free((genericptr_t) pick_list);
+    }
+    destroy_nhwindow(win);
+
+    switch (i) {
+    default:
+    case 'o':
+        mdat->mattk[0].damd += 1;
+        pline("Your teeth feel sharper.");
+        break;
+    case 'd':
+        mdat->ac -= 2;
+        You("feel more hardy.");
+        break;
+    case 's':
+        mdat->mmove += 1;
+        You("feel a bit quicker.");
+        break;
+    }
+
+    /* Increase the monster's level to align with the player's. */
+    mdat->mlevel += 1;
+    g.context.botl = TRUE;
 }
 
 /*exper.c*/

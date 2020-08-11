@@ -1,4 +1,4 @@
-/* NetHack 3.6	dokick.c	$NHDT-Date: 1582155880 2020/02/19 23:44:40 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.153 $ */
+/* NetHack 3.7	dokick.c	$NHDT-Date: 1596498160 2020/08/03 23:42:40 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.155 $ */
 /* Copyright (c) Izchak Miller, Mike Stephenson, Steve Linhart, 1989. */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -35,6 +35,7 @@ boolean clumsy;
     int dmg = (ACURRSTR + ACURR(A_DEX) + ACURR(A_CON)) / 15;
     int specialdmg, kick_skill = P_NONE;
     boolean trapkilled = FALSE;
+    struct obj* hated_obj = NULL;
 
     if (uarmf && uarmf->otyp == KICKING_BOOTS)
         dmg += 5;
@@ -51,7 +52,7 @@ boolean clumsy;
     if (mon->data == &mons[PM_SHADE])
         dmg = 0;
 
-    specialdmg = special_dmgval(&g.youmonst, mon, W_ARMF, NULL);
+    specialdmg = special_dmgval(&g.youmonst, mon, W_ARMF, &hated_obj);
 
     if (mon->data == &mons[PM_SHADE] && !specialdmg) {
         pline_The("%s.", kick_passes_thru);
@@ -88,9 +89,9 @@ boolean clumsy;
     dmg += specialdmg; /* for blessed (or hypothetically, silver) boots */
     if (uarmf) {
         dmg += uarmf->spe;
-        if (specialdmg)
-            searmsg(&g.youmonst, mon, uarmf);
     }
+    if (specialdmg && hated_obj)
+        searmsg(&g.youmonst, mon, hated_obj, TRUE);
     dmg += u.udaminc; /* add ring(s) of increase damage */
     if (dmg > 0)
         mon->mhp -= dmg;
@@ -203,7 +204,8 @@ xchar x, y;
                 continue;
 
             kickdieroll = rnd(20);
-            specialdmg = special_dmgval(&g.youmonst, mon, W_ARMF, NULL);
+            struct obj* hated_obj;
+            specialdmg = special_dmgval(&g.youmonst, mon, W_ARMF, &hated_obj);
             if (noncorporeal(mon->data) && !specialdmg) {
                 /* doesn't matter whether it would have hit or missed,
                    and shades have no passive counterattack */
@@ -212,6 +214,9 @@ xchar x, y;
             } else if (tmp > kickdieroll) {
                 You("kick %s.", mon_nam(mon));
                 sum = damageum(mon, uattk, specialdmg);
+                if (hated_obj) {
+                    searmsg(&g.youmonst, mon, hated_obj, FALSE);
+                }
                 (void) passive(mon, uarmf, (boolean) (sum > 0),
                                (sum != 2), AT_KICK, FALSE);
                 if (sum == 2)
@@ -537,6 +542,12 @@ xchar x, y;
                     killer_xname(g.kickedobj));
             instapetrify(g.killer.name);
         }
+    }
+
+    if (!uarmf && Hate_material(g.kickedobj->material)) {
+        searmsg(NULL, &g.youmonst, g.kickedobj, FALSE);
+        losehp(rnd(sear_damage(g.kickedobj->material)),
+               "kicking something disagreeable", KILLED_BY);
     }
 
     isgold = (g.kickedobj->oclass == COIN_CLASS);

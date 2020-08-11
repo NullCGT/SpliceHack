@@ -1,4 +1,4 @@
-/* NetHack 3.6	allmain.c	$NHDT-Date: 1584405115 2020/03/17 00:31:55 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.143 $ */
+/* NetHack 3.7	allmain.c	$NHDT-Date: 1596498146 2020/08/03 23:42:26 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.145 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -335,7 +335,7 @@ boolean resuming;
                                 stop_occupation();
                                 if (change == 1)
                                     polyself(0);
-                                else
+                                else if (!Race_if(PM_HUMAN_WERECAT))
                                     you_were();
                                 change = 0;
                             }
@@ -669,10 +669,6 @@ newgame()
 {
     int i;
 
-#ifdef MFLOPPY
-    gameDiskPrompt();
-#endif
-
     g.context.botlx = TRUE;
     g.context.ident = 1;
     g.context.stethoscope_move = -1L;
@@ -803,6 +799,13 @@ boolean new_game; /* false => restoring an old game */
     if (flags.tips && new_game) {
         get_rnd_text(SPLICETIPSFILE, tipbuf, rn2_on_display_rng);
         make_engr_at(u.ux, u.uy, tipbuf, g.moves, DUST);
+    }
+
+    if (Role_if(PM_DANCER)) {
+        You("are currently performing the %s.", simple_tech_name(u.ustance));
+        if (new_game) pline("Use #technique to switch dances.");
+    } else if (Race_if(PM_HUMAN_WERECAT) && !Upolyd) {
+        pline("You may use #monster to enter feline form.");
     }
 }
 

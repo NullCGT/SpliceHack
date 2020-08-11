@@ -1,4 +1,4 @@
-/* NetHack 3.6	winmap.c	$NHDT-Date: 1586202188 2020/04/06 19:43:08 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.35 $ */
+/* NetHack 3.7	winmap.c	$NHDT-Date: 1596498372 2020/08/03 23:46:12 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.38 $ */
 /* Copyright (c) Dean Luick, 1992                                 */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -190,6 +190,7 @@ struct tile_annotation {
 };
 
 static struct tile_annotation pet_annotation;
+static struct tile_annotation riding_annotation;
 static struct tile_annotation pile_annotation;
 
 static void
@@ -251,6 +252,8 @@ post_process_tiles()
 
     init_annotation(&pet_annotation, appResources.pet_mark_bitmap,
                     appResources.pet_mark_color);
+    init_annotation(&riding_annotation, appResources.riding_mark_bitmap,
+                    appResources.riding_mark_color);
     init_annotation(&pile_annotation, appResources.pilemark_bitmap,
                     appResources.pilemark_color);
 }
@@ -1312,6 +1315,21 @@ boolean inverted;
                     XCopyPlane(dpy, pet_annotation.bitmap, XtWindow(wp->w),
                                tile_map->black_gc, 0, 0, pet_annotation.width,
                                pet_annotation.height, dest_x, dest_y, 1);
+                    XSetClipOrigin(dpy, tile_map->black_gc, 0, 0);
+                    XSetClipMask(dpy, tile_map->black_gc, None);
+                    XSetForeground(dpy, tile_map->black_gc,
+                                   BlackPixelOfScreen(screen));
+                }
+                if ((tile_map->glyphs[row][cur_col].special & MG_RIDDEN)) {
+                    /* draw riding annotation (a letter R) */
+                    XSetForeground(dpy, tile_map->black_gc,
+                                   riding_annotation.foreground);
+                    XSetClipOrigin(dpy, tile_map->black_gc, dest_x, dest_y);
+                    XSetClipMask(dpy, tile_map->black_gc,
+                                 riding_annotation.bitmap);
+                    XCopyPlane(dpy, riding_annotation.bitmap, XtWindow(wp->w),
+                               tile_map->black_gc, 0, 0, riding_annotation.width,
+                               riding_annotation.height, dest_x, dest_y, 1);
                     XSetClipOrigin(dpy, tile_map->black_gc, 0, 0);
                     XSetClipMask(dpy, tile_map->black_gc, None);
                     XSetForeground(dpy, tile_map->black_gc,

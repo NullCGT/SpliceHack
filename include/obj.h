@@ -1,4 +1,4 @@
-/* NetHack 3.6	obj.h	$NHDT-Date: 1590870784 2020/05/30 20:33:04 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.69 $ */
+/* NetHack 3.7	obj.h	$NHDT-Date: 1596498552 2020/08/03 23:49:12 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.76 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2006. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -44,6 +44,7 @@ struct obj {
                   number of charges for wand or charged tool ( >= -1 );
                   number of candles attached to candelabrum;
                   marks your eggs, tin variety and spinach tins;
+                  candy bar wrapper index;
                   Schroedinger's Box (1) or royal coffers for a court (2);
                   tells which fruit a fruit is;
                   special for uball and amulet;
@@ -55,6 +56,7 @@ struct obj {
     char oclass;    /* object class */
     char invlet;    /* designation in inventory */
     char oartifact; /* artifact array index */
+    schar 	altmode; 	/* alternate modes - eg. SMG, double Lightsaber */
 
     xchar where;        /* where the object thinks it is */
 #define OBJ_FREE 0      /* object not attached to anything */
@@ -67,6 +69,10 @@ struct obj {
 #define OBJ_ONBILL 7    /* object on shk bill */
 #define OBJ_LUAFREE 8   /* object has been dealloc'd, but is ref'd by lua */
 #define NOBJ_STATES 9
+
+#define WP_MODE_AUTO	0	/* Max firing speed */
+#define WP_MODE_BURST	1	/* 1/3 of max rate */
+#define WP_MODE_SINGLE 	2	/* Single shot */
     xchar timed; /* # of fuses (timers) attached to this obj */
 
     Bitfield(cursed, 1);
@@ -108,7 +114,8 @@ struct obj {
     Bitfield(material, 5); /* material this obj is made of */
     Bitfield(in_use, 1); /* for magic items before useup items */
     Bitfield(bypass, 1); /* mark this as an object to be skipped by bhito() */
-    Bitfield(cknown, 1); /* contents of container assumed to be known */
+    Bitfield(cknown, 1); /* for containers (including statues): the contents
+                          * are known; also applicable to tins */
     Bitfield(lknown, 1); /* locked/unlocked status is known */
     Bitfield(yours, 1);	/* obj is yours (eg. thrown by you) */
     /* 6 free bits */
@@ -205,9 +212,11 @@ struct obj {
      && objects[otmp->otyp].oc_skill <= -P_BOW      \
      && otmp->otyp != WINDMILL_BLADE)
 #define is_poisonable(otmp)                         \
-    (otmp->oclass == WEAPON_CLASS                   \
-     && objects[otmp->otyp].oc_skill >= -P_SHURIKEN \
-     && objects[otmp->otyp].oc_skill <= -P_BOW)
+    ((otmp->oclass == WEAPON_CLASS                   \
+      && objects[otmp->otyp].oc_skill >= -P_SHURIKEN \
+      && objects[otmp->otyp].oc_skill <= -P_BOW      \
+      && !is_unpoisonable_firearm_ammo(otmp))        \
+     || otmp->otyp == CHAKRAM)
 #define uslinging() (uwep && objects[uwep->otyp].oc_skill == P_SLING)
 /* 'is_quest_artifact()' only applies to the current role's artifact */
 #define any_quest_artifact(o) ((o)->oartifact >= ART_ORB_OF_DETECTION)
@@ -218,6 +227,8 @@ struct obj {
 			 objects[(otmp)->otyp].oc_skill == P_FIREARM)
 #define is_bullet(otmp)	((otmp)->oclass == WEAPON_CLASS && \
 			 objects[(otmp)->otyp].oc_skill == -P_FIREARM)
+#define is_unpoisonable_firearm_ammo(otmp)	\
+			 (is_bullet(otmp) || is_grenade(otmp))
 
 /* Armor */
 #define is_shield(otmp)          \
@@ -416,7 +427,9 @@ struct obj {
  *       4. Add a testing macro after the set of referencing macros
  *          (see has_oname(), has_omonst(), has_omailcmd(), and has_omin(),
  *          for examples).
- *       5. Create newXX(otmp) function and possibly free_XX(otmp) function
+ *       5. If your new field isn't a pointer and requires a non-zero value
+ *          on initialization, add code to init_oextra() in src/mkobj.c.
+ *       6. Create newXX(otmp) function and possibly free_XX(otmp) function
  *          in an appropriate new or existing source file and add a prototype
  *          for it to include/extern.h.  The majority of these are currently
  *          located in mkobj.c for convenience.
@@ -437,14 +450,14 @@ struct obj {
  *              }
  *         }
  *
- *       6. Adjust size_obj() in src/cmd.c appropriately.
- *       7. Adjust dealloc_oextra() in src/mkobj.c to clean up
+ *       7. Adjust size_obj() in src/cmd.c appropriately.
+ *       8. Adjust dealloc_oextra() in src/mkobj.c to clean up
  *          properly during obj deallocation.
- *       8. Adjust copy_oextra() in src/mkobj.c to make duplicate
+ *       9. Adjust copy_oextra() in src/mkobj.c to make duplicate
  *          copies of your struct or data onto another obj struct.
- *       9. Adjust restobj() in src/restore.c to deal with your
+ *      10. Adjust restobj() in src/restore.c to deal with your
  *          struct or data during a restore.
- *      10. Adjust saveobj() in src/save.c to deal with your
+ *      11. Adjust saveobj() in src/save.c to deal with your
  *          struct or data during a save.
  */
 

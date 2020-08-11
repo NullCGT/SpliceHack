@@ -17,10 +17,12 @@ extern "C" {
 #undef min
 #undef max
 
+#include "qt_pre.h"
 #include <QtGui/QtGui>
 #if QT_VERSION >= 0x050000
 #include <QtWidgets/QtWidgets>
 #endif
+#include "qt_post.h"
 #include "qt_msg.h"
 #include "qt_msg.moc"
 #include "qt_map.h"
@@ -61,7 +63,7 @@ void NetHackQtMessageWindow::updateFont()
 	map->setFont(qt_settings->normalFont());
 }
 
-void NetHackQtMessageWindow::Scroll(int dx, int dy)
+void NetHackQtMessageWindow::Scroll(int dx UNUSED, int dy UNUSED)
 {
     //RLC Is this necessary?
     //RLC list->Scroll(dx,dy);
@@ -79,7 +81,7 @@ void NetHackQtMessageWindow::ClearMessages()
         list->clear();
 }
 
-void NetHackQtMessageWindow::Display(bool block)
+void NetHackQtMessageWindow::Display(bool block UNUSED)
 {
     if (changed) {
 	list->repaint();
@@ -103,10 +105,6 @@ const char * NetHackQtMessageWindow::GetStr(bool init)
 
 void NetHackQtMessageWindow::PutStr(int attr, const QString& text)
 {
-#ifdef USER_SOUNDS
-    play_sound_for_message(text.toLatin1().constData());
-#endif
-
     changed=true;
 
     // If the line is output from the "/" command, map the first character
@@ -141,7 +139,7 @@ void NetHackQtMessageWindow::PutStr(int attr, const QString& text)
 #endif
 
     // ATR_BLINK not supported
-    if (list->count() >= ::iflags.msg_history)
+    if (list->count() >= (int) ::iflags.msg_history)
 	delete list->item(0);
     list->addItem(text2);
 

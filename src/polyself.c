@@ -1,4 +1,4 @@
-/* NetHack 3.6	polyself.c	$NHDT-Date: 1583073991 2020/03/01 14:46:31 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.152 $ */
+/* NetHack 3.7	polyself.c	$NHDT-Date: 1596498197 2020/08/03 23:43:17 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.155 $ */
 /*      Copyright (C) 1987, 1988, 1989 by Ken Arromdee */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -714,8 +714,8 @@ int mntmp;
     /* New stats for monster, to last only as long as polymorphed.
      * Currently only strength gets changed.
      */
-    if (strongmonst(&mons[mntmp]) || (Race_if(PM_HUMAN_WEREWOLF) && u.umonnum == PM_WEREWOLF))
-        ABASE(A_STR) = AMAX(A_STR) = STR18(100);
+    if (strongmonst(&mons[mntmp]) || (Race_if(PM_HUMAN_WERECAT) && u.umonnum == PM_WERECAT))
+        ABASE(A_STR) = AMAX(A_STR) = STR19(25);
     
     if (mntmp == PM_VOMITOUS_GHOUL)
         make_vomiting((long) rnd(100), FALSE);
@@ -933,8 +933,7 @@ static void
 break_armor()
 {
     register struct obj *otmp;
-    boolean controlled_change = (Race_if(PM_DOPPELGANGER) ||
-    		(Race_if(PM_HUMAN_WEREWOLF) && u.umonnum == PM_WEREWOLF));
+    boolean controlled_change = (Race_if(PM_HUMAN_WERECAT) && u.umonnum == PM_WERECAT);
 
     if (breakarm(g.youmonst.data)) {
         if ((otmp = uarm) != 0) {
@@ -1684,10 +1683,12 @@ dopoly()
     return 1;
 }
 
+/* #monster for hero-as-mind_flayer giving psychic blast */
 int
 domindblast()
 {
     struct monst *mtmp, *nmon;
+    int dmg;
 
     if (u.uen < 10) {
         You("concentrate but lack the energy to maintain doing so.");
@@ -1708,12 +1709,21 @@ domindblast()
             continue;
         if (mtmp->mpeaceful)
             continue;
-        u_sen = has_telepathy(mtmp) && !mtmp->mcansee;
-        if (u_sen || (has_telepathy(mtmp) && rn2(2)) || !rn2(10)) {
+        if (mindless(mtmp->data))
+            continue;
+        u_sen = telepathic(mtmp->data) && !mtmp->mcansee;
+        if (u_sen || (telepathic(mtmp->data) && rn2(2)) || !rn2(10)) {
+            dmg = rnd(15);
+            /* wake it up first, to bring hidden monster out of hiding;
+               but in case it is currently peaceful, don't make it hostile
+               unless it will survive the psychic blast, otherwise hero
+               would avoid the penalty for killing it while peaceful */
+            wakeup(mtmp, (dmg > mtmp->mhp) ? TRUE : FALSE);
             You("lock in on %s %s.", s_suffix(mon_nam(mtmp)),
                 u_sen ? "telepathy"
-                      : has_telepathy(mtmp) ? "latent telepathy" : "mind");
-            mtmp->mhp -= rnd(15);
+                : has_telepathy(mtmp) ? "latent telepathy"
+                  : "mind");
+            mtmp->mhp -= dmg;
             if (DEADMONSTER(mtmp))
                 killed(mtmp);
         }

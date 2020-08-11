@@ -1,4 +1,4 @@
-/* NetHack 3.6  artilist.h      $NHDT-Date: 1564351548 2019/07/28 22:05:48 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.20 $ */
+/* NetHack 3.7  artilist.h      $NHDT-Date: 1596498526 2020/08/03 23:48:46 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.23 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2017. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -151,6 +151,12 @@ static NEARDATA struct artifact artilist[] = {
     */
     A("Gungnir", DWARVISH_SPEAR, (SPFX_RESTR), 0, 0, PHYS(100, 4),
       NO_DFNS, NO_CARY, LIGHTNING_BOLT, A_NEUTRAL, PM_VALKYRIE, NON_PM, 4000L, NO_COLOR),
+
+    /* 
+    *       I cannot believe this hasn't been done yet.
+    */
+    A("Hand Grenade of Antioch", FRAG_GRENADE, (SPFX_RESTR), 0, 0, PHYS(1, 1),
+      NO_DFNS, NO_CARY, 0, A_LAWFUL, NON_PM, NON_PM, 300L, NO_COLOR),
 
     A("Idspike", ATHAME, (SPFX_RESTR | SPFX_ATTK | SPFX_DEFN), 0, 0,
       PSYC(5, 0), PSYC(0, 0), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 4000L,

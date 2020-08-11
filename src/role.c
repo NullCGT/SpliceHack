@@ -1,4 +1,4 @@
-/* NetHack 3.6	role.c	$NHDT-Date: 1589326676 2020/05/12 23:37:56 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.70 $ */
+/* NetHack 3.7	role.c	$NHDT-Date: 1596498206 2020/08/03 23:43:26 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.71 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985-1999. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1070,12 +1070,12 @@ const struct Race races[] = {
         { 1, 0, 1, 0, 1, 0 }  /* Energy */
     },
     {
-        "werewolf",
+        "werecat",
         "lycanthrope",
         "lycanthrope-kind",
         "Wer",
         { "man", "woman", "person" },
-        PM_HUMAN_WEREWOLF,
+        PM_HUMAN_WERECAT,
         NON_PM,
         NON_PM,
         PM_HUMAN_MUMMY,
@@ -1087,7 +1087,7 @@ const struct Race races[] = {
         MH_GNOME | MH_ORC | MH_ELF,
         /*    Str     Int Wis Dex Con Cha */
         { 3, 3, 3, 3, 3, 3 },
-        { STR19(19), 15, 15, 20, 19, 15 },
+        { 16, 16, 15, 14, 16, 15 },
         /* Init   Lower  Higher */
         { 2, 0, 0, 2, 1, 0 }, /* Hit points */
         { 1, 0, 2, 0, 2, 0 }  /* Energy */

@@ -1,4 +1,4 @@
-/* NetHack 3.6	attrib.c	$NHDT-Date: 1579655026 2020/01/22 01:03:46 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.74 $ */
+/* NetHack 3.7	attrib.c	$NHDT-Date: 1596498149 2020/08/03 23:42:29 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.75 $ */
 /*      Copyright 1988, 1989, 1990, 1992, M. Stephenson           */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -817,7 +817,7 @@ long frommask;
         case PM_ORC:
             abil = orc_abil;
             break;
-        case PM_HUMAN_WEREWOLF:
+        case PM_HUMAN_WERECAT:
             abil = lyc_abil;
             break;
         case PM_HUMAN:
@@ -1023,7 +1023,7 @@ int oldlevel, newlevel;
     case PM_CHANGELING:
         rabil = chn_abil;
         break;
-    case PM_HUMAN_WEREWOLF:
+    case PM_HUMAN_WERECAT:
     case PM_HUMAN:
     case PM_DWARF:
     case PM_GNOME:

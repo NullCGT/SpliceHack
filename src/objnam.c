@@ -1,4 +1,4 @@
-/* NetHack 3.7	objnam.c	$NHDT-Date: 1583315888 2020/03/04 09:58:08 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.293 $ */
+/* NetHack 3.7	objnam.c	$NHDT-Date: 1596162343 2020/07/31 02:25:43 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.304 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -464,7 +464,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
     const char *dn = OBJ_DESCR(*ocl);
     const char *un = ocl->oc_uname;
     boolean pluralize = (obj->quan != 1L) && !(cxn_flags & CXN_SINGULAR);
-    boolean forcemat = (cxn_flags & CXN_FORCEMAT);
+    boolean forcemat = ((cxn_flags & CXN_FORCEMAT) || obj->otyp == CHAKRAM);
     boolean known, dknown, bknown;
 
     buf = nextobuf() + PREFIX; /* leave room for "17 -3 " */
@@ -701,7 +701,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         if (!dknown)
             break;
         if (nn && obj->corpsenm != NON_PM) {
-            Strcat(buf, " of summon ");
+            Strcat(buf, " - ");
             Strcat(buf, mons[obj->corpsenm].mname);
         } else if (nn) {
             Strcat(buf, " of ");
@@ -780,14 +780,30 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
     }
     default:
         Sprintf(buf, "glorkum %d %d %d", obj->oclass, typ, obj->spe);
+        break;
     }
     if (pluralize)
         Strcpy(buf, makeplural(buf));
 
-    if (obj->otyp == T_SHIRT && g.program_state.gameover) {
+    /* maybe give some extra information which isn't shown during play */
+    if (g.program_state.gameover) {
+        const char *lbl;
         char tmpbuf[BUFSZ];
 
-        Sprintf(eos(buf), " with text \"%s\"", tshirt_text(obj, tmpbuf));
+        /* disclose without breaking illiterate conduct, but mainly tip off
+           players who aren't aware that something readable is present */
+        switch (obj->otyp) {
+        case T_SHIRT:
+            Sprintf(eos(buf), " with text \"%s\"", tshirt_text(obj, tmpbuf));
+            break;
+        case CANDY_BAR:
+            lbl = candy_wrapper_text(obj);
+            if (*lbl)
+                Sprintf(eos(buf), " labeled \"%s\"", lbl);
+            break;
+        default:
+            break;
+        }
     }
 
     if (has_oname(obj) && dknown) {
@@ -2704,6 +2720,7 @@ const char *oldstr;
                 || !BSTRCMPI(bp, p - 4, "nxes") /* lynxes */
                 || !BSTRCMPI(bp, p - 4, "ches")
                 || !BSTRCMPI(bp, p - 4, "uses") /* lotuses */
+                || !BSTRCMPI(bp, p - 4, "shes") /* splashes [of venom] */
                 || !BSTRCMPI(bp, p - 4, "sses") /* priestesses */
                 || !BSTRCMPI(bp, p - 5, "atoes") /* tomatoes */
                 || !BSTRCMPI(bp, p - 7, "dingoes")
@@ -2928,6 +2945,9 @@ static NEARDATA const struct o_range o_ranges[] = {
     { "dragon scale mail", ARMOR_CLASS, GRAY_DRAGON_SCALE_MAIL,
       VOID_DRAGON_SCALE_MAIL },
     { "sword", WEAPON_CLASS, SHORT_SWORD, KATANA },
+    { "firearm", 	WEAPON_CLASS, PISTOL, AUTO_SHOTGUN },
+	{ "gun", 	WEAPON_CLASS, PISTOL, AUTO_SHOTGUN },
+    { "machine gun", WEAPON_CLASS, SUBMACHINE_GUN, HEAVY_MACHINE_GUN },
     { "grenade", WEAPON_CLASS, FRAG_GRENADE, GAS_GRENADE },
     { "venom", VENOM_CLASS, BLINDING_VENOM, ACID_VENOM },
     { "gray stone", GEM_CLASS, LUCKSTONE, FLINT },
@@ -2987,7 +3007,11 @@ static struct alt_spellings {
     { "touch stone", TOUCHSTONE },
     { "flintstone", FLINT },
     /* grenades and firearms */
+    { "handgun", PISTOL },
+	{ "hand gun", PISTOL },
+	{ "revolver", PISTOL },
     { "hand grenade", FRAG_GRENADE },
+    { "shell", SHOTGUN_SHELL },
     { (const char *) 0, 0 },
 };
 
@@ -4346,7 +4370,7 @@ struct obj *no_wish;
     }
 
     /* if player specified a reasonable count, maybe honor it */
-    if (cnt > 1 && objects[typ].oc_merge
+    if (cnt > 0 && objects[typ].oc_merge
         && (wizard || cnt < rnd(6) || (cnt <= 7 && Is_candle(otmp))
             || (cnt <= 20 && ((oclass == WEAPON_CLASS && is_ammo(otmp))
                               || typ == ROCK || is_missile(otmp))))) {
@@ -4692,7 +4716,9 @@ Cartomancer_rarity(otyp)
 int otyp;
 {
     int price = objects[otyp].oc_cost;
-    if (price < 60) {
+    if (otyp == SCR_CREATE_MONSTER) {
+        return "monster card";
+    } else if (price < 60) {
         return "common spell card";
     } else if (price < 100) {
         return "uncommon spell card";

@@ -1,4 +1,4 @@
-/* NetHack 3.6	dog.c	$NHDT-Date: 1545439150 2018/12/22 00:39:10 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.85 $ */
+/* NetHack 3.7	dog.c	$NHDT-Date: 1596498159 2020/08/03 23:42:39 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.103 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -59,6 +59,7 @@ static int
 pet_type()
 {
     int dragon_type;
+    uchar prop;
     
     if (g.urole.petnum != NON_PM)
         return  g.urole.petnum;
@@ -70,13 +71,15 @@ pet_type()
      		else
      			  return (rn2(2) ? PM_PARROT : PM_MONKEY);
     } else if (Role_if(PM_DRAGONMASTER)) {
-        /* baby black dragons are not chosen as starting pets, since
-           black dragons are arguably some of the most powerful pets
-           in SpliceHack. */
         dragon_type = PM_BABY_SILVER_DRAGON 
             + rn2(PM_BABY_YELLOW_DRAGON - PM_BABY_SILVER_DRAGON);
         if (dragon_type == PM_BABY_BLACK_DRAGON)
             dragon_type = PM_BABY_GRAY_DRAGON;
+        prop = objects[GRAY_DRAGON_SCALES + dragon_type - PM_BABY_GRAY_DRAGON].oc_oprop;
+        /* Dragonmasters resist the element of their pet */
+        if (prop == REFLECTING || prop == ANTIMAGIC)
+            prop = COLD_RES;
+        u.uprops[prop].intrinsic |= FROMOUTSIDE;
         return dragon_type;
     } else if (g.preferred_pet == 'c')
         return  PM_KITTEN;

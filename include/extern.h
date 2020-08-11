@@ -1,4 +1,4 @@
-/* NetHack 3.6	extern.h	$NHDT-Date: 1591017416 2020/06/01 13:16:56 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.848 $ */
+/* NetHack 3.7	extern.h	$NHDT-Date: 1596498536 2020/08/03 23:48:56 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.854 $ */
 /* Copyright (c) Steve Creps, 1988.				  */
 /* NetHack may be freely redistributed.  See license for details. */
 /* Edited on 5/8/18 by NullCGT */
@@ -614,6 +614,8 @@ E boolean FDECL(walk_path, (coord *, coord *,
                             boolean (*)(genericptr, int, int), genericptr_t));
 E boolean FDECL(hurtle_jump, (genericptr_t, int, int));
 E boolean FDECL(hurtle_step, (genericptr_t, int, int));
+E int FDECL(firearm_range, (int));
+E int FDECL(firearm_rof, (int));
 
 /* ### drawing.c ### */
 
@@ -812,9 +814,6 @@ E char *FDECL(fname_encode, (const char *, CHAR_P, char *, char *, int));
 E char *FDECL(fname_decode, (CHAR_P, char *, char *, int));
 E const char *FDECL(fqname, (const char *, int, int));
 E FILE *FDECL(fopen_datafile, (const char *, const char *, int));
-#ifdef MFLOPPY
-E void NDECL(set_lock_and_bones);
-#endif
 E void FDECL(zero_nhfile, (NHFILE *));
 E void FDECL(close_nhfile, (NHFILE *));
 E void FDECL(rewind_nhfile, (NHFILE *));
@@ -824,9 +823,6 @@ E NHFILE *FDECL(open_levelfile, (int, char *));
 E void FDECL(delete_levelfile, (int));
 E void NDECL(clearlocks);
 E NHFILE *FDECL(create_bonesfile, (d_level *, char **, char *));
-#ifdef MFLOPPY
-E void NDECL(cancel_bonesfile);
-#endif
 E void FDECL(commit_bonesfile, (d_level *));
 E NHFILE *FDECL(open_bonesfile, (d_level *, char **));
 E int FDECL(delete_bonesfile, (d_level *));
@@ -1042,6 +1038,7 @@ E void FDECL(record_achievement, (SCHAR_P));
 E boolean FDECL(remove_achievement, (SCHAR_P));
 E int NDECL(count_achievements);
 E schar FDECL(achieve_rank, (int));
+E boolean NDECL(sokoban_in_play);
 E int NDECL(dovanquished);
 E int NDECL(doborn);
 E void FDECL(list_vanquished, (CHAR_P, BOOLEAN_P));
@@ -1093,6 +1090,7 @@ E int FDECL(ggetobj, (const char *, int (*)(OBJ_P), int,
                       BOOLEAN_P, unsigned *));
 E int FDECL(askchain, (struct obj **, const char *, int, int (*)(OBJ_P),
                        int (*)(OBJ_P), int, const char *));
+E void FDECL(set_cknown_lknown, (struct obj *));
 E void FDECL(fully_identify_obj, (struct obj *));
 E int FDECL(identify, (struct obj *));
 E int FDECL(count_unidentified, (struct obj *));
@@ -1334,6 +1332,7 @@ E int FDECL(gazemu, (struct monst *, struct attack *));
 E void FDECL(mdamageu, (struct monst *, int));
 E int FDECL(could_seduce, (struct monst *, struct monst *, struct attack *));
 E int FDECL(doseduce, (struct monst *));
+E long FDECL(attack_contact_slots, (struct monst *, int));
 
 /* ### minion.c ### */
 
@@ -1628,6 +1627,7 @@ E const char *FDECL(stagger, (const struct permonst *, const char *));
 E const char *FDECL(on_fire, (struct permonst *, struct attack *));
 E const struct permonst *FDECL(raceptr, (struct monst *));
 E boolean FDECL(olfaction, (struct permonst *));
+E int FDECL(monmaterial, (int));
 
 /* ### monmove.c ### */
 
@@ -1746,7 +1746,6 @@ E boolean FDECL(hits_bars, (struct obj **, int, int, int, int, int, int));
 E boolean FDECL(find_defensive, (struct monst *, BOOLEAN_P));
 E int FDECL(use_defensive, (struct monst *));
 E int FDECL(rnd_defensive_item, (struct monst *));
-E void FDECL(card_response, (struct monst *));
 E boolean FDECL(find_offensive, (struct monst *));
 #ifdef USE_TRAMPOLI
 E int FDECL(mbhitm, (struct monst *, struct obj *));
@@ -2006,13 +2005,6 @@ E const char *NDECL(get_portable_device);
 #if defined(MICRO) || defined(WIN32)
 E void NDECL(flushout);
 E int NDECL(dosh);
-#ifdef MFLOPPY
-E void FDECL(eraseall, (const char *, const char *));
-E void FDECL(copybones, (int));
-E void NDECL(playwoRAMdisk);
-E int FDECL(saveDiskPrompt, (int));
-E void NDECL(gameDiskPrompt);
-#endif
 E void FDECL(append_slash, (char *));
 E void FDECL(getreturn, (const char *));
 #ifndef AMIGA
@@ -2252,6 +2244,8 @@ E long NDECL(random);
 
 E void FDECL(learnscroll, (struct obj *));
 E char *FDECL(tshirt_text, (struct obj *, char *));
+E const char *FDECL(candy_wrapper_text, (struct obj *));
+E void FDECL(assign_candy_wrapper, (struct obj *));
 E int NDECL(doread);
 E boolean FDECL(is_chargeable, (struct obj *));
 E void FDECL(recharge, (struct obj *, int));
@@ -2396,13 +2390,7 @@ E boolean FDECL(tricked_fileremoved, (NHFILE *, char *));
 #ifdef INSURANCE
 E void NDECL(savestateinlock);
 #endif
-#ifdef MFLOPPY
-E boolean FDECL(savelev, (NHFILE *, XCHAR_P));
-E boolean FDECL(swapin_file, (int));
-E void NDECL(co_false);
-#else
 E void FDECL(savelev, (NHFILE *, XCHAR_P));
-#endif
 E genericptr_t FDECL(mon_to_buffer, (struct monst *, int *));
 E boolean FDECL(close_check, (int));
 E void FDECL(savecemetery, (NHFILE *, struct cemetery **));
@@ -2676,6 +2664,7 @@ E boolean FDECL(stucksteed, (BOOLEAN_P));
 
 /* ### tech.c ### */
 
+E const char* FDECL(simple_tech_name, (int));
 E void FDECL(adjtech, (int,int));
 E int NDECL(dotech);
 E const char *NDECL(lookup_tech_name);
@@ -3099,7 +3088,8 @@ E int FDECL(hitval, (struct obj *, struct monst *));
 E int FDECL(dmgval, (struct obj *, struct monst *));
 E int FDECL(special_dmgval, (struct monst *, struct monst *, long,
                              struct obj **));
-E void FDECL(searmsg, (struct monst *, struct monst *, struct obj *));
+E void FDECL(searmsg, (struct monst *, struct monst *, const struct obj *,
+                       BOOLEAN_P));
 E void FDECL(silver_sears, (struct monst *, struct monst *, long));
 E struct obj *FDECL(select_rwep, (struct monst *));
 E boolean FDECL(monmightthrowwep, (struct obj *));
@@ -3192,6 +3182,7 @@ E void NDECL(dump_close_log);
 E void FDECL(dump_redirect, (BOOLEAN_P));
 E void FDECL(dump_forward_putstr, (winid, int, const char*, int));
 E void FDECL(livelog_dump_url, (unsigned int));
+E int FDECL(has_color, (int));
 
 /* ### winnt.c ### */
 #ifdef WIN32

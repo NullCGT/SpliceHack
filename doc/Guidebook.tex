@@ -1,5 +1,5 @@
 \documentstyle[titlepage,longtable]{article}
-% NetHack 3.6  Guidebook.tex $NHDT-Date: 1431192762 2015/12/16 17:32:42 $  $NHDT-Branch: master $:$NHDT-Revision: 1.60 $ */
+% NetHack 3.7  Guidebook.tex $NHDT-Date: 1431192762 2015/12/16 17:32:42 $  $NHDT-Branch: master $:$NHDT-Revision: 1.60 $ */
 %+% we're still limping along in LaTeX 2.09 compatibility mode
 %-%\documentclass{article}
 %-%\usepackage{hyperref} % before longtable
@@ -45,7 +45,7 @@
 %.au
 \author{Original version - Eric S. Raymond\\
 (Edited and expanded for 3.7 by Mike Stephenson and others)}
-\date{June 20, 2020}
+\date{August 5, 2020}
 
 \maketitle
 
@@ -844,7 +844,7 @@ You can set the
 option to require a response of ``{\tt yes}'' instead of just `{\tt y}'.
 %.lp
 % Make sure Elbereth is not hyphenated below, the exact spelling matters.
-% (Only specified here to parallel Guidebook.mn; use of \tt font implicity
+% (Only specified here to parallel Guidebook.mn; use of \tt font implicitly
 % prevents automatic hyphenation in TeX and LaTeX.)
 \hyphenation{Elbereth}		%override the deduced syllable breaks
 \item[\tb{E}]
@@ -1650,7 +1650,12 @@ Debug mode only.
 Default key is `{\tt \^{}F}'.
 %.lp
 \item[\tb{\#wizrumorcheck}]
-Verify rumor boundaries.
+Verify rumor boundaries by displaying first and last true rumors and
+first and last false rumors.\\
+%.lp ""
+Also displays first, second, and last random engravings, epitaphs,
+and hallucinatory monsters.\\
+%.lp ""
 Autocompletes.
 Debug mode only.
 %.lp
@@ -1882,7 +1887,7 @@ And some (giants) can smash doors.
 Secret doors are hidden and appear to be ordinary wall (from inside a
 room) or solid rock (from outside).
 You can find them with the `{\tt s}' (search) command but it might
-take multiple tries.
+take multiple tries (possibly many tries if your luck is poor).
 Once found they are in all ways equivalent to normal doors.
 Mapping magic does not reveal secret doors.
 
@@ -1890,20 +1895,75 @@ Mapping magic does not reveal secret doors.
 \subsection*{Traps (`{\tt \^{}}')}
 
 %.pg
-There are traps throughout the dungeon to snare the unwary delver.
+There are traps throughout the dungeon to snare the unwary intruder.
 For example, you may suddenly fall into a pit and be stuck for a few
-turns trying to climb out.  Traps don't appear on your map until you
-see one triggered by moving onto it, see something fall into it, or you
-discover it with the `{\tt s}' (search) command.  Monsters can fall prey to
-traps, too, which can be a very useful defensive strategy.
+turns trying to climb out (see below).
+A trap usually won't appear on your map until you trigger it by moving
+onto it, you see someone else trigger it, or you discover it with
+the `{\tt s}' (search) command (multiple attempts are often needed;
+if your luck is poor, many attempts might be needed).
+{\it Wands of secret door detection\/} and {\it spell of detect unseen\/}
+also reveal traps within a modest radius but only if the trap is also
+within line-of-sight (whether you can see at the time or not).
+There is also other magic which can reveal traps.
 
 %.pg
-There is a special pre-mapped branch of the dungeon based on the
-classic computer game ``{\tt Sokoban}.''  The goal is to push the boulders
-into the pits or holes.  With careful foresight, it is possible to
-complete all of the levels according to the traditional rules of
-Sokoban.  Some allowances are permitted in case the player gets stuck;
-however, they will lower your luck.
+Monsters can fall prey to
+traps, too, which can potentially be used as a defensive strategy.
+Unfortunately traps can be harmful to your pet(s) as well.
+Monsters, including pets, usually will avoid moving onto a trap which
+is shown on your map if they have encountered that type of trap before.
+
+%.pg
+Some traps such as pits, bear traps, and webs hold you in one place.
+You can escape by simply trying to move to an adjacent spot and repeat
+as needed; eventually you will get free.
+
+%.pg
+Other traps can send you to different locations.
+Teleporters send you elsewhere on the same dungeon level.
+Level teleporters send you to a random dungeon level, the destination
+chosen from a few levels lower all the way to the top.
+Trap doors and holes also send you to another level, but one which is
+always below the current level.
+Usually that will be the next level down but it can be farther.
+All of these traps choose a new destination each time they're activated.
+Magic portals also send you to a different level but behave differently.
+Some portals are two-way and their remote destination is always the same:
+another portal which can take you back.
+Others are one-way and send you to a specific destination level but not
+necessarily to a specific location there.
+
+%.pg
+There is a special multi-level branch of the dungeon with pre-mapped levels
+based on the classic computer game ``{\tt Sokoban}.''
+In that game, you operate as a warehouse worker who pushes crates around
+obstacles to position them at designated locations.
+In NetHack, the goal is to push boulders into pits or holes until those
+traps have all been nullified, giving access to whatever is beyond them.
+In the Sokoban game, you can only move in the four cardinal compass
+directions, and a crate in its final destination blocks further access
+to that spot.
+In the Sokoban levels of NetHack, you can move diagonally (unless that
+would let you pass between two neighboring boulders) but you can only
+push boulders in the four cardinal directions, and a boulder which fills
+a pit or hole removes both the boulder and the trap so opens up normal
+access to that spot.
+With careful foresight, it is possible to complete all of the levels
+according to the traditional rules of Sokoban.
+(Hint: to solve Sokoban puzzles, you often need to move things away from
+their eventual destinations in order to open up more room to maneuver.)
+Since NetHack does not support an {\it undo\/} capability, some allowances
+are permitted in case you get stuck.
+For example, each level has at least one extra boulder.
+Also, it is possible to drop everything in order to be able to squeeze
+into the same location as a boulder (and then presumably move past it),
+or to destroy a boulder with magic or tools, or to create new boulders
+with a {\it scroll of earth}.
+However, doing such things will lower your luck without any specific
+message given about that.
+See the {\it Conduct\/} section for information about getting feedback for
+your actions in Sokoban.
 
 %.hn 2
 \subsection*{Stairs and ladders (`{\tt <}', `{\tt >}')}
@@ -1968,10 +2028,12 @@ claim ownership without offering any compensation.  You'll have to buy
 it back if you want to reclaim it.
 
 %.pg
-Shopkeepers sometimes run out of money.  When that happens, you'll be
-offered credit instead of gold when you try to sell something.  Credit
-can be used to pay for purchases, but it is only good in the shop where
-it was obtained; other shopkeepers won't honor it.  (If you happen to
+Shopkeepers sometime run out of money.
+When that happens, you'll be
+offered credit instead of gold when you try to sell something.
+Credit can be used to pay for purchases, but it is only good in the shop
+where it was obtained; other shopkeepers won't honor it.
+(If you happen to
 find a ``credit card'' in the dungeon, don't bother trying to use it in
 shops; shopkeepers will not accept it.)
 
@@ -2000,7 +2062,7 @@ A shopkeeper treats the spot immediately inside the door as if it were
 outside the shop.
 %.lp \(bu 2
 \item[$\bullet$]
-While the shopkeeper watches you like a hawk, he will generally ignore
+While the shopkeeper watches you like a hawk, he or she will generally ignore
 any other customers.
 %.lp \(bu 2
 \item[$\bullet$]
@@ -2264,8 +2326,8 @@ to discard some of what you're carrying or collapse under its weight.
 %.pg
 {\it NetHack\/} will tell you how badly you have loaded yourself.
 If you are encumbered, one of the conditions
-``{\it Burdened\/}'', ``{\it Stressed\/}'', ``{\it Strained\/}'',
-``{\it Overtaxed\/}'' or ``{\it Overloaded\/}'' will be
+{\tt Burdened}, {\tt Stressed}, {\tt Strained},
+{\tt Overtaxed}, or {\tt Overloaded} will be
 shown on the bottom line status display.
 
 %.pg
@@ -2306,9 +2368,10 @@ less effective in combat.  Other cursed objects may act poorly or
 detrimentally in other ways.
 
 %.pg
-Objects can also be blessed.  Blessed items usually work better or
-more beneficially than normal uncursed items.  For example, a blessed
-weapon will do more damage against demons.
+Objects can also be blessed instead.
+Blessed items usually work better or more beneficially than normal
+uncursed items.
+For example, a blessed weapon will do slightly more damage against demons.
 
 %.pg
 Objects which are neither cursed nor blessed are referred to as uncursed.
@@ -2319,21 +2382,30 @@ half full versus glass half empty'' situation; make of that what you will.
 %.pg
 There are magical means of bestowing or removing curses upon objects,
 so even if you are stuck with one, you can still have the curse
-lifted and the item removed.  Priests and Priestesses have an innate
+lifted and the item removed.
+Priests and Priestesses have an innate
 sensitivity to this property in any object, so they can more easily avoid
 cursed objects than other character roles.
+Dropping objects onto an altar will reveal their bless or curse state
+provided that you can see them land.
 
 %.pg
 An item with unknown status will be reported in your inventory with no prefix.
 An item which you know the state of will be distinguished in your inventory
-by the presence of the word ``cursed'', ``uncursed'' or ``blessed'' in the
-description of the item.
-In some cases ``uncursed'' will be omitted as being redundant when
+by the presence of the word {\tt cursed}, {\tt uncursed} or
+{\tt blessed} in the description of the item.
+In some cases {\tt uncursed} will be omitted as being redundant when
 enough other information is displayed.
 The
 {\it implicit\verb+_+uncursed\/}
-option can be used to control this; toggle it off to have ``uncursed''
+option can be used to control this; toggle it off to have {\tt uncursed}
 be displayed even when that can be deduced from other attributes.
+
+%.pg
+Sometimes the bless or curse state of objects is referred to as their
+``{\tt BUC}'' attribute, for Blessed, Uncursed, or Cursed state,
+or ``{\tt BUCX}'' for Blessed, Uncursed, Cursed, or unknown.
+(The term {\it beatitude\/} is occasionally used as well.)
 
 %.hn 2
 \subsection*{Weapons (`{\tt )}')}
@@ -3076,7 +3148,7 @@ difficult challenge, although it is still possible to gain experience
 by other means.
 
 %.pg
-An illiterate character cannot read or write.  This includes reading
+An illiterate character does not read or write.  This includes reading
 a scroll, spellbook, fortune cookie message, or t-shirt; writing a
 scroll; or making an engraving of anything other than a single ``X'' (the
 traditional signature of an illiterate person).  Reading an engraving,
@@ -3085,6 +3157,33 @@ against this conduct.  The identity of scrolls and spellbooks (and
 knowledge of spells) in your starting inventory is assumed to be
 learned from your teachers prior to the start of the game and isn't
 counted.
+
+%.pg
+There is a side-branch to the main dungeon called ``Sokoban,'' briefly
+described in the earlier section about {\it Traps}.
+As mentioned there, the goal is to push boulders into pits and/or holes
+to plug those in order to both get the boulders out of your way and be
+able to go past the traps.
+There are some special ``rules'' that are active when in that branch
+of the dungeon.
+Some rules can't be bypassed, such as being unable to push a boulder
+diagonally.
+Other rules can, such as not smashing boulders with magic or tools,
+but doing so causes you to receive a luck penalty.
+No message about that is given at the time, but it is tracked as a conduct.
+The #conduct command and end of game disclosure will report whether
+you have abided by the special rules of Sokoban, and if not, how many
+times you violated them, providing you with a way to discover which
+actions incur bad luck so that you can be better informed about whether
+or not to avoid repeating those actions in the future.
+(Note:  the Sokoban conduct will only be displayed if you have
+entered the Sokoban branch of the dungeon during the current game.
+Once that has happened, it becomes part of disclosed conduct even if
+you haven't done anything interesting there.
+Ending the game with ``never broke the Sokoban rules'' conduct is most
+meaningful if you also manage to perform
+the ``obtained the Sokoban prize'' achievement
+(see {\it Achievements\/} below).)
 
 %.pg
 There are several other challenges tracked by the game.  It is possible
@@ -3256,22 +3355,30 @@ On MS-DOS it is \mbox{``defaults.nh''} in the same folder as
 \mbox{{\it SpliceHack.exe\/}}.\\
 
 %.lp ""
-Any line in the configuration file starting with `{\tt \#}' is treated as a comment.
-Empty lines are ignored. Any line beginning with `{\tt [}' and ending in `{\tt ]}' is considered a section
-marker. The text between the square brackets is the section name.
-Lines after a section marker belong to that section, and are
-ignored unless a CHOOSE -statement was used to select that section.
-Section names are case insensitive.
+Any line in the configuration file starting with `{\tt \#}' is treated
+as a comment and ignored.
+Empty lines are ignored.
+
+Any line beginning with `{\tt [}' and ending in `{\tt ]}'
+is a section marker (the closing `{\tt ]}' can be followed
+by whitespace and then an arbitrary comment beginning with `{\tt #}').
+The text between the square brackets is the section name.
+Section markers are only valid after a CHOOSE directive and their names
+are case insensitive.
+Lines after a section marker belong to that section up until another
+section starts or a marker without a name is encountered or the file ends.
+Lines within sections are ignored unless a CHOOSE directive has selected
+that section.
 
 %.pg
-You can use different configuration statements in the file, some
+You can use different configuration directives in the file, some
 of which can be used multiple times.
-In general, the statements are
+In general, the directives are
 written in capital letters, followed by an equals sign, followed by
-settings particular to that statement.
+settings particular to that directive.
 
 %.pg
-Here is a list of allowed statements:
+Here is a list of allowed directives:
 
 %.lp
 \blist{}
@@ -3282,8 +3389,8 @@ take more diverse values.
 Prefix a boolean option with `no' or `!' to turn it off.
 For compound options, the option name and value are separated by a colon.
 Some options are persistent, and apply only to new games.
-You can specify multiple OPTIONS statements, and multiple options
-separated by commas in a single OPTIONS statement.
+You can specify multiple OPTIONS directives, and multiple options
+separated by commas in a single OPTIONS directive.
 (Comma separated options are processed from right to left.)
 
 %.lp ""
@@ -3362,7 +3469,8 @@ Example:
 %.lp
 \item[\bb{CHOOSE}]
 Chooses at random one of the comma-separated parameters as an active
-section name. Lines in other sections are ignored.
+section name.
+Lines in other sections are ignored.
 
 %.lp ""
 Example:
@@ -3374,8 +3482,15 @@ Example:
    OPTIONS=role:arc,race:dwa,align:law,gender:fem
    [char B]
    OPTIONS=role:wiz,race:elf,align:cha,gender:mal
+   [] #end of CHOOSE
+   OPTIONS=!rest_on_space
 \end{verbatim}
 %.ed
+
+%.lp ""
+If {\tt []} is present, the preceding section is closed and no new
+section begins; whatever follows will be common to all sections.
+Otherwise the last section extends to the end of the options file.
 
 %.lp
 \item[\bb{MENUCOLOR}]
@@ -3493,10 +3608,10 @@ to that shell), or the pair of commands
 
 %.pg
 The NETHACKOPTIONS value is effectively the same as a single OPTIONS
-statement in a configuration file.
+directive in a configuration file.
 The ``OPTIONS='' prefix is implied and comma separated options are
 processed from right to left.
-Other types of configuration statements such as BIND or MSGTYPE are
+Other types of configuration directives such as BIND or MSGTYPE are
 not allowed.
 
 %.pg
@@ -3593,14 +3708,6 @@ synonym for ``{\it role\/}''.  See {\it role\/} for more details.
 \item[\ib{checkpoint}]
 Save game state after each level change, for possible recovery after
 program crash (default on).  Persistent.
-%.lp
-\item[\ib{checkspace}]
-Check free disk space before writing files to disk (default on).
-You may have to turn this off if you have more than 2 GB free space
-on the partition used for your save and level files
-(because too much space might overflow the calculation and end up
-looking like insufficient space).
-Only applies when MFLOPPY was defined during compilation.
 %.lp
 \item[\ib{clicklook}]
 Allows looking at things on the screen by navigating the mouse
@@ -4654,7 +4761,7 @@ returns to {\it NetHack\/} to help compensate for international keyboard
 issues.
 OPTIONS=subkeyvalue:171/92
 will return 92 to {\it NetHack\/}, if 171 was originally going to be returned.
-You can use multiple subkeyvalue statements in the configuration file
+You can use multiple subkeyvalue assignments in the configuration file
 if needed.
 Cannot be set with the `{\tt O}' command.
 %.lp
@@ -5106,10 +5213,11 @@ Each SOUND entry is broken down into the following parts:
 
 %.sd
 %.si
-{\tt MESG      } --- message window mapping (the only one supported in 3.6);\\
-{\tt pattern   } --- the pattern to match;\\
-{\tt sound file} --- the sound file to play;\\
-{\tt volume    } --- the volume to be set while playing the sound file.
+{\tt MESG       } --- message window mapping (the only one supported in 3.6);\\
+{\tt pattern    } --- the pattern to match;\\
+{\tt sound file } --- the sound file to play;\\
+{\tt volume     } --- the volume to be set while playing the sound file;\\
+{\tt sound index} --- optional; the index corresponding to a sound file.
 %.ei
 %.ed
 \elist
@@ -5866,9 +5974,18 @@ Kenny Woodland}, {\it Mike Thome}, and {\it Jon Payne}.
 
 %.pg
 \medskip
-\nd {\it Andries Brouwer\/} did a major re-write, transforming {\it Hack\/}
-into a very different game, and published (at least) three versions (1.0.1,
-1.0.2, and 1.0.3) for UNIX machines to the Usenet.
+\nd {\it Andries Brouwer\/} did a major re-write while at
+Stichting Mathematisch Centrum (now Centrum Wiskunde \& Informatica),
+transforming Hack into a very different game.
+He published the Hack source code for use on UNIX
+systems by posting that to Usenet
+newsgroup {\it net.sources\/} (later renamed {\it comp.sources})
+releasing version 1.0 in December of 1984, then versions 1.0.1, 1.0.2,
+and finally 1.0.3 in July of 1985.
+Usenet newsgroup {\it net.games.hack\/} (later
+renamed {\it rec.games.hack}, eventually replaced
+by {\it rec.games.roguelike.nethack})
+was created for discussing it.
 
 %.pg
 \medskip
@@ -5891,6 +6008,9 @@ incorporating many of the added features, and produced {\it NetHack\/} version
 1.4 in 1987.
 He then coordinated a cast of thousands in enhancing and debugging
 {\it NetHack\/} 1.4 and released {\it NetHack\/} versions 2.2 and 2.3.
+Like Hack, they were released by posting their source code to Usenet where
+they remained available in various archives accessible
+via {\it ftp\/} and {\it uucp\/} after expiring from the newsgroup.
 
 %.pg
 \medskip
@@ -5919,9 +6039,12 @@ revisions of 3.0.
 %.pg
 Version 3.0 went through ten relatively rapidly released ``patch-level''
 revisions.
-Versions at the time were designated ``3.0 patchlevel 10''
-or ``3.0pl10'' rather than 3.0.10; that three component numbering scheme
-began to be used with 3.1.0.
+Versions at the time were known as 3.0 for the base release and variously
+as ``3.0a'' through ``3.0j'',
+``3.0~patchlevel~1'' through ``3.0~patchlevel~10'',
+or ``3.0pl1'' through ``3.0pl10''
+rather than 3.0.0 and 3.0.1 through 3.0.10;
+the three component numbering scheme began to be used with 3.1.0.
 
 %.pg
 \medskip
@@ -5930,11 +6053,14 @@ and {\it Janet Walz}, the {\it NetHack Development Team} which now included
 {\it Ken Arromdee},
 {\it David Cohrs}, {\it Jean-Christophe Collet}, {\it Kevin Darcy},
 {\it Matt Day}, {\it Timo Hakulinen}, {\it Steve Linhart}, {\it Dean Luick},
-{\it Pat Rankin}, {\it Eric Raymond}, and {\it Eric Smith\/} undertook a radical
-revision of 3.0.  They re-structured the game's design, and re-wrote major
-parts of the code.  They added multiple dungeons, a new display, special
+{\it Pat Rankin}, {\it Eric Raymond}, and {\it Eric Smith\/} undertook a
+radical revision of 3.0.
+They re-structured the game's design, and re-wrote major
+parts of the code.
+They added multiple dungeons, a new display, special
 individual character quests, a new endgame and many other new features, and
 produced {\it NetHack\/} 3.1.
+Version 3.1.0 was released in January of 1993.
 
 %.pg
 \medskip
@@ -5996,16 +6122,19 @@ picked up by various other games.
 Arromdee}, {\it David Cohrs}, {\it Jessie Collet}, {\it Steve Creps}, {\it
 Kevin Darcy}, {\it Timo Hakulinen}, {\it Steve Linhart}, {\it Dean Luick},
 {\it Pat Rankin}, {\it Eric Smith}, {\it Mike Stephenson}, {\it Janet Walz},
-and {\it Paul Winner}, released version 3.2 in April of 1996.
+and {\it Paul Winner}, released version 3.2.0 in April of 1996.
 
 %.pg
 \medskip
-\nd Version 3.2 marked the tenth anniversary of the formation of the development
-team.  In a testament to their dedication to the game, all thirteen members
-of the original {\it NetHack Development Team} remained on the team at the start of work on
-that release.  During the interval between the release of 3.1.3 and 3.2,
-one of the founding members of the {\it NetHack Development Team}, {\it Dr. Izchak Miller},
-was diagnosed with cancer and passed away.  That release of the game was
+\nd Version 3.2 marked the tenth anniversary of the formation of the
+development team.
+In a testament to their dedication to the game, all thirteen members
+of the original {\it NetHack Development Team} remained on the team at the
+start of work on that release.
+During the interval between the release of 3.1.3 and 3.2.0,
+one of the founding members of the {\it NetHack Development Team},
+{\it Dr. Izchak Miller}, was diagnosed with cancer and passed away.
+That release of the game was
 dedicated to him by the development and porting teams.
 
 %.pg
@@ -6045,6 +6174,20 @@ the best of these ideas into {\it NetHack\/} 3.3.
 \medskip
 The final update to 3.2 was the bug fix release 3.2.3, which was released
 simultaneously with 3.3.0 in December 1999 just in time for the Year 2000.
+Because of the newer version, 3.2.3 was released as a source code patch only,
+without any ready-to-play distribution for systems that usually had such.
+
+%.pg
+(To anyone considering resurrecting an old version:  all versions before
+3.2.3 had a {\it Y2K\/} bug.
+The high scores file and the log file contained
+dates which were formatted using a two-digit year, and 1999's year 99 was
+followed by 2000's year 100.
+That got written out successfully but it
+unintentionally introduced an extra column in the file layout which prevented
+score entries from being read back in correctly, interfering with insertion
+of new high scores and with retrieval of old character names to use for
+random ghost and statue names in the current game.)
 
 %.pg
 \medskip
@@ -6159,8 +6302,8 @@ In January 2015, preparation began for the release of NetHack 3.6.
 
 %.pg
 \medskip
-At the beginning of development for what would eventually get released
-as 3.6.0, the {\it NetHack Development Team} consisted of {\it Warwick Allison},
+At the beginning of development for what would eventually get released as
+3.6.0, the {\it NetHack Development Team} consisted of {\it Warwick Allison},
 {\it Michael Allison}, {\it Ken Arromdee},
 {\it David Cohrs}, {\it Jessie Collet},
 {\it Ken Lorber}, {\it Dean Luick}, {\it Pat Rankin},
@@ -6186,7 +6329,7 @@ patches.  Many bugs were fixed and some code was restructured.
 \medskip
 The {\it NetHack Development Team}, as well as {\it Steve VanDevender} and
 {\it Kevin Smolkowski}, ensured that {\it NetHack\/} 3.6 continued to
-operate on various Unix flavors and maintained the X11 interface.
+operate on various UNIX flavors and maintained the X11 interface.
 
 %.pg
 \medskip

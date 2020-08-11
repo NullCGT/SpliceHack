@@ -1,4 +1,4 @@
-/* NetHack 3.6	mhmap.c	$NHDT-Date: 1435002695 2015/06/22 19:51:35 $  $NHDT-Branch: master $:$NHDT-Revision: 1.56 $ */
+/* NetHack 3.7	mhmap.c	$NHDT-Date: 1596498353 2020/08/03 23:45:53 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.85 $ */
 /* Copyright (C) 2001 by Alex Kompel      */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -13,7 +13,9 @@
 #include "resource.h"
 
 #include "color.h"
+#if !defined(PATCHLEVEL_H)
 #include "patchlevel.h"
+#endif
 
 #define NHMAP_FONT_NAME TEXT("Terminal")
 #define NHMAP_TTFONT_NAME TEXT("Consolas")
@@ -857,6 +859,24 @@ paintTile(PNHMapWindow data, int i, int j, RECT * rect)
         DeleteDC(hdcPetMark);
     }
 #ifdef USE_PILEMARK
+    if ((glyph != NO_GLYPH) && (special & MG_RIDDEN)) {
+        /* apply riding mark transparently over
+            monster image */
+        HDC hdcRidingMark;
+        HBITMAP bmRidingMarkOld;
+
+        /* this is DC for ridingmark bitmap */
+        hdcRidingMark = CreateCompatibleDC(data->backBufferDC);
+        bmRidingMarkOld =
+            SelectObject(hdcRidingMark, GetNHApp()->bmpRidingMark);
+
+        (*GetNHApp()->lpfnTransparentBlt)(
+            data->backBufferDC, rect->left, rect->top,
+            data->xBackTile, data->yBackTile, hdcRidingMark, 0, 0,
+            TILE_X, TILE_Y, TILE_BK_COLOR);
+        SelectObject(hdcRidingMark, bmRidingMarkOld);
+        DeleteDC(hdcRidingMark);
+    }
     if ((glyph != NO_GLYPH) && (special & MG_OBJPILE)
         && iflags.hilite_pile) {
         /* apply pilemark transparently over other image */

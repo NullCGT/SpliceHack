@@ -1,4 +1,4 @@
-/* NetHack 3.6	weapon.c	$NHDT-Date: 1579648295 2020/01/21 23:11:35 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.82 $ */
+/* NetHack 3.7	weapon.c	$NHDT-Date: 1596498226 2020/08/03 23:43:46 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.87 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -27,8 +27,8 @@ static void FDECL(skill_advance, (int));
 #define PN_POLEARMS (-4)
 #define PN_SABER (-5)
 #define PN_HAMMER (-6)
-#define PN_WHIP (-7)
-#define PN_FIREARMS	(-8)
+#define PN_FIREARMS	(-7)
+#define PN_WHIP (-8)
 #define PN_ATTACK_SPELL (-9)
 #define PN_HEALING_SPELL (-10)
 #define PN_DIVINATION_SPELL (-11)
@@ -49,7 +49,7 @@ static NEARDATA const short skill_names_indices[P_NUM_SKILLS] = {
     0, DAGGER, KNIFE, AXE, PICK_AXE, SHORT_SWORD, BROADSWORD, LONG_SWORD,
     TWO_HANDED_SWORD, SCIMITAR, PN_SABER, CLUB, MACE, MORNING_STAR, FLAIL,
     PN_HAMMER, QUARTERSTAFF, PN_POLEARMS, SPEAR, TRIDENT, LANCE, BOW, SLING,
-    CROSSBOW, PN_FIREARMS, DART, SHURIKEN, BOOMERANG, PN_WHIP, UNICORN_HORN,
+    PN_FIREARMS, CROSSBOW, DART, SHURIKEN, BOOMERANG, PN_WHIP, UNICORN_HORN,
     PN_ATTACK_SPELL, PN_HEALING_SPELL, PN_DIVINATION_SPELL,
     PN_ENCHANTMENT_SPELL, PN_CLERIC_SPELL, PN_ESCAPE_SPELL, PN_MATTER_SPELL,
     PN_BARE_HANDED, PN_TWO_WEAPONS, PN_RIDING, PN_COOKING
@@ -58,8 +58,7 @@ static NEARDATA const short skill_names_indices[P_NUM_SKILLS] = {
 /* note: entry [0] isn't used */
 static NEARDATA const char *const odd_skill_names[] = {
     "no skill", "bare hands", /* use barehands_or_martial[] instead */
-    "two weapon combat", "riding", "polearms", "saber", "hammer", "whip",
-    "firearms",
+    "two weapon combat", "riding", "polearms", "saber", "hammer", "firearms", "whip",
     "attack spells", "healing spells", "divination spells",
     "enchantment spells", "clerical spells", "escape spells", "matter spells",
     "cooking",
@@ -138,6 +137,10 @@ struct obj *obj;
     case P_CROSSBOW:
         if (is_ammo(obj))
             descr = "bolt";
+        break;
+    case P_FIREARM:
+        if (is_ammo(obj))
+            descr = "bullet";
         break;
     case P_FLAIL:
         if (obj->otyp == GRAPPLING_HOOK)
@@ -411,123 +414,213 @@ struct monst *mon;
     return  tmp;
 }
 
-/* check whether blessed and/or material damage applies for *non-weapon* hit;
-   return value is the amount of the extra damage */
+/* Find an object that magr is wearing (or even magr's body itself) that has a
+ * special damaging effect on mdef, and return the amount of bonus damage done.
+ * The most damaging source has precedence; each source that causes special
+ * damage makes its own roll for damage, and the highest roll will be applied.
+ */
 int
 special_dmgval(magr, mdef, armask, out_obj)
 struct monst *magr, *mdef;
-long armask; /* armor mask, multiple bits accepted for W_ARMC|W_ARM|W_ARMU
-              * or W_ARMG|W_RINGL|W_RINGR only */
+long armask; /* armor mask of all the slots that can be touching mdef */
 struct obj **out_obj; /* ptr to offending object, can be NULL if not wanted */
 {
-    struct obj *obj;
-    struct permonst *ptr = mdef->data;
-    boolean left_ring = (armask & W_RINGL) ? TRUE : FALSE,
-            right_ring = (armask & W_RINGR) ? TRUE : FALSE;
+    boolean youattack = (magr == &g.youmonst);
+    const int magr_material = monmaterial(monsndx(magr->data));
     int bonus = 0;
+    int tmpbonus = 0;
+    boolean try_body = FALSE;
+    struct obj *gloves    = which_armor(magr, W_ARMG),
+               *helm      = which_armor(magr, W_ARMH),
+               *shield    = which_armor(magr, W_ARMS),
+               *boots     = which_armor(magr, W_ARMF),
+               *armor     = which_armor(magr, W_ARM),
+               *cloak     = which_armor(magr, W_ARMC),
+               *shirt     = which_armor(magr, W_ARMU),
+               *leftring  = (youattack ? uleft : which_armor(magr, W_RINGL)),
+               *rightring = (youattack ? uright : which_armor(magr, W_RINGR));
 
-    obj = 0;
-    if (out_obj)
+    if (out_obj) {
         *out_obj = 0;
-    if (armask & (W_ARMC | W_ARM | W_ARMU)) {
-        if ((armask & W_ARMC) != 0L
-            && (obj = which_armor(magr, W_ARMC)) != 0)
-            armask = W_ARMC;
-        else if ((armask & W_ARM) != 0L
-                 && (obj = which_armor(magr, W_ARM)) != 0)
-            armask = W_ARM;
-        else if ((armask & W_ARMU) != 0L
-                 && (obj = which_armor(magr, W_ARMU)) != 0)
-            armask = W_ARMU;
-        else
-            armask = 0L;
-    } else if (armask & (W_ARMG | W_RINGL | W_RINGR)) {
-        armask = ((obj = which_armor(magr, W_ARMG)) != 0) ?  W_ARMG : 0L;
-    } else {
-        obj = which_armor(magr, armask);
     }
 
-    if (obj) {
-        if (obj->blessed
-            && (is_undead(ptr) || is_demon(ptr) || is_vampshifter(mdef)))
-            bonus += rnd(4);
-        if (mon_hates_material(mdef, obj->material)) {
-            bonus += rnd(sear_damage(obj->material));
-            if (out_obj)
-                *out_obj = obj;
-        }
+    /* Simple exclusions where we ignore a certain type of armor because it is
+     * covered by some other equipment. */
+    if (gloves) {
+        leftring = rightring = NULL;
+    }
+    if (cloak) {
+        armor = shirt = NULL;
+    }
+    if (armor) {
+        shirt = NULL;
+    }
 
-    /* when no gloves we check for rings made of hated material (blessed rings
-     * ignored) */
-    } else if ((left_ring || right_ring) && magr == &g.youmonst) {
-        if (left_ring && uleft
-            && mon_hates_material(mdef, uleft->material)) {
-            bonus += rnd(sear_damage(uleft->material));
-            if (out_obj)
-                *out_obj = uleft;
-        }
-        if (right_ring && uright
-            && mon_hates_material(mdef, uright->material)) {
-            /* What if an enemy hates two kinds of materials and you're
-             * wearing one of each?
-             * The most appropriate flavor is that you're only hitting with
-             * one hand at a time, so if both would apply material damage,
-             * take one or the other hand randomly. */
-            if (*out_obj == uleft && rn2(2)) {
-                /* nothing in this function could have set bonus to 0 before
-                 * this except the left ring case above */
-                bonus = 0;
-                bonus += rnd(sear_damage(uright->material));
-                if (out_obj)
-                    *out_obj = uright;
+    /* Cases where we want to count magr's body: the caller indicates a certain
+     * slot is making contact, and magr is not wearing anything in that slot, so
+     * their body must be making contact.
+     * Note: in the gloves case, rings don't prevent magr's body from making
+     * contact. */
+    if (((armask & W_ARMG) && !gloves)
+        || ((armask & W_ARMF) && !boots)
+        || ((armask & W_ARMH) && !helm)
+        || ((armask & (W_ARMC | W_ARM | W_ARMU))
+            && !cloak && !armor && !shirt)) {
+        try_body = TRUE;
+    }
+
+    if (try_body && mon_hates_material(mdef, magr_material)) {
+        bonus = sear_damage(magr_material);
+        if (out_obj)
+            *out_obj = (struct obj *) &cg.zeroobj;
+    }
+
+    /* The order of armor slots in this array doesn't really matter because we
+     * roll for everything that applies and take the highest damage. */
+    struct {
+        long mask;
+        struct obj* obj;
+    } array[9] = {
+        { W_ARMG, gloves },
+        { W_ARMH, helm   },
+        { W_ARMS, shield },
+        { W_ARMF, boots  },
+        { W_ARM,  armor  },
+        { W_ARMC, cloak  },
+        { W_ARMU, shirt  },
+        { W_RINGL, leftring },
+        { W_RINGR, rightring }
+    };
+
+    int i;
+    for (i = 0; i < 9; ++i) {
+        if (array[i].obj && (armask & array[i].mask)) {
+            tmpbonus = dmgval(array[i].obj, mdef);
+            if (tmpbonus > bonus) {
+                bonus = tmpbonus;
+                if (out_obj) {
+                    *out_obj = array[i].obj;
+                }
             }
         }
     }
-
     return bonus;
 }
 
 /* give a "silver <item> sears <target>" message (or similar for other
- * material); not used for weapon hit, so we only handle rings */
+ * material); in addition to weapon hit, this is used for rings, boots for kick,
+ * gloves for punch, or helm for headbutt.
+ */
 void
-searmsg(magr, mdef, obj)
-struct monst *magr UNUSED;
+searmsg(magr, mdef, obj, minimal)
+struct monst *magr;
 struct monst *mdef;
-struct obj * obj; /* the offending item */
+const struct obj * obj; /* the offending item, or &cg.zeroobj if magr's body */
+boolean minimal;        /* print a shorter message leaving out obj details */
 {
-    char onamebuf[BUFSZ];
-    char whose[BUFSZ];
-    int mat = obj->material;
-    const char* matname = materialnm[mat];
+    boolean youattack = (magr == &g.youmonst);
+    boolean youdefend = (mdef == &g.youmonst);
+    boolean has_flesh = (!noncorporeal(mdef->data) && !amorphous(mdef->data));
 
     if (!obj) {
         impossible("searmsg: nothing searing?");
         return;
     }
+    if (!youdefend && !canspotmon(mdef)) {
+        return;
+    }
 
-    /* Make it explicit to the player that this effect is from the
-     * material. If the object name doesn't already contain the material name,
-     * add it (e.g. "engraved silver bell" shouldn't turn into "silver engraved
-     * silver bell") */
-    boolean alreadyin = (strstri(cxname(obj), matname) != NULL);
-    if (!alreadyin) {
-        Sprintf(onamebuf, "%s %s", matname, cxname(obj));
+    char onamebuf[BUFSZ];
+    char whose[BUFSZ];
+    int mat;
+
+    if (obj == &cg.zeroobj) {
+        mat = monmaterial(monsndx(magr->data));
+        Sprintf(onamebuf, "%s touch", materialnm[mat]);
+        if (youattack) {
+            Strcpy(whose, "your ");
+        }
+        else if (!magr) {
+            impossible("searmsg: non-weapon attack with no aggressor?");
+            return;
+        }
+        else {
+            Strcpy(whose, s_suffix(y_monnam(magr)));
+            Strcat(whose, " ");
+        }
     }
     else {
-        Strcpy(onamebuf, cxname(obj));
+        mat = obj->material;
+        const char* matname = materialnm[mat];
+
+        /* Why doesn't cxname receive a const struct obj? */
+        char* cxnameobj = cxname((struct obj *) obj);
+
+        /* Make it explicit to the player that this effect is from the material,
+         * by prepending the material, but only if the object's name doesn't
+         * already contain the material string somewhere.  (e.g. "sword" should
+         * turn into "iron sword", but "engraved silver bell" shouldn't turn
+         * into "silver engraved silver bell") */
+        boolean alreadyin = (strstri(cxnameobj, matname) != NULL);
+        if (!alreadyin) {
+            Sprintf(onamebuf, "%s %s", matname, cxnameobj);
+        }
+        else {
+            Strcpy(onamebuf, cxnameobj);
+        }
+        shk_your(whose, (struct obj *) obj);
     }
+
+    if (minimal) {
+        /* instead of "foo's obj", it will be "the [touch of] <material>;
+         * whose becomes "the" in both cases */
+        Strcpy(whose, "the ");
+        if (mat == SILVER) { /* different formatting */
+            Strcpy(onamebuf, "silver");
+        }
+        else {
+            Sprintf(onamebuf, "touch of %s", materialnm[mat]);
+        }
+    }
+
+    /* "Extra-minimal" case where we don't know what is doing the searing.
+     * Note that this can assume it will be formatting some non-player entity
+     * because it only applies when the player isn't involved. */
+    if (!youattack && !youdefend && !canseemon(mdef) && minimal) {
+        if (mat == SILVER || mat == COLD_IRON) {
+            char defender[BUFSZ];
+            if (has_flesh) {
+                Sprintf(defender, "%s flesh", s_suffix(Monnam(mdef)));
+            }
+            else {
+                Strcpy(defender, Monnam(mdef));
+            }
+            pline("%s is seared!", defender);
+        }
+        else {
+            pline("%s recoils!", Monnam(mdef));
+        }
+        return;
+    }
+
+    /* char* whom = youdefend ? "you" : mon_nam(mdef); */
     char* whom = mon_nam(mdef);
-    shk_your(whose, obj);
+    if (youdefend) {
+        Strcpy(whom, "you");
+    }
+
     if (mat == SILVER || mat == COLD_IRON) { /* more dramatic effects than other materials */
         /* note: s_suffix returns a modifiable buffer */
-        if (!noncorporeal(mdef->data) && !amorphous(mdef->data))
+        if (has_flesh)
             whom = strcat(s_suffix(whom), " flesh");
 
         pline("%s%s %s %s!", upstart(whose), onamebuf,
               vtense(onamebuf, "sear"), whom);
     }
     else {
-        pline("%s flinches from %s%s!", Monnam(mdef), whose, onamebuf);
+        whom = upstart(whom);
+        pline("%s recoil%s from %s%s!", whom, (youdefend ? "" : "s"),
+              whose, onamebuf);
     }
 }
 
@@ -598,7 +691,7 @@ int x;
 
 /* TODO: have monsters use aklys' throw-and-return */
 static NEARDATA const int rwep[] = {
-    FRAG_GRENADE, GAS_GRENADE,
+    FRAG_GRENADE, GAS_GRENADE, BULLET, SHOTGUN_SHELL,
     ORB_OF_PERMAFROST, DWARVISH_SPEAR, ELVEN_SPEAR, SPEAR,
     ORCISH_SPEAR, JAVELIN, WINDMILL_BLADE, THROWING_AXE,
     SHURIKEN, LIGHT_ARROW, 
@@ -606,7 +699,7 @@ static NEARDATA const int rwep[] = {
     CROSSBOW_BOLT, ELVEN_DAGGER, DARK_ELVEN_DAGGER,
     DAGGER, ORCISH_DAGGER, KNIFE,
     FLINT, ROCK, LOADSTONE, LUCKSTONE, DART, PINEAPPLE,
-    /* BOOMERANG, */ CREAM_PIE
+    /* CHAKRAM, BOOMERANG, */ CREAM_PIE
 };
 
 static NEARDATA const int pwep[] = { SPIKED_CHAIN,
@@ -763,6 +856,19 @@ register struct monst *mtmp;
                 break;
             case P_CROSSBOW:
                 g.propellor = oselect(mtmp, CROSSBOW);
+                break;
+            case P_FIREARM:
+                if ((objects[rwep[i]].w_ammotyp) == WP_BULLET) {
+                    g.propellor = (oselect(mtmp, HEAVY_MACHINE_GUN));
+                    if (!g.propellor) g.propellor = (oselect(mtmp, SUBMACHINE_GUN));
+                    if (!g.propellor) g.propellor = (oselect(mtmp, SNIPER_RIFLE));
+                    if (!g.propellor) g.propellor = (oselect(mtmp, RIFLE));
+                    if (!g.propellor) g.propellor = (oselect(mtmp, PISTOL));
+                } else if ((objects[rwep[i]].w_ammotyp) == WP_SHELL) {
+                    g.propellor = (oselect(mtmp, AUTO_SHOTGUN));
+                    if (!g.propellor) g.propellor = (oselect(mtmp, SHOTGUN));
+                }
+                break;
             }
             if (!tmpprop) tmpprop = g.propellor;
             if ((otmp = MON_WEP(mtmp)) && mwelded(otmp) && otmp != g.propellor
@@ -822,7 +928,8 @@ static const NEARDATA short hwep[] = {
     ORCISH_SPEAR, FLAIL, BULLWHIP, BASEBALL_BAT, QUARTERSTAFF, JAVELIN,
     AKLYS, CLUB, PICK_AXE,
     RUBBER_HOSE, WAR_HAMMER, ELVEN_DAGGER, DAGGER, ORCISH_DAGGER,
-    ATHAME, SCALPEL, KNIFE, WORM_TOOTH
+    ATHAME, SCALPEL, KNIFE, WORM_TOOTH,
+    AUTO_SHOTGUN, SHOTGUN, RIFLE, PISTOL /* hitting enemies with small firearms */
 };
 
 boolean

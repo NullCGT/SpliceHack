@@ -1,4 +1,4 @@
-/* NetHack 3.6	skills.h	$NHDT-Date: 1547255911 2019/01/12 01:18:31 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.15 $ */
+/* NetHack 3.7	skills.h	$NHDT-Date: 1596498559 2020/08/03 23:49:19 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.16 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985-1999. */
 /*-Copyright (c) Pasi Kallinen, 2017. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -43,8 +43,8 @@ enum p_skills {
     P_LANCE              = 20,
     P_BOW                = 21, /* launchers */
     P_SLING              = 22,
-    P_CROSSBOW           = 23,
-    P_FIREARM			 = 24,	/* KMH */
+    P_FIREARM			 = 23,	/* KMH */
+    P_CROSSBOW           = 24,
     P_DART               = 25, /* hand-thrown missiles */
     P_SHURIKEN           = 26,
     P_BOOMERANG          = 27,

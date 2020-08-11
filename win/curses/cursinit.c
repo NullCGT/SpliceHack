@@ -1,5 +1,5 @@
 /* vim:set cin ft=c sw=4 sts=4 ts=8 et ai cino=Ls\:0t0(0 : -*- mode:c;fill-column:80;tab-width:8;c-basic-offset:4;indent-tabs-mode:nil;c-file-style:"k&r" -*-*/
-/* NetHack 3.6 cursinit.c */
+/* NetHack 3.7 cursinit.c */
 /* Copyright (c) Karl Garrison, 2010. */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -7,7 +7,6 @@
 #include "hack.h"
 #include "wincurs.h"
 #include "cursinit.h"
-/*#include "patchlevel.h"*/
 
 #include <ctype.h>
 
@@ -1072,21 +1071,6 @@ curses_display_splash_window()
     }
     if (iflags.wc2_guicolor)
          curses_toggle_color_attr(stdscr, CLR_WHITE, A_NORMAL, OFF);
-
-    #ifdef COPYRIGHT_BANNER_A
-        mvaddstr(y_start, x_start, COPYRIGHT_BANNER_A);
-        y_start++;
-    #endif
-
-    #ifdef COPYRIGHT_BANNER_B
-        mvaddstr(y_start, x_start, COPYRIGHT_BANNER_B);
-        y_start++;
-    #endif
-
-    #ifdef COPYRIGHT_BANNER_C
-        mvaddstr(y_start, x_start, COPYRIGHT_BANNER_C);
-        y_start++;
-    #endif
 
     for (i = 1; i <= 4; ++i) {
          mvaddstr(y_start, x_start, copyright_banner_line(i));

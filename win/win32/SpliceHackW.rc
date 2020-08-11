@@ -246,6 +246,8 @@ IDB_MENU_UNSEL          BITMAP                  "mnunsel.bmp"
 
 IDB_PETMARK             BITMAP                  "petmark.bmp"
 
+IDB_RIDINGMARK          BITMAP                  "ridingmark.bmp"
+
 IDB_PILEMARK            BITMAP                  "pilemark.bmp"
 
 IDB_MENU_SEL_COUNT      BITMAP                  "mnselcnt.bmp"

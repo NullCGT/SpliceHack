@@ -1,4 +1,4 @@
-/* NetHack 3.6	mhitm.c	$NHDT-Date: 1593306906 2020/06/28 01:15:06 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.137 $ */
+/* NetHack 3.7	mhitm.c	$NHDT-Date: 1596498178 2020/08/03 23:42:58 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.140 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -386,6 +386,11 @@ register struct monst *magr, *mdef;
     if (magr->data == &mons[PM_HYDRA]) {
         k = min(magr->m_lev - magr->data->mlevel + 1, 10);
     }
+    /* controls whether a mind flayer uses all of its tentacle-for-DRIN
+       attacks; when fighting a headless monster, stop after the first
+       one because repeating the same failing hit (or even an ordinary
+       tentacle miss) is very verbose and makes the flayer look stupid */
+    g.skipdrin = FALSE;
 
     /* Now perform all attacks for the monster. */
     for (i = 0; i < NATTK; i++) {
@@ -393,6 +398,12 @@ register struct monst *magr, *mdef;
         mattk = getmattk(magr, mdef, i, res, &alt_attk);
         mwep = (struct obj *) 0;
         attk = 1;
+        /* reduce verbosity for mind flayer attacking creature without a
+           head (or worm's tail); this is similar to monster with multiple
+           attacks after a wildmiss against displaced or invisible hero */
+        if (g.skipdrin && mattk->aatyp == AT_TENT && mattk->adtyp == AD_DRIN)
+            continue;
+
         switch (mattk->aatyp) {
         case AT_WEAP: /* weapon attacks */
             if (distmin(magr->mx, magr->my, mdef->mx, mdef->my) > 1) {
@@ -683,29 +694,6 @@ int dieroll;
             }
             if (*buf)
                 pline("%s %s.", buf, mon_nam_too(mdef, magr));
-
-            if (weaponhit && mwep && mon_hates_material(mdef, mwep->material)) {
-                char *mdef_name = mon_nam_too(mdef, magr);
-
-                /* note: mon_nam_too returns a modifiable buffer; so
-                   does s_suffix, but it returns a single static buffer
-                   and we might be calling it twice for this message */
-                Strcpy(magr_name, s_suffix(magr_name));
-                if (!noncorporeal(mdef->data) && !amorphous(mdef->data)) {
-                    if (mdef != magr) {
-                        mdef_name = s_suffix(mdef_name);
-                    } else {
-                        (void) strsubst(mdef_name, "himself", "his own");
-                        (void) strsubst(mdef_name, "herself", "her own");
-                        (void) strsubst(mdef_name, "itself", "its own");
-                        (void) strsubst(mdef_name, "themself", "their own");
-                    }
-                    Strcat(mdef_name, " flesh");
-                }
-
-                pline("%s %s sears %s!", magr_name, /*s_suffix(magr_name), */
-                      simpleonames(mwep), mdef_name);
-            }
         }
     } else
         noises(magr, mattk);
@@ -999,6 +987,14 @@ int dieroll;
     armpro = magic_negation(mdef);
     cancelled = magr->mcan || !(rn2(10) >= 3 * armpro);
 
+    /* check for special damage sources (e.g. hated material) */
+    long armask = attack_contact_slots(magr, mattk->aatyp);
+    struct obj* hated_obj;
+    tmp += special_dmgval(magr, mdef, armask, &hated_obj);
+    if (hated_obj) {
+        searmsg(magr, mdef, hated_obj, FALSE);
+    }
+
     switch (mattk->adtyp) {
     case AD_DGST:
         /* eating a Rider or its corpse is fatal */
@@ -1114,9 +1110,13 @@ int dieroll;
                 /* artifact_hit updates 'tmp' but doesn't inflict any
                    damage; however, it might cause carried items to be
                    destroyed and they might do so */
-               if (DEADMONSTER(mdef))
+                if (DEADMONSTER(mdef))
                     return (MM_DEF_DIED
                             | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
+            }
+            if (mon_hates_material(mdef, mwep->material)) {
+                /* extra damage already applied by dmgval() */
+                searmsg(magr, mdef, mwep, TRUE);
             }
             if (tmp)
                 rustm(mdef, mwep);
@@ -1640,6 +1640,9 @@ int dieroll;
                 pline("%s doesn't seem harmed.", Monnam(mdef));
             /* Not clear what to do for green slimes */
             tmp = 0;
+            /* don't bother with additional DRIN attacks since they wouldn't
+               be able to hit target on head either */
+            g.skipdrin = TRUE; /* affects mattackm()'s attack loop */
             break;
         }
         if ((mdef->misc_worn_check & W_ARMH) && (rn2(8) ||

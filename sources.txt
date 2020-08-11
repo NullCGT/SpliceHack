@@ -100,6 +100,7 @@
 #DNetHack
 - Inspiration for Creeping Kudzu
 - Code for race fields and expanded races
+- Chakrams
 
 #UnNetHack
 - Black Market Code

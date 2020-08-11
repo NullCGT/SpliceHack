@@ -1,4 +1,4 @@
-/* NetHack 3.6	objclass.h	$NHDT-Date: 1578895344 2020/01/13 06:02:24 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.21 $ */
+/* NetHack 3.7	objclass.h	$NHDT-Date: 1596498553 2020/08/03 23:49:13 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.22 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Pasi Kallinen, 2018. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -77,7 +77,6 @@ struct objclass {
 #define PIERCE 0x1 /* for weapons & tools used as weapons */
 #define SLASH 0x2  /* (latter includes iron ball & chain) */
 #define WHACK 0x4
-#define EXPLODE 0x8
 
     /* 4 free bits */
 
@@ -124,6 +123,12 @@ struct objclass {
     /* Check the AD&D rules!  The FIRST is small monster damage. */
     /* for weapons, and tools, rocks, and gems useful as weapons */
     schar oc_wsdam, oc_wldam; /* max small/large monster damage */
+#define w_ammotyp	oc_oc2		/* type of ammo taken by ranged weapon */
+#define WP_GENERIC	0		/* all ammo subclasses ok */
+#define WP_BULLET	1
+#define WP_SHELL	2
+#define WP_ROCKET	3
+#define WP_GRENADE	4
     schar oc_oc1, oc_oc2;
 #define oc_hitbon oc_oc1 /* weapons: "to hit" bonus */
 

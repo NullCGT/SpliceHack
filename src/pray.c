@@ -1,4 +1,4 @@
-/* NetHack 3.6	pray.c	$NHDT-Date: 1584872363 2020/03/22 10:19:23 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.142 $ */
+/* NetHack 3.7	pray.c	$NHDT-Date: 1596498198 2020/08/03 23:43:18 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.144 $ */
 /* Copyright (c) Benson I. Margulies, Mike Stephenson, Steve Linhart, 1989. */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -205,7 +205,7 @@ in_trouble()
         return TROUBLE_REGION;
     if (critically_low_hp(FALSE))
         return TROUBLE_HIT;
-    if (u.ulycn >= LOW_PM && !Race_if(PM_HUMAN_WEREWOLF))
+    if (u.ulycn >= LOW_PM && !Race_if(PM_HUMAN_WERECAT))
         return TROUBLE_LYCANTHROPE;
     if (near_capacity() >= EXT_ENCUMBER && AMAX(A_STR) - ABASE(A_STR) > 3)
         return TROUBLE_COLLAPSING;
@@ -864,7 +864,7 @@ gcrownu()
             }
     }
 
-	if( Role_if(PM_PIRATE) ){
+	if(Role_if(PM_PIRATE)){
 		if (class_gift != STRANGE_OBJECT) {
 			;		/* already got bonus above for some reason */
 		} else if (in_hand) {
@@ -883,8 +883,7 @@ gcrownu()
 		unrestrict_weapon_skill(P_SCIMITAR);
 		if (obj && obj->oartifact == ART_REAVER)
 			discover_artifact(ART_REAVER);
-	}
-	else {
+	} else {
     switch (u.ualign.type) {
     case A_LAWFUL:
         if (class_gift != STRANGE_OBJECT) {

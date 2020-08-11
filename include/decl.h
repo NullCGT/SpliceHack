@@ -1,4 +1,4 @@
-/* NetHack 3.6  decl.h  $NHDT-Date: 1591017415 2020/06/01 13:16:55 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.237 $ */
+/* NetHack 3.7  decl.h  $NHDT-Date: 1596498532 2020/08/03 23:48:52 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.240 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2007. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -827,13 +827,6 @@ struct instance_globals {
 #ifdef MICRO
     char levels[PATHLEN]; /* where levels are */
 #endif /* MICRO */
-#ifdef MFLOPPY
-    char permbones[PATHLEN]; /* where permanent copy of bones go */
-    int ramdisk = FALSE;     /* whether to copy bones to levels or not */
-    int saveprompt = TRUE;
-    const char *alllevels = "levels.*";
-    const char *allbones = "bones*.*";
-#endif
     struct sinfo program_state;
 
     /* detect.c */
@@ -966,9 +959,10 @@ struct instance_globals {
     /* makemon.c */
 
     /* mhitm.c */
-    boolean vis;
-    boolean far_noise;
     long noisetime;
+    boolean far_noise;
+    boolean vis;
+    boolean skipdrin; /* mind flayer against headless target */
 
     /* mhitu.c */
     int mhitu_dieroll;

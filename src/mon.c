@@ -1,4 +1,4 @@
-/* NetHack 3.6	mon.c	$NHDT-Date: 1593306909 2020/06/28 01:15:09 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.338 $ */
+/* NetHack 3.7	mon.c	$NHDT-Date: 1596498185 2020/08/03 23:43:05 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.343 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -56,16 +56,23 @@ const char *msg;
                        mtmp->mnum, mndx, msg);
             mtmp->mnum = mndx;
         }
+#if 0   /*
+         * Gremlims don't obey the (mhpmax >= m_lev) rule so disable
+         * this check, at least for the time being.  We could skip it
+         * when the cloned flag is set, but the original gremlim would
+         * still be an issue.
+         */
         /* check before DEADMONSTER() because dead monsters should still
            have sane mhpmax */
         if (mtmp->mhpmax < 1
-            || mtmp->mhpmax < (int) mtmp->m_lev + 1
+            || mtmp->mhpmax < (int) mtmp->m_lev
             || mtmp->mhp > mtmp->mhpmax)
             impossible(
                      "%s: level %d monster #%u [%s] has %d cur HP, %d max HP",
                        msg, (int) mtmp->m_lev,
                        mtmp->m_id, fmt_ptr((genericptr_t) mtmp),
                        mtmp->mhp, mtmp->mhpmax);
+#endif
         if (DEADMONSTER(mtmp)) {
 #if 0
             /* bad if not fmons list or if not vault guard */
@@ -898,6 +905,7 @@ mcalcdistress()
                 }
             }
             mongone(mtmp);
+            continue;
         }
 
         /* possibly polymorph shapechangers and lycanthropes */
@@ -2298,9 +2306,24 @@ struct permonst *mptr; /* reflects mtmp->data _prior_ to mtmp's death */
     /* to prevent an infinite relobj-flooreffects-hmon-killed loop */
     mtmp->mtrapped = 0;
     mtmp->mhp = 0; /* simplify some tests: force mhp to 0 */
+    if (mtmp->iswiz)
+        wizdead();
+    if (mtmp->data->msound == MS_NEMESIS)
+        nemdead();
     if (mtmp->m_id == g.stealmid)
         thiefdead();
+    if (mtmp->data->msound == MS_LEADER)
+        leaddead();
+
+    /* killing a god is a horrible sin */
+    if (mtmp->data == &mons[PM_LAWFUL_DEIFIC_AVATAR] ||
+        mtmp->data == &mons[PM_NEUTRAL_DEIFIC_AVATAR] ||
+        mtmp->data == &mons[PM_CHAOTIC_DEIFIC_AVATAR]) {
+        u.ualign.record -= 100;
+    }
+
     relobj(mtmp, 0, FALSE);
+
     if (onmap || mtmp == g.level.monsters[0][0]) {
         if (mtmp->wormno)
             remove_worm(mtmp);
@@ -2548,6 +2571,16 @@ register struct monst *mtmp;
     if (be_sad)
         You("have a sad feeling for a moment, then it passes.");
 
+    /* Anything killed while playing as a cartomancer has a chance of leaving behind
+       a monster card. */
+    if (Role_if(PM_CARTOMANCER) && !(mtmp->data->geno & G_UNIQ) && !mtmp->mfading
+        && !mtmp->mtame && rn2(2)) {
+        otmp = mksobj(SCR_CREATE_MONSTER, FALSE, FALSE);
+        otmp->corpsenm = monsndx(mtmp->data);
+        place_object(otmp, mtmp->mx, mtmp->my);
+        newsym(mtmp->mx, mtmp->my);
+    }
+
     /* dead vault guard is actually kept at coordinate <0,0> until
        his temporary corridor to/from the vault has been removed;
        need to do this after life-saving and before m_detach() */
@@ -2583,6 +2616,8 @@ register struct monst *mtmp;
         set_mon_data(mtmp, &mons[PM_PACK_LORD]);
     else if (mtmp->data == &mons[PM_WERERAT])
         set_mon_data(mtmp, &mons[PM_HUMAN_WERERAT]);
+    else if (mtmp->data == &mons[PM_WERECAT])
+        set_mon_data(mtmp, &mons[PM_HUMAN_WERECAT]);
 
     /*
      * g.mvitals[].died does double duty as total number of dead monsters
@@ -2623,6 +2658,7 @@ register struct monst *mtmp;
     if (Is_blackmarket(&u.uz) && tmp == PM_ARMS_DEALER) {
         bars_around_portal(TRUE);
     }
+#if 0   /* moved to m_detach() to kick in if mongone() happens */
     if (mtmp->iswiz)
         wizdead();
     if (mtmp->data->msound == MS_NEMESIS)
@@ -2636,7 +2672,7 @@ register struct monst *mtmp;
         mtmp->data == &mons[PM_CHAOTIC_DEIFIC_AVATAR]) {
         u.ualign.record -= 100;
     }
-
+#endif
     /* Medusa falls into two livelog categories,
      * we log one message flagged for both categories,
      * but only for the first kill. Subsequent kills are not an achievement.
@@ -3107,16 +3143,6 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
 
     if (g.stoned) {
         g.stoned = FALSE;
-        goto cleanup;
-    }
-
-    /* Anything killed while playing as a cartomancer has a chance of leaving behind
-       a monster card. */
-    if (Role_if(PM_CARTOMANCER) && !(mdat->geno & G_UNIQ) && !rn2(20)) {
-        otmp = mksobj(SCR_CREATE_MONSTER, FALSE, FALSE);
-        otmp->corpsenm = mndx;
-        place_object(otmp, mtmp->mx, mtmp->my);
-        newsym(mtmp->mx, mtmp->my);
         goto cleanup;
     }
 
@@ -3839,8 +3865,11 @@ register struct monst *mtmp;
 boolean via_attack;
 {
     mtmp->msleeping = 0;
-    if (M_AP_TYPE(mtmp)) {
-        seemimic(mtmp);
+    if (M_AP_TYPE(mtmp) != M_AP_NOTHING) {
+        /* mimics come out of hiding, but disguised Wizard doesn't
+           have to lose his disguise */
+        if (M_AP_TYPE(mtmp) != M_AP_MONSTER)
+            seemimic(mtmp);
     } else if (g.context.forcefight && !g.context.mon_moving
                && mtmp->mundetected) {
         mtmp->mundetected = 0;
@@ -5029,6 +5058,8 @@ struct permonst *mdat;
         case PM_HUMAN_WERETIGER:
         case PM_HUMAN_WERERAT:
         case PM_HUMAN_WEREWOLF:
+        case PM_HUMAN_WERECAT:
+        case PM_WERECAT:
         case PM_PACK_LORD:
         case PM_ALPHA_WEREWOLF:
         case PM_WEREJACKAL:

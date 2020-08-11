@@ -1,4 +1,4 @@
-/* NetHack 3.6	makemon.c	$NHDT-Date: 1591178397 2020/06/03 09:59:57 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.173 $ */
+/* NetHack 3.7	makemon.c	$NHDT-Date: 1596498176 2020/08/03 23:42:56 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.177 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -217,7 +217,12 @@ register struct monst *mtmp;
             (void) mongets(mtmp, TRIDENT);
         break;
     case S_HUMAN:
-        if (is_mercenary(ptr)) {
+        if (mm == PM_SHOPKEEPER) {
+            (void) mongets(mtmp,SHOTGUN);
+            m_initthrow(mtmp, SHOTGUN_SHELL, 20);
+            m_initthrow(mtmp, SHOTGUN_SHELL, 20);
+            m_initthrow(mtmp, SHOTGUN_SHELL, 20);
+        } else if (is_mercenary(ptr)) {
             w1 = w2 = 0;
             switch (mm) {
             case PM_WATCHMAN:
@@ -1009,7 +1014,7 @@ register struct monst *mtmp;
             switch (rn2(4)) {
             /* MAJOR fall through ... */
             case 0:
-                (void) mongets(mtmp, WAN_MAGIC_MISSILE);
+                (void) mongets(mtmp, POT_SPEED);
                 /*FALLTHRU*/
             case 1:
                 (void) mongets(mtmp, POT_EXTRA_HEALING);
@@ -1018,7 +1023,7 @@ register struct monst *mtmp;
                 (void) mongets(mtmp, POT_HEALING);
                 /*FALLTHRU*/
             case 3:
-                (void) mongets(mtmp, WAN_STRIKING);
+                (void) mongets(mtmp, POT_REFLECTION);
             }
         } else if (ptr == &mons[PM_EXTRAPLANAR_MERCHANT]) {
             (void) mongets(mtmp, SKELETON_KEY);
@@ -1440,14 +1445,12 @@ uchar m_lev; /* not just a struct mon because polyself code also uses this */
          * way to fit in the 50..127 positive range of a signed character
          * above the 1..49 that indicate "normal" monster levels */
         return 2 * (ptr->mlevel - 6);
-    } else if (m_lev == 0) {
+    } else if (!m_lev) {
         return rnd(4);
     } else {
         int hpmax = d(m_lev, hd_size(ptr));
         if (is_home_elemental(ptr))
             hpmax *= 2;
-        if (hpmax < (int) ptr->mlevel + 1)
-            hpmax = (int) ptr->mlevel + 1;
         return hpmax;
     }
 }
@@ -1467,6 +1470,23 @@ int mndx;
         /* Second half of the "special" fixed hp monster code: adjust level */
         mon->m_lev = mon->mhp / 4; /* approximation */
     }
+        /* if d(X,8) rolled a 1 all X times, give a boost;
+       most beneficial for level 0 and level 1 monsters, making mhpmax
+       and starting mhp always be at least 2 */
+    if (mon->mhpmax == 1) {
+        mon->mhpmax += 1;
+        mon->mhp = mon->mhpmax;
+    }
+}
+
+static const struct mextra zeromextra = DUMMY;
+
+static void
+init_mextra(mex)
+struct mextra *mex;
+{
+    *mex = zeromextra;
+    mex->mcorpsenm = NON_PM;
 }
 
 struct mextra *
@@ -1475,14 +1495,7 @@ newmextra()
     struct mextra *mextra;
 
     mextra = (struct mextra *) alloc(sizeof(struct mextra));
-    mextra->mname = 0;
-    mextra->egd = 0;
-    mextra->epri = 0;
-    mextra->eshk = 0;
-    mextra->emin = 0;
-    mextra->edog = 0;
-    mextra->erid = 0;
-    mextra->mcorpsenm = NON_PM;
+    init_mextra(mextra);
     return mextra;
 }
 
@@ -1797,7 +1810,7 @@ long mmflags;
         new_light_source(mtmp->mx, mtmp->my, ct, LS_MONSTER,
                          monst_to_any(mtmp));
     /* lycanthropes are peaceful to natural lycanthropes and pack lords */
-    if ((is_were(mtmp->data) && Race_if(PM_HUMAN_WEREWOLF))
+    if ((is_were(mtmp->data) && Race_if(PM_HUMAN_WERECAT))
         || (u.ulycn == PM_ALPHA_WEREWOLF && mndx == PM_WEREWOLF))
         mtmp->mpeaceful = TRUE;
     mitem = 0; /* extra inventory item for this monster */

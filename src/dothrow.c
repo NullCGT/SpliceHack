@@ -1441,7 +1441,7 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
                 else
                     sho_obj_return_to_u(obj); /* display its flight */
 
-                if (!impaired && rn2(100)) {
+                if ((!impaired && rn2(100)) || obj->oartifact) {
                     pline("%s to your hand!", Tobjnam(obj, "return"));
                     obj = addinv_before(obj, oldslot);
                     (void) encumber_msg();

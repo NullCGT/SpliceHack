@@ -797,6 +797,8 @@ u_init()
     struct attack* attkptr;
 
     flags.gender = flags.initgend;
+    if (!flags.initorientation)
+        flags.orientation = flags.initorientation = rn2(NUM_ORIENTATIONS);
     if (flags.gender == GEND_N)
         record_achievement(ACH_NBIN);
     flags.beginner = 1;

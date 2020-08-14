@@ -41,6 +41,7 @@ struct flag {
 #define SEX_GAY 1
 #define SEX_ACE 2
 #define SEX_BI 3 
+#define NUM_ORIENTATIONS SEX_BI
     int orientation;
     boolean friday13;        /* it's Friday the 13th */
     boolean goldX;           /* for BUCX filtering, whether gold is X or U */

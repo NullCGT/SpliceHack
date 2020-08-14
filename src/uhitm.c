@@ -2971,7 +2971,7 @@ register struct monst *mon;
 {
     struct attack *mattk, alt_attk;
     struct obj *weapon, **originalweapon;
-    boolean altwep = FALSE, weapon_used = FALSE, stop_attacking = FALSE;
+    boolean altwep = FALSE, weapon_used = FALSE;
     int i, tmp, armorpenalty, sum[NATTK], nsum = 0, dhit = 0, attknum = 0;
     int dieroll;
 

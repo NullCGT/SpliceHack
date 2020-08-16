@@ -124,6 +124,7 @@ QOL
 - Hallucination protects you against all gaze attacks made by monsters. (from XNetHack)
 - All wands that print an unambiguous message clue to their identity now
   automatically type-identify when engraved with. (from XNetHack)
+- Blessed stethoscopes can identify eggs (from XNetHack)
 
 
 New Artifacts

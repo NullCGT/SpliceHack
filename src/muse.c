@@ -1877,7 +1877,7 @@ struct monst *mtmp;
     case MUSE_MGC_DRUM:
         if (oseen) {
             pline("%s begins to beat on a drum!", Monnam(mtmp));
-            You("%s produces a heavy, thunderous rolling!", Monnam(mtmp));
+            pline("%s produces a heavy, thunderous rolling!", Monnam(mtmp));
             makeknown(otmp->otyp);
         }
         otmp->spe--;

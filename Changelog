@@ -229,6 +229,8 @@ Role Changes
     can be active for an arbitrarily long amount of time.
   - Dancers are no longer prevented from wearing body armor.
   - Dancer messages are much less annoying now.
+- Knight
+  - Allow chaotic knights.
 - Pirate
   - Changed to bring in line with dNetHack: Pirates cannot be gifted artifacts, but have
     greatly increased artifact generation.

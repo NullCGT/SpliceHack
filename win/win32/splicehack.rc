@@ -60,8 +60,8 @@ IDI_ICON1               ICON                    "nethack.ico"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,7,1,0
- PRODUCTVERSION 0,7,1,0
+ FILEVERSION 0,8,0,0
+ PRODUCTVERSION 0,8,0,0
  FILEFLAGSMASK 0x1fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -77,12 +77,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "SpliceHack for Windows - TTY Interface"
-            VALUE "FileVersion", "0.7.1"
+            VALUE "FileVersion", "0.8.0"
             VALUE "InternalName", "SpliceHack"
             VALUE "LegalCopyright", "Copyright (C) 1985 - 2020.  By Stichting Mathematisch Centrum and M. Stephenson.  See license for details."
             VALUE "OriginalFilename", "SpliceHack.exe"
             VALUE "ProductName", "SpliceHack"
-            VALUE "ProductVersion", "0.7.1"
+            VALUE "ProductVersion", "0.8.0"
         END
     END
     BLOCK "VarFileInfo"

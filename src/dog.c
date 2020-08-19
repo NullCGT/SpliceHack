@@ -225,6 +225,9 @@ makedog()
 	    if(Role_if(PM_CONVICT)) petname = "Nicodemus"; /* Rats of NIMH */
     } else if (!*petname && pettype == PM_BABY_RED_DRAGON) {
 	    if(Role_if(PM_DRAGONMASTER)) petname = "Flame"; /* D&D */
+    } else if (!*petname && pettype == PM_PONY) {
+        if (Role_if(PM_KNIGHT) && Race_if(PM_VAMPIRE))
+            petname = "White Lily"; /* Vampire Knight */
     }
 
     mtmp = makemon(&mons[pettype], u.ux, u.uy, MM_EDOG);

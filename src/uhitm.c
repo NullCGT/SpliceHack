@@ -863,6 +863,7 @@ int dieroll;
                             /* not grapnels; applied implies uwep */
                             || (thrown == HMON_APPLIED && is_pole(uwep)));
     int jousting = 0;
+    int specialpoison = 0;
     struct obj *hated_obj = NULL;
     int wtype;
     struct obj *monwep;
@@ -1510,18 +1511,26 @@ int dieroll;
             You_feel("like an evil coward for using a poisoned weapon.");
             adjalign(-1);
         }
+
+        if (obj && obj->opoisoned != POT_SICKNESS) {
+            specialpoison = obj->opoisoned;
+            unpoisonmsg = FALSE;
+        }
+
         if (obj && !rn2(nopoison)) {
             /* remove poison now in case obj ends up in a bones file */
             obj->opoisoned = FALSE;
             /* defer "obj is no longer poisoned" until after hit message */
-            unpoisonmsg = TRUE;
+            if (!specialpoison) unpoisonmsg = TRUE;
         }
-        if (resists_poison(mon))
-            needpoismsg = TRUE;
-        else if (rn2(10))
-            tmp += rnd(6);
-        else
-            poiskilled = TRUE;
+        if (!specialpoison) {
+            if (resists_poison(mon))
+                needpoismsg = TRUE;
+            else if (rn2(10))
+                tmp += rnd(6);
+            else
+                poiskilled = TRUE;
+        }
     }
     if (tmp < 1) {
         boolean mon_is_shade = (mon->data == &mons[PM_SHADE]);
@@ -1713,6 +1722,16 @@ int dieroll;
                 pline("%s appears confused.", Monnam(mon));
         }
     }
+
+    if (specialpoison && !destroyed) {
+        struct obj *pseudo = mksobj(specialpoison, FALSE, FALSE);
+        pseudo->blessed = 0;
+        pseudo->cursed = 1;
+        potionhit(mon, pseudo, POTHIT_HERO_WEP);
+        if (DEADMONSTER(mon))
+            destroyed = TRUE;
+    }
+
     if (unpoisonmsg)
         Your("%s %s no longer poisoned.", saved_oname,
              vtense(saved_oname, "are"));

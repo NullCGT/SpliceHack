@@ -570,7 +570,7 @@ int expltype;
                     else if (str != g.killer.name && str != hallu_buf)
                         Strcpy(g.killer.name, str);
                     g.killer.format = KILLED_BY_AN;
-                } else if (type >= 0 && olet != SCROLL_CLASS) {
+                } else if (type >= 0 && olet != SCROLL_CLASS && olet != BURNING_OIL) {
                     g.killer.format = NO_KILLER_PREFIX;
                     Sprintf(g.killer.name, "caught %sself in %s own %s", uhim(),
                             uhis(), str);

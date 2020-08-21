@@ -174,7 +174,9 @@ int otyp, oquan;
     otmp->quan = (long) rn1(oquan, 3);
     otmp->owt = weight(otmp);
     if (otyp == ORCISH_ARROW)
-        otmp->opoisoned = TRUE;
+        otmp->opoisoned = POT_SICKNESS;
+    if (otyp == DARK_ELVEN_ARROW)
+        otmp->opoisoned = POT_SLEEPING;
     (void) mpickobj(mtmp, otmp);
 }
 

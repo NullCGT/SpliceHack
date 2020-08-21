@@ -34,6 +34,8 @@ New Items
     - Monsters will attempt to use pistols, shotguns, and auto
       shotguns as melee weapons.
     - Bullets and guns are affected by the object materials patch.
+- Potion of Filth
+  - Infects the user with terminal illness.
 
 New Monsters
 - Servals
@@ -47,6 +49,24 @@ New Monsters
 AI
 - Monsters can light potions of oil, and hurl lit potions.
 - Monsters will use wands of teleportation offensively.
+
+Poison
+- Weapons can now be poisoned with most types of potions, causing the potion to take
+  effect upon hitting a creature. This feature stems from a similar feature in DNetHack.
+  Unlike in DNetHack, a weapon can only have a single type of coating at once, and a weapon
+  can be imbued with any type of potion.
+  - Potion effects that occur via weapon always function as if the potion in question
+    was cursed.
+  - In extremely rare cases, monsters will generate with potion-soaked items.
+  - Oiled weapons and projectiles create explosions of burning oil.
+  - Sleeping potion = "drugged", sickness potion = "poisoned," potion of oil = "oiled,"
+    potion of paralysis = "envenomed," potion of filth = "filth-crusted," 
+    all other potions = "potion-soaked."
+  - Dark elven arrows are always poisoned with sleeping potions.
+  - As a consequence of this feature, some potions now have effects upon hitting
+    the player or monsters. This includes potions of hallucination, gain level, and
+    levitation.
+- Just like DNetHack, many more types of weapons can be poisoned.
 
 Shopkeepers
 - Shopkeeper services, originally from SLASH'EM, are now available.

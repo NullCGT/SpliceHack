@@ -59,6 +59,11 @@
      (ptr == &mons[PM_HIGH_PRIEST]) || \
      (ptr == &mons[PM_SOLAR]))
 
+#define resists_sickness(ptr) \
+    (is_undead(ptr) || amorphous(ptr) || is_rider(ptr) \
+    || is_demon(ptr) \
+    || (((ptr == &mons[PM_FILTH_DRAGON]))))
+
 #define immune_poisongas(ptr) ((ptr) == &mons[PM_HEZROU])
 
 #define is_lminion(mon) \

@@ -1456,7 +1456,7 @@ register struct attack *mattk;
         if (uncancelled && !rn2(8)) {
             Sprintf(buf, "%s %s", s_suffix(Monnam(mtmp)),
                     mpoisons_subj(mtmp, mattk));
-            poisoned(buf, ptmp, mdat->mname, 30, FALSE);
+            poisoned(buf, ptmp, mdat->mname, 30, FALSE, 0);
         }
         break;
     case AD_DRIN:

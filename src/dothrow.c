@@ -1246,7 +1246,7 @@ struct obj *oldslot; /* for thrown-and-return used with !fixinv */
     /* KMH -- Handle Plague here */
   	if (uwep && uwep->oartifact == ART_PLAGUE &&
   			ammo_and_launcher(obj, uwep) && is_poisonable(obj))
-  		  obj->opoisoned = 1;
+  		  obj->opoisoned = POT_SICKNESS;
 
     g.thrownobj = obj;
     g.thrownobj->was_thrown = 1;

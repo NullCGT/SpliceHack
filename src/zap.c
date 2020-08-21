@@ -1714,7 +1714,7 @@ int id;
         otmp->otrapped = TRUE;
 
     if (obj->opoisoned && is_poisonable(otmp))
-        otmp->opoisoned = TRUE;
+        otmp->opoisoned = otmp->opoisoned;
 
     if (id == STRANGE_OBJECT && obj->otyp == CORPSE) {
         /* turn crocodile corpses into shoes */
@@ -2714,7 +2714,7 @@ boolean ordinary;
         break;
 
     case SPE_POISON_BLAST:
-        poisoned("blast", A_DEX, "poisoned blast", 15, FALSE);
+        poisoned("blast", A_DEX, "poisoned blast", 15, FALSE, 0);
         break;
 
     case WAN_ACID:
@@ -4453,7 +4453,7 @@ xchar sx, sy;
             destroy_item(RING_CLASS, AD_ELEC);
         break;
     case ZT_POISON_GAS:
-        poisoned("blast", A_DEX, "poisoned blast", 15, FALSE);
+        poisoned("blast", A_DEX, "poisoned blast", 15, FALSE, 0);
         break;
     case ZT_ACID:
         if (Acid_resistance) {

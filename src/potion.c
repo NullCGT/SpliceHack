@@ -1483,6 +1483,22 @@ register struct obj *otmp;
             (void) make_hallucinated(0L, FALSE, 0L);
         }
         break;
+    case POT_FILTH:
+        pline("Ulch - that was tainted with filth!");
+        if (Sick_resistance) {
+            pline("It doesn't seem at all sickening, though...");
+        } else {
+            char buf[BUFSZ];
+            long sick_time;
+
+            sick_time = (long) rn1(10, 10);
+            /* make sure new ill doesn't result in improvement */
+            if (Sick && (sick_time > Sick))
+                sick_time = (Sick > 1L) ? Sick - 1L : 1L;
+            Sprintf(buf, "filthy %s", xname(otmp));
+            make_sick(sick_time, buf, TRUE, SICK_VOMITABLE);
+        }
+        break;
     case POT_CONFUSION:
         if (!Confusion) {
             if (Hallucination) {
@@ -1989,8 +2005,9 @@ int how;
     int distance, tx, ty;
     struct obj *saddle = (struct obj *) 0;
     boolean hit_saddle = FALSE, your_fault = (how <= POTHIT_HERO_THROW);
+    boolean injection = (how == POTHIT_HERO_WEP || how == POTHIT_MONST_WEP);
 
-    if (isyou) {
+    if (isyou && !injection) {
         tx = u.ux, ty = u.uy;
         distance = 0;
         pline_The("%s crashes on your %s and breaks into shards.", botlnam,
@@ -1999,7 +2016,7 @@ int how;
                (how == POTHIT_OTHER_THROW) ? "propelled potion" /* scatter */
                                            : "thrown potion",
                KILLED_BY_AN);
-    } else {
+    } else if (!injection) {
         tx = mon->mx, ty = mon->my;
         /* sometimes it hits the saddle */
         if (((mon->misc_worn_check & W_SADDLE)
@@ -2032,10 +2049,16 @@ int how;
         }
         if (rn2(5) && mon->mhp > 1 && !hit_saddle)
             mon->mhp--;
+    } else if (isyou) {
+        tx = u.ux, ty = u.uy;
+        distance = distu(tx, ty);
+    } else {
+        tx = mon->mx, ty =mon->my;
+        distance = distu(tx, ty);
     }
 
     /* oil doesn't instantly evaporate; Neither does a saddle hit */
-    if (obj->otyp != POT_OIL && !hit_saddle && cansee(tx, ty))
+    if (!injection && obj->otyp != POT_OIL && !hit_saddle && cansee(tx, ty))
         pline("%s.", Tobjnam(obj, "evaporate"));
 
     if (isyou) {
@@ -2043,6 +2066,10 @@ int how;
         case POT_OIL:
             if (obj->lamplit)
                 explode_oil(obj, u.ux, u.uy);
+            else if (injection) {
+                if (!Blind) You("see a spark catch on some oil!");
+                explode(u.ux, u.uy, 11, d(4, 4), BURNING_OIL, EXPL_FIERY);
+            }
             break;
         case POT_POLYMORPH:
             You_feel("a little %s.", Hallucination ? "normal" : "strange");
@@ -2072,6 +2099,47 @@ int how;
                                    : obj->cursed ? " a lot" : "");
                 dmg = d(obj->cursed ? 2 : 1, obj->blessed ? 4 : 8);
                 losehp(Maybe_Half_Phys(dmg), "potion of acid", KILLED_BY_AN);
+            }
+            break;
+        case POT_GAIN_LEVEL:
+            if (!obj->cursed) {
+                pluslvl(FALSE);
+                /* blessed potions place you at a random spot in the
+                middle of the new level instead of the low point */
+                if (obj->blessed)
+                    u.uexp = rndexp(TRUE);
+                break;
+            }
+            if ((ledger_no(&u.uz) == 1 && u.uhave.amulet)
+                || Can_rise_up(u.ux, u.uy, &u.uz)) {
+                const char *riseup = "rise up, through the %s!";
+                if (ledger_no(&u.uz) == 1) {
+                    You(riseup, ceiling(u.ux, u.uy));
+                    schedule_goto(&earth_level, FALSE, FALSE, 0, (char *) 0, (char *) 0);
+                } else {
+                    register int newlev = depth(&u.uz) - 1;
+                    d_level newlevel;
+                    get_level(&newlevel, newlev);
+                    if (on_level(&newlevel, &u.uz)) {
+                        break;
+                    } else
+                        You(riseup, ceiling(u.ux, u.uy));
+                    schedule_goto(&newlevel, FALSE, FALSE, 0, (char *) 0, (char *) 0);
+                }
+            } else
+                You("have an uneasy feeling.");
+            break;
+        case POT_FILTH:
+            if (Sick_resistance) {
+                pline_The("tainted filth doesn't seem to affect you.");
+                return;
+            } else {
+                long sick_time;
+                sick_time = (long) rn1(20, 20);
+                /* make sure new ill doesn't result in improvement */
+                if (Sick && (sick_time > Sick))
+                    sick_time = (Sick > 2L) ? Sick/2L : 1L;
+                make_sick(sick_time, "filth", TRUE, SICK_NONVOMITABLE);
             }
             break;
         }
@@ -2172,7 +2240,7 @@ int how;
                 /* really should be rnd(5) for consistency with players
                  * breathing potions, but...
                  */
-                paralyze_monst(mon, rnd(25));
+                paralyze_monst(mon, (injection) ? rnd(5) : rnd(25));
             }
             break;
         case POT_ORCISH_WAR_JUICE:
@@ -2244,6 +2312,9 @@ int how;
         case POT_OIL:
             if (obj->lamplit)
                 explode_oil(obj, tx, ty);
+            else if (injection) {
+                explode(tx, ty, 11, d(4, 4), BURNING_OIL, EXPL_FIERY);
+            }
             break;
         case POT_ACID:
             if (!resists_acid(mon) && !resist(mon, POTION_CLASS, 0, NOTELL)) {
@@ -2269,8 +2340,50 @@ int how;
         case POT_POLYMORPH:
             (void) bhitm(mon, obj);
             break;
-        /*
         case POT_GAIN_LEVEL:
+            if (obj->cursed) {
+                if (Can_rise_up(mon->mx, mon->my, &u.uz)) {
+                    register int tolev = depth(&u.uz) - 1;
+                    d_level tolevel;
+                    get_level(&tolevel, tolev);
+                    if (on_level(&tolevel, &u.uz))
+                        break;
+                    if (canseemon(mon)) {
+                        pline("%s rises up, through the %s!", Monnam(mon),
+                            ceiling(mon->mx, mon->my));
+                    }
+                    migrate_to_level(mon, ledger_no(&tolevel), MIGR_RANDOM,
+                                    (coord *) 0);
+                    break;
+                } else if (canseemon(mon)) {
+                    pline("%s looks uneasy.", Monnam(mon));
+                    break;
+                }
+            }
+            if (canseemon(mon))
+                pline("%s seems more experienced.", Monnam(mon));
+            grow_up(mon, (struct monst *) 0);
+            break;
+        case POT_FILTH:
+            if (resists_sickness(mon->data)) {
+                if (canseemon(mon)) pline_The("filth doesn't seem to affect %s.",
+                        mon_nam(mon));
+            } else {
+                if (rn2(30)) {
+                    mon->mhp = rnd(12);
+                } else {
+                    if (canseemon(mon)) pline_The("tainted filth was deadly...");
+                    mon->mhp -= mon->mhp;
+                }
+            }
+            if (DEADMONSTER(mon)) {
+                if (your_fault)
+                    killed(mon);
+                else
+                    monkilled(mon, "", AD_DISE);
+            }
+            break;
+        /*
         case POT_LEVITATION:
         case POT_FRUIT_JUICE:
         case POT_MONSTER_DETECTION:
@@ -2418,6 +2531,11 @@ register struct obj *obj;
         break;
     case POT_HALLUCINATION:
         You("have a momentary vision.");
+        if (Halluc_resistance)
+                break;
+            (void) make_hallucinated(itimeout_incr(HHallucination,
+                                            rn1(10, 6 - 3 * bcsign(obj))),
+                                    TRUE, 0L);
         break;
     case POT_CONFUSION:
     case POT_BOOZE:
@@ -2504,10 +2622,44 @@ register struct obj *obj;
   		      obj->otyp == POT_VAMPIRE_BLOOD ? "terrible " : "");
   		} else
   		    exercise(A_CON, FALSE);
-      break;
-    /*
-    case POT_GAIN_LEVEL:
+        break;
     case POT_LEVITATION:
+        if (!Levitation && !BLevitation) {
+            set_itimeout(&HLevitation, 1L);
+            float_up();
+        } 
+        if (obj->cursed) {
+            HLevitation &= ~I_SPECIAL;
+            if (BLevitation) {
+                ; /* rising via levitation is blocked */
+            } else if ((u.ux == xupstair && u.uy == yupstair)
+                    || (g.sstairs.up && u.ux == g.sstairs.sx && u.uy == g.sstairs.sy)
+                    || (xupladder && u.ux == xupladder && u.uy == yupladder)) {
+                if (ledger_no(&u.uz) == 1 && u.uhave.amulet) {
+                    schedule_goto(&earth_level, TRUE, FALSE, 0, (char *) 0, (char *) 0);
+                } else if (ledger_no(&u.uz) != 1) {
+                    register int newlev = depth(&u.uz) - 1;
+                    d_level newlevel;
+                    get_level(&newlevel, newlev);
+                    schedule_goto(&newlevel, TRUE, FALSE, 0, (char *) 0, (char *) 0);
+                }
+            } else if (has_ceiling(&u.uz)) {
+                int dmg = rnd(!uarmh ? 10 : !is_metallic(uarmh) ? 6 : 3);
+                You("hit your %s on the %s.", body_part(HEAD),
+                    ceiling(u.ux, u.uy));
+                losehp(Maybe_Half_Phys(dmg), "being thrown into the ceiling",
+                       KILLED_BY);
+            }
+        } else if (obj->blessed) {
+            incr_itimeout(&HLevitation, rn1(50, 250));
+            HLevitation |= I_SPECIAL;
+        } else 
+            incr_itimeout(&HLevitation, rn1(140, 10));
+        if (Levitation && IS_SINK(levl[u.ux][u.uy].typ))
+            spoteffects(FALSE);
+        float_vs_flight();
+        break;
+    /*
     case POT_FRUIT_JUICE:
     case POT_MONSTER_DETECTION:
     case POT_OBJECT_DETECTION:
@@ -2564,6 +2716,7 @@ register struct obj *o1, *o2;
         case POT_CONFUSION:
         case POT_BLOOD:
         case POT_VAMPIRE_BLOOD:
+        case POT_FILTH:
             return POT_WATER;
         }
         break;
@@ -2868,7 +3021,9 @@ dodip()
     }
 
     if (is_poisonable(obj)) {
-        if (potion->otyp == POT_SICKNESS && !obj->opoisoned) {
+        if (potion->otyp != POT_HEALING && potion->otyp != POT_EXTRA_HEALING
+            && potion->otyp != POT_FULL_HEALING && potion->otyp != POT_ACID 
+            && !obj->opoisoned) {
             char buf[BUFSZ];
 
             if (potion->quan > 1L)
@@ -2876,7 +3031,7 @@ dodip()
             else
                 Strcpy(buf, The(xname(potion)));
             pline("%s forms a coating on %s.", buf, the(xname(obj)));
-            obj->opoisoned = TRUE;
+            obj->opoisoned = potion->otyp;
             goto poof;
         } else if (obj->opoisoned && (potion->otyp == POT_HEALING
                                       || potion->otyp == POT_EXTRA_HEALING
@@ -2885,6 +3040,7 @@ dodip()
             obj->opoisoned = 0;
             goto poof;
         }
+        /* healing potions should not be able to poison arrows */
     }
 
     if (potion->otyp == POT_ACID) {

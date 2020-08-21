@@ -3723,6 +3723,10 @@ register struct obj *otmp, *obj;
     if (obj->oclass == COIN_CLASS)
         return TRUE;
 
+    /* different types of poison will never merge */
+    if (obj->opoisoned != otmp->opoisoned)
+        return FALSE;
+
     if (obj->bypass != otmp->bypass
         || obj->cursed != otmp->cursed || obj->blessed != otmp->blessed)
         return FALSE;

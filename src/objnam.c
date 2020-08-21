@@ -527,8 +527,14 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
             Sprintf(eos(buf), "%s amulet", dn);
         break;
     case WEAPON_CLASS:
-        if (is_poisonable(obj) && obj->opoisoned)
-            Strcpy(buf, "poisoned ");
+        if (is_poisonable(obj) && obj->opoisoned) {
+            if (obj->opoisoned == POT_SICKNESS) Strcpy(buf, "poisoned ");
+            else if (obj->opoisoned == POT_SLEEPING) Strcpy(buf, "drugged ");
+            else if (obj->opoisoned == POT_PARALYSIS) Strcpy(buf, "envenomed ");
+            else if (obj->opoisoned == POT_OIL) Strcpy(buf, "oiled ");
+            else if (obj->opoisoned == POT_FILTH) Strcpy(buf, "filth-crusted ");
+            else Strcpy(buf, "potion-coated ");
+        }
         /*FALLTHRU*/
     case VENOM_CLASS:
     case TOOL_CLASS:
@@ -1028,10 +1034,10 @@ doname_base(obj, doname_flags)
 struct obj *obj;
 unsigned doname_flags;
 {
-    boolean ispoisoned = FALSE,
-            with_price = (doname_flags & DONAME_WITH_PRICE) != 0,
+    boolean with_price = (doname_flags & DONAME_WITH_PRICE) != 0,
             vague_quan = (doname_flags & DONAME_VAGUE_QUAN) != 0;
     boolean known, dknown, cknown, bknown, lknown;
+    int ispoisoned = 0;
     int omndx = obj->corpsenm;
     char prefix[PREFIX];
     char tmpbuf[PREFIX + 1]; /* for when we have to add something at
@@ -1055,9 +1061,24 @@ unsigned doname_flags;
      * combining both into one function taking a parameter.
      */
     /* must check opoisoned--someone can have a weirdly-named fruit */
-    if (!strncmp(bp, "poisoned ", 9) && obj->opoisoned) {
+    if (!strncmp(bp, "poisoned ", 9) && obj->opoisoned == POT_SICKNESS) {
         bp += 9;
-        ispoisoned = TRUE;
+        ispoisoned = POT_SICKNESS;
+    } else if (!strncmp(bp, "drugged ", 8) && obj->opoisoned == POT_SLEEPING) {
+        bp += 8;
+        ispoisoned = POT_SLEEPING;
+    } else if (!strncmp(bp, "envenomed ", 8) && obj->opoisoned == POT_PARALYSIS) {
+        bp += 8;
+        ispoisoned = POT_PARALYSIS;
+    } else if (!strncmp(bp, "oiled ", 6) && obj->opoisoned) {
+        bp += 6;
+        ispoisoned = POT_OIL;
+     } else if (!strncmp(bp, "filth-crusted ", 14) && obj->opoisoned) {
+        bp += 14;
+        ispoisoned = POT_FILTH;
+    } else if (!strncmp(bp, "potion-coated ", 14) && obj->opoisoned) {
+        bp += 14;
+        ispoisoned = obj->opoisoned;
     }
 
     if (obj->quan != 1L) {
@@ -1174,8 +1195,20 @@ unsigned doname_flags;
         }
         /*FALLTHRU*/
     case WEAPON_CLASS:
-        if (ispoisoned)
-            Strcat(prefix, "poisoned ");
+        if (ispoisoned) {
+            if (ispoisoned == POT_SICKNESS)
+                Strcat(prefix, "poisoned ");
+            else if (ispoisoned == POT_SLEEPING)
+                Strcat(prefix, "drugged ");
+            else if (ispoisoned == POT_PARALYSIS)
+                Strcat(prefix, "envenomed ");
+            else if (ispoisoned == POT_OIL)
+                Strcat(prefix, "oiled ");
+            else if (ispoisoned == POT_FILTH)
+                Strcat(prefix, "filth-crusted ");
+            else
+                Strcat(prefix, "potion-coated ");
+         }
         add_erosion_words(obj, prefix);
         if (known) {
             Strcat(prefix, sitoa(obj->spe));
@@ -3572,7 +3605,17 @@ struct obj *no_wish;
                    || !strncmpi(bp, "blank ", l = 6)) {
             unlabeled = 1;
         } else if (!strncmpi(bp, "poisoned ", l = 9)) {
-            ispoisoned = 1;
+            ispoisoned = POT_SICKNESS;
+        } else if (!strncmpi(bp, "drugged ", l = 8)) {
+            ispoisoned = POT_SLEEPING;
+        } else if (!strncmpi(bp, "envenomed ", l = 10)) {
+            ispoisoned = POT_PARALYSIS;
+        } else if (!strncmpi(bp, "oiled ", l = 6)) {
+            ispoisoned = POT_OIL;
+        } else if (!strncmpi(bp, "filth-crusted ", l = 14)) {
+            ispoisoned = POT_FILTH;
+        } else if (!strncmpi(bp, "potion-coated ", l = 14)) {
+            ispoisoned = POT_GAIN_ABILITY + rn2(POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY);
             /* "trapped" recognized but not honored outside wizard mode */
         } else if (!strncmpi(bp, "trapped ", l = 8)) {
             trapped = 0; /* undo any previous "untrapped" */
@@ -4557,7 +4600,7 @@ struct obj *no_wish;
     /* set poisoned */
     if (ispoisoned) {
         if (is_poisonable(otmp))
-            otmp->opoisoned = (Luck >= 0);
+            otmp->opoisoned = (Luck >= 0) ? ispoisoned : 0;
         else if (oclass == FOOD_CLASS)
             /* try to taint by making it as old as possible */
             otmp->age = 1L;

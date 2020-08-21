@@ -4036,7 +4036,7 @@ struct monst *shkp;
 	    verbalize("Just imagine what poisoned %s can do!", xname(obj));
 	    charge = 10 * obj->quan;
 	    if (shk_offer_price(slang, charge, shkp) == FALSE) return;
-	    obj->opoisoned = TRUE;
+	    obj->opoisoned = POT_SICKNESS;
 	    break;
 
 	default:

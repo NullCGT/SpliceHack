@@ -799,6 +799,10 @@ const char **remainder_p;
 
     if ((s = strstri(str, "vortices")) != 0)
         Strcpy(s + 4, "ex");
+    else if ((s = strstri(term - 5, " lady")) != 0)
+        Strcpy(term - 4, "lord");
+    else if ((s = strstri(term - 6, " queen")) != 0)
+        Strcpy(term - 4, "king");
     /* be careful with "ies"; "priest", "zombies" */
     else if (slen > 3 && !strcmpi(term - 3, "ies")
              && (slen < 7 || strcmpi(term - 7, "zombies")))

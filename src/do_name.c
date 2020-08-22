@@ -1946,6 +1946,13 @@ boolean called;
         name_at_start = (boolean) type_is_pname(mdat);
     }
 
+    /* lords and ladies */
+    if (is_lord(mtmp->data) && mtmp->female) {
+        strsubst(buf, " lord", " lady");
+    } else if (is_prince(mtmp->data) && mtmp->female) {
+        strsubst(buf, " king", " queen");
+    }
+
     if (name_at_start && (article == ARTICLE_YOUR || !has_adjectives)) {
         if (mdat == &mons[PM_WIZARD_OF_YENDOR])
             article = ARTICLE_THE;

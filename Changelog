@@ -279,6 +279,8 @@ Miscelaneous
 - Prevent boulders from being pushed while running (RojjaCebolla)
 - Randomize orienation on game start.
 - Allow gnomish tourists, vampiric knights, gnomish samurai.
+- Dynamically assign a gender to "lord" and "king" monsters, and change their 
+  names based on gender.
 
 Balance
 - Being deaf does not make you resistant to sonic attacks.

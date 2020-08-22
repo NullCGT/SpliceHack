@@ -362,7 +362,7 @@ const struct shclass shtypes[] = {
         { 10, -WINDMILL_BLADE },
         { 10, -BASEBALL_BAT },
         { 2,  -DECK_OF_FATE },
-        { 8, -IRON_CHAIN },
+        { 8, -FOOTBOW },
         { 5, -WAN_NOTHING } },
       shkjunk },
     { "health food store",

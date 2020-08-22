@@ -753,6 +753,7 @@ struct permonst * pm;
 
 
     ADDRESIST(resists_drain(pm), "life-drain");
+    ADDRESIST(resists_sickness(pm), "sickness");
     /* ADDRESIST(SICK_RES, "sickness"); */
     ADDRESIST(resists_mgc(pm), "magic");
     if (*buf) {

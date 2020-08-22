@@ -76,7 +76,7 @@ const char *name; /* if null, then format `*objp' */
             : an(name);
     is_acid = (obj && obj->otyp == ACID_VENOM);
 
-    if (u.uac + tlev <= (dieroll = rnd(20))) {
+    if (max(0, u.uac) + tlev <= (dieroll = rnd(20))) {
         ++g.mesg_given;
         if (Blind || !flags.verbose) {
             pline("It misses.");
@@ -251,7 +251,9 @@ struct obj *otmp, *mwep;
             || (is_gnome(mtmp->data) && otmp->otyp == CROSSBOW_BOLT
                 && mwep->otyp == CROSSBOW)
             || (mtmp->data == &mons[PM_DROW] && otmp->otyp == DARK_ELVEN_ARROW
-                && mwep->otyp == DARK_ELVEN_BOW))
+                && mwep->otyp == DARK_ELVEN_BOW)
+            || (mtmp->data == &mons[PM_MARRASHI] && otmp->otyp == ARROW
+                && mwep->otyp == FOOTBOW))
             multishot++;
     }
 
@@ -808,6 +810,9 @@ register boolean verbose;
                         dam++;
                 } else if (mon->data == &mons[PM_MANTICORE]) {
                     hitv += 7;
+                } else if (mon->data == &mons[PM_MARRASHI]
+                           && MON_WEP(mon) && MON_WEP(mon)->otyp == FOOTBOW) {
+                    hitv += 5;
                 }
                 if (bigmonst(g.youmonst.data))
                     hitv++;

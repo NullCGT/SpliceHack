@@ -376,6 +376,9 @@ dowield()
         }
         /* wielding whole readied stack, so no longer quivered */
         setuqwep((struct obj *) 0);
+    } else if (wep->otyp == FOOTBOW && !humanoid(g.youmonst.data)) {
+        You("lack the sole strength to wield that.");
+        return 0;
     } else if (wep->owornmask & (W_ARMOR | W_ACCESSORY | W_SADDLE)) {
         You("cannot wield that!");
         return 0;

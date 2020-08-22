@@ -531,6 +531,29 @@ register struct monst *mtmp;
                 (void) mongets(mtmp, rnd_offensive_item(mtmp));
                 (void) mongets(mtmp, rnd_offensive_item(mtmp));
                 break;
+            case PM_MARRASHI:
+                /* Marrashi have one special arrow that causes sickness. */
+                otmp = mksobj(ARROW, TRUE, FALSE);
+                otmp->blessed = TRUE;
+                otmp->oerodeproof = TRUE;
+                otmp->opoisoned = POT_FILTH;
+                otmp->spe = 5;
+                otmp->quan = (long) 1;
+                otmp->owt = weight(otmp);
+			    (void) mpickobj(mtmp, otmp);
+                /* Many varieties of arrows */
+                m_initthrow(mtmp, ARROW, 15);
+                m_initthrow(mtmp, ARROW, 15);
+                m_initthrow(mtmp, ARROW, 15);
+                m_initthrow(mtmp, ARROW, 15);
+                /* powerful bow */
+                otmp = mksobj(FOOTBOW, TRUE, FALSE);
+                otmp->spe = 3;
+                (void) mpickobj(mtmp, otmp);
+                /* defenses */
+                (void) mongets(mtmp, rnd_defensive_item(mtmp));
+                (void) mongets(mtmp, GREEN_DRAGON_SCALE_MAIL);
+                break;
             default:
                 break;
         }

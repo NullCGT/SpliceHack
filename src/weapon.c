@@ -840,7 +840,9 @@ register struct monst *mtmp;
         if (prop < 0) {
             switch (-prop) {
             case P_BOW:
-                g.propellor = oselect(mtmp, YUMI);
+                g.propellor = oselect(mtmp, FOOTBOW);
+                if (!g.propellor)
+                    g.propellor = (oselect(mtmp, YUMI));
                 if (!g.propellor)
                     g.propellor = (oselect(mtmp, ELVEN_BOW));
                 /* WAC added dark elven bow */

@@ -62,7 +62,8 @@
 #define resists_sickness(ptr) \
     (is_undead(ptr) || amorphous(ptr) || is_rider(ptr) \
     || is_demon(ptr) \
-    || (((ptr == &mons[PM_FILTH_DRAGON]))))
+    || (((ptr == &mons[PM_FILTH_DRAGON] || \
+          ptr == &mons[PM_MARRASHI]))))
 
 #define immune_poisongas(ptr) ((ptr) == &mons[PM_HEZROU])
 

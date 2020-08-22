@@ -36,6 +36,11 @@ New Items
     - Bullets and guns are affected by the object materials patch.
 - Potion of Filth
   - Infects the user with terminal illness.
+  - Not randomly generated.
+- Footbow
+  - Not randomly generated. Only found in the inventory of marrash.
+  - Can only be effectively wielded by humanoids, since it requires the
+    use of one's feet.
 
 New Monsters
 - Servals
@@ -45,6 +50,10 @@ New Monsters
 - Werecats
   - Not randomly generated. Exist as a placeholder for the lycanthrope
     race.
+- Marrashi
+  - Dangerous gnoll species that appears in the mid to late game.
+  - Equipped with a single filth-encrusted arrow, along with
+    a footbow.
 
 AI
 - Monsters can light potions of oil, and hurl lit potions.
@@ -254,6 +263,10 @@ Role Changes
 - Pirate
   - Changed to bring in line with dNetHack: Pirates cannot be gifted artifacts, but have
     greatly increased artifact generation.
+
+Combat
+- Changed the calculation for monsters firing ranged weapons at the hero, so that
+  heroes with extremely low AC are still hit relatively often by arrows.
 
 Miscelaneous
 - Kicking a tree has a chance of spawning a serval or (very rarely) a jaguar.

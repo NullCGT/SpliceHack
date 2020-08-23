@@ -674,7 +674,6 @@ struct permonst * pm;
     char buf[BUFSZ];
     char buf2[BUFSZ];
     int diff = mons[monsndx(pm)].difficulty;
-    const char* mname = pm->mname;
     int gen = pm->geno;
     int freq = (gen & G_FREQ);
     boolean uniq = !!(gen & G_UNIQ);
@@ -711,8 +710,6 @@ struct permonst * pm;
     MONPUTSTR("");
 
     /* Misc */
-    Sprintf(buf, "%s", mname);
-    putstr(datawin, ATR_INVERSE, mname);
 
     Sprintf(buf, "Difficulty %d, speed %d, base AC %d, magic saving throw %d, weight %d.",
             diff, pm->mmove, pm->ac, pm->mr, pm->cwt);
@@ -954,8 +951,6 @@ add_obj_info(winid datawin, short otyp)
     OBJPUTSTR("");
 
     /* Misc */
-    Sprintf(buf, "%s", oc.oc_name_known ? OBJ_NAME(oc) : OBJ_DESCR(oc));
-    putstr(datawin, ATR_INVERSE, buf);
 
     /* Object classes currently with no special messages here: amulets. */
     boolean weptool = (olet == TOOL_CLASS && oc.oc_skill != P_NONE);
@@ -2306,6 +2301,13 @@ coord *click_cc;
                 if (supplemental_pm)
                     do_supplemental_info(supplemental_name, supplemental_pm,
                                          (boolean) (ans == LOOK_VERBOSE));
+            } else if (found == 1 && ans == LOOK_ONCE && supplemental_pm) {
+                winid datawin = WIN_ERR;
+                datawin = create_nhwindow(NHW_MENU);
+                add_mon_info(datawin, supplemental_pm);
+                putstr(datawin, 0, "");
+                display_nhwindow(datawin, FALSE);
+                destroy_nhwindow(datawin), datawin = WIN_ERR;
             }
         } else {
             pline("I've never heard of such things.");

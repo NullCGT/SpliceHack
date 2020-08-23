@@ -105,6 +105,7 @@ QOL
 - Having earmuffs on will no longer cause enlightenment to display "sonic resistance."
 - Display the number of times that the player has violated the celibate conduct
   in their conduct.
+- Automatically display monster stats for monsters that the player looks at.
 
 New Artifacts
 - Idspike

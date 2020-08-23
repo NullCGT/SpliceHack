@@ -1948,9 +1948,13 @@ boolean called;
 
     /* lords and ladies */
     if (is_lord(mtmp->data) && mtmp->female) {
-        strsubst(buf, " lord", " lady");
+        strsubst(buf, " noble", " lady");
     } else if (is_prince(mtmp->data) && mtmp->female) {
-        strsubst(buf, " king", " queen");
+        strsubst(buf, " royal", " queen");
+    } else if (is_lord(mtmp->data) && !mtmp->female) {
+        strsubst(buf, " noble", " lord");
+    } else if (is_prince(mtmp->data) && !mtmp->female) {
+        strsubst(buf, " royal", " king");
     }
 
     if (name_at_start && (article == ARTICLE_YOUR || !has_adjectives)) {

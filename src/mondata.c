@@ -799,10 +799,16 @@ const char **remainder_p;
 
     if ((s = strstri(str, "vortices")) != 0)
         Strcpy(s + 4, "ex");
-    else if ((s = strstri(term - 5, " lady")) != 0)
-        Strcpy(term - 4, "lord");
+
+    /* nobles and royalty */
+    if ((s = strstri(term - 5, " lady")) != 0)
+        Strcpy(term - 4, "noble");
+    else if ((s = strstri(term - 5, " lord")) != 0)
+        Strcpy(term - 4, "noble");
     else if ((s = strstri(term - 6, " queen")) != 0)
-        Strcpy(term - 4, "king");
+        Strcpy(term - 4, "royal");
+    else if ((s = strstri(term - 5, " king")) != 0)
+        Strcpy(term - 4, "royal");
     /* be careful with "ies"; "priest", "zombies" */
     else if (slen > 3 && !strcmpi(term - 3, "ies")
              && (slen < 7 || strcmpi(term - 7, "zombies")))
@@ -1089,11 +1095,11 @@ static const short grownups[][2] = {
     { PM_PONY, PM_HORSE },
     { PM_HORSE, PM_WARHORSE },
     { PM_KOBOLD, PM_LARGE_KOBOLD },
-    { PM_LARGE_KOBOLD, PM_KOBOLD_LORD },
-    { PM_GNOME, PM_GNOME_LORD },
-    { PM_GNOME_LORD, PM_GNOME_KING },
-    { PM_DWARF, PM_DWARF_LORD },
-    { PM_DWARF_LORD, PM_DWARF_KING },
+    { PM_LARGE_KOBOLD, PM_KOBOLD_NOBLE },
+    { PM_GNOME, PM_GNOME_NOBLE },
+    { PM_GNOME_NOBLE, PM_GNOME_ROYAL },
+    { PM_DWARF, PM_DWARF_NOBLE },
+    { PM_DWARF_NOBLE, PM_DWARF_ROYAL },
     { PM_MIND_FLAYER, PM_MASTER_MIND_FLAYER },
     { PM_ORC, PM_ORC_CAPTAIN },
     { PM_HILL_ORC, PM_ORC_CAPTAIN },
@@ -1105,8 +1111,8 @@ static const short grownups[][2] = {
 	{ PM_ENORMOUS_RAT, PM_RODENT_OF_UNUSUAL_SIZE },
     { PM_CAVE_SPIDER, PM_GIANT_SPIDER },
     { PM_GIANT_SPIDER, PM_MONSTROUS_SPIDER },
-    { PM_OGRE, PM_OGRE_LORD },
-    { PM_OGRE_LORD, PM_OGRE_KING },
+    { PM_OGRE, PM_OGRE_NOBLE },
+    { PM_OGRE_NOBLE, PM_OGRE_ROYAL },
     { PM_ELF, PM_ELF_LORD },
     { PM_WOODLAND_ELF, PM_ELF_LORD },
     { PM_GREEN_ELF, PM_ELF_LORD },
@@ -1115,7 +1121,7 @@ static const short grownups[][2] = {
     { PM_LICH, PM_DEMILICH },
     { PM_DEMILICH, PM_MASTER_LICH },
     { PM_MASTER_LICH, PM_ARCH_LICH },
-    { PM_VAMPIRE, PM_VAMPIRE_LORD },
+    { PM_VAMPIRE, PM_VAMPIRE_NOBLE },
     { PM_BAT, PM_GIANT_BAT },
     { PM_BABY_GRAY_DRAGON, PM_GRAY_DRAGON },
     { PM_BABY_SILVER_DRAGON, PM_SILVER_DRAGON },

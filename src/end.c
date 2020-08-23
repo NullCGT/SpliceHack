@@ -475,7 +475,7 @@ int how;
         /* m_monnam() suppresses "the" prefix plus "invisible", and
            it overrides the effect of Hallucination on priestname() */
         Strcat(buf, m_monnam(mtmp));
-    } else if ((is_lord(mtmp->data) || is_prince(mtmp->data)) && mtmp->female) {
+    } else if (is_lord(mtmp->data) || is_prince(mtmp->data)) {
         Strcat(buf, m_monnam(mtmp));
     } else {
         Strcat(buf, mptr->mname);

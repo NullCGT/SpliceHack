@@ -222,7 +222,7 @@ int mndx;
         mndx = PM_ELF;
         break;
     case PM_VAMPIRE:
-    case PM_VAMPIRE_LORD:
+    case PM_VAMPIRE_NOBLE:
     case PM_VAMPIRE_MAGE:
     case PM_NOSFERATU:
     case PM_HUMAN_ZOMBIE:
@@ -407,7 +407,7 @@ unsigned corpseflags;
         (void) mksobj_at(WORM_TOOTH, x, y, TRUE, FALSE);
         goto default_1;
     case PM_VAMPIRE:
-    case PM_VAMPIRE_LORD:
+    case PM_VAMPIRE_NOBLE:
     case PM_BAOBHAN_SITH:
     case PM_NOSFERATU:
     case PM_VAMPIRE_MAGE:
@@ -4215,7 +4215,7 @@ struct monst *mon;
         }
         break;
     case PM_VAMPIRE_MAGE:
-    case PM_VAMPIRE_LORD: /* vampire lord or Vlad can become wolf */
+    case PM_VAMPIRE_NOBLE: /* vampire lord or Vlad can become wolf */
         if (!rn2(wolfchance) && !uppercase_only) {
             mndx = PM_WOLF;
             break;
@@ -4368,7 +4368,7 @@ struct monst *mon;
         break;
     case PM_ALUCARD:
     case PM_VLAD_THE_IMPALER:
-    case PM_VAMPIRE_LORD:
+    case PM_VAMPIRE_NOBLE:
     case PM_BAOBHAN_SITH:
     case PM_VAMPIRE_MAGE:
     case PM_VAMPIRE:

@@ -596,8 +596,8 @@ register struct monst *mtmp;
                 (void) mongets(mtmp, DWARVISH_HELM);
                 if (!rn2(3)) {
                     (void) mongets(mtmp, DWARVISH_RING_MAIL);
-                    if ((ptr == &mons[PM_DWARF_LORD] && !rn2(4))
-                        || (ptr == &mons[PM_DWARF_KING] && !rn2(2))) {
+                    if ((ptr == &mons[PM_DWARF_NOBLE] && !rn2(4))
+                        || (ptr == &mons[PM_DWARF_ROYAL] && !rn2(2))) {
                         struct obj* mail = m_carrying(mtmp, DWARVISH_RING_MAIL);
                         if (mail)
                             mail->material = MITHRIL;
@@ -686,7 +686,7 @@ register struct monst *mtmp;
             (void) mongets(mtmp, GREEN_GOWN);
         break;
     case S_OGRE:
-        if (!rn2(mm == PM_OGRE_KING ? 3 : mm == PM_OGRE_LORD ? 6 : 12))
+        if (!rn2(mm == PM_OGRE_ROYAL ? 3 : mm == PM_OGRE_NOBLE ? 6 : 12))
             (void) mongets(mtmp, BATTLE_AXE);
         else
             (void) mongets(mtmp, CLUB);

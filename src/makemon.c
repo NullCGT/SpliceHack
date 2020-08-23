@@ -1785,6 +1785,7 @@ long mmflags;
         break;
     case S_LIGHT:
     case S_ELEMENTAL:
+    case S_FELINE:
         if (mndx == PM_STALKER || mndx == PM_BLACK_LIGHT
               || mndx == PM_HELLCAT) {
             mtmp->perminvis = TRUE;

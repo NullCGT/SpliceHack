@@ -2581,8 +2581,6 @@ struct monst *mtmp;
                 name = rnd_name(maldemonnames);
         }
         else {
-            impossible("mintroduce: monster type %s has no defined names!",
-                       mtmp->data->mname);
             return;
         }
         const char* pronoun =

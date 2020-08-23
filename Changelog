@@ -282,6 +282,7 @@ Miscelaneous
 - Allow gnomish tourists, vampiric knights, gnomish samurai.
 - Dynamically assign a gender to "lord" and "king" monsters, and change their 
   names based on gender.
+- Vampire mages and ogre mages can now be female.
 
 Balance
 - Being deaf does not make you resistant to sonic attacks.

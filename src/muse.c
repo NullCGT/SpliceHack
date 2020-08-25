@@ -2215,7 +2215,7 @@ struct monst *mtmp;
             g.m.has_misc = MUSE_FIGURINE;
         }
         nomore(MUSE_BULLWHIP);
-        if ((obj->otyp == BULLWHIP || obj->otyp == RAZOR_WHIP)
+        if ((obj->otyp == BULLWHIP || obj->otyp == RAZOR_WHIP || obj->otyp == FLAMING_LASH)
             && !mtmp->mpeaceful
             /* the random test prevents whip-wielding
                monster from attempting disarm every turn */
@@ -2716,7 +2716,7 @@ struct monst *mtmp;
     case MUSE_BULLWHIP:
         /* attempt to disarm hero */
         {
-            const char *The_whip = vismon ? "The bullwhip" : "A whip";
+            const char *The_whip = vismon ? "The whip" : "A whip";
             int where_to = rn2(4);
             struct obj *obj = uwep;
             const char *hand;
@@ -2734,7 +2734,7 @@ struct monst *mtmp;
                 hand = makeplural(hand);
 
             if (vismon)
-                pline("%s flicks a bullwhip towards your %s!", Monnam(mtmp),
+                pline("%s flicks a whip towards your %s!", Monnam(mtmp),
                       hand);
             if (obj->otyp == HEAVY_IRON_BALL) {
                 pline("%s fails to wrap around %s.", The_whip, the_weapon);

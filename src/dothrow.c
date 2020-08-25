@@ -2263,6 +2263,7 @@ struct obj *obj;
     case SPIKE:
     case BULLET:
     case SHOTGUN_SHELL:
+    case FLAMING_LASH:
         return 1;
     default:
         return 0;
@@ -2296,6 +2297,10 @@ boolean in_view;
         else
             pline("%s shatter%s%s!", Doname2(obj),
                   (obj->quan == 1L) ? "s" : "", to_pieces);
+        break;
+    case FLAMING_LASH:
+        if (in_view)
+            pline("%s crumbles into ash.", Doname2(obj));
         break;
     case BULLET:
     case SHOTGUN_SHELL:

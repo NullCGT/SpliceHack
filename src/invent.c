@@ -1616,6 +1616,7 @@ register const char *let, *word;
                       && otyp != FRAG_GRENADE
                       && otyp != GAS_GRENADE
                       && !is_pole(otmp) && otyp != BULLWHIP
+                      && otyp != FLAMING_LASH
                       && otyp != RAZOR_WHIP)
                      || (otmp->oclass == POTION_CLASS
                          /* only applicable potion is oil, and it will only

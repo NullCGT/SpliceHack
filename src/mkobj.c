@@ -3359,6 +3359,7 @@ struct obj* obj;
          * work properly. */
         case BULLWHIP:
         case SPIKE:
+        case FLAMING_LASH:
             return NULL;
         /* Any other cases for specific object types go here. */
         case SHIELD_OF_RESONANCE:

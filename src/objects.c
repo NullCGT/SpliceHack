@@ -325,6 +325,8 @@ WEAPON("spiked chain", None,
 /* misc */
 WEAPON("bullwhip", None,
        1, 0, 0,  1,  20,   4,  2,  1, 0, 0,   P_WHIP, LEATHER, CLR_BROWN),
+WEAPON("flaming lash", None,
+       1, 0, 0,  0, 180,   4, 12, 12, 0, 0,   P_WHIP, LEATHER, CLR_RED),
 WEAPON("razor whip", None,
       1, 0, 0,  1,  50,   10,  4,  4, 0, 0,   P_WHIP, IRON, HI_METAL),
 

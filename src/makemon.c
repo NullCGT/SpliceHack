@@ -798,7 +798,7 @@ register struct monst *mtmp;
             (void) mongets(mtmp, PUMPKIN);
             break;
         case PM_BALROG:
-            (void) mongets(mtmp, BULLWHIP);
+            (void) mongets(mtmp, FLAMING_LASH);
             (void) mongets(mtmp, BROADSWORD);
             break;
         case PM_MOLYDEUS:

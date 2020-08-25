@@ -4114,6 +4114,7 @@ doapply()
         break;
     case RAZOR_WHIP:
     case BULLWHIP:
+    case FLAMING_LASH:
         res = use_whip(obj);
         break;
     case GRAPPLING_HOOK:

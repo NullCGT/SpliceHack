@@ -110,6 +110,14 @@ QOL
 - Display the number of times that the player has violated the celibate conduct
   in their conduct.
 - Automatically display monster stats for monsters that the player looks at.
+- Magic lamps always release a djinni when rubbed instead of 1/3 of the time. (from XNetHack)
+- Martial arts users, sasquatches, and players wearing kicking boots can no
+  longer miss a monster completely with a clumsy kick. (from XNetHack)
+- Pets won't fight each other even if they grudge each other. (from XNetHack)
+- Hallucination protects you against all gaze attacks made by monsters. (from XNetHack)
+- All wands that print an unambiguous message clue to their identity now
+  automatically type-identify when engraved with. (from XNetHack)
+
 
 New Artifacts
 - Idspike

@@ -1143,8 +1143,9 @@ struct obj *obj;
     }
 }
 
-/* monster attempts ranged weapon attack against player */
-void
+/* monster attempts ranged weapon attack against player
+ * returns TRUE if it did something; FALSE if it decided not to attack */
+boolean
 thrwmu(mtmp)
 struct monst *mtmp;
 {
@@ -1154,31 +1155,26 @@ struct monst *mtmp;
     int gun_range;
 
     /* Rearranged beginning so monsters can use polearms not in a line */
-    /* TODO: Find a better fix for the monster weapon switching bug. */
-    if ((mtmp->weapon_check == NEED_WEAPON && MON_WEP(mtmp) && !is_pole(MON_WEP(mtmp))) || !MON_WEP(mtmp)) {
-   	    if (dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 3) {
-   	        mtmp->weapon_check = NEED_HTH_WEAPON;
-   	        if (mon_wield_item(mtmp) != 0) return;
-   	    }
+    if (mtmp->weapon_check == NEED_WEAPON || !MON_WEP(mtmp)) {
         mtmp->weapon_check = NEED_RANGED_WEAPON;
         /* mon_wield_item resets weapon_check as appropriate */
         if (mon_wield_item(mtmp) != 0)
-            return;
+            return TRUE;
     }
 
     /* Pick a weapon */
     otmp = select_rwep(mtmp);
     if (!otmp)
-        return;
+        return FALSE;
 
     if (is_pole(otmp)) {
         int dam, hitv;
 
         if (otmp != MON_WEP(mtmp))
-            return; /* polearm must be wielded */
+            return FALSE; /* polearm must be wielded */
         if (dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) > POLE_LIM
             || !couldsee(mtmp->mx, mtmp->my))
-            return; /* Out of range, or intervening wall */
+            return FALSE; /* Out of range, or intervening wall */
 
         if (canseemon(mtmp)) {
             onm = xname(otmp);
@@ -1199,7 +1195,7 @@ struct monst *mtmp;
 
         (void) thitu(hitv, dam, &otmp, (char *) 0);
         stop_occupation();
-        return;
+        return TRUE;
     }
 
     x = mtmp->mx;
@@ -1212,7 +1208,7 @@ struct monst *mtmp;
     if (!lined_up(mtmp)
         || (URETREATING(x, y)
             && rn2(BOLT_LIM - distmin(x, y, mtmp->mux, mtmp->muy))))
-        return;
+        return FALSE;
 
     mwep = MON_WEP(mtmp); /* wielded weapon */
     if (mwep) gun_range = firearm_range(mwep->otyp);
@@ -1220,10 +1216,11 @@ struct monst *mtmp;
     if (mwep && is_firearm(mwep) && ammo_and_launcher(otmp, mwep) && gun_range &&
 		dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) >
 		gun_range * gun_range)
-	    return; /* Out of range */
+	    return FALSE; /* Out of range */
 
     monshoot(mtmp, otmp, mwep); /* multishot shooting or throwing */
     nomul(0);
+    return TRUE;
 }
 
 /* monster fires a volley of projectiles at you */

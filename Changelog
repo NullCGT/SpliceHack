@@ -325,6 +325,8 @@ Miscelaneous
 - War hammers deal d12 damage, instead of d4, buffing both Giantslayer and Mjollnir.
 - Bell of opening reverted to a silver bell.
 - Vorpal Jabberwocks now behead, similar to how they do in UnNetHack.
+- Monsters will not put on equipment when the player is directly next to them (from xNetHack).
+- Monsters will fire ranged weapons in melee if they lack a hand-to-hand weapon.
 
 Bug Fixes
 - Correctly track the celibate conduct.

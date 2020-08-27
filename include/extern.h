@@ -1724,7 +1724,7 @@ E void FDECL(Delay, (int));
 E boolean FDECL(m_has_launcher_and_ammo, (struct monst *));
 E int FDECL(thitu, (int, int, struct obj **, const char *));
 E int FDECL(ohitmon, (struct monst *, struct obj *, int, BOOLEAN_P));
-E void FDECL(thrwmu, (struct monst *));
+E boolean FDECL(thrwmu, (struct monst *));
 E int FDECL(spitmu, (struct monst *, struct attack *));
 E int FDECL(volleymu, (struct monst *, struct attack *));
 E int FDECL(breamu, (struct monst *, struct attack *));

@@ -531,7 +531,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
             if (obj->opoisoned == POT_SICKNESS) Strcpy(buf, "poisoned ");
             else if (obj->opoisoned == POT_SLEEPING) Strcpy(buf, "drugged ");
             else if (obj->opoisoned == POT_PARALYSIS) Strcpy(buf, "envenomed ");
-            else if (obj->opoisoned == POT_OIL) Strcpy(buf, "oiled ");
+            else if (obj->opoisoned == POT_OIL) Strcpy(buf, "firebombed ");
             else if (obj->opoisoned == POT_FILTH) Strcpy(buf, "filth-crusted ");
             else Strcpy(buf, "potion-coated ");
         }
@@ -1070,7 +1070,7 @@ unsigned doname_flags;
     } else if (!strncmp(bp, "envenomed ", 8) && obj->opoisoned == POT_PARALYSIS) {
         bp += 8;
         ispoisoned = POT_PARALYSIS;
-    } else if (!strncmp(bp, "oiled ", 6) && obj->opoisoned) {
+    } else if (!strncmp(bp, "firebombed ", 6) && obj->opoisoned) {
         bp += 6;
         ispoisoned = POT_OIL;
      } else if (!strncmp(bp, "filth-crusted ", 14) && obj->opoisoned) {
@@ -1203,7 +1203,7 @@ unsigned doname_flags;
             else if (ispoisoned == POT_PARALYSIS)
                 Strcat(prefix, "envenomed ");
             else if (ispoisoned == POT_OIL)
-                Strcat(prefix, "oiled ");
+                Strcat(prefix, "firebombed ");
             else if (ispoisoned == POT_FILTH)
                 Strcat(prefix, "filth-crusted ");
             else
@@ -3611,7 +3611,7 @@ struct obj *no_wish;
             ispoisoned = POT_SLEEPING;
         } else if (!strncmpi(bp, "envenomed ", l = 10)) {
             ispoisoned = POT_PARALYSIS;
-        } else if (!strncmpi(bp, "oiled ", l = 6)) {
+        } else if (!strncmpi(bp, "firebombed ", l = 6)) {
             ispoisoned = POT_OIL;
         } else if (!strncmpi(bp, "filth-crusted ", l = 14)) {
             ispoisoned = POT_FILTH;

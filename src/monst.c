@@ -525,6 +525,14 @@ NEARDATA struct permonst mons_init[] = {
           M1_FLY | M1_BREATHLESS | M1_NOLIMBS | M1_NOHEAD,
           M2_NOPOLY | M2_HOSTILE | M2_NEUTER | M2_NASTY,
           M3_INFRAVISIBLE | M3_INFRAVISION, 0, 14, HI_LORD),
+    MON("sphere of the void", S_EYE, LVL(25, 4, -3, 100, 0), (G_NOCORPSE | 1),
+          A(ATTK(AT_TUCH, AD_VOID, 2, 4), NO_ATTK, NO_ATTK,
+      	    NO_ATTK, NO_ATTK, NO_ATTK),
+          SIZ(20, 20, MS_SILENT, MZ_MEDIUM), 
+          MR_PSYCHIC | MR_DISINT | MR_STONE, 0,
+          M1_FLY | M1_NOLIMBS | M1_NOHEAD | M1_MINDLESS | M1_NOTAKE
+            | M1_WALLWALK, 
+          M2_NOPOLY | M2_NEUTER | M2_NASTY, 0, 0, 30, HI_LORD),
     /*
      * felines
      */

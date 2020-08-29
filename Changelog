@@ -58,6 +58,9 @@ New Monsters
   - Dangerous gnoll species that appears in the mid to late game.
   - Equipped with a single filth-encrusted arrow, along with
     a footbow.
+- Sphere of the Void
+  - Slow-moving sphere with a disintegration attack.
+  - Spawns hostile if the player has the amulet, but is otherwise peaceful.
 
 AI
 - Monsters can light potions of oil, and hurl lit potions.

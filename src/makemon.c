@@ -1812,6 +1812,12 @@ long mmflags;
         if (rn2(5) && !u.uhave.amulet)
             mtmp->msleeping = 1;
         break;
+    case S_EYE:
+        if (!u.uhave.amulet)
+            mtmp->mpeaceful = 1;
+        else
+            mtmp->mpeaceful = 0;
+        break;
     case S_ZOMBIE:
         if (Race_if(PM_GHOUL) && ptr->mhflags & MH_GHOUL)
             mtmp->mpeaceful = TRUE;

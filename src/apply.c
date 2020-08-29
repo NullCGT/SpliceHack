@@ -2258,7 +2258,7 @@ static void
 use_sewing_kit(obj)
 struct obj *obj;
 {
-    struct obj *corpse, *otmp;
+    struct obj *otmp;
 
     if (obj->spe <= 0) {
         You("are fresh out of thread.");
@@ -2291,48 +2291,6 @@ struct obj *obj;
             pline("Whoops! You prick your finger.");
             losehp(1, "pricking a finger with a needle", KILLED_BY);
         }
-        consume_obj_charge(obj, TRUE);
-        return;
-    } else if (Race_if(PM_GHOUL) && !Upolyd) {
-        /* Ghoul stuff */
-        if (!(corpse = floorfood("graft", 2)))
-            return;
-        if (corpse->oeaten || corpse->odrained) {
-            You("cannot sew %s which is partly eaten onto yourself.", something);
-            return;
-        }
-        if (touch_petrifies(&mons[corpse->corpsenm]) && !Stone_resistance
-            && !uarmg) {
-            char kbuf[BUFSZ];
-
-            if (poly_when_stoned(g.youmonst.data))
-                You("sitch up %s without wearing gloves.",
-                    an(mons[corpse->corpsenm].mname));
-            else {
-                pline("Sewing up %s without wearing gloves is a fatal mistake...",
-                    an(mons[corpse->corpsenm].mname));
-                Sprintf(kbuf, "trying to sew up %s without gloves",
-                        an(mons[corpse->corpsenm].mname));
-            }
-            instapetrify(kbuf);
-        }
-        if (is_rider(&mons[corpse->corpsenm])) {
-            if (revive_corpse(corpse, FALSE))
-                verbalize("You are growing to be quite a stitch in my side, War.");
-            else
-                pline_The("corpse evades your grasp.");
-            return;
-        }
-        if (mons[corpse->corpsenm].cnutrit == 0) {
-            pline("That's too insubstantial to sew.");
-            return;
-        }
-        if (unique_corpstat(&mons[corpse->corpsenm])) {
-            pline("That's just asking for trouble.");
-            return;
-        }
-        You("graft %s onto your body.", an(mons[corpse->corpsenm].mname));
-        u.ugrave_arise = corpse->corpsenm;
         consume_obj_charge(obj, TRUE);
         return;
     }

@@ -540,12 +540,16 @@ exerper()
             exercise(A_CON, TRUE);
             break;
         case WEAK:
+            if (Race_if(PM_GHOUL))
+                break;
             exercise(A_STR, FALSE);
             if (Role_if(PM_MONK)) /* fasting */
                 exercise(A_WIS, TRUE);
             break;
         case FAINTING:
         case FAINTED:
+            if (Race_if(PM_GHOUL))
+                break;
             exercise(A_CON, FALSE);
             break;
         }

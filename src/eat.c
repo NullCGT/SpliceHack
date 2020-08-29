@@ -95,7 +95,7 @@ register struct obj *obj;
         return TRUE;
 
     /* Ghouls and ghasts only eat non-veggy corpses or eggs (see dogfood()) */
-    if (Race_if(PM_GHOUL) || is_ghoul(g.youmonst.data))
+    if (!(Race_if(PM_GHOUL) && !Upolyd) || is_ghoul(g.youmonst.data))
         return (boolean)((obj->otyp == CORPSE
                           && !vegan(&mons[obj->corpsenm]))
                          || (obj->otyp == EGG));
@@ -2872,7 +2872,7 @@ doeat()
     if (!is_edible(otmp)) {
         You("cannot eat that!");
         return 0;
-    } else if ((Race_if(PM_GHOUL) || is_ghoul(g.youmonst.data))
+    } else if (otmp->otyp == CORPSE && (Race_if(PM_GHOUL) || is_ghoul(g.youmonst.data))
         && (((g.monstermoves - peek_at_iced_corpse_age(otmp))
             / 10L) <= 5L && !nonrotting_corpse(otmp->corpsenm))) {
     		pline ("This corpse is too fresh!");
@@ -3264,8 +3264,8 @@ gethungry()
         && (carnivorous(g.youmonst.data)
             || herbivorous(g.youmonst.data)
             || metallivorous(g.youmonst.data))
-            /* Convicts can last twice as long at hungry and below */
-        && (!Role_if(PM_CONVICT) || (g.moves % 2) || (u.uhs < HUNGRY))
+            /* Ghouls and convicts can last twice as long at hungry and below */
+        && ((!Role_if(PM_CONVICT) && !Race_if(PM_GHOUL)) || (g.moves % 2) || (u.uhs < HUNGRY))
         && !Slow_digestion)
         u.uhunger--; /* ordinary food consumption */
 
@@ -3531,6 +3531,25 @@ boolean incr;
             ATEMP(A_STR) = 0; /* repair of loss also overrides Fixed_abil */
             /* defer g.context.botl status update until after hunger message */
         }
+        /* ghouls get stat changes based on hunger level. */
+        if (newhs >= HUNGRY && u.uhs < HUNGRY && Race_if(PM_GHOUL)) {
+            ATEMP(A_STR) = 4;
+            ATEMP(A_DEX) = 4;
+        } else if (newhs < HUNGRY && u.uhs >= HUNGRY && Race_if(PM_GHOUL)) {
+            ATEMP(A_STR) = 0;
+            ATEMP(A_DEX) = 0;
+        }
+        if (newhs < FAINTING && u.uhs >= FAINTING && Race_if(PM_GHOUL)) {
+            ATEMP(A_STR) = 2;
+            ATEMP(A_DEX) = 2;
+            ATEMP(A_WIS) = 2;
+            ATEMP(A_INT) = 2;
+        } else if (newhs < FAINTING && u.uhs >= FAINTING && Race_if(PM_GHOUL)) {
+            ATEMP(A_STR) = 0;
+            ATEMP(A_DEX) = 0;
+            ATEMP(A_WIS) = 0;
+            ATEMP(A_INT) = 0;
+        }
 
         switch (newhs) {
         case HUNGRY:
@@ -3541,13 +3560,19 @@ boolean incr;
                 You("%s.", !incr ? "only feel hungry now"
                            : (u.uhunger < 145) ? "feel hungry"
                              : "are beginning to feel hungry");
+            if (Race_if(PM_GHOUL)) {
+                pline(incr ? "You draw strength from your gnawing hunger." 
+                    : "You are no longer going berserk from hunger.");
+            }
             if (incr && g.occupation
                 && (g.occupation != eatfood && g.occupation != opentin))
                 stop_occupation();
             end_running(TRUE);
             break;
         case WEAK:
-            if (Hallucination)
+            if (Race_if(PM_GHOUL) && incr) {
+                You("go berserk with hunger!");
+            } else if (Hallucination)
                 pline(!incr ? "You still have the munchies."
               : "The munchies are interfering with your motor capabilities.");
             else if (incr && (Role_if(PM_WIZARD) || Race_if(PM_ELF)

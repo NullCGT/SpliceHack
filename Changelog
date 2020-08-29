@@ -229,6 +229,18 @@ Race Changes
 - Dwarf
   - Dwarves start all games with some booze.
   - Dwarves receive mattocks instead of picks in starting inventories.
+- Ghoul
+  - Removed grafting system.
+  - Ghouls can eat non-meat objects.
+  - Ghouls, like convicts, can last twice as long at hungry and below.
+  - Ghouls gain the revification technique at level 10.
+  - Ghouls get stronger the hungrier they are, and do not suffer abuse penalties
+    from being hungry.
+    - When at least hungry, ghouls gain 4 strength and 4 dexterity.
+    - When at least weak, ghouls deal double damage with their physical attacks.
+    - When fainting, ghouls gain 2 strength, dexterity, wisdom, and intelligence.
+  - Altered ability scores. Notably lowered strength cap to 16, which should
+    incentivize players to stay hungry as much as possible.
 - Angel
   - Angels receive a number of edicts upon starting the game:
     - Do not harm the innocent.

@@ -215,6 +215,8 @@ static const struct innate_tech
 	gno_tech[] = { {   1, T_VANISH, 1},
 		       {   7, T_TINKER, 1},
 		       {   0, 0, 0} },
+	ghu_tech[] = { {   10, T_REVIVE, 1},
+		       {   0, 0, 0} },
 	#if 0
 	hob_tech[] = { {   1, T_BLINK, 1},
 		       {   0, 0, 0} },
@@ -1994,6 +1996,7 @@ race_tech()
     #endif
 		case PM_CHANGELING:	return (chn_tech);
 		case PM_VAMPIRE:	return (vam_tech);
+		case PM_GHOUL:		return (ghu_tech);
 		case PM_MERFOLK:	return (mer_tech);
 		case PM_GNOME:		return (gno_tech);
 		case PM_HUMAN_WERECAT:	return (lyc_tech);

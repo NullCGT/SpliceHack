@@ -1042,7 +1042,7 @@ const struct Race races[] = {
         MH_GNOME | MH_ELF | MH_DWARF,
         /*    Str     Int Wis Dex Con Cha */
         { 3, 3, 3, 3, 3, 3 },
-        { STR18(50), 20, 16, 16, 18, 16 },
+        { 16, 20, 18, 16, 18, 20 },
         /* Init   Lower  Higher */
         { 1, 0, 0, 0, 1, 0 }, /* Hit points */
         { 2, 0, 2, 0, 2, 0 }  /* Energy */

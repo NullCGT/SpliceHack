@@ -231,7 +231,7 @@ static struct trobj Wizard[] = {
 
 static struct trobj Tinopener[] = { { TIN_OPENER, 0, TOOL_CLASS, 1, 0 },
                                     { 0, 0, 0, 0, 0 } };
-static struct trobj Sewingkit[] = { { SEWING_KIT, 0, TOOL_CLASS, 1, 0 },
+static struct trobj Sewingkit[] = { { SEWING_KIT, UNDEF_SPE, TOOL_CLASS, 1, 0 },
                                     { 0, 0, 0, 0, 0 } };
 
 static struct trobj Halo[] = { { HALO, 0, ARMOR_CLASS, 1, UNDEF_BLESS },
@@ -1360,7 +1360,6 @@ register struct trobj *trop;
 {
     struct obj *obj;
     int otyp, i;
-    int corpses = 0;
 
 	while (trop->trclass) {
         otyp = (int) trop->trotyp;
@@ -1470,21 +1469,6 @@ register struct trobj *trop;
                     break;
                 }
         }
-
-        /* Create ghoul corpses */
-        if (g.urace.malenum == PM_GHOUL && obj->oclass == FOOD_CLASS) {
-            dealloc_obj(obj);
-            if (corpses <= 2) {
-                obj = mksobj(CORPSE, TRUE, FALSE);
-                obj->corpsenm = PM_CORPSEWORM;
-                obj->age = -100;
-                corpses++;
-            } else {
-                trop++;
-                continue;
-            }
-        }
-
         /* Set up cartomancer cards */
         if (g.urole.malenum == PM_CARTOMANCER && obj->otyp == SCR_CREATE_MONSTER) {
             do {

@@ -718,6 +718,10 @@ register struct monst *mtmp;
             if (ptr == &mons[PM_FOREST_CENTAUR]) {
                 (void) mongets(mtmp, BOW);
                 m_initthrow(mtmp, ARROW, 12);
+            } else if (ptr == &mons[PM_ARMANITE]) {
+                (void) mongets(mtmp, CROSSBOW);
+                (void) mongets(mtmp, rn2(2) ? RANSEUR : LANCE);
+                m_initthrow(mtmp, CROSSBOW_BOLT, 7);
             } else {
                 (void) mongets(mtmp, CROSSBOW);
                 m_initthrow(mtmp, CROSSBOW_BOLT, 12);

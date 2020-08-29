@@ -61,6 +61,10 @@ New Monsters
 - Sphere of the Void
   - Slow-moving sphere with a disintegration attack.
   - Spawns hostile if the player has the amulet, but is otherwise peaceful.
+- Armanite
+  - Centuar-like demons that appear in large groups in Gehennom.
+  - Due to their numbers and many attacks, often end up summoning many demons
+    while attacking.
 
 AI
 - Monsters can light potions of oil, and hurl lit potions.

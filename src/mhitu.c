@@ -1259,6 +1259,20 @@ register struct attack *mattk;
             hurtle(u.ux - mtmp->mx, u.uy - mtmp->my, rn1(3, 3), FALSE);
         }
         break;
+    case AD_VORP:
+        if (!rn2(50)) {
+            if (noncorporeal(g.youmonst.data)
+                        || amorphous(g.youmonst.data)) {
+                        pline("%s slices through your %s.", Monnam(mtmp),
+                            body_part(NECK));
+            } else if (has_head(g.youmonst.data)) {
+                pline("%s beheads you!", Monnam(mtmp));
+                dmg = 2 * (Upolyd ? u.mh : u.uhp) + 200;
+            }
+        } else {
+            hitmsg(mtmp, mattk);
+        }
+        break;
     case AD_DISE:
         hitmsg(mtmp, mattk);
         if (!diseasemu(mdat))

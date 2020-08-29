@@ -2121,6 +2121,17 @@ int specialdmg; /* blessed and/or material bonus against various things */
             }
         }
         break;
+    case AD_VORP:
+        if (!rn2(50)) {
+            if (noncorporeal(mdef->data) || amorphous(mdef->data)) {
+                You("slice through %s %s.",
+                        s_suffix(mon_nam(mdef)), mbodypart(mdef, NECK));
+            } else if (has_head(mdef->data) && !g.notonhead) {
+                You("behead %s!", mon_nam(mdef));
+                tmp = 2 * mdef->mhp + 200;
+            }
+        }
+        break;
     case AD_WTHR:
         if (!rn2(3) && !is_undead(mdef->data)) {
             if (canseemon(mdef))

@@ -656,6 +656,7 @@ static const char * damagetypes[] = {
     "knockback",
     "withering",
     "prosecution",
+    "beheading",
     "clerical",
     "arcane",
     "random breath",

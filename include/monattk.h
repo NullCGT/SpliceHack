@@ -104,11 +104,12 @@
 #define AD_CLOB 63 /* knockback */
 #define AD_WTHR 64 /* withering (mummies) */
 #define AD_LAWS 65 /* laws (lawyer) */
-#define AD_CLRC 66 /* random clerical spell */
-#define AD_SPEL 67 /* random magic spell */
-#define AD_RBRE 68 /* random breath weapon */
-#define AD_SAMU 69 /* hits, may steal Amulet (Wizard) */
-#define AD_CURS 70 /* random curse (ex. gremlin) */
+#define AD_VORP 66 /* beheading (vorpal jabberwock) */
+#define AD_CLRC 67 /* random clerical spell */
+#define AD_SPEL 68 /* random magic spell */
+#define AD_RBRE 69 /* random breath weapon */
+#define AD_SAMU 70 /* hits, may steal Amulet (Wizard) */
+#define AD_CURS 71 /* random curse (ex. gremlin) */
 #define LAST_AD AD_CURS
 
 /*

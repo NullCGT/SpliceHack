@@ -1129,6 +1129,17 @@ int dieroll;
                 tmp = mdef->mhp - 1;
         }
         break;
+    case AD_VORP:
+        if (!rn2(50)) {
+            if (noncorporeal(mdef->data) || amorphous(mdef->data)) {
+                pline("%s slices through %s %s.", Monnam(magr),
+                        s_suffix(mon_nam(mdef)), mbodypart(mdef, NECK));
+            } else if (has_head(mdef->data) && !g.notonhead) {
+                pline("%s beheads %s!", Monnam(magr), mon_nam(mdef));
+                tmp = 2 * mdef->mhp + 200;
+            }
+        }
+        break;
     case AD_WTHR:
         if (!rn2(3) && !is_undead(mdef->data)) {
             if (canseemon(mdef))

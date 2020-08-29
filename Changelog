@@ -308,11 +308,10 @@ Miscelaneous
 - Removed the void branch.
 - Rearranged Gehennom to be closer to vanilla, and shortened main dungeon back to
   the length of vanilla.
-
-Balance
 - Being deaf does not make you resistant to sonic attacks.
 - War hammers deal d12 damage, instead of d4, buffing both Giantslayer and Mjollnir.
 - Bell of opening reverted to a silver bell.
+- Vorpal Jabberwocks now behead, similar to how they do in UnNetHack.
 
 Bug Fixes
 - Correctly track the celibate conduct.

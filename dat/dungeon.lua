@@ -3,7 +3,7 @@ dungeon = {
    {
       name = "The Dungeons of Doom",
       bonetag = "D",
-      base = 30,
+      base = 25,
       range = 5,
       alignment = "unaligned",
       themerooms = "themerms.lua",
@@ -30,12 +30,6 @@ dungeon = {
             name = "Fort Ludios",
             base = 18,
             range = 4,
-            branchtype = "portal"
-         },
-         {
-            name = "The Void",
-            base = -2,
-            range = 0,
             branchtype = "portal"
          },
          {
@@ -112,14 +106,6 @@ dungeon = {
             nlevels = 10
          },
          {
-            name = "bigrm",
-            bonetag = "B",
-            base = 25,
-            range = 3,
-            chance = 40,
-            nlevels = 10
-         },
-         {
             name = "medusa",
             base = -5,
             range = 4,
@@ -160,8 +146,8 @@ dungeon = {
          {
             name = "juiblex",
             bonetag = "J",
-            base = 2,
-            range = 2
+            base = 4,
+            range = 4
          },
          {
             name = "foogardens",
@@ -173,24 +159,24 @@ dungeon = {
             name = "mephisto",
             bonetag = "M",
             base = 2,
-            range = 5
+            range = 6
          },
          {
             name = "baalz",
             bonetag = "B",
-            base = 4,
-            range = 2
+            base = 6,
+            range = 4
          },
          {
             name = "asmodeus",
             bonetag = "A",
             base = 2,
-            range = 5
+            range = 6
          },
          {
             name = "wizard1",
-            base = 8,
-            range = 1
+            base = 11,
+            range = 6
          },
          {
             name = "wizard2",
@@ -207,15 +193,21 @@ dungeon = {
          {
             name = "orcus",
             bonetag = "O",
-            base = 12,
-            range = 0
+            base = 10,
+            range = 6
          },
          {
             name = "fakewiz1",
             bonetag = "F",
-            base = -3,
-            range = 1
-         }
+            base = -6,
+            range = 4
+         },
+         {
+            name = "fakewiz2",
+            bonetag = "G",
+            base = -6,
+            range = 4
+         },
       }
    },
    {
@@ -328,20 +320,6 @@ dungeon = {
          {
             name = "banquet",
             bonetag = "b",
-            base = -1
-         }
-      }
-   },
-   {
-      name = "The Void",
-      base = 1,
-      bonetag = "v",
-      flags = { "mazelike" },
-      alignment = "unaligned",
-      levels = {
-         {
-            name = "void",
-            bonetag = "V",
             base = -1
          }
       }

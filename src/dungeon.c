@@ -724,7 +724,6 @@ static struct level_map {
                   { "statuary", &statuary_level },
                   { "storm", &storm_level },
                   { "valley", &valley_level },
-                  { "void",   &void_level },
                   { "water", &water_level },
                   { "wizard1", &wiz1_level },
                   { "wizard2", &wiz2_level },

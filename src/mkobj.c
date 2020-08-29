@@ -972,6 +972,8 @@ boolean artif;
             case EXPENSIVE_CAMERA:
             case TINNING_KIT:
             case MAGIC_MARKER:
+                otmp->spe = rn1(70, 30); /* 0..69 + 30 => 30..99 */
+                break;
             case CAN_OF_GREASE:
                 otmp->spe = rn1(21, 5); /* 0..20 + 5 => 5..25 */
                 blessorcurse(otmp, 10);

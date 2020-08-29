@@ -321,6 +321,10 @@ int material;
     if (material == SILVER && is_vampshifter(mon))
         return TRUE;
 
+    /* infernal player */
+    if (mon == &g.youmonst && material == SILVER)
+        return TRUE;
+
     /* extra extra case: lycanthrope player (monster lycanthropes all fall under
      * hates_material, and non-lycanthropes can't currently be infected) */
     if (mon == &g.youmonst && material == SILVER && u.ulycn >= LOW_PM)
@@ -345,7 +349,6 @@ int material;
         return (is_were(ptr)
                 || is_vampire(ptr)
                 || is_demon(ptr) || ptr == &mons[PM_SHADE]
-                || (Race_if(PM_INFERNAL) && !Upolyd)
                 || (ptr->mlet == S_IMP));
     }
     else if (material == IRON || material == COLD_IRON) {

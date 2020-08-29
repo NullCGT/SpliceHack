@@ -1339,15 +1339,19 @@ struct obj * wpn;
         "Orphan Maker",   "Monster Slayer",
         "Astral Caller",   "Danger",
     };
-    if (!rn2(20)) {
-        const char* name = tt_name();
-        char buf[BUFSZ];
-        Sprintf(buf, "%s of %s", upstart(basename), name);
-        return oname(wpn, buf);
+    char buf[BUFSZ];
+    if (!rn2(25 - (2 * wpn->spe))) {
+        char nbuf[PL_NSIZ+1];
+        const char* ttname = tt_name();
+        if (ttname) {
+            Strcpy(nbuf, ttname);
+            Sprintf(buf, "%s of %s", upstart(basename), upstart(nbuf));
+            return oname(wpn, buf);
+        }
+        /* if a name couldn't be found, fall through to default */
     }
     const char* name = wpn_names[rn2(SIZE(wpn_names))];
     if (strstri(name, "%s")) {
-        char buf[BUFSZ];
         Sprintf(buf, name, upstart(basename));
         return oname(wpn, buf);
     }

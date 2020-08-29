@@ -1699,6 +1699,7 @@ struct obj* obj;
     int rand_align = rn2((int) A_LAWFUL + 2) - 1;
     boolean vis = !Blind && cansee(obj->ox, obj->oy);
     boolean yours = obj->where == OBJ_INVENT || (obj->ox == u.ux && obj->oy == u.uy);
+    const char *ttname;
     boolean mishap = FALSE;
 
     switch(obj->otyp) {
@@ -1787,13 +1788,17 @@ struct obj* obj;
         stop_occupation();
         break;
     case SPIRIT_CANDLE:
+        ttname = tt_name();
         g.level.flags.graveyard = 1;
         mtmp = makemon(&mons[rn2(3) ? PM_SPECTRE : PM_SHADE], obj->ox, obj->oy, NO_MM_FLAGS);
         if (!mtmp) {
             You("smell a whiff of ectoplasm.");
             break;
         }
-        christen_monst(mtmp, tt_name());
+        if (ttname)
+            christen_monst(mtmp, ttname);
+        else
+            christen_monst(mtmp, "Antigulp");
         if (vis)
             pline("%s, a spirit of the past, appears before you...", noit_Monnam(mtmp));
         if (!obj->cursed && rn2(5) && yours) {

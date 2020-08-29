@@ -1377,10 +1377,9 @@ pickentry:
 const char*
 tt_name()
 {
-    struct toptenentry *tt;
-    tt = get_rnd_toptenentry();
+    struct toptenentry *tt = get_rnd_toptenentry();
     if (!tt)
-        return (const char *) g.plname;
+        return NULL;
     else
         return tt->name;
 

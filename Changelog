@@ -66,9 +66,14 @@ New Monsters
   - Due to their numbers and many attacks, often end up summoning many demons
     while attacking.
 
-AI
+AI and Combat
 - Monsters can light potions of oil, and hurl lit potions.
 - Monsters will use wands of teleportation offensively.
+- Monsters will not put on equipment when the player is directly next to them (from xNetHack).
+- Monsters will fire ranged weapons in melee if they lack a hand-to-hand weapon.
+- Remove monster charging mechanic.
+- Changed the calculation for monsters firing ranged weapons at the hero, so that
+  heroes with extremely low AC are still hit relatively often by arrows.
 
 Poison
 - Weapons can now be poisoned with most types of potions, causing the potion to take
@@ -297,9 +302,12 @@ Role Changes
   - Changed to bring in line with dNetHack: Pirates cannot be gifted artifacts, but have
     greatly increased artifact generation.
 
-Combat
-- Changed the calculation for monsters firing ranged weapons at the hero, so that
-  heroes with extremely low AC are still hit relatively often by arrows.
+Gehennom
+- When in Gehennom, randomly generated monsters will be automatically converted to their hellish
+  counterparts, if any. For example, bears become hellbears, and sewer rats become hellrats.
+- Monsters DO NOT leave corpses in Gehennom.
+- Rearranged Gehennom to be closer to vanilla, and shortened main dungeon back to
+  the length of vanilla.
 
 Miscelaneous
 - Kicking a tree has a chance of spawning a serval or (very rarely) a jaguar.
@@ -319,17 +327,10 @@ Miscelaneous
   - Balrog leave behind a cloud of smoke when they move.
   - Balrog spawn with a flaming lash, and will prioritize wielding it.
 - Removed the void branch.
-- Rearranged Gehennom to be closer to vanilla, and shortened main dungeon back to
-  the length of vanilla.
 - Being deaf does not make you resistant to sonic attacks.
 - War hammers deal d12 damage, instead of d4, buffing both Giantslayer and Mjollnir.
 - Bell of opening reverted to a silver bell.
 - Vorpal Jabberwocks now behead, similar to how they do in UnNetHack.
-- Monsters will not put on equipment when the player is directly next to them (from xNetHack).
-- Monsters will fire ranged weapons in melee if they lack a hand-to-hand weapon.
-- When in Gehennom, randomly generated monsters will be automatically converted to their hellish
-  counterparts, if any. For example, bears become hellbears, and sewer rats become hellrats.
-- Remove monster charging mechanic.
 - Improve monster callout noises.
 
 Bug Fixes

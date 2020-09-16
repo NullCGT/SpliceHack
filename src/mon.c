@@ -29,6 +29,7 @@ static void FDECL(deal_with_overcrowding, (struct monst *));
 
 #define LEVEL_SPECIFIC_NOCORPSE(mdat) \
     (Is_rogue_level(&u.uz)            \
+     || In_hell(&u.uz)                \
      || (g.level.flags.graveyard && is_undead(mdat) && rn2(3)))
 
 #if 0

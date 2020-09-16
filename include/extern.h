@@ -1624,6 +1624,7 @@ E boolean FDECL(levl_follower, (struct monst *));
 E int FDECL(little_to_big, (int));
 E int FDECL(big_to_little, (int));
 E boolean FDECL(big_little_match, (int, int));
+E int FDECL(monster_to_hellbeast, (int));
 E const char *FDECL(locomotion, (const struct permonst *, const char *));
 E const char *FDECL(stagger, (const struct permonst *, const char *));
 E const char *FDECL(on_fire, (struct permonst *, struct attack *));

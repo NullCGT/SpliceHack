@@ -327,6 +327,8 @@ Miscelaneous
 - Vorpal Jabberwocks now behead, similar to how they do in UnNetHack.
 - Monsters will not put on equipment when the player is directly next to them (from xNetHack).
 - Monsters will fire ranged weapons in melee if they lack a hand-to-hand weapon.
+- When in Gehennom, randomly generated monsters will be automatically converted to their hellish
+  counterparts, if any. For example, bears become hellbears, and sewer rats become hellrats.
 
 Bug Fixes
 - Correctly track the celibate conduct.

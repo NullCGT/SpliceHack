@@ -2193,6 +2193,15 @@ rndmonst()
                 selected_mndx = mndx;
         }
     }
+    /* Convert monsters in gehennom to their hellish variants */
+    if (Inhell) {
+        int hellmon = monster_to_hellbeast(selected_mndx);
+        if (hellmon != NON_PM && 
+            ((g.mvitals[hellmon].mvflags & G_GENOD) == 0 
+                || (g.mvitals[hellmon].mvflags & G_EXTINCT) == 0)) {
+            selected_mndx = hellmon;
+        }
+    }
     /*
      * Possible modification:  if totalweight is "too low" or nothing
      * viable was picked, expand minmlev..maxmlev range and try again.

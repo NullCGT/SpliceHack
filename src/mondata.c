@@ -1233,6 +1233,38 @@ int montyp1, montyp2;
     return FALSE;
 }
 
+static const short hellvariants[][2] = {
+    { PM_BAT, PM_HELLBAT },
+    { PM_GIANT_BAT, PM_HELLBAT },
+    { PM_GIANT_RAT, PM_HELLRAT },
+    { PM_SEWER_RAT, PM_HELLRAT },
+    { PM_KITTEN, PM_HELLCAT },
+    { PM_HOUSECAT, PM_HELLCAT },
+    { PM_LARGE_CAT, PM_HELLCAT },
+    { PM_BEAR, PM_HELLBEAR },
+    { PM_PONY, PM_NIGHTMARE },
+    { PM_HORSE, PM_NIGHTMARE },
+    { PM_WARHORSE, PM_NIGHTMARE },
+    { PM_LITTLE_DOG, PM_HELL_HOUND_PUP },
+    { PM_DOG, PM_HELL_HOUND },
+    { PM_LARGE_DOG, PM_HELL_HOUND },
+    { PM_FOREST_CENTAUR, PM_ARMANITE },
+    { NON_PM, NON_PM }
+};
+
+int
+monster_to_hellbeast(montype)
+int montype;
+{
+    register int i;
+
+    for (i = 0; hellvariants[i][0] >= LOW_PM; i++)
+        if (montype == hellvariants[i][0]) {
+            return hellvariants[i][1];
+        }
+    return NON_PM;
+}
+
 /*
  * Return the permonst ptr for the race of the monster.
  * Returns correct pointer for non-polymorphed and polymorphed

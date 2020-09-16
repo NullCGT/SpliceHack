@@ -176,7 +176,6 @@ enum ms_sounds {
 #define M3_DISPLACES    0x0400 /* moves monsters out of its way */
 
 #define M3_ORGANIZED 0x0800 /* uses group tactics */
-#define M3_CHARGER 0x1000 /* charges from a distance */
 
 #define MZ_TINY 0          /* < 2' */
 #define MZ_SMALL 1         /* 2-4' */

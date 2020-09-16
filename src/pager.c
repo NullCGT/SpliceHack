@@ -841,7 +841,6 @@ struct permonst * pm;
     APPENDC(is_clinger(pm), "cling to the ceiling");
     APPENDC(needspick(pm), "mine");
     APPENDC(is_jumper(pm), "jump long distances");
-    APPENDC(is_charger(pm), "charge in straight lines");
     APPENDC(is_organized(pm), "organize with others of its kind")
     if (!needspick(pm))
         APPENDC(tunnels(pm), "dig");

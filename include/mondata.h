@@ -250,7 +250,6 @@
     (ptr) == &mons[PM_BABY_SHIMMERING_DRAGON] || \
     (ptr) == &mons[PM_CHESHIRE_CAT])
 #define is_organized(ptr)  (((ptr)->mflags3 & M3_ORGANIZED))
-#define is_charger(ptr) (((ptr)->mflags3 & M3_CHARGER))
 #define is_mplayer(ptr) \
     (((ptr) >= &mons[PM_ARCHEOLOGIST]) && ((ptr) <= &mons[PM_WIZARD]))
 #define is_watch(ptr) \

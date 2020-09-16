@@ -331,6 +331,7 @@ Miscelaneous
 - War hammers deal d12 damage, instead of d4, buffing both Giantslayer and Mjollnir.
 - Bell of opening reverted to a silver bell.
 - Vorpal Jabberwocks now behead, similar to how they do in UnNetHack.
+- Piranhas now eat corpses.
 - Improve monster callout noises.
 
 Bug Fixes
@@ -354,6 +355,8 @@ Bug Fixes
 - Prevented cartomancer grinding via killing fading monsters repeatedly.
 - Do not count births of fading monsters.
 - Many fixes for the object materials patch.
+- Locusts can no longer consume an entire pile of objects in a single turn. They can,
+  however, still consume bags.
 
 Sounds
 - Add more sounds for monsters fighting than just noises in the distance.

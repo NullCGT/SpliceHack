@@ -1240,7 +1240,7 @@ register struct obj *otmp;
 
 /* monster eats a pile of objects */
 int
-meatobj(mtmp) /* for gelatinous cubes and locusts */
+meatobj(mtmp) /* for gelatinous cubes, tasmanian devils, and other hungry monsters. */
 struct monst *mtmp;
 {
     struct obj *otmp, *otmp2;
@@ -1260,7 +1260,8 @@ struct monst *mtmp;
         otmp2 = otmp->nexthere;
 
         /* Locusts only eat organic matter */
-        if (mtmp->data == &mons[PM_LOCUST] && !is_organic(otmp)) {
+        if (mtmp->data == &mons[PM_LOCUST] 
+            && (!is_organic(otmp) || (otmp->otyp == CORPSE) )) {
             continue;
         }
         /* touch sensitive items */
@@ -1366,8 +1367,11 @@ struct monst *mtmp;
                 if (newcham(mtmp, (struct permonst *) 0, FALSE, vis))
                     ptr = mtmp->data;
             } else if (mtmp->data == &mons[PM_LOCUST]) {
-                if (canseemon(mtmp)) pline("%s starts swarming!", Monnam(mtmp));
-                if (!rn2(3)) clone_mon(mtmp, 0, 0);
+                if (!rn2(3)) {
+                    clone_mon(mtmp, 0, 0);
+                    if (canseemon(mtmp)) pline("%s starts swarming!", Monnam(mtmp));
+                }
+                return 1;
             } else if (grow) {
                 ptr = grow_up(mtmp, (struct monst *) 0);
             } else if (heal) {

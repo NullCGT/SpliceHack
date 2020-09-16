@@ -369,7 +369,6 @@
     ((ptr) == &mons[PM_GELATINOUS_CUBE] \
      || (ptr) == &mons[PM_TASMANIAN_DEVIL] \
      || (ptr) == &mons[PM_GLUTTONY] \
-     || (ptr) == &mons[PM_PIG] \
      || (ptr) == &mons[PM_LOCUST])
 
 #define avoids_player(ptr) \

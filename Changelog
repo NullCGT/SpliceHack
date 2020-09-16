@@ -330,6 +330,7 @@ Miscelaneous
 - When in Gehennom, randomly generated monsters will be automatically converted to their hellish
   counterparts, if any. For example, bears become hellbears, and sewer rats become hellrats.
 - Remove monster charging mechanic.
+- Improve monster callout noises.
 
 Bug Fixes
 - Correctly track the celibate conduct.

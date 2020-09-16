@@ -429,13 +429,13 @@ register struct monst *mtmp;
 
     static const char *const helpmsg[] = {
         "Over here!",
-        "Someone help!",
+        "Charge!",
         "Allies, to me!",
         "To me, friends!"
     };
     switch (mtmp->data->msound) {
     case MS_BARK:
-        ret = "howl";
+        ret = rn2(2) ? "bay" : "howl";
         break;
     case MS_MEW:
         ret = is_feline(mtmp->data) ? "caterwaul" : "yowl";
@@ -445,7 +445,7 @@ register struct monst *mtmp;
         ret = is_feline(mtmp->data) ? "yowl" : "bellow";
         break;
     case MS_PIRATE:
-        verbalize("To me, ye scurvy dogs!");
+        verbalize(rn2(2)? "Avast!" : "To me, ye scurvy dogs!");
         ret = NULL;
         break;
     case MS_CUSS:
@@ -457,11 +457,11 @@ register struct monst *mtmp;
         ret = NULL;
         break;
     case MS_BOAST:
-        pline("%s yells, \"I found a live one!\"", Monnam(mtmp));
+        pline("%s shouts a challenge.", Monnam(mtmp));
         ret = NULL;
         break;
     case MS_ARREST:
-        verbalize("Suspect is hostile! Where\'s my team?");
+        pline("%s calls for your arrest.", Monnam(mtmp));
         ret = NULL;
         break;
     case MS_VAMPIRE:
@@ -479,7 +479,7 @@ register struct monst *mtmp;
         ret = NULL;
         break;
     case MS_ONEEYEDSAM:
-        verbalize("Kill %s.", uhim());
+        verbalize("%s calmly issues an order for your swift execution.", Monnam(mtmp));
         ret = NULL;
         break;
     case MS_GUARD:

@@ -29,6 +29,8 @@ static boolean FDECL(restricted_spell_discipline, (int));
  */
 
 static struct trobj Archeologist[] = {
+#define A_MAJOR 0 /* pistol for chaotic archaeologists */
+#define A_HAT 2 /* secondary pistol for chaotic archaeologists */
     /* if adventure has a name...  idea from tan@uvm-gen */
     { BULLWHIP, 2, WEAPON_CLASS, 1, UNDEF_BLESS },
     { JACKET, 0, ARMOR_CLASS, 1, UNDEF_BLESS },
@@ -236,6 +238,9 @@ static struct trobj Sewingkit[] = { { SEWING_KIT, UNDEF_SPE, TOOL_CLASS, 1, 0 },
 
 static struct trobj Halo[] = { { HALO, 0, ARMOR_CLASS, 1, UNDEF_BLESS },
                                     { 0, 0, 0, 0, 0 } };
+static struct trobj Bullets[] = { { BULLET, 0, TOOL_CLASS,
+                                        50, 0 },
+                                      { 0, 0, 0, 0, 0 } };
 static struct trobj Magicmarker[] = { { MAGIC_MARKER, UNDEF_SPE, TOOL_CLASS,
                                         1, 0 },
                                       { 0, 0, 0, 0, 0 } };
@@ -886,6 +891,12 @@ u_init()
      * skew the results if we use rn2(2)...  --KAA
      */
     case PM_ARCHEOLOGIST:
+        if (u.ualign.type == A_CHAOTIC) {
+            Archeologist[A_MAJOR].trotyp = PISTOL;
+            Archeologist[A_HAT].trotyp = PISTOL;
+            Archeologist[A_HAT].trclass = WEAPON_CLASS;
+            ini_inv(Bullets);
+        }
         ini_inv(Archeologist);
         if (!rn2(10))
             ini_inv(Tinopener);

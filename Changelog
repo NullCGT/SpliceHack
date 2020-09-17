@@ -74,6 +74,7 @@ AI and Combat
 - Remove monster charging mechanic.
 - Changed the calculation for monsters firing ranged weapons at the hero, so that
   heroes with extremely low AC are still hit relatively often by arrows.
+- Dual-wielding firearms is allowed, although at present it is not useful.
 
 Poison
 - Weapons can now be poisoned with most types of potions, causing the potion to take
@@ -281,6 +282,9 @@ Race Changes
       - +1 speed.
 
 Role Changes
+- Archeologist
+  - Allow chaotic archeologists. Chaotic archeologists start with a pair of pistols,
+    rather than a bullwhip and a fedora.
 - Dragonmaster
   - All dragonmasters start with basic skill in riding.
   - Dragonmasters start with an intrinsic depending on the type of dragon

@@ -55,8 +55,8 @@ const struct Role roles[NUM_ROLES+1] = {
       ART_ORB_OF_DETECTION,
       MH_HUMAN | MH_DWARF | MH_GNOME | MH_ANGEL | MH_DEMON | MH_GHOUL | MH_WERE
         | MH_VAMPIRE | MH_CHANGELING,
-      ROLE_MALE | ROLE_FEMALE |
-      ROLE_NEUTER | ROLE_LAWFUL | ROLE_NEUTRAL,
+      ROLE_MALE | ROLE_FEMALE
+        | ROLE_NEUTER | ROLE_LAWFUL | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
       { 7, 10, 10, 7, 7, 7 },
       { 20, 20, 20, 10, 20, 10 },

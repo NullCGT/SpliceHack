@@ -20,14 +20,14 @@ suggestions for new features, questions, and pull requests can be directed
 to this variant's github page.
 
 # How to Play:
-- The latest SpliceHack release can be downloaded from [Github](https://github.com/NullCGT/SpliceHack/releases).
-- SpliceHack is hosted online at [Hardfought](https://www.hardfought.org).
+- The latest stable SpliceHack release can be downloaded from https://github.com/NullCGT/SpliceHack/releases.
+- SpliceHack is hosted online at https://www.hardfought.org.
 - Advanced users can compile SpliceHack from the source using the same steps as one
   would use to compile NetHack 3.7.
 
 # Configuration
-For information about customizing NetHack, refer to [this guide](https://nethackwiki.com/wiki/Options)
-on the wiki. The steps for customizing SpliceHack are the same as the steps for
+For information about customizing NetHack, refer to https://nethackwiki.com/wiki/Options.
+The steps for customizing SpliceHack are the same as the steps for
 customizing NetHack, except the file to edit is named .splicehackrc if you are
 on a Unix system.
 

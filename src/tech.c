@@ -97,6 +97,7 @@ static NEARDATA const char *tech_names[] = {
 	"terran tango",
 	"flow breaker",
 	"spellstrike slide",
+	"alternate form",
 	"court of blades",
 	"balanced fate",
 	"armageddon"
@@ -203,7 +204,8 @@ static const struct innate_tech
 	dop_tech[] = { {   1, T_LIQUID_LEAP, 1},
 		       {   0, 0, 0} },
 	#endif
-	chn_tech[] = { {   1, T_LIQUID_LEAP, 1},
+	chn_tech[] = {  {   1, T_POLYMORPH, 1},
+					{   1, T_LIQUID_LEAP, 1},
 				/* changelings learn other random techs on level up */
 		       {   0, 0, 0} },
 	dwa_tech[] = { {   1, T_RAGE, 1},
@@ -1782,6 +1784,10 @@ tamedog(mtmp, (struct obj *) 0);
 			You("begin performing the %s.", techname(tech_no));
 			u.ustance = techid(tech_no);
 			t_timeout = rn1(50, 50);
+			break;
+		case T_POLYMORPH:
+			polyself(1);
+			t_timeout = 30 - techlev(tech_no);
 			break;
 		case T_CROWN_LAW:
 			You("call upon the seven heavens to enact holy justice upon your enemies!");

@@ -585,10 +585,6 @@ int wtcap;
             }
             if (Regeneration && !Withering && !heal)
                 heal = 1;
-            
-            /* changelings do not heal unless polymorphed */
-            if (Race_if(PM_CHANGELING) && !Regeneration)
-                heal = 0;
 
             if (heal) {
                 g.context.botl = TRUE;

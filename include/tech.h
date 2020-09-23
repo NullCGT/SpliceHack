@@ -104,11 +104,12 @@ struct blitz_tab {
 #define T_DANCE_EARTH 55
 #define T_DANCE_STOP 56
 #define T_DANCE_SPELL 57
-#define T_CROWN_LAW 58
-#define T_CROWN_NEU 59
-#define T_CROWN_CHAOS 60
+#define T_POLYMORPH 58
+#define T_CROWN_LAW 59
+#define T_CROWN_NEU 60
+#define T_CROWN_CHAOS 61
 
-#define MAXTECH 60
+#define MAXTECH 62
 
 
 #endif /* TECH_H */

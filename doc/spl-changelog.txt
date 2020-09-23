@@ -286,6 +286,17 @@ Race Changes
       - +2 bite damage.
       - -2 AC
       - +1 speed.
+- Changeling
+  - Changelings now regenerate even when in their natural form.
+  - Drastically lowered base stats.
+  - Mechanic overhaul:
+    - Chatting with a monster gives the changeling knowledge of that monster's form.
+    - When using controlled polymorph, a changeling can, with 100% success, transform into
+      any monster they have knowledge of, regardless of whether or not that creature is
+      normally a valid polymorph form. Upon polymorphing, a changeling loses knowledge
+      of that form, until a monster of that type is chatted with again.
+    - Changelings can ONLY controlled polymorph into monsters whose forms they are
+      familiar with.
 
 Role Changes
 - Archeologist

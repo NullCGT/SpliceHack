@@ -1517,19 +1517,11 @@ dochat()
         return 0;
     }
 
-    if (Race_if(PM_CHANGELING) && canseemon(mtmp) && monsndx(mtmp->data) != u.umonnum
-            && polyok(mtmp->data)
-            && yn("Attempt to mimic?") == 'y') {
+    if (Race_if(PM_CHANGELING) && canseemon(mtmp) && monsndx(mtmp->data) != u.umonnum 
+        && ((g.mvitals[monsndx(mtmp->data)].mvflags & G_KNOWN) == 0)) {
+        g.mvitals[monsndx(mtmp->data)].mvflags |= G_KNOWN;
         pline("You study %s as you speak to %s...", mon_nam(mtmp), mhim(mtmp));
-        if (mtmp->data->mlevel <= u.ulevel + 3 && u.uen >= mtmp->data->mlevel) {
-            u.uen = (u.uen - mtmp->data->mlevel) / 2;
-            polymon(monsndx(mtmp->data));
-            g.context.botl = TRUE;
-        } else if (u.uen < mtmp->data->mlevel) {
-            You("do not have enough energy to change form!");
-        } else {
-            pline("Unfortunately, that form is a bit beyond your capabilities.");
-        }
+        pline("You can now mimic %s perfectly.", mon_nam(mtmp));
     }
     return domonnoise(mtmp);
 }

@@ -1009,7 +1009,7 @@ static boolean
 diseasemu(mdat)
 struct permonst *mdat;
 {
-    if (Sick_resistance) {
+    if (Sick_resistance || resists_sickness(g.youmonst.data)) {
         You_feel("a slight illness.");
         return FALSE;
     } else {

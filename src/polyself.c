@@ -401,7 +401,10 @@ polyself(psflags)
 int psflags;
 {
     char buf[BUFSZ] = DUMMY;
-    int old_light, new_light, mntmp, class, tryct;
+    char chnbuf[BUFSZ];
+    winid tmpwin;
+            
+    int old_light, new_light, mntmp, class, tryct, i, ct;
     boolean forcecontrol = (psflags == 1),
             monsterpoly = (psflags == 2),
             formrevert = (psflags == 3),
@@ -409,6 +412,7 @@ int psflags;
             iswere = (u.ulycn >= LOW_PM),
             isvamp = (is_vampire(g.youmonst.data)
                       || is_vampshifter(&g.youmonst)),
+            changeling = Race_if(PM_CHANGELING) && (psflags == 1),
             controllable_poly = Polymorph_control && !(Stunned || Unaware),
             verysafe = (psflags == 3), ismolydeus = (psflags == 4), 
             iscirce = (psflags == 5);
@@ -445,6 +449,28 @@ int psflags;
 
     if (controllable_poly || forcecontrol) {
         tryct = 5;
+
+        /* Changelings have a limited set of valid forms. */
+        if (changeling) {
+            ct = 0;
+            tmpwin = create_nhwindow(NHW_MENU);
+            putstr(tmpwin, 0, "Known Forms:");
+            putstr(tmpwin, 0, "");
+
+            for (i = LOW_PM; i < NUMMONS; i++) {
+                if (g.mvitals[i].mvflags & G_KNOWN) {
+                    ct++;
+                    Sprintf(chnbuf, "  %s", mons[i].mname);
+                    putstr(tmpwin, 0, chnbuf);
+                }
+            }
+            if (ct == 0) {
+                You("do not know any polymorph forms...");
+            } else
+                display_nhwindow(tmpwin, TRUE);
+            destroy_nhwindow(tmpwin);
+        }
+
         do {
             mntmp = NON_PM;
             getlin("Become what kind of monster? [type the name]", buf);
@@ -484,6 +510,17 @@ int psflags;
                                   || mntmp == counter_were(u.ulycn)
                                   || (Upolyd && mntmp == PM_HUMAN))) {
                 goto do_shift;
+            } else if (changeling) {
+                /* changelings can transform into anything, regardless of whether
+                   it is considered a valid form */
+                if (g.mvitals[mntmp].mvflags & G_KNOWN) {
+                    g.mvitals[mntmp].mvflags &= ~G_KNOWN;
+                    pline("Your knowledge of that form fades.");
+                    goto do_change;
+                } else {
+                    You("are not familiar enough with that form to polymorph into it.");
+                    ++tryct;
+                }
             } else if (!polyok(&mons[mntmp])
                        /* Note:  humans are illegal as monsters, but an
                           illegal monster forces newman(), which is what
@@ -584,6 +621,7 @@ int psflags;
                     return;
             }
         }
+ do_change:
         /* if polymon fails, "you feel" message has been given
            so don't follow up with another polymon or newman;
            sex_change_ok left disabled here */
@@ -650,7 +688,7 @@ int mntmp;
     if (!u.uconduct.polyselfs++)
         livelog_printf(LL_CONDUCT,
                        "changed form for the first time, becoming %s",
-                       an(mons[mntmp].mname));
+                       unique_corpstat(&mons[mntmp]) ? mons[mntmp].mname : an(mons[mntmp].mname));
 
     /* exercise used to be at the very end but only Wis was affected
        there since the polymorph was always in effect by then */
@@ -699,7 +737,7 @@ int mntmp;
                        ? "" : flags.gender == GEND_F ? "female " : flags.gender == GEND_N ? "person " : "male ");
     }
     Strcat(buf, mons[mntmp].mname);
-    You("%s %s!", (u.umonnum != mntmp) ? "turn into" : "feel like", an(buf));
+    You("%s %s!", (u.umonnum != mntmp) ? "turn into" : "feel like", unique_corpstat(&mons[mntmp]) ? buf : (an(buf)));
 
     if (Stoned && poly_when_stoned(&mons[mntmp])) {
         /* poly_when_stoned already checked stone golem genocide */

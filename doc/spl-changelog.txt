@@ -75,6 +75,12 @@ AI and Combat
 - Changed the calculation for monsters firing ranged weapons at the hero, so that
   heroes with extremely low AC are still hit relatively often by arrows.
 - Dual-wielding firearms is allowed, although at present it is not useful.
+- Characters with a constitution score of greater than 12 no longer gain a bonus to hit
+  point regeneration.
+  - New players will not notice much of a difference, since accellerated regeneration only
+    comes into play after level 10. Experienced players can no longer allow themselves to
+    be surrounded with impunity, since they will no longer regenerate with such absurd speed.
+  - Ideally, waiting for regeneration will be discouraged due to the lack of food in Gehennom.
 
 Poison
 - Weapons can now be poisoned with most types of potions, causing the potion to take

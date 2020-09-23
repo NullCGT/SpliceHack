@@ -577,15 +577,7 @@ int wtcap;
         if (u.uhp < u.uhpmax && (encumbrance_ok || Regeneration) && !Withering) {
             if (u.ulevel > 9) {
                 if (!(g.moves % 3L)) {
-                    int Con = (int) ACURR(A_CON);
-
-                    if (Con <= 12) {
-                        heal = 1;
-                    } else {
-                        heal = rnd(Con);
-                        if (heal > u.ulevel - 9)
-                            heal = u.ulevel - 9;
-                    }
+                    heal = 1;
                 }
             } else { /* u.ulevel <= 9 */
                 if (!(g.moves % (long) ((MAXULEV + 12) / (u.ulevel + 2) + 1)))

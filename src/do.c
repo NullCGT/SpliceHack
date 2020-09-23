@@ -2136,7 +2136,7 @@ boolean moldy;
                     pline("%s rises from the dead in a churning pillar of flies!",
                         Monnam(mtmp));
                 } else if (pm == PM_FAMINE) {
-                    pline("%s rises from the dead amid a chorus of wails!",
+                    pline("%s rises from the dead amid a circle of withering crops!",
                         Monnam(mtmp));
                 } else {
                     pline("%s rises from the dead!",

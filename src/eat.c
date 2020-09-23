@@ -95,7 +95,7 @@ register struct obj *obj;
         return TRUE;
 
     /* Ghouls and ghasts only eat non-veggy corpses or eggs (see dogfood()) */
-    if (!(Race_if(PM_GHOUL) && !Upolyd) || is_ghoul(g.youmonst.data))
+    if ((Race_if(PM_GHOUL) && !Upolyd) || is_ghoul(g.youmonst.data))
         return (boolean)((obj->otyp == CORPSE
                           && !vegan(&mons[obj->corpsenm]))
                          || (obj->otyp == EGG));

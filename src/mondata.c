@@ -322,7 +322,7 @@ int material;
         return TRUE;
 
     /* infernal player */
-    if (mon == &g.youmonst && material == SILVER)
+    if (mon == &g.youmonst && Race_if(PM_INFERNAL) && material == SILVER)
         return TRUE;
 
     /* extra extra case: lycanthrope player (monster lycanthropes all fall under

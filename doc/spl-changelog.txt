@@ -281,11 +281,7 @@ Race Changes
   - Racial lycanthropes can use #monster to instantly transform.
   - Racial lycanthropes have a strength of 25 in animal form.
   - Racial lycanthropes only regenerate abnormally quickly when in animal form.
-  - Every time a racial lycanthrope levels up, they may choose one aspect of their creature
-    form to improve:
-      - +2 bite damage.
-      - -2 AC
-      - +1 speed.
+  - Racial lycnthrope bite damage and HD scale with the level of the player.
 - Changeling
   - Changelings now regenerate even when in their natural form.
   - Drastically lowered base stats.

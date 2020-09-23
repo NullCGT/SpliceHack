@@ -318,6 +318,10 @@ you_were()
         if (!paranoid_query(ParanoidWerechange, qbuf))
             return;
     }
+    if (Race_if(PM_HUMAN_WERECAT)) {
+        mons[u.ulycn].mlevel = u.ulevel;
+        mons[u.ulycn].mattk[0].damd = max(2, u.ulevel / 2);
+    }
     (void) polymon(u.ulycn);
     (void) angry_guards(FALSE);
 }

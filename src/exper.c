@@ -9,7 +9,9 @@
 #endif
 
 static int FDECL(enermod, (int));
+#if 0
 static void NDECL(improve_lycanthrope_form);
+#endif
 
 long
 newuexp(lev)
@@ -347,8 +349,10 @@ boolean incr; /* true iff via incremental experience growth */
         pline("Welcome %sto experience level %d.",
               (u.ulevelmax < u.ulevel) ? "" : "back ",
               u.ulevel);
+        #if 0
         if (Race_if(PM_HUMAN_WERECAT) && u.ulevelmax < u.ulevel)
             improve_lycanthrope_form();
+        #endif
         if (u.ulevelmax < u.ulevel)
             u.ulevelmax = u.ulevel;
         adjabil(u.ulevel - 1, u.ulevel); /* give new intrinsics */
@@ -388,6 +392,7 @@ boolean gaining; /* gaining XP via potion vs setting XP for polyself */
     return result;
 }
 
+#if 0
 void
 improve_lycanthrope_form()
 {
@@ -435,9 +440,10 @@ improve_lycanthrope_form()
         break;
     }
 
-    /* Increase the monster's level to align with the player's. */
-    mdat->mlevel += 1;
+    /* Set the monster's level to align with the player's. */
+    mdat->mlevel = u.ulevel;
     g.context.botl = TRUE;
 }
+#endif
 
 /*exper.c*/

@@ -819,7 +819,7 @@ tileutil: $(U)gif2txt.exe $(U)gif2tx32.exe $(U)txt2ppm.exe
 $(O)winres.o: $(TILEBMP16) $(MSWIN)/NetHackW.rc $(MSWIN)/mnsel.bmp \
 	 $(MSWIN)/mnselcnt.bmp $(MSWIN)/mnunsel.bmp \
 	 $(MSWIN)/petmark.bmp $(MSWIN)/pilemark.bmp $(MSWIN)/NetHack.ico $(MSWIN)/rip.bmp \
-	 $(MSWIN)/splash.bmp
+	 $(MSWIN)/splash.bmp $(MSWIN)/ridingmark.bmp
 	$(rc) -o$@ --include-dir $(MSWIN) -i $(MSWIN)/NetHackW.rc
 
 $(O)conres.o: $(MSWSYS)/console.rc $(MSWSYS)/NetHack.ico
@@ -994,6 +994,11 @@ $(MSWIN)/petmark.bmp: $(U)uudecode.exe $(MSWIN)/petmark.uu
 	$(subst /,\,$(U)uudecode.exe $(MSWIN)/petmark.uu)
 	$(subst /,\,copy petmark.bmp $@)
 	del petmark.bmp
+
+$(MSWIN)/ridingmark.bmp: $(U)uudecode.exe $(MSWIN)/ridingmark.uu
+	$(subst /,\,$(U)uudecode.exe $(MSWIN)/ridingmark.uu)
+	$(subst /,\,copy ridingmark.bmp $@)
+	del ridingmark.bmp
 
 $(MSWIN)/pilemark.bmp: $(U)uudecode.exe $(MSWIN)/pilemark.uu
 	$(subst /,\,$(U)uudecode.exe $(MSWIN)/pilemark.uu)
@@ -1244,6 +1249,7 @@ ifneq "$(W_MSWIN)" ""
 	if exist $(W_MSWIN)\mnselcnt.bmp   del $(W_MSWIN)\mnselcnt.bmp
 	if exist $(W_MSWIN)\mnunsel.bmp    del $(W_MSWIN)\mnunsel.bmp
 	if exist $(W_MSWIN)\petmark.bmp    del $(W_MSWIN)\petmark.bmp
+	if exist $(W_MSWIN)\ridingmark.bmp    del $(W_MSWIN)\ridingmark.bmp
 	if exist $(W_MSWIN)\pilemark.bmp   del $(W_MSWIN)\pilemark.bmp
 	if exist $(W_MSWIN)\rip.bmp        del $(W_MSWIN)\rip.bmp
 	if exist $(W_MSWIN)\splash.bmp     del $(W_MSWIN)\splash.bmp

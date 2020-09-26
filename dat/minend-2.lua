@@ -76,10 +76,17 @@ des.non_diggable(selection.area(53,17,74,17))
 des.non_diggable(selection.area(74,01,74,16))
 des.non_diggable(selection.area(53,07,55,07))
 des.non_diggable(selection.area(53,14,61,14))
--- The Gnome King's wine cellar.
+-- The Gnome King's/Queen's wine cellar (one is selected at random).
 -- the Trespassers sign is a long-running joke
-des.engraving({12,03}, "engrave",
-	      "You are now entering the Gnome King's wine cellar.")
+if percent(50) then
+   des.monster({ id="gnome royal", female=0 })
+   des.engraving({12,03}, "engrave",
+	         "You are now entering the Gnome King's wine cellar.")
+else
+   des.monster({ id="gnome royal", female=1 })
+   des.engraving({12,03}, "engrave",
+	         "You are now entering the Gnome Queen's wine cellar.")
+end
 des.engraving({12,04}, "engrave", "Trespassers will be persecuted!")
 des.object("booze", 10, 07)
 des.object("booze", 10, 07)
@@ -131,7 +138,6 @@ des.trap()
 des.trap()
 des.trap()
 -- Random monsters.
-des.monster("gnome royal")
 des.monster("gnome noble")
 des.monster("gnome noble")
 des.monster("gnome noble")

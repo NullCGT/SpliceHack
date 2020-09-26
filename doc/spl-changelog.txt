@@ -5,6 +5,7 @@
 Bug Fixes
 - Fixed some minor window naming in the windows release.
 - Added a pull request by entrez to fix gender naming monsters in special levels.
+- Fixed riding mark only appearing when pilemark was enabled.
 
                             Version 0.8.0
 

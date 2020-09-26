@@ -2091,7 +2091,7 @@ struct mkroom *croom;
         if (m->invis) {
             mtmp->minvis = mtmp->perminvis = 1;
         }
-        if (m->female != 2)
+        if (m->female == 0 || m->female == 1)
             mtmp->female = m->female;
         if (m->blinded) {
             mtmp->mcansee = 0;

@@ -524,7 +524,7 @@ xx|.....|xx
 }|..|}
 }----}
 }}}}}}]], contents = function(m) des.region({ region={3,3,3,3}, type="themed", irregular=true, prefilled=false, joined=false });
-     local nasty_undead = { "giant zombie", "ettin zombie", "vampire lord" };
+     local nasty_undead = { "giant zombie", "ettin zombie", "vampire noble" };
      des.object("chest", 2, 2);
      des.object("chest", 3, 2);
      des.object("chest", 2, 3);

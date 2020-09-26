@@ -25,7 +25,7 @@ des.levregion({ region={4,4,4,4}, type="portal", name="wizard3" })
 des.mazewalk(08,05,"east")
 des.region({ region={04,03,06,06},lit=0,type="ordinary",prefilled=0,irregular=1 })
 des.monster("L",04,04)
-des.monster("vampire lord",03,04)
+des.monster("vampire noble",03,04)
 des.monster("kraken",06,06)
 -- And to make things a little harder.
 des.trap("board",04,03)

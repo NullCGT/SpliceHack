@@ -2078,8 +2078,6 @@ struct mkroom *croom;
         }
         if (m->seentraps)
             mtmp->mtrapseen = m->seentraps;
-        if (m->female)
-            mtmp->female = 1;
         if (m->cancelled)
             mtmp->mcan = 1;
         if (m->revived)
@@ -2093,6 +2091,8 @@ struct mkroom *croom;
         if (m->invis) {
             mtmp->minvis = mtmp->perminvis = 1;
         }
+        if (m->female == 0 || m->female == 1)
+            mtmp->female = m->female;
         if (m->blinded) {
             mtmp->mcansee = 0;
             mtmp->mblinded = (m->blinded % 127);
@@ -3227,7 +3227,7 @@ lua_State *L;
         tmpmons.appear = 0;
         tmpmons.appear_as.str = (char *) 0;
         tmpmons.align = get_table_align(L);
-        tmpmons.female = get_table_int_opt(L, "female", 0);
+        tmpmons.female = get_table_int_opt(L, "female", 2);
         tmpmons.invis = get_table_int_opt(L, "invisible", 0);
         tmpmons.cancelled = get_table_int_opt(L, "cancelled", 0);
         tmpmons.revived = get_table_int_opt(L, "revived", 0);

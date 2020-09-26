@@ -1,5 +1,11 @@
                         SpliceHack -- Changelog
 
+                            Version 0.8.1
+
+Bug Fixes
+- Fixed some minor window naming in the windows release.
+- Added a pull request by entrez to fix gender naming monsters in special levels.
+
                             Version 0.8.0
 
 New Items

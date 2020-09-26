@@ -858,7 +858,6 @@ paintTile(PNHMapWindow data, int i, int j, RECT * rect)
         SelectObject(hdcPetMark, bmPetMarkOld);
         DeleteDC(hdcPetMark);
     }
-#ifdef USE_PILEMARK
     if ((glyph != NO_GLYPH) && (special & MG_RIDDEN)) {
         /* apply riding mark transparently over
             monster image */
@@ -877,6 +876,7 @@ paintTile(PNHMapWindow data, int i, int j, RECT * rect)
         SelectObject(hdcRidingMark, bmRidingMarkOld);
         DeleteDC(hdcRidingMark);
     }
+#ifdef USE_PILEMARK
     if ((glyph != NO_GLYPH) && (special & MG_OBJPILE)
         && iflags.hilite_pile) {
         /* apply pilemark transparently over other image */

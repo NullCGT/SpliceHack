@@ -172,5 +172,5 @@ deploy:
   on:
     tags: true
   prerelease: true
-  name: "Test release build of SpliceHack 0.8.0"
-  body: "This is an auto generated test release build of SpliceHack 0.8.0"
+  name: "Test release build of SpliceHack 0.8.1"
+  body: "This is an auto generated test release build of SpliceHack 0.8.1"

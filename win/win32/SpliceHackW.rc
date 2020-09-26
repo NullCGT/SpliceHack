@@ -375,7 +375,7 @@ END
 STRINGTABLE
 BEGIN
     IDS_APP_TITLE           "SpliceHack for Windows - Graphical Interface"
-    IDC_NETHACKW            "NETHACKW"
+    IDC_NETHACKW            "SPLICEHACKW"
     IDS_APP_TITLE_SHORT     "SpliceHack for Windows"
 END
 

@@ -1013,8 +1013,8 @@ $(O)install.tag: 	$(DAT)\data	$(DAT)\rumors	$(DAT)\oracles \
 	if exist $(DAT)\symbols copy $(DAT)\symbols $(GAMEDIR)\symbols.template
 	if exist $(DOC)\guidebook.txt copy $(DOC)\guidebook.txt $(GAMEDIR)\Guidebook.txt
 	if exist $(DOC)\nethack.txt copy $(DOC)\nethack.txt $(GAMEDIR)\NetHack.txt
-	@if exist $(GAMEDIR)\NetHack.PDB echo NOTE: You may want to remove $(GAMEDIR:\=/)/NetHack.PDB to conserve space
-	@if exist $(GAMEDIR)\NetHackW.PDB echo NOTE: You may want to remove $(GAMEDIR:\=/)/NetHackW.PDB to conserve space
+	@if exist $(GAMEDIR)\SpliceHack.PDB echo NOTE: You may want to remove $(GAMEDIR:\=/)/SpliceHack.PDB to conserve space
+	@if exist $(GAMEDIR)\SpliceHackW.PDB echo NOTE: You may want to remove $(GAMEDIR:\=/)/SpliceHackW.PDB to conserve space
 	-if exist $(MSWSYS)\.splicehackrc.template copy $(MSWSYS)\.splicehackrc.template   $(GAMEDIR)
 	-if not exist $(GAMEDIR)\record. goto>$(GAMEDIR)\record.
 	echo install done > $@
@@ -1607,7 +1607,7 @@ spotless: clean
 	if exist $(GAMEDIR)\nh340key.dll del $(GAMEDIR)\nh340key.dll
 	if exist $(GAMEDIR)\nhraykey.dll del $(GAMEDIR)\nhraykey.dll
 	if exist $(GAMEDIR)\SpliceHack.exe  del $(GAMEDIR)\SpliceHack.exe
-	if exist $(GAMEDIR)\NetHack.pdb  del $(GAMEDIR)\NetHack.pdb
+	if exist $(GAMEDIR)\SpliceHack.pdb  del $(GAMEDIR)\SpliceHack.pdb
 	if exist $(GAMEDIR)\nhdat$(NHV)  del $(GAMEDIR)\nhdat$(NHV)
 ! ENDIF
 	if exist $(INCL)\date.h          del $(INCL)\date.h

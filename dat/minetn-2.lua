@@ -140,7 +140,7 @@ des.room({ type = "ordinary", lit=1, x=3, y=3,
                  des.room({ type = "ordinary", lit=1, x=18,y=10, w=4,h=3,
                             contents = function()
                                des.door({ state="locked", wall="west" })
-                               des.monster("gnome lord")
+                               des.monster("gnome noble")
                             end
                  });
               end

@@ -53,7 +53,7 @@ des.non_passwall(selection.area(16,02,27,12))
 des.non_passwall(selection.area(06,12,16,12))
 --
 des.monster("L", 10, 07)
-des.monster("vampire lord", 12, 07)
+des.monster("vampire noble", 12, 07)
 -- Some surrounding horrors
 des.monster("kraken", 08, 05)
 des.monster("giant eel", 08, 08)

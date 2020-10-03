@@ -20,6 +20,8 @@ New Materials
 Dungeon
 - Added a minetown variant (Zootown), from SporkHack/EvilHack.
 - Added an original minetown variant (Lavender Town).
+- Added holiday-themed fruit name generation from xNetHack. It's an excellent feature with great
+  inclusivity.
 
 Balance
 - When a monster activates a polytrap, there is a 1 in 7 chance that the polytrap is removed.

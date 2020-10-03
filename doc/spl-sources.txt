@@ -25,6 +25,7 @@
 - Code for object probabilities
 - Mjollnir invocation.
 - Monster HP calculation.
+- Holiday-themed fruits.
 
 #Biodiversity Patch
 - Umbral Hulk

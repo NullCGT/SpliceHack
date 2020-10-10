@@ -98,7 +98,8 @@ register struct obj *obj;
     if ((Race_if(PM_GHOUL) && !Upolyd) || is_ghoul(g.youmonst.data))
         return (boolean)((obj->otyp == CORPSE
                           && !vegan(&mons[obj->corpsenm]))
-                         || (obj->otyp == EGG));
+                         || obj->otyp == EGG
+                         || obj->otyp == TIN);
     /* Vampires drink the blood of meaty corpses */
 	/* [ALI] (fully) drained food is not presented as an option,
 	 * but partly eaten food is (even though you can't drain it).
@@ -1602,7 +1603,7 @@ const char *mesg;
         /* charge for one at pre-eating cost */
         tin = costly_tin(COST_OPEN);
 
-        if (tintxts[r].nut < 0) /* rotten */
+        if (tintxts[r].nut < 0 && !(Race_if(PM_GHOUL) || is_ghoul(g.youmonst.data)) /* rotten */
             make_vomiting((long) rn1(15, 10), FALSE);
         else
             lesshungry(tintxts[r].nut);
@@ -1615,7 +1616,12 @@ const char *mesg;
         }
 
     } else { /* spinach... */
-        if (tin->cursed) {
+        if (Race_if(PM_GHOUL) || is_ghoul(g.youmonst.data)) {
+            pline("It contains some inedible plant matter.");
+            if (flags.verbose)
+                You("discard the open tin.");
+            goto use_up_tin;
+        } else if (tin->cursed) {
             pline("It contains some decaying%s%s substance.",
                   Blind ? "" : " ", Blind ? "" : hcolor(NH_GREEN));
         } else {
@@ -1821,6 +1827,28 @@ struct obj *obj;
     return 0;
 }
 
+long
+rot_amount(otmp)
+struct obj *otmp;
+{
+    long age = peek_at_iced_corpse_age(otmp);
+    long rotted = 0L;
+
+    /* Kludge: Ghouls need to know when a corpse is rotted, and therefore edible.
+       Thus, all corpses rot at a consistent rate for them. */
+    rotted = 
+        (g.monstermoves - age) / (10L + (Race_if(PM_GHOUL) ? 0 : rn2(20)));
+    if (otmp->cursed)
+        rotted += 2L;
+    else if (otmp->blessed)
+        rotted -= 2L;
+    
+    if (otmp->oeroded > 0) {
+        rotted += otmp->oeroded * 1L;
+    }
+    return rotted;
+}
+
 /* called when a corpse is selected as food */
 static int
 eatcorpse(otmp)
@@ -1851,17 +1879,7 @@ struct obj *otmp;
     }
 
     if (!nonrotting_corpse(mnum)) {
-        long age = peek_at_iced_corpse_age(otmp);
-
-        rotted = (g.monstermoves - age) / (10L + rn2(20));
-        if (otmp->cursed)
-            rotted += 2L;
-        else if (otmp->blessed)
-            rotted -= 2L;
-        
-        if (otmp->oeroded > 0) {
-            rotted += otmp->oeroded * 1L;
-        }
+        rotted = rot_amount(otmp);
     }
 
     /* Vampires only drink the blood of very young, meaty corpses
@@ -3551,8 +3569,8 @@ boolean incr;
             ATEMP(A_DEX) = 0;
         }
         if (newhs < FAINTING && u.uhs >= FAINTING && Race_if(PM_GHOUL)) {
-            ATEMP(A_STR) = 2;
-            ATEMP(A_DEX) = 2;
+            ATEMP(A_STR) = 6;
+            ATEMP(A_DEX) = 6;
             ATEMP(A_WIS) = 2;
             ATEMP(A_INT) = 2;
         } else if (newhs < FAINTING && u.uhs >= FAINTING && Race_if(PM_GHOUL)) {

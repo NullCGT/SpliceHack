@@ -1284,6 +1284,11 @@ unsigned doname_flags;
 		            (obj->oeaten > drainlevel(obj)) ? "partly " : "");
 		} else if (obj->oeaten)
             Strcat(prefix, "partly eaten ");
+        /* ghouls know how rotted a corpse is by looking at it. */
+        if (obj->otyp == CORPSE && Race_if(PM_GHOUL) && rot_amount(obj) > 5L) {
+            Strcat(prefix, " rotting ");
+        }
+
         if (obj->otyp == PUMPKIN)
             goto armor;
         add_erosion_words(obj, prefix);

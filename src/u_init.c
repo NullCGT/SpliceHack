@@ -1414,7 +1414,7 @@ register struct trobj *trop;
                    /* starting with pumpkins can give better AC */
                    || otyp == PUMPKIN
                    /* orcs start with poison resistance */
-                   || (otyp == RIN_POISON_RESISTANCE && Race_if(PM_ORC))
+                   || (otyp == RIN_POISON_RESISTANCE && (Race_if(PM_ORC) || Race_if(PM_GHOUL)))
                    /* Monks don't use weapons */
                    || (otyp == SCR_ENCHANT_WEAPON && Role_if(PM_MONK))
                    /* Infernals already have regeneration and hate silver */
@@ -1492,6 +1492,12 @@ register struct trobj *trop;
         if (g.urace.malenum == PM_VAMPIRE && obj->otyp == FOOD_RATION) {
             dealloc_obj(obj);
             obj = mksobj(POT_VAMPIRE_BLOOD, TRUE, FALSE);
+        }
+
+        /* Ghouls do not get food rations */
+        if (g.urace.malenum == PM_GHOUL && obj->otyp == FOOD_RATION) {
+            dealloc_obj(obj);
+            obj = mksobj(TIN, TRUE, FALSE);
         }
 
         /* angels don't get helmets */

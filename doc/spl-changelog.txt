@@ -1,12 +1,33 @@
                         SpliceHack -- Changelog
 
+                            Version 0.8.2
+
+Balance
+- Improved ghoul playability
+  - Ghouls can eat tins. They automatically discard all tins of spinach, but can eat all
+    other tins without risk of sickness.
+  - When playing as a ghoul, all corpses rot at a consistent rate. Edible corpses are
+    denoted by the prefix "rotting".
+    - This should fix one of the most annoying parts of playing as a ghoul: Hoping
+      that your corpses are old enough to eat. Additionally, it fixes the exploit of
+      repeatedly trying to eat a corpse until the RNG decides it is just rotted enough
+      for you to do so.
+  - Refined the starting inventory of ghouls so they get less useless objects.
+    - More specifically, ghouls cannot start with rings of poison resistance, and food
+      rations are replaced by tins.
+  - TODO: Penalize ghouls for being satiated.
+
+Bug Fixes
+- Fixed improper skill attribution for two-weaponing.
+- Fixed ghouls getting less powerful when weak.
+
+
                             Version 0.8.1
 
 Bug Fixes
 - Fixed some minor window naming in the windows release.
 - Added a pull request by entrez to fix gender naming monsters in special levels.
 - Fixed riding mark only appearing when pilemark was enabled.
-- Fixed improper skill attribution for two-weaponing.
 
                             Version 0.8.0
 

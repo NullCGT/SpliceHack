@@ -629,21 +629,17 @@ struct attack *mattk;
 struct obj *mwep;
 int dieroll;
 {
-<<<<<<< HEAD
     boolean weaponhit = ((mattk->aatyp == AT_WEAP
                           || (mattk->aatyp == AT_CLAW && mwep)));
 
     pre_mm_attack(magr, mdef);
 
-    if (g.vis) {
-=======
     /* Possibly awaken nearby monsters */
     if ((!is_silent(magr->data) || !helpless(mdef)) && rn2(10)) {
         wake_nearto(magr->mx, magr->my, combat_noise(magr->data));
     }
 
-    if (vis) {
->>>>>>> d1497be9b... Melee combat wakes up nearby monsters
+    if (g.vis) {
         int compat;
         char buf[BUFSZ];
 

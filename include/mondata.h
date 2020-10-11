@@ -376,7 +376,6 @@
      || (ptr) == &mons[PM_MAD_ALCHEMIST] \
      || (ptr) == &mons[PM_MAGICAL_EYE])
 
-<<<<<<< HEAD
 #define horizontal_mover(ptr) \
     ((ptr) == &mons[PM_GRID_BUG] \
      || (ptr) == &mons[PM_SPARK_BUG] \
@@ -386,7 +385,6 @@
                                || (ptr) == &mons[PM_VAMPIRE] || (ptr) == &mons[PM_WRAITH]  \
                                || (ptr) == &mons[PM_GREEN_SLIME] || (ptr)->mlet == S_MUMMY \
                                || (ptr) == &mons[PM_BAOBHAN_SITH])
-=======
 /* Noise that a monster makes when engaged in combat. Assume that vocalizations
  * account for some noise, so monsters capable of vocalizing make more.
  * This gets used as an argument to wake_nearto, which expects a squared value,
@@ -395,5 +393,4 @@
     ((ptr)->msound ? ((ptr)->msize*2 + 1) * ((ptr)->msize*2 + 1) \
                    : ((ptr)->msize + 1)   * ((ptr)->msize + 1))
 
->>>>>>> d1497be9b... Melee combat wakes up nearby monsters
 #endif /* MONDATA_H */

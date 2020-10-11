@@ -23,6 +23,7 @@ Bug Fixes
 - Prevent banquet hall chest from spawning inside a wall.
 - Fixed a bug where using credit for shopkeeper services could cause issues.
 - Prevent extraplanar merchants from dying to fumaroles in the city of brass.
+- Prevent archons from going extinct due to sin spawning during a fallen angel ascension.
 
 
                             Version 0.8.1

@@ -2943,7 +2943,7 @@ create_sin()
         }
         tryct++;
     } while ((g.mvitals[pm].mvflags & G_EXTINCT) && tryct < 100);
-    if (!(g.mvitals[pm].mvflags & G_EXTINCT)) {
+    if (!(g.mvitals[pm].mvflags & G_EXTINCT) && mons[pm].geno & G_UNIQ) {
         makemon(&mons[pm], 0, 0, NO_MM_FLAGS);
         g.mvitals[pm].mvflags |= G_EXTINCT;
     }

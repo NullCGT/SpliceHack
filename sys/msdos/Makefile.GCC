@@ -679,7 +679,7 @@ $(U)recover.exe:   $(RECOVOBJS)
 	$(LINK) $(LFLAGS) -o$@ $(O)recover.o
 
 $(O)recover.o:   $(CONFIG_H) $(U)recover.c
-	$(CC) $(cflags) -o$@ $(U)recover.c
+	$(CC) $(cflags) -DNO_MAIN -o$@ $(U)recover.c
 
 #==========================================
 #  Header file moves required for tile support

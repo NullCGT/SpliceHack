@@ -1322,6 +1322,8 @@ register struct attack *mattk;
                 destroy_item(SPBOOK_CLASS, AD_FIRE);
             if ((int) mtmp->m_lev > rn2(30))
                 destroy_item(FOOD_CLASS, AD_FIRE);
+            if ((int) mtmp->m_lev > rn2(20))
+                ignite_items(g.invent);
             burn_away_slime();
         } else
             dmg = 0;
@@ -2957,6 +2959,8 @@ struct attack *mattk;
                     destroy_item(POTION_CLASS, AD_FIRE);
                 if (lev > rn2(25))
                     destroy_item(SPBOOK_CLASS, AD_FIRE);
+                if (lev > rn2(20))
+                    ignite_items(g.invent);
                 if (dmg)
                     mdamageu(mtmp, dmg);
             }

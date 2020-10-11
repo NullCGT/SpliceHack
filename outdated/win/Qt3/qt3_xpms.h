@@ -946,6 +946,35 @@ static const char *pet_mark_small_xpm[] = {
 "..X.."
 };
 /* XPM */
+static const char *riding_mark_xpm[] = {
+/* width height ncolors chars_per_pixel */
+"8 7 2 1",
+/* colors */
+". c None",
+"  c #00FF00",
+/* pixels */
+"      ..",
+" ..... .",
+" ..... .",
+"      ..",
+"   .....",
+" ..  ...",
+" ....  ."
+};
+/* XPM */
+static const char *riding_mark_small_xpm[] = {
+/* width height ncolors chars_per_pixel */
+"5 5 2 1",
+/* colors */
+". c None",
+"X c #00FF00",
+/* pixels */
+"XXXX.",
+"XXX..",
+"X.X..",
+"X..X."
+};
+/* XPM */
 static const char *pile_mark_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "5 5 2 1",

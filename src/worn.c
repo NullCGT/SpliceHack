@@ -949,6 +949,9 @@ boolean polyspot;
             m_useup(mon, otmp);
         }
     } else if (sliparm(mdat)) {
+        /* sliparm checks whirly, noncorporeal, and small or under */
+        boolean passes_thru_clothes = !(mdat->msize <= MZ_SMALL);
+
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
             if (vis)
                 pline("%s armor falls around %s!", s_suffix(Monnam(mon)),
@@ -974,7 +977,7 @@ boolean polyspot;
         }
         if ((otmp = which_armor(mon, W_ARMU)) != 0) {
             if (vis) {
-                if (sliparm(mon->data))
+                if (passes_thru_clothes)
                     pline("%s seeps right through %s shirt!", Monnam(mon),
                           ppronoun);
                 else

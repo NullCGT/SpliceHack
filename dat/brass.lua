@@ -32,12 +32,12 @@ LLLLLLLLLLLLLL|....|..............|.------------......LLLL...............|..
 des.feature("fountain",26,17)
 
 -- Shops
-des.region({ region={04,01,10,04}, lit=1, type="shop", prefilled=0 })
-des.region({ region={02,08,11,10}, lit=1, type="shop", prefilled=0 })
-des.region({ region={20,11,33,14}, lit=1, type="shop", prefilled=0 })
-des.region({ region={16,01,30,7}, lit=1, type="shop", prefilled=0 })
-des.region({ region={48,00,56,4}, lit=1, type="shop", prefilled=0 })
-des.region({ region={59,15,67,17}, lit=1, type="shop", prefilled=0 })
+des.region({ region={04,01,10,04}, lit=1, type="shop", filled=1 })
+des.region({ region={02,08,11,10}, lit=1, type="shop", filled=1 })
+des.region({ region={20,11,33,14}, lit=1, type="shop", filled=1 })
+des.region({ region={16,01,30,7}, lit=1, type="shop", filled=1 })
+des.region({ region={48,00,56,4}, lit=1, type="shop", filled=1 })
+des.region({ region={59,15,67,17}, lit=1, type="shop", filled=1 })
 
 -- Portal located in left half of the level, somewhere in the mess of shops.
 --des.portal((0,0,40,19),(65,13,75,19),"water")

@@ -26,7 +26,7 @@ des.map([[
 ]]);
 
 des.levregion({ region = {01,01,01,01}, type="branch" });
-des.region({ region = {03,01,74,16}, type="black market", lit=1, prefilled=0 });
+des.region({ region = {03,01,74,16}, type="black market", lit=1, filled=1 });
 des.non_diggable(selection.area(00,00,75,17))
 des.non_passwall(selection.area(000,00,75,17))
 des.door("open",02,14)

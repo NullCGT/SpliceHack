@@ -1,4 +1,4 @@
-/* NetHack 3.7  makedefs.c  $NHDT-Date: 1596498258 2020/08/03 23:44:18 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.184 $ */
+/* NetHack 3.7  makedefs.c  $NHDT-Date: 1600855420 2020/09/23 10:03:40 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.188 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Kenneth Lorber, Kensington, Maryland, 2015. */
 /* Copyright (c) M. Stephenson, 1990, 1991.                       */
@@ -126,6 +126,7 @@ static struct version_info version;
 /* Use this as an out-of-bound value in the close table.  */
 #define CLOSE_OFF_TABLE_STRING "99" /* for the close table */
 #define FAR_OFF_TABLE_STRING "0xff" /* for the far table */
+#define FLG_TEMPFILE  0x01              /* flag for temp file */
 
 #define sign(z) ((z) < 0 ? -1 : ((z) ? 1 : 0))
 #ifdef VISION_TABLES
@@ -166,8 +167,7 @@ extern void NDECL(monst_globals_init);   /* monst.c */
 extern void NDECL(objects_globals_init); /* objects.c */
 
 static char *FDECL(name_file, (const char *, const char *));
-static void FDECL(delete_file, (const char *template, const char *));
-static FILE *FDECL(getfp, (const char *, const char *, const char *));
+static FILE *FDECL(getfp, (const char *, const char *, const char *, int));
 static void FDECL(do_ext_makedefs, (int, char **));
 static char *FDECL(xcrypt, (const char *));
 static unsigned long FDECL(read_rumors_file,
@@ -387,6 +387,9 @@ const char *tag;
     return namebuf;
 }
 
+#ifdef HAS_NO_MKSTEMP
+static void FDECL(delete_file, (const char *template, const char *));
+
 static void
 delete_file(template, tag)
 const char *template;
@@ -396,19 +399,43 @@ const char *tag;
 
     Unlink(name);
 }
+#endif
 
 static FILE *
-getfp(template, tag, mode)
+getfp(template, tag, mode, flg)
 const char *template;
 const char *tag;
 const char *mode;
+#ifndef HAS_NO_MKSTEMP
+int flg;
+#else
+int flg UNUSED;
+#endif
 {
     char *name = name_file(template, tag);
-    FILE *rv = fopen(name, mode);
+    FILE *rv = (FILE *) 0;
+#ifndef HAS_NO_MKSTEMP
+    boolean istemp = (flg & FLG_TEMPFILE) != 0;
+    char tmpfbuf[MAXFNAMELEN];
+    int tmpfd;
 
+    if (istemp) {
+        (void) snprintf(tmpfbuf, sizeof tmpfbuf, DATA_TEMPLATE, "mdXXXXXX");
+        tmpfd = mkstemp(tmpfbuf);
+        if (tmpfd >= 0) {
+            rv = fdopen(tmpfd, WRTMODE);   /* temp file is always read+write */
+            Unlink(tmpfbuf);
+        }
+    } else
+#endif
+    rv = fopen(name, mode);
     if (!rv) {
-        Fprintf(stderr, "Can't open '%s'.\n", name);
-        exit(EXIT_FAILURE);
+        Fprintf(stderr, "Can't open '%s'.\n",
+#ifndef HAS_NO_MKSTEMP
+                istemp ? tmpfbuf :
+#endif
+                 name);
+            exit(EXIT_FAILURE);
     }
     return rv;
 }
@@ -431,7 +458,7 @@ static int FDECL(grep_check_id, (const char *));
 static void FDECL(grep_show_wstack, (const char *));
 static char *FDECL(do_grep_control, (char *));
 static void NDECL(do_grep);
-static void FDECL(grep0, (FILE *, FILE *));
+static void FDECL(grep0, (FILE *, FILE *, int));
 
 static int grep_trace = 0;
 
@@ -780,7 +807,7 @@ char *buf;
 }
 #endif
 
-static void grep0(FILE *, FILE *);
+static void grep0(FILE *, FILE *, int);
 
 static void
 do_grep()
@@ -795,14 +822,26 @@ do_grep()
         exit(EXIT_FAILURE);
     }
 
-    grep0(inputfp, outputfp);
+    grep0(inputfp, outputfp, 0);
 }
 
 static void
-grep0(inputfp0, outputfp0)
+grep0(inputfp0, outputfp0, flg)
 FILE *inputfp0;
 FILE *outputfp0;
+#ifndef HAS_NO_MKSTEMP
+int flg;
+#else
+int flg UNUSED;
+#endif
 {
+#ifndef HAS_NO_MKSTEMP
+    /* if grep0 is passed FLG_TEMPFILE flag, it will
+       leave the output file open when it returns.
+       The caller will have to take care of calling
+       fclose() when it is done with the file */
+    boolean istemp = (flg & FLG_TEMPFILE) != 0;
+#endif
     char buf[16384]; /* looong, just in case */
 
     while (!feof(inputfp0) && !ferror(inputfp0)) {
@@ -842,7 +881,12 @@ FILE *outputfp0;
         exit(EXIT_FAILURE);
     }
     fclose(inputfp0);
-    fclose(outputfp0);
+#ifndef HAS_NO_MKSTEMP
+    if (istemp)
+        rewind(outputfp0);
+    else
+#endif
+        fclose(outputfp0);
     if (grep_sp) {
         Fprintf(stderr, "%d unterminated conditional level%s\n", grep_sp,
                 grep_sp == 1 ? "" : "s");
@@ -972,10 +1016,13 @@ const char *deflt_content;
        more likely to be picked than normal but it's nothing to worry about */
     (void) fputs(xcrypt(deflt_content), ofp);
 
-    tfp = getfp(DATA_TEMPLATE, "grep.tmp", WRTMODE);
-    grep0(ifp, tfp);
-    ifp = getfp(DATA_TEMPLATE, "grep.tmp", RDTMODE);
-
+    tfp = getfp(DATA_TEMPLATE, "grep.tmp", WRTMODE, FLG_TEMPFILE);
+    grep0(ifp, tfp, FLG_TEMPFILE);
+#ifndef HAS_NO_MKSTEMP
+    ifp = tfp;
+#else
+    ifp = getfp(DATA_TEMPLATE, "grep.tmp", RDTMODE, 0);
+#endif
     while ((line = fgetline(ifp)) != 0) {
         if (line[0] != '#' && line[0] != '\n')
             (void) fputs(xcrypt(line), ofp);
@@ -984,7 +1031,9 @@ const char *deflt_content;
     Fclose(ifp);
     Fclose(ofp);
 
+#ifdef HAS_NO_MKSTEMP
     delete_file(DATA_TEMPLATE, "grep.tmp");
+#endif
     return;
 }
 
@@ -1091,13 +1140,11 @@ do_date()
     char githash[BUFSZ], gitbranch[BUFSZ];
     char *c, cbuf[60], buf[BUFSZ];
     const char *ul_sfx;
-#if defined(CROSSCOMPILE) && defined(CROSSCOMPILE_HOST)
-    int steps = 0;
-    const char ind[] = "    ";
+#if defined(CROSSCOMPILE) && !defined(CROSSCOMPILE_TARGET)
     const char *xpref = "HOST_";
 #else
     const char *xpref = (const char *) 0;
-#endif /* CROSSCOMPILE && CROSSCOMPILE_HOST */
+#endif /* CROSSCOMPILE && !CROSSCOMPILE_TARGET */
 
     /* before creating date.h, make sure that xxx_GRAPHICS and
        DEFAULT_WINDOW_SYS have been set up in a viable fashion */
@@ -1199,10 +1246,10 @@ do_date()
     ul_sfx = "L";
 #endif
 
-#if !defined(CROSSCOMPILE) || defined(CROSSCOMPILE_HOST)
+#if !defined(CROSSCOMPILE) || !defined(CROSSCOMPILE_TARGET)
     Fprintf(ofp,
-            "\n#if !defined(CROSSCOMPILE) || defined(CROSSCOMPILE_HOST)\n");
-#endif /* CROSSCOMPILE || CROSSCOMPILE_HOST */
+            "\n#if !defined(CROSSCOMPILE) || !defined(CROSSCOMPILE_TARGET)\n");
+#endif /* CROSSCOMPILE || !CROSSCOMPILE_TARGET */
     if (date_via_env)
         Fprintf(ofp, "#define SOURCE_DATE_EPOCH (%lu%s) /* via getenv() */\n",
                 (unsigned long) clocktim, ul_sfx);
@@ -1223,10 +1270,18 @@ do_date()
 #endif
     Fprintf(ofp, "#define VERSION_SANITY1 0x%08lx%s\n", version.entity_count,
             ul_sfx);
+#ifndef __EMSCRIPTEN__
     Fprintf(ofp, "#define VERSION_SANITY2 0x%08lx%s\n", version.struct_sizes1,
             ul_sfx);
     Fprintf(ofp, "#define VERSION_SANITY3 0x%08lx%s\n", version.struct_sizes2,
             ul_sfx);
+#else /* __EMSCRIPTEN__ */
+    Fprintf(ofp, "#define VERSION_SANITY2 0x%08llx%s\n", version.struct_sizes1,
+            ul_sfx);
+    Fprintf(ofp, "#define VERSION_SANITY3 0x%08llx%s\n", version.struct_sizes2,
+            ul_sfx);
+#endif /* !__EMSCRIPTEN__ */
+
     Fprintf(ofp, "\n");
     Fprintf(ofp, "#define VERSION_STRING \"%s\"\n", version_string(buf, "."));
     Fprintf(ofp, "#define VERSION_ID \\\n \"%s\"\n",
@@ -1238,13 +1293,15 @@ do_date()
         Fprintf(ofp, "#define NETHACK_GIT_BRANCH \"%s\"\n", gitbranch);
     }
     if (xpref && get_gitinfo(githash, gitbranch)) {
-        Fprintf(ofp, "#else /* !CROSSCOMPILE || CROSSCOMPILE_HOST */\n");
+        Fprintf(ofp, "#else /* !CROSSCOMPILE || !CROSSCOMPILE_TARGET */\n");
         Fprintf(ofp, "#define NETHACK_%sGIT_SHA \"%s\"\n",
                 xpref, githash);
         Fprintf(ofp, "#define NETHACK_%sGIT_BRANCH \"%s\"\n",
                 xpref, gitbranch);
     }
-    Fprintf(ofp, "#endif /* !CROSSCOMPILE || CROSSCOMPILE_HOST */\n");
+#if !defined(CROSSCOMPILE) || !defined(CROSSCOMPILE_TARGET)
+    Fprintf(ofp, "#endif /* !CROSSCOMPILE || !CROSSCOMPILE_TARGET */\n");
+#endif
     Fprintf(ofp, "\n");
 #ifdef AMIGA
     {
@@ -1752,10 +1809,13 @@ do_dungeon()
     }
     Fprintf(ofp, "%s", Dont_Edit_Data);
 
-    tfp = getfp(DATA_TEMPLATE, "grep.tmp", WRTMODE);
-    grep0(ifp, tfp);
-    ifp = getfp(DATA_TEMPLATE, "grep.tmp", RDTMODE);
-
+    tfp = getfp(DATA_TEMPLATE, "grep.tmp", WRTMODE, FLG_TEMPFILE);
+    grep0(ifp, tfp, FLG_TEMPFILE);
+#ifndef HAS_NO_MKSTEMP
+    ifp = tfp;
+#else
+    ifp = getfp(DATA_TEMPLATE, "grep.tmp", RDTMODE, 0);
+#endif
     while ((line = fgetline(ifp)) != 0) {
         SpinCursor(3);
 
@@ -1769,7 +1829,9 @@ do_dungeon()
     Fclose(ifp);
     Fclose(ofp);
 
+#ifdef HAS_NO_MKSTEMP
     delete_file(DATA_TEMPLATE, "grep.tmp");
+#endif
     return;
 }
 
@@ -1872,7 +1934,7 @@ void
 do_monstr()
 {
     struct permonst *ptr;
-    int i, j;
+    int i;
 
     /* Don't break anything for ports that haven't been updated. */
     printf("DEPRECATION WARNINGS:\n");
@@ -1914,7 +1976,7 @@ do_monstr()
 
     /* output derived monstr values as a comment */
     Fprintf(ofp, "\n\n/*\n * default mons[].difficulty values\n *\n");
-    for (ptr = &mons[0], j = 0; ptr->mlet; ptr++) {
+    for (ptr = &mons[0]; ptr->mlet; ptr++) {
         i = mstrength(ptr);
         Fprintf(ofp, "%-24s %2u\n", ptr->mname, (unsigned int) (uchar) i);
     }

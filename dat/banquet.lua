@@ -18,7 +18,7 @@ des.map({ halign = "center", valign = "center", map = [[
     ......................................................    
     ......................................................    
 ]]});
-des.region({ region={00,00,61,07},lit=1,type="throne", prefilled=1 })
+des.region({ region={00,00,61,07},lit=1,type="throne", filled=2 })
 
 -- Features
 des.levregion({ region = {30,01,30,01}, exclude = {0,0,0,0}, type="branch" })

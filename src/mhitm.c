@@ -409,6 +409,9 @@ register struct monst *magr, *mdef;
             if (distmin(magr->mx, magr->my, mdef->mx, mdef->my) > 1) {
                 /* D: Do a ranged attack here! */
                 strike = thrwmm(magr, mdef);
+                if (strike)
+                    /* We don't really know if we hit or not; pretend we did. */
+                    res[i] |= MM_HIT;
                 if (DEADMONSTER(mdef))
                     res[i] = MM_DEF_DIED;
                 if (DEADMONSTER(magr))
@@ -1229,6 +1232,7 @@ int dieroll;
         }
         /* only potions damage resistant players in destroy_item */
         tmp += destroy_mitem(mdef, POTION_CLASS, AD_FIRE);
+        ignite_items(mdef->minvent);
         break;
     case AD_COLD:
         if (cancelled) {

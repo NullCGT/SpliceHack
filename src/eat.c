@@ -1603,7 +1603,7 @@ const char *mesg;
         /* charge for one at pre-eating cost */
         tin = costly_tin(COST_OPEN);
 
-        if (tintxts[r].nut < 0 && !(Race_if(PM_GHOUL) || is_ghoul(g.youmonst.data)) /* rotten */
+        if (tintxts[r].nut < 0 && !(Race_if(PM_GHOUL) || is_ghoul(g.youmonst.data))) /* rotten */
             make_vomiting((long) rn1(15, 10), FALSE);
         else
             lesshungry(tintxts[r].nut);

@@ -3900,8 +3900,8 @@ struct permonst _mons2[] = {
         A(ATTK(AT_WEAP, AD_PHYS, 8, 4), ATTK(AT_WEAP, AD_PHYS, 8, 4), NO_ATTK,
           NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(WT_HUMAN, 400, MS_SELL, MZ_HUMAN), 0, 0,
-        M1_HUMANOID | M1_OMNIVORE, M2_NOPOLY | M2_PEACEFUL
-                                       | M2_STRONG | M2_COLLECT | M2_MAGIC,
+        M1_HUMANOID | M1_OMNIVORE | M1_BREATHLESS, 
+        M2_NOPOLY | M2_PEACEFUL | M2_STRONG | M2_COLLECT | M2_MAGIC,
         M3_INFRAVISIBLE, 0, 23, CLR_BLUE),
     MON("guard", S_HUMAN, LVL(12, 12, 10, 40, 10), G_NOGEN,
         A(ATTK(AT_WEAP, AD_PHYS, 4, 10),

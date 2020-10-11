@@ -22,6 +22,7 @@ Bug Fixes
 - Fixed ghouls getting less powerful when weak.
 - Prevent banquet hall chest from spawning inside a wall.
 - Fixed a bug where using credit for shopkeeper services could cause issues.
+- Prevent extraplanar merchants from dying to fumaroles in the city of brass.
 
 
                             Version 0.8.1

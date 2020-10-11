@@ -378,6 +378,9 @@ boolean on, silently;
         case DISPLACED:
             mon->mextrinsics |= MR2_DISPLACED;
             break;
+        case TELEPAT:
+            mon->mextrinsics |= MR2_TELEPATHY;
+            break;
         /* properties handled elsewhere */
         case ANTIMAGIC:
         case REFLECTING:
@@ -385,8 +388,6 @@ boolean on, silently;
         /* properties which have no effect for monsters */
         case CLAIRVOYANT:
         case STEALTH:
-        case TELEPAT:
-            break;
         /* properties which should have an effect but aren't implemented */
         case LEVITATION:
             break;
@@ -435,6 +436,9 @@ boolean on, silently;
             break;
         case TELEPORT:
             mon->mextrinsics &= ~(MR2_TELEPORT);
+            break;
+        case TELEPAT:
+            mon->mextrinsics &= ~(MR2_TELEPATHY);
             break;
         case FIRE_RES:
         case COLD_RES:
@@ -504,8 +508,7 @@ register struct monst *mon;
 }
 
 /*
- * weapons are handled separately;
- * rings and eyewear aren't used by monsters
+ * eyewear isn't used by monsters
  */
 
 /* Wear the best object of each type that the monster has.  During creation,

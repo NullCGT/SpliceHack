@@ -366,8 +366,8 @@ register struct monst *mtmp;
      */
     /* Intelligent chaotic weapons (Stormbringer) want blood */
     if (is_safemon(mtmp) && !g.context.forcefight) {
-        if (!uwep || uwep->oartifact != ART_STORMBRINGER
-            || uwep->oartifact != ART_WAR_S_SWORD) {
+        if (!uwep || (uwep->oartifact != ART_STORMBRINGER
+            && uwep->oartifact != ART_WAR_S_SWORD)) {
             /* There are some additional considerations: this won't work
              * if in a shop or Punished or you miss a random roll or
              * if you can walk thru walls and your pet cannot (KAA) or

@@ -778,6 +778,8 @@ boolean new_game; /* false => restoring an old game */
                 ? (g.urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)
                 : currentgend != flags.initgend))
         Sprintf(eos(buf), " %s", genders[currentgend].adj);
+    if (new_game || flags.orientation != flags.initorientation)
+        Sprintf(eos(buf), " %s", orientations[flags.orientation].adj);
 
     pline(new_game ? "%s %s, welcome to SpliceHack!  You are a%s %s %s."
                    : "%s %s, the%s %s %s, welcome back to SpliceHack!",

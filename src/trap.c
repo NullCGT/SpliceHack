@@ -2633,7 +2633,7 @@ register struct monst *mtmp;
                         surface(mtmp->mx, mtmp->my));
 
             if (resists_fire(mtmp)) {
-                if (in_sight) {
+                if (in_sight && !Is_firelevel(&u.uz)) {
                     shieldeff(mtmp->mx, mtmp->my);
                     pline("%s is uninjured.", Monnam(mtmp));
                 }

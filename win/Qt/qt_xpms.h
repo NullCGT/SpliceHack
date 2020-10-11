@@ -3,7 +3,7 @@
 // In alhpabetical order by array name.  Probably not the best ordering...
 
 /* clang-format off */
-#if 0   // blank icon for use as placeholder
+#if 1   // blank icon for use as placeholder
 /* XPM */
 static const char *blank_xpm[] = {
 /* width height ncolors chars_per_pixel */

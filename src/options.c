@@ -1351,7 +1351,7 @@ char *op;
         if (parse_role_opts(optidx, negated, allopt[optidx].name, opts, &op)) {
             if ((flags.initorientation = str2orientation(op)) == ROLE_NONE) {
                 config_error_add("Unknown %s '%s'", allopt[optidx].name, op);
-                flags.orientation = flags.initorientation = rn2(3);;
+                flags.orientation = flags.initorientation = rn2(NUM_ORIENTATIONS);;
                 return optn_err;
             } else
                 flags.orientation = flags.initorientation;

@@ -1403,6 +1403,9 @@ boolean ghostly;
             debugpline1("Automatically extinguished %s.",
                         makeplural(mons[mndx].mname));
         }
+        if (uwep && uwep->oartifact == ART_WAR_S_SWORD) {
+            pline("The sinister blade in your %s grows warmer.", body_part(HAND));
+        }
         g.mvitals[mndx].mvflags |= G_EXTINCT;
     }
     return result;

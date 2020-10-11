@@ -17,6 +17,9 @@ Balance
       rations are replaced by tins.
   - TODO: Penalize ghouls for being satiated.
 
+Miscelaneous
+- War's sword displays a message if a species goes extinct while it is held.
+
 Bug Fixes
 - Fixed improper skill attribution for two-weaponing.
 - Fixed ghouls getting less powerful when weak.

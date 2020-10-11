@@ -50,7 +50,7 @@ des.monster({id="storm giant", x=61, y=03,name="Vizier Dophomor",peaceful=0})
 
 -- Treasure
 des.object({id="chest", x=61, y=03})
-des.object({id="chest", x=61, y=06})
+des.object({id="chest", x=61, y=05})
 des.object("keg")
 des.object("keg")
 des.object("keg")

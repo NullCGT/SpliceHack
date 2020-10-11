@@ -20,6 +20,7 @@ Balance
 Bug Fixes
 - Fixed improper skill attribution for two-weaponing.
 - Fixed ghouls getting less powerful when weak.
+- Prevent banquet hall chest from spawning inside a wall.
 
 
                             Version 0.8.1

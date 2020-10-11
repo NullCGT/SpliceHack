@@ -676,10 +676,10 @@ $(O)makedefs.o:  $(CONFIG_H)	$(PERMONST_H)	   $(INCL)/objclass.h \
 #==========================================
 
 $(U)recover.exe:   $(RECOVOBJS)
-	$(LINK) $(LFLAGS) -o$@ $(O)recover.o
+	$(LINK) $(LFLAGS) -DNO_MAIN -o$@ $(O)recover.o
 
 $(O)recover.o:   $(CONFIG_H) $(U)recover.c
-	$(CC) $(cflags) -DNO_MAIN -o$@ $(U)recover.c
+	$(CC) $(cflags) -o$@ $(U)recover.c
 
 #==========================================
 #  Header file moves required for tile support

@@ -4340,7 +4340,8 @@ shk_offer_price(slang, charge, shkp)
 	/* Charge the customer */
 	charge = check_credit (charge, shkp); /* Deduct the credit first */
 
-	money2mon(shkp, charge);
+    if (charge)
+	    money2mon(shkp, charge);
 	bot();
 
 	return(TRUE);

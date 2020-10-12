@@ -35,6 +35,7 @@ Bug Fixes
 - Prevent extraplanar merchants from dying to fumaroles in the city of brass.
 - Prevent archons from going extinct due to sin spawning during a fallen angel ascension.
 - Fix monsters not gaining telepathy from items that should grant it.
+- Fixed Yeenoghu entrance typo.
 
 
                             Version 0.8.1

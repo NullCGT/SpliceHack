@@ -277,7 +277,7 @@ Kostchtchie is itching for a fight.]],
       Yeenoghu = {
          synopsis = "[Yeenoghu appears!]",
          output = "menu",
-         text = [[The hulking humanoid that stands before you is covered nearly three meters tall
+         text = [[The hulking humanoid that stands before you is nearly three meters tall
 and has the head of a hyena. In one hand it grips a  flail, and the other hand
 crackles with magical energy. When it opens its mouth, the unholy din that
 emerges could charitably be called a laugh.

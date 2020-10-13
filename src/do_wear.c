@@ -830,9 +830,9 @@ Amulet_on()
         /* Don't use same message as polymorph */
         if (orig_sex != poly_gender()) {
             makeknown(AMULET_OF_CHANGE);
-            You("are suddenly very %s! (%d)",
+            You("are suddenly very %s!",
                 poly_gender() == GEND_F ? "feminine" 
-                    : (poly_gender() == GEND_M ? "masculine" : "androgynous"), flags.gender);
+                    : (poly_gender() == GEND_M ? "masculine" : "androgynous"));
             g.context.botl = 1;
         } else
             /* already polymorphed into single-gender monster; only

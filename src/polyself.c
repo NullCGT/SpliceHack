@@ -252,9 +252,9 @@ change_sex()
     if (!already_polyd
         || (!is_male(g.youmonst.data) && !is_female(g.youmonst.data)
             && !is_neuter(g.youmonst.data)))
-        flags.gender = !flags.gender;
+        flags.gender = (flags.gender == ROLE_GENDERS-1) ? 0 : flags.gender + 1;
     if (already_polyd) /* poly'd: also change saved sex */
-        u.ugender = !u.ugender;
+        u.ugender = (u.ugender == ROLE_GENDERS-1) ? 0 : u.ugender + 1;
     max_rank_sz(); /* [this appears to be superfluous] */
     if ((already_polyd ? u.ugender : flags.gender == GEND_F) && g.urole.name.f)
         Strcpy(g.pl_character, g.urole.name.f);

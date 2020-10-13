@@ -2448,9 +2448,8 @@ role_init()
 
     /* Check for a valid gender.  If new game, check both initgend
      * and female.  On restore, assume flags.gender is correct. */
-    flags.gender = flags.initgend;
-
     if (flags.pantheon == -1) { /* new game */
+        flags.gender = flags.initgend;
         if (!validgend(flags.initrole, flags.initrace, flags.gender))
             flags.gender = !flags.gender;
     }

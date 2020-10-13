@@ -1671,7 +1671,8 @@ register const char *let, *word;
                  && !canwearobj(otmp, &dummymask, FALSE))
              /* or armor with 'P' or 'R' or accessory with 'W' or 'T' */
              || ((putting_on(word) || taking_off(word))
-                 && ((*let == ARMOR_CLASS) ^ (otmp->oclass == ARMOR_CLASS)))
+                 && ((*let == ARMOR_CLASS) ^ (otmp->oclass == ARMOR_CLASS
+                         || otmp->otyp == PUMPKIN)))
              /* or unsuitable items rubbed on known touchstone */
              || (!strncmp(word, "rub on the stone", 16)
                  && *let == GEM_CLASS && otmp->dknown

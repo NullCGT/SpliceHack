@@ -26,6 +26,8 @@ QOL
 
 Miscelaneous
 - War's sword displays a message if a species goes extinct while it is held.
+- Goristros resist fire.
+- Gnomish psychics resist psychic damage.
 
 Bug Fixes
 - Fixed improper skill attribution for two-weaponing.

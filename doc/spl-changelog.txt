@@ -23,6 +23,8 @@ Balance
 QOL
 - The sparkle animation that plays when monsters step on fire traps is automatically disabled
   on the plane of fire and city of brass.
+- Wear pumpkins with 'W' (entrez)
+- Start of game displays orientation (entrez)
 
 Miscelaneous
 - War's sword displays a message if a species goes extinct while it is held.

@@ -31,10 +31,17 @@ teenage NetHack ninja turtle
 white hand
 +Ben Drowned
 +Jeff
-Rake
++Solomon
 
-# Stuff that should never be in NetHack
+# Bad Gaming Things
 DLC
+alpha gamer
+
+# BSG
+cylon
+
+# Angband
+clear icky thing
 
 # Anime
 catgirl
@@ -63,11 +70,6 @@ lusus
 # Bionicle
 rahkshi
 
-# Slex
-novice light wall
-moldy potato
-bundler
-
 # Bioshock
 splicer
 
@@ -77,10 +79,8 @@ _golden witch
 tiny bomb
 
 # SSBM
-telekinetic swordsman
-fun-canceller
 happy feet
-wobbler
+dashdancer
 
 # Dwarf Fortress
 flaming dwarf
@@ -88,7 +88,6 @@ tantrum-throwing dwarf
 drunken cat
 
 # SLASH'EM
-shotgun-wielding shopkeeper
 bunny
 bat from Hell
 shoggoth

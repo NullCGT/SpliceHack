@@ -3459,6 +3459,7 @@ boolean by_you;
     else
         /* can use a 0 in the list to default to the base material */
         obj->material = objects[obj->otyp].oc_material;
+    obj->owt = weight(obj);
     if (origmat != obj->material) {
         /* Charge for the cost of the object */
         if (by_you)

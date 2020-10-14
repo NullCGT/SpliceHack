@@ -40,6 +40,7 @@ Bug Fixes
 - Prevent archons from going extinct due to sin spawning during a fallen angel ascension.
 - Fix monsters not gaining telepathy from items that should grant it.
 - Fixed Yeenoghu entrance typo.
+- Fixed object weight not updating when material was warped.
 
 
                             Version 0.8.1

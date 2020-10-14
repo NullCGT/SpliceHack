@@ -773,9 +773,13 @@ boolean new_game; /* false => restoring an old game */
     *buf = '\0';
     if (new_game || u.ualignbase[A_ORIGINAL] != u.ualignbase[A_CURRENT])
         Sprintf(eos(buf), " %s", align_str(u.ualignbase[A_ORIGINAL]));
-    if (!g.urole.name.f
+    if (new_game || flags.orientation != flags.initorientation)
+        Sprintf(eos(buf), " %s", orientations[flags.orientation].adj);
+    if ((!g.urole.name.f || !g.urole.name.n)
         && (new_game
-                ? (g.urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)
+                ? ((g.urole.allow & ROLE_GENDMASK) != (ROLE_MALE)
+                    && (g.urole.allow & ROLE_GENDMASK) != (ROLE_FEMALE)
+                    && (g.urole.allow & ROLE_GENDMASK) != (ROLE_NEUTER))
                 : currentgend != flags.initgend))
         Sprintf(eos(buf), " %s", genders[currentgend].adj);
 

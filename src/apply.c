@@ -498,9 +498,10 @@ struct obj *obj;
                 pline("You draw The Hierophant!");
                 if (levl[u.ux][u.uy].typ != STAIRS &&
                       levl[u.ux][u.uy].typ != LADDER &&
-                      levl[u.ux][u.uy].typ != AIR) {
-                    levl[u.ux][u.uy].typ = ALTAR;
+                      levl[u.ux][u.uy].typ != AIR &&
+                      levl[u.ux][u.uy].typ != ALTAR) {
                     pline("The %s beneath you reshapes itself into an altar!", surface(u.ux, u.uy));
+                    levl[u.ux][u.uy].typ = ALTAR;
                 } else {
                     You("feel a twinge of anxiety.");
                 }

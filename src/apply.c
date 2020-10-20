@@ -427,7 +427,7 @@ struct obj *obj;
                 draws = 0;
                 break;
             case 6:
-                pline("You draw Judgement...");
+                pline("You draw Judgment...");
                 punish(obj);
                 break;
             case 7:
@@ -500,7 +500,7 @@ struct obj *obj;
                       levl[u.ux][u.uy].typ != LADDER &&
                       levl[u.ux][u.uy].typ != AIR) {
                     levl[u.ux][u.uy].typ = ALTAR;
-                    pline("The %s beneath you twists reshapes itself into an altar!", surface(u.ux, u.uy));
+                    pline("The %s beneath you reshapes itself into an altar!", surface(u.ux, u.uy));
                 } else {
                     You("feel a twinge of anxiety.");
                 }

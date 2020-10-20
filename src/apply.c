@@ -325,8 +325,11 @@ struct obj *stethoscope;
 
 static const char hollow_str[] = "a hollow sound.  This must be a secret %s!";
 
-static NEARDATA const char *cardnames[] = { "the Tower", "the Wheel of Fortune", "the Devil", "the Fool", "Death", "Judgment", "the Emperor", "the Hermit", "the Hanged Man", "Justice", "Temperance", "the Lovers", "the Magician", "Strength", "the High Priestess", "the Hierophant", "the Empress", "the Chariot", "the Sun", "the Moon", "the Star", "the World" };
+static NEARDATA const char *tarotnames[] = { "the Tower", "the Wheel of Fortune", "the Devil", "the Fool", "Death", "Judgment", "the Emperor", "the Hermit", "the Hanged Man", "Justice", "Temperance", "the Lovers", "the Magician", "Strength", "the High Priestess", "the Hierophant", "the Empress", "the Chariot", "the Sun", "the Moon", "the Star", "the World" };
 static const int GOOD_CARDS = 12;
+
+static NEARDATA const char *cardnames[] = { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king" };
+static NEARDATA const char *cardsuits[] = { "diamonds", "hearts", "clubs", "spades" };
 
 void
 use_deck(obj)
@@ -364,9 +367,9 @@ struct obj *obj;
 
         /* if blessed, indicate the luck value directly. */
         if (goodcards && Luck > 0)
-            You("shuffle the deck %d times.", Luck);
-        else
-            You("don't bother shuffling the deck.");
+            pline_The("%s is the %s of %s.", Luck < 5 ? "kicker" : "high card",
+                    cardnames[Luck-1], cardsuits[rn2(4)]);
+
         return;
     }
 
@@ -393,7 +396,7 @@ struct obj *obj;
         if (Blind)
             You("draw a card.");
         else
-            You("draw %s%s", cardnames[index-1], index < GOOD_CARDS ? "..." : "!");
+            You("draw %s%s", tarotnames[index-1], index < GOOD_CARDS ? "..." : "!");
         switch(index) {
             case 1: /* The Tower */
                 explode(u.ux, u.uy, 15, rnd(30), TOOL_CLASS, EXPL_MAGICAL);

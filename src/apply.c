@@ -340,10 +340,6 @@ struct obj *obj;
     struct monst *mtmp;
     struct obj *otmp;
 
-    if (Blind) {
-        You("can't play cards in the dark!");
-        return;
-    }
     if (obj->blessed || Role_if(PM_CARTOMANCER)) {
         goodcards = TRUE;
     } else if (obj->cursed) {
@@ -351,23 +347,30 @@ struct obj *obj;
     }
 
     if (obj->otyp == PLAYING_CARD_DECK) {
-        if ((badcards && Luck == 13) || Luck <= 0) {
-            pline("You draw a hand of five cards. It's not very good...");
-        } else if ((badcards && Luck >= 5) || Luck < 5) {
-            pline("You draw a hand of five cards. Two pair!");
-        } else if ((badcards && Luck > 0) || Luck < 13) {
-            pline("You draw a hand of five cards. Full house!");
-        } else if ((badcards && Luck <= 0) || Luck == 13) {
-            pline("You draw a hand of five cards. Wow, a royal flush!");
+        int card_luck;
+        card_luck = badcards ? 13 - Luck : Luck;
+
+        You("draw a hand of five cards.");
+        if (Blind) {
+            pline("No telling how good it is...");
+        } else if (card_luck <= 0) {
+            pline("It's not very good...");
+        } else if (card_luck < 5) {
+            pline("Two pair!");
+        } else if (card_luck < 13) {
+            pline("Full house!");
+        } else if (card_luck == 13) {
+            pline("Wow, a royal flush!");
         }
         /* if blessed, indicate the luck value directly. */
         if (goodcards && Luck > 0) {
-            pline("You shuffle the deck %d times.", Luck);
+            You("shuffle the deck %d times.", Luck);
         } else {
-            pline("You don't bother shuffling the deck.");
+            You("don't bother shuffling the deck.");
         }
         return;
     }
+
     /* deck of fate */
     makeknown(obj->otyp);
     getlin("How many cards will you draw?", buf);
@@ -376,14 +379,10 @@ struct obj *obj;
     if (draws > 5)
         draws = 5;
     if (strlen(buf) <= 0L || draws <= 0L) {
-        pline("You decide not to try your luck.");
-        pline("The pack of cards vanishes in a puff of smoke.");
-        useup(obj);
-        return;
+        You("decide not to try your luck.");
+        goto usedeck;
     }
-    pline("You begin to draw from the deck of fate...");
-    /* It would make sense not to give messages if blind, but that would make
-       this already long string of spaghetti code even longer :( */
+    You("begin to draw from the deck of fate...");
     for ( ; draws > 0; draws--) {
         index = rnd(22);
         /* wishes and disasters can be modified through BCU */
@@ -392,7 +391,10 @@ struct obj *obj;
         } else if (goodcards && index < 22) {
           index++;
         }
-        pline("You draw %s%s", cardnames[index-1], index < GOOD_CARDS ? "..." : "!");
+        if (Blind)
+            You("draw a card.");
+        else
+            You("draw %s%s", cardnames[index-1], index < GOOD_CARDS ? "..." : "!");
         switch(index) {
             case 1: /* The Tower */
                 explode(u.ux, u.uy, 15, rnd(30), TOOL_CLASS, EXPL_MAGICAL);
@@ -400,7 +402,7 @@ struct obj *obj;
                 (void) cancel_monst(&g.youmonst, obj, TRUE, FALSE, TRUE);
                 break;
             case 2: /* The Wheel of Fortune */
-                pline("Two cards flip out of the deck.");
+                pline("Two more cards flip out of the deck.");
                 draws += 2;
                 break;
             case 3: /* The Devil */
@@ -408,7 +410,7 @@ struct obj *obj;
                     pline("Moloch's visage on the card grins at you.");
                 if ((pm = dlord(A_NONE)) != NON_PM) {
                     mtmp = makemon(&mons[pm], u.ux, u.uy, NO_MM_FLAGS);
-                    if (mtmp)
+                    if (!Blind && mtmp)
                         pline("%s appears from a cloud of noxious smoke!", Monnam(mtmp));
                     else
                         pline("Something stinks!");
@@ -416,13 +418,16 @@ struct obj *obj;
                 draws = 0;
                 break;
             case 4: /* The Fool */
-                pline("You feel foolish!");
+                You_feel("foolish!");
                 (void) adjattrib(A_INT, -rnd(3), FALSE);
                 (void) adjattrib(A_WIS, -rnd(3), FALSE);
                 forget_objects(10);
                 break;
             case 5: /* Death */
-                pline("The Grim Reaper gently sets their hand upon the deck, stopping your draws.");
+                if (!Blind)
+                    pline("The Grim Reaper gently sets their hand upon the deck, stopping your draws.");
+                else
+                    pline("A bony hand gently stops you from drawing further.");
                 makemon(&mons[PM_GRIM_REAPER], u.ux, u.uy, NO_MM_FLAGS);
                 draws = 0;
                 break;
@@ -430,7 +435,6 @@ struct obj *obj;
                 punish(obj);
                 break;
             case 7: /* The Emperor */
-                pline("You feel worthless.");
                 attrcurse();
                 attrcurse();
                 break;
@@ -441,11 +445,15 @@ struct obj *obj;
                 aggravate();
                 break;
             case 9: /* The Hanged Man */
-                pline("A hangman arrives!");
                 mtmp = makemon(&mons[PM_ROPE_GOLEM], u.ux, u.uy, NO_MM_FLAGS);
+                if (!Blind && mtmp)
+                    pline("A hangman arrives!");
                 break;
             case 10: /* Justice */
-                pline("You are frozen by the power of Justice!");
+                if (!Blind)
+                    You("are frozen by the power of Justice!");
+                else
+                    You("can't seem to move!");
                 nomul(-(rn1(30, 20)));
                 g.multi_reason = "frozen by fate";
                 g.nomovemsg = You_can_move_again;
@@ -454,7 +462,6 @@ struct obj *obj;
                 /* traditionally a good card? */
                 destroy_arm(some_armor(&g.youmonst));
                 destroy_arm(some_armor(&g.youmonst));
-                pline("That ought to teach you.");
                 break;
             /* cards before this point are bad, after this are good */
             case 12: /* The Lovers */
@@ -473,16 +480,15 @@ struct obj *obj;
                 break;
             case 13: /* The Magician */
                 if (!Blind)
-                    pline("The figure on the card winks!");
+                    pline_The("figure on the card winks.");
                 u.uenmax += rn1(20,10);
                 u.uen = u.uenmax;
                 break;
             case 14: /* Strength */
                 (void) adjattrib(A_STR, rn1(5, 4), FALSE);
-                You("feel impossibly strong!");
                 break;
             case 15: /* The High Priestess */
-                pline("You feel more devout.");
+                You_feel("more devout.");
                 adjalign(10);
                 break;
             case 16: /* The Hierophant */
@@ -490,19 +496,23 @@ struct obj *obj;
                       levl[u.ux][u.uy].typ != LADDER &&
                       levl[u.ux][u.uy].typ != AIR &&
                       levl[u.ux][u.uy].typ != ALTAR) {
-                    pline("The %s beneath you reshapes itself into an altar!", surface(u.ux, u.uy));
+                    if (!Blind)
+                        pline_The("%s beneath you reshapes itself into an altar!", surface(u.ux, u.uy));
+                    else
+                        You_feel("the %s beneath you shift and reform!", surface(u.ux, u.uy));
                     levl[u.ux][u.uy].typ = ALTAR;
                 } else
-                    You("feel a twinge of anxiety.");
+                    You_feel("a twinge of anxiety.");
                 break;
             case 17: /* The Empress */
                 if (levl[u.ux][u.uy].typ != STAIRS &&
                       levl[u.ux][u.uy].typ != LADDER &&
                       levl[u.ux][u.uy].typ != AIR) {
-                    pline("Your throne arrives.");
+                    if (!Blind)
+                        Your("throne arrives.");
                     levl[u.ux][u.uy].typ = THRONE;
                 } else
-                    You("feel quite lordly.");
+                    You_feel("quite lordly.");
                 break;
             case 18: /* The Chariot */
                 unrestrict_weapon_skill(P_RIDING);
@@ -512,12 +522,12 @@ struct obj *obj;
                     (void) initedog(mtmp);
                     otmp = mksobj(SADDLE, FALSE, FALSE);
                     put_saddle_on_mon(otmp, mtmp);
-                    Your("steed arrives!");
-                } else
-                    pline("It is time to ride to victory!");
+                    if (!Blind)
+                        Your("steed arrives!");
+                }
                 break;
             case 19: /* The Sun */
-                pline("You are bathed in warmth!");
+                You("are bathed in warmth.");
                 /* as praying */
                 if (!(HProtection & INTRINSIC)) {
                     HProtection |= FROMOUTSIDE;
@@ -530,11 +540,11 @@ struct obj *obj;
                 if (Luck > 0) {
                     otmp = mksobj(MOONSTONE, FALSE, FALSE);
                     pline(Blind ? "Something phases through your foot." 
-                        : "An object shimmers into existence at your feet!");
+                        : "An object shimmers into existence at your feet.");
                     dropy(otmp);
                 } else {
                     change_luck(3);
-                    pline("Your luck is beginning to change...");
+                    Your("luck is beginning to change...");
                 }
                 break;
             case 21: /* The Star */
@@ -544,10 +554,12 @@ struct obj *obj;
                 makewish();
                 break;
             default:
-                pline("You draw the twenty-three of cups, apparently.");
+                impossible("use_deck: drew out-of-bounds tarot card");
         }
     }
-    pline("The pack of cards vanishes in a puff of smoke.");
+
+usedeck:
+    pline_The("pack of cards vanishes in a puff of smoke.");
     useup(obj);
     return;
 }

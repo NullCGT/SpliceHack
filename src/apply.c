@@ -371,7 +371,7 @@ struct obj *obj;
          * kicker (depending on the hand) corresponds to the current value of
          * Luck, with a one meaning Luck == 1 and a king meaning Luck == 13.
          */
-        if (goodcards && Luck > 0)
+        if (goodcards && Luck > 0 && !Blind)
             pline_The("%s is the %s of %s.", Luck < 5 ? "kicker" : "high card",
                     cardnames[Luck-1], cardsuits[rn2(4)]);
 
@@ -400,9 +400,10 @@ struct obj *obj;
         }
         if (Blind)
             You("draw a card.");
-        else
+        else {
             /* Good cards end with `!', bad cards end with `...' */
             You("draw %s%s", tarotnames[index-1], index < GOOD_CARDS ? "..." : "!");
+        }
         switch(index) {
             case 1: /* The Tower */
                 explode(u.ux, u.uy, 15, rnd(30), TOOL_CLASS, EXPL_MAGICAL);

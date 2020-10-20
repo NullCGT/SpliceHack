@@ -351,23 +351,22 @@ struct obj *obj;
         card_luck = badcards ? 13 - Luck : Luck;
 
         You("draw a hand of five cards.");
-        if (Blind) {
+        if (Blind) 
             pline("No telling how good it is...");
-        } else if (card_luck <= 0) {
+        else if (card_luck <= 0) 
             pline("It's not very good...");
-        } else if (card_luck < 5) {
+        else if (card_luck < 5)
             pline("Two pair!");
-        } else if (card_luck < 13) {
+        else if (card_luck < 13) 
             pline("Full house!");
-        } else if (card_luck == 13) {
+        else if (card_luck == 13)
             pline("Wow, a royal flush!");
-        }
+
         /* if blessed, indicate the luck value directly. */
-        if (goodcards && Luck > 0) {
+        if (goodcards && Luck > 0)
             You("shuffle the deck %d times.", Luck);
-        } else {
+        else
             You("don't bother shuffling the deck.");
-        }
         return;
     }
 

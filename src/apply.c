@@ -359,7 +359,7 @@ struct obj *obj;
             pline("Two pair!");
         else if (card_luck < 13) 
             pline("Full house!");
-        else if (card_luck == 13)
+        else if (card_luck >= 13)
             pline("Wow, a royal flush!");
 
         /* if blessed, indicate the luck value directly. */

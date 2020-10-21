@@ -328,7 +328,7 @@ static const char hollow_str[] = "a hollow sound.  This must be a secret %s!";
 static NEARDATA const char *tarotnames[] = { "the Tower", "the Wheel of Fortune", "the Devil", "the Fool", "Death", "Judgment", "the Emperor", "the Hermit", "the Hanged Man", "Justice", "Temperance", "the Lovers", "the Magician", "Strength", "the High Priestess", "the Hierophant", "the Empress", "the Chariot", "the Sun", "the Moon", "the Star", "the World" };
 static const int GOOD_CARDS = 12;
 
-static NEARDATA const char *cardnames[] = { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king" };
+static NEARDATA const char *cardnames[] = { "ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king" };
 static NEARDATA const char *cardsuits[] = { "diamonds", "hearts", "clubs", "spades" };
 
 void

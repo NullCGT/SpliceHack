@@ -364,7 +364,7 @@ struct obj *obj;
         else if (card_luck < 13) 
             pline("Full house!");
         else if (card_luck >= 13)
-            pline("Wow, a royal flush!");
+            pline("Wow, a straight flush!");
 
         /* 
          * If blessed, indicate the luck value directly.  The high card or

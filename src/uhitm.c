@@ -969,6 +969,9 @@ int dieroll;
             Strcpy(saved_oname, cxname(obj));
         else
             Strcpy(saved_oname, bare_artifactname(obj));
+        if (obj->opoisoned && is_poisonable(obj)) {
+            ispoisoned = TRUE;
+        }
         if (obj->oclass == WEAPON_CLASS || is_weptool(obj)
             || obj->oclass == GEM_CLASS || obj->otyp == HEAVY_IRON_BALL) {
             /* is it not a melee weapon? */
@@ -1123,8 +1126,6 @@ int dieroll;
               			    }
                         train_weapon_skill = (tmp > 0);
                     }
-                    if (obj->opoisoned && is_poisonable(obj))
-                        ispoisoned = TRUE;
                 }
                 if (thrown == HMON_THROWN
                     && obj->oartifact == ART_GAE_BULG && !noncorporeal(mdat) &&
@@ -1496,7 +1497,7 @@ int dieroll;
     		hittxt = TRUE;
   	}
 
-    if (ispoisoned) {
+    if (obj && ispoisoned) {
         int nopoison = (10 - (obj->owt / 10));
 
         if (nopoison < 2)
@@ -1514,7 +1515,9 @@ int dieroll;
             unpoisonmsg = FALSE;
         }
 
-        if (obj && !rn2(nopoison)) {
+        if (obj && obj->opoisoned == POT_OIL) {
+            obj->opoisoned = FALSE;
+        } else if (obj && !rn2(nopoison)) {
             /* remove poison now in case obj ends up in a bones file */
             obj->opoisoned = FALSE;
             /* defer "obj is no longer poisoned" until after hit message */

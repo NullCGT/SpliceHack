@@ -2057,8 +2057,15 @@ int how;
             if (obj->lamplit)
                 explode_oil(obj, u.ux, u.uy);
             else if (injection) {
-                if (!Blind) You("see a spark catch on some oil!");
-                explode(u.ux, u.uy, 11, d(4, 4), BURNING_OIL, EXPL_FIERY);
+                You("catch on fire!");
+                if (completelyburns(g.youmonst.data)) {
+                    rehumanize();
+                    break;
+                } else if (Fire_resistance) {
+                    pline_The("fire doesn't feel hot!");
+                } else {
+                    losehp(d(2, 4), "flaming weapon", KILLED_BY_AN);
+                }
             }
             break;
         case POT_POLYMORPH:
@@ -2303,7 +2310,16 @@ int how;
             if (obj->lamplit)
                 explode_oil(obj, tx, ty);
             else if (injection) {
-                explode(tx, ty, 11, d(4, 4), BURNING_OIL, EXPL_FIERY);
+                if (!resists_fire(mon)) {
+                    mon->mhp -= d(2, 4);
+                    if (!Blind) pline("%s catches on fire!", Monnam(mon));
+                    if (DEADMONSTER(mon)) {
+                        if (your_fault)
+                            killed(mon);
+                        else
+                            monkilled(mon, "", AD_FIRE);
+                    }
+                }
             }
             break;
         case POT_ACID:

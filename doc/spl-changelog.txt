@@ -32,6 +32,7 @@ Miscelaneous
 - War's sword displays a message if a species goes extinct while it is held.
 - Goristros resist fire.
 - Gnomish psychics resist psychic damage.
+- Oiled weapons always lose thier oil after a single strike, and no longer cause explosions.
 
 Bug Fixes
 - Fixed improper skill attribution for two-weaponing.
@@ -43,9 +44,10 @@ Bug Fixes
 - Fix monsters not gaining telepathy from items that should grant it.
 - Fixed Yeenoghu entrance typo.
 - Fixed object weight not updating when material was warped.
+- Fixed poison and potion dips not affecting weapons the way they should.
 
 
-                            Version 0.8.1
+                            Version 0.8.2
 
 Bug Fixes
 - Fixed some minor window naming in the windows release.

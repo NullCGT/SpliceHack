@@ -1029,7 +1029,7 @@ register struct monst *mtmp;
         pline_msg = mtmp->mpeaceful ? "oinks." : "squeals angrily.";
         break;
     case MS_CHICKEN:
-        pline_msg = mtmp->mpeaceful ? "clucks" : "clucks aggressively.";
+        pline_msg = mtmp->mpeaceful ? "clucks." : "clucks aggressively.";
         break;
     case MS_MOO:
         pline_msg = mtmp->mpeaceful ? "moos." : "bellows!";
@@ -1243,7 +1243,7 @@ register struct monst *mtmp;
     } break;
     case MS_ARREST:
         if (mtmp->mpeaceful)
-            verbalize("Just the facts, %s.", flags.gender ? "Ma'am" : "Sir");
+            verbalize("Just the facts, %s.", flags.gender == GEND_F ? "Ma'am" : "Sir");
         else if (mtmp->data == &mons[PM_KORRUPT_KOP])
             verbalize("Stop resisting arrest!");
         else {

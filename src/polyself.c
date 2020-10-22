@@ -242,6 +242,7 @@ change_sex()
     /* setting u.umonster for caveman/cavewoman or priest/priestess
        swap unintentionally makes `Upolyd' appear to be true */
     boolean already_polyd = (boolean) Upolyd;
+    int newgender;
 
     /* Some monsters are always of one sex and their sex can't be changed;
      * Succubi/incubi can change, but are handled below.
@@ -249,12 +250,17 @@ change_sex()
      * !already_polyd check necessary because is_male() and is_female()
      * are true if the player is a priest/priestess.
      */
+
+    /* Select gender from the list at random excluding the starting gender */
+    newgender = GEND_M + (poly_gender() + rn2(ROLE_GENDERS - 1) + 1) % ROLE_GENDERS;
+
     if (!already_polyd
         || (!is_male(g.youmonst.data) && !is_female(g.youmonst.data)
             && !is_neuter(g.youmonst.data)))
-        flags.gender = !flags.gender;
+        flags.gender = newgender;
     if (already_polyd) /* poly'd: also change saved sex */
-        u.ugender = !u.ugender;
+        u.ugender = newgender;
+
     max_rank_sz(); /* [this appears to be superfluous] */
     if ((already_polyd ? u.ugender : flags.gender == GEND_F) && g.urole.name.f)
         Strcpy(g.pl_character, g.urole.name.f);

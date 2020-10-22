@@ -2324,7 +2324,7 @@ logDebug(const char *fmt, ...)
 /* Reading and writing settings from the registry. */
 #define CATEGORYKEY "Software"
 #define COMPANYKEY "SpliceHack"
-#define PRODUCTKEY "SpliceHack 0.8.1"
+#define PRODUCTKEY "SpliceHack 0.8.2"
 #define SETTINGSKEY "Settings"
 #define MAINSHOWSTATEKEY "MainShowState"
 #define MAINMINXKEY "MainMinX"

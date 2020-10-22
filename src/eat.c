@@ -3560,6 +3560,13 @@ boolean incr;
             /* defer g.context.botl status update until after hunger message */
         }
         /* ghouls get stat changes based on hunger level. */
+        if (newhs == SATIATED && u.uhs > SATIATED && Race_if(PM_GHOUL)) {
+            ATEMP(A_STR) = -2;
+            ATEMP(A_DEX) = -2;
+        } else if (newhs > SATIATED && u.uhs == SATIATED && Race_if(PM_GHOUL)) {
+            ATEMP(A_STR) = 0;
+            ATEMP(A_DEX) = 0;
+        }
         if (newhs >= HUNGRY && u.uhs < HUNGRY && Race_if(PM_GHOUL)) {
             ATEMP(A_STR) = 4;
             ATEMP(A_DEX) = 4;

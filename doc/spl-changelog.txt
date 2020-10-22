@@ -15,7 +15,7 @@ Balance
   - Refined the starting inventory of ghouls so they get less useless objects.
     - More specifically, ghouls cannot start with rings of poison resistance, and food
       rations are replaced by tins.
-  - TODO: Penalize ghouls for being satiated.
+  - Ghouls take a -2 penalty to strength and dexterity while satiated.
 - From xNetHack: It is no longer possible to gain see invisible intrinsically. All sources
   of intrinsic see invisible eventually time out.
 - From xNetHack: Melee combat wakes up nearby monsters.

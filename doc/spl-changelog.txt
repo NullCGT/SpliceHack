@@ -26,6 +26,7 @@ QOL
 - Wear pumpkins with 'W' (entrez)
 - Start of game displays orientation (entrez)
 - Improved deck of cards and deck of fate feedback (entrez)
+- Improve amulet of change functionality (entrez)
 
 Miscelaneous
 - War's sword displays a message if a species goes extinct while it is held.

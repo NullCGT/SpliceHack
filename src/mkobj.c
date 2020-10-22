@@ -215,7 +215,7 @@ boolean init, artif;
     otmp = mksobj(otyp, init, artif);
     add_to_migration(otmp);
     otmp->owornmask = (long) MIGR_TO_SPECIES;
-    otmp->corpsenm = mhflags;
+    otmp->migr_species = mhflags;
     return otmp;
 }
 

@@ -1850,6 +1850,7 @@ E void NDECL(nttty_exit);
 E void NDECL(init_objects);
 E void FDECL(obj_shuffle_range, (int, int *, int *));
 E int NDECL(find_skates);
+E boolean FDECL(objdescr_is, (struct obj *, const char *));
 E void NDECL(oinit);
 E void FDECL(savenames, (NHFILE *));
 E void FDECL(restnames, (NHFILE *));
@@ -2099,6 +2100,7 @@ E void VDECL(verbalize, (const char *, ...)) PRINTF_F(1, 2);
 E void VDECL(raw_printf, (const char *, ...)) PRINTF_F(1, 2);
 E void VDECL(impossible, (const char *, ...)) PRINTF_F(1, 2);
 E void VDECL(config_error_add, (const char *, ...)) PRINTF_F(1, 2);
+E void FDECL(nhassert_failed, (const char *, const char *, int));
 
 /* ### polyself.c ### */
 

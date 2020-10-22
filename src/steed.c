@@ -183,7 +183,6 @@ struct obj *otmp;
     struct monst *mtmp;
     struct permonst *ptr;
     int chance;
-    const char *s;
 
     if (!u_handsy())
         return 0;
@@ -258,12 +257,10 @@ struct obj *otmp;
     }
     if (Confusion || Fumbling || Glib)
         chance -= 20;
-    else if (uarmg && (s = OBJ_DESCR(objects[uarmg->otyp])) != (char *) 0
-             && !strncmp(s, "riding ", 7))
+    else if (uarmg && objdescr_is(uarmg, "riding gloves"))
         /* Bonus for wearing "riding" (but not fumbling) gloves */
         chance += 10;
-    else if (uarmf && (s = OBJ_DESCR(objects[uarmf->otyp])) != (char *) 0
-             && !strncmp(s, "riding ", 7))
+    else if (uarmf && objdescr_is(uarmf, "riding boots"))
         /* ... or for "riding boots" */
         chance += 10;
     if (otmp->cursed)

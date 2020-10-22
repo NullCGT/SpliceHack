@@ -25,6 +25,7 @@ QOL
   on the plane of fire and city of brass.
 - Wear pumpkins with 'W' (entrez)
 - Start of game displays orientation (entrez)
+- Improved deck of cards and deck of fate feedback (entrez)
 
 Miscelaneous
 - War's sword displays a message if a species goes extinct while it is held.

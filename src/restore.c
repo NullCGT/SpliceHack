@@ -1031,7 +1031,11 @@ struct cemetery **cemeteryaddr;
 static void
 rest_levl(nhfp, rlecomp)
 NHFILE *nhfp;
+#ifdef RLECOMP
 boolean rlecomp;
+#else
+boolean rlecomp UNUSED;
+#endif
 {
 #ifdef RLECOMP
     short i, j;
@@ -1061,9 +1065,7 @@ boolean rlecomp;
         }
         return;
     }
-#else /* !RLECOMP */
-    nhUse(rlecomp);
-#endif /* ?RLECOMP */
+#endif /* RLECOMP */
     if (nhfp->structlevel) {
         mread(nhfp->fd, (genericptr_t) levl, sizeof levl);
     }

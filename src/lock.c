@@ -210,37 +210,6 @@ boolean destroyit;
     }
 }
 
-/* Relative durability (likelihood of withstanding damage intact) of various
- * materials. */
-static
-const int matdur[] = {
-     0,
-     1,  // LIQUID
-     1,  // WAX
-     1,  // VEGGY
-     3,  // FLESH
-     1,  // PAPER
-     2,  // CLOTH
-     3,  // LEATHER
-     4,  // WOOD
-     3,  // BONE
-     9,  // DRAGON_HIDE
-     7,  // IRON - de facto baseline for metal armor
-     7,  // METAL
-     5,  // COPPER
-     5,  // SILVER
-     4,  // GOLD
-     6,  // PLATINUM
-     8,  // ADAMANTINE
-     7,  // COLD IRON
-     8,  // MITHRIL
-     3,  // PLASTIC
-     2,  // GLASS
-     5,  // GEMSTONE
-     7,  // SHADOW
-     6,  // MINERAL
-};
-
 /* try to force a locked chest */
 static int
 forcelock(VOID_ARGS)

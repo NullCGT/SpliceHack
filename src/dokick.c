@@ -636,7 +636,11 @@ xchar x, y;
             pline("THUD!");
         container_impact_dmg(g.kickedobj, x, y);
         if (g.kickedobj->olocked) {
-            if (!rn2(5) || (martial() && !rn2(2))) {
+            float lockdur, lockdur_ratio;
+            lockdur = matdur[g.kickedobj->material];
+            lockdur_ratio = lockdur / matdur[objects[g.kickedobj->otyp].oc_material];
+
+            if (!rn2((int) 5 * lockdur_ratio) || (martial() && !rn2((int) 2 * lockdur_ratio))) {
                 You("break open the lock!");
                 breakchestlock(g.kickedobj, FALSE);
                 if (otrp)

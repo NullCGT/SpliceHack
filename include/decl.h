@@ -299,6 +299,7 @@ E const struct c_common_strings c_common_strings;
 
 /* material strings */
 E const char *materialnm[];
+E const int matdur[];
 
 /* empty string that is non-const for parameter use */
 E char emptystr[];

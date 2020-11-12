@@ -110,6 +110,34 @@ const char *materialnm[] = { "mysterious", "liquid",  "wax",        "organic",
                              "plastic",    "glass",   "crystal",   "shadowspun",
                              "stone" };
 
+const int matdur[] = {
+    0,
+    1,  // LIQUID
+    1,  // WAX
+    1,  // VEGGY
+    3,  // FLESH
+    1,  // PAPER
+    2,  // CLOTH
+    3,  // LEATHER
+    4,  // WOOD
+    3,  // BONE
+    9,  // DRAGON_HIDE
+    7,  // IRON - de facto baseline for metal armor
+    7,  // METAL
+    5,  // COPPER
+    5,  // SILVER
+    4,  // GOLD
+    6,  // PLATINUM
+    8,  // ADAMANTINE
+    7,  // COLD IRON
+    8,  // MITHRIL
+    3,  // PLASTIC
+    2,  // GLASS
+    5,  // GEMSTONE
+    7,  // SHADOW
+    6,  // MINERAL
+};
+
 char emptystr[] = {0};       /* non-const */
 
 /* Global windowing data, defined here for multi-window-system support */

@@ -412,17 +412,17 @@ static const struct def_skill Skill_C[] = {
     { P_NONE, 0 }
 };
 static const struct def_skill Skill_Con[] = {
-    { P_DAGGER, P_SKILLED },		
+    { P_DAGGER, P_SKILLED },
     { P_KNIFE,  P_EXPERT },
-    { P_HAMMER, P_SKILLED },		
+    { P_HAMMER, P_SKILLED },
     { P_PICK_AXE, P_EXPERT },
-    { P_CLUB, P_EXPERT },		    
+    { P_CLUB, P_EXPERT },
     { P_MACE, P_BASIC },
-    { P_DART, P_SKILLED },		    
+    { P_DART, P_SKILLED },
     { P_FLAIL, P_EXPERT },
-    { P_SHORT_SWORD, P_BASIC },		
+    { P_SHORT_SWORD, P_BASIC },
     { P_SLING, P_SKILLED },
-    { P_ATTACK_SPELL, P_BASIC },	
+    { P_ATTACK_SPELL, P_BASIC },
     { P_ESCAPE_SPELL, P_EXPERT },
     { P_TWO_WEAPON_COMBAT, P_SKILLED },
     { P_BARE_HANDED_COMBAT, P_SKILLED },
@@ -1163,14 +1163,14 @@ u_init()
         knows_object(POT_VAMPIRE_BLOOD);
         knows_object(POT_BLOOD);
 	    /* Vampires start off with gods not as pleased, luck penalty */
-	    adjalign(-5); 
+	    adjalign(-5);
 	    change_luck(-1);
 	    break;
 
     case PM_HUMAN_WERECAT:
         set_ulycn(PM_WERECAT);
         break;
-    
+
     case PM_MINOR_ANGEL:
         ini_inv(Halo);
         break;
@@ -1418,8 +1418,9 @@ register struct trobj *trop;
                    /* Monks don't use weapons */
                    || (otyp == SCR_ENCHANT_WEAPON && Role_if(PM_MONK))
                    /* Infernals already have regeneration and hate silver */
-                   || (otyp == RIN_REGENERATION && Role_if(PM_INFERNAL))
-                   || (objects[obj->otyp].oc_material == SILVER && Role_if(PM_INFERNAL))
+                   || (otyp == RIN_REGENERATION && Race_if(PM_INFERNAL))
+                   || (otyp == RIN_FIRE_RESISTANCE && Race_if(PM_INFERNAL))
+                   || (objects[obj->otyp].oc_material == SILVER && Race_if(PM_INFERNAL))
                    /* wizard patch -- they already have one */
                    || (otyp == SPE_FORCE_BOLT && Role_if(PM_WIZARD))
                    /* powerful spells are either useless to
@@ -1501,7 +1502,7 @@ register struct trobj *trop;
         }
 
         /* angels don't get helmets */
-        if (g.urace.malenum == PM_MINOR_ANGEL && is_helmet(obj) 
+        if (g.urace.malenum == PM_MINOR_ANGEL && is_helmet(obj)
             && obj->otyp != HALO) {
             dealloc_obj(obj);
             trop++;

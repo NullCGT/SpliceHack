@@ -7,7 +7,9 @@
 #include "hack.h"
 
 static boolean FDECL(mon_is_gecko, (struct monst *));
-static int FDECL(domonnoise, (struct monst *));
+static int FDECL(domonnoise, (struct monst *, char *));
+static int FDECL(dialogue, (struct monst *));
+static int FDECL(dopat, (struct monst *));
 static int NDECL(dochat);
 static struct monst *FDECL(responsive_mon_at, (int, int));
 static int FDECL(mon_in_room, (struct monst *, int));
@@ -683,7 +685,7 @@ register struct monst *mtmp;
 
     /* presumably nearness and soundok checks have already been made */
     if (!is_silent(mtmp->data) && mtmp->data->msound <= MS_ANIMAL) {
-        (void) domonnoise(mtmp);
+        (void) domonnoise(mtmp, (char *) 0);
     } else if (mtmp->data->msound >= MS_HUMANOID) {
         if (!canspotmon(mtmp))
             map_invisible(mtmp->mx, mtmp->my);
@@ -788,8 +790,9 @@ struct monst *mon;
 }
 
 static int
-domonnoise(mtmp)
+domonnoise(mtmp, winbuf)
 register struct monst *mtmp;
+char *winbuf;
 {
     char verbuf[BUFSZ];
     register const char *pline_msg = 0, /* Monnam(mtmp) will be prepended */
@@ -801,8 +804,12 @@ register struct monst *mtmp;
     /* presumably nearness and sleep checks have already been made */
     if (Deaf)
         return 0;
-    if (is_silent(ptr))
+    if (is_silent(ptr)) {
+        if (winbuf) {
+            Sprintf(winbuf, "%s is silent.", Monnam(mtmp));
+        }
         return 0;
+    }
 
     /* leader might be poly'd; if he can still speak, give leader speech */
     if (mtmp->m_id == g.quest_status.leader_m_id && msound > MS_ANIMAL)
@@ -1394,6 +1401,24 @@ register struct monst *mtmp;
     } /* case MS_RIDER */
     } /* switch */
 
+    if (winbuf) {
+        if (pline_msg) {
+            Sprintf(winbuf, "%s %s", Monnam(mtmp), pline_msg);
+        } else if (mtmp->mcan && verbl_msg_mcan) {
+            Sprintf(winbuf, "\"%s\"", verbl_msg_mcan);
+        } else if (verbl_msg) {
+            if (ptr == &mons[PM_DEATH]) {
+                char tmpbuf[BUFSZ];
+                Sprintf(winbuf, "%s", ucase(strcpy(tmpbuf, verbl_msg)));
+            } else {
+                Sprintf(winbuf, "\"%s\"", verbl_msg);
+            }
+        } else {
+            Sprintf(winbuf, "%s is busy.", Monnam(mtmp));
+        }
+        return 1;
+    }
+
     if (pline_msg) {
         pline("%s %s", Monnam(mtmp), pline_msg);
     } else if (mtmp->mcan && verbl_msg_mcan) {
@@ -1473,7 +1498,7 @@ dochat()
             pline("%s seems not to notice you.", Monnam(u.usteed));
             return 1;
         } else
-            return domonnoise(u.usteed);
+            return domonnoise(u.usteed, (char *) 0);
     }
 
     if (u.dz) {
@@ -1592,7 +1617,114 @@ dochat()
         pline("You study %s as you speak to %s...", mon_nam(mtmp), mhim(mtmp));
         pline("You can now mimic %s perfectly.", mon_nam(mtmp));
     }
-    return domonnoise(mtmp);
+
+    return dialogue(mtmp);
+}
+
+static const char *const compliment_reactions[] = {
+    "flustered", "pleased", "very pleased", "happy", "overjoyed",
+    "puzzled"
+};
+
+static int
+dialogue(mtmp)
+struct monst *mtmp;
+{
+    int res;
+    winid datawin;
+    anything any = cg.zeroany;
+    menu_item *pick_list = (menu_item *) 0;
+    char winbuf[BUFSZ];
+    int i = '\0';
+
+    datawin = create_nhwindow(NHW_MENU);
+    res = domonnoise(mtmp, winbuf);
+
+    start_menu(datawin, MENU_BEHAVE_STANDARD);
+    if (is_animal(mtmp->data)) {
+        any.a_char = 'p';
+        add_menu(datawin, NO_GLYPH, &any,
+                flags.lootabc ? 0 : any.a_char, 'p', ATR_NONE,
+                "Pet", MENU_ITEMFLAGS_NONE);
+    }
+    any.a_char = 'c';
+    add_menu(datawin, NO_GLYPH, &any,
+            flags.lootabc ? 0 : any.a_char, 'p', ATR_NONE,
+            "Compliment", MENU_ITEMFLAGS_NONE);
+    any.a_char = 't';
+    add_menu(datawin, NO_GLYPH, &any,
+                flags.lootabc ? 0 : any.a_char, 't', ATR_NONE,
+                "Threaten", MENU_ITEMFLAGS_NONE);
+    any.a_char = 'q';
+    add_menu(datawin, NO_GLYPH, &any,
+                flags.lootabc ? 0 : any.a_char, 'q', ATR_NONE,
+                "Leave", MENU_ITEMFLAGS_NONE);
+    end_menu(datawin, winbuf);
+    if (select_menu(datawin, PICK_ONE, &pick_list) > 0) {
+        i = pick_list->item.a_char;
+        free((genericptr_t) pick_list);
+    }
+    /* display_nhwindow(datawin, TRUE);*/
+    destroy_nhwindow(datawin);
+
+    switch (i) {
+    case 't':
+        You("threaten %s.", mon_nam(mtmp));
+        setmangry(mtmp, FALSE);
+        break;
+    case 'p':
+        dopat(mtmp);
+        break;
+    case 'c':
+        switch(rn2(3)) {
+        case 0:
+            You("tell %s you like %s %s.", mon_nam(mtmp), mhis(mtmp), body_part(HAIR));
+            break;
+        case 1:
+            You("smile at %s.", mon_nam(mtmp));
+            break;
+        default:
+            You("compliment %s.", mon_nam(mtmp));
+            break;
+        }
+        if (mtmp->mpeaceful && nohands(mtmp->data)) {
+            /* Undertale */
+            pline("%s does not understand what you said, but seems flattered anyway.", Monnam(mtmp));
+        } else if (mtmp->mpeaceful) {
+            pline("%s seems %s.", Monnam(mtmp), compliment_reactions[mtmp->m_id % (SIZE(compliment_reactions))]);
+        } else {
+            pline("%s is not amused.", Monnam(mtmp));
+        }
+        break;
+    default:
+    case 'q':
+        You("finish talking to %s.", mon_nam(mtmp));
+        break;
+    }
+
+    return res;
+}
+
+static int
+dopat(mtmp)
+struct monst *mtmp;
+{
+    char kbuf[BUFSZ];
+
+    You("pet %s.", mon_nam(mtmp));
+    if (!mtmp->mpeaceful)
+        growl(mtmp);
+    else if (!mtmp->mtame)
+        domonnoise(mtmp, (char *) 0);
+    else if (mtmp->mcanmove)
+        pline("%s leans into your pet, clearly enjoying the attention.", Monnam(mtmp));
+
+    if (!uarmg && touch_petrifies(mtmp->data)) {
+        Sprintf(kbuf, "trying to pet %s.", an(mtmp->data->mname));
+        instapetrify(kbuf);
+        return 0;
+    }
+    return 1;
 }
 
 /* is there a monster at <x,y> that can see the hero and react? */
@@ -1641,7 +1773,7 @@ tiphat()
             if (!u.usteed->mcanmove || u.usteed->msleeping)
                 pline("%s doesn't notice.", Monnam(u.usteed));
             else
-                (void) domonnoise(u.usteed);
+                (void) domonnoise(u.usteed, 0);
         } else if (u.dz) {
             pline("There's no one %s there.", (u.dz < 0) ? "up" : "down");
         } else {
@@ -1713,7 +1845,7 @@ tiphat()
 
             pline("%s %s%s%s at you...", Monnam(mtmp), reaction[which],
                   twice ? " and " : "", twice ? reaction[twice] : "");
-        } else if (distu(x, y) <= 2 && !Deaf && domonnoise(mtmp)) {
+        } else if (distu(x, y) <= 2 && !Deaf && domonnoise(mtmp, 0)) {
             if (!vismon)
                 map_invisible(x, y);
         } else if (vismon) {

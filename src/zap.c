@@ -1532,6 +1532,10 @@ int okind;
     		pm_index = PM_WAX_GOLEM;
     		material = "wax ";
     		break;
+    case SLIME:
+            pm_index = PM_SLUDGE_GOLEM;
+            material = "slime ";
+            break;
     default:
         /* if all else fails... */
         pm_index = PM_STRAW_GOLEM;

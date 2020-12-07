@@ -2348,6 +2348,7 @@ const int matprices[] = {
     15, /* COLD_IRON */
     32, /* MITHRIL - mithril-coat to regular chain mail */
     10, /* PLASTIC */
+    10, /* SLIME */
     20, /* GLASS */
    500, /* GEMSTONE */
     15, /* SHADOW */

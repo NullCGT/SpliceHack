@@ -983,7 +983,9 @@ break_armor()
         if ((otmp = uarm) != 0) {
             if (donning(otmp))
                 cancel_don();
-            if (controlled_change && !otmp->cursed) {
+            if (otmp->material == SLIME) {
+                Your("armor contorts to fit you.");
+            } else if (controlled_change && !otmp->cursed) {
                 You("quickly remove your armor as you start to change.");
                 (void) Armor_gone();
                 dropx(otmp); /*WAC Drop instead of destroy*/
@@ -995,7 +997,9 @@ break_armor()
             }
         }
         if ((otmp = uarmc) != 0) {
-            if (otmp->oartifact) {
+            if (otmp->material == SLIME) {
+                Your("%s stretches to fit you.", cloak_simple_name(otmp));
+            } else if (otmp->oartifact) {
                 Your("%s falls off!", cloak_simple_name(otmp));
                 (void) Cloak_off();
                 dropp(otmp);
@@ -1011,11 +1015,16 @@ break_armor()
             }
         }
         if (uarmu) {
-            Your("shirt rips to shreds!");
-            useup(uarmu);
+            if (otmp->material == SLIME) {
+                Your("shirt expands to fit you.");
+            } else {
+                Your("shirt rips to shreds!");
+                useup(uarmu);
+            }
         }
     } else if (sliparm(g.youmonst.data)) {
-        if ((otmp = uarm) != 0 && racial_exception(&g.youmonst, otmp) < 1) {
+        if ((otmp = uarm) != 0 && racial_exception(&g.youmonst, otmp) < 1
+            && otmp->material != SLIME) {
             if (donning(otmp))
                 cancel_don();
             Your("armor falls around you!");
@@ -1025,6 +1034,8 @@ break_armor()
         if ((otmp = uarmc) != 0) {
             if (is_whirly(g.youmonst.data))
                 Your("%s falls, unsupported!", cloak_simple_name(otmp));
+            else if (otmp->material == SLIME)
+                Your("%s shrinks to fit you.", cloak_simple_name(otmp));
             else
                 You("shrink out of your %s!", cloak_simple_name(otmp));
             (void) Cloak_off();
@@ -1033,6 +1044,8 @@ break_armor()
         if ((otmp = uarmu) != 0) {
             if (is_whirly(g.youmonst.data))
                 You("seep right through your shirt!");
+            else if (otmp->material == SLIME)
+                Your("%s shrinks to fit you.", shirt_simple_name(otmp));
             else
                 You("become much too small for your shirt!");
             setworn((struct obj *) 0, otmp->owornmask & W_ARMU);

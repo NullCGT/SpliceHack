@@ -484,8 +484,19 @@ unsigned corpseflags;
         }
         free_mname(mtmp);
         break;
-    case PM_CLAY_GOLEM:
     case PM_SLUDGE_GOLEM:
+        num = d(2, 6);
+        while (num--) {
+            obj = mkobj_at(RANDOM_CLASS, x, y, FALSE);
+            if (!valid_obj_material(obj, SLIME)) {
+                delobj(obj);
+                obj = mksobj_at(GLOB_OF_GREEN_SLIME, x, y, TRUE, FALSE);
+            }
+            obj->material = SLIME;
+        }
+        free_mname(mtmp); /* don't christen obj */
+        break;
+    case PM_CLAY_GOLEM:
         /* TODO: Other material? */
         obj = mksobj_at(ROCK, x, y, FALSE, FALSE);
         obj->quan = (long) (rn2(20) + 50);

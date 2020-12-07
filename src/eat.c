@@ -2574,8 +2574,8 @@ static const char *foodwords[] = {
     "meal",    "liquid",  "wax",       "food", "meat",     "paper",
     "cloth",   "leather", "wood",      "bone", "scale",    "metal",
     "metal",   "metal",   "silver",    "gold", "platinum", "adamantine", 
-    "chilled metal",      "mithril",   "plastic", "glass", "rich food", 
-    "shadow",  "stone",
+    "chilled metal",      "mithril",   "plastic", "slime", "glass",
+    "rich food",          "shadow",    "stone",
 };
 
 static const char *

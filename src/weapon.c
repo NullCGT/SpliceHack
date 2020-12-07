@@ -346,6 +346,10 @@ struct monst *mon;
         /* just terrible weapons all around */
         tmp -= 2;
     }
+    else if (is_odd_material(otmp, SLIME)) {
+        /* even worse... */
+        tmp -= 4;
+    }
     else if (is_odd_material(otmp, WOOD)) {
         /* poor at holding an edge */
         if (is_blade(otmp)) {

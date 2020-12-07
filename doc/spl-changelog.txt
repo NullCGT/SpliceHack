@@ -1,5 +1,23 @@
                         SpliceHack -- Changelog
 
+                            Version 0.8.3
+
+Chatting
+- Chatting with a monster yields a number of different dialogue options.
+  - Pet: Pet an animal, because why not? :)
+  - Compliment: Compliment a monster. Make the dungeon a nicer place.
+  - Threaten: Make a monster angry.
+
+New Materials
+- Slime
+  - Gelatinous armor can grow and shrink with the player when they polymorph instead of breaking
+    or falling off.
+  - Gelatinous weapons have -4 damage, and are generally terrible.
+  - Sludge golems drop gelatinous items and green slime.
+
+Miscelaneous
+- The SpliceHack splash screen in curses mode is now rainbow!
+
                             Version 0.8.2
 
 Balance

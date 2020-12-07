@@ -3205,7 +3205,7 @@ struct obj *otmp2;
 
 /* for objects which are normally iron or metal */
 static const struct icp metal_materials[] = {
-    {747, 0}, /* default to base type, iron or metal */
+    {746, 0}, /* default to base type, iron or metal */
     { 49, IRON},
     { 50, WOOD},
     { 50, SILVER},
@@ -3215,6 +3215,7 @@ static const struct icp metal_materials[] = {
     { 10, BONE},
     { 10, GLASS},
     { 10, PLASTIC},
+    {  1, SLIME },
     {  1, ADAMANTINE},
     {  1, SHADOW },
     {  1, COLD_IRON},
@@ -3242,37 +3243,41 @@ static const struct icp shiny_materials[] = {
     {120, GLASS},
     { 70, MITHRIL},
     { 50, METAL}, /* aluminum, or similar */
-    { 20, PLATINUM},
-    {  5, ADAMANTINE}
+    { 19, PLATINUM},
+    {  5, ADAMANTINE},
+    {  1, SLIME}
     /* Avoiding cold iron because a cold iron amulet in Sokoban would be
        really nasty for elves. */
 };
 
 /* for objects which are normally wooden */
 static const struct icp wood_materials[] = {
-    {800, WOOD},
+    {799, WOOD},
     {100, MINERAL},
     { 50, IRON},
     { 30, BONE},
     { 10, COPPER},
-    { 10, SILVER}
+    { 10, SILVER},
+    {  1, SLIME}
 };
 
 /* for objects which are normally cloth */
 static const struct icp cloth_materials[] = {
-    {800, CLOTH},
+    {799, CLOTH},
     {100, LEATHER},
     { 70, PLASTIC},
     { 28, PAPER},
-    {  2, SHADOW}
+    {  2, SHADOW},
+    {  1, SLIME}
 };
 
 /* for objects which are normally leather */
 static const struct icp leather_materials[] = {
-    {750, LEATHER},
+    {749, LEATHER},
     {170, CLOTH},
     { 70, PLASTIC},
-    { 10, PAPER}
+    { 10, PAPER},
+    {  1, SLIME}
 };
 
 /* for objects of dwarvish make */

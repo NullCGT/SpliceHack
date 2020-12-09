@@ -61,6 +61,25 @@ des.object("boulder", 28, 8)
 des.feature("fountain",16,09)
 des.feature("fountain",25,09)
 
+-- resourceful orcs have set up a kitchen, and are preparing to 
+-- "process" the former residents of minetown
+des.feature("furnace", 13, 05)
+des.feature("sink", 14, 05)
+des.object("icebox", 15, 05)
+if percent(50) then
+  des.object({ id = "icebox", 15, 05,
+               contents = function()
+		  des.object({ id = "gnome corpse", quantity=d(2,4) })
+                  des.object({ id = "dwarf corpse", quantity=d(4) })
+               end
+  });
+end
+des.object("dented pot", 13, 06)
+des.object("knife", 13, 06)
+des.object("apron", 13, 06)
+des.object("tin opener", 13, 06)
+des.monster({ id = "goblin", x=13, y=06, name = "Cookie of Glothris" })
+
 -- the altar's defiled; useful for BUC but never coaligned
 des.altar({ x=20,y=13,align="noalign", type="shrine" })
 

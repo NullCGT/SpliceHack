@@ -1209,6 +1209,7 @@ boolean ranged;
 		((mtmp->mhp*4 < mtmp->mhpmax
 		  || mtmp2->data->msound == MS_GUARDIAN
 		  || mtmp2->data->msound == MS_LEADER) && !ranged && !Conflict) ||
+           (mtmp2->data == &mons[PM_SPHERE_OF_THE_VOID] && !resists_disint(mtmp)) ||
 		   (!ranged && touch_petrifies(mtmp2->data) &&
 			!resists_ston(mtmp)));
 }

@@ -15,6 +15,10 @@ New Materials
   - Gelatinous weapons have -4 damage, and are generally terrible.
   - Sludge golems drop gelatinous items and green slime.
 
+Dungeon
+- Added a minetown variant (Zootown), from SporkHack/EvilHack.
+- Added an original minetown variant (Lavender Town).
+
 Balance
 - When a monster activates a polytrap, there is a 1 in 7 chance that the polytrap is removed.
   This is to prevent abuse of the new methods of taming monsters in order to create an army of

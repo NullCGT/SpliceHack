@@ -1646,7 +1646,8 @@ struct monst *mtmp;
         mtmp->data->msound == MS_LEADER ||
         mtmp->data->msound == MS_NEMESIS ||
         mtmp->data->msound == MS_GUARDIAN ||
-        mtmp->data->msound == MS_SELL)
+        mtmp->data->msound == MS_SELL ||
+        mtmp->data->msound == MS_BONES)
         return res;
 
     start_menu(datawin, MENU_BEHAVE_STANDARD);

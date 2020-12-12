@@ -7,6 +7,8 @@ Chatting
   - Pet: Pet an animal, because why not? :)
   - Compliment: Compliment a monster. Make the dungeon a nicer place.
   - Threaten: Make a monster angry.
+  - Recruit: Recruit a peaceful monster to fight for you. Requires a successful charisma check.
+    Based on a YANI by aosdict and FIQ.
 
 New Materials
 - Slime

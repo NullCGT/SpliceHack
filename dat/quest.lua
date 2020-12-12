@@ -170,7 +170,7 @@ of us all:  Go bravely with %d!]],
          output = "menu",
          text = [[It is written in the Book of %d:
 
-    After the Creation, the cruel god Moloch rebel 
+    After the Creation, the cruel god Moloch rebelled
     against the authority of Marduk the Creator.
     Moloch stole from Marduk the most powerful of all
     the artifacts of the gods, the Amulet of Yendor,

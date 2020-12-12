@@ -3944,6 +3944,10 @@ int x, y;
         Sprintf(buf, "Put saddle on %s", mon_nam(mtmp)), ++K;
         add_herecmd_menuitem(win, doapply, buf);
     }
+    if (mtmp || glyph_is_invisible(glyph_at(x, y))) {
+        Sprintf(buf, "Chat with %s", mon_nam(mtmp)), ++K;
+        add_herecmd_menuitem(win, dotalk, buf);
+    }
 #if 0
     if (mtmp || glyph_is_invisible(glyph_at(x, y))) {
         /* "Attack %s", mtmp ? mon_nam(mtmp) : "unseen creature" */
@@ -3990,21 +3994,26 @@ boolean doit;
     win = create_nhwindow(NHW_MENU);
     start_menu(win, MENU_BEHAVE_STANDARD);
 
-    if (IS_FOUNTAIN(typ) || IS_SINK(typ)) {
+    if (IS_FOUNTAIN(typ) || IS_SINK(typ) || IS_FURNACE(typ)) {
         Sprintf(buf, "Drink from the %s",
-                defsyms[IS_FOUNTAIN(typ) ? S_fountain : S_sink].explanation);
+                defsyms[IS_FOUNTAIN(typ) ? S_fountain : IS_FURNACE(typ) ? S_furnace : S_sink].explanation);
         add_herecmd_menuitem(win, dodrink, buf);
     }
-    if (IS_FURNACE(typ)) {
-        add_herecmd_menuitem(win, dodrink, "Really drink from the furnace? There's lava in there.");
-    }
-    if (IS_FOUNTAIN(typ))
+    if (IS_FOUNTAIN(typ) || IS_FURNACE(typ)) {
         Sprintf(buf, "Dip something into the %s",
                 defsyms[IS_FOUNTAIN(typ) ? S_fountain : S_furnace].explanation);
         add_herecmd_menuitem(win, dodip, buf);
+    }
+    if (IS_FURNACE(typ)) {
+        Sprintf(buf, "Cook something in the %s",
+                defsyms[S_furnace].explanation);
+        add_herecmd_menuitem(win, docook, buf);
+    }
     if (IS_THRONE(typ))
         add_herecmd_menuitem(win, dosit,
                              "Sit on the throne");
+    if (IS_ALTAR(typ))
+        add_herecmd_menuitem(win, dosacrifice, "Sacrifice at the altar");
 
     if (On_stairs_up(u.ux, u.uy)) {
         Sprintf(buf, "Go up the %s",
@@ -4025,13 +4034,11 @@ boolean doit;
         add_herecmd_menuitem(win, doride, buf);
     }
 
-#if 0
     if (Upolyd) { /* before objects */
         Sprintf(buf, "Use %s special ability",
                 s_suffix(mons[u.umonnum].mname));
         add_herecmd_menuitem(win, domonability, buf);
     }
-#endif
 
     if (OBJ_AT(u.ux, u.uy)) {
         struct obj *otmp = g.level.objects[u.ux][u.uy];
@@ -4052,6 +4059,8 @@ boolean doit;
     if (g.invent)
         add_herecmd_menuitem(win, dodrop, "Drop items");
 
+    add_herecmd_menuitem(win, doengrave, "Make an engraving");
+    add_herecmd_menuitem(win, dopray, "Pray");
     add_herecmd_menuitem(win, donull, "Rest one turn");
     add_herecmd_menuitem(win, dosearch, "Search around you");
     add_herecmd_menuitem(win, dolook, "Look at what is here");

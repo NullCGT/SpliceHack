@@ -27,6 +27,7 @@ Balance
 
 Miscelaneous
 - The SpliceHack splash screen in curses mode is now rainbow!
+- Updated therecmdmenu and herecmdmenu to be more helpful.
 
                             Version 0.8.2
 

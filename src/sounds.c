@@ -983,7 +983,7 @@ char *winbuf;
         break;
     case MS_ANT:
         if (Hallucination)
-            verbalize("Go team ant!");
+            verbl_msg = "Go team ant!";
         else
             pline_msg = "chitters.";
         break;
@@ -1110,8 +1110,7 @@ char *winbuf;
         if (!mtmp->mpeaceful) {
             switch (rn2(4)) {
             case 0:
-                pline("%s boasts about %s gem collection.", Monnam(mtmp),
-                      mhis(mtmp));
+                pline_msg = "boasts about a mighty gem collection.";
                 break;
             case 1:
                 pline_msg = "complains about a diet of mutton.";
@@ -1636,9 +1635,19 @@ struct monst *mtmp;
     menu_item *pick_list = (menu_item *) 0;
     char winbuf[BUFSZ];
     int i = '\0';
+    int roll;
 
     datawin = create_nhwindow(NHW_MENU);
     res = domonnoise(mtmp, winbuf);
+
+    /* TODO: Remove massive kludge */
+    if (mtmp->data->msound == MS_ORACLE ||
+        mtmp->data->msound == MS_PRIEST ||
+        mtmp->data->msound == MS_LEADER ||
+        mtmp->data->msound == MS_NEMESIS ||
+        mtmp->data->msound == MS_GUARDIAN ||
+        mtmp->data->msound == MS_SELL)
+        return res;
 
     start_menu(datawin, MENU_BEHAVE_STANDARD);
     if (is_animal(mtmp->data)) {
@@ -1651,6 +1660,13 @@ struct monst *mtmp;
     add_menu(datawin, NO_GLYPH, &any,
             flags.lootabc ? 0 : any.a_char, 'p', ATR_NONE,
             "Compliment", MENU_ITEMFLAGS_NONE);
+    if (!is_silent(mtmp->data) && !nohands(mtmp->data)
+        && mtmp->mpeaceful && !mtmp->mtame && !mtmp->mrecruited) {
+        any.a_char = 'r';
+        add_menu(datawin, NO_GLYPH, &any,
+                flags.lootabc ? 0 : any.a_char, 'r', ATR_NONE,
+                "Recruit", MENU_ITEMFLAGS_NONE);
+    }
     any.a_char = 't';
     add_menu(datawin, NO_GLYPH, &any,
                 flags.lootabc ? 0 : any.a_char, 't', ATR_NONE,
@@ -1670,10 +1686,38 @@ struct monst *mtmp;
     switch (i) {
     case 't':
         You("threaten %s.", mon_nam(mtmp));
-        setmangry(mtmp, FALSE);
+        if (mtmp->mtame) {
+            abuse_dog(mtmp);
+        } else {
+            setmangry(mtmp, FALSE);
+        }
         break;
     case 'p':
         dopat(mtmp);
+        break;
+    case 'r':
+        roll = rn2(20);
+        if (same_race(mtmp->data, g.youmonst.data)) roll += 2;
+        if (mtmp->m_lev > u.ulevel) roll -= (mtmp->m_lev - u.ulevel);
+        mtmp->mrecruited = TRUE;
+        You("tell %s of your quest.", mon_nam(mtmp));
+        if (roll <= 1) {
+            You("accidentally insult %s.", mon_nam(mtmp));
+            exercise(A_CHA, FALSE);
+            setmangry(mtmp, FALSE);
+        } else if (roll < ACURR(A_CHA) && tamedog(mtmp, (struct obj *) 0)) {
+            pline("%s agrees to join your party!", Monnam(mtmp));
+            mtmp->mtame = 2;
+            mintroduce(mtmp);
+        } else {
+            exercise(A_CHA, FALSE);
+            if (mtmp->data->msound == MS_GUARDIAN || mtmp->data->msound == MS_LEADER)
+                pline("%s wishes you luck.", Monnam(mtmp));
+            else if (roll - ACURR(A_CHA) >= 5)
+                pline("%s laughs in your %s.", Monnam(mtmp), body_part(FACE));
+            else
+                pline("%s is not interested.", Monnam(mtmp));
+        }
         break;
     case 'c':
         switch(rn2(3)) {
@@ -1687,9 +1731,8 @@ struct monst *mtmp;
             You("compliment %s.", mon_nam(mtmp));
             break;
         }
-        if (mtmp->mpeaceful && nohands(mtmp->data)) {
-            /* Undertale */
-            pline("%s does not understand what you said, but seems flattered anyway.", Monnam(mtmp));
+        if (mtmp->mpeaceful && nohands(mtmp->data) && !mindless(mtmp->data)) {
+            pline("%s seems happy.", Monnam(mtmp));
         } else if (mtmp->mpeaceful) {
             pline("%s seems %s.", Monnam(mtmp), compliment_reactions[mtmp->m_id % (SIZE(compliment_reactions))]);
         } else {
@@ -1715,7 +1758,7 @@ struct monst *mtmp;
     if (!mtmp->mpeaceful)
         growl(mtmp);
     else if (!mtmp->mtame)
-        domonnoise(mtmp, (char *) 0);
+        (void) domonnoise(mtmp, (char *) 0);
     else if (mtmp->mcanmove)
         pline("%s leans into your pet, clearly enjoying the attention.", Monnam(mtmp));
 

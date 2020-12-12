@@ -1902,6 +1902,8 @@ struct obj *otmp;
                     (void) strsubst(buf, "your ", "your new ");
                 You("adjust yourself in the saddle on %s.", buf);
             }
+            if (!rn2(7))
+                deltrap(trap);
         }
         steedhit = TRUE;
         break;
@@ -3013,6 +3015,8 @@ register struct monst *mtmp;
                 if (in_sight)
                     seetrap(trap);
             }
+            if (!rn2(7))
+                deltrap(trap);
             break;
         case ROLLING_BOULDER_TRAP:
             if (!is_flyer(mptr)) {

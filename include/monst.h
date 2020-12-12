@@ -136,7 +136,8 @@ struct monst {
     Bitfield(wormno, 5);    /* at most 31 worms on any level */
     Bitfield(mwither, 1);   /* is withering */
     Bitfield(mtemplit, 1);  /* temporarily seen; only valid during bhit() */
-    /* 8 free bits */
+    Bitfield(mrecruited, 1); /* monster is recruitable */
+    /* 7 free bits */
 
 #define MAX_NUM_WORMS 32    /* should be 2^(wormno bitfield size) */
 

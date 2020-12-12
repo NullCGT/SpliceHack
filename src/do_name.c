@@ -2574,18 +2574,24 @@ void
 mintroduce(mtmp)
 struct monst *mtmp;
 {
+    char buf[BUFSZ];
+
     if (!has_mname(mtmp) && !(mtmp->data->geno & G_UNIQ)) {
         const char* name;
         if (mtmp->data->mlet == S_NYMPH || mtmp->data == &mons[PM_THRIAE]) {
             name = rnd_name(nymphnames);
-        }
-        else if (is_demon(mtmp->data)) {
+        } else if (is_demon(mtmp->data)) {
             if (mtmp->female)
                 name = rnd_name(femdemonnames);
             else
                 name = rnd_name(maldemonnames);
-        }
-        else {
+        } else if (mtmp->data == &mons[PM_GHOST]) {
+            name = rndghostname();
+        } else if (is_orc(mtmp->data)) {
+            name = rndorcname(buf);
+        } else if (is_human(mtmp->data)) {
+            rndhumname(mtmp->female);
+        } else {
             return;
         }
         const char* pronoun =

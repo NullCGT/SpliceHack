@@ -3814,7 +3814,7 @@ struct mhitm_data *mhm;
                     mhm->damage = 1;
             }
         }
-        if (mhm->damage > 0 && !rn2(5)) {
+        if (mattk->adtyp == AD_CLOB && mhm->damage > 0 && !rn2(5)) {
             You("knock %s back with an awesome blow!", mon_nam(mdef));
             mhurtle(mdef, u.ux - mdef->mx, u.uy - mdef->my, rn1(3, 3));
         }
@@ -3965,8 +3965,9 @@ struct mhitm_data *mhm;
                 mhm->damage = mdef->mhp - 1;
         }
 
-        if (mhm->damage > 0 && !rn2(5) && canseemon(mdef) && canseemon(magr)) {
-            pline("%s knocks %s back with an awesome blow!", Monnam(magr), mon_nam(mdef));
+        if (mattk->adtyp == AD_CLOB && mhm->damage > 0 && !rn2(5)) {
+            if (canseemon(mdef) && canseemon(magr))
+                pline("%s knocks %s back with an awesome blow!", Monnam(magr), mon_nam(mdef));
             mhurtle(magr, magr->mx - mdef->mx, magr->my - mdef->my, rn1(3, 3));
         }
     }

@@ -178,6 +178,11 @@
 #define is_bird(ptr) (((ptr)->mlet == S_BAT && !is_bat(ptr)) || \
                         ((ptr) == &mons[PM_CHICKEN] || \
                         (ptr) == &mons[PM_PAZUZU]))
+#define is_bear(ptr) ((ptr) == &mons[PM_BUGBEAR] || \
+                      (ptr) == &mons[PM_OWLBEAR] || \
+                      (ptr) == &mons[PM_WEREBEAR] || \
+                      (ptr) == &mons[PM_HELLBEAR] || \
+                      (ptr) == &mons[PM_BEAR])
 # define is_rat(ptr) ((ptr) == &mons[PM_SEWER_RAT] || \
 				 (ptr) == &mons[PM_GIANT_RAT] || \
 				 (ptr) == &mons[PM_RABID_RAT] || \

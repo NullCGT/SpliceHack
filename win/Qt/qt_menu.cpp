@@ -999,6 +999,8 @@ NetHackQtTextWindow::NetHackQtTextWindow(QWidget *parent) :
     // we don't want keystrokes being sent to the main window for use as
     // commands while this text window is popped up
     setFocusPolicy(Qt::StrongFocus);
+    // needed so that keystrokes get sent to our keyPressEvent()
+    lines->setFocusPolicy(Qt::NoFocus);
 }
 
 void NetHackQtTextWindow::doUpdate()
@@ -1183,15 +1185,18 @@ void NetHackQtTextWindow::Search()
     //  Force text window to be on top.  Without this, it moves behind
     //  the map after the string requestor completes.  Then it can't
     //  be seen or accessed (unless the game window is minimized or
-    //  possibly dragged out of the way).  Unfortunately the window
-    //  noticeably vanishes and then immediately gets redrawn.
-    if (!this->isActiveWindow())
+    //  dragged out of the way).  Unfortunately the window noticeably
+    //  vanishes and then immediately gets redrawn.
+    if (!this->isActiveWindow()) {
         this->activateWindow();
-    this->raise();
+        this->raise();
+    }
 
     if (get_a_line) {
         int linecount = lines->count();
         int current = lines->currentRow();
+        if (current == -1)
+            current = 0;
         // when no row is highlighted (selected), start the search
         // on the current row, otherwise start on the row after it
         // [normally means that the very first row is a candidate
@@ -1224,12 +1229,6 @@ void NetHackQtTextWindow::keyPressEvent(QKeyEvent *key_event)
 {
     uchar key = keyValue(key_event);
 
-    //
-    // FIXME:
-    //  Typing ':' doesn't produce ':' so key won't match MENU_SEARCH,
-    //  despite the fact that it does produce ':' for menu input and
-    //  we're calling the exact same code for both types of window...?
-    //
     if (key == MENU_SEARCH) {
         if (!use_rip)
             Search();

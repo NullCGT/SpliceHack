@@ -38,8 +38,10 @@ Miscelaneous
 - Monsters attacking in melee with potion effect attacks (i.e. shambling horrors) do no damage
   when splashing potions on the player.
 - Increased chance that ice devils will inflict fumbling.
-- Refactored order that knockback attacks take place in, hopefully preventing future bugs.
+- Refactored order that knockback attack effects occur in, hopefully preventing future bugs.
 - Cancelled molydei cannot polymorph other monsters.
+- Improve consistency of YAFMs for bears caught in bear traps.
+- Improve messages for buzzsaw traps.
 
                             Version 0.8.2
 

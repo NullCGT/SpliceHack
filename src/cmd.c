@@ -1,4 +1,4 @@
-/* NetHack 3.7	cmd.c	$NHDT-Date: 1607591200 2020/12/10 09:06:40 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.431 $ */
+/* NetHack 3.7	cmd.c	$NHDT-Date: 1608233885 2020/12/17 19:38:05 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.437 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -184,7 +184,8 @@ static void FDECL(show_direction_keys, (winid, CHAR_P, BOOLEAN_P));
 static boolean FDECL(help_dir, (CHAR_P, int, const char *));
 
 static void NDECL(commands_init);
-static boolean FDECL(keylist_func_has_key, (const struct ext_func_tab *));
+static boolean FDECL(keylist_func_has_key, (const struct ext_func_tab *,
+                                            boolean *));
 static int FDECL(keylist_putcmds, (winid, BOOLEAN_P, int, int, boolean *));
 static int FDECL(ch2spkeys, (CHAR_P, int, int));
 static boolean FDECL(prefix_cmd, (CHAR_P));
@@ -763,30 +764,37 @@ domonability(VOID_ARGS)
 int
 enter_explore_mode(VOID_ARGS)
 {
-    if (wizard) {
-        You("are in debug mode.");
-    } else if (discover) {
+    if (discover) {
         You("are already in explore mode.");
     } else {
+        const char *oldmode = !wizard ? "normal game" : "debug mode";
+
 #ifdef SYSCF
 #if defined(UNIX)
         if (!sysopt.explorers || !sysopt.explorers[0]
             || !check_user_string(sysopt.explorers)) {
-            You("cannot access explore mode.");
-            return 0;
+            if (!wizard) {
+                You("cannot access explore mode.");
+                return 0;
+            } else {
+                pline(
+                 "Note: normally you wouldn't be allowed into explore mode.");
+                /* keep going */
+            }
         }
 #endif
 #endif
-        pline(
-        "Beware!  From explore mode there will be no return to normal game.");
+        pline("Beware!  From explore mode there will be no return to %s,",
+              oldmode);
         if (paranoid_query(ParanoidQuit,
                            "Do you want to enter explore mode?")) {
+            discover = TRUE;
+            wizard = FALSE;
             clear_nhwindow(WIN_MESSAGE);
             You("are now in non-scoring explore mode.");
-            discover = TRUE;
         } else {
             clear_nhwindow(WIN_MESSAGE);
-            pline("Resuming normal game.");
+            pline("Continuing with %s.", oldmode);
         }
     }
     return 0;
@@ -1833,7 +1841,7 @@ struct ext_func_tab extcmdlist[] = {
     { 'E', "engrave", "engrave writing on the floor", doengrave },
     { M('e'), "enhance", "advance or check weapon and spell skills",
             enhance_weapon_skill, IFBURIED | AUTOCOMPLETE },
-    { '\0', "exploremode", "enter explore (discovery) mode",
+    { M('X'), "exploremode", "enter explore (discovery) mode",
             enter_explore_mode, IFBURIED | GENERALCMD },
     { 'f', "fire", "fire ammunition from quiver", dofire },
     { M('f'), "force", "force a lock", doforce, AUTOCOMPLETE },
@@ -1842,11 +1850,11 @@ struct ext_func_tab extcmdlist[] = {
             doquickwhatis, IFBURIED | GENERALCMD },
     { '?', "help", "give a help message", dohelp, IFBURIED | GENERALCMD },
     { '\0', "herecmdmenu", "show menu of commands you can do here",
-            doherecmdmenu, IFBURIED | GENERALCMD },
+            doherecmdmenu, IFBURIED | AUTOCOMPLETE | GENERALCMD },
     { 'V', "history", "show long version and game history",
             dohistory, IFBURIED | GENERALCMD },
     { 'i', "inventory", "show your inventory", ddoinv, IFBURIED },
-    { 'I', "inventtype", "inventory specific item types",
+    { 'I', "inventtype", "show inventory of one specific item class",
             dotypeinv, IFBURIED },
     { M('i'), "invoke", "invoke an object's special powers",
             doinvoke, IFBURIED | AUTOCOMPLETE },
@@ -1939,11 +1947,14 @@ struct ext_func_tab extcmdlist[] = {
     { 'A', "takeoffall", "remove all armor", doddoremarm },
     { C('t'), "teleport", "teleport around the level", dotelecmd, IFBURIED },
     { '!', "technique", "use special techniques", dotech, AUTOCOMPLETE },
+    /* \177 == <del> aka <delete> aka <rubout>; some terminals have an
+       option to swap it with <backspace> so if there's a key labeled
+       <delete> it may or may not actually invoke the #terrain command */
     { '\0', "terrain", "show map without obstructions",
             doterrain, IFBURIED | AUTOCOMPLETE },
     { '\0', "therecmdmenu",
             "menu of commands you can do from here to adjacent spot",
-            dotherecmdmenu, GENERALCMD },
+            dotherecmdmenu, AUTOCOMPLETE | GENERALCMD },
     { 't', "throw", "throw something", dothrow },
     { '\0', "timeout", "look at timeout queue and hero's timed intrinsics",
             wiz_timeout_queue, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
@@ -2146,12 +2157,16 @@ commands_init()
 }
 
 static boolean
-keylist_func_has_key(extcmd)
+keylist_func_has_key(extcmd, skip_keys_used)
 const struct ext_func_tab *extcmd;
+boolean *skip_keys_used; /* boolean keys_used[256] */
 {
     int i;
 
-    for (i = 0; i < 256; i++) {
+    for (i = 0; i < 256; ++i) {
+        if (skip_keys_used[i])
+            continue;
+
         if (g.Cmd.commands[i] == extcmd)
             return TRUE;
     }
@@ -2168,11 +2183,13 @@ boolean *keys_used; /* boolean keys_used[256] */
     const struct ext_func_tab *extcmd;
     int i;
     char buf[BUFSZ], buf2[QBUFSZ];
+    boolean keys_already_used[256]; /* copy of keys_used[] before updates */
     int count = 0;
 
     for (i = 0; i < 256; i++) {
         uchar key = (uchar) i;
 
+        keys_already_used[i] = keys_used[i];
         if (keys_used[i])
             continue;
         if (key == ' ' && !flags.rest_on_space)
@@ -2198,8 +2215,10 @@ boolean *keys_used; /* boolean keys_used[256] */
             continue;
         /* can't just check for non-Null extcmd->key; it holds the
            default assignment and a user-specified binding might hijack
-           the this command's default key for some other command */
-        if (keylist_func_has_key(extcmd))
+           this command's default key for some other command; or this
+           command might have been assigned a key being used for
+           movement or as a prefix, intercepting that keystroke */
+        if (keylist_func_has_key(extcmd, keys_already_used))
             continue;
         /* found a command for current category without any key assignment */
         if (docount) {
@@ -2225,6 +2244,7 @@ dokeylist(VOID_ARGS)
     int i;
     static const char
         run_desc[] = "Prefix: run until something very interesting is seen",
+        rush_desc[] = "Prefix: rush until something interesting is seen",
         forcefight_desc[] =
                      "Prefix: force fight even if you don't see a monster";
     static const struct {
@@ -2232,9 +2252,9 @@ dokeylist(VOID_ARGS)
         const char *desc;
         boolean numpad;
     } misc_keys[] = {
-        { NHKF_ESC, "escape from the current query/action", FALSE },
-        { NHKF_RUSH,
-          "Prefix: rush until something interesting is seen", FALSE },
+        { NHKF_ESC, "cancel current prompt or pending prefix", FALSE },
+        { NHKF_RUSH, rush_desc, FALSE },
+        { NHKF_RUSH2, rush_desc, TRUE },
         { NHKF_RUN, run_desc, FALSE },
         { NHKF_RUN2, run_desc, TRUE },
         { NHKF_FIGHT, forcefight_desc, FALSE },
@@ -2243,7 +2263,9 @@ dokeylist(VOID_ARGS)
           "Prefix: move without picking up objects or fighting", FALSE },
         { NHKF_RUN_NOPICKUP,
           "Prefix: run without picking up objects or fighting", FALSE },
-        { NHKF_DOINV, "view inventory", TRUE },
+        { NHKF_DOINV, "view full inventory", TRUE },
+        /* NHKF_DOINV2 for num_pad+pcHack_compat isn't implemented */
+        /* { NHKF_DOINV2, "view inventory of one class of objects", TRUE }, */
         { NHKF_REQMENU, "Prefix: request a menu", FALSE },
         { NHKF_COUNT,
           "Prefix: for digits when prefixing a command with a count", TRUE },
@@ -2253,32 +2275,11 @@ dokeylist(VOID_ARGS)
 
     (void) memset((genericptr_t) keys_used, 0, sizeof keys_used);
 
-    datawin = create_nhwindow(NHW_TEXT);
-    putstr(datawin, 0, "");
-    Sprintf(buf, "%7s %s", "", "    Full Current Key Bindings List");
-    putstr(datawin, 0, buf);
-    for (extcmd = extcmdlist; extcmd->ef_txt; ++extcmd)
-        /* this can only check for commands without any key assigned, not
-           ones whose key has been hijacked by something that's processed
-           before it (in use as a prefix, for instance) */
-        if (!keylist_func_has_key(extcmd)) {
-            Sprintf(buf, "%7s %s", "",
-                               "(also commands with no key assignment)");
-            putstr(datawin, 0, buf);
-            break;
-        }
-
-    /* directional keys */
-    putstr(datawin, 0, "");
-    putstr(datawin, 0, "Directional keys:");
-    show_direction_keys(datawin, '.', FALSE); /* '.'==self in direct'n grid */
-
     keys_used[(uchar) g.Cmd.move_NW] = keys_used[(uchar) g.Cmd.move_N]
         = keys_used[(uchar) g.Cmd.move_NE] = keys_used[(uchar) g.Cmd.move_W]
         = keys_used[(uchar) g.Cmd.move_E] = keys_used[(uchar) g.Cmd.move_SW]
         = keys_used[(uchar) g.Cmd.move_S] = keys_used[(uchar) g.Cmd.move_SE]
         = TRUE;
-
     if (!iflags.num_pad) {
         keys_used[(uchar) highc(g.Cmd.move_NW)]
             = keys_used[(uchar) highc(g.Cmd.move_N)]
@@ -2296,20 +2297,54 @@ dokeylist(VOID_ARGS)
             = keys_used[(uchar) C(g.Cmd.move_SW)]
             = keys_used[(uchar) C(g.Cmd.move_S)]
             = keys_used[(uchar) C(g.Cmd.move_SE)] = TRUE;
-        putstr(datawin, 0, "");
-        putstr(datawin, 0,
-     "Ctrl+<direction> will run in specified direction until something very");
-        Sprintf(buf, "%7s %s", "", "interesting is seen.");
-        putstr(datawin, 0, buf);
-        Strcpy(buf, "Shift");
     } else {
         /* num_pad */
         keys_used[(uchar) M('1')] = keys_used[(uchar) M('2')]
             = keys_used[(uchar) M('3')] = keys_used[(uchar) M('4')]
             = keys_used[(uchar) M('6')] = keys_used[(uchar) M('7')]
             = keys_used[(uchar) M('8')] = keys_used[(uchar) M('9')] = TRUE;
+    }
+    for (i = 0; misc_keys[i].desc; ++i) {
+        key = (uchar) g.Cmd.spkeys[misc_keys[i].nhkf];
+        if (key && ((misc_keys[i].numpad && iflags.num_pad)
+                    || !misc_keys[i].numpad)) {
+            keys_used[key] = TRUE;
+        }
+    }
+#ifndef NO_SIGNAL
+    /* this is actually ambiguous; tty raw mode will override SIGINT */
+    key = (uchar) C('c');
+    keys_used[key] = TRUE;
+#endif
+
+    datawin = create_nhwindow(NHW_TEXT);
+    putstr(datawin, 0, "");
+    Sprintf(buf, "%7s %s", "", "    Full Current Key Bindings List");
+    putstr(datawin, 0, buf);
+    for (extcmd = extcmdlist; extcmd->ef_txt; ++extcmd)
+        if (!keylist_func_has_key(extcmd, keys_used)) {
+            Sprintf(buf, "%7s %s", "",
+                               "(also commands with no key assignment)");
+            putstr(datawin, 0, buf);
+            break;
+        }
+
+    /* directional keys */
+    putstr(datawin, 0, "");
+    putstr(datawin, 0, "Directional keys:");
+    show_direction_keys(datawin, '.', FALSE); /* '.'==self in direct'n grid */
+
+    if (!iflags.num_pad) {
         putstr(datawin, 0, "");
-        Strcpy(buf, "Meta");
+        putstr(datawin, 0,
+     "Ctrl+<direction> will run in specified direction until something very");
+        Sprintf(buf, "%7s %s", "", "interesting is seen.");
+        putstr(datawin, 0, buf);
+        Strcpy(buf, "Shift"); /* append the rest below */
+    } else {
+        /* num_pad */
+        putstr(datawin, 0, "");
+        Strcpy(buf, "Meta"); /* append the rest next */
     }
     Strcat(buf,
           "+<direction> will run in specified direction until you encounter");
@@ -2319,18 +2354,18 @@ dokeylist(VOID_ARGS)
 
     putstr(datawin, 0, "");
     putstr(datawin, 0, "Miscellaneous keys:");
-    for (i = 0; misc_keys[i].desc; i++) {
-        key = g.Cmd.spkeys[misc_keys[i].nhkf];
+    for (i = 0; misc_keys[i].desc; ++i) {
+        key = (uchar) g.Cmd.spkeys[misc_keys[i].nhkf];
         if (key && ((misc_keys[i].numpad && iflags.num_pad)
                     || !misc_keys[i].numpad)) {
-            keys_used[(uchar) key] = TRUE;
             Sprintf(buf, "%-7s %s", key2txt(key, buf2), misc_keys[i].desc);
             putstr(datawin, 0, buf);
         }
     }
 #ifndef NO_SIGNAL
-    keys_used[(uchar) C('c')] = TRUE;
-    Sprintf(buf, "%-7s %s", key2txt(C('c'), buf2),
+    /* (see above) */
+    key = (uchar) C('c');
+    Sprintf(buf, "%-7s %s", key2txt(key, buf2),
             "break out of NetHack (SIGINT)");
     putstr(datawin, 0, buf);
 #endif
@@ -2346,15 +2381,14 @@ dokeylist(VOID_ARGS)
     }
 
     if (keylist_putcmds(datawin, TRUE, 0,
-                          GENERALCMD | WIZMODECMD, keys_used)) {
+                        GENERALCMD | WIZMODECMD, keys_used)) {
         putstr(datawin, 0, "");
         putstr(datawin, 0, "Game commands:");
         (void) keylist_putcmds(datawin, FALSE, 0,
-                                 GENERALCMD | WIZMODECMD, keys_used);
+                               GENERALCMD | WIZMODECMD, keys_used);
     }
 
-    if (wizard
-        && keylist_putcmds(datawin, TRUE, WIZMODECMD, 0, keys_used)) {
+    if (wizard && keylist_putcmds(datawin, TRUE, WIZMODECMD, 0, keys_used)) {
         putstr(datawin, 0, "");
         putstr(datawin, 0, "Debug mode commands:");
         (void) keylist_putcmds(datawin, FALSE, WIZMODECMD, 0, keys_used);
@@ -2870,7 +2904,7 @@ wiz_migrate_mons()
 
 static struct {
     int nhkf;
-    char key;
+    uchar key;
     const char *name;
 } const spkeys_binds[] = {
     { NHKF_ESC,              '\033', (char *) 0 }, /* no binding */
@@ -2879,6 +2913,7 @@ static struct {
     { NHKF_RUN,              'G', "run" },
     { NHKF_RUN2,             '5', "run.numpad" },
     { NHKF_RUSH,             'g', "rush" },
+    { NHKF_RUSH2,            M('5'), "rush.numpad" },
     { NHKF_FIGHT,            'F', "fight" },
     { NHKF_FIGHT2,           '-', "fight.numpad" },
     { NHKF_NOPICKUP,         'm', "nopickup" },
@@ -3137,13 +3172,14 @@ boolean initial;
         if (flagtemp != g.Cmd.swap_yz) {
             g.Cmd.swap_yz = flagtemp;
             ++updated;
-            /* g.Cmd.swap_yz has been toggled;
+            /* FIXME? should Cmd.spkeys[] be scanned for y and/or z to swap?
+               Cmd.swap_yz has been toggled;
                perform the swap (or reverse previous one) */
             for (i = 0; i < SIZE(ylist); i++) {
                 c = ylist[i] & 0xff;
-                cmdtmp = g.Cmd.commands[c];              /* tmp = [y] */
+                cmdtmp = g.Cmd.commands[c];                /* tmp = [y] */
                 g.Cmd.commands[c] = g.Cmd.commands[c + 1]; /* [y] = [z] */
-                g.Cmd.commands[c + 1] = cmdtmp;          /* [z] = tmp */
+                g.Cmd.commands[c + 1] = cmdtmp;            /* [z] = tmp */
             }
         }
         /* MSDOS compatibility mode (only applicable for num_pad) */
@@ -3152,10 +3188,17 @@ boolean initial;
             g.Cmd.pcHack_compat = flagtemp;
             ++updated;
             /* pcHack_compat has been toggled */
+#if 0
             c = M('5') & 0xff;
             cmdtmp = g.Cmd.commands['5'];
             g.Cmd.commands['5'] = g.Cmd.commands[c];
             g.Cmd.commands[c] = cmdtmp;
+#else
+            c = g.Cmd.spkeys[NHKF_RUN2];
+            g.Cmd.spkeys[NHKF_RUN2] = g.Cmd.spkeys[NHKF_RUSH2];
+            g.Cmd.spkeys[NHKF_RUSH2] = c;
+#endif
+            /* FIXME: NHKF_DOINV2 ought to be implemented instead of this */
             c = M('0') & 0xff;
             g.Cmd.commands[c] = g.Cmd.pcHack_compat ? g.Cmd.commands['I'] : 0;
         }
@@ -3366,6 +3409,10 @@ register char *cmd;
     spkey = ch2spkeys(*cmd, NHKF_RUN, NHKF_CLICKLOOK);
 
     switch (spkey) {
+    case NHKF_RUSH2:
+        if (!g.Cmd.num_pad)
+            break;
+        /*FALLTHRU*/
     case NHKF_RUSH:
         if (movecmd(cmd[1])) {
             g.context.run = 2;
@@ -3625,7 +3672,8 @@ char c;
             || c == g.Cmd.spkeys[NHKF_RUN_NOPICKUP]
             || c == g.Cmd.spkeys[NHKF_FIGHT]
             || (g.Cmd.num_pad && (c == g.Cmd.spkeys[NHKF_RUN2]
-                                || c == g.Cmd.spkeys[NHKF_FIGHT2])));
+                                  || c == g.Cmd.spkeys[NHKF_RUSH2]
+                                  || c == g.Cmd.spkeys[NHKF_FIGHT2])));
 }
 
 /*
@@ -3779,6 +3827,10 @@ const char *msg;
     case NHKF_NOPICKUP:
         dothat = "move";
         break;
+    case NHKF_RUSH2:
+        if (!g.Cmd.num_pad)
+            break;
+        /*FALLTHRU*/
     case NHKF_RUSH:
         dothat = "rush";
         break;
@@ -3976,6 +4028,9 @@ const char *text;
     }
 }
 
+/* offer choice of actions to perform at adjacent location <x,y>;
+   does not work as intended because the actions that get invoked
+   ask for a direction or target instead of using our <x,y> */
 static char
 there_cmd_menu(doit, x, y)
 boolean doit;
@@ -4053,6 +4108,18 @@ int x, y;
         add_herecmd_menuitem(win, dotalk, buf);
     }
 #if 0
+    if (mtmp) {
+        Sprintf(buf, "%s %s", mon_nam(mtmp),
+                !has_mname(mtmp) ? "Name" : "Rename"), ++K;
+        /* need a way to pass mtmp or <ux+dx,uy+dy>to an 'int f()' function
+           as well as reorganizinging do_mname() to use that function */
+        add_herecmd_menuitem(win, XXX(), buf);
+    }
+#endif
+#if 0
+    /* these are necessary if click_to_cmd() is deferring to us; however,
+       moving/fighting aren't implmented as independent commands so don't
+       fit our menu's use of command functions */
     if (mtmp || glyph_is_invisible(glyph_at(x, y))) {
         /* "Attack %s", mtmp ? mon_nam(mtmp) : "unseen creature" */
     } else {
@@ -4068,7 +4135,7 @@ int x, y;
         npick = 0;
     }
     destroy_nhwindow(win);
-    ch = '\0';
+    ch = '\033';
     if (npick > 0) {
         int NDECL((*func)) = picks->item.a_nfunc;
         free((genericptr_t) picks);
@@ -4171,7 +4238,7 @@ boolean doit;
     end_menu(win, "What do you want to do?");
     npick = select_menu(win, PICK_ONE, &picks);
     destroy_nhwindow(win);
-    ch = '\0';
+    ch = '\033';
     if (npick > 0) {
         int NDECL((*func)) = picks->item.a_nfunc;
         free((genericptr_t) picks);
@@ -4196,15 +4263,32 @@ int x, y, mod;
 {
     static char cmd[4];
     struct obj *o;
-    int dir;
+    int dir, udist;
 
-    cmd[1] = '\0';
-
+    cmd[0] = cmd[1] = '\0';
     if (iflags.clicklook && mod == CLICK_2) {
         g.clicklook_cc.x = x;
         g.clicklook_cc.y = y;
         cmd[0] = g.Cmd.spkeys[NHKF_CLICKLOOK];
         return cmd;
+    }
+    /* this used to be inside the 'if (flags.travelcmd)' block, but
+       handle click-on-self even when travel is disabled; unlike
+       accidentally zooming across the level because of a stray click,
+       clicking on self can easily be cancelled if it wasn't intended */
+    if (iflags.herecmd_menu && isok(x, y)) {
+        udist = distu(x, y);
+        if (!udist) {
+            cmd[0] = here_cmd_menu(FALSE);
+            return cmd;
+        } else if (udist <= 2) {
+#if 0       /* there_cmd_menu() is broken; the commands it invokes
+             * tend to ask for a direction or target instead of using
+             * the adjacent coordinates that are being passed to it */
+            cmd[0] = there_cmd_menu(FALSE, x, y);
+            return cmd;
+#endif
+        }
     }
 
     x -= u.ux;
@@ -4221,11 +4305,6 @@ int x, y, mod;
         }
 
         if (x == 0 && y == 0) {
-            if (iflags.herecmd_menu) {
-                cmd[0] = here_cmd_menu(FALSE);
-                return cmd;
-            }
-
             /* here */
             if (IS_FOUNTAIN(levl[u.ux][u.uy].typ)
                 || IS_SINK(levl[u.ux][u.uy].typ)) {
@@ -4255,17 +4334,10 @@ int x, y, mod;
         /* directional commands */
 
         dir = xytod(x, y);
-
         if (!m_at(u.ux + x, u.uy + y)
             && !test_move(u.ux, u.uy, x, y, TEST_MOVE)) {
             cmd[1] = g.Cmd.dirchars[dir];
             cmd[2] = '\0';
-            if (iflags.herecmd_menu) {
-                cmd[0] = there_cmd_menu(FALSE, u.ux + x, u.uy + y);
-                if (cmd[0] == '\0')
-                    cmd[1] = '\0';
-                return cmd;
-            }
 
             if (IS_DOOR(levl[u.ux + x][u.uy + y].typ)) {
                 /* slight assistance to player: choose kick/open for them */

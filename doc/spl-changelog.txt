@@ -45,6 +45,7 @@ Bug Fixes
 - Cancelled molydei cannot polymorph other monsters.
 - Improve consistency of YAFMs for bears caught in bear traps.
 - Fixed dragonmaster quest leader being randomly hostile.
+- Fixed unicorn horn dipping.
 
                             Version 0.8.2
 

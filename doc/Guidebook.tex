@@ -45,7 +45,7 @@
 %.au
 \author{Original version - Eric S. Raymond\\
 (Edited and expanded for 3.7 by Mike Stephenson and others)}
-\date{October 2, 2020}
+\date{December 9, 2020}
 
 \maketitle
 
@@ -1095,6 +1095,7 @@ Zap (cast) a spell.\\
 %.lp
 \item[\tb{\^{}Z}]
 Suspend the game (UNIX versions with job control only).
+See ``\#suspend'' below for more details.
 %.lp
 \item[\tb{:}]
 Look at what is here.
@@ -1135,7 +1136,7 @@ Combines the preceding five type-specific
 commands into one.
 %.lp
 \item[\tb{\$}]
-Count your gold pieces.
+Report the gold you're carrying, possibly shop credit and/or debt too.
 %.lp
 \item[\tb{+}]
 List the spells you know.\\
@@ -1159,6 +1160,7 @@ Show discovered types for one class of objects.
 %.lp
 \item[\tb{!}]
 Escape to a shell.
+See ``\#shell'' below for more details.
 %.lp
 \item[\tb{\#}]
 Perform an extended command.\\
@@ -1469,31 +1471,40 @@ Show the amulet currently worn. Default key is `{\tt "}'.
 \item[\tb{\#seearmor}]
 Show the armor currently worn. Default key is `{\tt [}'.
 %.lp
-\item[\tb{\#seegold}]
-Count your gold. Default key is `{\tt \$}'.
-%.lp
-\item[\tb{\#seenv}]
-Show seen vectors.
-Autocompletes.
-Debug mode only.
-%.lp
 \item[\tb{\#seerings}]
 Show the ring(s) currently worn. Default key is `{\tt =}'.
 %.lp
-\item[\tb{\#seespells}]
-List and reorder known spells. Default key is `{\tt +}'.
-%.lp
 \item[\tb{\#seetools}]
 Show the tools currently in use. Default key is `{\tt (}'.
-%.lp
-\item[\tb{\#seetrap}]
-Show the type of an adjacent trap. Default key is `{\tt \^{}}'.
 %.lp
 \item[\tb{\#seeweapon}]
 Show the weapon currently wielded. Default key is `{\tt )}'.
 %.lp
 \item[\tb{\#shell}]
-Do a shell escape. Default key is `{\tt !}'.
+Do a shell escape, switching from NetHack to a subprocess.
+Can be disabled at the time the program is built.
+When enabled, access for specific users can be controlled by the system
+configuration file.
+Use the shell command `{\tt exit}' to return to the game.
+Default key is `{\tt !}'.
+%.lp
+\item[\tb{\#showgold}]
+Report the gold in your inventory and if you are inside a shop,
+report any credit or debt you have in that shop.
+Does not report on any gold inside containers you're carrying.
+Default key is `{\tt \$}'.
+%.lp
+\item[\tb{\#showspells}]
+List and reorder known spells.
+Default key is `{\tt +}'.
+%.lp
+\item[\tb{\#showtrap}]
+Describe an adjacent trap, possibly covered by objects or a monster.
+To be eligible, the trap must already be discovered.
+(The ``{\tt \#terrain}'' command can display your map with all objects and
+monsters temporarily removed, making it possible to see all discovered
+traps.)
+Default key is `{\tt \^{}}'.
 %.lp
 \item[\tb{\#sit}]
 Sit down. Autocompletes. Default key is `{\tt M-s}'.
@@ -1504,7 +1515,14 @@ Autocompletes.
 Debug mode only.
 %.lp
 \item[\tb{\#suspend}]
-Suspend the game. Default key is `{\tt \^{}Z}'.
+Suspend the game, switching from NetHack to the terminal it was started
+from without performing save-and-exit.
+Can be disabled at the time the program is built.
+When enabled, mainly useful for {\it tty\/} and {\it curses\/} interfaces on
+%.UX \. \" yields "UNIX."
+UNIX.
+Use the shell command `{\tt fg}' to return to the game.
+Default key is `{\tt \^{}Z}'.
 %.lp
 \item[\tb{\#swap}]
 Swap wielded and secondary weapons. Default key is `{\tt x}'.
@@ -1575,10 +1593,19 @@ Debug mode only.
 %.lp
 \item[\tb{\#version}]
 Print compile time options for this version of {\it NetHack\/}.
+
+%.lp
+The second paragraph lists the user interface(s) that are included.
+If there are more than one, you can use the {\it window\verb+_+type\/}
+option in your run-time configuration file to select the one you want.
+
+%.lp
 Autocompletes. Default key is `{\tt M-v}'.
 %.lp
 \item[\tb{\#versionshort}]
-Show version string. Default key is `{\tt v}'.
+Show the program's version number, plus the date and time that the
+running copy was built from sources (not the version's release date).
+Default key is `{\tt v}'.
 %.lp
 \item[\tb{\#vision}]
 Show vision array.
@@ -1658,6 +1685,11 @@ first and last false rumors.\\
 Also displays first, second, and last random engravings, epitaphs,
 and hallucinatory monsters.\\
 %.lp ""
+Autocompletes.
+Debug mode only.
+%.lp
+\item[\tb{\#wizseenv}]
+Show map locations' seen vectors.
 Autocompletes.
 Debug mode only.
 %.lp
@@ -2075,7 +2107,7 @@ Shops do not get restocked with new items, regardless of inventory depletion.
 \end{itemize}
 
 %.hn 2
-\subsubsection*{Movement feedback}
+\subsection*{Movement feedback}
 
 %.pg
 Moving around the map usually provides no
@@ -2160,6 +2192,27 @@ The
 {\it run\verb+_+mode}
 option controls how frequently the map gets redrawn when moving more
 than one step in a single command (so when rushing, running, or traveling).
+
+%.hn 2
+\subsection*{Rogue level}
+
+%.pg
+One dungeon level (occurring in mid to late teens of the main dungeon)
+is a tribute to the ancestor game {\it hack}'s inspiration {\it rogue}.
+
+%.pg
+It is usually displayed differently from other levels: possibly in
+characters instead of tiles, or without line-drawing symbols if already
+in characters; also, gold is shown as {\tt *} rather than {\tt \verb+$+}
+and stairs are shown as {\tt \verb+%+} rather than {\tt <} and {\tt >}.
+There are some minor differences in actual game play: doorways lack
+doors; a scroll, wand, or spell of light used in a room lights up the
+whole room rather than within a radius around your character.
+And monsters represented by lower-case letters aren't randomly
+generated on the rogue level.
+
+%.pg
+The slight strangeness of this level is a feature, not a bug....
 
 %.hn 1
 \section{Monsters}
@@ -4529,7 +4582,16 @@ with the `{\tt O}' command.
  Where to align or place the status window (top, bottom, left, or right).
 %.lp
 \item[\ib{ascii\verb+_+map}]
-If {\it NetHack\/} can, it should display an ascii map.
+%.hw DECgraphics IBMgraphics \% don't hyphenate these
+\hyphenation{DECgraphics IBMgraphics}
+If {\it NetHack\/} can, it should display the map using simple
+characters (letters and punctuation) rather than {\it tiles\/} graphics.
+In some cases, characters can be augmented with line-drawing symbols;
+use the {\tt symset}
+option to select a symbol set such as {\it DECgraphics\/}
+or {\it IBMgraphics\/} if your display supports them.
+Setting {\tt ascii\verb+_+map} to {\it True\/} forces
+{\tt tiled\verb+_+map} to be {\it False}.
 %.lp
 \item[\ib{color}]
 If {\it NetHack\/} can, it should display color for different monsters,
@@ -4621,8 +4683,36 @@ it starts up (default yes).
 %.lp
 \item[\ib{statuslines}]
 Number of lines for traditional below-the-map status display.
-Acceptable values are 2 and 3 (default is 2).
-Curses and tty interfaces only.
+Acceptable values are {\tt 2} and {\tt 3} (default is {\tt 2}).
+
+%.lp ""
+For {\tt 3}, the {\tt tty} interface moves some fields around and
+mainly shows status conditions on their own line.
+A display capable of showing at least 25 lines is recommended.
+The value can be toggled back and forth during the game with the `O'
+command.
+
+%.lp ""
+The {\tt curses} interface does likewise if the
+{\it align\verb+_+status\/}
+option is set to {\it top\/} or {\it bottom\/} but ignores
+{\it statuslines\/}
+when set to {\it left\/} or {\it right}.
+
+%.lp ""
+The {\tt Qt} interface already displays more than 3 lines for status
+so uses the
+{\it statuslines\/}
+value differently.
+A value of {\tt 3} renders status in the {\tt Qt} interface's
+original format, with the status window spread out vertically.
+A value of {\tt 2} makes status be slightly condensed, moving some
+fields to different lines to eliminate one whole line, reducing the
+height needed.
+For {\tt Qt},
+{\it statuslines\/}
+can only be set in the configuration file or via NETHACKOPTIONS, not
+with the `O' command.
 %.lp
 \item[\ib{term\verb+_+cols} {\normalfont and}]
 %.lp
@@ -4633,9 +4723,6 @@ Curses will attempt to resize to the values specified but will settle
 for smaller sizes if they are too big.
 Default is the current window size.
 %.lp
-\item[\ib{tiled\verb+_+map}]
-If {\it NetHack\/} can, it should display a tiled map if it can.
-%.lp
 \item[\ib{tile\verb+_+file}]
 Specify the name of an alternative tile file to override the default.
 %.lp
@@ -4644,6 +4731,13 @@ Specify the preferred height of each tile in a tile capable port.
 %.lp
 \item[\ib{tile\verb+_+width}]
 Specify the preferred width of each tile in a tile capable port
+%.lp
+\item[\ib{tiled\verb+_+map}]
+If {\it NetHack\/} can, it should display the map using \fItiles\fP graphics
+rather than simple characters (letters and punctuation, possibly
+augmented by line-drawing symbols).
+Setting {\tt tiled\verb+_+map} to {\it True\/} forces
+{\tt ascii\verb+_+map} to be {\it False}.
 %.lp
 \item[\ib{use\verb+_+darkgray}]
 Use bold black instead of blue for black glyphs (TTY only).
@@ -4807,7 +4901,7 @@ if this does not correct the problem, try {\tt !color}.
 Cannot be set with the `{\tt O}' command.
 \elist
 
-%.nh 2
+%.hn 2
 \subsection*{Regular Expressions}
 
 %.pg

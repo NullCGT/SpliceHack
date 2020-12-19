@@ -1,4 +1,4 @@
-/* NetHack 3.7	options.c	$NHDT-Date: 1599893947 2020/09/12 06:59:07 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.473 $ */
+/* NetHack 3.7	options.c	$NHDT-Date: 1607591206 2020/12/10 09:06:46 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.485 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2008. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -252,13 +252,12 @@ static boolean FDECL(add_menu_coloring_parsed, (const char *, int, int));
 static void FDECL(free_one_menu_coloring, (int));
 static int NDECL(count_menucolors);
 static boolean FDECL(parse_role_opts, (int, BOOLEAN_P, const char *,
-                                           char *, char **));
+                                       char *, char **));
 static void FDECL(doset_add_menu, (winid, const char *, int, int));
-static void FDECL(opts_add_others, (winid, const char *, int,
-                                        char *, int));
+static void FDECL(opts_add_others, (winid, const char *, int, char *, int));
 static int FDECL(handle_add_list_remove, (const char *, int));
 static void FDECL(remove_autopickup_exception,
-                      (struct autopickup_exception *));
+                  (struct autopickup_exception *));
 static int NDECL(count_apes);
 static int NDECL(count_cond);
 
@@ -288,7 +287,7 @@ static boolean FDECL(is_wc2_option, (const char *));
 static boolean FDECL(wc2_supported, (const char *));
 static void FDECL(wc_set_font_name, (int, char *));
 static int FDECL(wc_set_window_colors, (char *));
-static boolean FDECL(illegal_menu_cmd_key, (CHAR_P));
+static boolean FDECL(illegal_menu_cmd_key, (UCHAR_P));
 #ifndef CHANGE_COLOR
 int FDECL(optfn_palette, (int, int, BOOLEAN_P, char *, char *));
 #endif
@@ -3514,9 +3513,9 @@ char *op;
             itmp = atoi(op);
         }
         if (itmp < 2 || itmp > 3) {
-            config_error_add("'%s' requires a value of 2 or 3",
-                             allopt[optidx].name);
-            retval = optn_err;
+            config_error_add("'%s:%s' is invalid; must be 2 or 3",
+                             allopt[optidx].name, op);
+            retval = optn_silenterr;
         } else {
             iflags.wc2_statuslines = itmp;
             if (!g.opt_initial)
@@ -4345,13 +4344,9 @@ char *op;
 
         if ((op = string_for_env_opt(allopt[optidx].name, opts, FALSE))
             != empty_optstr) {
+            nmcpy(g.chosen_windowtype, op, WINTYPELEN);
             if (!iflags.windowtype_deferred) {
-                char buf[WINTYPELEN];
-
-                nmcpy(buf, op, WINTYPELEN);
-                choose_windows(buf);
-            } else {
-                nmcpy(g.chosen_windowtype, op, WINTYPELEN);
+                choose_windows(g.chosen_windowtype);
             }
         } else
             return optn_err;
@@ -4370,7 +4365,8 @@ char *op;
  *    Prefix-handling functions
  */
 
-int pfxfn_cond_(optidx, req, negated, opts, op)
+int
+pfxfn_cond_(optidx, req, negated, opts, op)
 int optidx UNUSED;
 int req;
 boolean negated;
@@ -4414,7 +4410,8 @@ char *op UNUSED;
     return optn_ok;
 }
 
-int pfxfn_font(optidx, req, negated, opts, op)
+int
+pfxfn_font(optidx, req, negated, opts, op)
 int optidx;
 int req;
 boolean negated;
@@ -4550,7 +4547,8 @@ char *op;
 }
 
 #if defined(MICRO) && !defined(AMIGA)
-int pfxfn_IBM_(optidx, req, negated, opts, op)
+int
+pfxfn_IBM_(optidx, req, negated, opts, op)
 int optidx;
 int req;
 boolean negated;
@@ -4705,6 +4703,12 @@ char *op;
                 /* [is reassessment really needed here?] */
                 status_initialize(REASSESS_ONLY);
                 g.opt_need_redraw = TRUE;
+#ifdef QT_GRAPHICS
+            } else if (WINDOWPORT("Qt")) {
+                /* Qt doesn't support HILITE_STATUS or FLUSH_STATUS so fails
+                   VIA_WINDOWPORT(), but it does support WC2_HITPOINTBAR */
+                g.context.botlx = TRUE;
+#endif
             }
             break;
         case opt_color:
@@ -4737,7 +4741,8 @@ char *op;
     return optn_ok;
 }
 
-int spcfn_misc_menu_cmd(midx, req, negated, opts, op)
+int
+spcfn_misc_menu_cmd(midx, req, negated, opts, op)
 int midx;
 int req;
 boolean negated;
@@ -4757,7 +4762,7 @@ char *op;
             escapes(op, op_buf);
             c = *op_buf;
 
-            if (illegal_menu_cmd_key(c))
+            if (illegal_menu_cmd_key((uchar) c))
                 return optn_err;
             add_menu_cmd_alias(c, default_menu_cmd_info[midx].cmd);
         }
@@ -5884,7 +5889,8 @@ int optidx;
     if (using_alias)
         Sprintf(buf, " (via alias: %s)", allopt[optidx].alias);
     config_error_add("%s option specified multiple times: %s%s",
-                     (allopt[optidx].opttyp == CompOpt) ? "compound" : "boolean",
+                     (allopt[optidx].opttyp == CompOpt) ? "compound"
+                                                        : "boolean",
                      allopt[optidx].name, buf);
 #endif /* ?MAC */
     return;
@@ -6456,10 +6462,10 @@ const char *optn;
 /* parse key:command */
 boolean
 parsebindings(bindings)
-char* bindings;
+char *bindings;
 {
     char *bind;
-    char key;
+    uchar key;
     int i;
     boolean ret = FALSE;
 
@@ -6494,7 +6500,7 @@ char* bindings;
                 config_error_add("Bad menu key %s:%s", visctrl(key), bind);
                 return FALSE;
             } else
-                add_menu_cmd_alias(key, default_menu_cmd_info[i].cmd);
+                add_menu_cmd_alias((char) key, default_menu_cmd_info[i].cmd);
             return TRUE;
         }
     }
@@ -6673,7 +6679,7 @@ boolean load_colors;
                 if (c == CLR_BLACK || c == CLR_WHITE || c == NO_COLOR)
                     continue; /* skip these */
                 Sprintf(cnm, patternfmt, colornames[i].name);
-                add_menu_coloring_parsed(dupstr(cnm), c, ATR_NONE);
+                add_menu_coloring_parsed(cnm, c, ATR_NONE);
             }
 
             /* right now, menu_colorings contains the alternate color list;
@@ -7246,18 +7252,19 @@ char **opp;
 /* Check if character c is illegal as a menu command key */
 boolean
 illegal_menu_cmd_key(c)
-char c;
+uchar c;
 {
-    if (c == 0 || c == '\r' || c == '\n' || c == '\033'
-        || c == ' ' || digit(c) || (letter(c) && c != '@')) {
-        config_error_add("Reserved menu command key '%s'", visctrl(c));
+    if (c == 0 || c == '\r' || c == '\n' || c == '\033' || c == ' '
+        || digit((char) c) || (letter((char) c) && c != '@')) {
+        config_error_add("Reserved menu command key '%s'", visctrl((char) c));
         return TRUE;
     } else { /* reject default object class symbols */
         int j;
+
         for (j = 1; j < MAXOCLASSES; j++)
-            if (c == def_oc_syms[j].sym) {
+            if (c == (uchar) def_oc_syms[j].sym) {
                 config_error_add("Menu command key '%s' is an object class",
-                                 visctrl(c));
+                                 visctrl((char) c));
                 return TRUE;
             }
     }
@@ -7499,10 +7506,9 @@ static struct other_opts {
     int NDECL((*othr_count_func));
 } othropt[] = {
     { "autopickup exceptions", set_in_game, OPT_OTHER_APEXC, count_apes },
-    { "status condition fields", set_in_game,
-      OPT_OTHER_COND, count_cond },
     { "menu colors", set_in_game, OPT_OTHER_MENUCOLOR, count_menucolors },
     { "message types", set_in_game, OPT_OTHER_MSGTYPE, msgtype_count },
+    { "status condition fields", set_in_game, OPT_OTHER_COND, count_cond },
 #ifdef STATUS_HILITES
     { "status hilite rules", set_in_game, OPT_OTHER_STATHILITE,
       count_status_hilites },
@@ -7718,7 +7724,8 @@ doset() /* changing options via menu by Per Liboriussen */
         check_gold_symbol();
         reglyph_darkroom();
         (void) doredraw();
-    } else if (g.context.botl || g.context.botlx) {
+    }
+    if (g.context.botl || g.context.botlx) {
         bot();
     }
     return 0;
@@ -7813,7 +7820,7 @@ boolean dolist;
         int i;
 
         for (i = 0; i < SIZE(default_menu_cmd_info); i++) {
-            Sprintf(buf, "%-8s %s",
+            Sprintf(buf, "%-7s %s",
                     visctrl(get_menu_cmd_key(default_menu_cmd_info[i].cmd)),
                     default_menu_cmd_info[i].desc);
             putstr(win, 0, buf);
@@ -8198,8 +8205,14 @@ static const char *opt_intro[] = {
 
 static const char *opt_epilog[] = {
     "",
-    "Some of the options can be set only before the game is started; those",
-    "items will not be selectable in the 'O' command's menu.",
+    "Some of the options can only be set before the game is started;",
+    "those items will not be selectable in the 'O' command's menu.",
+    "Some options are stored in a game's save file, and will keep saved",
+    "values when restoring that game even if you have updated your config-",
+    "uration file to change them.  Such changes will matter for new games.",
+    "The \"other settings\" can be set with 'O', but when set within the",
+    "configuration file they use their own directives rather than OPTIONS.",
+    "See NetHack's \"Guidebook\" for details.",
     (char *) 0
 };
 
@@ -8231,14 +8244,43 @@ option_help()
     /* Compound options */
     putstr(datawin, 0, "Compound options:");
     for (i = 0; allopt[i].name; i++) {
+        if (allopt[i].opttyp != CompOpt) /* skip booleans */
+            continue;
         Sprintf(buf2, "`%s'", allopt[i].name);
         Sprintf(buf, "%-20s - %s%c", buf2, allopt[i].descr,
                 allopt[i + 1].name ? ',' : '.');
         putstr(datawin, 0, buf);
     }
+    putstr(datawin, 0, "");
+
+    putstr(datawin, 0, "Other settings:");
+    for (i = 0; othropt[i].name; ++i) {
+        Sprintf(buf, " %s", othropt[i].name);
+        putstr(datawin, 0, buf);
+    }
 
     for (i = 0; opt_epilog[i]; i++)
         putstr(datawin, 0, opt_epilog[i]);
+
+    /*
+     * TODO:
+     *  briefly describe interface-specific option-like settings for
+     *  the currently active interface:
+     *    X11 uses X-specific "application defaults" from NetHack.ad;
+     *    Qt has menu accessible "game -> Qt settings" (non-OSX) or
+     *      "nethack -> Preferences" (OSX) to maintain a few options
+     *      (font size, map tile size, paperdoll show/hide flag and
+     *      tile size) which persist across games;
+     *    Windows GUI also has some port-specific menus;
+     *    tty and curses: anything?
+     *  Best done via a new windowprocs function rather than plugging
+     *  in details here.
+     *
+     * Maybe:
+     *  switch from text window to pick-none menu so that user can
+     *  scroll back up.  (Not necessary for Qt where text windows are
+     *  already scrollable.)
+     */
 
     display_nhwindow(datawin, FALSE);
     destroy_nhwindow(datawin);

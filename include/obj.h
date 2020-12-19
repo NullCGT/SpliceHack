@@ -1,4 +1,4 @@
-/* NetHack 3.7	obj.h	$NHDT-Date: 1596498552 2020/08/03 23:49:12 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.76 $ */
+/* NetHack 3.7	obj.h	$NHDT-Date: 1604620981 2020/11/06 00:03:01 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.79 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2006. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -131,6 +131,8 @@ struct obj {
     long age;               /* creation date */
     long owornmask;
     unsigned lua_ref_cnt;  /* # of lua script references for this object */
+    xchar omigr_from_dnum; /* where obj is migrating from */
+    xchar omigr_from_dlevel; /* where obj is migrating from */
     struct oextra *oextra; /* pointer to oextra struct */
 };
 
@@ -272,13 +274,16 @@ struct obj {
 #define stale_egg(egg) \
     ((g.monstermoves - (egg)->age) > (2 * MAX_EGG_HATCH_TIME))
 #define ofood(o) ((o)->otyp == CORPSE || (o)->otyp == EGG || (o)->otyp == TIN)
+    /* note: sometimes eggs and tins have special corpsenm values that
+       shouldn't be used as an index into mons[]                       */
 #define polyfodder(obj) \
-    (ofood(obj) && (pm_to_cham((obj)->corpsenm) != NON_PM       \
+    (ofood(obj) && (obj)->corpsenm >= LOW_PM                            \
+     && (pm_to_cham((obj)->corpsenm) != NON_PM                          \
                     || dmgtype(&mons[(obj)->corpsenm], AD_POLY)))
 #define mlevelgain(obj) (ofood(obj) && (obj)->corpsenm == PM_WRAITH)
 #define mhealup(obj) (ofood(obj) && (obj)->corpsenm == PM_NURSE)
-#define Is_pudding(o)                                                 \
-    (o->otyp == GLOB_OF_GRAY_OOZE || o->otyp == GLOB_OF_BROWN_PUDDING \
+#define Is_pudding(o) \
+    (o->otyp == GLOB_OF_GRAY_OOZE || o->otyp == GLOB_OF_BROWN_PUDDING   \
      || o->otyp == GLOB_OF_GREEN_SLIME || o->otyp == GLOB_OF_BLACK_PUDDING)
 #define drainlevel(corpse) (mons[(corpse)->corpsenm].cnutrit * 0.8)
 
@@ -337,24 +342,29 @@ struct obj {
     || otmp->otyp == AUTOMATON_CANDLE)
 #define MAX_OIL_IN_FLASK 400 /* maximum amount of oil in a potion of oil */
 
-/* MAGIC_LAMP intentionally excluded below */
-/* age field of this is relative age rather than absolute */
-#define age_is_relative(otmp)                                       \
+/* age field of this is relative age rather than absolute; does not include
+   magic lamp */
+#define age_is_relative(otmp) \
     ((otmp)->otyp == LANTERN || (otmp)->otyp == OIL_LAMP      \
      || (otmp)->otyp == CANDELABRUM_OF_INVOCATION                   \
      || (otmp)->otyp == TALLOW_CANDLE || (otmp)->otyp == WAX_CANDLE \
      || (otmp)->otyp == POT_OIL || (otmp)->otyp == CALLING_CANDLE \
      || (otmp)->otyp == SPIRIT_CANDLE || (otmp)->otyp == AUTOMATON_CANDLE)
-/* object can be ignited */
-#define ignitable(otmp)                                             \
+/* object can be ignited; magic lamp used to excluded here too but all
+   usage of this macro ended up testing
+     (ignitable(obj) || obj->otyp == MAGIC_LAMP)
+   so include it; brass lantern can be lit but not by fire */
+#define ignitable(otmp) \
     ((otmp)->otyp == LANTERN || (otmp)->otyp == OIL_LAMP      \
+     || ((otmp)->otyp == MAGIC_LAMP && (otmp)->spe > 0)             \
      || (otmp)->otyp == CANDELABRUM_OF_INVOCATION                   \
      || (otmp)->otyp == TALLOW_CANDLE || (otmp)->otyp == WAX_CANDLE \
      || (otmp)->otyp == POT_OIL || (otmp)->otyp == CALLING_CANDLE \
-     || (otmp)->otyp == SPIRIT_CANDLE || (otmp)->otyp == AUTOMATON_CANDLE)
+     || (otmp)->otyp == SPIRIT_CANDLE || (otmp)->otyp == AUTOMATON_CANDLE \
+     || (otmp)->otyp == MOONSTONE)
 
 /* things that can be read */
-#define is_readable(otmp)                                                    \
+#define is_readable(otmp) \
     ((otmp)->otyp == FORTUNE_COOKIE || (otmp)->otyp == T_SHIRT               \
      || (otmp)->otyp == ALCHEMY_SMOCK || (otmp)->otyp == CREDIT_CARD         \
      || (otmp)->otyp == CAN_OF_GREASE || (otmp)->otyp == MAGIC_MARKER        \
@@ -381,6 +391,10 @@ struct obj {
      || ((o)->oartifact == ART_EYES_OF_THE_OVERWORLD                    \
          && !undiscovered_artifact(ART_EYES_OF_THE_OVERWORLD)))
 #define pair_of(o) ((o)->otyp == LENSES || (o)->otyp == EARMUFFS || is_gloves(o) || is_boots(o))
+
+#define unpolyable(o) ((o)->otyp == WAN_POLYMORPH \
+                       || (o)->otyp == SPE_POLYMORPH \
+                       || (o)->otyp == POT_POLYMORPH)
 
 /* achievement tracking; 3.6.x did this differently */
 #define is_mines_prize(o) ((o)->o_id == g.context.achieveo.mines_prize_oid)

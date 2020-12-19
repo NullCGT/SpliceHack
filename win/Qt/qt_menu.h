@@ -15,6 +15,8 @@
 
 namespace nethack_qt_ {
 
+extern uchar keyValue(QKeyEvent *key_event); // also used in qt_xcmd.cpp
+
 class NetHackQtTextListBox : public QListWidget {
 public:
     NetHackQtTextListBox(QWidget* parent = NULL) : QListWidget(parent) { }
@@ -155,15 +157,21 @@ public slots:
 	void Search();
 
 private slots:
+        void doDismiss();
 	void doUpdate();
+
+protected:
+	virtual void keyPressEvent(QKeyEvent *);
 
 private:
 	bool use_rip;
 	bool str_fixed;
+        bool textsearching;
 
 	QPushButton ok;
 	QPushButton search;
 	NetHackQtTextListBox* lines;
+        char target[BUFSZ];
 
 	NetHackQtRIP rip;
 };

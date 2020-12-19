@@ -279,17 +279,7 @@ boolean resuming;
                     if (wtcap > MOD_ENCUMBER && u.umoved) {
                         if (!(wtcap < EXT_ENCUMBER ? g.moves % 30
                                                    : g.moves % 10)) {
-                            if (Upolyd && u.mh > 1) {
-                                u.mh--;
-                                g.context.botl = TRUE;
-                            } else if (!Upolyd && u.uhp > 1) {
-                                u.uhp--;
-                                g.context.botl = TRUE;
-                            } else {
-                                You("pass out from exertion!");
-                                exercise(A_CON, FALSE);
-                                fall_asleep(-10, FALSE);
-                            }
+                            overexert_hp();
                         }
                     }
 
@@ -537,6 +527,8 @@ boolean resuming;
     }
 }
 
+#define U_CAN_REGEN() (Regeneration || (Sleepy && u.usleep))
+
 /* maybe recover some lost health (or lose some when an eel out of water) */
 static void
 regen_hp(wtcap)
@@ -559,7 +551,7 @@ int wtcap;
                 && (!Half_physical_damage || !(g.moves % 2L)))
                 heal = -1;
         } else if (u.mh < u.mhmax) {
-            if (Regeneration || (encumbrance_ok && !(g.moves % 20L)))
+            if (U_CAN_REGEN() || (encumbrance_ok && !(g.moves % 20L)))
                 heal = 1;
         }
         if (heal) {
@@ -574,7 +566,7 @@ int wtcap;
            no !Upolyd check here, so poly'd hero recovered lost u.uhp
            once u.mh reached u.mhmax; that may have been convenient
            for the player, but it didn't make sense for gameplay...] */
-        if (u.uhp < u.uhpmax && (encumbrance_ok || Regeneration) && !Withering) {
+        if (u.uhp < u.uhpmax && (encumbrance_ok || U_CAN_REGEN()) && !Withering) {
             if (u.ulevel > 9) {
                 if (!(g.moves % 3L)) {
                     heal = 1;
@@ -583,8 +575,10 @@ int wtcap;
                 if (!(g.moves % (long) ((MAXULEV + 12) / (u.ulevel + 2) + 1)))
                     heal = 1;
             }
-            if (Regeneration && !Withering && !heal)
+            if (U_CAN_REGEN() && !Withering && !heal)
                 heal = 1;
+            if (Sleepy && u.usleep)
+                heal++;
 
             if (heal) {
                 g.context.botl = TRUE;
@@ -600,6 +594,8 @@ int wtcap;
     if (reached_full)
         interrupt_multi("You are in full health.");
 }
+
+#undef U_CAN_REGEN
 
 void
 stop_occupation()
@@ -807,43 +803,21 @@ do_positionbar()
 {
     static char pbar[COLNO];
     char *p;
+    stairway *stway = g.stairs;
 
     p = pbar;
-    /* up stairway */
-    if (g.upstair.sx
-        && (glyph_to_cmap(g.level.locations[g.upstair.sx][g.upstair.sy].glyph)
-                == S_upstair
-            || glyph_to_cmap(g.level.locations[g.upstair.sx][g.upstair.sy].glyph)
-                   == S_upladder)) {
-        *p++ = '<';
-        *p++ = g.upstair.sx;
-    }
-    if (g.sstairs.sx
-        && (glyph_to_cmap(g.level.locations[g.sstairs.sx][g.sstairs.sy].glyph)
-                == S_upstair
-            || glyph_to_cmap(g.level.locations[g.sstairs.sx][g.sstairs.sy].glyph)
-                   == S_upladder)) {
-        *p++ = '<';
-        *p++ = g.sstairs.sx;
-    }
+    /* TODO: use the same method as getpos() so objects don't cover stairs */
+    while (stway) {
+        int x = stway->sx;
+        int y = stway->sy;
+        int glyph = glyph_to_cmap(g.level.locations[x][y].glyph);
 
-    /* down stairway */
-    if (g.dnstair.sx
-        && (glyph_to_cmap(g.level.locations[g.dnstair.sx][g.dnstair.sy].glyph)
-                == S_dnstair
-            || glyph_to_cmap(g.level.locations[g.dnstair.sx][g.dnstair.sy].glyph)
-                   == S_dnladder)) {
-        *p++ = '>';
-        *p++ = g.dnstair.sx;
-    }
-    if (g.sstairs.sx
-        && (glyph_to_cmap(g.level.locations[g.sstairs.sx][g.sstairs.sy].glyph)
-                == S_dnstair
-            || glyph_to_cmap(g.level.locations[g.sstairs.sx][g.sstairs.sy].glyph)
-                   == S_dnladder)) {
-        *p++ = '>';
-        *p++ = g.sstairs.sx;
-    }
+        if (is_cmap_stairs(glyph)) {
+            *p++ = (stway->up ? '<' : '>');
+            *p++ = stway->sx;
+        }
+        stway = stway->next;
+     }
 
     /* hero location */
     if (u.ux) {

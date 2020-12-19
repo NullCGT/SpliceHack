@@ -1,0 +1,71 @@
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-20.04'
+    mac:
+      imageName: 'macOS-10.15'
+    windows:
+      imageName: 'windows-latest'
+
+pool:
+  vmImage: $(imageName)
+
+resources:
+  repositories:
+  - repository: luarepo
+    type: github
+    name: lua/lua
+    ref: refs/tags/v5.4.1
+    endpoint: github.com_barthouse
+
+steps:
+- checkout: git://NetHack/NetHack@NetHack-3.7  # $(Agent.BuildDirectory)\s\NetHack
+- checkout: luarepo  # $(Agent.BuildDirectory)\s\lua
+
+- task: DownloadSecureFile@1
+  name: storeKey
+  displayName: 'Store Key Download'
+  inputs:
+    secureFile: 'NetHackPackage_StoreKey.pfx'
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+
+- task: CopyFiles@2
+  inputs: 
+    contents: NetHackPackage_StoreKey.pfx
+    SourceFolder: $(Agent.TempDirectory)
+    TargetFolder: $(Agent.BuildDirectory)\s\NetHack\win\win32\vs
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+
+- task: CopyFiles@2
+  inputs: 
+    SourceFolder: $(Agent.BuildDirectory)\s\lua
+    TargetFolder: $(Agent.BuildDirectory)\s\NetHack\lib\lua-5.4.1\src
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+
+- task: MSBuild@1
+  inputs:
+    solution: $(Agent.BuildDirectory)\s\NetHack\win\win32\vs\NetHack.sln
+    platform: Win32
+    configuration: Debug
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+
+- bash: |
+    sudo apt-get -qq -y update
+    sudo apt-get -qq -y install libncurses5-dev
+    sudo apt-get -qq -y install libx11-dev libxaw7-dev xfonts-utils qtbase5-dev qtmultimedia5-dev qtbase5-dev-tools
+    cd NetHack/sys/unix
+    sh setup.sh hints/linux.2020
+    cd ../..
+    make fetch-lua
+    make WANT_WIN_ALL=1 QT_SELECT=5 MOC=moc all
+  condition: eq( variables['Agent.OS'], 'Linux' )
+  displayName: 'Linux Build'
+
+- bash: |
+    cd NetHack/sys/unix
+    sh setup.sh hints/macos.2020
+    cd ../..
+    make fetch-lua
+    make all
+  condition: eq( variables['Agent.OS'], 'Darwin' )
+  displayName: 'Mac Build'

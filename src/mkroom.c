@@ -708,10 +708,13 @@ boolean
 has_dnstairs(sroom)
 register struct mkroom *sroom;
 {
-    if (sroom == g.dnstairs_room)
-        return TRUE;
-    if (g.sstairs.sx && !g.sstairs.up)
-        return (boolean) (sroom == g.sstairs_room);
+    stairway *stway = g.stairs;
+
+    while (stway) {
+        if (!stway->up && inside_room(sroom, stway->sx, stway->sy))
+            return TRUE;
+        stway = stway->next;
+    }
     return FALSE;
 }
 
@@ -719,10 +722,13 @@ boolean
 has_upstairs(sroom)
 register struct mkroom *sroom;
 {
-    if (sroom == g.upstairs_room)
-        return TRUE;
-    if (g.sstairs.sx && g.sstairs.up)
-        return (boolean) (sroom == g.sstairs_room);
+    stairway *stway = g.stairs;
+
+    while (stway) {
+        if (stway->up && inside_room(sroom, stway->sx, stway->sy))
+            return TRUE;
+        stway = stway->next;
+    }
     return FALSE;
 }
 

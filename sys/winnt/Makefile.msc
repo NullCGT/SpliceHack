@@ -5,7 +5,7 @@
 #==============================================================================
 # Build Tools Environment
 #
-#       NetHack 3.7 Work-in-progress Makefile for 
+#       NetHack 3.7 Work-in-progress Makefile for
 #       MS Visual Studio Visual C++ compiler
 #
 #       Visual Studio Compilers Tested:
@@ -23,11 +23,11 @@
 #
 #   BEFORE YOU START, in addition to your C compiler and linker,
 #
-#       o You will need a complete Lua source tree parallel to your 
+#       o You will need a complete Lua source tree parallel to your
 #         NetHack source tree. Lua is not an optional requirement,
 #         it is required in order to process the level and dungeon
-#         description files during the game. You can obtain the 
-#         Lua source from here: 
+#         description files during the game. You can obtain the
+#         Lua source from here:
 #             https://www.lua.org/download.html
 #
 #       o If you want to include the curses Window port in the non-GUI
@@ -38,7 +38,7 @@
 #         or via git from here:
 #             git clone https://github.com/wmcbrine/PDCurses.git ../pdcurses
 #
-#       o If you want your build of NetHack to include support for 
+#       o If you want your build of NetHack to include support for
 #         compressing your save files, or to be able to exchange and use
 #         compressed save files that originated on another platform such
 #         as Linux or a handheld phone or tablet, then you will need
@@ -61,16 +61,16 @@
 #
 # Build Options Decisions
 #
-#       There are currently 5 decisions that you can choose to make. 
-#       none of the 5 decisions are absolutely required because defaults 
+#       There are currently 5 decisions that you can choose to make.
+#       none of the 5 decisions are absolutely required because defaults
 #       are in place:
 #
 #	1. Where do you want your build results to end up?
 #       2. Do you want to include the optional curses port?
-#       3. Do you want to include compressed savefile support to 
+#       3. Do you want to include compressed savefile support to
 #          transfer compressed savefiles between platforms?
 #	4. Do you want debug information in the executable?
-#	5. Do you want to explicitly override auto-detection of 
+#	5. Do you want to explicitly override auto-detection of
 #          a 32-bit or 64-bit target?
 #
 # Mandatory Lua source Location (not optional)
@@ -89,7 +89,7 @@
 GAMEDIR = ..\binary               # Default game build directory
 #
 #------------------------------------------------------------------------------
-# OPTIONAL - Curses window port support 
+# OPTIONAL - Curses window port support
 #
 # 2. Uncomment these and set them appropriately if you want to
 #    include curses port support alongside TTY support in your
@@ -113,13 +113,13 @@ GAMEDIR = ..\binary               # Default game build directory
 #
 #------------------------------------------------------------------------------
 # 4. Do you want debug information available to the executable?
-# 
+#
 DEBUGINFO = Y
 #
 #------------------------------------------------------------------------------
 # 5. This Makefile will attempt to auto-detect your selected target architecture
 #    based on Visual Studio command prompt configuration settins etc.
-#    However, if you want to manually override generation of a 
+#    However, if you want to manually override generation of a
 #    32-bit or 64-bit build target, you can uncomment the apppropriate
 #    TARGET_CPU line below.
 #
@@ -132,7 +132,7 @@ DEBUGINFO = Y
 # This marks the end of the BUILD DECISIONS section.
 #==============================================================================
 !IFNDEF LUA_VERSION
-LUAVER=5.4.0
+LUAVER=5.4.1
 !ELSE
 LUAVER=$(LUA_VERSION)
 !ENDIF
@@ -140,8 +140,8 @@ LUAVER=$(LUA_VERSION)
 #
 # Location of LUA
 #
-# Original source needs to be obtained from: 
-#    http://www.lua.org/ftp/lua-5.4.0.tar.gz
+# Original source needs to be obtained from:
+#    http://www.lua.org/ftp/lua-5.4.1.tar.gz
 #
 #    This build assumes that the LUA sources are located
 #    at the specified location. If they are actually elsewhere
@@ -188,8 +188,8 @@ SSYS    = ..\sys\share   # Shared system files
 MSWSYS  = ..\sys\winnt   # mswin specific files
 TTY     = ..\win\tty     # window port files (tty)
 MSWIN   = ..\win\win32   # window port files (win32)
-WCURSES = ..\win\curses  # window port files (curses) 
-WSHR    = ..\win\share   # Tile support files 
+WCURSES = ..\win\curses  # window port files (curses)
+WSHR    = ..\win\share   # Tile support files
 QT      = ..\win\Qt      # QT support files
 X11     = ..\win\X11     # X11 support files
 
@@ -204,7 +204,6 @@ OBJ     = o
 # Exe File Info.
 #==========================================
 
-#
 #
 # Optional high-quality BSD random number generation routines
 # (see pcconf.h). Set to nothing if not used.
@@ -293,13 +292,13 @@ PPMWRITERS     = $(O)ppmwrite.o $(O)alloc$(HOST).o $(O)panic$(HOST).o
 #
 
 VOBJ01 = $(O)allmain.o  $(O)alloc.o    $(O)apply.o    $(O)artifact.o
-VOBJ02 = $(O)attrib.o   $(O)ball.o     $(O)bones.o    $(O)botl.o    
-VOBJ03 = $(O)cmd.o      $(O)dbridge.o  $(O)decl.o     $(O)detect.o  
-VOBJ04 = $(O)dig.o      $(O)display.o  $(O)do.o       $(O)do_name.o 
-VOBJ05 = $(O)do_wear.o  $(O)dog.o      $(O)dogmove.o  $(O)dokick.o  
-VOBJ06 = $(O)dothrow.o  $(O)drawing.o  $(O)dungeon.o  $(O)eat.o     
-VOBJ07 = $(O)end.o      $(O)engrave.o  $(O)exper.o    $(O)explode.o 
-VOBJ08 = $(O)extralev.o $(O)files.o    $(O)fountain.o $(O)hack.o    
+VOBJ02 = $(O)attrib.o   $(O)ball.o     $(O)bones.o    $(O)botl.o
+VOBJ03 = $(O)cmd.o      $(O)dbridge.o  $(O)decl.o     $(O)detect.o
+VOBJ04 = $(O)dig.o      $(O)display.o  $(O)do.o       $(O)do_name.o
+VOBJ05 = $(O)do_wear.o  $(O)dog.o      $(O)dogmove.o  $(O)dokick.o
+VOBJ06 = $(O)dothrow.o  $(O)drawing.o  $(O)dungeon.o  $(O)eat.o
+VOBJ07 = $(O)end.o      $(O)engrave.o  $(O)exper.o    $(O)explode.o
+VOBJ08 = $(O)extralev.o $(O)files.o    $(O)fountain.o $(O)hack.o
 VOBJ09 = $(O)hacklib.o  $(O)insight.o  $(O)invent.o   $(O)isaac64.o
 VOBJ10 = $(O)light.o    $(O)lock.o     $(O)mail.o     $(O)makemon.o
 VOBJ11 = $(O)mapglyph.o $(O)mcastu.o   $(O)mhitm.o    $(O)mhitu.o
@@ -386,7 +385,7 @@ OPTIONS_FILE = $(DAT)\options
 
 #===============-=================================================
 # LUA library
-# Source from http://www.lua.org/ftp/lua-5.4.0.tar.gz
+# Source from http://www.lua.org/ftp/lua-5.4.1.tar.gz
 #=================================================================
 
 !IFNDEF LUAVER
@@ -395,6 +394,9 @@ LUATMP   = $(LUATOP:..\lib\lua-=)    #strip leading "..\lib\lua-"
 LUATMP   = $(LUATMP:-beta=)         #strip suffix if exists "-beta"
 !IF "$(LUATMP)" == "5.4.0"
 LUAVER   = 5.4.0
+!ENDIF
+!IF "$(LUATMP)" == "5.4.1"
+LUAVER   = 5.4.1
 !ENDIF
 !ELSE
 !ERROR NetHack 3.7 requires LUA so LUATOP must be defined
@@ -406,7 +408,7 @@ LUATMP   = $(LUATMP:-BETA=)         #strip suffix if exists "-BETA"
 !IF "$(LUATMP)" == "5.3.5"
 LUAVER   = 5.3.5
 !ELSE
-LUAVER   = 5.4.0
+LUAVER   = 5.4.1
 !ENDIF
 !ENDIF
 !ENDIF
@@ -438,7 +440,7 @@ LUAOBJFILES =   $(O)lapi.o $(O)lauxlib.o $(O)lbaselib.o                \
 LUASRCFILES = $(LUASRCFILES) lbitlib.c
 LUAOBJFILES =   $(LUAOBJFILES) $(O)lbitlib.o
 !ELSE
-#  5.4.0 adds header files ljumptab.h and lopnames.h
+#  5.4.0 added header files ljumptab.h and lopnames.h
 #        and removes lbitlib.c
 !ENDIF
 
@@ -530,7 +532,7 @@ CTAGSOPT =--language-force=c --sort=no -D"Bitfield(x,n)=unsigned x : n" --excmd=
 #
 TINC = $(INCL:\=/)
 TSRC = $(SRC:\=/)
- 
+
 
 cc=cl
 cpp=cpp
@@ -541,7 +543,7 @@ rc=Rc
 # Visual Studio we are using.  We set VSVER to 0000 to flag any version that
 # is too old or untested.
 #
-#NMAKE version 1427291120 from latest VS 2019 (October 13, 2020 version 16.7.6)
+#NMAKE version 1428293340 from latest VS 2019 (November 19, 2020 version 16.8.2)
 
 #!MESSAGE $(MAKEFLAGS)
 #!MESSAGE $(MAKEDIR)
@@ -565,9 +567,9 @@ VSVER=2013
 VSVER=2015
 !ELSEIF ($(MAKEVERSION) > 1411000000) && ($(MAKEVERSION) < 1416270312)
 VSVER=2017
-!ELSEIF ($(MAKEVERSION) > 1416270311) && ($(MAKEVERSION) < 1427291121)
+!ELSEIF ($(MAKEVERSION) > 1416270311) && ($(MAKEVERSION) < 1428293341)
 VSVER=$(VSNEWEST)
-!ELSEIF ($(MAKEVERSION) > 1427291120)
+!ELSEIF ($(MAKEVERSION) > 1428293340)
 VSVER=2999              #untested future version
 !ENDIF
 
@@ -1031,7 +1033,7 @@ $(O)utility.tag: $(INCL)\nhlua.h $(INCL)\date.h $(INCL)\onames.h $(INCL)\pm.h \
 	     @echo utilities made >$@
 	     @echo utilities made.
 
-$(INCL)\nhlua.h: 
+$(INCL)\nhlua.h:
 	@echo  /* nhlua.h - generated by Makefile */ > $@
 	@echo #include "../lib/lua-$(LUAVER)/src/lua.h" >> $@
 	@echo LUA_API int   (lua_error) (lua_State *L) NORETURN; >> $@
@@ -1196,6 +1198,32 @@ $(O)envchk.tag: $(O)obj.tag
 #==========================================
 #=========== SECONDARY TARGETS ============
 #==========================================
+fetch-lua: fetch-actual-Lua
+
+fetch-Lua: fetch-actual-Lua
+
+fetch-actual-Lua:
+	@if not exist ..\lib\*.* mkdir ..\lib
+	cd ..\lib
+	curl -R -O http://www.lua.org/ftp/lua-$(LUAVER).tar.gz
+	tar zxf lua-$(LUAVER).tar.gz
+	if exist lua-$(LUAVER).tar.gz del lua-$(LUAVER).tar.gz
+	if exist lua-$(LUAVER).tar del lua-$(LUAVER).tar
+	cd ..\src
+	@echo Lua has been fetched into ..\lib\lua-$(LUAVER)
+
+fetch-pdcurses:
+	@if not exist ..\lib\*.* mkdir ..\lib
+	cd ..\lib
+	curl -L -R https://codeload.github.com/wmcbrine/PDCurses/zip/master -o pdcurses.zip
+	powershell -command "Expand-Archive -Path .\pdcurses.zip -DestinationPath ./pdcurses-temp"
+	if exist .\pdcurses\* rd .\pdcurses /s /Q
+	move .\pdcurses-temp\PDCurses-master .
+	ren PDCurses-master pdcurses
+	if exist .\pdcurses-temp\* rd .\pdcurses-temp /s /Q
+	if exist .\pdcurses.zip del .\pdcurses.zip
+	cd ..\src
+	@echo pdcurses has been fetched into ..\lib\pdcurses
 
 #==========================================
 # DLB utility and nhdatNNN file creation
@@ -1498,7 +1526,7 @@ $(O)curswins.o: $(WCURSES)\curswins.c $(WCURSES)\curswins.h $(INCL)\wincurs.h
 $(O)sfstruct.o: $(HACK_H) $(SRC)\sfstruct.c
 #	@$(cc) $(cflagsBuild) -Fo$@ $(SRC)\sfstruct.c
 
- 
+
 #===============================================================================
 # CROSSCOMPILE
 #===============================================================================

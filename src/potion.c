@@ -1277,11 +1277,7 @@ register struct obj *otmp;
                 (void) adjattrib(A_INT, 1, FALSE);
                 (void) adjattrib(A_WIS, 1, FALSE);
             }
-            You_feel("self-knowledgeable...");
-            display_nhwindow(WIN_MESSAGE, FALSE);
-            enlightenment(MAGICENLIGHTENMENT, ENL_GAMEINPROGRESS);
-            pline_The("feeling subsides.");
-            exercise(A_WIS, TRUE);
+            do_enlightenment_effect();
         }
         break;
     case SPE_INVISIBILITY:
@@ -1664,9 +1660,7 @@ register struct obj *otmp;
             HLevitation &= ~I_SPECIAL; /* can't descend upon demand */
             if (BLevitation) {
                 ; /* rising via levitation is blocked */
-            } else if ((u.ux == xupstair && u.uy == yupstair)
-                    || (g.sstairs.up && u.ux == g.sstairs.sx && u.uy == g.sstairs.sy)
-                    || (xupladder && u.ux == xupladder && u.uy == yupladder)) {
+            } else if (stairway_find_dir(TRUE)) {
                 (void) doup();
                 /* in case we're already Levitating, which would have
                    resulted in incrementing 'nothing' */
@@ -2112,7 +2106,7 @@ int how;
                 const char *riseup = "rise up, through the %s!";
                 if (ledger_no(&u.uz) == 1) {
                     You(riseup, ceiling(u.ux, u.uy));
-                    schedule_goto(&earth_level, FALSE, FALSE, 0, (char *) 0, (char *) 0);
+                    schedule_goto(&earth_level, UTOTYPE_NONE, (char *) 0, (char *) 0);
                 } else {
                     register int newlev = depth(&u.uz) - 1;
                     d_level newlevel;
@@ -2121,7 +2115,7 @@ int how;
                         break;
                     } else
                         You(riseup, ceiling(u.ux, u.uy));
-                    schedule_goto(&newlevel, FALSE, FALSE, 0, (char *) 0, (char *) 0);
+                    schedule_goto(&newlevel, UTOTYPE_NONE, (char *) 0, (char *) 0);
                 }
             } else
                 You("have an uneasy feeling.");
@@ -2638,16 +2632,14 @@ register struct obj *obj;
             HLevitation &= ~I_SPECIAL;
             if (BLevitation) {
                 ; /* rising via levitation is blocked */
-            } else if ((u.ux == xupstair && u.uy == yupstair)
-                    || (g.sstairs.up && u.ux == g.sstairs.sx && u.uy == g.sstairs.sy)
-                    || (xupladder && u.ux == xupladder && u.uy == yupladder)) {
+            } else if (stairway_at(u.ux, u.uy)) {
                 if (ledger_no(&u.uz) == 1 && u.uhave.amulet) {
-                    schedule_goto(&earth_level, TRUE, FALSE, 0, (char *) 0, (char *) 0);
+                    schedule_goto(&earth_level, UTOTYPE_FALLING, (char *) 0, (char *) 0);
                 } else if (ledger_no(&u.uz) != 1) {
                     register int newlev = depth(&u.uz) - 1;
                     d_level newlevel;
                     get_level(&newlevel, newlev);
-                    schedule_goto(&newlevel, TRUE, FALSE, 0, (char *) 0, (char *) 0);
+                    schedule_goto(&newlevel, UTOTYPE_FALLING, (char *) 0, (char *) 0);
                 }
             } else if (has_ceiling(&u.uz)) {
                 int dmg = rnd(!uarmh ? 10 : !is_metallic(uarmh) ? 6 : 3);
@@ -2873,11 +2865,7 @@ dodip()
             goto poof;
     } else if (obj->otyp == POT_POLYMORPH || potion->otyp == POT_POLYMORPH) {
         /* some objects can't be polymorphed */
-        if (obj->otyp == potion->otyp /* both POT_POLY */
-            || obj->otyp == WAN_POLYMORPH || obj->otyp == SPE_POLYMORPH
-            || obj == uball || obj == uskin
-            || obj_resists(obj->otyp == POT_POLYMORPH ? potion : obj,
-                           5, 95)) {
+        if (obj_unpolyable(obj->otyp == POT_POLYMORPH ? potion : obj)) {
             pline1(nothing_happens);
         } else {
             short save_otyp = obj->otyp;

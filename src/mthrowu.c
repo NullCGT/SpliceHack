@@ -1,4 +1,4 @@
-/* NetHack 3.7	mthrowu.c	$NHDT-Date: 1596498189 2020/08/03 23:43:09 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.102 $ */
+/* NetHack 3.7	mthrowu.c	$NHDT-Date: 1605315160 2020/11/14 00:52:40 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.103 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Pasi Kallinen, 2016. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -577,8 +577,8 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
             }
         }
         if (otmp->otyp == EGG && touch_petrifies(&mons[otmp->corpsenm])) {
-            if (!munstone(mtmp, TRUE))
-                minstapetrify(mtmp, TRUE);
+            if (!munstone(mtmp, FALSE))
+                minstapetrify(mtmp, FALSE);
             if (resists_ston(mtmp))
                 damage = 0;
         }
@@ -913,13 +913,13 @@ struct monst *mtmp, *mtarg;
         mtmp->weapon_check = NEED_RANGED_WEAPON;
         /* mon_wield_item resets weapon_check as appropriate */
         if (mon_wield_item(mtmp) != 0)
-            return 0;
+            return MM_MISS;
     }
 
     /* Pick a weapon */
     otmp = select_rwep(mtmp);
     if (!otmp)
-        return 0;
+        return MM_MISS;
     ispole = is_pole(otmp);
 
     x = mtmp->mx;
@@ -940,17 +940,17 @@ struct monst *mtmp, *mtarg;
             if (ammo_and_launcher(otmp, mwep)
                 && dist2(mtmp->mx, mtmp->my, mtarg->mx, mtarg->my)
                    > PET_MISSILE_RANGE2)
-                return 0; /* Out of range */
+                return MM_MISS; /* Out of range */
             /* Set target monster */
             g.mtarget = mtarg;
             g.marcher = mtmp;
             monshoot(mtmp, otmp, mwep); /* multishot shooting or throwing */
             g.marcher = g.mtarget = (struct monst *) 0;
             nomul(0);
-            return 1;
+            return MM_HIT;
         }
     }
-    return 0;
+    return MM_MISS;
 }
 
 /* monster spits substance at monster */
@@ -965,10 +965,17 @@ struct attack *mattk;
         if (!Deaf)
             pline("A dry rattle comes from %s body.",
                   s_suffix(mon_nam(mtmp)));
-        return 0;
+        return MM_MISS;
     }
     if (m_lined_up(mtarg, mtmp)) {
+        boolean utarg = (mtarg == &g.youmonst);
+        xchar tx = utarg ? mtmp->mux : mtarg->mx;
+        xchar ty = utarg ? mtmp->muy : mtarg->my;
+
         switch (mattk->adtyp) {
+        case AD_QUIL:
+            otmp = mksobj(SPIKE, TRUE, FALSE);
+            break;
         case AD_BLND:
         case AD_DRST:
             otmp = mksobj(BLINDING_VENOM, TRUE, FALSE);
@@ -980,13 +987,13 @@ struct attack *mattk;
             impossible("bad attack type in spitmm");
             otmp = mksobj(ACID_VENOM, TRUE, FALSE);
         }
-        if (!rn2(BOLT_LIM-distmin(mtmp->mx,mtmp->my,mtarg->mx,mtarg->my))) {
-            if (canseemon(mtmp)) {
+        if (!rn2(BOLT_LIM-distmin(mtmp->mx,mtmp->my,tx,ty))) {
+            if (canseemon(mtmp))
                 pline("%s spits venom!", Monnam(mtmp));
-            }
-            g.mtarget = mtarg;
+            if (!utarg)
+                g.mtarget = mtarg;
             m_throw(mtmp, mtmp->mx, mtmp->my, sgn(g.tbx), sgn(g.tby),
-                    distmin(mtmp->mx,mtmp->my,mtarg->mx,mtarg->my), otmp, TRUE);
+                    distmin(mtmp->mx,mtmp->my,tx,ty), otmp);
             g.mtarget = (struct monst *)0;
             nomul(0);
 
@@ -1000,10 +1007,13 @@ struct attack *mattk;
                     dog->hungrytime -= 5;
             }
 
-            return 1;
+            return MM_HIT;
+        } else {
+            obj_extract_self(otmp);
+            obfree(otmp, (struct obj *) 0);
         }
     }
-    return 0;
+    return MM_MISS;
 }
 
 /* monster fires a volley of projectiles at monster */
@@ -1067,7 +1077,7 @@ struct attack  *mattk;
                 else
                     You_hear("a cough.");
             }
-            return 0;
+            return MM_MISS;
         }
         if (!mtmp->mspec_used && rn2(3)) {
             boolean utarget = (mtarg == &g.youmonst);
@@ -1105,9 +1115,9 @@ struct attack  *mattk;
                 nomul(0);
             } else impossible("Breath weapon %d used", typ-1);
         } else
-            return 0;
+            return MM_MISS;
     }
-    return 1;
+    return MM_HIT;
 }
 
 
@@ -1267,44 +1277,7 @@ spitmu(mtmp, mattk)
 struct monst *mtmp;
 struct attack *mattk;
 {
-    struct obj *otmp;
-
-    if (mtmp->mcan) {
-        if (!Deaf)
-            pline("A dry rattle comes from %s throat.",
-                  s_suffix(mon_nam(mtmp)));
-        return 0;
-    }
-    if (lined_up(mtmp)) {
-        switch (mattk->adtyp) {
-        case AD_QUIL:
-            otmp = mksobj(SPIKE, TRUE, FALSE);
-            break;
-        case AD_BLND:
-        case AD_DRST:
-            otmp = mksobj(BLINDING_VENOM, TRUE, FALSE);
-            break;
-        case AD_ACID:
-            otmp = mksobj(ACID_VENOM, TRUE, FALSE);
-            break;
-        default:
-            otmp = mksobj(ACID_VENOM, TRUE, FALSE);
-        }
-        if (!rn2(BOLT_LIM
-                 - distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy))) {
-            if (canseemon(mtmp)) {
-                pline("%s spits venom!", Monnam(mtmp));
-            }
-            m_throw(mtmp, mtmp->mx, mtmp->my, sgn(g.tbx), sgn(g.tby),
-                    distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy), otmp, TRUE);
-            nomul(0);
-            return 0;
-        } else {
-            obj_extract_self(otmp);
-            obfree(otmp, (struct obj *) 0);
-        }
-    }
-    return 0;
+    return spitmm(mtmp, mattk, &g.youmonst);
 }
 
 /* monster breathes at you (ranged) */

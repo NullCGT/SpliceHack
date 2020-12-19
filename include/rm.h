@@ -253,6 +253,8 @@ enum screen_symbols {
 #define is_cmap_furniture(i) ((i) >= S_upstair && (i) <= S_fountain)
 #define is_cmap_water(i) ((i) == S_pool || (i) == S_water)
 #define is_cmap_lava(i) ((i) == S_lava)
+#define is_cmap_stairs(i) ((i) == S_upstair || (i) == S_dnstair || \
+                           (i) == S_upladder || (i) == S_dnladder)
 
 
 struct symdef {
@@ -344,11 +346,6 @@ extern const struct symdef def_warnsyms[WARNCOUNT];
 #define D_LOCKED 8
 #define D_TRAPPED 16
 #define D_SECRET 32 /* only used by sp_lev.c, NOT in rm-struct */
-
-/*
- * Some altars are considered as shrines, so we need a flag.
- */
-#define AM_SHRINE 8
 
 /*
  * Thrones should only be looted once.
@@ -557,7 +554,7 @@ struct cemetery {
     /* date+time in string of digits rather than binary */
     char when[4 + 2 + 2 + 2 + 2 + 2 + 1]; /* "YYYYMMDDhhmmss\0" */
     /* final resting place spot */
-    schar frpx, frpy;
+    xchar frpx, frpy;
     boolean bonesknown;
 };
 

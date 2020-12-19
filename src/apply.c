@@ -1,4 +1,4 @@
-/* NetHack 3.7	apply.c	$NHDT-Date: 1602270122 2020/10/09 19:02:02 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.328 $ */
+/* NetHack 3.7	apply.c	$NHDT-Date: 1605184220 2020/11/12 12:30:20 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.331 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1683,14 +1683,14 @@ struct obj *obj;
 }
 
 /* Called when potentially lightable object is affected by fire_damage().
-   Return TRUE if object was lit and FALSE otherwise --ALI */
+   Return TRUE if object becomes lit and FALSE otherwise --ALI */
 boolean
 catch_lit(obj)
 struct obj *obj;
 {
     xchar x, y;
 
-    if (!obj->lamplit && (obj->otyp == MAGIC_LAMP || ignitable(obj))) {
+    if (!obj->lamplit && ignitable(obj)) {
         if ((obj->otyp == MAGIC_LAMP
              || obj->otyp == CANDELABRUM_OF_INVOCATION) && obj->spe == 0)
             return FALSE;
@@ -2955,10 +2955,10 @@ struct obj *otmp;
         what = "in water";
     else if (is_lava(u.ux, u.uy))
         what = "in lava";
-    else if (On_stairs(u.ux, u.uy))
-        what = (u.ux == xdnladder || u.ux == xupladder) ? "on the ladder"
-                                                        : "on the stairs";
-    else if (IS_FURNITURE(levtyp) || IS_ROCK(levtyp)
+    else if (On_stairs(u.ux, u.uy)) {
+        stairway *stway = stairway_at(u.ux, u.uy);
+        what = stway->isladder ? "on the ladder" : "on the stairs";
+    } else if (IS_FURNITURE(levtyp) || IS_ROCK(levtyp)
              || closed_door(u.ux, u.uy) || t_at(u.ux, u.uy))
         what = "here";
     else if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz))
@@ -3808,21 +3808,24 @@ struct obj *obj;
     boolean fillmsg = FALSE;
     int expltype = EXPL_MAGICAL;
     char confirm[QBUFSZ], buf[BUFSZ];
-    boolean is_fragile = objdescr_is(obj, "balsa");
-
-    if (!paranoid_query(ParanoidBreakwand,
-                       safe_qbuf(confirm,
-                                 "Are you really sure you want to break ",
-                                 "?", obj, yname, ysimple_name, "the wand")))
-        return 0;
+    boolean is_fragile = (objdescr_is(obj, "balsa")
+                          || objdescr_is(obj, "glass"));
 
     if (nohands(g.youmonst.data)) {
         You_cant("break %s without hands!", yname(obj));
+        return 0;
+    } else if (!freehand()) {
+        Your("%s are occupied!", makeplural(body_part(HAND)));
         return 0;
     } else if (ACURR(A_STR) < (is_fragile ? 5 : 10)) {
         You("don't have the strength to break %s!", yname(obj));
         return 0;
     }
+    if (!paranoid_query(ParanoidBreakwand,
+                        safe_qbuf(confirm,
+                                  "Are you really sure you want to break ",
+                                  "?", obj, yname, ysimple_name, "the wand")))
+        return 0;
     pline("Raising %s high above your %s, you %s it in two!", yname(obj),
           body_part(HEAD), is_fragile ? "snap" : "break");
 

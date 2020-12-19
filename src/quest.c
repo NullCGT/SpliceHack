@@ -196,9 +196,9 @@ boolean seal;
 
     br = dungeon_branch("The Quest");
     dest = (br->end1.dnum == u.uz.dnum) ? &br->end2 : &br->end1;
-    portal_flag = u.uevent.qexpelled ? 0 /* returned via artifact? */
-                                     : !seal ? 1 : -1;
-    schedule_goto(dest, FALSE, FALSE, portal_flag, (char *) 0, (char *) 0);
+    portal_flag = u.uevent.qexpelled ? UTOTYPE_NONE /* returned via artifact? */
+                                     : !seal ? UTOTYPE_PORTAL : UTOTYPE_RMPORTAL;
+    schedule_goto(dest, portal_flag, (char *) 0, (char *) 0);
     #if 0
     if (seal) { /* remove the portal to the quest - sealing it off */
         int reexpelled = u.uevent.qexpelled;

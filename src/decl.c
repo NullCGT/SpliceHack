@@ -1,4 +1,4 @@
-/* NetHack 3.7	decl.c	$NHDT-Date: 1600468453 2020/09/18 22:34:13 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.218 $ */
+/* NetHack 3.7	decl.c	$NHDT-Date: 1606919256 2020/12/02 14:27:36 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.221 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2009. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -274,10 +274,7 @@ const struct instance_globals g_init = {
     (ROWNO - 1) & ~1, /* y_maze_max */
     UNDEFINED_VALUE, /* otg_temp */
     0, /* in_doagain */
-    DUMMY, /* dnstair */
-    DUMMY, /* upstair */
-    DUMMY, /* dnladder */
-    DUMMY, /* upladder */
+    NULL, /* stairs */
     DUMMY, /* smeq */
     0, /* doorindex */
     NULL, /* save_cm */
@@ -299,7 +296,6 @@ const struct instance_globals g_init = {
     UNDEFINED_PTR, /* sp_levchn */
     { 0, 0, STRANGE_OBJECT, FALSE }, /* m_shot */
     UNDEFINED_VALUES, /* dungeons */
-    { 0, 0, { 0, 0 }, 0 }, /* sstairs */
     { 0, 0, 0, 0, 0, 0, 0, 0 }, /* updest */
     { 0, 0, 0, 0, 0, 0, 0, 0 }, /* dndest */
     { 0, 0} , /* inv_pos */
@@ -310,9 +306,6 @@ const struct instance_globals g_init = {
     FALSE, /* mrg_to_wielded */
     NULL, /* plinemsg_types */
     UNDEFINED_VALUES, /* toplines */
-    UNDEFINED_PTR, /* upstairs_room */
-    UNDEFINED_PTR, /* dnstairs_room */
-    UNDEFINED_PTR, /* sstairs_room */
     DUMMY, /* bhitpos */
     FALSE, /* in_steed_dismounting */
     DUMMY, /* doors */
@@ -507,6 +500,7 @@ const struct instance_globals g_init = {
     /* mon.c */
     UNDEFINED_VALUE, /* vamp_rise_msg */
     UNDEFINED_VALUE, /* disintegested */
+    UNDEFINED_VALUE, /* zombify */
     NULL, /* animal_list */
     UNDEFINED_VALUE, /* animal_list_count */
 
@@ -626,6 +620,8 @@ const struct instance_globals g_init = {
     TRUE, /* havestate*/
     0, /* ustuck_id */
     0, /* usteed_id */
+    (struct obj *) 0, /* looseball */
+    (struct obj *) 0, /* loosechain */
 
     /* shk.c */
     'a', /* sell_response */

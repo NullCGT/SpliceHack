@@ -1,4 +1,4 @@
-/* NetHack 3.7	dogmove.c	$NHDT-Date: 1596498159 2020/08/03 23:42:39 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.91 $ */
+/* NetHack 3.7	dogmove.c	$NHDT-Date: 1607374000 2020/12/07 20:46:40 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.94 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2012. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1319,17 +1319,7 @@ int after; /* this is extra fast monster movement */
     if (appr == -2)
         return 0;
 
-    allowflags = ALLOW_M | ALLOW_TRAPS | ALLOW_SSM | ALLOW_SANCT;
-    if (passes_walls(mtmp->data))
-        allowflags |= (ALLOW_ROCK | ALLOW_WALL);
-    if (passes_bars(mtmp->data))
-        allowflags |= ALLOW_BARS;
-    if (throws_rocks(mtmp->data))
-        allowflags |= ALLOW_ROCK;
-    if (is_displacer(mtmp->data))
-        allowflags |= ALLOW_MDISP;
     if (Conflict && !resist(mtmp, RING_CLASS, 0, 0)) {
-        allowflags |= ALLOW_U;
         if (!has_edog) {
             /* Guardian angel refuses to be conflicted; rather,
              * it disappears, angrily, and sends in some nasties
@@ -1348,6 +1338,7 @@ int after; /* this is extra fast monster movement */
 
 
     /*
+    * Intelligent pet patch...
     * We haven't moved yet, so search for monsters to attack from a
     * distance and attack them if it's plausible.
     */
@@ -1391,19 +1382,9 @@ int after; /* this is extra fast monster movement */
                     return 1; /* attacked */
        	    }
        	  }
+    /* end intelligent pet patch */
 
-    if (!nohands(mtmp->data) && !verysmall(mtmp->data)) {
-        allowflags |= OPENDOOR;
-        if (monhaskey(mtmp, TRUE))
-            allowflags |= UNLOCKDOOR;
-        /* note:  the Wizard and Riders can unlock doors without a key;
-           they won't use that ability if someone manages to tame them */
-    }
-    if (is_giant(mtmp->data))
-        allowflags |= BUSTDOOR;
-    if (tunnels(mtmp->data)
-        && !Is_rogue_level(&u.uz)) /* same restriction as m_move() */
-        allowflags |= ALLOW_DIG;
+    allowflags = mon_allowflags(mtmp);
     cnt = mfndpos(mtmp, poss, info, allowflags);
 
     /* Normally dogs don't step on cursed items, but if they have no
@@ -1753,7 +1734,9 @@ xchar mx, my, fx, fy;
             if (dist2(i, j, fx, fy) >= dist)
                 continue;
             if (IS_ROCK(levl[i][j].typ) && !passes_walls(mon->data)
-                && (!may_dig(i, j) || !tunnels(mon->data)))
+                && (!may_dig(i, j) || !tunnels(mon->data)
+                    /* tunnelling monsters can't do that on the rogue level */
+                    || Is_rogue_level(&u.uz)))
                 continue;
             if (IS_DOOR(levl[i][j].typ)
                 && (levl[i][j].doormask & (D_CLOSED | D_LOCKED)))

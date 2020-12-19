@@ -36,7 +36,7 @@
 #
 # Build Options Decisions
 #
-#       There are currently 4 decisions that you can choose to make. 
+#       There are currently 4 decisions that you can choose to make.
 #       None of the 4 decisions are absolutely required because defaults are in place:
 #	1. Where do you want your build to end up?
 #	2. Do you want debug information in the executable?
@@ -129,15 +129,15 @@ TARGET_CPU=x86
 #
 #---------------------------------------------------------------
 ifndef LUA_VERSION
-LUAVER=5.4.0
+LUAVER=5.4.1
 else
 LUAVER=$(LUA_VERSION)
 endif
 #---------------------------------------------------------------
 # Location of LUA
 #
-# Original source needs to be obtained from: 
-#    http://www.lua.org/ftp/lua-5.4.0.tar.gz
+# Original source needs to be obtained from:
+#    http://www.lua.org/ftp/lua-5.4.1.tar.gz
 #
 #    This build assumes that the LUA sources are located
 #    at the specified location. If they are actually elsewhere
@@ -187,8 +187,8 @@ NHV=$(subst ",,$(NHV1))
 # MSWSYS  - mswin specific files
 # TTY     - window port files (tty)
 # MSWIN   - window port files (win32)
-# WCURSES - window port files (curses) 
-# WSHR    - Tile support files 
+# WCURSES - window port files (curses)
+# WSHR    - Tile support files
 # QT      - QT window support files
 
 INCL    =../include
@@ -305,13 +305,13 @@ PPMWRITERS     = $(O)ppmwrite.o $(O)alloc.o $(O)panic.o
 #
 
 VOBJ01 = $(O)allmain.o  $(O)alloc.o    $(O)apply.o    $(O)artifact.o
-VOBJ02 = $(O)attrib.o   $(O)ball.o     $(O)bones.o    $(O)botl.o    
-VOBJ03 = $(O)cmd.o      $(O)dbridge.o  $(O)decl.o     $(O)detect.o  
-VOBJ04 = $(O)dig.o      $(O)display.o  $(O)do.o       $(O)do_name.o 
-VOBJ05 = $(O)do_wear.o  $(O)dog.o      $(O)dogmove.o  $(O)dokick.o  
-VOBJ06 = $(O)dothrow.o  $(O)drawing.o  $(O)dungeon.o  $(O)eat.o     
-VOBJ07 = $(O)end.o      $(O)engrave.o  $(O)exper.o    $(O)explode.o 
-VOBJ08 = $(O)extralev.o $(O)files.o    $(O)fountain.o $(O)hack.o    
+VOBJ02 = $(O)attrib.o   $(O)ball.o     $(O)bones.o    $(O)botl.o
+VOBJ03 = $(O)cmd.o      $(O)dbridge.o  $(O)decl.o     $(O)detect.o
+VOBJ04 = $(O)dig.o      $(O)display.o  $(O)do.o       $(O)do_name.o
+VOBJ05 = $(O)do_wear.o  $(O)dog.o      $(O)dogmove.o  $(O)dokick.o
+VOBJ06 = $(O)dothrow.o  $(O)drawing.o  $(O)dungeon.o  $(O)eat.o
+VOBJ07 = $(O)end.o      $(O)engrave.o  $(O)exper.o    $(O)explode.o
+VOBJ08 = $(O)extralev.o $(O)files.o    $(O)fountain.o $(O)hack.o
 VOBJ09 = $(O)hacklib.o  $(O)insight.o  $(O)invent.o   $(O)isaac64.o
 VOBJ10 = $(O)light.o    $(O)lock.o     $(O)mail.o     $(O)makemon.o
 VOBJ11 = $(O)mapglyph.o $(O)mdlib.o    $(O)mcastu.o   $(O)mhitm.o
@@ -353,7 +353,7 @@ CURSESOBJ=
 endif
 
 SOBJ   = $(O)windmain.o $(O)winnt.o $(O)win10.o \
-	$(O)safeproc.o $(O)nhlan.o $(SOUND) 
+	$(O)safeproc.o $(O)nhlan.o $(SOUND)
 
 OBJS   = $(VOBJ01) $(VOBJ02) $(VOBJ03) $(VOBJ04) $(VOBJ05) \
 	 $(VOBJ06) $(VOBJ07) $(VOBJ08) $(VOBJ09) $(VOBJ10) \
@@ -419,11 +419,11 @@ OPTIONS_FILE = $(DAT)\options
 
 #===============-=================================================
 # LUA library
-# Source from http://www.lua.org/ftp/lua-5.4.0.tar.gz
+# Source from http://www.lua.org/ftp/lua-5.4.1.tar.gz
 #=================================================================
 
 ifndef LUAVER
-LUAVER   = 5.4.0
+LUAVER   = 5.4.1
 endif
 LUASRC   = $(LUATOP)/src
 LUALIB   = $(O)lua-$(LUAVER).static.a
@@ -449,7 +449,7 @@ LUAOBJFILES =   $(O)lapi.o $(O)lauxlib.o $(O)lbaselib.o \
 		$(O)lstring.o $(O)lstrlib.o $(O)ltable.o $(O)ltablib.o \
 		$(O)ltm.o $(O)lundump.o $(O)lutf8lib.o $(O)lvm.o $(O)lzio.o
 ifeq "$(LUAVER)" "5.3.5"
-#  5.4.0 adds header files ljumptab.h and lopnames.h and removes lbitlib.c
+#  5.4.0 added header files ljumptab.h and lopnames.h and removes lbitlib.c
 #  so we have to tack those on for the previous version (5.3.5)
 LUASRCFILES = $(LUASRCFILES) lbitlib.c
 LUAOBJFILES = $(LUAOBJFILES) lbitlib.o
@@ -745,7 +745,7 @@ SHELL=CMD.EXE
 # Since DOS doesn't allow / as path separator, and GCC doesn't allow \ as
 # path separator, we must change all pathnames when performing DOS commands.
 # This is done by blindly applying $(subst /,\, ...) on every command.
-# Where any command contain / for another reason (switch char, a little 
+# Where any command contain / for another reason (switch char, a little
 # more care is taken.
 
 #
@@ -797,7 +797,7 @@ recover: $(U)recover.exe
 	$(subst /,\,if exist $(U)recover.exe copy $(U)recover.exe  $(GAMEDIR))
 	$(subst /,\,if exist $(DOC)/recover.txt copy $(DOC)/recover.txt $(GAMEDIR)/recover.txt)
 
-$(O)sp_lev.tag: $(O)utility.tag 
+$(O)sp_lev.tag: $(O)utility.tag
 	$(subst /,\,echo sp_levs done > $(O)sp_lev.tag)
 
 $(O)utility.tag: $(INCL)/date.h $(INCL)/onames.h $(INCL)/pm.h \
@@ -1176,7 +1176,7 @@ $(O)til2bm32.o: $(WSHR)/til2bm32.c $(HACK_H) $(TILE_H) $(MSWSYS)/win32api.h
 $(O)pdcurses.a : $(PDCLIBOBJS) $(PDCOBJS)
 	ar rcs $@ $(PDCLIBOBJS) $(PDCOBJS)
 
-  
+
 #=============================================================
 # LUA
 #=============================================================

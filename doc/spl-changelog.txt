@@ -30,6 +30,16 @@ Balance
 Miscelaneous
 - The SpliceHack splash screen in curses mode is now rainbow!
 - Updated therecmdmenu and herecmdmenu to be more helpful.
+- Increase damage for mhitm and uhitm with quills.
+- Magic cancellation does not affect AD_CALM messages.
+- Increased probability of luck damaging melee attacks succeeding.
+- Monster disarm attack chance is now unaffected by magic cancellation. The frequency of disarming
+  was dropped to compensate.
+- Monsters attacking in melee with potion effect attacks (i.e. shambling horrors) do no damage
+  when splashing potions on the player.
+- Increased chance that ice devils will inflict fumbling.
+- Refactored order that knockback attacks take place in, hopefully preventing future bugs.
+- Cancelled molydei cannot polymorph other monsters.
 
                             Version 0.8.2
 

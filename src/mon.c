@@ -1,4 +1,4 @@
-/* NetHack 3.7	mon.c	$NHDT-Date: 1600933441 2020/09/24 07:44:01 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.348 $ */
+/* NetHack 3.7	mon.c	$NHDT-Date: 1607374002 2020/12/07 20:46:42 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.359 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -10,6 +10,7 @@
 static void FDECL(sanity_check_single_mon, (struct monst *, BOOLEAN_P,
                                                 const char *));
 static boolean FDECL(restrap, (struct monst *));
+static long FDECL(mm_2way_aggression, (struct monst *, struct monst *));
 static long FDECL(mm_displacement, (struct monst *, struct monst *));
 static int NDECL(pick_animal);
 static void FDECL(kill_eggs, (struct obj *));
@@ -99,6 +100,29 @@ const char *msg;
     /* guardian angel on astral level is tame but has emin rather than edog */
     if (mtmp->mtame && !has_edog(mtmp) && !mtmp->isminion)
         impossible("pet without edog (%s)", msg);
+
+    if (mtmp->mtrapped) {
+        if (mtmp->wormno) {
+            /* TODO: how to check worm in trap? */
+        } else if (!t_at(mtmp->mx, mtmp->my))
+            impossible("trapped without a trap (%s)", msg);
+    }
+
+    /* monster is hiding? */
+    if (mtmp->mundetected) {
+        struct trap *t;
+
+        if (mtmp == u.ustuck)
+            impossible("hiding monster stuck to you (%s)", msg);
+        if (m_at(mtmp->mx, mtmp->my) == mtmp && hides_under(mtmp->data) && !OBJ_AT(mtmp->mx, mtmp->my))
+            impossible("mon hiding under nonexistent obj (%s)", msg);
+        if (mtmp->data->mlet == S_EEL && !is_pool(mtmp->mx, mtmp->my) && !Is_waterlevel(&u.uz))
+            impossible("eel hiding out of water (%s)", msg);
+        if (mtmp->mtrapped && (t = t_at(mtmp->mx, mtmp->my)) != 0
+            && !(t->ttyp == PIT || t->ttyp == SPIKED_PIT))
+            impossible("hiding while trapped in a non-pit (%s)", msg);
+    }
+
 }
 
 void
@@ -194,6 +218,59 @@ struct monst *mtmp;
     if (is_you ? Poison_resistance : resists_poison(mtmp))
         return M_POISONGAS_MINOR;
     return M_POISONGAS_BAD;
+}
+
+/* Return TRUE if this monster is capable of converting other monsters into
+ * zombies. */
+boolean
+zombie_maker(pm)
+struct permonst *pm;
+{
+    switch(pm->mlet) {
+    case S_ZOMBIE:
+        /* Z-class monsters that aren't actually zombies go here */
+        if (pm == &mons[PM_GHOUL] || pm == &mons[PM_SKELETON])
+            return FALSE;
+        return TRUE;
+    case S_LICH:
+        /* all liches will create zombies as well */
+        return TRUE;
+    }
+    return FALSE;
+}
+
+/* return the monster index of the zombie monster which this monster could be
+ * turned into, or NON_PM if it doesn't have a direct counterpart. Sort of the
+ * zombie-specific inverse of undead_to_corpse.
+ * If a zombie gets passed to this function, it should return NON_PM, not the
+ * same monster again. */
+int
+zombie_form(pm)
+struct permonst *pm;
+{
+    switch(pm->mlet) {
+    case S_KOBOLD:
+        return PM_KOBOLD_ZOMBIE;
+    case S_ORC:
+        return PM_ORC_ZOMBIE;
+    case S_GIANT:
+        if (pm == &mons[PM_ETTIN])
+            return PM_ETTIN_ZOMBIE;
+        return PM_GIANT_ZOMBIE;
+    case S_HUMAN:
+    case S_KOP:
+        if (is_elf(pm))
+            return PM_ELF_ZOMBIE;
+        return PM_HUMAN_ZOMBIE;
+    case S_HUMANOID:
+        if (is_dwarf(pm))
+            return PM_DWARF_ZOMBIE;
+        else
+            break;
+    case S_GNOME:
+        return PM_GNOME_ZOMBIE;
+    }
+    return NON_PM;
 }
 
 /* convert the monster index of an undead to its living counterpart */
@@ -1708,6 +1785,67 @@ struct obj *otmp;
     return iquan;
 }
 
+/* return flags based on monster data, for mfndpos() */
+long
+mon_allowflags(mtmp)
+struct monst *mtmp;
+{
+    long allowflags = 0L;
+    boolean can_open = !(nohands(mtmp->data) || verysmall(mtmp->data));
+    boolean can_unlock = ((can_open && monhaskey(mtmp, TRUE))
+                          || mtmp->iswiz || is_rider(mtmp->data));
+    boolean doorbuster = is_giant(mtmp->data);
+    /* don't tunnel if on rogue level or if hostile and close enough
+       to prefer a weapon; same criteria as in m_move() */
+    boolean can_tunnel = (tunnels(mtmp->data) && !Is_rogue_level(&u.uz));
+
+    if (can_tunnel && needspick(mtmp->data)
+        && ((!mtmp->mpeaceful || Conflict)
+            && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 8))
+        can_tunnel = FALSE;
+
+    if (mtmp->mtame)
+        allowflags |= ALLOW_M | ALLOW_TRAPS | ALLOW_SANCT | ALLOW_SSM;
+    else if (mtmp->mpeaceful)
+        allowflags |= ALLOW_SANCT | ALLOW_SSM;
+    else
+        allowflags |= ALLOW_U;
+    if (Conflict && !resist(mtmp, RING_CLASS, 0, 0))
+        allowflags |= ALLOW_U;
+    if (mtmp->isshk)
+        allowflags |= ALLOW_SSM;
+    if (mtmp->ispriest)
+        allowflags |= ALLOW_SSM | ALLOW_SANCT;
+    if (passes_walls(mtmp->data))
+        allowflags |= (ALLOW_ROCK | ALLOW_WALL);
+    if (throws_rocks(mtmp->data))
+        allowflags |= ALLOW_ROCK;
+    if (can_tunnel)
+        allowflags |= ALLOW_DIG;
+    if (doorbuster)
+        allowflags |= BUSTDOOR;
+    if (can_open)
+        allowflags |= OPENDOOR;
+    if (can_unlock)
+        allowflags |= UNLOCKDOOR;
+    if (passes_bars(mtmp->data))
+        allowflags |= ALLOW_BARS;
+    if (is_displacer(mtmp->data))
+        allowflags |= ALLOW_MDISP;
+    if (is_minion(mtmp->data) || is_rider(mtmp->data))
+        allowflags |= ALLOW_SANCT;
+    /* unicorn may not be able to avoid hero on a noteleport level */
+    if (avoids_player(mtmp->data) && !noteleport_level(mtmp))
+        allowflags |= NOTONL;
+    if (is_human(mtmp->data) || mtmp->data == &mons[PM_MINOTAUR])
+        allowflags |= ALLOW_SSM;
+    if ((is_undead(mtmp->data) && mtmp->data->mlet != S_GHOST)
+        || is_vampshifter(mtmp))
+        allowflags |= NOGARLIC;
+
+    return allowflags;
+}
+
 /* return number of acceptable neighbour positions */
 int
 mfndpos(mon, poss, info, flag)
@@ -1955,6 +2093,65 @@ long flag;
     return cnt;
 }
 
+/* Part of mm_aggression that represents two-way aggression. To avoid having to
+ * code each case twice, this function contains those cases that ought to
+ * happen twice, and mm_aggression will call it twice. */
+static long
+mm_2way_aggression(magr, mdef)
+struct monst *magr, *mdef;
+{
+    struct permonst *ma = magr->data;
+    struct permonst *md = mdef->data;
+
+    /* zombies vs things that can be zombified */
+    if (zombie_maker(ma) && zombie_form(md) != NON_PM)
+        return ALLOW_M|ALLOW_TM;
+    /* Since the quest guardians are under siege, it makes sense to have
+       them fight hostiles.  (But we don't want the quest leader to be in
+       danger.) */
+    if(ma->msound==MS_GUARDIAN && mdef->mpeaceful==FALSE)
+        return ALLOW_M|ALLOW_TM;
+
+  	/* elves vs. orcs */
+  	if(is_elf(ma) && is_orc(md))
+  		  return ALLOW_M|ALLOW_TM;
+
+  	/* angels vs. demons */
+  	if(ma->mlet==S_ANGEL && is_demon(md))
+  		  return ALLOW_M|ALLOW_TM;
+
+    /* Nazgul vs. hobbits */
+    if(ma == &mons[PM_NAZGUL] && md == &mons[PM_HOBBIT])
+        return ALLOW_M | ALLOW_TM;
+
+    /* Asmodeus and Mephisto dislike one another. */
+    if(ma == &mons[PM_MEPHISTO] && md == &mons[PM_ASMODEUS])
+        return ALLOW_M|ALLOW_TM;
+
+    /* Yeenoghu and Baphomet have an ancient rivalry. */
+    if(ma == &mons[PM_YEENOGHU] && md == &mons[PM_BAPHOMET])
+        return ALLOW_M|ALLOW_TM;
+
+    /* Pirate patch. TODO: Clean this up */
+    if (magr->data == &mons[PM_SKELETAL_PIRATE] &&
+      is_mercenary(mdef->data))
+     	  return ALLOW_M|ALLOW_TM;
+   	else if (magr->data == &mons[PM_DAMNED_PIRATE] &&
+   		is_mercenary(mdef->data))
+   	    return ALLOW_M|ALLOW_TM;
+   	else if (magr->data == &mons[PM_DAMNED_PIRATE] &&
+   		u.ukinghill)
+   	    return ALLOW_M|ALLOW_TM;
+   	else if (magr->data == &mons[PM_DAMNED_PIRATE] &&
+   		u.ukinghill)
+   	    return ALLOW_M|ALLOW_TM;
+   	else if (magr->data == &mons[PM_PLANAR_PIRATE] &&
+   		u.ukinghill)
+   	    return ALLOW_M|ALLOW_TM;
+
+    return 0;
+}
+
 /* Monster against monster special attacks; for the specified monster
    combinations, this allows one monster to attack another adjacent one
    in the absence of Conflict.  There is no provision for targetting
@@ -1965,97 +2162,28 @@ mm_aggression(magr, mdef)
 struct monst *magr, /* monster that is currently deciding where to move */
              *mdef; /* another monster which is next to it */
 {
-    struct permonst *ma, *md;
-    ma = magr->data;
-    md = mdef->data;
-    /* Don't allow pets to fight each other. */
+    int mndx = monsndx(magr->data);
+
+    /* don't allow pets to fight each other */
     if (magr->mtame && mdef->mtame)
         return 0;
+
     /* supposedly purple worms are attracted to shrieking because they
        like to eat shriekers, so attack the latter when feasible */
-    if ((ma == &mons[PM_PURPLE_WORM] || ma == &mons[PM_BABY_PURPLE_WORM]) 
-            && md == &mons[PM_SHRIEKER])
+    if ((mndx == PM_PURPLE_WORM || mndx == PM_BABY_PURPLE_WORM) 
+            && mdef->data == &mons[PM_SHRIEKER])
         return ALLOW_M | ALLOW_TM;
-    /* Nephi's Grudge patch. */
-
-    /* Since the quest guardians are under siege, it makes sense to have
-       them fight hostiles.  (But we don't want the quest leader to be in
-       danger.) */
-    if(ma->msound==MS_GUARDIAN && mdef->mpeaceful==FALSE)
-        return ALLOW_M|ALLOW_TM;
-    /* and vice versa */
-    if(md->msound==MS_GUARDIAN && magr->mpeaceful==FALSE)
-   	    return ALLOW_M|ALLOW_TM;
-
-  	/* elves vs. orcs */
-  	if(is_elf(ma) && is_orc(md))
+    /* woodchucks vs. The Oracle */
+  	if(mndx == PM_WOODCHUCK && mndx == PM_ORACLE)
   		  return ALLOW_M|ALLOW_TM;
-  	/* and vice versa */
-  	if(is_elf(md) && is_orc(ma))
-  		  return ALLOW_M|ALLOW_TM;
-
-  	/* angels vs. demons */
-  	if(ma->mlet==S_ANGEL && is_demon(md))
-  		  return ALLOW_M|ALLOW_TM;
-  	/* and vice versa */
-  	if(md->mlet==S_ANGEL && is_demon(ma))
-  		  return ALLOW_M|ALLOW_TM;
-
-  	/* woodchucks vs. The Oracle */
-  	if(ma == &mons[PM_WOODCHUCK] && md == &mons[PM_ORACLE])
-  		  return ALLOW_M|ALLOW_TM;
-
   	/* ravens like eyes */
-  	if(ma == &mons[PM_RAVEN] && md == &mons[PM_FLOATING_EYE])
+  	if(mndx == PM_RAVEN && mdef->data == &mons[PM_FLOATING_EYE])
   		  return ALLOW_M|ALLOW_TM;
-
-    /* Nazgul vs. hobbits */
-    if(ma == &mons[PM_NAZGUL] && md == &mons[PM_HOBBIT])
-        return ALLOW_M | ALLOW_TM;
-    /* and vice versa */
-    if(md == &mons[PM_NAZGUL] && ma == &mons[PM_HOBBIT])
-        return ALLOW_M | ALLOW_TM;
-
-    /* Asmodeus and Mephisto dislike one another. */
-    if(ma == &mons[PM_MEPHISTO] && md == &mons[PM_ASMODEUS])
-        return ALLOW_M|ALLOW_TM;
-    if(ma == &mons[PM_ASMODEUS] && md == &mons[PM_MEPHISTO])
-        return ALLOW_M|ALLOW_TM;
-    /* Yeenoghu and Baphomet have an ancient rivalry. */
-    if(ma == &mons[PM_YEENOGHU] && md == &mons[PM_BAPHOMET])
-        return ALLOW_M|ALLOW_TM;
-    if(ma == &mons[PM_YEENOGHU] && md == &mons[PM_BAPHOMET])
-        return ALLOW_M|ALLOW_TM;
-
-    /* Pirate patch. TODO: Clean this up */
-    if (magr->data == &mons[PM_SKELETAL_PIRATE] &&
-      is_mercenary(mdef->data))
-     	  return ALLOW_M|ALLOW_TM;
-   	else if (mdef->data == &mons[PM_SKELETAL_PIRATE] &&
-   		is_mercenary(magr->data))
-   	    return ALLOW_M|ALLOW_TM;
-
-   	else if (magr->data == &mons[PM_DAMNED_PIRATE] &&
-   		is_mercenary(mdef->data))
-   	    return ALLOW_M|ALLOW_TM;
-   	else if (mdef->data == &mons[PM_DAMNED_PIRATE] &&
-   		is_mercenary(magr->data))
-   	    return ALLOW_M|ALLOW_TM;
-
-   	else if (magr->data == &mons[PM_DAMNED_PIRATE] &&
-   		u.ukinghill)
-   	    return ALLOW_M|ALLOW_TM;
-   	else if (magr->data == &mons[PM_DAMNED_PIRATE] &&
-   		u.ukinghill)
-   	    return ALLOW_M|ALLOW_TM;
-   	else if (magr->data == &mons[PM_PLANAR_PIRATE] &&
-   		u.ukinghill)
-   	    return ALLOW_M|ALLOW_TM;
     /* Endgame amulet theft / fleeing */
-    if(mon_has_amulet(magr) && In_endgame(&u.uz)) {
+    if(mon_has_amulet(magr) && In_endgame(&u.uz))
         return ALLOW_M|ALLOW_TM;
-    }
-    return 0L;
+
+    return (mm_2way_aggression(magr, mdef) | mm_2way_aggression(mdef, magr));
 }
 
 /* Monster displacing another monster out of the way */
@@ -2676,11 +2804,15 @@ register struct monst *mtmp;
 #endif
 
     if (mtmp->data->mlet == S_KOP) {
+        stairway *stway = stairway_find_type_dir(FALSE, FALSE);
+
         /* Dead Kops may come back. */
         switch (rnd(5)) {
         case 1: /* returns near the stairs */
-            (void) makemon(mtmp->data, xdnstair, ydnstair, NO_MM_FLAGS);
-            break;
+            if (stway) {
+                (void) makemon(mtmp->data, stway->sx, stway->sy, NO_MM_FLAGS);
+                break;
+            }
         case 2: /* randomly */
             (void) makemon(mtmp->data, 0, 0, NO_MM_FLAGS);
             break;
@@ -3022,30 +3154,56 @@ const char *fltxt;
 int how;
 {
     boolean fried = FALSE; /* true if mon burned to death */
+    struct permonst *mptr = mdef->data;
 
-    if ((mdef->wormno ? worm_known(mdef) : cansee(mdef->mx, mdef->my))
-        && fltxt)
+    if (fltxt && (mdef->wormno ? worm_known(mdef)
+                               : cansee(mdef->mx, mdef->my)))
         pline("%s is %s%s%s!", Monnam(mdef),
-              nonliving(mdef->data) ? "destroyed" : "killed",
+              nonliving(mptr) ? "destroyed" : "killed",
               *fltxt ? " by the " : "", fltxt);
     else
-        iflags.sad_feeling = (mdef->mtame != 0);
+        /* sad feeling is deferred until after potential life-saving */
+        iflags.sad_feeling = mdef->mtame ? TRUE : FALSE;
 
-    /* no corpses if digested or disintegrated */
-    g.disintegested = (how == AD_DGST || how == -AD_RBRE);
+    /* no corpse if digested or disintegrated or flammable golem burnt up;
+       no corpse for a paper golem means no scrolls; golems that rust or
+       rot completely are described as "falling to pieces" so they do
+       leave a corpse (which means staves for wood golem, leather armor for
+       leather golem, iron chains for iron golem, not a regular corpse) */
+    g.disintegested = (how == AD_DGST || how == -AD_RBRE
+                       || (how == AD_FIRE && completelyburns(mptr)));
     fried = (how == AD_FIRE);
     if (g.disintegested)
-        mondead(mdef);
+        mondead(mdef); /* never leaves a corpse */
     else if (fried)
         monfried(mdef);
     else
-        mondied(mdef);
+        mondied(mdef); /* calls mondead() and maybe leaves a corpse */
+
+    if (!DEADMONSTER(mdef))
+        return; /* life-saved */
+    /* extra message if pet golem is completely destroyed;
+       if not visible, this will follow "you have a sad feeling" */
+    if (mdef->mtame) {
+        const char *rxt = (how == AD_FIRE && completelyburns(mptr)) ? "roast"
+                          : (how == AD_RUST && completelyrusts(mptr)) ? "rust"
+                            : (how == AD_DCAY && completelyrots(mptr)) ? "rot"
+                              :  0;
+        if (rxt)
+            pline("May %s %s in peace.", noit_mon_nam(mdef), rxt);
+    }
 }
 
 void
 set_ustuck(mtmp)
 struct monst *mtmp;
 {
+    if (iflags.sanity_check || iflags.debug_fuzzer) {
+        if (mtmp && distu(mtmp->mx, mtmp->my) > 2)
+            impossible("Sticking to %s at distu %d?",
+                       mon_nam(mtmp), distu(mtmp->mx, mtmp->my));
+    }
+
     g.context.botl = 1;
     u.ustuck = mtmp;
 }
@@ -3213,16 +3371,16 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
         }
         /* corpse--none if hero was inside the monster */
         if (!wasinside && corpse_chance(mtmp, (struct monst *) 0, FALSE)) {
-
-            
+            g.zombify = (!g.thrownobj && !g.stoned && !uwep
+                         && zombie_maker(g.youmonst.data)
+                         && zombie_form(mtmp->data) != NON_PM);
             if (burncorpse) {
                 cadaver = make_corpse(mtmp, burycorpse ? CORPSTAT_BURIED
                                                    : CORPSTAT_BURNT);
             } else
                 cadaver = make_corpse(mtmp, burycorpse ? CORPSTAT_BURIED
                                                     : CORPSTAT_NONE);
-
-
+            g.zombify = FALSE; /* reset */
             if (burycorpse && cadaver && cansee(x, y) && !mtmp->minvis
                 && cadaver->where == OBJ_BURIED && !nomsg) {
                 pline("%s corpse ends up buried.", s_suffix(Monnam(mtmp)));
@@ -4096,6 +4254,19 @@ register struct monst *mtmp;
     }
 
     return FALSE;
+}
+
+/* reveal a monster at x,y hiding under an object,
+   if there are no objects there */
+void
+maybe_unhide_at(x, y)
+xchar x, y;
+{
+    struct monst *mtmp;
+
+    if (!OBJ_AT(x, y) && (mtmp = m_at(x, y)) != 0
+        && mtmp->mundetected && hides_under(mtmp->data))
+        (void) hideunder(mtmp);
 }
 
 /* monster/hero tries to hide under something at the current location */

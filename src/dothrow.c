@@ -1,4 +1,4 @@
-/* NetHack 3.7	dothrow.c	$NHDT-Date: 1596498161 2020/08/03 23:42:41 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.188 $ */
+/* NetHack 3.7	dothrow.c	$NHDT-Date: 1607200366 2020/12/05 20:32:46 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.191 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -24,8 +24,9 @@ static boolean FDECL(mhurtle_step, (genericptr_t, int, int));
 static NEARDATA const char toss_objs[] = { ALLOW_COUNT, COIN_CLASS,
                                            ALL_CLASSES, WEAPON_CLASS, 0 };
 /* different default choices when wielding a sling (gold must be included) */
-static NEARDATA const char bullets[] = { ALLOW_COUNT, COIN_CLASS, ALL_CLASSES,
-                                         GEM_CLASS, 0 };
+static NEARDATA const char t_bullets[] = {
+    ALLOW_COUNT, COIN_CLASS, ALL_CLASSES, GEM_CLASS, 0
+};
 
 /* g.thrownobj (decl.c) tracks an object until it lands */
 
@@ -327,7 +328,7 @@ dothrow()
     if (!ok_to_throw(&shotlimit))
         return 0;
 
-    obj = getobj(uslinging() ? bullets : toss_objs, "throw");
+    obj = getobj(uslinging() ? t_bullets : toss_objs, "throw");
     /* it is also possible to throw food */
     /* (or jewels, or iron balls... ) */
 
@@ -438,7 +439,7 @@ dofire()
                use direction of previous throw as getobj()'s choice here */
             g.in_doagain = 0;
             /* choose something from inventory, then usually quiver it */
-            obj = getobj(uslinging() ? bullets : toss_objs, "throw");
+            obj = getobj(uslinging() ? t_bullets : toss_objs, "throw");
             /* Q command doesn't allow gold in quiver */
             if (obj && !obj->owornmask && obj->oclass != COIN_CLASS)
                 setuqwep(obj); /* demi-autoquiver */
@@ -1004,10 +1005,15 @@ boolean broken;
         /* ushops0: in case we threw while levitating and recoiled
            out of shop (most likely to the shk's spot in front of door) */
         if (*oshops == *u.ushops || *oshops == *u.ushops0) {
-            if (is_unpaid(obj))
+            if (is_unpaid(obj)) {
+                long gt = Has_contents(obj) ? contained_gold(obj, TRUE) : 0L;
+
                 subfrombill(obj, shkp);
-            else if (x != shkp->mx || y != shkp->my)
+                if (gt > 0L)
+                    donate_gold(gt, shkp, TRUE);
+            } else if (x != shkp->mx || y != shkp->my) {
                 sellobj(obj, x, y);
+            }
         }
     }
 }
@@ -1152,7 +1158,7 @@ boolean hitsroof;
         }
         hitfloor(obj, TRUE);
         g.thrownobj = 0;
-        losehp(Maybe_Half_Phys(dmg), "falling object", KILLED_BY_AN);
+        losehp(dmg, "falling object", KILLED_BY_AN);
     }
     return TRUE;
 }

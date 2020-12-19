@@ -167,6 +167,11 @@ void NetHackQtBind::qt_init_nhwindows(int* argc, char** argv)
     // This nethack engine feature should be moved into windowport API
     nt_kbhit = NetHackQtBind::qt_kbhit;
 #endif
+
+#ifndef DYNAMIC_STATUSLINES
+    // 'statuslines' option can be set in config file but not via 'O'
+    set_wc2_option_mod_status(WC2_STATUSLINES, set_gameview);
+#endif
 }
 
 int NetHackQtBind::qt_kbhit()
@@ -185,38 +190,57 @@ void NetHackQtBind::qt_player_selection()
 
 void NetHackQtBind::qt_askname()
 {
-    have_asked = true;
+    char default_plname[PL_NSIZ];
 
-    // We do it all here, and nothing in askname
+    have_asked = true;
+    str_copy(default_plname, g.plname, PL_NSIZ);
+
+    // We do it all here (plus qt_plsel.cpp and qt_svsel.cpp),
+    // nothing in player_selection().
 
     char** saved = get_saved_games();
-    int ch = -1;
+    int ch = -1; // -1 => new game
     if ( saved && *saved ) {
 	if ( splash ) splash->hide();
 	NetHackQtSavedGameSelector sgsel((const char**)saved);
 	ch = sgsel.choose();
 	if ( ch >= 0 )
 	    str_copy(g.plname, saved[ch], SIZE(g.plname));
+        // caller needs new lock name even if plname[] hasn't changed
+        // because successful get_saved_games() clobbers g.SAVEF[]
+        ::iflags.renameinprogress = TRUE;
     }
     free_saved_games(saved);
 
     switch (ch) {
     case -1:
+        // New Game
         if (splash)
             splash->hide();
-        if (NetHackQtPlayerSelector(keybuffer).Choose())
-            return;
+        if (NetHackQtPlayerSelector(keybuffer).Choose()) {
+            // success; handle plname[] verification below prior to returning
+            break;
+        }
         /*FALLTHRU*/
     case -2:
+        // Quit
+        clearlocks();
+        qt_exit_nhwindows(0);
+        nh_terminate(0);
+        /*NOTREACHED*/
         break;
     default:
-        return;
+        // picked a character from the saved games list
+        break;
     }
 
-    // Quit
-    clearlocks();
-    qt_exit_nhwindows(0);
-    nh_terminate(0);
+    if (!*g.plname)
+        // in case Choose() returns with plname[] empty
+        Strcpy(g.plname, default_plname);
+    else if (strcmp(g.plname, default_plname) != 0)
+        // caller needs to set new lock file name
+        ::iflags.renameinprogress = TRUE;
+    return;
 }
 
 void NetHackQtBind::qt_get_nh_event()
@@ -424,7 +448,7 @@ int NetHackQtBind::qt_select_menu(winid wid, int how, MENU_ITEM_P **menu_list)
 void NetHackQtBind::qt_update_inventory()
 {
     if (main)
-	main->updateInventory();
+	main->updateInventory(); // update the paper doll inventory subset
     /* doesn't work yet
     if (g.program_state.something_worth_saving && iflags.perm_invent)
         display_inventory(NULL, false);
@@ -735,7 +759,7 @@ char NetHackQtBind::qt_yn_function(const char *question_,
 void NetHackQtBind::qt_getlin(const char *prompt, char *line)
 {
     NetHackQtStringRequestor requestor(mainWidget(),prompt);
-    if (!requestor.Get(line)) {
+    if (!requestor.Get(line, BUFSZ, 40)) {
         Strcpy(line, "\033");
         // discard any input that Get() might have left pending
         keybuffer.Drain();
@@ -766,10 +790,17 @@ void NetHackQtBind::qt_getlin(const char *prompt, char *line)
     NetHackQtBind::qt_clear_nhwindow(WIN_MESSAGE);
 }
 
+// User has typed '#' to begin entering an extended command; core calls us.
 int NetHackQtBind::qt_get_ext_cmd()
 {
-    NetHackQtExtCmdRequestor requestor(mainWidget());
-    return requestor.get();
+    NetHackQtExtCmdRequestor *xcmd;
+    int result;
+    do {
+        xcmd = new NetHackQtExtCmdRequestor(mainWidget());
+        result = xcmd->get();
+        delete xcmd;
+    } while (result == xcmdNoMatch);
+    return result;
 }
 
 void NetHackQtBind::qt_number_pad(int)
@@ -799,6 +830,18 @@ void NetHackQtBind::qt_outrip(winid wid, int how, time_t when)
 {
     NetHackQtWindow* window=id_to_window[(int)wid];
     window->UseRIP(how, when);
+}
+
+void NetHackQtBind::qt_preference_update(const char *optname)
+{
+#ifdef DYNAMIC_STATUSLINES  // leave disabled; redoStatus() doesn't work
+    if (!strcmp(optname, "statuslines")) {
+        // delete and recreate status window
+        main->redoStatus();
+    }
+#else
+    nhUse(optname);
+#endif
 }
 
 char *NetHackQtBind::qt_getmsghistory(BOOLEAN_P init)
@@ -931,12 +974,11 @@ static void Qt_positionbar(char *) {}
 
 struct window_procs Qt_procs = {
     "Qt",
-    WC_COLOR | WC_HILITE_PET
-    | WC_ASCII_MAP | WC_TILED_MAP
-    | WC_FONT_MAP | WC_TILE_FILE | WC_TILE_WIDTH | WC_TILE_HEIGHT
-    | WC_POPUP_DIALOG
-    | WC_PLAYER_SELECTION | WC_SPLASH_SCREEN,
-    0L,
+    (WC_COLOR | WC_HILITE_PET
+     | WC_ASCII_MAP | WC_TILED_MAP
+     | WC_FONT_MAP | WC_TILE_FILE | WC_TILE_WIDTH | WC_TILE_HEIGHT
+     | WC_POPUP_DIALOG | WC_PLAYER_SELECTION | WC_SPLASH_SCREEN),
+    (WC2_HITPOINTBAR | WC2_STATUSLINES),
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, /* color availability */
     nethack_qt_::NetHackQtBind::qt_init_nhwindows,
     nethack_qt_::NetHackQtBind::qt_player_selection,
@@ -994,8 +1036,7 @@ struct window_procs Qt_procs = {
 #else
     genl_outrip,
 #endif
-    genl_preference_update,
-
+    nethack_qt_::NetHackQtBind::qt_preference_update,
     nethack_qt_::NetHackQtBind::qt_getmsghistory,
     nethack_qt_::NetHackQtBind::qt_putmsghistory,
     genl_status_init,

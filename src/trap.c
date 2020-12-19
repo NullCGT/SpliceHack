@@ -1,4 +1,4 @@
-/* NetHack 3.7	trap.c	$NHDT-Date: 1602270123 2020/10/09 19:02:03 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.364 $ */
+/* NetHack 3.7	trap.c	$NHDT-Date: 1606558763 2020/11/28 10:19:23 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.367 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -544,7 +544,7 @@ unsigned ftflags;
         Sprintf(msgbuf, "The hole in the %s above you closes up.",
                 ceiling(u.ux, u.uy));
 
-    schedule_goto(&dtmp, FALSE, TRUE, 0, (char *) 0,
+    schedule_goto(&dtmp, UTOTYPE_FALLING, (char *) 0,
                   !td ? msgbuf : (char *) 0);
 }
 
@@ -2612,12 +2612,11 @@ register struct monst *mtmp;
                     (void) water_damage(target, "shirt", TRUE);
             }
 
-            if (mptr == &mons[PM_IRON_GOLEM]) {
+            if (completelyrusts(mptr)) {
                 if (in_sight)
-                    pline("%s falls to pieces!", Monnam(mtmp));
-                else if (mtmp->mtame)
-                    pline("May %s rust in peace.", mon_nam(mtmp));
-                mondied(mtmp);
+                    pline("%s %s to pieces!", Monnam(mtmp),
+                          !mlifesaver(mtmp) ? "falls" : "starts to fall");
+                monkilled(mtmp, (const char *) 0, AD_RUST);
                 if (DEADMONSTER(mtmp))
                     trapkilled = TRUE;
             } else if (mptr == &mons[PM_GREMLIN] && rn2(3)) {
@@ -2643,8 +2642,10 @@ register struct monst *mtmp;
                 int num = d(2, 4), alt;
                 boolean immolate = FALSE;
 
-                /* paper burns very fast, assume straw is tightly
-                 * packed and burns a bit slower */
+                /* paper burns very fast, assume straw is tightly packed
+                   and burns a bit slower
+                   (note: this is inconsistent with mattackm()'s AD_FIRE
+                   damage where completelyburns() includes straw golem) */
                 switch (monsndx(mptr)) {
                 case PM_PAPER_GOLEM:
                     immolate = TRUE;
@@ -5739,7 +5740,7 @@ boolean nocorpse;
             }
         }
         mon->mhp -= dam;
-        if (DEADMONSTER(mon)) {
+        if (mon->mhp <= 0) {
             int xx = mon->mx, yy = mon->my;
 
             monkilled(mon, "", nocorpse ? -AD_RBRE : AD_PHYS);
@@ -6057,9 +6058,9 @@ boolean override;
     return defsyms[trap_to_defsym(ttyp)].explanation;
 }
 
-/* Ignite ignitable items in the given object chain, due to some external source
- * of fire. The object chain should be somewhere exposed, like someone's open
- * inventory or the floor.
+/* Ignite ignitable items in the given object chain, due to some external
+ * source of fire.  The object chain should be somewhere exposed, like
+ * someone's open inventory or the floor.
  * This is modeled after destroy_item() somewhat and hopefully will be able to
  * merge into it in the future.
  */
@@ -6084,7 +6085,7 @@ struct obj *objchn;
     }
 
     for (obj = objchn; obj; obj = obj->nobj) {
-        if (!(ignitable(obj) || obj->otyp == MAGIC_LAMP)
+        if (!ignitable(obj)
             /* The Candelabrum requires intention to be lit */
             || obj->otyp == CANDELABRUM_OF_INVOCATION
             || obj->otyp == LANTERN /* doesn't ignite via fire */

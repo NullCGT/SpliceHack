@@ -1,4 +1,4 @@
-/* NetHack 3.7	sp_lev.c	$NHDT-Date: 1600909016 2020/09/24 00:56:56 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.203 $ */
+/* NetHack 3.7	sp_lev.c	$NHDT-Date: 1605779812 2020/11/19 09:56:52 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.216 $ */
 /*      Copyright (c) 1989 by Jean-Christophe Collet */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -44,11 +44,11 @@ static void FDECL(maybe_add_door, (int, int, struct mkroom *));
 static void NDECL(link_doors_rooms);
 static int NDECL(rnddoor);
 static int NDECL(rndtrap);
-static void FDECL(get_location, (schar *, schar *, int, struct mkroom *));
-static boolean FDECL(is_ok_location, (SCHAR_P, SCHAR_P, int));
+static void FDECL(get_location, (xchar *, xchar *, int, struct mkroom *));
+static boolean FDECL(is_ok_location, (XCHAR_P, XCHAR_P, int));
 static unpacked_coord FDECL(get_unpacked_coord, (long, int));
-static void FDECL(get_room_loc, (schar *, schar *, struct mkroom *));
-static void FDECL(get_free_room_loc, (schar *, schar *,
+static void FDECL(get_room_loc, (xchar *, xchar *, struct mkroom *));
+static void FDECL(get_free_room_loc, (xchar *, xchar *,
                                           struct mkroom *, packed_coord));
 static boolean FDECL(create_subroom, (struct mkroom *, XCHAR_P, XCHAR_P,
                                       XCHAR_P, XCHAR_P, XCHAR_P, XCHAR_P));
@@ -62,11 +62,9 @@ static void FDECL(create_object, (object *, struct mkroom *));
 static void FDECL(create_altar, (altar *, struct mkroom *));
 static boolean FDECL(search_door, (struct mkroom *,
                                        xchar *, xchar *, XCHAR_P, int));
-static void NDECL(fix_stair_rooms);
 static void FDECL(create_corridor, (corridor *));
 static struct mkroom *FDECL(build_room, (room *, struct mkroom *));
 static void FDECL(light_region, (region *));
-static void FDECL(wallify_map, (int, int, int, int));
 static void FDECL(maze1xy, (coord *, int));
 static void NDECL(fill_empty_maze);
 static void FDECL(splev_initlev, (lev_init *));
@@ -409,7 +407,7 @@ struct rm *lev;
     }
 }
 
-/* for #wizlevelflip; not needed when flipping during level creation;
+/* for #wizfliplevel; not needed when flipping during level creation;
    update seen vector for whole flip area and glyph for known walls */
 static void
 flip_visuals(flp, minx, miny, maxx, maxy)
@@ -486,7 +484,7 @@ flip_encoded_direction_bits(int flp, int val)
     } while (0)
 
 /* transpose top with bottom or left with right or both; sometimes called
-   for new special levels, or for any level via the #wizlevelflip command */
+   for new special levels, or for any level via the #wizfliplevel command */
 void
 flip_level(flp, extras)
 int flp;
@@ -502,6 +500,7 @@ boolean extras;
     struct mkroom *sroom;
     timer_element *timer;
     boolean ball_active = FALSE, ball_fliparea = FALSE;
+    stairway *stway;
 
     /* nothing to do unless (flp & 1) or (flp & 2) or both */
     if ((flp & 3) == 0)
@@ -539,29 +538,11 @@ boolean extras;
     }
 
     /* stairs and ladders */
-    if (flp & 1) {
-        if (xupstair)
-            yupstair = FlipY(yupstair);
-        if (xdnstair)
-            ydnstair = FlipY(ydnstair);
-        if (xupladder)
-            yupladder = FlipY(yupladder);
-        if (xdnladder)
-            ydnladder = FlipY(ydnladder);
-        if (g.sstairs.sx)
-            g.sstairs.sy = FlipY(g.sstairs.sy);
-    }
-    if (flp & 2) {
-        if (xupstair)
-            xupstair = FlipX(xupstair);
-        if (xdnstair)
-            xdnstair = FlipX(xdnstair);
-        if (xupladder)
-            xupladder = FlipX(xupladder);
-        if (xdnladder)
-            xdnladder = FlipX(xdnladder);
-        if (g.sstairs.sx)
-            g.sstairs.sx = FlipX(g.sstairs.sx);
+    for (stway = g.stairs; stway; stway = stway->next) {
+        if (flp & 1)
+            stway->sy = FlipY(stway->sy);
+        if (flp & 2)
+            stway->sx = FlipX(stway->sx);
     }
 
     /* traps */
@@ -828,7 +809,7 @@ boolean extras;
         }
     }
 
-    if (extras) { /* for #wizlevelflip rather than during level creation */
+    if (extras) { /* for #wizfliplevel rather than during level creation */
         /* flip hero location only if inside the flippable area */
         if (inFlipArea(u.ux, u.uy)) {
             if (flp & 1)
@@ -1047,10 +1028,9 @@ link_doors_rooms()
 static int
 rnddoor()
 {
-    int i = 1 << rn2(5);
+    static int state[] = { D_NODOOR, D_BROKEN, D_ISOPEN, D_CLOSED, D_LOCKED };
 
-    i >>= 1;
-    return i;
+    return state[rn2(SIZE(state))];
 }
 
 /*
@@ -1097,7 +1077,7 @@ rndtrap()
  */
 static void
 get_location(x, y, humidity, croom)
-schar *x, *y;
+xchar *x, *y;
 int humidity;
 struct mkroom *croom;
 {
@@ -1167,7 +1147,7 @@ struct mkroom *croom;
 
 static boolean
 is_ok_location(x, y, humidity)
-register schar x, y;
+register xchar x, y;
 register int humidity;
 {
     register int typ;
@@ -1229,7 +1209,7 @@ int defhumidity;
 
 void
 get_location_coord(x, y, humidity, croom, crd)
-schar *x, *y;
+xchar *x, *y;
 int humidity;
 struct mkroom *croom;
 long crd;
@@ -1252,7 +1232,7 @@ long crd;
 
 static void
 get_room_loc(x, y, croom)
-schar *x, *y;
+xchar *x, *y;
 struct mkroom *croom;
 {
     coord c;
@@ -1279,11 +1259,11 @@ struct mkroom *croom;
  */
 static void
 get_free_room_loc(x, y, croom, pos)
-schar *x, *y;
+xchar *x, *y;
 struct mkroom *croom;
 packed_coord pos;
 {
-    schar try_x, try_y;
+    xchar try_x, try_y;
     register int trycnt = 0;
 
     get_location_coord(&try_x, &try_y, DRY, croom, pos);
@@ -1763,7 +1743,7 @@ create_trap(t, croom)
 spltrap *t;
 struct mkroom *croom;
 {
-    schar x = -1, y = -1;
+    xchar x = -1, y = -1;
     coord tm;
 
     if (croom) {
@@ -1847,7 +1827,7 @@ monster *m;
 struct mkroom *croom;
 {
     struct monst *mtmp;
-    schar x, y;
+    xchar x, y;
     char class;
     aligntyp amask;
     coord cc;
@@ -2110,7 +2090,7 @@ object *o;
 struct mkroom *croom;
 {
     struct obj *otmp;
-    schar x, y;
+    xchar x, y;
     char c;
     boolean named; /* has a name been supplied in level description? */
 
@@ -2346,7 +2326,8 @@ create_altar(a, croom)
 altar *a;
 struct mkroom *croom;
 {
-    schar sproom, x = -1, y = -1;
+    schar sproom;
+    xchar x = -1, y = -1;
     aligntyp amask;
     boolean croom_is_temple = TRUE;
     int oldtyp;
@@ -2569,52 +2550,6 @@ schar ftyp, btyp;
 }
 
 /*
- * Disgusting hack: since special levels have their rooms filled before
- * sorting the rooms, we have to re-arrange the speed values g.upstairs_room
- * and g.dnstairs_room after the rooms have been sorted.  On normal levels,
- * stairs don't get created until _after_ sorting takes place.
- */
-static void
-fix_stair_rooms()
-{
-    int i;
-    struct mkroom *croom;
-
-    if (xdnstair
-        && !((g.dnstairs_room->lx <= xdnstair
-              && xdnstair <= g.dnstairs_room->hx)
-             && (g.dnstairs_room->ly <= ydnstair
-                 && ydnstair <= g.dnstairs_room->hy))) {
-        for (i = 0; i < g.nroom; i++) {
-            croom = &g.rooms[i];
-            if ((croom->lx <= xdnstair && xdnstair <= croom->hx)
-                && (croom->ly <= ydnstair && ydnstair <= croom->hy)) {
-                g.dnstairs_room = croom;
-                break;
-            }
-        }
-        if (i == g.nroom)
-            panic("Couldn't find dnstair room in fix_stair_rooms!");
-    }
-    if (xupstair
-        && !((g.upstairs_room->lx <= xupstair
-              && xupstair <= g.upstairs_room->hx)
-             && (g.upstairs_room->ly <= yupstair
-                 && yupstair <= g.upstairs_room->hy))) {
-        for (i = 0; i < g.nroom; i++) {
-            croom = &g.rooms[i];
-            if ((croom->lx <= xupstair && xupstair <= croom->hx)
-                && (croom->ly <= yupstair && yupstair <= croom->hy)) {
-                g.upstairs_room = croom;
-                break;
-            }
-        }
-        if (i == g.nroom)
-            panic("Couldn't find upstair room in fix_stair_rooms!");
-    }
-}
-
-/*
  * Corridors always start from a door. But it can end anywhere...
  * Basically we search for door coordinates or for endpoints coordinates
  * (from a distance).
@@ -2626,7 +2561,6 @@ corridor *c;
     coord org, dest;
 
     if (c->src.room == -1) {
-        fix_stair_rooms();
         makecorridors(); /*makecorridors(c->src.door);*/
         return;
     }
@@ -2824,7 +2758,7 @@ region *tmpregion;
     }
 }
 
-static void
+void
 wallify_map(x1, y1, x2, y2)
 int x1, y1, x2, y2;
 {
@@ -2876,7 +2810,7 @@ int humidity;
         if (--tryct < 0)
             break; /* give up */
     } while (!(x % 2) || !(y % 2) || SpLev_Map[x][y]
-             || !is_ok_location((schar) x, (schar) y, humidity));
+             || !is_ok_location((xchar) x, (xchar) y, humidity));
 
     m->x = (xchar) x, m->y = (xchar) y;
 }
@@ -3962,12 +3896,18 @@ boolean using_ladder;
     if (using_ladder) {
         levl[x][y].typ = LADDER;
         if (up) {
-            xupladder = x;
-            yupladder = y;
+            d_level dest;
+
+            dest.dnum = u.uz.dnum;
+            dest.dlevel = u.uz.dlevel - 1;
+            stairway_add(x, y, TRUE, TRUE, &dest);
             levl[x][y].ladder = LA_UP;
         } else {
-            xdnladder = x;
-            ydnladder = y;
+            d_level dest;
+
+            dest.dnum = u.uz.dnum;
+            dest.dlevel = u.uz.dlevel + 1;
+            stairway_add(x, y, FALSE, TRUE, &dest);
             levl[x][y].ladder = LA_DOWN;
         }
     } else {
@@ -4010,7 +3950,7 @@ lspo_grave(L)
 lua_State *L;
 {
     int argc = lua_gettop(L);
-    schar x, y;
+    xchar x, y;
     long scoord;
     int ax,ay;
     char *txt;
@@ -4222,7 +4162,7 @@ lspo_gold(L)
 lua_State *L;
 {
     int argc = lua_gettop(L);
-    schar x, y;
+    xchar x, y;
     long amount;
     long gcoord;
     int gx, gy;
@@ -4448,7 +4388,7 @@ int percent;
 int
 selection_rndcoord(ov, x, y, removeit)
 struct selectionvar *ov;
-schar *x, *y;
+xchar *x, *y;
 boolean removeit;
 {
     int idx = 0;
@@ -4799,7 +4739,7 @@ long x, y, x2, y2, gtyp, mind, maxd, limit;
 /* bresenham line algo */
 void
 selection_do_line(x1, y1, x2, y2, ov)
-schar x1, y1, x2, y2;
+xchar x1, y1, x2, y2;
 struct selectionvar *ov;
 {
     int d0, dx, dy, ai, bi, xi, yi;
@@ -4853,7 +4793,8 @@ struct selectionvar *ov;
 
 void
 selection_do_randline(x1, y1, x2, y2, rough, rec, ov)
-schar x1, y1, x2, y2, rough, rec;
+xchar x1, y1, x2, y2;
+schar rough, rec;
 struct selectionvar *ov;
 {
     int mx, my;
@@ -4973,7 +4914,7 @@ lua_State *L;
         -1, D_ISOPEN, D_CLOSED, D_LOCKED, D_NODOOR, D_BROKEN, D_SECRET
     };
     int msk;
-    schar x,y;
+    xchar x,y;
     xchar typ;
     int argc = lua_gettop(L);
 
@@ -5054,7 +4995,7 @@ lua_State *L;
                                             "throne", "tree", NULL };
     static const int features2i[] = { FOUNTAIN, FURNACE, SINK, POOL,
                                       THRONE, TREE, STONE };
-    schar x,y;
+    xchar x,y;
     int typ;
     int argc = lua_gettop(L);
     boolean can_have_flags = FALSE;
@@ -5258,7 +5199,7 @@ lua_State *L;
         if (x1 == -1 && y1 == -1 && x2 == -1 && y2 == -1) {
             (void) selection_not(sel);
         } else {
-            schar rx1, ry1, rx2, ry2;
+            xchar rx1, ry1, rx2, ry2;
             rx1 = x1, ry1 = y1, rx2 = x2, ry2 = x2;
             get_location(&rx1, &ry1, ANY_LOC, g.coder->croom);
             get_location(&rx2, &ry2, ANY_LOC, g.coder->croom);
@@ -5298,7 +5239,7 @@ struct selectionvar *ov;
         WAN_TELEPORTATION, SCR_TELEPORTATION, RIN_TELEPORTATION
     };
     struct selectionvar *ov2 = selection_new(), *ov3;
-    schar x, y;
+    xchar x, y;
     boolean res = TRUE;
 
     selection_floodfill(ov2, nx, ny, TRUE);
@@ -5366,17 +5307,15 @@ ensure_way_out()
     struct trap *ttmp = g.ftrap;
     int x,y;
     boolean ret = TRUE;
+    stairway *stway = g.stairs;
 
     set_selection_floodfillchk(floodfillchk_match_accessible);
 
-    if (xupstair && !selection_getpoint(xupstair, yupstair, ov))
-        selection_floodfill(ov, xupstair, yupstair, TRUE);
-    if (xdnstair && !selection_getpoint(xdnstair, ydnstair, ov))
-        selection_floodfill(ov, xdnstair, ydnstair, TRUE);
-    if (xupladder && !selection_getpoint(xupladder, yupladder, ov))
-        selection_floodfill(ov, xupladder, yupladder, TRUE);
-    if (xdnladder && !selection_getpoint(xdnladder, ydnladder, ov))
-        selection_floodfill(ov, xdnladder, ydnladder, TRUE);
+    while (stway) {
+        if (stway->tolev.dnum == u.uz.dnum)
+            selection_floodfill(ov, stway->sx, stway->sy, TRUE);
+        stway = stway->next;
+    }
 
     while (ttmp) {
         if ((ttmp->ttyp == MAGIC_PORTAL || ttmp->ttyp == VIBRATING_SQUARE
@@ -5918,7 +5857,7 @@ lua_State *L;
 {
     static const char *const wprops[] = { "nondiggable", "nonpasswall", NULL };
     static const int wprop2i[] = { W_NONDIGGABLE, W_NONPASSWALL, -1 };
-    schar dx1 = -1, dy1 = -1, dx2 = -1, dy2 = -1;
+    xchar dx1 = -1, dy1 = -1, dx2 = -1, dy2 = -1;
     int wprop;
 
     create_des_coder();

@@ -1,4 +1,4 @@
-/* NetHack 3.7	mondata.c	$NHDT-Date: 1596498186 2020/08/03 23:43:06 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.83 $ */
+/* NetHack 3.7	mondata.c	$NHDT-Date: 1606473489 2020/11/27 10:38:09 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.87 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -394,7 +394,10 @@ struct permonst *mptr;
 {
     return (boolean) (passes_walls(mptr) || amorphous(mptr) || unsolid(mptr)
                       || is_whirly(mptr) || verysmall(mptr)
-                      || dmgtype(mptr, AD_CORR) || dmgtype(mptr, AD_RUST)
+                      /* rust monsters and some puddings can destroy bars */
+                      || dmgtype(mptr, AD_RUST) || dmgtype(mptr, AD_CORR)
+                      /* rock moles can eat bars */
+                      || metallivorous(mptr)
                       || (slithy(mptr) && !bigmonst(mptr)));
 }
 
@@ -570,7 +573,7 @@ int
 max_passive_dmg(mdef, magr)
 register struct monst *mdef, *magr;
 {
-    int i, dmg = 0, multi2 = 0;
+    int i, dmg, multi2 = 0;
     uchar adtyp;
 
     /* each attack by magr can result in passive damage */
@@ -592,25 +595,29 @@ register struct monst *mdef, *magr;
             break;
         }
 
+    dmg = 0;
     for (i = 0; i < NATTK; i++)
         if (mdef->data->mattk[i].aatyp == AT_NONE
             || mdef->data->mattk[i].aatyp == AT_BOOM) {
             adtyp = mdef->data->mattk[i].adtyp;
-            if ((adtyp == AD_ACID && !resists_acid(magr))
-                || (adtyp == AD_COLD && !resists_cold(magr))
-                || (adtyp == AD_FIRE && !resists_fire(magr))
-                || (adtyp == AD_ELEC && !resists_elec(magr))
-                || adtyp == AD_PHYS) {
+            if ((adtyp == AD_FIRE && completelyburns(magr->data))
+                || (adtyp == AD_DCAY && completelyrots(magr->data))
+                || (adtyp == AD_RUST && completelyrusts(magr->data))) {
+                dmg = magr->mhp;
+            } else if ((adtyp == AD_ACID && !resists_acid(magr))
+                       || (adtyp == AD_COLD && !resists_cold(magr))
+                       || (adtyp == AD_FIRE && !resists_fire(magr))
+                       || (adtyp == AD_ELEC && !resists_elec(magr))
+                       || adtyp == AD_PHYS) {
                 dmg = mdef->data->mattk[i].damn;
                 if (!dmg)
                     dmg = mdef->data->mlevel + 1;
                 dmg *= mdef->data->mattk[i].damd;
-            } else
-                dmg = 0;
-
-            return dmg * multi2;
+            }
+            dmg *= multi2;
+            break;
         }
-    return 0;
+    return dmg;
 }
 
 /* determine whether two monster types are from the same species */

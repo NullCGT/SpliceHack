@@ -454,10 +454,12 @@ aboutMsg()
        but we're using it mid-sentence so strip period off */
     if ((p = strrchr(getversionstring(vbuf), '.')) != 0 && *(p + 1) == '\0')
         *p = '\0';
+    /* it's also long; break it into two pieces */
+    (void) strsubst(vbuf, " - ", "\n- ");
     QString msg;
     msg.sprintf(
         // format
-        "Qt NetHack is a version of NetHack built using" // no newline
+        "NetHack-Qt is a version of NetHack built using" // no newline
 #ifdef KDE
         " KDE and"                                       // ditto
 #endif
@@ -527,7 +529,7 @@ NetHackQtMainWindow::NetHackQtMainWindow(NetHackQtKeyBuffer& ks) :
     addToolBar(toolbar);
     menubar = menuBar();
 
-    setWindowTitle("Qt SpliceHack");
+    setWindowTitle("SpliceHack-Qt");
     setWindowIcon(QIcon(QPixmap(qt_compact_mode ? nh_icon_small : nh_icon)));
 
 #ifdef MACOSX
@@ -672,26 +674,42 @@ NetHackQtMainWindow::NetHackQtMainWindow(NetHackQtKeyBuffer& ks) :
 	{ 0, 0, 0 }
     };
 
-    int i;
-
-    game->addAction(
+    QAction *actn;
 #ifndef MACOSX
-                    "Qt settings...",
+    (void) game->addAction("Qt settings...", this, SLOT(doQtSettings(bool)));
 #else
-                    /* on OSX, put this in the application menu by using
-                       a name that Qt will move to that menu */
-                    "Preferences...",
+    /* on OSX, put this in the application menu instead of the game menu;
+       Qt would change the action name behind our backs; do it explicitly */
+    actn = game->addAction("Preferences...", this, SLOT(doQtSettings(bool)));
+    actn->setMenuRole(QWidgetAction::PreferencesRole);
+    /* we also want a "Quit NetHack" entry in the application menu;
+       when "_Quit-without-saving" was called "Quit" it got intercepted
+       for that, but now this needs to be added separately; we'll use a
+       handy menu and let the interception put it in the intended place;
+       unlike About, it is not a duplicate; _Quit-without-saving runs
+       nethack's #quit command with "really quit?" prompt, this quit--with
+       Command+q as shortcut--pops up a dialog to choose between quit or
+       cancel-and-resume-playing */
+    actn = game->addAction("Quit NetHack-Qt", this, SLOT(doQuit(bool)));
+    actn->setMenuRole(QWidgetAction::QuitRole);
 #endif
-                    this, SLOT(doQtSettings(bool)));
-    /* on OSX, 'about' will end up in the application menu rather than
-       the help menu (this had trailing "..." but that conflicts with
-       the convention that an elipsis indicates the choice will bring
-       up its own sub-menu) */
-    help->addAction("About Qt NetHack", this, SLOT(doAbout(bool)));
-    //help->addAction("NetHack Guidebook", this, SLOT(doGuidebook(bool)));
+
+    actn = help->addAction("About NetHack-Qt", this, SLOT(doAbout(bool)));
+#ifdef MACOSX
+    actn->setMenuRole(QWidgetAction::AboutRole);
+    /* for OSX, the preceding "About" went into the application menu;
+       now add another duplicate one to the Help dropdown menu */
+    actn = help->addAction("About NetHack-Qt", this, SLOT(doAbout(bool)));
+    actn->setMenuRole(QWidgetAction::NoRole);
+#else
+    nhUse(actn);
+#endif
     help->addSeparator();
 
-    for (i=0; item[i].menu; i++) {
+    //help->addAction("NetHack Guidebook", this, SLOT(doGuidebook(bool)));
+    //help->addSeparator();
+
+    for (int i = 0; item[i].menu; ++i) {
 	if ( item[i].flags & (qt_compact_mode ? 1 : 2) ) {
 	    if (item[i].name) {
                 char actchar[32];
@@ -766,21 +784,6 @@ NetHackQtMainWindow::NetHackQtMainWindow(NetHackQtKeyBuffer& ks) :
 	help->setTitle("Help");
 	menubar->addMenu(help);
     }
-#ifdef MACOSX
-    /* for OSX, the attempt above to add "About Qt NetHack" went into
-       the application menu instead of the help menu; we'll add it to
-       the latter now and have two ways to access it; without the
-       leading underscore (or some other spelling variation such as
-       "'bout"), this one would get intercepted too and then evidently
-       be discarded as a duplicate */
-    help->addSeparator();
-    help->addAction("_About_Qt_NetHack_", this, SLOT(doAbout(bool)));
-    /* we also want a "Quit NetHack" entry in the application menu;
-       when "_Quit-without-saving" was called "Quit" it got intercepted
-       for that, but now it needs to be added separately; we'll use a
-       handy menu and let the interception put it in the intended place */
-    game->addAction("Quit NetHack", this, SLOT(doQuit(bool)));
-#endif
 
     // order changed: was Again, Get, Kick, Throw, Fire, Drop, Eat, Rest
     //                now Again, PickUp, Drop, Kick, Throw, Fire, Eat, Rest
@@ -952,7 +955,7 @@ void NetHackQtMainWindow::doQtSettings(bool)
 
 void NetHackQtMainWindow::doAbout(bool)
 {
-    QMessageBox::about(this, "About Qt NetHack", aboutMsg());
+    QMessageBox::about(this, "About NetHack-Qt", aboutMsg());
 }
 
 // on OSX, "quit nethack" has been selected in the application menu or
@@ -1138,8 +1141,33 @@ void NetHackQtMainWindow::layout()
         // call resizePaperDoll() indirectly...
         qt_settings->resizeDoll();
 #endif
+        // reset widths
+        int w = width(); /* of main window */
+        int d = invusage->width();
+        splittersizes[2] = w / 2 - (d * 1 / 4); // status
+        splittersizes[1] = d;                   // invusage
+        splittersizes[0] = w / 2 - (d * 3 / 4); // messages
+        hsplitter->setSizes(splittersizes);
     }
 }
+
+#ifdef DYNAMIC_STATUSLINES  // leave disabled; this doesn't work as intended
+// called when 'statuslines' changes from 2 to 3 or vice versa; simpler to
+// destroy and recreate the status window than to adjust existing fields
+void NetHackQtMainWindow::redoStatus()
+{
+    NetHackQtStatusWindow *oldstatus = this->status;
+    if (!oldstatus)
+        return; // not ready yet?
+    this->status = new NetHackQtStatusWindow;
+
+    if (!qt_compact_mode)
+        hsplitter->replaceWidget(2, this->status->Widget());
+
+    delete oldstatus;
+    ShowIfReady();
+}
+#endif
 
 void NetHackQtMainWindow::resizePaperDoll(bool showdoll)
 {
@@ -1162,8 +1190,10 @@ void NetHackQtMainWindow::resizePaperDoll(bool showdoll)
         hsplitter->setSizes(hsplittersizes);
     }
 
-    // Height limit is 48 pixels per doll cell;
-    // values greater than 44 need taller window which pushes the map down.
+    // Height limit is 48+2 pixels per doll cell plus 1 pixel margin at top;
+    // values greater than 44+2 need taller window which pushes the map down
+    // (when font size 'Large' is used for messages and status; threshold
+    // may vary by 1 or 2 for other sizes).
     // FIXME: this doesn't shrink the window back if size is reduced from 45+
     int oldheight = vsplittersizes[0],
         newheight = w->height();

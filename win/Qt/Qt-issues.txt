@@ -26,6 +26,12 @@ around by giving focus to some other application (which will put up
 its own menu bar) and then back to nethack (thereby reloading nethack's
 menu bar).
 
+On OSX, a "Search [______]" action is inserted as the first entry of
+the dropdown Help menu on the toolbar.  NetHack has no control over
+what it does or where it looks, so it should be eliminated somehow.
+(It is not releated to nethack's search command, nor the interception
+of an attempt to insert "Search" into the dropdown Action menu.)
+
 Sometimes scrolling a menu leaves the displayed text not matching what
 nethack thinks is displayed, so making a selection by mouse click may
 occasionally pick the wrong item.  There's usually a visual clue when
@@ -44,15 +50,6 @@ On the map, ^V is a dead key (at least on OSX; all other ASCII control
 characters from ^A through ^U, ^W through ^Z, and ^[, ^\, ^], ^^, ^_
 work; no attempt to have ^@ generate NUL has been made).
 
-The save file selection widget writes all the file name selection
-buttons on top of each other, with the last one added being the only
-one visible.  Clicking on it seems to be picking the first one instead.
-If you pick "new game" and use a different character name then
-eventually save, it clobbers the last one in the list (rather, warns
-the player that a save file exists and asks whether to overwrite it;
-answering yes and then loading the file shows the new character, not
-the original one even though the file is still named for that one).
-
 Map column #0, which the core reserves for its own purposes and isn't
 intended to be displayed, is displayed (as blank terrain).
 
@@ -60,5 +57,23 @@ intended to be displayed, is displayed (as blank terrain).
 
 3.6 status conditions (Stone, Slime, Strngl, Deaf, Lev, Fly, Ride)
 have been implemented but need icon artwork (one 40x40 tile for each).
+
+In a menu window, typing ':' (via shift+something) works to initiate
+a search without the need to click on the [Search] button.  In a text
+window, it does not, despite moving the menu key press interpretation
+code into its own routine and calling that for both types of windows.
+From the text window code, it sees the initial shift but not the ':'
+that should follow.
+
+Clicking on window close button pops up a confirmation dialog with
+  [  Save and exit  ]  [__Quit_without_saving__]
+with the second one highlighted.  Internally they're specified as
+"&Save" and "&Quit".  Typing <return> or <space> picks Quit, but
+typing 'Q' or 'q' picks Save-and-exit because Alt+Q is expected for
+the keyboard shortcut.
+
+The status window can't be resized while hitpointbar is active.
+Toggling it off, resizing as desired, then toggling it back on is a
+viable workaround.
 
 -----

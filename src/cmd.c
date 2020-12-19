@@ -1,4 +1,4 @@
-/* NetHack 3.7	cmd.c	$NHDT-Date: 1602621705 2020/10/13 20:41:45 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.423 $ */
+/* NetHack 3.7	cmd.c	$NHDT-Date: 1607591200 2020/12/10 09:06:40 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.431 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -144,7 +144,7 @@ static int NDECL(wiz_polyself);
 static int NDECL(wiz_load_lua);
 static int NDECL(wiz_level_tele);
 static int NDECL(wiz_level_change);
-static int NDECL(wiz_level_flip);
+static int NDECL(wiz_flip_level);
 static int NDECL(wiz_show_seenv);
 static int NDECL(wiz_show_vision);
 static int NDECL(wiz_smell);
@@ -184,13 +184,13 @@ static void FDECL(show_direction_keys, (winid, CHAR_P, BOOLEAN_P));
 static boolean FDECL(help_dir, (CHAR_P, int, const char *));
 
 static void NDECL(commands_init);
-static int FDECL(dokeylist_putcmds, (winid, BOOLEAN_P, int, int, boolean *));
+static boolean FDECL(keylist_func_has_key, (const struct ext_func_tab *));
+static int FDECL(keylist_putcmds, (winid, BOOLEAN_P, int, int, boolean *));
 static int FDECL(ch2spkeys, (CHAR_P, int, int));
 static boolean FDECL(prefix_cmd, (CHAR_P));
 
 static int NDECL((*timed_occ_fn));
-static char *FDECL(doc_extcmd_flagstr, (winid, const struct ext_func_tab *,
-                                        BOOLEAN_P));
+static char *FDECL(doc_extcmd_flagstr, (winid, const struct ext_func_tab *));
 
 static const char *readchar_queue = "";
 /* for rejecting attempts to use wizard mode commands */
@@ -343,38 +343,47 @@ doextcmd(VOID_ARGS)
     return retval;
 }
 
+/* format extended command flags for display */
 static char *
-doc_extcmd_flagstr(menuwin, efp, doc)
+doc_extcmd_flagstr(menuwin, efp)
 winid menuwin;
-const struct ext_func_tab *efp;
-boolean doc;
+const struct ext_func_tab *efp; /* if Null, add a footnote to the menu */
 {
-    static char buf[BUFSZ];
+    static char Abuf[10]; /* 5 would suffice: {'[','m','A',']','\0'} */
 
-    if (doc) {
+    /* note: tag shown for menu prefix is 'm' even if m-prefix action
+       has been bound to some other key */
+    if (!efp) {
+        char qbuf[QBUFSZ];
         anything any = cg.zeroany;
 
         add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                  "[A] Command autocompletes", MENU_ITEMFLAGS_NONE);
-        Sprintf(buf, "[m] Command accepts '%c' prefix",
+        Sprintf(qbuf, "[m] Command accepts '%c' prefix",
                 g.Cmd.spkeys[NHKF_REQMENU]);
-        add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf,
+        add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE, qbuf,
                  MENU_ITEMFLAGS_NONE);
         return (char *) 0;
     } else {
-        buf[0] = '\0';
-        Sprintf(&buf[1], "%s%s",
-                (efp->flags & AUTOCOMPLETE) ? "A" : "",
-                accept_menu_prefix(efp->ef_funct) ? "m" : "");
-        if (buf[1]) {
-            buf[0] = '[';
-            Strcat(buf, "]");
+        boolean mprefix = accept_menu_prefix(efp->ef_funct),
+                autocomplete = (efp->flags & AUTOCOMPLETE) != 0;
+        char *p = Abuf;
+
+        /* "" or "[m]" or "[A]" or "[mA]" */
+        if (mprefix || autocomplete) {
+            *p++ = '[';
+            if (mprefix)
+                *p++ = 'm';
+            if (autocomplete)
+                *p++ = 'A';
+            *p++ = ']';
         }
-        return buf;
+        *p = '\0';
+        return Abuf;
     }
 }
 
-/* here after #? - now list all full-word commands and provid
+/* here after #? - now list all full-word commands and provide
    some navigation capability through the long list */
 int
 doextlist(VOID_ARGS)
@@ -403,10 +412,8 @@ doextlist(VOID_ARGS)
         add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                  "", MENU_ITEMFLAGS_NONE);
 
-        Strcpy(buf, menumode ? "Show" : "Hide");
-        Strcat(buf, " commands that don't autocomplete");
-        if (!menumode)
-            Strcat(buf, " (those not marked with [A])");
+        Sprintf(buf, "Switch to %s commands that don't autocomplete",
+                menumode ? "including" : "excluding");
         any.a_int = 1;
         add_menu(menuwin, NO_GLYPH, &any, 'a', 0, ATR_NONE, buf,
                  MENU_ITEMFLAGS_NONE);
@@ -422,7 +429,7 @@ doextlist(VOID_ARGS)
                      "Search extended commands",
                      MENU_ITEMFLAGS_NONE);
         } else {
-            Strcpy(buf, "Show all, clear search");
+            Strcpy(buf, "Switch back from search");
             if (strlen(buf) + strlen(searchbuf) + strlen(" (\"\")") < QBUFSZ)
                 Sprintf(eos(buf), " (\"%s\")", searchbuf);
             any.a_int = 3;
@@ -437,8 +444,8 @@ doextlist(VOID_ARGS)
         if (wizard) {
             any.a_int = 4;
             add_menu(menuwin, NO_GLYPH, &any, 'z', 0, ATR_NONE,
-                     onelist ? "Show debugging commands in separate section"
-                    : "Show all alphabetically, including debugging commands",
+          onelist ? "Switch to showing debugging commands in separate section"
+       : "Switch to showing all alphabetically, including debugging commands",
                      MENU_ITEMFLAGS_NONE);
         }
         any = cg.zeroany;
@@ -489,10 +496,10 @@ doextlist(VOID_ARGS)
                              MENU_ITEMFLAGS_NONE);
                     menushown[pass] = 1;
                 }
-                Sprintf(buf, " %-14s %-4s %s",
-                        efp->ef_txt,
-                        doc_extcmd_flagstr(menuwin, efp, FALSE),
-                        efp->ef_desc);
+                /* longest ef_txt at present is "wizrumorcheck" (13 chars);
+                   2nd field will be "    " or " [A]" or " [m]" or "[mA]" */
+                Sprintf(buf, " %-14s %4s %s", efp->ef_txt,
+                        doc_extcmd_flagstr(menuwin, efp), efp->ef_desc);
                 add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                          buf, MENU_ITEMFLAGS_NONE);
                 ++n;
@@ -505,7 +512,7 @@ doextlist(VOID_ARGS)
             add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                      "no matches", MENU_ITEMFLAGS_NONE);
         else
-            (void) doc_extcmd_flagstr(menuwin, efp, TRUE);
+            (void) doc_extcmd_flagstr(menuwin, (struct ext_func_tab *) 0);
 
         end_menu(menuwin, (char *) 0);
         n = select_menu(menuwin, PICK_ONE, &selected);
@@ -1075,9 +1082,9 @@ wiz_level_tele(VOID_ARGS)
     return 0;
 }
 
-/* #wizlevelflip - transpose the current level */
+/* #wizfliplevel - transpose the current level */
 static int
-wiz_level_flip(VOID_ARGS)
+wiz_flip_level(VOID_ARGS)
 {
     static const char choices[] = "0123",
         prmpt[] = "Flip 0=randomly, 1=vertically, 2=horizonally, 3=both:";
@@ -1808,9 +1815,10 @@ struct ext_func_tab extcmdlist[] = {
             doapply },
     { C('x'), "attributes", "show your attributes",
             doattributes, IFBURIED },
-    { '@', "autopickup", "toggle the pickup option on/off",
+    { '@', "autopickup", "toggle the 'autopickup' option on/off",
             dotogglepickup, IFBURIED },
-    { 'C', "call", "call (name) something", docallcmd, IFBURIED },
+    { 'C', "call", "name a monster, a specific object, or a type of object",
+            docallcmd, IFBURIED },
     { 'Z', "cast", "zap (cast) a spell", docast, IFBURIED },
     { M('c'), "chat", "talk to someone", dotalk, IFBURIED | AUTOCOMPLETE },
     { 'c', "close", "close a door", doclose },
@@ -1826,7 +1834,7 @@ struct ext_func_tab extcmdlist[] = {
     { M('e'), "enhance", "advance or check weapon and spell skills",
             enhance_weapon_skill, IFBURIED | AUTOCOMPLETE },
     { '\0', "exploremode", "enter explore (discovery) mode",
-            enter_explore_mode, IFBURIED },
+            enter_explore_mode, IFBURIED | GENERALCMD },
     { 'f', "fire", "fire ammunition from quiver", dofire },
     { M('f'), "force", "force a lock", doforce, AUTOCOMPLETE },
     { M('g'), "give", "give another creature an item", dogive, AUTOCOMPLETE },
@@ -1834,7 +1842,7 @@ struct ext_func_tab extcmdlist[] = {
             doquickwhatis, IFBURIED | GENERALCMD },
     { '?', "help", "give a help message", dohelp, IFBURIED | GENERALCMD },
     { '\0', "herecmdmenu", "show menu of commands you can do here",
-            doherecmdmenu, IFBURIED },
+            doherecmdmenu, IFBURIED | GENERALCMD },
     { 'V', "history", "show long version and game history",
             dohistory, IFBURIED | GENERALCMD },
     { 'i', "inventory", "show your inventory", ddoinv, IFBURIED },
@@ -1860,7 +1868,7 @@ struct ext_func_tab extcmdlist[] = {
 #endif
     { M('m'), "monster", "use monster's special ability",
             domonability, IFBURIED | AUTOCOMPLETE },
-    { 'N', "name", "name a monster or an object",
+    { 'N', "name", "same as call; name a monster or object or object type",
             docallcmd, IFBURIED | AUTOCOMPLETE },
     { M('o'), "offer", "offer a sacrifice to the gods",
             dosacrifice, AUTOCOMPLETE },
@@ -1898,28 +1906,29 @@ struct ext_func_tab extcmdlist[] = {
             dopramulet, IFBURIED },
     { ARMOR_SYM, "seearmor", "show the armor currently worn",
             doprarm, IFBURIED },
-    { GOLD_SYM, "seegold", "count your gold", doprgold, IFBURIED },
-    { '\0', "seenv", "show seen vectors",
-            wiz_show_seenv, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
     { RING_SYM, "seerings", "show the ring(s) currently worn",
             doprring, IFBURIED },
-    { SPBOOK_SYM, "seespells", "list and reorder known spells",
-            dovspell, IFBURIED },
     { TOOL_SYM, "seetools", "show the tools currently in use",
             doprtool, IFBURIED },
-    { '^', "seetrap", "show the type of adjacent trap", doidtrap, IFBURIED },
     { WEAPON_SYM, "seeweapon", "show the weapon currently wielded",
             doprwep, IFBURIED },
-    { '!', "shell", "do a shell escape",
+    { '!', "shell", "leave game to enter a sub-shell ('exit' to come back)",
             dosh_core, IFBURIED | GENERALCMD
 #ifndef SHELL
                        | CMD_NOT_AVAILABLE
 #endif /* SHELL */
     },
+    /* $ is like ),=,&c but is not included with *, so not called "seegold" */
+    { GOLD_SYM, "showgold", "show gold, possibly shop credit or debt",
+            doprgold, IFBURIED },
+    { SPBOOK_SYM, "showspells", "list and reorder known spells",
+            dovspell, IFBURIED },
+    { '^', "showtrap", "describe an adjacent, discovered trap",
+            doidtrap, IFBURIED },
     { M('s'), "sit", "sit down", dosit, AUTOCOMPLETE },
     { '\0', "stats", "show memory statistics",
             wiz_show_stats, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
-    { C('z'), "suspend", "suspend the game",
+    { C('z'), "suspend", "push game to background ('fg' to come back)",
             dosuspend_core, IFBURIED | GENERALCMD
 #ifndef SUSPEND
                             | CMD_NOT_AVAILABLE
@@ -1934,7 +1943,7 @@ struct ext_func_tab extcmdlist[] = {
             doterrain, IFBURIED | AUTOCOMPLETE },
     { '\0', "therecmdmenu",
             "menu of commands you can do from here to adjacent spot",
-            dotherecmdmenu },
+            dotherecmdmenu, GENERALCMD },
     { 't', "throw", "throw something", dothrow },
     { '\0', "timeout", "look at timeout queue and hero's timed intrinsics",
             wiz_timeout_queue, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
@@ -1950,7 +1959,8 @@ struct ext_func_tab extcmdlist[] = {
     { M('v'), "version",
             "list compile time options for this version of NetHack",
             doextversion, IFBURIED | AUTOCOMPLETE | GENERALCMD },
-    { 'v', "versionshort", "show version", doversion, IFBURIED | GENERALCMD },
+    { 'v', "versionshort", "show version and date+time program was built",
+            doversion, IFBURIED | GENERALCMD },
     { '\0', "vision", "show vision array",
             wiz_show_vision, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
     { '.', "wait", "rest one move while doing nothing",
@@ -1969,14 +1979,14 @@ struct ext_func_tab extcmdlist[] = {
 #endif
     { C('e'), "wizdetect", "reveal hidden things within a small radius",
             wiz_detect, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { '\0', "wizfliplevel", "flip the level",
+            wiz_flip_level, IFBURIED | WIZMODECMD },
     { C('g'), "wizgenesis", "create a monster",
             wiz_genesis, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
     { C('i'), "wizidentify", "identify all items in inventory",
             wiz_identify, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
     { '\0', "wizintrinsic", "set an intrinsic",
             wiz_intrinsic, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
-    { '\0', "wizlevelflip", "flip the level",
-            wiz_level_flip, IFBURIED | WIZMODECMD },
     { C('v'), "wizlevelport", "teleport to another level",
             wiz_level_tele, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
     { '\0', "wizloaddes", "load and execute a des-file lua script",
@@ -1989,6 +1999,8 @@ struct ext_func_tab extcmdlist[] = {
             wiz_map, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
     { '\0', "wizrumorcheck", "verify rumor boundaries",
             wiz_rumor_check, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { '\0', "wizseenv", "show map locations' seen vectors",
+            wiz_show_seenv, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
     { '\0', "wizsmell", "smell monster",
             wiz_smell, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
     { '\0', "wizwhere", "show locations of special levels",
@@ -2133,20 +2145,32 @@ commands_init()
     (void) bind_key(' ',    "wait");
 }
 
-static int
-dokeylist_putcmds(datawin, docount, cmdflags, exflags, keys_used)
-winid datawin;
-boolean docount;
-int cmdflags, exflags;
-boolean *keys_used; /* boolean keys_used[256] */
+static boolean
+keylist_func_has_key(extcmd)
+const struct ext_func_tab *extcmd;
 {
     int i;
-    char buf[BUFSZ];
-    char buf2[QBUFSZ];
+
+    for (i = 0; i < 256; i++) {
+        if (g.Cmd.commands[i] == extcmd)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+static int
+keylist_putcmds(datawin, docount, incl_flags, excl_flags, keys_used)
+winid datawin;
+boolean docount;
+int incl_flags, excl_flags;
+boolean *keys_used; /* boolean keys_used[256] */
+{
+    const struct ext_func_tab *extcmd;
+    int i;
+    char buf[BUFSZ], buf2[QBUFSZ];
     int count = 0;
 
     for (i = 0; i < 256; i++) {
-        const struct ext_func_tab *extcmd;
         uchar key = (uchar) i;
 
         if (keys_used[i])
@@ -2154,19 +2178,37 @@ boolean *keys_used; /* boolean keys_used[256] */
         if (key == ' ' && !flags.rest_on_space)
             continue;
         if ((extcmd = g.Cmd.commands[i]) != (struct ext_func_tab *) 0) {
-            if ((cmdflags && !(extcmd->flags & cmdflags))
-                || (exflags && (extcmd->flags & exflags)))
+            if ((incl_flags && !(extcmd->flags & incl_flags))
+                || (excl_flags && (extcmd->flags & excl_flags)))
                 continue;
             if (docount) {
                 count++;
                 continue;
             }
-            Sprintf(buf, "%-8s %-12s %s", key2txt(key, buf2),
-                    extcmd->ef_txt,
-                    extcmd->ef_desc);
+            Sprintf(buf, "%-7s %-13s %s", key2txt(key, buf2),
+                    extcmd->ef_txt, extcmd->ef_desc);
             putstr(datawin, 0, buf);
             keys_used[i] = TRUE;
         }
+    }
+    /* also list commands that lack key assignments; most are wizard mode */
+    for (extcmd = extcmdlist; extcmd->ef_txt; ++extcmd) {
+        if ((incl_flags && !(extcmd->flags & incl_flags))
+            || (excl_flags && (extcmd->flags & excl_flags)))
+            continue;
+        /* can't just check for non-Null extcmd->key; it holds the
+           default assignment and a user-specified binding might hijack
+           the this command's default key for some other command */
+        if (keylist_func_has_key(extcmd))
+            continue;
+        /* found a command for current category without any key assignment */
+        if (docount) {
+            count++;
+            continue;
+        }
+        /* '#'+20 for one column here == 7+' '+13 for two columns above */
+        Sprintf(buf, "#%-20s %s", extcmd->ef_txt, extcmd->ef_desc);
+        putstr(datawin, 0, buf);
     }
     return count;
 }
@@ -2175,9 +2217,10 @@ boolean *keys_used; /* boolean keys_used[256] */
 void
 dokeylist(VOID_ARGS)
 {
+    const struct ext_func_tab *extcmd;
     char buf[BUFSZ], buf2[BUFSZ];
     uchar key;
-    boolean keys_used[256] = {0};
+    boolean keys_used[256];
     winid datawin;
     int i;
     static const char
@@ -2197,20 +2240,33 @@ dokeylist(VOID_ARGS)
         { NHKF_FIGHT, forcefight_desc, FALSE },
         { NHKF_FIGHT2, forcefight_desc, TRUE } ,
         { NHKF_NOPICKUP,
-          "Prefix: move without picking up objects/fighting", FALSE },
+          "Prefix: move without picking up objects or fighting", FALSE },
         { NHKF_RUN_NOPICKUP,
-          "Prefix: run without picking up objects/fighting", FALSE },
+          "Prefix: run without picking up objects or fighting", FALSE },
         { NHKF_DOINV, "view inventory", TRUE },
         { NHKF_REQMENU, "Prefix: request a menu", FALSE },
-#ifdef REDO
+        { NHKF_COUNT,
+          "Prefix: for digits when prefixing a command with a count", TRUE },
         { NHKF_DOAGAIN , "re-do: perform the previous command again", FALSE },
-#endif
         { 0, (const char *) 0, FALSE }
     };
 
+    (void) memset((genericptr_t) keys_used, 0, sizeof keys_used);
+
     datawin = create_nhwindow(NHW_TEXT);
     putstr(datawin, 0, "");
-    putstr(datawin, 0, "            Full Current Key Bindings List");
+    Sprintf(buf, "%7s %s", "", "    Full Current Key Bindings List");
+    putstr(datawin, 0, buf);
+    for (extcmd = extcmdlist; extcmd->ef_txt; ++extcmd)
+        /* this can only check for commands without any key assigned, not
+           ones whose key has been hijacked by something that's processed
+           before it (in use as a prefix, for instance) */
+        if (!keylist_func_has_key(extcmd)) {
+            Sprintf(buf, "%7s %s", "",
+                               "(also commands with no key assignment)");
+            putstr(datawin, 0, buf);
+            break;
+        }
 
     /* directional keys */
     putstr(datawin, 0, "");
@@ -2242,12 +2298,24 @@ dokeylist(VOID_ARGS)
             = keys_used[(uchar) C(g.Cmd.move_SE)] = TRUE;
         putstr(datawin, 0, "");
         putstr(datawin, 0,
-          "Shift-<direction> will move in specified direction until you hit");
-        putstr(datawin, 0, "        a wall or run into something.");
-        putstr(datawin, 0,
-          "Ctrl-<direction> will run in specified direction until something");
-        putstr(datawin, 0, "        very interesting is seen.");
+     "Ctrl+<direction> will run in specified direction until something very");
+        Sprintf(buf, "%7s %s", "", "interesting is seen.");
+        putstr(datawin, 0, buf);
+        Strcpy(buf, "Shift");
+    } else {
+        /* num_pad */
+        keys_used[(uchar) M('1')] = keys_used[(uchar) M('2')]
+            = keys_used[(uchar) M('3')] = keys_used[(uchar) M('4')]
+            = keys_used[(uchar) M('6')] = keys_used[(uchar) M('7')]
+            = keys_used[(uchar) M('8')] = keys_used[(uchar) M('9')] = TRUE;
+        putstr(datawin, 0, "");
+        Strcpy(buf, "Meta");
     }
+    Strcat(buf,
+          "+<direction> will run in specified direction until you encounter");
+    putstr(datawin, 0, buf);
+    Sprintf(buf, "%7s %s", "", "an obstacle.");
+    putstr(datawin, 0, buf);
 
     putstr(datawin, 0, "");
     putstr(datawin, 0, "Miscellaneous keys:");
@@ -2256,36 +2324,40 @@ dokeylist(VOID_ARGS)
         if (key && ((misc_keys[i].numpad && iflags.num_pad)
                     || !misc_keys[i].numpad)) {
             keys_used[(uchar) key] = TRUE;
-            Sprintf(buf, "%-8s %s", key2txt(key, buf2), misc_keys[i].desc);
+            Sprintf(buf, "%-7s %s", key2txt(key, buf2), misc_keys[i].desc);
             putstr(datawin, 0, buf);
         }
     }
 #ifndef NO_SIGNAL
-    putstr(datawin, 0, "^c       break out of NetHack (SIGINT)");
     keys_used[(uchar) C('c')] = TRUE;
+    Sprintf(buf, "%-7s %s", key2txt(C('c'), buf2),
+            "break out of NetHack (SIGINT)");
+    putstr(datawin, 0, buf);
 #endif
 
     putstr(datawin, 0, "");
     show_menu_controls(datawin, TRUE);
 
-    if (dokeylist_putcmds(datawin, TRUE, GENERALCMD, WIZMODECMD, keys_used)) {
+    if (keylist_putcmds(datawin, TRUE, GENERALCMD, WIZMODECMD, keys_used)) {
         putstr(datawin, 0, "");
         putstr(datawin, 0, "General commands:");
-        (void) dokeylist_putcmds(datawin, FALSE, GENERALCMD, WIZMODECMD,
+        (void) keylist_putcmds(datawin, FALSE, GENERALCMD, WIZMODECMD,
                                  keys_used);
     }
 
-    if (dokeylist_putcmds(datawin, TRUE, 0, WIZMODECMD, keys_used)) {
+    if (keylist_putcmds(datawin, TRUE, 0,
+                          GENERALCMD | WIZMODECMD, keys_used)) {
         putstr(datawin, 0, "");
         putstr(datawin, 0, "Game commands:");
-        (void) dokeylist_putcmds(datawin, FALSE, 0, WIZMODECMD, keys_used);
+        (void) keylist_putcmds(datawin, FALSE, 0,
+                                 GENERALCMD | WIZMODECMD, keys_used);
     }
 
     if (wizard
-        && dokeylist_putcmds(datawin, TRUE, WIZMODECMD, 0, keys_used)) {
+        && keylist_putcmds(datawin, TRUE, WIZMODECMD, 0, keys_used)) {
         putstr(datawin, 0, "");
-        putstr(datawin, 0, "Wizard-mode commands:");
-        (void) dokeylist_putcmds(datawin, FALSE, WIZMODECMD, 0, keys_used);
+        putstr(datawin, 0, "Debug mode commands:");
+        (void) keylist_putcmds(datawin, FALSE, WIZMODECMD, 0, keys_used);
     }
 
     display_nhwindow(datawin, FALSE);
@@ -2796,7 +2868,7 @@ wiz_migrate_mons()
 }
 #endif
 
-struct {
+static struct {
     int nhkf;
     char key;
     const char *name;
@@ -2860,19 +2932,21 @@ const char *command;
     return FALSE;
 }
 
-/* returns a one-byte character from the text (it may massacre the txt
- * buffer) */
-char
+/* returns a one-byte character from the text; may change txt[] */
+uchar
 txt2key(txt)
 char *txt;
 {
+    uchar uc;
+    boolean makemeta = FALSE;
+
     txt = trimspaces(txt);
     if (!*txt)
         return '\0';
 
     /* simple character */
     if (!txt[1])
-        return txt[0];
+        return (uchar) txt[0];
 
     /* a few special entries */
     if (!strcmp(txt, "<enter>"))
@@ -2883,25 +2957,55 @@ char *txt;
         return '\033';
 
     /* control and meta keys */
-    switch (*txt) {
-    case 'm': /* can be mx, Mx, m-x, M-x */
-    case 'M':
-        txt++;
+    if (highc(*txt) == 'M') {
+        /*
+         * M <nothing>             return 'M'
+         * M - <nothing>           return M-'-'
+         * M <other><nothing>      return M-<other>
+         * otherwise M is pending until after ^/C- processing.
+         * Since trailing spaces are discarded, the only way to
+         * specify M-' ' is via "160".
+         */
+        if (!txt[1])
+            return (uchar) *txt;
+        /* skip past 'M' or 'm' and maybe '-' */
+        ++txt;
         if (*txt == '-' && txt[1])
-            txt++;
-        if (txt[1])
-            return '\0';
-        return M(*txt);
-    case 'c': /* can be cx, Cx, ^x, c-x, C-x, ^-x */
-    case 'C':
-    case '^':
-        txt++;
-        if (*txt == '-' && txt[1])
-            txt++;
-        if (txt[1])
-            return '\0';
-        return C(*txt);
+            ++txt;
+        if (!txt[1])
+            return M((uchar) *txt);
+        makemeta = TRUE;
     }
+    if (*txt == '^' || highc(*txt) == 'C') {
+        /*
+         * C <nothing>             return 'C' or M-'C'
+         * C - <nothing>           return '-' or M-'-'
+         * C [-] <other><nothing>  return C-<other> or M-C-<other>
+         * C [-] ?                 return <rubout>
+         * otherwise return C-<other> or M-C-<other>
+         */
+        uc = (uchar) *txt;
+        if (!txt[1])
+            return makemeta ? M(uc) : uc;
+        ++txt;
+        /* unlike M-x, lots of values of x are invalid for C-x;
+           checking and rejecting them is not worthwhile; GIGO;
+           we do accept "^-x" as synonym for "^x" or "C-x" */
+        if (*txt == '-' && txt[1])
+            ++txt;
+        /* and accept ^?, which gets used despite not being a control char */
+        if (*txt == '?')
+            return (uchar) (makemeta ? '\377' : '\177'); /* rubout/delete */
+        uc = C((uchar) *txt);
+        return makemeta ? M(uc) : uc;
+    }
+    if (makemeta && *txt)
+        return M((uchar) *txt);
+
+    /* FIXME: should accept single-quote single-character single-quote
+       and probably single-quote backslash octal-digits single-quote;
+       if we do that, the M- and C- results should be pending until
+       after, so that C-'X' becomes valid for ^X */
 
     /* ascii codes: must be three-digit decimal */
     if (*txt >= '0' && *txt <= '9') {
@@ -2931,9 +3035,9 @@ char *txt; /* sufficiently long buffer */
     if (c == ' ')
         Sprintf(txt, "<space>");
     else if (c == '\033')
-        Sprintf(txt, "<esc>");
+        Sprintf(txt, "<esc>"); /* "<escape>" won't fit */
     else if (c == '\n')
-        Sprintf(txt, "<enter>");
+        Sprintf(txt, "<enter>"); /* "<return>" won't fit */
     else if (c == '\177')
         Sprintf(txt, "<del>"); /* "<delete>" won't fit */
     else
@@ -3990,6 +4094,7 @@ boolean doit;
     schar typ = levl[u.ux][u.uy].typ;
     int npick;
     menu_item *picks = (menu_item *) 0;
+    stairway *stway = stairway_at(u.ux, u.uy);
 
     win = create_nhwindow(NHW_MENU);
     start_menu(win, MENU_BEHAVE_STANDARD);
@@ -4015,16 +4120,14 @@ boolean doit;
     if (IS_ALTAR(typ))
         add_herecmd_menuitem(win, dosacrifice, "Sacrifice at the altar");
 
-    if (On_stairs_up(u.ux, u.uy)) {
+    if (stway && stway->up) {
         Sprintf(buf, "Go up the %s",
-                (u.ux == xupladder && u.uy == yupladder)
-                ? "ladder" : "stairs");
+                stway->isladder ? "ladder" : "stairs");
         add_herecmd_menuitem(win, doup, buf);
     }
-    if (On_stairs_dn(u.ux, u.uy)) {
+    if (stway && !stway->up) {
         Sprintf(buf, "Go down the %s",
-                (u.ux == xupladder && u.uy == yupladder)
-                ? "ladder" : "stairs");
+                stway->isladder ? "ladder" : "stairs");
         add_herecmd_menuitem(win, dodown, buf);
     }
     if (u.usteed) { /* another movement choice */

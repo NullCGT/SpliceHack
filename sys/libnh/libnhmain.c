@@ -555,11 +555,11 @@ whoami()
     return FALSE;
 }
 
+#ifndef NO_SIGNAL
 void
 sethanguphandler(handler)
 void FDECL((*handler), (int));
 {
-#ifndef NO_SIGNAL
 #ifdef SA_RESTART
     /* don't want reads to restart.  If SA_RESTART is defined, we know
      * sigaction exists and can be used to ensure reads won't restart.
@@ -581,8 +581,8 @@ void FDECL((*handler), (int));
     (void) signal(SIGXCPU, (SIG_RET_TYPE) handler);
 #endif
 #endif /* ?SA_RESTART */
-#endif /* !NO_SIGNAL */
 }
+#endif /* !NO_SIGNAL */
 
 #ifdef PORT_HELP
 void
@@ -648,11 +648,11 @@ char *name;
 
 boolean
 check_user_string(optstr)
-char *optstr;
+const char *optstr;
 {
     struct passwd *pw;
     int pwlen;
-    char *eop, *w;
+    const char *eop, *w;
     char *pwname = 0;
 
     if (optstr[0] == '*')
@@ -664,7 +664,7 @@ char *optstr;
     if (!pwname || !*pwname)
         return FALSE;
     pwlen = (int) strlen(pwname);
-    eop = eos(optstr);
+    eop = eos((char *)optstr);
     w = optstr;
     while (w + pwlen <= eop) {
         if (!*w)
@@ -1003,7 +1003,8 @@ void js_constants_init() {
     // copyright
     SET_CONSTANT_STRING("COPYRIGHT", COPYRIGHT_BANNER_A);
     SET_CONSTANT_STRING("COPYRIGHT", COPYRIGHT_BANNER_B);
-    SET_CONSTANT_STRING("COPYRIGHT", COPYRIGHT_BANNER_C);
+    // XXX: not set for cross-compile
+    //SET_CONSTANT_STRING("COPYRIGHT", COPYRIGHT_BANNER_C);
     SET_CONSTANT_STRING("COPYRIGHT", COPYRIGHT_BANNER_D);
 
     // glyphs
@@ -1071,7 +1072,6 @@ void create_global (char *name, void *ptr, char *type);
 void js_globals_init() {
     // int i;
     // char buf[BUFSZ];
-    printf("js_globals_init\n");
 
     EM_ASM({
         globalThis.nethackGlobal = globalThis.nethackGlobal || {};

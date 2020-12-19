@@ -1,4 +1,4 @@
-/* NetHack 3.7  decl.h  $NHDT-Date: 1600468452 2020/09/18 22:34:12 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.242 $ */
+/* NetHack 3.7  decl.h  $NHDT-Date: 1606919254 2020/12/02 14:27:34 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.247 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Michael Allison, 2007. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -87,16 +87,6 @@ struct dgn_topology { /* special dungeon levels for speed */
 #define statuary_level  	    (g.dungeon_topology.d_statuary_level)
 /* clang-format on */
 
-#define xdnstair (g.dnstair.sx)
-#define ydnstair (g.dnstair.sy)
-#define xupstair (g.upstair.sx)
-#define yupstair (g.upstair.sy)
-
-#define xdnladder (g.dnladder.sx)
-#define ydnladder (g.dnladder.sy)
-#define xupladder (g.upladder.sx)
-#define yupladder (g.upladder.sy)
-
 #define dunlev_reached(x) (g.dungeons[(x)->dnum].dunlev_ureached)
 
 #include "quest.h"
@@ -116,6 +106,8 @@ struct sinfo {
     int something_worth_saving; /* in case of panic */
     int panicking;              /* `panic' is in progress */
     int exiting;                /* an exit handler is executing */
+    int saving;
+    int restoring;
     int in_moveloop;
     int in_impossible;
     int in_self_recover;
@@ -746,10 +738,7 @@ struct instance_globals {
     int y_maze_max;
     int otg_temp; /* used by object_to_glyph() [otg] */
     int in_doagain;
-    stairway dnstair; /* stairs down */
-    stairway upstair; /* stairs up */
-    stairway dnladder; /* ladder down */
-    stairway upladder; /* ladder up */
+    stairway *stairs;
     int smeq[MAXNROFROOMS + 1];
     int doorindex;
     char *save_cm;
@@ -775,7 +764,6 @@ struct instance_globals {
        number of shots, index of current one, validity check, shoot vs throw */
     struct multishot m_shot;
     dungeon dungeons[MAXDUNGEON]; /* ini'ed by init_dungeon() */
-    stairway sstairs;
     dest_area updest;
     dest_area dndest;
     coord inv_pos;
@@ -786,9 +774,6 @@ struct instance_globals {
     boolean mrg_to_wielded; /* weapon picked is merged with wielded one */
     struct plinemsg_type *plinemsg_types;
     char toplines[TBUFSZ];
-    struct mkroom *upstairs_room;
-    struct mkroom *dnstairs_room;
-    struct mkroom *sstairs_room;
     coord bhitpos; /* place where throw or zap hits or stops */
     boolean in_steed_dismounting;
     coord doors[DOORMAX];
@@ -842,8 +827,8 @@ struct instance_globals {
 
     /* display.c */
     gbuf_entry gbuf[ROWNO][COLNO];
-    char gbuf_start[ROWNO];
-    char gbuf_stop[ROWNO];
+    xchar gbuf_start[ROWNO];
+    xchar gbuf_stop[ROWNO];
 
 
     /* do.c */
@@ -867,7 +852,7 @@ struct instance_globals {
     int petname_used; /* user preferred pet name has been used */
     xchar gtyp;  /* type of dog's current goal */
     xchar gx; /* x position of dog's current goal */
-    char  gy; /* y position of dog's current goal */
+    xchar  gy; /* y position of dog's current goal */
     char birdname[PL_PSIZ];
     char dogname[PL_PSIZ];
     char dragonname[PL_PSIZ];
@@ -997,6 +982,7 @@ struct instance_globals {
     /* mon.c */
     boolean vamp_rise_msg;
     boolean disintegested;
+    boolean zombify;
     short *animal_list; /* list of PM values for animal monsters */
     int animal_list_count;
 
@@ -1142,6 +1128,8 @@ struct instance_globals {
     boolean havestate;
     unsigned ustuck_id; /* need to preserve during save */
     unsigned usteed_id; /* need to preserve during save */
+    struct obj *looseball;  /* track uball during save and... */
+    struct obj *loosechain; /* track uchain since saving might free it */
 
     /* shk.c */
     /* auto-response flag for/from "sell foo?" 'a' => 'y', 'q' => 'n' */
@@ -1210,9 +1198,9 @@ struct instance_globals {
                                       Stormbringer's maliciousness. */
 
     /* vision.c */
-    char **viz_array; /* used in cansee() and couldsee() macros */
-    char *viz_rmin;			/* min could see indices */
-    char *viz_rmax;			/* max could see indices */
+    xchar **viz_array; /* used in cansee() and couldsee() macros */
+    xchar *viz_rmin;			/* min could see indices */
+    xchar *viz_rmax;			/* max could see indices */
     boolean vision_full_recalc;
 
     /* weapon.c */

@@ -1,4 +1,4 @@
-/* NetHack 3.7	mkobj.c	$NHDT-Date: 1596498183 2020/08/03 23:43:03 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.186 $ */
+/* NetHack 3.7	mkobj.c	$NHDT-Date: 1606343579 2020/11/25 22:32:59 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.191 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -664,9 +664,7 @@ register struct obj *otmp;
     *dummy = *otmp;
     dummy->oextra = (struct oextra *) 0;
     dummy->where = OBJ_FREE;
-    dummy->o_id = g.context.ident++;
-    if (!dummy->o_id)
-        dummy->o_id = g.context.ident++; /* ident overflowed */
+    dummy->o_id = nextoid(otmp, dummy);
     dummy->timed = 0;
     copy_oextra(dummy, otmp);
     if (has_omid(dummy))
@@ -678,8 +676,8 @@ register struct obj *otmp;
     if (cost)
         alter_cost(dummy, -cost);
     /* no_charge is only valid for some locations */
-    otmp->no_charge =
-        (otmp->where == OBJ_FLOOR || otmp->where == OBJ_CONTAINED) ? 1 : 0;
+    otmp->no_charge = (otmp->where == OBJ_FLOOR
+                       || otmp->where == OBJ_CONTAINED) ? 1 : 0;
     otmp->unpaid = 0;
     return;
 }
@@ -1276,6 +1274,10 @@ struct obj *body;
                 when = age;
                 break;
             }
+    } else if (!no_revival && g.zombify
+               && zombie_form(&mons[body->corpsenm]) != NON_PM) {
+        action = ZOMBIFY_MON;
+        when = 5 + rn2(15);
     }
 
     if (action == ROT_CORPSE && !acidic(&mons[body->corpsenm])) {
@@ -1731,7 +1733,7 @@ unsigned corpstatflags;
 
         otmp->corpsenm = monsndx(ptr);
         otmp->owt = weight(otmp);
-        if (otmp->otyp == CORPSE && (special_corpse(old_corpsenm)
+        if (otmp->otyp == CORPSE && (g.zombify || special_corpse(old_corpsenm)
                                      || special_corpse(otmp->corpsenm))) {
             obj_stop_timers(otmp);
             start_corpse_timeout(otmp);
@@ -2348,6 +2350,8 @@ struct obj *obj;
 
     obj->where = OBJ_MIGRATING;
     obj->nobj = g.migrating_objs;
+    obj->omigr_from_dnum = u.uz.dnum;
+    obj->omigr_from_dlevel = u.uz.dlevel;
     g.migrating_objs = obj;
 }
 

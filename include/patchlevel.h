@@ -17,7 +17,7 @@
  * Incrementing EDITLEVEL can be used to force invalidation of old bones
  * and save files.
  */
-#define EDITLEVEL 2
+#define EDITLEVEL 3
 
 /*
  * Development status possibilities.
@@ -51,7 +51,7 @@
  * PP = patch level, ee = edit level, L = literal suffix "L",
  * with all four numbers specified as two hexadecimal digits.
  */
-#define VERSION_COMPATIBILITY 0x00080200L
+#define VERSION_COMPATIBILITY 0x00080203L
 
 /****************************************************************************/
 /* Version 3.7.x */
@@ -98,7 +98,7 @@
  *  fix the article used in the message when your steed encounters a polymorph
  *      trap
  *  allow teleporting onto the vibrating square
- *  message "your knapsack can't accomodate any more items" when picking stuff
+ *  message "your knapsack can't accommodate any more items" when picking stuff
  *      up or removing such from container was inaccurate if there was some
  *      gold pending; vary the message rather than add more convoluted pickup
  *      code

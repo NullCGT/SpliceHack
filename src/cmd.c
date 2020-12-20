@@ -1344,7 +1344,7 @@ wiz_map_levltyp(VOID_ARGS)
     }
 
     {
-        char dsc[BUFSZ];
+        char dsc[COLBUFSZ];
         s_level *slev = Is_special(&u.uz);
 
         Sprintf(dsc, "D:%d,L:%d", u.uz.dnum, u.uz.dlevel);
@@ -3263,6 +3263,8 @@ int NDECL((*cmd_func));
         /* 'm' for removing saddle from adjacent monster without checking
            for containers at <u.ux,u.uy> */
         || cmd_func == doloot
+        /* offer menu to choose discoveries sort order */
+        || cmd_func == dodiscovered || cmd_func == doclassdisco
         /* travel: pop up a menu of interesting targets in view */
         || cmd_func == dotravel
         /* wait and search: allow even if next to a hostile monster */

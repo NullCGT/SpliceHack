@@ -1019,6 +1019,7 @@ E void NDECL(ustatusline);
 
 /* ### invent.c ### */
 
+E void FDECL(loot_classify, (Loot *, struct obj *));
 E Loot *FDECL(sortloot, (struct obj **, unsigned, BOOLEAN_P,
                          boolean (*)(OBJ_P)));
 E void FDECL(unsortloot, (Loot **));
@@ -1817,6 +1818,7 @@ E void FDECL(savenames, (NHFILE *));
 E void FDECL(restnames, (NHFILE *));
 E void FDECL(discover_object, (int, BOOLEAN_P, BOOLEAN_P));
 E void FDECL(undiscover_object, (int));
+E int FDECL(choose_disco_sort, (int));
 E int NDECL(dodiscovered);
 E int NDECL(doclassdisco);
 E void NDECL(rename_disco);

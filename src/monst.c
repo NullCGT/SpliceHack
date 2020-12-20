@@ -3350,7 +3350,7 @@ struct permonst _mons2[] = {
         MR_COLD | MR_DISINT | MR_SLEEP | MR_POISON | MR_STONE, 0,
         M1_FLY | M1_BREATHLESS | M1_WALLWALK | M1_HUMANOID | M1_UNSOLID
             | M1_SEE_INVIS,
-        M2_NOPOLY | M2_WANDER | M2_STALK | M2_HOSTILE | M2_NASTY,
+        M2_WANDER | M2_STALK | M2_HOSTILE | M2_NASTY,
         M3_INFRAVISION, MH_UNDEAD, 16, CLR_CYAN),
     /*
      * Xorn

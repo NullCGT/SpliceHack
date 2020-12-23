@@ -427,6 +427,9 @@ struct mkroom *sroom;
                 if (!rn2(20)) /* the payroll and some loot */
                     (void) mksobj_at((rn2(3)) ? LARGE_BOX : CHEST, sx, sy,
                                      TRUE, FALSE);
+                if (!rn2(25)) /* the cure for boredom */
+                    (void) mksobj_at((rn2(10)) ? DECK_OF_FATE :
+                                     PLAYING_CARD_DECK, sx, sy, TRUE, FALSE);
                 break;
             case COCKNEST:
                 if (!rn2(3)) {

@@ -2459,6 +2459,7 @@ static const char *const encyclopedias[] = {
     "The Big Book of Bats", "Mystickism and Magick",
     "Monsters Most Malevolent", "The Voluminous Volume Vol. V",
     "Catacomps and Creeps", "The Encyclopedia of Enchantments",
+    "Mummies, Mimics, and More", "On the Magic of Markers",
     /* Misc */
     "A Treatise on Yendor", "Collected Essays of Og",
     /* Sir Terry, Night Watch */

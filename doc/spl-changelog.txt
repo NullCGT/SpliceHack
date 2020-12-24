@@ -20,6 +20,10 @@ New Materials
 Dungeon
 - Added a minetown variant (Zootown), from SporkHack/EvilHack.
 - Added an original minetown variant (Lavender Town).
+- Replaced the Eternal Storm with a new, more exciting plane: The Plane of Ice.
+  - Flying and levitation are impossible.
+  - Icebergs float through the level. The player must progress from iceberg to iceberg in order
+    to move forward.
 - Added holiday-themed fruit name generation from xNetHack. It's an excellent feature with great
   inclusivity.
 

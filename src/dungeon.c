@@ -722,7 +722,7 @@ static struct level_map {
                   { "rogue", &rogue_level },
                   { "sanctum", &sanctum_level },
                   { "statuary", &statuary_level },
-                  { "storm", &storm_level },
+                  { "ice", &iceplane_level },
                   { "valley", &valley_level },
                   { "water", &water_level },
                   { "wizard1", &wiz1_level },
@@ -1752,7 +1752,7 @@ has_ceiling(lev)
 d_level *lev;
 {
     /* [what about level 1 of the quest?] */
-    return (boolean) (!Is_airlevel(lev) && !Is_waterlevel(lev));
+    return (boolean) (!Is_airlevel(lev) && !Is_waterlevel(lev) && !Is_iceplanelevel(lev));
 }
 
 /*
@@ -2402,6 +2402,7 @@ xchar *rdgn;
         /* only report "no portal found" when actually expecting a portal */
         else if (Is_earthlevel(&u.uz) || Is_waterlevel(&u.uz)
                  || Is_firelevel(&u.uz) || Is_airlevel(&u.uz)
+                 || Is_iceplanelevel(&u.uz)
                  || Is_gemlevel(&u.uz)
                  || Is_qstart(&u.uz) || at_dgn_entrance("The Quest")
                  || Is_knox(&u.uz))
@@ -3294,7 +3295,7 @@ int indx;
         planename = "Fire";
         break;
     case -4:
-        planename = "Air, Eternal Storm";
+        planename = "Ice";
         break;
     case -3:
         planename = "Air";

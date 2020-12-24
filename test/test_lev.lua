@@ -59,7 +59,7 @@ local special_levels = {
 "wizard3",
 "statuary",
 "blkmar",
-"storm",
+"ice",
 }
 
 local roles = { "Arc", "Bar", "Cav", "Hea", "Kni", "Mon", "Pri", "Ran", "Rog", "Sam", "Tou", "Val", "Wiz" }

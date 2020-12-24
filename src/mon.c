@@ -124,7 +124,7 @@ const char *msg;
         if (m_at(mx, my) == mtmp && hides_under(mptr) && !OBJ_AT(mx, my))
             impossible("mon hiding under nonexistent obj (%s)", msg);
         if (mptr->mlet == S_EEL
-            && !is_pool(mx, my) && !Is_waterlevel(&u.uz))
+            && !is_pool(mx, my) && !Is_waterlevel(&u.uz) && !Is_iceplanelevel(&u.uz))
             impossible("eel hiding out of water (%s)", msg);
         if (ceiling_hider(mptr)
             /* normally !accessible would be overridable with passes_walls,

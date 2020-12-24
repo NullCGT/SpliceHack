@@ -74,7 +74,7 @@ Car-fila.lua  Car-filb.lua  Car-goal.lua  Car-loca.lua  Car-strt.lua
 Dra-fila.lua  Dra-filb.lua  Dra-goal.lua  Dra-loca.lua  Dra-strt.lua
 Con-fila.lua  Con-filb.lua  Con-goal.lua  Con-loca.lua  Con-strt.lua
 Pir-fila.lua  Pir-filb.lua  Pir-goal.lua  Pir-loca.lua  Pir-strt.lua
-statuary.lua  blkmar.lua    storm.lua     brass.lua     gemarray.lua
+statuary.lua  blkmar.lua    ice.lua     brass.lua     gemarray.lua
 darkforest.lua void.lua     banquet.lua   laboratory.lua icewaste.lua
 mephisto.lua  foogardens.lua themerms.lua
 

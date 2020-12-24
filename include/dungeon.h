@@ -113,11 +113,11 @@ typedef struct branch {
 
 #define Is_astralevel(x)    (Lcheck(x, &astral_level))
 #define Is_gemlevel(x)      (Lcheck(x, &gem_level))
-#define Is_stormlevel(x)    (Lcheck(x, &storm_level))
+#define Is_iceplanelevel(x)    (Lcheck(x, &iceplane_level))
 #define Is_earthlevel(x)    (Lcheck(x, &earth_level))
 #define Is_waterlevel(x)    (Lcheck(x, &water_level))
 #define Is_firelevel(x)     (Lcheck(x, &fire_level) || Lcheck(x, &brass_level))
-#define Is_airlevel(x)      (Lcheck(x, &air_level) || Lcheck(x, &storm_level))
+#define Is_airlevel(x)      (Lcheck(x, &air_level))
 #define Is_medusa_level(x)  (Lcheck(x, &medusa_level))
 #define Is_oracle_level(x)  (Lcheck(x, &oracle_level))
 #define Is_valley(x)        (Lcheck(x, &valley_level))

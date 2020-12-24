@@ -2961,7 +2961,7 @@ struct trap *trap;
     }
     /* convert landmine into pit */
     if (trap) {
-        if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz)) {
+        if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz) || Is_iceplanelevel(&u.uz)) {
             /* no pits here */
             deltrap(trap);
         } else {

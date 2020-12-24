@@ -50,7 +50,7 @@ struct permonst *ptr;
         switch (monsndx(ptr)) {
         case PM_STORM_ELEMENTAL:
         case PM_AIR_ELEMENTAL:
-            return Is_airlevel(&u.uz);
+            return Is_airlevel(&u.uz) || Is_iceplanelevel(&u.uz);
         case PM_MAGMA_ELEMENTAL:
         case PM_FIRE_ELEMENTAL:
             return Is_firelevel(&u.uz);
@@ -58,7 +58,7 @@ struct permonst *ptr;
             return Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz);
         case PM_ICE_ELEMENTAL:
         case PM_WATER_ELEMENTAL:
-            return Is_waterlevel(&u.uz);
+            return Is_waterlevel(&u.uz) || Is_iceplanelevel(&u.uz);
         case PM_MUD_ELEMENTAL:
             return Is_earthlevel(&u.uz) || Is_waterlevel(&u.uz);
         case PM_FUSION_ELEMENTAL:
@@ -84,6 +84,9 @@ struct permonst *ptr;
             return TRUE;
     } else if (Is_firelevel(&u.uz)) {
         if (!pm_resistance(ptr, MR_FIRE))
+            return TRUE;
+    } else if (Is_iceplanelevel(&u.uz)) {
+        if (!pm_resistance(ptr, MR_COLD))
             return TRUE;
     } else if (Is_airlevel(&u.uz)) {
         if (!(is_flyer(ptr) && ptr->mlet != S_TRAPPER) && !is_floater(ptr)

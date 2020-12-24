@@ -428,7 +428,7 @@ dungeon = {
             base = 4
          },
          {
-            name = "storm",
+            name = "ice",
             base = 5
          },
          {

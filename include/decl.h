@@ -34,7 +34,7 @@ struct dgn_topology { /* special dungeon levels for speed */
     d_level d_water_level;
     d_level d_brass_level;
     d_level d_fire_level;
-    d_level d_storm_level;
+    d_level d_iceplane_level;
     d_level d_air_level;
     d_level d_astral_level;
     xchar d_tower_dnum;
@@ -70,7 +70,7 @@ struct dgn_topology { /* special dungeon levels for speed */
 #define water_level             (g.dungeon_topology.d_water_level)
 #define brass_level             (g.dungeon_topology.d_brass_level)
 #define fire_level              (g.dungeon_topology.d_fire_level)
-#define storm_level             (g.dungeon_topology.d_storm_level)
+#define iceplane_level          (g.dungeon_topology.d_iceplane_level)
 #define air_level               (g.dungeon_topology.d_air_level)
 #define astral_level            (g.dungeon_topology.d_astral_level)
 #define tower_dnum              (g.dungeon_topology.d_tower_dnum)

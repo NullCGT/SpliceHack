@@ -169,7 +169,7 @@
     <Luafiles Include = "pir-strt.lua"/>
     <Luafiles Include = "statuary.lua"/>
     <Luafiles Include = "blkmar.lua"/>
-    <Luafiles Include = "storm.lua"/>
+    <Luafiles Include = "ice.lua"/>
   </ItemGroup>
   <ItemGroup>
     <UUFiles Include = "$(SysWinntDir)nhico.uu"/>

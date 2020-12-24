@@ -360,7 +360,7 @@ boolean resuming;
  * things that are active and need to be handled that is dynamically
  * maintained and not a list of special cases. */
                     /* underwater and waterlevel vision are done here */
-                    if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz))
+                    if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz) || Is_iceplanelevel(&u.uz))
                         movebubbles();
                     else if (Is_gemlevel(&u.uz) && !rn2(7))
                         do_earthquake(5, rn2(76), rn2(20));

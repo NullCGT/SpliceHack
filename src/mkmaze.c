@@ -252,7 +252,7 @@ coord *cc;
  * Bad if:
  *      pos is occupied OR
  *      pos is inside restricted region (lx,ly,hx,hy) OR
- *      NOT (pos is corridor and a maze level OR pos is a room OR pos is air)
+ *      NOT (pos is corridor and a maze level OR pos is a room OR pos is air OR pos is ice)
  */
 boolean
 bad_location(x, y, lx, ly, hx, hy)
@@ -263,7 +263,8 @@ xchar lx, ly, hx, hy;
                       || within_bounded_area(x, y, lx, ly, hx, hy)
                       || !((levl[x][y].typ == CORR && g.level.flags.is_maze_lev)
                            || levl[x][y].typ == ROOM
-                           || levl[x][y].typ == AIR));
+                           || levl[x][y].typ == AIR
+                           || levl[x][y].typ == ICE));
 }
 
 /* pick a location in area (lx, ly, hx, hy) but not in (nlx, nly, nhx, nhy)
@@ -467,7 +468,7 @@ fixup_special()
     struct mkroom *croom;
     boolean added_branch = FALSE;
 
-    if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz)) {
+    if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz) || Is_iceplanelevel(&u.uz)) {
         g.level.flags.hero_memory = 0;
         /* water level is an odd beast - it has to be set up
            before calling place_lregions etc. */
@@ -1395,7 +1396,7 @@ movebubbles()
 
     vision_recalc(2);
 
-    if (Is_waterlevel(&u.uz)) {
+    if (Is_waterlevel(&u.uz) || Is_iceplanelevel(&u.uz)) {
         /* keep attached ball&chain separate from bubble objects */
         if (Punished)
             bcpin = unplacebc_and_covet_placebc();
@@ -1478,7 +1479,7 @@ movebubbles()
                         }
 
                         levl[x][y] = water_pos;
-                        block_point(x, y);
+                        if (Is_waterlevel(&u.uz)) block_point(x, y);
                     }
         }
     } else if (Is_airlevel(&u.uz)) {
@@ -1487,11 +1488,7 @@ movebubbles()
         for (x = 1; x <= (COLNO - 1); x++)
             for (y = 0; y <= (ROWNO - 1); y++) {
                 levl[x][y] = air_pos;
-                if (!Is_stormlevel(&u.uz))
-                    unblock_point(x, y);
-                else {
-                    block_point(x, y);
-                }
+                unblock_point(x, y);
                 /* all air or all cloud around the perimeter of the Air
                    level tends to look strange; break up the pattern */
                 xedge = (boolean) (x < gbxmin || x > gbxmax);
@@ -1519,7 +1516,7 @@ movebubbles()
     }
 
     /* put attached ball&chain back */
-    if (Is_waterlevel(&u.uz) && Punished)
+    if ((Is_waterlevel(&u.uz) || Is_iceplanelevel(&u.uz)) && Punished)
         lift_covet_and_placebc(bcpin);
     g.vision_full_recalc = 1;
 }
@@ -1565,7 +1562,7 @@ NHFILE *nhfp;
 {
     struct bubble *b;
 
-    if (!Is_waterlevel(&u.uz) && !Is_airlevel(&u.uz))
+    if (!Is_waterlevel(&u.uz) && !Is_iceplanelevel(&u.uz) && !Is_airlevel(&u.uz))
         return;
 
     if (perform_bwrite(nhfp)) {
@@ -1595,13 +1592,13 @@ NHFILE *nhfp;
     struct bubble *b = (struct bubble *) 0, *btmp;
     int i, n = 0;
 
-    if (!Is_waterlevel(&u.uz) && !Is_airlevel(&u.uz))
+    if (!Is_waterlevel(&u.uz) && !Is_iceplanelevel(&u.uz) && !Is_airlevel(&u.uz))
         return;
 
     if (nhfp->fd == -1) { /* special handling for restore in goto_level() */
         if (!wizard)
             impossible("restore_waterlevel: returning to %s?",
-                       Is_waterlevel(&u.uz) ? "Water" : "Air");
+                       Is_waterlevel(&u.uz) ? "Water" : Is_iceplanelevel(&u.uz) ? "Ice" : "Air");
         setup_waterlevel();
         return;
     }
@@ -1648,6 +1645,8 @@ xchar x, y;
 
     if (ltyp == LAVAPOOL)
         return hliquid("lava");
+    else if (ltyp == ICE && Is_iceplanelevel(&u.uz))
+        return "iceberg";
     else if (ltyp == ICE)
         return "ice";
     else if (ltyp == POOL)
@@ -1677,8 +1676,8 @@ setup_waterlevel()
 {
     int x, y, xskip, yskip, typ, glyph;
 
-    if (!Is_waterlevel(&u.uz) && !Is_airlevel(&u.uz))
-        panic("setup_waterlevel(): [%d:%d] neither 'Water' nor 'Air'",
+    if (!Is_waterlevel(&u.uz) && !Is_airlevel(&u.uz) && !Is_iceplanelevel(&u.uz))
+        panic("setup_waterlevel(): [%d:%d] neither 'Water' nor 'Ice' nor 'Air'",
               (int) u.uz.dnum, (int) u.uz.dlevel);
 
     /* ouch, hardcoded... (file scope statics and used in bxmin,bymax,&c) */
@@ -1694,8 +1693,8 @@ setup_waterlevel()
 
     /* entire level is remembered as one glyph and any unspecified portion
        should default to level's base element rather than to usual stone */
-    glyph = cmap_to_glyph(Is_waterlevel(&u.uz) ? S_water : S_air);
-    typ = Is_waterlevel(&u.uz) ? WATER : AIR;
+    glyph = cmap_to_glyph((Is_waterlevel(&u.uz) || Is_iceplanelevel(&u.uz)) ? S_water : S_air);
+    typ = (Is_waterlevel(&u.uz) || Is_iceplanelevel(&u.uz)) ? WATER : AIR;
 
     /* set unspecified terrain (stone) and hero's memory to water or air */
     for (x = 1; x <= COLNO - 1; x++)
@@ -1709,6 +1708,9 @@ setup_waterlevel()
     if (Is_waterlevel(&u.uz)) {
         xskip = 10 + rn2(10);
         yskip = 4 + rn2(4);
+    } else if (Is_iceplanelevel(&u.uz)) {
+        xskip = 7 + rn2(7);
+        yskip = 4 + rn2(5);
     } else {
         xskip = 6 + rn2(4);
         yskip = 3 + rn2(3);
@@ -1868,6 +1870,10 @@ boolean ini;
                     levl[x][y].typ = AIR;
                     levl[x][y].lit = 1;
                     unblock_point(x, y);
+                } else if (Is_iceplanelevel(&u.uz)) {
+                    levl[x][y].typ = ICE;
+                    levl[x][y].lit = 1;
+                    unblock_point(x, y);
                 } else if (Is_airlevel(&u.uz)) {
                     levl[x][y].typ = CLOUD;
                     levl[x][y].lit = 1;
@@ -1875,7 +1881,7 @@ boolean ini;
                 }
             }
 
-    if (Is_waterlevel(&u.uz)) {
+    if (Is_waterlevel(&u.uz) || Is_iceplanelevel(&u.uz)) {
         /* replace contents of bubble */
         for (cons = b->cons; cons; cons = ctemp) {
             ctemp = cons->next;

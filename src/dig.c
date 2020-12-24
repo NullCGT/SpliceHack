@@ -1453,7 +1453,7 @@ zap_dig()
     } /* swallowed */
 
     if (u.dz) {
-        if (!Is_airlevel(&u.uz) && !Is_waterlevel(&u.uz) && !Underwater) {
+        if (!Is_airlevel(&u.uz) && !Is_waterlevel(&u.uz) && !Is_iceplanelevel(&u.uz) && !Underwater) {
             if (u.dz < 0 || On_stairs(u.ux, u.uy)) {
                 int dmg;
                 if (On_stairs(u.ux, u.uy)) {

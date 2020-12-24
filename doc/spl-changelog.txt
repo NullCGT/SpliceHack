@@ -41,6 +41,7 @@ Miscelaneous
 - Refactored order that knockback attack effects occur in, hopefully preventing future bugs.
 - Improve messages for buzzsaw traps.
 - Banshees are a valid polymorph form.
+- Decks of cards generate in barracks (RojjaCebolla)
 
 Bug Fixes
 - Cancelled molydei cannot polymorph other monsters.

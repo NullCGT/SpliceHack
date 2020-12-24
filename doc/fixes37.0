@@ -1,4 +1,4 @@
-NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.396 $ $NHDT-Date: 1608335163 2020/12/18 23:46:03 $
+NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.400 $ $NHDT-Date: 1608749030 2020/12/23 18:43:50 $
 
 General Fixes and Modified Features
 -----------------------------------
@@ -341,6 +341,10 @@ when protection from shape changers begins, force mimic out of concealment
 	even if hero can't see its location; for locations that can be seen,
 	don't make double-trouble Wizard concealed as another monster--or pet
 	temporarily mimicking something while eating mimic corpse--fall asleep
+best possible armor class reduced from -127 to -99; worst from +127 to +99;
+	charged or enchanted individual items also capped at +/- 99 (affects
+	wizard mode wishing, negligible effect on normal play)
+fix several inconsistencies for objects at hole locations
 
 
 Fixes to 3.7.0-x Problems that Were Exposed Via git Repository
@@ -676,12 +680,15 @@ mild zombie apocalypse
 list lamps and lanterns in charging prompt
 let tourists read conical hats
 when "?i" (show key bindings) displays commands and their keys, also show
-	commands without any key (so useable via '#', or possibly menu, only;
-	the majority are debugging commands)
+	commands without any key (so ones useable via '#', or possibly menu,
+	only; the majority are debugging commands)
 assign default key binding for <del> or <delete> to execute #terrain
 assign M-X to #exploremode
 make #herecmdmenu and #therecmdmenu autocomplete
 add 'sortdiscoveries' option to control output of '\' and '`' commands
+include an indication of monsters' health during farlook feedback (including
+	/M and autodescribe); also include it in death reason when killed by
+	a monster: "killed by {an uninjured newt,a heavily injured mumak}"
 
 
 Platform- and/or Interface-Specific New Features

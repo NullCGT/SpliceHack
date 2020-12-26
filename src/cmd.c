@@ -1,4 +1,4 @@
-/* NetHack 3.7	cmd.c	$NHDT-Date: 1608233885 2020/12/17 19:38:05 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.437 $ */
+/* NetHack 3.7	cmd.c	$NHDT-Date: 1608933418 2020/12/25 21:56:58 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.440 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2013. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -189,6 +189,7 @@ static boolean FDECL(keylist_func_has_key, (const struct ext_func_tab *,
 static int FDECL(keylist_putcmds, (winid, BOOLEAN_P, int, int, boolean *));
 static int FDECL(ch2spkeys, (CHAR_P, int, int));
 static boolean FDECL(prefix_cmd, (CHAR_P));
+static const char *FDECL(spkey_name, (int));
 
 static int NDECL((*timed_occ_fn));
 static char *FDECL(doc_extcmd_flagstr, (winid, const struct ext_func_tab *));
@@ -2100,13 +2101,13 @@ const char *command;
     struct ext_func_tab *extcmd;
 
     /* special case: "nothing" is reserved for unbinding */
-    if (!strcmp(command, "nothing")) {
+    if (!strcmpi(command, "nothing")) {
         g.Cmd.commands[key] = (struct ext_func_tab *) 0;
         return TRUE;
     }
 
     for (extcmd = extcmdlist; extcmd->ef_txt; extcmd++) {
-        if (strcmp(command, extcmd->ef_txt))
+        if (strcmpi(command, extcmd->ef_txt))
             continue;
         g.Cmd.commands[key] = extcmd;
 #if 0 /* silently accept key binding for unavailable command (!SHELL,&c) */
@@ -2236,12 +2237,6 @@ boolean *keys_used; /* boolean keys_used[256] */
 void
 dokeylist(VOID_ARGS)
 {
-    const struct ext_func_tab *extcmd;
-    char buf[BUFSZ], buf2[BUFSZ];
-    uchar key;
-    boolean keys_used[256];
-    winid datawin;
-    int i;
     static const char
         run_desc[] = "Prefix: run until something very interesting is seen",
         rush_desc[] = "Prefix: rush until something interesting is seen",
@@ -2263,17 +2258,26 @@ dokeylist(VOID_ARGS)
           "Prefix: move without picking up objects or fighting", FALSE },
         { NHKF_RUN_NOPICKUP,
           "Prefix: run without picking up objects or fighting", FALSE },
-        { NHKF_DOINV, "view full inventory", TRUE },
-        /* NHKF_DOINV2 for num_pad+pcHack_compat isn't implemented */
-        /* { NHKF_DOINV2, "view inventory of one class of objects", TRUE }, */
-        { NHKF_REQMENU, "Prefix: request a menu", FALSE },
+        { NHKF_REQMENU,
+          "Prefix: request a menu (for some non-movement commands)", FALSE },
         { NHKF_COUNT,
-          "Prefix: for digits when prefixing a command with a count", TRUE },
-        { NHKF_DOAGAIN , "re-do: perform the previous command again", FALSE },
+          "Prefix: for digits when preceding a command with a count", TRUE },
+        { NHKF_DOINV, "numpad: view full inventory", TRUE },
+        /* NHKF_DOINV2 for num_pad+pcHack_compat isn't implemented */
+        /* { NHKF_DOINV2, "numpad: view inventory of one class of objects",
+             TRUE }, */
+        { NHKF_DOAGAIN , "repeat: perform the previous command again", FALSE },
         { 0, (const char *) 0, FALSE }
     };
+    const struct ext_func_tab *extcmd;
+    winid datawin;
+    char buf[BUFSZ], buf2[BUFSZ];
+    uchar key;
+    boolean spkey_gap, keys_used[256], mov_seen[256];
+    int i, j, pfx_seen[256];
 
     (void) memset((genericptr_t) keys_used, 0, sizeof keys_used);
+    (void) memset((genericptr_t) pfx_seen, 0, sizeof pfx_seen);
 
     keys_used[(uchar) g.Cmd.move_NW] = keys_used[(uchar) g.Cmd.move_N]
         = keys_used[(uchar) g.Cmd.move_NE] = keys_used[(uchar) g.Cmd.move_W]
@@ -2304,25 +2308,38 @@ dokeylist(VOID_ARGS)
             = keys_used[(uchar) M('6')] = keys_used[(uchar) M('7')]
             = keys_used[(uchar) M('8')] = keys_used[(uchar) M('9')] = TRUE;
     }
-    for (i = 0; misc_keys[i].desc; ++i) {
-        key = (uchar) g.Cmd.spkeys[misc_keys[i].nhkf];
-        if (key && ((misc_keys[i].numpad && iflags.num_pad)
-                    || !misc_keys[i].numpad)) {
-            keys_used[key] = TRUE;
-        }
-    }
 #ifndef NO_SIGNAL
-    /* this is actually ambiguous; tty raw mode will override SIGINT */
+    /* this is actually ambiguous; tty raw mode will override SIGINT;
+       when enabled, treat it like a movement command since assigning
+       other commands to this keystroke would be unwise... */
     key = (uchar) C('c');
     keys_used[key] = TRUE;
 #endif
+
+    /* movement keys have been flagged in keys_used[]; clone them */
+    (void) memcpy((genericptr_t) mov_seen, (genericptr_t) keys_used,
+                  sizeof mov_seen);
+
+    spkey_gap = FALSE;
+    for (i = 0; misc_keys[i].desc; ++i) {
+        if (misc_keys[i].numpad && !iflags.num_pad)
+            continue;
+        j = misc_keys[i].nhkf;
+        key = (uchar) g.Cmd.spkeys[j];
+        if (key && !mov_seen[key] && (!pfx_seen[key] || j == NHKF_REQMENU)) {
+            keys_used[key] = TRUE;
+            if (j != NHKF_REQMENU)
+                pfx_seen[key] = j;
+        } else
+            spkey_gap = TRUE;
+    }
 
     datawin = create_nhwindow(NHW_TEXT);
     putstr(datawin, 0, "");
     Sprintf(buf, "%7s %s", "", "    Full Current Key Bindings List");
     putstr(datawin, 0, buf);
     for (extcmd = extcmdlist; extcmd->ef_txt; ++extcmd)
-        if (!keylist_func_has_key(extcmd, keys_used)) {
+        if (spkey_gap || !keylist_func_has_key(extcmd, keys_used)) {
             Sprintf(buf, "%7s %s", "",
                                "(also commands with no key assignment)");
             putstr(datawin, 0, buf);
@@ -2355,20 +2372,44 @@ dokeylist(VOID_ARGS)
     putstr(datawin, 0, "");
     putstr(datawin, 0, "Miscellaneous keys:");
     for (i = 0; misc_keys[i].desc; ++i) {
-        key = (uchar) g.Cmd.spkeys[misc_keys[i].nhkf];
-        if (key && ((misc_keys[i].numpad && iflags.num_pad)
-                    || !misc_keys[i].numpad)) {
+        if (misc_keys[i].numpad && !iflags.num_pad)
+            continue;
+        j = misc_keys[i].nhkf;
+        key = (uchar) g.Cmd.spkeys[j];
+        if (key && !mov_seen[key]
+            && (pfx_seen[key] == j || j == NHKF_REQMENU)) {
             Sprintf(buf, "%-7s %s", key2txt(key, buf2), misc_keys[i].desc);
             putstr(datawin, 0, buf);
         }
     }
-#ifndef NO_SIGNAL
     /* (see above) */
     key = (uchar) C('c');
-    Sprintf(buf, "%-7s %s", key2txt(key, buf2),
-            "break out of NetHack (SIGINT)");
-    putstr(datawin, 0, buf);
+#ifndef NO_SIGNAL
+    /* last of the special keys */
+    Sprintf(buf, "%-7s", key2txt(key, buf2));
+#else
+    /* first of the keyless commands */
+    Sprintf(buf2, "[%s]", key2txt(key, buf));
+    Sprintf(buf, "%-21s", buf2);
 #endif
+    Strcat(buf, " interrupt: break out of NetHack (SIGINT)");
+    putstr(datawin, 0, buf);
+    /* keyless special key commands, if any */
+    if (spkey_gap) {
+        for (i = 0; misc_keys[i].desc; ++i) {
+            if (misc_keys[i].numpad && !iflags.num_pad)
+                continue;
+            j = misc_keys[i].nhkf;
+            key = (uchar) g.Cmd.spkeys[j];
+            if (!key || (pfx_seen[key] != j && j != NHKF_REQMENU)) {
+                Sprintf(buf2, "[%s]", spkey_name(j));
+                /* lines up with the other unassigned commands which use
+                   "#%-20s ", but not with the other special keys */
+                Sprintf(buf, "%-21s %s", buf2, misc_keys[i].desc);
+                putstr(datawin, 0, buf);
+            }
+        }
+    }
 
     putstr(datawin, 0, "");
     show_menu_controls(datawin, TRUE);
@@ -2902,6 +2943,10 @@ wiz_migrate_mons()
 }
 #endif
 
+#ifndef DOAGAIN /* might have gotten undefined in config.h */
+#define DOAGAIN '\0' /* undefined => 0, '\0' => no key to activate redo */
+#endif
+
 static struct {
     int nhkf;
     uchar key;
@@ -2958,6 +3003,7 @@ uchar key;
 const char *command;
 {
     int i;
+
     for (i = 0; i < SIZE(spkeys_binds); i++) {
         if (!spkeys_binds[i].name || strcmp(command, spkeys_binds[i].name))
             continue;
@@ -2965,6 +3011,22 @@ const char *command;
         return TRUE;
     }
     return FALSE;
+}
+
+static const char *
+spkey_name(nhkf)
+int nhkf;
+{
+    const char *name = 0;
+    int i;
+
+    for (i = 0; i < SIZE(spkeys_binds); i++) {
+        if (spkeys_binds[i].nhkf == nhkf) {
+            name = (nhkf == NHKF_ESC) ? "escape" : spkeys_binds[i].name;
+            break;
+        }
+    }
+    return name;
 }
 
 /* returns a one-byte character from the text; may change txt[] */
@@ -3391,7 +3453,9 @@ register char *cmd;
         g.context.move = FALSE;
         return;
     }
-    if (*cmd == DOAGAIN && !g.in_doagain && g.saveq[0]) {
+    /* DOAGAIN might be '\0'; if so, don't execute it even if *cmd is too */
+    if ((*cmd && *cmd == g.Cmd.spkeys[NHKF_DOAGAIN])
+        && !g.in_doagain && g.saveq[0]) {
         g.in_doagain = TRUE;
         g.stail = 0;
         rhack((char *) 0); /* read and execute command */
@@ -3502,9 +3566,9 @@ register char *cmd;
         break;
     }
 
-    /* some special prefix handling */
-    /* overload 'm' prefix to mean "request a menu" */
-    if (prefix_seen && cmd[0] == g.Cmd.spkeys[NHKF_REQMENU]) {
+    /* after movement--if reqmenu duplicates a prefix, movement takes
+       precedence; "request a menu" (default 'm') */
+    if (cmd[0] == g.Cmd.spkeys[NHKF_REQMENU]) {
         /* (for func_tab cast, see below) */
         const struct ext_func_tab *ft = g.Cmd.commands[cmd[1] & 0xff];
         int NDECL((*func)) = ft ? ((struct ext_func_tab *) ft)->ef_funct : 0;
@@ -3512,6 +3576,9 @@ register char *cmd;
         if (func && accept_menu_prefix(func)) {
             iflags.menu_requested = TRUE;
             ++cmd;
+            prefix_seen = FALSE;
+        } else {
+            prefix_seen = TRUE;
         }
     }
 
@@ -3545,10 +3612,14 @@ register char *cmd;
         g.context.mv = TRUE;
         domove();
         return;
-    } else if (prefix_seen && cmd[1] == g.Cmd.spkeys[NHKF_ESC]) {
-        /* <prefix><escape> */
-        /* don't report "unknown command" for change of heart... */
-        bad_command = FALSE;
+    } else if (prefix_seen) {
+        if (cmd[1] == g.Cmd.spkeys[NHKF_ESC]) {
+            /* <prefix><escape> */
+            /* don't report "unknown command" for change of heart... */
+            bad_command = FALSE;
+        } else { /* prefix followed by non-movement command */
+            bad_command = TRUE; /* skip cmdlist[] loop */
+        }
     } else if (*cmd == ' ' && !flags.rest_on_space) {
         bad_command = TRUE; /* skip cmdlist[] loop */
 
@@ -3668,7 +3739,8 @@ static boolean
 prefix_cmd(c)
 char c;
 {
-    return (c == g.Cmd.spkeys[NHKF_RUSH]
+    return (c == g.Cmd.spkeys[NHKF_REQMENU]
+            || c == g.Cmd.spkeys[NHKF_RUSH]
             || c == g.Cmd.spkeys[NHKF_RUN]
             || c == g.Cmd.spkeys[NHKF_NOPICKUP]
             || c == g.Cmd.spkeys[NHKF_RUN_NOPICKUP]
@@ -4507,7 +4579,7 @@ parse()
     if (foo == g.Cmd.spkeys[NHKF_ESC]) { /* esc cancels count (TH) */
         clear_nhwindow(WIN_MESSAGE);
         g.multi = g.last_multi = 0;
-    } else if (foo == g.Cmd.spkeys[NHKF_DOAGAIN] || g.in_doagain) {
+    } else if ((foo && foo == g.Cmd.spkeys[NHKF_DOAGAIN]) || g.in_doagain) {
         g.multi = g.last_multi;
     } else {
         g.last_multi = g.multi;

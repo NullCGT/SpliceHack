@@ -3024,7 +3024,8 @@ struct obj *obj;
             return TRUE;
         if (Is_candle(obj) && !infravision(mon->data))
             return TRUE;
-        if (Is_container(obj) && !(Is_mbag(obj) && obj->cursed))
+        if (Is_container(obj) && !(Is_mbag(obj) && obj->cursed)
+            && !obj->olocked)
             return TRUE;
         break;
     case FOOD_CLASS:

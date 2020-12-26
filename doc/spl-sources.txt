@@ -143,6 +143,9 @@
 # Karl Garrison
 - Convict Patch
 
+# Pasi Kallinen
+- Changing mazes patch
+
 ################
 # Other Thanks #
 ################

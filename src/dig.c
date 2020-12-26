@@ -457,7 +457,7 @@ dig(VOID_ARGS)
                                NO_MM_FLAGS);
                 break;
             default:
-                mtmp = makemon(&mons[PM_XORN], dpx, dpy, NO_MM_FLAGS);
+                mtmp = makemon(&mons[Is_earthlevel(&u.uz) ? PM_XORN : PM_CRYSTAL_GOLEM], dpx, dpy, NO_MM_FLAGS);
                 break;
             }
             if (mtmp)

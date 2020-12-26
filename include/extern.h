@@ -1374,6 +1374,7 @@ E void NDECL(water_friction);
 E void FDECL(save_waterlevel, (NHFILE *));
 E void FDECL(restore_waterlevel, (NHFILE *));
 E const char *FDECL(waterbody_name, (XCHAR_P, XCHAR_P));
+E void NDECL(changemaze);
 
 /* ### mkobj.c ### */
 

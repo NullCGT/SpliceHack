@@ -24,6 +24,10 @@ Dungeon
   - Flying and levitation are impossible.
   - Icebergs float through the level. The player must progress from iceberg to iceberg in order
     to move forward.
+- Replaced the Gemstone Array's map with a new, more exciting variant.
+  - The gemstone array is a standard corridor maze, but with a twist: The maze changes over time.
+    This is made possible by the changing mazes patch by Pasi Kallinen.
+  - Digging in the gemstone array can create crystal golems.
 - Added holiday-themed fruit name generation from xNetHack. It's an excellent feature with great
   inclusivity.
 

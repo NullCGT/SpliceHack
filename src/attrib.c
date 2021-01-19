@@ -489,7 +489,7 @@ boolean inc_or_dec;
     debugpline0("Exercise:");
 
     /* no physical exercise while polymorphed; the body's temporary */
-    if (Upolyd && i != A_WIS)
+    if (Upolyd && i != A_WIS && i != A_INT && i != A_CHA)
         return;
 
     if (abs(AEXE(i)) < AVAL) {
@@ -637,7 +637,7 @@ exerchk()
                 goto nextattrib;
             /* can't exercise non-Wisdom while polymorphed; previous
                exercise/abuse gradually wears off without impact then */
-            if (Upolyd && i != A_WIS)
+            if (Upolyd && i != A_WIS && i != A_INT && i != A_CHA)
                 goto nextattrib;
 
             debugpline2("exerchk: testing %s (%d).",

@@ -49,10 +49,10 @@ struct conditionals {
     const char *name;
 } conditionals[] = {
 #ifndef CHARON /* not supported */
-    { MON_GLYPH, PM_HELL_HOUND, "Cerberus" },
+    { MON_GLYPH, PM_DRAUGLIR, "Cerberus" },
 #endif
     /* commented out in monst.c at present */
-    { MON_GLYPH, PM_SHOCKING_SPHERE, "beholder" },
+    { MON_GLYPH, PM_BLINKING_EYE, "beholder" },
 #ifndef CHARON /* not supported yet */
     { MON_GLYPH, PM_CROESUS, "Charon" },
 #endif
@@ -60,10 +60,10 @@ struct conditionals {
     { MON_GLYPH, PM_FAMINE, "mail daemon" },
 #endif
     /* commented out in monst.c at present */
-    { MON_GLYPH, PM_SHAMAN_KARNOV, "Earendil" },
-    { MON_GLYPH, PM_SHAMAN_KARNOV, "Elwing" },
+    { MON_GLYPH, PM_LORD_OF_THE_CARDS, "Earendil" },
+    { MON_GLYPH, PM_LORD_OF_THE_CARDS, "Elwing" },
     /* commented out in monst.c at present */
-    { MON_GLYPH, PM_CHROMATIC_DRAGON, "Goblin King" },
+    { MON_GLYPH, PM_DAL_ZETHIRE, "Goblin King" },
     { MON_GLYPH, PM_NEANDERTHAL, "High-elf" },
 /* allow slime mold to look like slice of pizza, since we
  * don't know what a slime mold should look like when renamed anyway

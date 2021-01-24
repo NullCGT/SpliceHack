@@ -487,8 +487,6 @@ int i;
 boolean inc_or_dec;
 {
     debugpline0("Exercise:");
-    if (i == A_INT || i == A_CHA)
-        return; /* can't exercise these */
 
     /* no physical exercise while polymorphed; the body's temporary */
     if (Upolyd && i != A_WIS)
@@ -506,9 +504,9 @@ boolean inc_or_dec;
          */
         AEXE(i) += (inc_or_dec) ? (rn2(19) > ACURR(i)) : -rn2(2);
         debugpline3("%s, %s AEXE = %d",
-                    (i == A_STR) ? "Str" : (i == A_WIS) ? "Wis" : (i == A_DEX)
-                                                                      ? "Dex"
-                                                                      : "Con",
+                    (i == A_STR) ? "Str" : (i == A_WIS) ? "Wis" :
+                    (i == A_DEX) ? "Dex" : (i == A_INT) ? "Int" :
+                    (i == A_CHA) ? "Cha" : (i == A_CON) ? "Con" : "???",
                     (inc_or_dec) ? "inc" : "dec", AEXE(i));
     }
     if (g.moves > 0 && (i == A_STR || i == A_CON))

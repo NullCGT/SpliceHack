@@ -5301,21 +5301,24 @@ short exploding_wand_typ;
             draft_message(FALSE); /* "You feel a draft." (open doorway) */
     }
 
-    /* regular door absorbs remaining zap range, possibly gets destroyed */
-    if (closed_door(x, y)) {
+    /* regular door absorbs remaining zap range, possibly gets destroyed;
+     * trees behave similarly */
+    if (closed_door(x, y) || IS_TREE(lev->typ)) {
         int new_doormask = -1;
         const char *see_txt = 0, *sense_txt = 0, *hear_txt = 0;
+        boolean istree = IS_TREE(lev->typ);
+        const char *object = istree ? "tree" : "door";
 
         rangemod = -1000;
         switch (abstype) {
         case ZT_FIRE:
             new_doormask = D_NODOOR;
-            see_txt = "The door is consumed in flames!";
+            see_txt = "The %s is consumed in flames!";
             sense_txt = "smell smoke.";
             break;
         case ZT_COLD:
             new_doormask = D_NODOOR;
-            see_txt = "The door freezes and shatters!";
+            see_txt = "The %s freezes and shatters!";
             hear_txt = "a deep cracking sound.";
             break;
         case ZT_SONIC:
@@ -5331,50 +5334,54 @@ short exploding_wand_typ;
             if (abs(type) != ZT_BREATH(ZT_DEATH))
                 goto def_case;
             new_doormask = D_NODOOR;
-            see_txt = "The door disintegrates!";
+            see_txt = "The %s disintegrates!";
             hear_txt = "crashing wood.";
             break;
         case ZT_LIGHTNING:
             new_doormask = D_BROKEN;
-            see_txt = "The door splinters!";
+            see_txt = "The %s splinters!";
             hear_txt = "crackling.";
             break;
         default:
  def_case:
             if (exploding_wand_typ > 0) {
                 /* Magical explosion from misc exploding wand */
-                if (exploding_wand_typ == WAN_STRIKING) {
+                if (exploding_wand_typ == WAN_STRIKING && !istree) {
                     new_doormask = D_BROKEN;
-                    see_txt = "The door crashes open!";
+                    see_txt = "The %s crashes open!";
                     sense_txt = "feel a burst of cool air.";
                     break;
                 }
             }
             if (see_it) {
-                /* "the door absorbs the blast" would be
-                   inaccurate for an exploding wand since
+                /* "the door/tree absorbs the blast" would
+                   be inaccurate for an exploding wand since
                    other adjacent locations still get hit */
                 if (exploding_wand_typ)
-                    pline_The("door remains intact.");
+                    pline_The("%s remains intact.", object);
                 else
-                    pline_The("door absorbs %s %s!", yourzap ? "your" : "the",
-                              zapverb);
+                    pline_The("%s absorbs %s %s!", object,
+                              yourzap ? "your" : "the", zapverb);
             } else
                 You_feel("vibrations.");
             break;
         }
-        if (new_doormask >= 0) { /* door gets broken */
-            if (*in_rooms(x, y, SHOPBASE)) {
-                if (type >= 0) {
-                    add_damage(x, y, SHOP_DOOR_COST);
-                    *shopdamage = TRUE;
-                } else /* caused by monster */
-                    add_damage(x, y, 0L);
+        if (new_doormask >= 0) { /* door broken/tree destroyed */
+            if (istree)
+                lev->typ = ROOM;
+            else {
+                if (*in_rooms(x, y, SHOPBASE)) {
+                    if (type >= 0) {
+                        add_damage(x, y, SHOP_DOOR_COST);
+                        *shopdamage = TRUE;
+                    } else /* caused by monster */
+                        add_damage(x, y, 0L);
+                }
+                lev->doormask = new_doormask;
             }
-            lev->doormask = new_doormask;
             unblock_point(x, y); /* vision */
             if (see_it) {
-                pline1(see_txt);
+                pline(see_txt, object);
                 newsym(x, y);
             } else if (sense_txt) {
                 You1(sense_txt);
@@ -5390,8 +5397,9 @@ short exploding_wand_typ;
     if (OBJ_AT(x, y) && abstype == ZT_FIRE)
         if (burn_floor_objects(x, y, FALSE, type > 0) && couldsee(x, y)) {
             newsym(x, y);
-            You("%s of smoke.", !Blind ? "see a puff" : "smell a whiff");
+            You("%s of smoke.", see_it ? "see a puff" : "smell a whiff");
         }
+
     if ((mon = m_at(x, y)) != 0) {
         wakeup(mon, FALSE);
         if (type >= 0) {

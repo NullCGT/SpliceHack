@@ -2465,7 +2465,8 @@ char *str;
           " versus ", " from ",    " in ",
           " on ",     " a la ",    " with", /* " with "? */
           " de ",     " d'",       " du ",
-          "-in-",     "-at-",      0
+          "-in-",     "-at-",      " - ",
+          0
         }, /* list of first characters for all compounds[] entries */
         compound_start[] = " -";
 

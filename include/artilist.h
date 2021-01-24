@@ -114,6 +114,13 @@ static NEARDATA struct artifact artilist[] = {
       DRLI(0, 0), NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 6000L, NO_COLOR),
 
     /*
+    *      Attacks deal double damage, but at the cost of hallucination.
+    *      This effect is only active while the user can see.
+    */
+    A("Lenses of Death Perception", LENSES, (SPFX_RESTR | SPFX_SEARCH), 0, 0, NO_ATTK,
+      NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 2000L, NO_COLOR),
+
+    /*
     *      Gae Bulg can be thrown as a last resort. If it hits, the attack
     *      is automatically fatal, and there is a 2/3 chance the javelin
     *      vanishes from the game. If it misses, however, the player risks

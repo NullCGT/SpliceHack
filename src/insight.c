@@ -923,9 +923,13 @@ int final;
         you_are("stunned", "");
     if (Confusion)
         you_are("confused", "");
-    if (Hallucination)
+    if (Hallucination) {
         Sprintf(buf, "%s hallucinating",
-                u.uroleplay.hallu ? "permanently" : "temporarily");
+                u.uroleplay.hallu ? "permanently" : DeathVision ? "deliberately" : "temporarily");
+        you_are(buf, "");
+    }
+    if (DeathVision)
+        you_are("dealing double damage due to comprehending death", "");
     if (Blind) {
         /* from_what() (currently wizard-mode only) checks !haseyes()
            before u.uroleplay.blind, so we should too */

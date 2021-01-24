@@ -1310,6 +1310,10 @@ struct obj *otmp;
     }
     if (ublindf->otyp == MASK)
         use_mask(&ublindf); 
+    if (ublindf->oartifact == ART_LENSES_OF_DEATH_PERCEPTION) {
+        pline("With madness comes clarity.");
+    }
+        
 }
 
 void

@@ -111,6 +111,8 @@
      && !u.uroleplay.blind && !Blinded && haseyes(g.youmonst.data))
 /* ...blind because of a blindfold, and *only* that */
 
+#define DeathVision (ublindf && ublindf->oartifact == ART_LENSES_OF_DEATH_PERCEPTION && !Blind)
+
 #define Sick u.uprops[SICK].intrinsic
 #define Stoned u.uprops[STONED].intrinsic
 #define Strangled u.uprops[STRANGLED].intrinsic
@@ -126,7 +128,7 @@
 #define EHalluc_resistance u.uprops[HALLUC_RES].extrinsic
 #define Halluc_resistance (HHalluc_resistance || EHalluc_resistance)
 #define Hallucination ((HHallucination && !Halluc_resistance) || \
-                        u.uroleplay.hallu)
+                        u.uroleplay.hallu || DeathVision)
 
 /* Timeout, plus a worn mask */
 #define HDeaf u.uprops[DEAF].intrinsic

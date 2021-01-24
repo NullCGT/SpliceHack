@@ -17,6 +17,11 @@ New Materials
   - Gelatinous weapons have -4 damage, and are generally terrible.
   - Sludge golems drop gelatinous items and green slime.
 
+New Artifacts
+- Lenses of Death Perception
+  - As long as the wearer is not blind, they deal double damage, but constantly hallucinate.
+  - Grants searching.
+
 Dungeon
 - Added a minetown variant (Zootown), from SporkHack/EvilHack.
 - Added an original minetown variant (Lavender Town).

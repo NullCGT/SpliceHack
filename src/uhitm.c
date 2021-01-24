@@ -1481,6 +1481,11 @@ int dieroll;
             tmp = 1;
     }
 
+    /* Lenses of death perception */
+    if (DeathVision) {
+        tmp *= 2;
+    }
+
     /*
   	 * Ki special ability, see cmd.c in function special_ability.
   	 * In this case, we do twice damage! Wow!

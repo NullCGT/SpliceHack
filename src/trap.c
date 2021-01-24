@@ -4401,11 +4401,17 @@ boolean force;
         if (carried(obj))
             pline("Your %s %s.", ostr, vtense(ostr, "fade"));
 
+        if (obj->corpsenm) {
+            if (obj->otyp == SCR_CREATE_MONSTER) {
+                seffects(obj);
+                delobj(obj);
+                return ER_DESTROYED;
+            }
+            obj->corpsenm = NON_PM;
+        }
         obj->otyp = SCR_BLANK_PAPER;
         obj->dknown = 0;
         obj->spe = 0;
-        if (obj->corpsenm)
-            obj->corpsenm = NON_PM;
         if (carried(obj))
             update_inventory();
         return ER_DAMAGED;

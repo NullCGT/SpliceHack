@@ -41,6 +41,7 @@ Balance
   This is to prevent abuse of the new methods of taming monsters in order to create an army of
   powerful pets.
 - Pets that are not immune to disintegration will not attack spheres of the void.
+- Monster cards transform when exposed to water, rather than fading.
 
 Miscelaneous
 - The SpliceHack splash screen in curses mode is now rainbow!

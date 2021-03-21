@@ -443,6 +443,25 @@ struct savefile_info {
         (nhassert_failed(#expression, __FILE__, __LINE__), 0))
 #endif
 
+/* Macros for meta and ctrl modifiers:
+ *   M and C return the meta/ctrl code for the given character;
+ *     e.g., (C('c') is ctrl-c
+ */
+#ifndef M
+#ifndef NHSTDC
+#define M(c) (0x80 | (c))
+#else
+#define M(c) ((c) - 128)
+#endif /* NHSTDC */
+#endif
+
+#ifndef C
+#define C(c) (0x1f & (c))
+#endif
+
+#define unctrl(c) ((c) <= C('z') ? (0x60 | (c)) : (c))
+#define unmeta(c) (0x7f & (c))
+
 /* LIVELOG message type flags */
 #define LL_WISH       0x0001 /* Report stuff people type at the wish prompt. */
 #define LL_ACHIEVE    0x0002 /* Achievements bitfield + invocation, planes */

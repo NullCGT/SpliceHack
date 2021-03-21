@@ -1,13 +1,9 @@
-/* NetHack 3.7	invent.c	$NHDT-Date: 1614474790 2021/02/28 01:13:10 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.320 $ */
+/* NetHack 3.7	invent.c	$NHDT-Date: 1615794750 2021/03/15 07:52:30 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.324 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
-
-#ifndef C /* same as cmd.c */
-#define C(c) (0x1f & (c))
-#endif
 
 #define NOINVSYM '#'
 #define CONTAINED_SYM '>' /* designator for inside a container */
@@ -37,6 +33,7 @@ static struct obj *find_unpaid(struct obj *, struct obj **);
 static void menu_identify(int);
 static boolean tool_in_use(struct obj *);
 static int adjust_ok(struct obj *);
+static int adjust_gold_ok(struct obj *);
 static char obj_to_let(struct obj *);
 static void mime_action(const char *);
 
@@ -1417,22 +1414,29 @@ static void
 mime_action(const char *word)
 {
     char buf[BUFSZ];
-    char *bp = buf;
-    char *suf = (char *) 0;
+    char *bp, *pfx, *sfx;
 
-    strcpy(buf, word);
+    Strcpy(buf, word);
+    bp = pfx = sfx = (char *) 0;
+
     if ((bp = strstr(buf, " on the ")) != 0) {
         /* rub on the stone[s] */
         *bp = '\0';
-        suf = (bp + 1);
+        sfx = (bp + 1); /* "something <sfx>" */
+    }
+    if (!strncmp(buf, "dip ", 4) && strstr(buf + 4, " into")) {
+        /* "dip <foo> into" => "dipping <foo> into" */
+        buf[3] = '\0';
+        pfx = &buf[4]; /* "<pfx> something" */
     }
     if ((bp = strstr(buf, " or ")) != 0) {
         *bp = '\0';
         bp = (rn2(2) ? buf : (bp + 4));
     } else
         bp = buf;
-    You("mime %s something%s%s.", ing_suffix(bp), suf ? " " : "",
-        suf ? suf : "");
+
+    You("mime %s%s%s something%s%s.", ing_suffix(bp),
+        pfx ? " " : "", pfx ? pfx : "", sfx ? " " : "", sfx ? sfx : "");
 }
 
 /* getobj callback that allows any object - but not hands. */
@@ -1470,8 +1474,9 @@ getobj(const char *word,
     boolean allowcnt = (ctrlflags & GETOBJ_ALLOWCNT),
             forceprompt = (ctrlflags & GETOBJ_PROMPT),
             allownone = FALSE;
-    xchar inaccess = 0; /* counts GETOBJ_EXCLUDE_INACCESS items for a message
-                           tweak */
+    int inaccess = 0; /* counts GETOBJ_EXCLUDE_INACCESS items to decide
+                       * between "you don't have anything to <foo>"
+                       * versus "you don't have anything _else_ to <foo>" */
     long cnt;
     boolean cntgiven = FALSE;
     boolean msggiven = FALSE;
@@ -1479,10 +1484,21 @@ getobj(const char *word,
     Loot *sortedinvent, *srtinv;
 
     /* is "hands"/"self" a valid thing to do this action on? */
-    if ((*obj_ok)((struct obj *) 0) == GETOBJ_SUGGEST) {
-	allownone = TRUE;
+    switch ((*obj_ok)((struct obj *) 0)) {
+    case GETOBJ_SUGGEST: /* treat as likely candidate */
+        allownone = TRUE;
         *bp++ = HANDS_SYM;
         *bp++ = ' '; /* put a space after the '-' in the prompt */
+        break;
+    case GETOBJ_DOWNPLAY: /* acceptable but not shown as likely chioce */
+    case GETOBJ_EXCLUDE_INACCESS:   /* nothing currently gives this for '-' but
+                                     * theoretically could if wearing gloves */
+    case GETOBJ_EXCLUDE_SELECTABLE: /* ditto, I think... */
+        allownone = TRUE;
+        *ap++ = HANDS_SYM;
+        break;
+    default:
+        break;
     }
 
     if (!flags.invlet_constant)
@@ -1548,12 +1564,12 @@ getobj(const char *word,
         cnt = 0;
         cntgiven = FALSE;
         Sprintf(qbuf, "What do you want to %s?", word);
-        if (g.in_doagain)
+        if (g.in_doagain) {
             ilet = readchar();
-        else if (iflags.force_invmenu) {
+        } else if (iflags.force_invmenu) {
             /* don't overwrite a possible quitchars */
             if (!oneloop)
-                ilet = forceprompt ? '*' : '?';
+                ilet = (*lets || *altlets) ? '?' : '*';
             if (!msggiven)
                 putmsghistory(qbuf, FALSE);
             msggiven = TRUE;
@@ -1616,8 +1632,11 @@ getobj(const char *word,
             ilet = display_pickinv(allowed_choices, *qbuf ? qbuf : (char *) 0,
                                    menuquery,
                                    TRUE, allowcnt ? &ctmp : (long *) 0);
-            if (!ilet)
+            if (!ilet) {
+                if (oneloop)
+                    return (struct obj *) 0;
                 continue;
+            }
             if (ilet == HANDS_SYM)
                 return (struct obj *) &cg.zeroobj; /* cast away 'const' */
             if (ilet == '\033') {
@@ -1638,19 +1657,19 @@ getobj(const char *word,
             if (otmp->invlet == ilet)
                 break;
         /* some items have restrictions */
-        if (ilet == def_oc_syms[COIN_CLASS].sym
-            /* guard against the [hypothetical] chace of having more
+        if (ilet == GOLD_SYM
+            /* guard against the [hypothetical] chance of having more
                than one invent slot of gold and picking the non-'$' one */
             || (otmp && otmp->oclass == COIN_CLASS)) {
-            if (obj_ok(otmp) <= GETOBJ_EXCLUDE) {
+            if (otmp && obj_ok(otmp) <= GETOBJ_EXCLUDE) {
                 You("cannot %s gold.", word);
                 return (struct obj *) 0;
             }
-            /* Historic note: early Nethack had a bug which was
+            /*
+             * Historical note: early Nethack had a bug which was
              * first reported for Larn, where trying to drop 2^32-n
-             * gold pieces was allowed, and did interesting things
-             * to your money supply.  The LRS is the tax bureau
-             * from Larn.
+             * gold pieces was allowed, and did interesting things to
+             * your money supply.  The LRS is the tax bureau from Larn.
              */
             if (cntgiven && cnt <= 0) {
                 if (cnt < 0)
@@ -2286,13 +2305,62 @@ update_inventory(void)
         return;
 
     /*
-     * Ought to check (windowprocs.wincap2 & WC2_PERM_INVENT) here....
+     * Ought to check (windowprocs.wincap & WC_PERM_INVENT) here....
      *
      * We currently don't skip this call when iflags.perm_invent is False
      * because curses uses that to disable a previous perm_invent window
      * (after toggle via 'O'; perhaps the options code should handle that).
      */
-    (*windowprocs.win_update_inventory)();
+    (*windowprocs.win_update_inventory)(0);
+}
+
+/* '|' command - call interface's persistent inventory manipulation routine */
+int
+doperminv(void)
+{
+    /*
+     * If persistent inventory window is enabled, interact with it.
+     *
+     * Depending on interface, might accept and execute one scrolling
+     * request (MENU_{FIRST,NEXT,PREVIOUS,LAST}_PAGE) then return,
+     * or might stay and handle multiple requests until user finishes
+     * (typically by typing <return> or <esc> but that's up to interface).
+     */
+
+    if (iflags.debug_fuzzer)
+        return 0;
+#if 0
+    /* [currently this would redraw the persistent inventory window
+       whether that's needed or not, so also reset any previous
+       scrolling; we don't want that if the interface only accepts
+       one scroll command at a time] */
+    update_inventory(); /* make sure that it's up to date */
+#endif
+
+    if ((windowprocs.wincap & WC_PERM_INVENT) == 0) {
+        /* [TODO? perhaps omit "by <interface>" if all the window ports
+           compiled into this binary lack support for perm_invent...] */
+        pline("Persistent inventory display is not supported by '%s'.",
+              windowprocs.name);
+
+    } else if (!iflags.perm_invent) {
+        pline(
+     "Persistent inventory ('perm_invent' option) is not presently enabled.");
+
+    } else if (!g.invent) {
+        /* [should this be left for the interface to decide?] */
+        pline("Persistent inventory display is empty.");
+
+    } else {
+        /* note: we used to request a scrolling key here and pass that to
+           (*win_update_inventory)(key), but that limited the functionality
+           and also cluttered message history with prompt and response so
+           just send non-zero and have the interface be responsible for it */
+        (*windowprocs.win_update_inventory)(1);
+
+    } /* iflags.perm_invent */
+
+    return 0;
 }
 
 /* should of course only be called for things in invent */
@@ -2570,7 +2638,7 @@ display_pickinv(
     classcount = 0;
     for (srtinv = sortedinvent; (otmp = srtinv->obj) != 0; ++srtinv) {
         int tmpglyph;
-	glyph_info tmpglyphinfo = nul_glyphinfo;
+        glyph_info tmpglyphinfo = nul_glyphinfo;
 
         if (lets && !index(lets, otmp->invlet))
             continue;
@@ -2592,7 +2660,7 @@ display_pickinv(
             else
                 any.a_char = ilet;
             tmpglyph = obj_to_glyph(otmp, rn2_on_display_rng);
-            map_glyphinfo(0, 0, tmpglyph, 0U, &tmpglyphinfo);            
+            map_glyphinfo(0, 0, tmpglyph, 0U, &tmpglyphinfo);
             add_menu(win, &tmpglyphinfo, &any, ilet,
                      wizid ? def_oc_syms[(int) otmp->oclass].sym : 0,
                      ATR_NONE, doname(otmp), MENU_ITEMFLAGS_NONE);
@@ -2607,7 +2675,12 @@ display_pickinv(
             goto nextclass;
         }
     }
-    if (iflags.force_invmenu && lets && want_reply) {
+    /* default for force_invmenu is a list of likely candidates;
+       add '*' for 'show all' as an extra choice unless list already
+       includes everything; won't work via keyboard if current menu
+       uses '*' as group accelerator for gems but might work via mouse */
+    if (iflags.force_invmenu && lets && want_reply
+        && (int) strlen(lets) < inv_cnt(TRUE)) {
         any = cg.zeroany;
         add_menu(win, &nul_glyphinfo, &any, 0, 0,
                  iflags.menu_headings, "Special", MENU_ITEMFLAGS_NONE);
@@ -3892,37 +3965,51 @@ reassign(void)
     g.lastinvnr = i;
 }
 
-/* getobj callback for item to #adjust */
+/* invent gold sanity check; used by doorganize() to control how getobj()
+   deals with gold and also by wizard mode sanity_check() */
+boolean
+check_invent_gold(const char *why) /* 'why' == caller in case of warning */
+{
+    struct obj *otmp;
+    int goldstacks = 0, wrongslot = 0;
+
+    /* there should be at most one stack of gold in invent, in slot '$' */
+    for (otmp = g.invent; otmp; otmp = otmp->nobj)
+        if (otmp->oclass == COIN_CLASS) {
+            ++goldstacks;
+            if (otmp->invlet != GOLD_SYM)
+                ++wrongslot;
+        }
+
+    if (goldstacks > 1 || wrongslot > 0) {
+        impossible("%s: %s%s%s", why,
+                   (wrongslot > 1) ? "gold in wrong slots"
+                      : (wrongslot > 0) ? "gold in wrong slot"
+                           : "",
+                   (wrongslot > 0 && goldstacks > 1) ? " and " : "",
+                   (goldstacks > 1) ? "multiple gold stacks" : "");
+        return TRUE; /* gold can be #adjusted */
+    }
+
+    return FALSE; /* gold can't be #adjusted */
+}
+
+/* normal getobj callback for item to #adjust; excludes gold */
 int
 adjust_ok(struct obj *obj)
 {
+    if (!obj || obj->oclass == COIN_CLASS)
+        return GETOBJ_EXCLUDE;
+
+    return GETOBJ_SUGGEST;
+}
+
+/* getobj callback for item to #adjust if gold is wonky; allows gold */
+int
+adjust_gold_ok(struct obj *obj)
+{
     if (!obj)
         return GETOBJ_EXCLUDE;
-
-    /* gold should never end up in a letter slot, nor should two '$' slots
-     * occur, but if they ever do, allow #adjust to handle them (in the
-     * past, things like this have happened, usually due to bknown being
-     * erroneously set on one stack, clear on another; object merger isn't
-     * fooled by that anymore) */
-    if (obj->oclass == COIN_CLASS) {
-        int goldstacks = 0;
-        struct obj *otmp;
-        if (obj->invlet != GOLD_SYM)
-            return GETOBJ_SUGGEST;
-        for (otmp = g.invent; otmp; otmp = otmp->nobj) {
-            if (otmp->oclass == COIN_CLASS) {
-                goldstacks++;
-            }
-        }
-
-        if (goldstacks > 1) {
-            impossible("getobj: multiple gold stacks in inventory");
-            return GETOBJ_SUGGEST;
-        }
-        /* assuming this impossible case doesn't happen, gold should be
-         * outright ignored as far as #adjust is concerned */
-        return GETOBJ_EXCLUDE;
-    }
 
     return GETOBJ_SUGGEST;
 }
@@ -3967,6 +4054,10 @@ adjust_ok(struct obj *obj)
  *      However, when splitting results in a merger, the name of the
  *      destination overrides that of the source, even if destination
  *      is unnamed and source is named.
+ *
+ *      Gold is only a candidate to adjust if we've somehow managed
+ *      to get multiple stacks and/or it is in a slot other than '$'.
+ *      Specifying a count to split it into two stacks is not allowed.
  */
 int
 doorganize(void) /* inventory organizer by Del Lamb */
@@ -3981,11 +4072,12 @@ doorganize(void) /* inventory organizer by Del Lamb */
     char qbuf[QBUFSZ];
     char *objname, *otmpname;
     const char *adj_type;
-    boolean ever_mind = FALSE, collect;
+    int (*adjust_filter)(struct obj *);
+    boolean ever_mind = FALSE, collect, isgold;
 
     /* when no invent, or just gold in '$' slot, there's nothing to adjust */
     if (!g.invent || (g.invent->oclass == COIN_CLASS
-                    && g.invent->invlet == GOLD_SYM && !g.invent->nobj)) {
+                      && g.invent->invlet == GOLD_SYM && !g.invent->nobj)) {
         You("aren't carrying anything %s.",
             !g.invent ? "to adjust" : "adjustable");
         return 0;
@@ -3993,10 +4085,19 @@ doorganize(void) /* inventory organizer by Del Lamb */
 
     if (!flags.invlet_constant)
         reassign();
+
+    /* filter passed to getobj() depends upon gold sanity */
+    adjust_filter = check_invent_gold("adjust") ? adjust_gold_ok : adjust_ok;
+
     /* get object the user wants to organize (the 'from' slot) */
-    obj = getobj("adjust", adjust_ok, GETOBJ_PROMPT | GETOBJ_ALLOWCNT);
+    obj = getobj("adjust", adjust_filter, GETOBJ_PROMPT | GETOBJ_ALLOWCNT);
     if (!obj)
         return 0;
+    /* can only be gold if check_invent_gold() found a problem:  multiple '$'
+       stacks and/or gold in some other slot, otherwise (*adjust_filter)()
+       won't allow gold to be picked; if player has picked any stack of gold
+       as #adjust 'from' slot, we'll force the 'to' slot to be '$' below */
+    isgold = (obj->oclass == COIN_CLASS);
 
     /* figure out whether user gave a split count to getobj() */
     splitting = bumped = 0;
@@ -4047,7 +4148,7 @@ doorganize(void) /* inventory organizer by Del Lamb */
     Sprintf(qbuf, "Adjust letter to what [%s]%s?", lets,
             g.invent ? " (? see used letters)" : "");
     for (trycnt = 1; ; ++trycnt) {
-        let = yn_function(qbuf, (char *) 0, '\0');
+        let = !isgold ? yn_function(qbuf, (char *) 0, '\0') : GOLD_SYM;
         if (let == '?' || let == '*') {
             let = display_used_invlets(splitting ? obj->invlet : 0);
             if (!let)

@@ -302,9 +302,9 @@ curs_add_invt(
 
     len = strlen(str);
     if (accelerator) {
-        /* +3: ")c " inventory letter will be inserted before invtxt;
+        /* +4: " )c " inventory letter will be inserted before invtxt;
            invtxt's "a "/"an "/"the " prefix, if any, will be skipped */
-        len += 3;
+        len += 4;
         if (len > pi.widest)
             len -= pi_article_skip(str);
     }
@@ -362,8 +362,9 @@ curs_show_invt(WINDOW *win)
             /* despite being shown as a menu, nothing is selectable from the
                persistent inventory window so avoid the usual highlighting
                of inventory letters */
-            wprintw(win, "%c) ", accelerator);
-            available_width -= 3; /* letter+parenthesis+space */
+            wprintw(win, " %c) ", accelerator);
+            available_width -= 4; /* space+letter+parenthesis+space */
+
             /*
              * Narrow the entries to fit more of the interesting text,
              * but defer the removal until after menu colors matching.

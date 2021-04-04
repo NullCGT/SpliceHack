@@ -3257,7 +3257,7 @@ print_mapseen(winid win, mapseen *mptr,
             Sprintf(buf, "%s: levels %d to %d",
                     g.dungeons[dnum].dname, depthstart,
                     depthstart + g.dungeons[dnum].dunlev_ureached - 1);
-        putstr(win, !final ? ATR_INVERSE : ATR_SUBHEAD, buf);
+        putstr(win, !final ? iflags.menu_headings : ATR_SUBHEAD, buf);
     }
 
     /* calculate level number */
@@ -3282,7 +3282,7 @@ print_mapseen(winid win, mapseen *mptr,
                 (!final || (final == 1 && how == ASCENDED)) ? "are"
                   : (final == 1 && how == ESCAPED) ? "left from"
                     : "were");
-    putstr(win, !final ? ATR_BOLD : ATR_PREFORM, buf);
+    putstr(win, !final ? iflags.menu_headings : ATR_PREFORM, buf);
 
     if (mptr->flags.forgot)
         return;

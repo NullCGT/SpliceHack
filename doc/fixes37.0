@@ -1,4 +1,4 @@
-NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.478 $ $NHDT-Date: 1615911117 2021/03/16 16:11:57 $
+NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.498 $ $NHDT-Date: 1617388018 2021/04/02 18:26:58 $
 
 General Fixes and Modified Features
 -----------------------------------
@@ -422,6 +422,26 @@ if player managed to get multiple $ items, all but the last could be moved to
 	count could split them into even more slots
 when a monster on the far side of a closed door opens it, sometimes the hero
 	was told about the monster without it being displayed on the map
+also show extended command name when showing what a key does in help
+poly'd hero who exploded when attacking a monster didn't wake up other
+	monsters in the vicinity; when attacking thin air, hero's explosion
+	woke other monsters within different radius than same monster's would
+troll corpse revival was inhibited by hero wielding Trollsbane; change that
+	to being killed by Trollsbane instead (wielded by hero or by monster)
+statues representing petrified creatures on Medusa's level might be from
+	monsters who change form (golems) when hit with stoning damage
+attempt to make corpse or statue of a named player character would yield that
+	of a random monster instead when 'record' was empty; could result in
+	statues of non-stonable creatures in cockatrice nests
+homemade tin of very low nutrition corpse gave more nutrition than the corpse
+magic mapping performed while engulfed or underwater would display whole map
+	but then not switch back to the engulfed or underwater restricted view
+#overview used hardcoded bold and inverse for highlighting; switch to the
+	'menu_headings' option value so player has some control
+for menustyle:full, the 'A' menu choice to auto-select everything now only
+	does so if no other choices have been picked; when any have (object
+	class or BUCX state or both), it auto-selects every item that matches
+	those choices (so still skips the second menu) rather than every item
 
 
 Fixes to 3.7.0-x Problems that Were Exposed Via git Repository
@@ -558,6 +578,9 @@ avoid segfault during error reporting for bad 'O' value(s) after theme rooms
 avoid complaints of "nothing to foo" for 'force_invmenu' if there are no
 	likely candidates to foo with but there are hidden acceptable choices
 avoid "Not carrying anything.  Never mind." for 'force_invmenu'
+'altmeta' option could be toggled On but once On could not be toggled back Off
+wearing a ring of protection and any amulet behaved as if wearing an amulet of
+	guarding when determining MC value
 
 curses: 'msg_window' option wasn't functional for curses unless the binary
 	also included tty support
@@ -566,6 +589,7 @@ curses: line input that doesn't take place on the bottom line of the message
 	partial input or to cancel; "Who are you?" prompt was willing to name
 	a character "^["; have the popup version of getlin() fake the usual
 	ESC handling, but player has to type <escape><return> for that to work
+curses: menu headings didn't use default text color
 Qt: at Xp levels above 20 with 'showexp' On, the combined status field
 	"Level:NN/nnnnnnnn" was too big and truncated by a char at each end
 Qt: searching a text window for something that wasn't found and then searching
@@ -599,6 +623,7 @@ curses: for vertical status, line up conditions in columns; usually two but
 	condense to three per line if the status window isn't tall enough
 	[at present, highlighting with inverse video includes trailing spaces
 	used to align entries in their columns--that's a feature...]
+curses: indent items in perm_invent window by one space
 macOS: Xcode project was failing to build if the path to the NetHack source
 	tree contained a space; the issue was within some shell script code
 	contained within the project
@@ -854,6 +879,9 @@ give feedback when boolean options are toggled interactively ('O' command)
 menu_shift_left, menu_shift_right menu command keys; default '{' and '}'
 	(curses for perm_invent only; implemented for X11 too but menus for
 	it lack horizontal scroll bars so the shifts don't work there)
+using 'f' while quiver is empty and 'autoquiver' is Off when wielding a
+	thrown-and-return weapon will throw that weapon instead of filling
+	the quiver (inspired by xNetHack)
 
 
 Platform- and/or Interface-Specific New Features

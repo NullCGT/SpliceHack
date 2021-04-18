@@ -619,6 +619,7 @@ extern boolean On_W_tower_level(d_level *);
 extern boolean In_W_tower(int, int, d_level *);
 extern void find_hell(d_level *);
 extern void goto_hell(boolean, boolean);
+extern boolean single_level_branch(d_level *);
 extern void assign_level(d_level *, d_level *);
 extern void assign_rnd_level(d_level *, d_level *, int);
 extern unsigned int induced_align(int);
@@ -3137,6 +3138,7 @@ extern int dowrite(struct obj *);
 
 extern void learnwand(struct obj *);
 extern int bhitm(struct monst *, struct obj *);
+extern void release_hold(void);
 extern void probe_monster(struct monst *);
 extern boolean get_obj_location(struct obj *, xchar *, xchar *, int);
 extern boolean get_mon_location(struct monst *, xchar *, xchar *, int);

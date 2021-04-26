@@ -110,7 +110,23 @@ correctly account for fuel remaining when lit candles are attached
 	there were 15 or fewer turns remaining)
 praying on an unaligned altar outside of Gehennom behaved like an ordinary
 	prayer; make that always fail
-Discworld typo: Moving Pictures passage 12 "or" -> "of"
+tribute (Discworld snippets) typos, in book order rather than fix order:
+	Sourcery passage #4 "the moment the words were out of your mouth" ->
+	 "the moment and the words out of your mouth" where "were" didn't
+	 belong and awkward phrasing because of it caused "and" to be removed
+	 (would be much clearer if optional comma after "moment" was included)
+	Moving Pictures passage #10 initial single quote should be double,
+	 #12 "or" -> "of", #14 second instance of "megalomaniac" misspelled
+	Lords and Ladies passage #5, near end add missing opening double
+	 quote, passage #7 last paragraph, "to" -> "be"
+	Hogfather passage #7 missing initial double quote for "Oh, just ...",
+	 also #7 insert missing "you" into "Why are you feeling [...]"
+	Jingo passage #2 "Vines" -> "Vimes", "profferred" -> "proffered",
+	 missing opening single quote on second sentence of Lord Downey's
+	 line, passage #11 both in footnote:  "genious" -> "genius",
+	 "was, oddly enough, was one [...]" -> "was, oddly enough, one [...]"
+	A Hat Full of Sky passage #9 "though" -> "thought"
+	various, including Death quotes:  separate sentences by two spaces
 unicorn corpses and wraith corpses could be sacrificed even if "too old"
 hero polymorphed into a hider and hiding was not unhidden when teleporting
 impose tighter restraints on 'summon nasties', both for spellcasting monsters
@@ -410,6 +426,8 @@ remove superfluous "All" from "All foos are already nonexistent." when blessed
 	genocide tries to remove something which has already been genocided
 "#dip <item> into -" produced a scrambled message:
 	You mime dip <item> intoing something.
+similarly, "#rub the royal jelly on -" produced
+	You mime rub the royal jellying on something.
 mounted hero falling out of saddle shouldn't hit ground and take damage when
 	levitating or flying (if done without steed's help)
 avoid "obj not free" panic if monster kills itself by reading scroll of earth
@@ -454,7 +472,7 @@ if a branch has only one level (Fort Ludios), prevent creation of any level
 	wishing could attempt to place one)
 opening/unlocking magic zapped at monster holding the hero will release hold
 	(zap at engulfer already expels hero); zapping at self has same effect
-when riding, allow scroll of remove curse to affect to affect steed's saddle
+when riding, allow scroll of remove curse read by hero to affect steed's saddle
 the 'scores' option for final top ten display left default values in place if
 	only some of the three settings were set; 'scores:own' should have
 	produced '0 top/0 around/own' but ended up as '3 top/2 around/own'
@@ -465,6 +483,14 @@ contents of chests, large boxes, and ice boxes are now immune to water damage
 	chests+large boxes were always immune and ice boxes always vulnerable)
 applying an empty brass lantern in an attempt to light it reported "your lamp
 	has run out of power"; change to "your lantern is out of power"
+when swallowed or underwater, player could be told about events (such as a
+	shapechanger taking on a new form) that the hero sensed but which
+	were not shown on the screen; treat being swallowed or underwater as
+	situations which block telepathy, extended monster detection, warning
+some rolling boulder trap feedback was inconsistent
+change "killed by <a foo>, while {paralyzed|frozen} by <a foo>" into
+	"killed by <a foo>, while {paralyzed|frozen}" if the killer caused
+	hero's helplessness
 
 
 Fixes to 3.7.0-x Problems that Were Exposed Via git Repository
@@ -609,6 +635,7 @@ give genetic engineers teleport capability (as they had in slash'em); 'port
 	away after polymorphing someone so that they don't just repeat that
 if an invisible hero managed to convert an unaligned altar to an aligned one
 	with color enabled, altar wasn't immediately redrawn with new color
+repair some regressions to (a)pply introduced by "getobj refactor" patch
 
 curses: 'msg_window' option wasn't functional for curses unless the binary
 	also included tty support
@@ -917,6 +944,7 @@ menu_shift_left, menu_shift_right menu command keys; default '{' and '}'
 using 'f' while quiver is empty and 'autoquiver' is Off when wielding a
 	thrown-and-return weapon will throw that weapon instead of filling
 	the quiver (inspired by xNetHack)
+3.6's tribute: add one new passage to Sourcery, three to Small Gods
 
 
 Platform- and/or Interface-Specific New Features

@@ -3842,7 +3842,6 @@ int amt;
         if (obj == g.context.victual.piece) /* always true unless wishing... */
             g.context.victual.reqtime =
                 g.context.victual.usedtime; /* no bites left */
-        obj->oeaten = 1; /* smallest possible positive value */
     }
 }
 

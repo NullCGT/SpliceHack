@@ -2287,8 +2287,8 @@ mhitm_ad_sgld(struct monst *magr, struct attack *mattk, struct monst *mdef,
             add_to_minv(magr, gold);
         }
         mdef->mstrategy &= ~STRAT_WAITFORU;
+        Strcpy(buf, Monnam(magr));
         if (g.vis && canseemon(mdef)) {
-            Strcpy(buf, Monnam(magr));
             pline("%s steals some gold from %s.", buf, mon_nam(mdef));
         }
         if (!tele_restrict(magr)) {
@@ -3949,7 +3949,7 @@ mhitm_ad_sedu(struct monst *magr, struct attack *mattk, struct monst *mdef,
         /* find an object to steal, non-cursed if magr is tame */
         for (obj = mdef->minvent; obj; obj = obj->nobj)
             if (!magr->mtame || !obj->cursed)
-                return;
+                break;
 
         if (obj) {
             char buf[BUFSZ];
@@ -3968,8 +3968,8 @@ mhitm_ad_sedu(struct monst *magr, struct attack *mattk, struct monst *mdef,
             if (g.vis)
                 Strcpy(onambuf, doname(obj));
             (void) add_to_minv(magr, obj);
+            Strcpy(buf, Monnam(magr));
             if (g.vis && canseemon(mdef)) {
-                Strcpy(buf, Monnam(magr));
                 pline("%s steals %s from %s!", buf, onambuf, mdefnambuf);
             }
             possibly_unwield(mdef, FALSE);

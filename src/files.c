@@ -1,4 +1,4 @@
-/* NetHack 3.7	files.c	$NHDT-Date: 1612819003 2021/02/08 21:16:43 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.331 $ */
+/* NetHack 3.7	files.c	$NHDT-Date: 1620522110 2021/05/09 01:01:50 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.334 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1426,7 +1426,7 @@ free_saved_games(char **saved)
 
 /* ----------  BEGIN FILE COMPRESSION HANDLING ----------- */
 
-#ifdef COMPRESS
+#ifdef COMPRESS /* external compression */
 
 static void
 redirect(const char *filename, const char *mode, FILE *stream, boolean uncomp)
@@ -1455,7 +1455,8 @@ redirect(const char *filename, const char *mode, FILE *stream, boolean uncomp)
 static void
 docompress_file(const char *filename, boolean uncomp)
 {
-    char cfn[SAVESIZE];
+    char *cfn = 0;
+    const char *xtra;
     FILE *cf;
     const char *args[10];
 #ifdef COMPRESS_OPTIONS
@@ -1463,18 +1464,27 @@ docompress_file(const char *filename, boolean uncomp)
 #endif
     int i = 0;
     int f;
+    unsigned ln;
 #ifdef TTY_GRAPHICS
     boolean istty = WINDOWPORT("tty");
 #endif
 
-    Strcpy(cfn, filename);
 #ifdef COMPRESS_EXTENSION
-    Strcat(cfn, COMPRESS_EXTENSION);
+    xtra = COMPRESS_EXTENSION;
+#else
+    xtra = "";
 #endif
+    ln = (unsigned) (strlen(filename) + strlen(xtra));
+    cfn = (char *) alloc(ln + 1);
+    Strcpy(cfn, filename);
+    Strcat(cfn, xtra);
+
     /* when compressing, we know the file exists */
     if (uncomp) {
-        if ((cf = fopen(cfn, RDBMODE)) == (FILE *) 0)
+        if ((cf = fopen(cfn, RDBMODE)) == (FILE *) 0) {
+            free((genericptr_t) cfn);
             return;
+        }
         (void) fclose(cf);
     }
 
@@ -1545,10 +1555,12 @@ docompress_file(const char *filename, boolean uncomp)
         perror((char *) 0);
         (void) fprintf(stderr, "Exec to %scompress %s failed.\n",
                        uncomp ? "un" : "", filename);
+        free((genericptr_t) cfn);
         nh_terminate(EXIT_FAILURE);
     } else if (f == -1) {
         perror((char *) 0);
         pline("Fork to %scompress %s failed.", uncomp ? "un" : "", filename);
+        free((genericptr_t) cfn);
         return;
     }
 #ifndef NO_SIGNAL
@@ -1597,8 +1609,11 @@ docompress_file(const char *filename, boolean uncomp)
         }
 #endif
     }
+
+    free((genericptr_t) cfn);
 }
-#endif /* COMPRESS */
+
+#endif /* COMPRESS : external compression */
 
 #if defined(COMPRESS) || defined(ZLIB_COMP)
 #define UNUSED_if_not_COMPRESS /*empty*/
@@ -3984,7 +3999,7 @@ recover_savefile(void)
     struct savefile_info sfi;
     char tmpplbuf[PL_NSIZ];
     const char *savewrite_failure = (const char *) 0;
-    
+
     for (lev = 0; lev < 256; lev++)
         processed[lev] = 0;
 
@@ -4081,7 +4096,7 @@ recover_savefile(void)
     if (savewrite_failure)
         goto cleanup;
 
-    if (snhfp->structlevel) {         
+    if (snhfp->structlevel) {
         if (write(snhfp->fd, (genericptr_t) &pltmpsiz, sizeof pltmpsiz)
             != sizeof pltmpsiz)
             savewrite_failure = "player name size";

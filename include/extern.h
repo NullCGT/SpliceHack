@@ -1,4 +1,4 @@
-/* NetHack 3.7	extern.h	$NHDT-Date: 1611445282 2021/01/23 23:41:22 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.947 $ */
+/* NetHack 3.7	extern.h	$NHDT-Date: 1620348705 2021/05/07 00:51:45 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.969 $ */
 /* Copyright (c) Steve Creps, 1988.				  */
 /* NetHack may be freely redistributed.  See license for details. */
 
@@ -648,6 +648,7 @@ extern boolean is_edible(struct obj *);
 extern void init_uhunger(void);
 extern int Hear_again(void);
 extern void reset_eat(void);
+extern unsigned obj_nutrition(struct obj *);
 extern int doeat(void);
 extern int use_tin_opener(struct obj *);
 extern void gethungry(void);
@@ -1024,6 +1025,7 @@ extern int ggetobj(const char *, int(*)(struct obj *), int, boolean,
                    unsigned *);
 extern int askchain(struct obj **, const char *, int, int(*)(struct obj *),
                     int(*)(struct obj *), int, const char *);
+extern void unknow_object(struct obj *);
 extern void set_cknown_lknown(struct obj *);
 extern void fully_identify_obj(struct obj *);
 extern int identify(struct obj *);

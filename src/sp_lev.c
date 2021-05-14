@@ -1686,6 +1686,7 @@ create_trap(spltrap* t, struct mkroom* croom)
 {
     xchar x = -1, y = -1;
     coord tm;
+    int mktrap_flags = MKTRAP_MAZEFLAG;
 
     if (croom) {
         get_free_room_loc(&x, &y, croom, t->coord);
@@ -1700,10 +1701,13 @@ create_trap(spltrap* t, struct mkroom* croom)
             return;
     }
 
+    if (!t->spider_on_web)
+        mktrap_flags |= MKTRAP_NOSPIDERONWEB;
+
     tm.x = x;
     tm.y = y;
 
-    mktrap(t->type, 1, (struct mkroom *) 0, &tm);
+    mktrap(t->type, mktrap_flags, (struct mkroom *) 0, &tm);
 }
 
 /*
@@ -2028,7 +2032,9 @@ create_monster(monster* m, struct mkroom* croom)
             mtmp->mflee = 1;
             mtmp->mfleetim = (m->fleeing % 127);
         }
-
+        if (m->waiting) {
+            mtmp->mstrategy |= STRAT_WAITFORU;
+        }
         if (m->has_invent) {
             discard_minvent(mtmp, TRUE);
             invent_carrying_monster = mtmp;
@@ -3026,6 +3032,7 @@ lspo_monster(lua_State* L)
     tmpmons.confused = 0;
     tmpmons.seentraps = 0;
     tmpmons.has_invent = 0;
+    tmpmons.waiting = 0;
 
     if (argc == 1 && lua_type(L, 1) == LUA_TSTRING) {
         const char *paramstr = luaL_checkstring(L, 1);
@@ -3089,6 +3096,7 @@ lspo_monster(lua_State* L)
         tmpmons.paralyzed = get_table_int_opt(L, "paralyzed", 0);
         tmpmons.stunned = get_table_int_opt(L, "stunned", 0);
         tmpmons.confused = get_table_int_opt(L, "confused", 0);
+        tmpmons.waiting = get_table_int_opt(L, "waiting", 0);
         tmpmons.seentraps = 0; /* TODO: list of trap names to bitfield */
         tmpmons.has_invent = 0;
 
@@ -3991,6 +3999,7 @@ get_traptype_byname(const char *trapname)
 }
 
 /* trap({ type = "hole", x = 1, y = 1 }); */
+/* trap({ type = "web", spider_on_web = 0 }); */
 /* trap("hole", 3, 4); */
 /* trap("level teleport", {5, 8}); */
 /* trap("rust") */
@@ -4003,6 +4012,8 @@ lspo_trap(lua_State* L)
     int argc = lua_gettop(L);
 
     create_des_coder();
+
+    tmptrap.spider_on_web = TRUE;
 
     if (argc == 1 && lua_type(L, 1) == LUA_TSTRING) {
         const char *trapstr = luaL_checkstring(L, 1);
@@ -4026,6 +4037,8 @@ lspo_trap(lua_State* L)
 
         get_table_xy_or_coord(L, &x, &y);
         tmptrap.type = get_table_traptype_opt(L, "type", -1);
+        tmptrap.spider_on_web
+            = get_table_boolean_opt(L, "spider_on_web", 1);
     }
 
     if (tmptrap.type == NO_TRAP)

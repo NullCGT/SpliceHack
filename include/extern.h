@@ -1182,6 +1182,7 @@ extern boolean usmellmon(struct permonst *);
 /* ### mcastu.c ### */
 
 extern int castmu(struct monst *, struct attack *, boolean, boolean);
+extern void touch_of_death(void);
 extern int buzzmu(struct monst *, struct attack *);
 
 /* ### mdlib.c ### */
@@ -1502,6 +1503,8 @@ extern const char *stagger(const struct permonst *, const char *);
 extern const char *on_fire(struct permonst *, struct attack *);
 extern const struct permonst *raceptr(struct monst *);
 extern boolean olfaction(struct permonst *);
+unsigned long cvt_adtyp_to_mseenres(uchar);
+extern void monstseesu(unsigned long);
 
 /* ### monmove.c ### */
 

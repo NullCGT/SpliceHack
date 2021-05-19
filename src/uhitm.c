@@ -2007,6 +2007,7 @@ mhitm_ad_fire(struct monst *magr, struct attack *mattk, struct monst *mdef,
                 return;
             } else if (Fire_resistance) {
                 pline_The("fire doesn't feel hot!");
+                monstseesu(M_SEEN_FIRE);
                 mhm->damage = 0;
             }
             if ((int) magr->m_lev > rn2(20))
@@ -2097,6 +2098,7 @@ mhitm_ad_cold(struct monst *magr, struct attack *mattk, struct monst *mdef,
             pline("You're covered in frost!");
             if (Cold_resistance) {
                 pline_The("frost doesn't seem cold!");
+                monstseesu(M_SEEN_COLD);
                 mhm->damage = 0;
             }
             if ((int) magr->m_lev > rn2(20))
@@ -2161,6 +2163,7 @@ mhitm_ad_elec(struct monst *magr, struct attack *mattk, struct monst *mdef,
             You("get zapped!");
             if (Shock_resistance) {
                 pline_The("zap doesn't shock you!");
+                monstseesu(M_SEEN_ELEC);
                 mhm->damage = 0;
             }
             if ((int) magr->m_lev > rn2(20))
@@ -2208,6 +2211,7 @@ mhitm_ad_acid(struct monst *magr, struct attack *mattk, struct monst *mdef,
             if (Acid_resistance) {
                 pline("You're covered in %s, but it seems harmless.",
                       hliquid("acid"));
+                monstseesu(M_SEEN_ACID);
                 mhm->damage = 0;
             } else {
                 pline("You're covered in %s!  It burns!", hliquid("acid"));
@@ -2884,8 +2888,10 @@ mhitm_ad_slee(struct monst *magr, struct attack *mattk, struct monst *mdef,
 
         hitmsg(magr, mattk);
         if (uncancelled && g.multi >= 0 && !rn2(5)) {
-            if (Sleep_resistance)
+            if (Sleep_resistance) {
+                monstseesu(M_SEEN_SLEEP);
                 return;
+            }
             fall_asleep(-rnd(10), TRUE);
             if (Blind)
                 You("are put to sleep!");
@@ -3206,9 +3212,7 @@ mhitm_ad_deth(struct monst *magr, struct attack *mattk UNUSED,
         case 18:
         case 17:
             if (!Antimagic) {
-                g.killer.format = KILLED_BY_AN;
-                Strcpy(g.killer.name, "touch of death");
-                done(DIED);
+                touch_of_death();
                 mhm->damage = 0;
                 return;
             }
@@ -4884,6 +4888,8 @@ passive(struct monst *mon,
 
             if (!Acid_resistance)
                 mdamageu(mon, tmp);
+            else
+                monstseesu(M_SEEN_ACID);
             if (!rn2(30))
                 erode_armor(&g.youmonst, ERODE_CORRODE);
         }
@@ -4948,6 +4954,7 @@ passive(struct monst *mon,
         /* wrath of gods for attacking Oracle */
         if (Antimagic) {
             shieldeff(u.ux, u.uy);
+            monstseesu(M_SEEN_MAGR);
             pline("A hail of magic missiles narrowly misses you!");
         } else {
             You("are hit by magic missiles appearing from thin air!");
@@ -5024,6 +5031,7 @@ passive(struct monst *mon,
                 if (Cold_resistance) {
                     shieldeff(u.ux, u.uy);
                     You_feel("a mild chill.");
+                    monstseesu(M_SEEN_COLD);
                     ugolemeffects(AD_COLD, tmp);
                     break;
                 }
@@ -5047,6 +5055,7 @@ passive(struct monst *mon,
                 if (Fire_resistance) {
                     shieldeff(u.ux, u.uy);
                     You_feel("mildly warm.");
+                    monstseesu(M_SEEN_FIRE);
                     ugolemeffects(AD_FIRE, tmp);
                     break;
                 }
@@ -5058,6 +5067,7 @@ passive(struct monst *mon,
             if (Shock_resistance) {
                 shieldeff(u.ux, u.uy);
                 You_feel("a mild tingle.");
+                monstseesu(M_SEEN_ELEC);
                 ugolemeffects(AD_ELEC, tmp);
                 break;
             }

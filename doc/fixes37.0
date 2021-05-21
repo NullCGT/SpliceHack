@@ -1,4 +1,4 @@
-NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.535 $ $NHDT-Date: 1621208908 2021/05/16 23:48:28 $
+NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.540 $ $NHDT-Date: 1621387861 2021/05/19 01:31:01 $
 
 General Fixes and Modified Features
 -----------------------------------
@@ -121,6 +121,7 @@ tribute (Discworld snippets) typos, in book order rather than fix order:
 	 quote, passage #7 last paragraph, "to" -> "be"
 	Men at Arms passage #1, italicize /for/, passage #2, insert omitted
 	 word "had": 'it was /fate/ that _had_ let Edward'
+	Interesting Times passage #1, italicize several words
 	Hogfather passage #7 missing initial double quote for "Oh, just ...",
 	 also #7 insert missing "you" into "Why are you feeling [...]"
 	Soul Music passage #1, italicize /feel/, #8, "fossile" -> "fossil"
@@ -522,6 +523,13 @@ prediscovered weapons adjustmens:  only knights and samurai know polearms;
 if the move counter ever reaches 1000000000, end the game
 knights get no metal armor penalty for clerical spells
 change touch of death from instadeath to maxhp reduction and damage
+dying from being level-drained below level 1 killed hero without saying so
+	and jumped straight to "do you want your possessions identified?"
+conflict will now consider your charisma and requires line of sight
+boost hit points of some golems
+make anti-magic fields drain more energy and prevent them from showing up
+	too early in the dungeon
+eating magical monsters such as wizards or shamans may give a mild buzz
 
 
 Fixes to 3.7.0-x Problems that Were Exposed Via git Repository
@@ -679,6 +687,7 @@ forgetting an item's known/dknown/bknown/&c settings when picked up by unseen
 	monster made it possible to trigger a latent shop bug with globs;
 	avoid clearing dknown flag for globs
 fix globby_bill_fixup to use shopkeeper instead of Null for glob pricing
+applying a book to check readability treated novels as if they were spellbooks
 
 curses: 'msg_window' option wasn't functional for curses unless the binary
 	also included tty support
@@ -991,7 +1000,7 @@ using 'f' while quiver is empty and 'autoquiver' is Off when wielding a
 	thrown-and-return weapon will throw that weapon instead of filling
 	the quiver (inspired by xNetHack)
 3.6's tribute: add one new passage to Sourcery, three to Small Gods, one to
-	Lords and Ladies, two to Soul Music
+	Lords and Ladies, two to Soul Music, three to Interesting Times
 monsters can see and remember hero resistances
 
 

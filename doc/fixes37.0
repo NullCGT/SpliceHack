@@ -530,6 +530,10 @@ boost hit points of some golems
 make anti-magic fields drain more energy and prevent them from showing up
 	too early in the dungeon
 eating magical monsters such as wizards or shamans may give a mild buzz
+make exploding spheres create an actual explosion
+pets are more careful about attacking monsters at low health
+allow killing your quest leader to open the quest
+give King Arthur Excalibur
 
 
 Fixes to 3.7.0-x Problems that Were Exposed Via git Repository
@@ -688,6 +692,9 @@ forgetting an item's known/dknown/bknown/&c settings when picked up by unseen
 	avoid clearing dknown flag for globs
 fix globby_bill_fixup to use shopkeeper instead of Null for glob pricing
 applying a book to check readability treated novels as if they were spellbooks
+#version was leaving the 'in_lua' flag set and if subsequent 'O' issued an
+	error (example was an attempt to interactively set bouldersym to an
+	invalid value), the error reporting routine crashed via segfault
 
 curses: 'msg_window' option wasn't functional for curses unless the binary
 	also included tty support
@@ -887,6 +894,7 @@ split off some of the functionality that was in makedefs (compiled-in options
 	and accessed on the target platform
 replace quest.txt and associated conversion to quest.dat via makedefs with
 	Lua quest texts loaded at runtime
+callback lua functions from core at certain game actions
 some altars are displayed in different colors (for tty and curses at least)
 add 'quick_farsight' option to provide some control over random clairvoyance
 	where pausing to be able to browse temporarily visible aspects of the
@@ -1002,6 +1010,7 @@ using 'f' while quiver is empty and 'autoquiver' is Off when wielding a
 3.6's tribute: add one new passage to Sourcery, three to Small Gods, one to
 	Lords and Ladies, two to Soul Music, three to Interesting Times
 monsters can see and remember hero resistances
+monsters can gain resistances by eating corpses
 
 
 Platform- and/or Interface-Specific New Features

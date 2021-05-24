@@ -656,6 +656,7 @@ extern void morehungry(int);
 extern void lesshungry(int);
 extern boolean is_fainted(void);
 extern void reset_faint(void);
+extern int corpse_intrinsic(struct permonst *);
 extern void violated_vegetarian(void);
 extern void newuhs(boolean);
 extern struct obj *floorfood(const char *, int);
@@ -666,6 +667,7 @@ extern void food_substitution(struct obj *, struct obj *);
 extern void eating_conducts(struct permonst *);
 extern int eat_brains(struct monst *, struct monst *, boolean, int *);
 extern void fix_petrification(void);
+extern boolean should_givit(int, struct permonst *);
 extern void consume_oeaten(struct obj *, int);
 extern boolean maybe_finished_meal(boolean);
 extern void set_tin_variety(struct obj *, int);
@@ -736,6 +738,8 @@ extern void explode(int, int, int, int, char, int);
 extern long scatter(int, int, int, unsigned int, struct obj *);
 extern void splatter_burning_oil(int, int, boolean);
 extern void explode_oil(struct obj *, int, int);
+extern int adtyp_to_expltype(int);
+extern void mon_explodes(struct monst *, struct attack *);
 
 /* ### extralev.c ### */
 
@@ -1401,6 +1405,7 @@ extern int movemon(void);
 extern int meatmetal(struct monst *);
 extern int meatobj(struct monst *);
 extern int meatcorpse(struct monst *);
+extern void mon_givit(struct monst *, struct permonst *);
 extern void mpickgold(struct monst *);
 extern boolean mpickstuff(struct monst *, const char *);
 extern int curr_mon_load(struct monst *);
@@ -1668,6 +1673,9 @@ extern int l_obj_register(lua_State *);
 /* ### nhlua.c ### */
 
 #if !defined(CROSSCOMPILE) || defined(CROSSCOMPILE_TARGET)
+extern void l_nhcore_init(void);
+extern void l_nhcore_done(void);
+extern void l_nhcore_call(int);
 extern lua_State * nhl_init(void);
 extern void nhl_done(lua_State *);
 extern boolean nhl_loadlua(lua_State *, const char *);
@@ -2070,6 +2078,7 @@ extern void free_epri(struct monst *);
 
 extern void onquest(void);
 extern void nemdead(void);
+extern void leaddead(void);
 extern void artitouch(struct obj *);
 extern boolean ok_to_quest(void);
 extern void leader_speaks(struct monst *);
@@ -2751,6 +2760,7 @@ extern boolean do_stone_u(struct monst *);
 extern void do_stone_mon(struct monst *, struct attack *, struct monst *,
                          struct mhitm_data *);
 extern int damageum(struct monst *, struct attack *, int);
+extern int explum(struct monst *, struct attack *);
 extern void missum(struct monst *, struct attack *, boolean);
 extern int passive(struct monst *, struct obj *, boolean, boolean, uchar,
                    boolean);

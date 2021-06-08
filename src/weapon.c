@@ -10,6 +10,7 @@
  */
 #include "hack.h"
 
+static int weapon_distribution_bonus(int, boolean, int);
 static void give_may_advance_msg(int);
 static void finish_towel_change(struct obj *obj, int);
 static boolean could_advance(int);
@@ -164,6 +165,21 @@ weapon_descr(struct obj *obj)
     return makesingular(descr);
 }
 
+int
+base_hitbonus(struct obj *otmp) {
+    int tmp = 0;
+
+    boolean Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
+
+    if (Is_weapon)
+        tmp += otmp->spe;
+
+    /* Put weapon specific "to hit" bonuses in below: */
+    tmp += objects[otmp->otyp].oc_hitbon;
+
+    return tmp;
+}
+
 /*
  *      hitval returns an integer representing the "to hit" bonuses
  *      of "otmp" against the monster.
@@ -175,11 +191,8 @@ hitval(struct obj *otmp, struct monst *mon)
     struct permonst *ptr = mon->data;
     boolean Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
 
-    if (Is_weapon)
-        tmp += otmp->spe;
-
-    /* Put weapon specific "to hit" bonuses in below: */
-    tmp += objects[otmp->otyp].oc_hitbon;
+    /* Add the weapon's basic to-hit bonus */
+    tmp += base_hitbonus(otmp);
 
     /* Put weapon vs. monster type "to hit" bonuses in below: */
 
@@ -208,6 +221,138 @@ hitval(struct obj *otmp, struct monst *mon)
         tmp += spec_abon(otmp, mon);
 
     return tmp;
+}
+
+#define LOW_ROLL 1
+#define HIGH_ROLL 2
+#define AVERAGE_ROLL 3
+#define RANDOM_ROLL 4
+
+char*
+describe_dmgval(char *buf, struct obj *otmp, boolean bigmonst) {
+    boolean Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
+    int otyp = otmp->otyp;
+    int flatbon = bigmonst ? (objects[otyp].oc_wsdam ? objects[otyp].oc_wsdam : 0)
+                  : (objects[otyp].oc_wldam ? objects[otyp].oc_wldam : 0);
+    int low_dmg, high_dmg;
+
+    if (Is_weapon && otmp->known) {
+        flatbon += otmp->spe;
+        if (flatbon < 0)
+            flatbon = 0;
+    }
+
+    flatbon -= greatest_erosion(otmp);
+    if (flatbon < 1)
+        flatbon = 1;
+
+    low_dmg = 1 + weapon_distribution_bonus(otyp, bigmonst, LOW_ROLL);
+    high_dmg = flatbon + weapon_distribution_bonus(otyp, bigmonst, HIGH_ROLL);
+    
+    Sprintf(eos(buf), "%d-%d", low_dmg, high_dmg);
+    return buf;
+}
+
+static int
+weapon_distribution_bonus(int otyp, boolean bigmonst, int distribution) {
+    int num_dice = 0;
+    int sides = 0;
+    int ret;
+    if (bigmonst) {
+        switch (otyp) {
+        case IRON_CHAIN:
+        case CROSSBOW_BOLT:
+        case MORNING_STAR:
+        case NASTY_PIKE:
+        case RUNESWORD:
+        case ELVEN_BROADSWORD:
+        case BROADSWORD:
+            num_dice = 1;
+            sides = 1;
+            break;
+
+        case FLAIL:
+        case RANSEUR:
+        case VOULGE:
+        case SCYTHE:
+            num_dice = 1;
+            sides = 4;
+            break;
+
+        case ACID_VENOM:
+        case HALBERD:
+        case SPETUM:
+            num_dice = 1;
+            sides = 6;
+            break;
+
+        case BATTLE_AXE:
+        case BARDICHE:
+        case TRIDENT:
+        case SPIKED_CHAIN:
+            num_dice = 2;
+            sides = 4;
+            break;
+
+        case TSURUGI:
+        case DWARVISH_MATTOCK:
+        case TWO_HANDED_SWORD:
+            num_dice = 2;
+            sides = 6;
+            break;
+        }
+    } else {
+        switch (otyp) {
+        case IRON_CHAIN:
+        case CROSSBOW_BOLT:
+        case MACE:
+        case WAR_HAMMER:
+        case FLAIL:
+        case SPETUM:
+        case TRIDENT:
+        case SPIKED_CHAIN:
+            num_dice = 1;
+            sides = 1;
+            break;
+
+        case BATTLE_AXE:
+        case BARDICHE:
+        case BILL_GUISARME:
+        case GUISARME:
+        case LUCERN_HAMMER:
+        case MORNING_STAR:
+        case RANSEUR:
+        case BROADSWORD:
+        case ELVEN_BROADSWORD:
+        case RUNESWORD:
+        case VOULGE:
+        case SCYTHE:
+            num_dice = 1;
+            sides = 4;
+            break;
+
+        case ACID_VENOM:
+            num_dice = 1;
+            sides = 6;
+            break;
+        }
+    }
+
+    switch(distribution) {
+    case LOW_ROLL:
+        return num_dice;
+    case HIGH_ROLL:
+        return num_dice * sides;
+    case AVERAGE_ROLL:
+        return (int) (num_dice * sides / 2);
+        break;
+    case RANDOM_ROLL:
+    default:
+        d(num_dice, sides);
+        break;
+    }
+
+    return ret;
 }
 
 /* Historical note: The original versions of Hack used a range of damage
@@ -246,81 +391,14 @@ dmgval(struct obj *otmp, struct monst *mon)
     if (otyp == CREAM_PIE)
         return 0;
 
-    if (bigmonst(ptr)) {
-        if (objects[otyp].oc_wldam)
-            tmp = rnd(objects[otyp].oc_wldam);
-        switch (otyp) {
-        case IRON_CHAIN:
-        case CROSSBOW_BOLT:
-        case MORNING_STAR:
-        case NASTY_PIKE:
-        case RUNESWORD:
-        case ELVEN_BROADSWORD:
-        case BROADSWORD:
-            tmp++;
-            break;
-
-        case FLAIL:
-        case RANSEUR:
-        case VOULGE:
-        case SCYTHE:
-            tmp += rnd(4);
-            break;
-
-        case ACID_VENOM:
-        case HALBERD:
-        case SPETUM:
-            tmp += rnd(6);
-            break;
-
-        case BATTLE_AXE:
-        case BARDICHE:
-        case TRIDENT:
-        case SPIKED_CHAIN:
-            tmp += d(2, 4);
-            break;
-
-        case TSURUGI:
-        case DWARVISH_MATTOCK:
-        case TWO_HANDED_SWORD:
-            tmp += d(2, 6);
-            break;
-        }
-    } else {
-        if (objects[otyp].oc_wsdam)
-            tmp = rnd(objects[otyp].oc_wsdam);
-        switch (otyp) {
-        case IRON_CHAIN:
-        case CROSSBOW_BOLT:
-        case MACE:
-        case WAR_HAMMER:
-        case FLAIL:
-        case SPETUM:
-        case TRIDENT:
-        case SPIKED_CHAIN:
-            tmp++;
-            break;
-
-        case BATTLE_AXE:
-        case BARDICHE:
-        case BILL_GUISARME:
-        case GUISARME:
-        case LUCERN_HAMMER:
-        case MORNING_STAR:
-        case RANSEUR:
-        case BROADSWORD:
-        case ELVEN_BROADSWORD:
-        case RUNESWORD:
-        case VOULGE:
-        case SCYTHE:
-            tmp += rnd(4);
-            break;
-
-        case ACID_VENOM:
-            tmp += rnd(6);
-            break;
-        }
+    if (bigmonst(ptr) && objects[otyp].oc_wldam) {
+        tmp = rnd(objects[otyp].oc_wldam);
+    } else if (objects[otyp].oc_wsdam) {
+        tmp = rnd(objects[otyp].oc_wsdam);
     }
+
+    tmp += weapon_distribution_bonus(otyp, bigmonst(ptr), RANDOM_ROLL);
+
     if (Is_weapon) {
         tmp += otmp->spe;
     /* adjust for various materials */
@@ -425,6 +503,13 @@ dmgval(struct obj *otmp, struct monst *mon)
  * The most damaging source has precedence; each source that causes special
  * damage makes its own roll for damage, and the highest roll will be applied.
  */
+#undef LOW_ROLL
+#undef HIGH_ROLL
+#undef AVERAGE_ROLL
+#undef RANDOM_ROLL
+
+/* check whether blessed and/or silver damage applies for *non-weapon* hit;
+   return value is the amount of the extra damage */
 int
 special_dmgval(struct monst *magr,
                struct monst *mdef,

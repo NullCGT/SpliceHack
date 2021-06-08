@@ -1819,6 +1819,7 @@ extern boolean the_unique_obj(struct obj *);
 extern boolean the_unique_pm(struct permonst *);
 extern boolean erosion_matters(struct obj *);
 extern char *doname(struct obj *);
+extern char *doname_item_stats(struct obj *);
 extern char *doname_with_price(struct obj *);
 extern char *doname_vague_quan(struct obj *);
 extern boolean not_fully_identified(struct obj *);
@@ -3074,6 +3075,8 @@ extern int vms_get_saved_games(const char *, char ***);
 /* ### weapon.c ### */
 
 extern const char *weapon_descr(struct obj *);
+extern int base_hitbonus(struct obj *);
+extern char *describe_dmgval(char *, struct obj *, boolean);
 extern int hitval(struct obj *, struct monst *);
 extern int dmgval(struct obj *, struct monst *);
 extern int special_dmgval(struct monst *, struct monst *, long, struct obj **);

@@ -116,7 +116,7 @@ struct objclass {
     /* Check the AD&D rules!  The FIRST is small monster damage. */
     /* for weapons, and tools, rocks, and gems useful as weapons */
     schar oc_wsdam, oc_wldam; /* max small/large monster damage */
-    schar oc_oc1, oc_oc2;
+    schar oc_oc1, oc_oc2;/*, oc_oc3; */
 #define w_ammotyp	oc_oc2		/* type of ammo taken by ranged weapon */
 #define WP_GENERIC	0		/* all ammo subclasses ok */
 #define WP_BULLET	1
@@ -124,9 +124,11 @@ struct objclass {
 #define WP_ROCKET	3
 #define WP_GRENADE	4
 #define oc_hitbon oc_oc1 /* weapons: "to hit" bonus */
+/* #define w_acbon oc_oc3 */ /* weapons: ac bonus */
 
 #define a_ac oc_oc1     /* armor class, used in ARM_BONUS in do.c */
 #define a_can oc_oc2    /* armor: used in mhitu.c */
+/* #define a_dr oc_oc3 */     /* armor damage reduction */
 #define oc_level oc_oc2 /* books: spell level */
 
     unsigned short oc_nutrition; /* food value */

@@ -113,6 +113,11 @@ in its own way.
   Zuggotomoy.
 - Levels have dynamically generated names.
 
+Combat System Changes
+- [PLANNED] Luck no longer gives a to-hit bonus.
+- [PLANNED] Port dnethack BAB?
+- [PLANNED] Dexterity contributes to AC, but the amount it contributes depends on weight?
+
 Monster Changes
 - Many monsters have gender-variant names. For example, female pigs are sows.
 - Altered the tiles for gnolls again to bring them closer in line with other humanoid tiles.
@@ -217,10 +222,14 @@ Role Changes
   - Priests can be of any race.
 - Added a few new role/race/alignment combinations.
 
-Display Changes
+Interface Changes
 - Ridden monsters are highlighted in bright magenta.
 - The floor of the gnomish mines is rendered in the same color as the walls.
 - The walls of the black market have unique tiles in graphical builds.
+- Weapons and Armor now display their approximate AC, attack bonus, and damage.
+  - As a bonus, this allows the player to distinguish "fake artifacts" from real artifacts.
+- [PLANNED] Approximate attack bonus is displayed on the bottom line.
+- [PLANNED] Approximate damage is displayed on the bottom line.
 
 Balancing
 - Potions of paralysis injected via dipped weapons no longer paralyze monsters for rnd(25) turns.

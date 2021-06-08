@@ -996,12 +996,14 @@ erosion_matters(struct obj* obj)
 
 #define DONAME_WITH_PRICE 1
 #define DONAME_VAGUE_QUAN 2
+#define DONAME_ITEM_STATS 3
 
 static char *
 doname_base(struct obj* obj, unsigned int doname_flags)
 {
     boolean with_price = (doname_flags & DONAME_WITH_PRICE) != 0,
-            vague_quan = (doname_flags & DONAME_VAGUE_QUAN) != 0;
+            vague_quan = (doname_flags & DONAME_VAGUE_QUAN) != 0,
+            equip_stats = (doname_flags & DONAME_ITEM_STATS) != 0;
     boolean known, dknown, cknown, bknown, lknown;
     int ispoisoned = 0;
     int omndx = obj->corpsenm;
@@ -1363,6 +1365,31 @@ doname_base(struct obj* obj, unsigned int doname_flags)
             Strcat(bp, " (at the ready)");
         }
     }
+
+    if (equip_stats && (obj->oclass == WEAPON_CLASS || is_weptool(obj)) && !is_ammo(obj)) {
+        if (obj->oartifact) {
+            Sprintf(eos(bp), " [???]");
+        } else if (obj->known) {
+            Sprintf(eos(bp), " [+%d|", base_hitbonus(obj));
+            describe_dmgval(bp, obj, FALSE);
+            Sprintf(eos(bp), "|");
+            describe_dmgval(bp, obj, TRUE);
+            Sprintf(eos(bp), "]");
+        } else {
+            Sprintf(eos(bp), " [+%d|", objects[obj->otyp].oc_hitbon);
+            describe_dmgval(bp, obj, FALSE);
+            Sprintf(eos(bp), "|");
+            describe_dmgval(bp, obj, TRUE);
+            Sprintf(eos(bp), "]");
+        }
+    } else if (obj->oclass == ARMOR_CLASS) {
+        if (obj->known) {
+            Sprintf(eos(bp), " [%dAC]", objects[obj->otyp].a_ac + obj->spe);
+        } else {
+            Sprintf(eos(bp), " [%dAC]", objects[obj->otyp].a_ac);
+        }
+    }
+
     /* treat 'restoring' like suppress_price because shopkeeper and
        bill might not be available yet while restore is in progress
        (objects won't normally be formatted during that time, but if
@@ -1419,6 +1446,12 @@ char *
 doname_with_price(struct obj* obj)
 {
     return doname_base(obj, DONAME_WITH_PRICE);
+}
+
+char *
+doname_item_stats(struct obj* obj)
+{
+    return doname_base(obj, DONAME_ITEM_STATS);
 }
 
 /* "some" instead of precise quantity if obj->dknown not set */

@@ -95,6 +95,7 @@ private:
         NetHackQtLabelledIcon hp;     // current HP / maximum HP
         NetHackQtLabelledIcon power;  // current energy / maximum energy
         NetHackQtLabelledIcon ac;     // armor class
+		NetHackQtLabelledIcon tohit;  // to-hit bonus
         NetHackQtLabelledIcon level;  // Xp level / Exp points (if 'showexp')
         NetHackQtLabelledIcon blank1; // pads the line to six columns
         NetHackQtLabelledIcon gold;   // used to come before HP

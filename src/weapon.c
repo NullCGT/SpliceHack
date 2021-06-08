@@ -168,14 +168,56 @@ weapon_descr(struct obj *obj)
 int
 base_hitbonus(struct obj *otmp) {
     int tmp = 0;
+    boolean Is_weapon;
 
-    boolean Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
+    if (!otmp)
+        return 0;
+    
+    Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
 
     if (Is_weapon)
         tmp += otmp->spe;
 
     /* Put weapon specific "to hit" bonuses in below: */
     tmp += objects[otmp->otyp].oc_hitbon;
+
+    return tmp;
+}
+
+int
+botl_hitbonus()
+{
+    int tmp, tmp2;
+    uchar aatyp = g.youmonst.data->mattk[0].aatyp;
+    struct obj *weapon = uwep;
+
+    /* tmp = abon() + u.uhitinc + maybe_polyd(g.youmonst.data->mlevel, u.ulevel); */
+    tmp = abon() + u.uhitinc + (int) maybe_polyd(g.youmonst.data->mlevel, u.ulevel) * 3 / 4;
+
+    /* role/race adjustments */
+    if (Role_if(PM_MONK) && !Upolyd) {
+        if (uarm)
+            tmp -= g.urole.spelarmr;
+        else if (!uwep && !uarms)
+            tmp += (u.ulevel / 3) + 2;
+    }
+
+    if (uwep && (uwep->otyp == HEAVY_IRON_BALL)) {
+        tmp += 4;
+    }
+
+    if ((tmp2 = near_capacity()) != 0)
+        tmp -= (tmp2 * 2) - 1;
+    if (u.utrap)
+        tmp -= 3;
+
+    if (aatyp == AT_WEAP || aatyp == AT_CLAW) {
+        if (weapon)
+            tmp += base_hitbonus(uwep);
+        tmp += weapon_hit_bonus(weapon);
+    } else if (aatyp == AT_KICK && martial_bonus()) {
+        tmp += weapon_hit_bonus((struct obj *) 0);
+    }
 
     return tmp;
 }

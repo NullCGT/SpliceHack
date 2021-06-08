@@ -56,12 +56,13 @@
 #define F_POWER    12
 #define F_MAXPOWER 13
 #define F_AC       14
-#define F_XP_LEVL  15
+#define F_TOHIT    15
+#define F_XP_LEVL  16
 /*#define F_HD F_XP_LEVL*/
-#define F_EXP_PTS  16
-#define F_ALIGN    17
-#define F_TIME     18
-#define F_SCORE    19
+#define F_EXP_PTS  17
+#define F_ALIGN    18
+#define F_TIME     19
+#define F_SCORE    20
 
 /* status conditions grouped by columns; tty orders these differently;
    hunger/encumbrance/movement used to be in the middle with fatal
@@ -69,32 +70,32 @@
    renumbered to match new order (forcing shown_stats[] to be reordered);
    some mutually exclusive conditions are overloaded during display--
    they're separate within shown_stats[] but share the same widget */
-#define F_HUNGER   20
-#define F_ENCUMBER 21
-#define F_TRAPPED  22
-#define F_TETHERED 23 /* overloads trapped rather than having its own slot */
-#define F_LEV      24
-#define F_FLY      25
-#define F_RIDE     26
+#define F_HUNGER   21
+#define F_ENCUMBER 22
+#define F_TRAPPED  23
+#define F_TETHERED 24 /* overloads trapped rather than having its own slot */
+#define F_LEV      25
+#define F_FLY      26
+#define F_RIDE     27
 
-#define F_GRABBED  27
-#define F_STONE    28
-#define F_SLIME    29
-#define F_STRNGL   30
-#define F_FOODPOIS 31
-#define F_TERMILL  32
-#define F_IN_LAVA  33 /* could overload trapped but severity differs a lot */
+#define F_GRABBED  28
+#define F_STONE    29
+#define F_SLIME    30
+#define F_STRNGL   31
+#define F_FOODPOIS 32
+#define F_TERMILL  33
+#define F_IN_LAVA  34 /* could overload trapped but severity differs a lot */
 
-#define F_HELD     34 /* could overload grabbed but severity differs a lot */
-#define F_HOLDING  35 /* overloads held */
-#define F_BLIND    36
-#define F_DEAF     37
-#define F_STUN     38
-#define F_CONF     39
-#define F_HALLU    40
-#define F_AFRAID   41
+#define F_HELD     35 /* could overload grabbed but severity differs a lot */
+#define F_HOLDING  36 /* overloads held */
+#define F_BLIND    37
+#define F_DEAF     38
+#define F_STUN     39
+#define F_CONF     40
+#define F_HALLU    41
+#define F_AFRAID   42
 
-#define NUM_STATS  42
+#define NUM_STATS  43
 
 static int condcolor(long, unsigned long *);
 static int condattr(long, unsigned long *);
@@ -141,7 +142,7 @@ static enum statusfields X11_fieldorder[][X11_NUM_STATUS_FIELD] = {
       BL_SCORE, BL_FLUSH, BL_FLUSH, BL_FLUSH, BL_FLUSH, BL_FLUSH,
       BL_FLUSH },
     { BL_LEVELDESC, BL_GOLD, BL_HP, BL_HPMAX, BL_ENE, BL_ENEMAX,
-      BL_AC, BL_XP, BL_EXP, BL_HD, BL_TIME, BL_HUNGER,
+      BL_AC, BL_TOHIT, BL_XP, BL_EXP, BL_HD, BL_TIME, BL_HUNGER,
       BL_CAP, BL_CONDITION, BL_FLUSH }
 };
 
@@ -840,6 +841,7 @@ X11_status_update_fancy(int fld, genericptr_t ptr, int chg UNUSED,
         { BL_ENEMAX, F_MAXPOWER },
         { BL_XP, F_XP_LEVL }, /* shares with BL_HD, depending upon Upolyd */
         { BL_AC, F_AC },
+        { BL_TOHIT, F_TOHIT },
         { BL_TIME, F_TIME },
         { BL_HUNGER, F_HUNGER },
         { BL_HP, F_HP },
@@ -1893,6 +1895,9 @@ update_fancy_status_field(int i, int color, int attributes)
         case F_AC:
             val = (long) u.uac;
             break;
+        case F_TOHiT;
+            val = (long) botl_hitbonus();
+            break;
         case F_XP_LEVL:
             val = (long) (Upolyd ? mons[u.umonnum].mlevel : u.ulevel);
             break;
@@ -2066,6 +2071,8 @@ width_string(int sv_index)
         return "9999";
     case F_AC:
         return "-127";
+    case F_TOHIT:
+        return "127";
     case F_XP_LEVL:
         return "99";
     case F_GOLD:
@@ -2292,8 +2299,8 @@ static int status_indices[3][11] = {
 /* used to fill up the empty space to right of 3rd status condition column */
 static int leftover_indices[] = { F_DUMMY, -1, 0, 0 };
 /* -2: top two rows of these columns are reserved for title and location */
-static int col1_indices[11 - 2] = {
-    F_HP,    F_POWER,    F_AC,    F_XP_LEVL, F_GOLD,  F_DUMMY,  -1, 0, 0
+static int col1_indices[12 - 2] = {
+    F_HP,    F_POWER,    F_AC,    F_TOHIT,    F_XP_LEVL, F_GOLD,  F_DUMMY,  -1, 0, 0
 };
 static int col2_indices[11 - 2] = {
     F_MAXHP, F_MAXPOWER, F_ALIGN, F_EXP_PTS, F_SCORE, F_TIME,   -1, 0, 0

@@ -283,8 +283,10 @@ find_roll_to_hit(struct monst *mtmp,
 
     *role_roll_penalty = 0; /* default is `none' */
 
-    tmp = 1 + Luck + abon() + find_mac(mtmp) + u.uhitinc
-          + maybe_polyd(g.youmonst.data->mlevel, u.ulevel);
+    /* In SpliceHack, luck and character level are not a factor */
+    /* tmp = 1 + Luck + abon() + find_mac(mtmp) + u.uhitinc
+          + maybe_polyd(g.youmonst.data->mlevel, u.ulevel); */
+    tmp = 1 + abon() + find_mac(mtmp) + u.uhitinc + (int) (maybe_polyd(g.youmonst.data->mlevel, u.ulevel) * 3 / 4);
 
     /* some actions should occur only once during multiple attacks */
     if (!(*attk_count)++) {

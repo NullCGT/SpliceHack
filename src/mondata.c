@@ -714,7 +714,7 @@ struct alt_spl {
 /* figure out what type of monster a user-supplied string is specifying;
    ingore anything past the monster name */
 int
-name_to_mon(const char *in_str, int * gender_name_var)
+name_to_mon(const char *in_str, int *gender_name_var)
 {
     return name_to_monplus(in_str, (const char **) 0, gender_name_var);
 }
@@ -750,6 +750,8 @@ name_to_monplus(
 
     if (remainder_p)
         *remainder_p = (const char *) 0;
+    if (gender_name_var)
+        *gender_name_var = 0;
 
     str = strcpy(buf, in_str);
 
@@ -805,7 +807,7 @@ name_to_monplus(
             /* Outdated names */
             { "invisible stalker", PM_STALKER, NEUTRAL },
             { "high-elf", PM_ELVEN_MONARCH, NEUTRAL }, /* PM_HIGH_ELF is obsolete */
-            /* {"substance warper", PM_TRANSMUTER, NEUTRAL }, */
+            {"substance warper", PM_TRANSMUTER, NEUTRAL },
             { "nova fox", PM_VULPENFERNO, NEUTRAL },
             /* other misspellings or incorrect words */
             { "wood-elf", PM_WOODLAND_ELF, NEUTRAL },
@@ -813,7 +815,7 @@ name_to_monplus(
             { "woodland nymph", PM_WOOD_NYMPH, NEUTRAL },
             { "halfling", PM_HOBBIT, NEUTRAL },    /* potential guess for polyself */
             { "genie", PM_DJINNI, NEUTRAL }, /* potential guess for ^G/#wizgenesis */
-            /* {"ifrit", PM_EFREET, NEUTRAL }, */
+            {"ifrit", PM_EFREET, NEUTRAL },
             { "eye of flame and fear", PM_EYE_OF_FEAR_AND_FLAME, NEUTRAL },
             /* prefix used to workaround duplicate monster names for
                monsters with alternate forms */

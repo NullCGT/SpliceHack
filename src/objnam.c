@@ -1371,12 +1371,16 @@ doname_base(struct obj* obj, unsigned int doname_flags)
             Sprintf(eos(bp), " [???]");
         } else if (obj->known) {
             Sprintf(eos(bp), " [+%d|", base_hitbonus(obj));
+            if (W_ARM_BONUS(obj) > 0)
+                Sprintf(eos(bp), "%dAC|", W_ARM_BONUS(obj));
             describe_dmgval(bp, obj, FALSE);
             Sprintf(eos(bp), "|");
             describe_dmgval(bp, obj, TRUE);
             Sprintf(eos(bp), "]");
         } else {
             Sprintf(eos(bp), " [+%d|", objects[obj->otyp].oc_hitbon);
+            if (W_ARM_BONUS(obj) > 0)
+                Sprintf(eos(bp), "%dAC|", W_ARM_BONUS(obj));
             describe_dmgval(bp, obj, FALSE);
             Sprintf(eos(bp), "|");
             describe_dmgval(bp, obj, TRUE);

@@ -645,6 +645,9 @@ basics_enlightenment(int mode UNUSED, int final)
                 (u.uac < 0) ? "best" : "worst");
     enl_msg("Your armor class ", "is ", "was ", buf, "");
 
+    Sprintf(buf, "%d", botl_hitbonus());
+    enl_msg("Your to-hit bonus ", "is ", "was ", buf, "");
+
     /* gold; similar to doprgold(#seegold) but without shop billing info;
        same amount as shown on status line which ignores container contents */
     {

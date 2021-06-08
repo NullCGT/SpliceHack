@@ -596,6 +596,10 @@ enum optset_restrictions {
      - min((int) greatest_erosion(obj), \
           objects[(obj)->otyp].a_ac + material_bonus(obj)))
 
+#define W_ARM_BONUS(obj) \
+    ((is_weptool((obj)) || (obj)->oclass == WEAPON_CLASS) ? \
+        (objects[(obj)->otyp].w_acbon) : 0)
+
 #define makeknown(x) discover_object((x), TRUE, TRUE)
 #define distu(xx, yy) dist2((int)(xx), (int)(yy), (int) u.ux, (int) u.uy)
 #define onlineu(xx, yy) online2((int)(xx), (int)(yy), (int) u.ux, (int) u.uy)

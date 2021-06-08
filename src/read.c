@@ -1686,6 +1686,9 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
             sobj = 0; /* nothing enchanted: strange_feeling -> useup */
         if (uwep)
             cap_spe(uwep);
+
+        /* Update to-hit bonus on botl */
+        g.context.botl = 1;
         break;
     case SCR_TAMING:
     case SPE_CHARM_MONSTER: {

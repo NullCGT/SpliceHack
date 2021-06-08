@@ -2292,6 +2292,8 @@ find_ac(void)
         uac -= uright->spe;
     if (uamul && uamul->otyp == AMULET_OF_GUARDING)
         uac -= 2; /* fixed amount; main benefit is to MC */
+    if (uwep)
+        uac -= W_ARM_BONUS(uwep);
 
     /* armor class from other sources */
     if (HProtection & INTRINSIC)

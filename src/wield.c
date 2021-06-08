@@ -421,6 +421,9 @@ dowield(void)
     if (flags.pushweapon && oldwep && uwep != oldwep)
         setuswapwep(oldwep);
     untwoweapon();
+    
+    /* Update botl with new weapon */
+    g.context.botl = TRUE;
 
     return result;
 }

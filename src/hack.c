@@ -3253,6 +3253,7 @@ nomul(int nval)
     if (nval == 0)
         g.multi_reason = NULL, g.multireasonbuf[0] = '\0';
     end_running(TRUE);
+    cmdq_clear();
 }
 
 /* called when a non-movement, multi-turn action has completed */

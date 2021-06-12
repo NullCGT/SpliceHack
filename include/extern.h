@@ -471,6 +471,8 @@ extern void mintroduce(struct monst *);
 extern int Mgender(struct monst *);
 extern const char *pmname(struct permonst *, int);
 #endif
+extern const char *mon_pmname(struct monst *);
+extern const char *obj_pmname(struct obj *);
 
 /* ### do_wear.c ### */
 

@@ -1,4 +1,4 @@
-/* NetHack 3.7	mondata.c	$NHDT-Date: 1623489867 2021/06/12 09:24:27 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.95 $ */
+/* NetHack 3.7	mondata.c	$NHDT-Date: 1624232729 2021/06/20 23:45:29 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.97 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1282,7 +1282,7 @@ stagger(const struct permonst* ptr, const char* def)
 
 /* return phrase describing the effect of fire attack on a type of monster */
 const char *
-on_fire(struct permonst* mptr, struct attack* mattk)
+on_fire(struct permonst *mptr, struct attack *mattk)
 {
     const char *what;
 
@@ -1316,6 +1316,50 @@ on_fire(struct permonst* mptr, struct attack* mattk)
         break;
     default:
         what = (mattk->aatyp == AT_HUGS) ? "being roasted" : "on fire";
+        break;
+    }
+    return what;
+}
+
+/* similar to on_fire(); creature is summoned in a cloud of <something> */
+const char *
+msummon_environ(struct permonst *mptr)
+{
+    const char *what;
+
+    switch (monsndx(mptr)) {
+    case PM_WATER_DEMON:
+    case PM_AIR_ELEMENTAL:
+    case PM_ICE_ELEMENTAL:
+    case PM_WATER_ELEMENTAL:
+    case PM_FOG_CLOUD:
+    case PM_ICE_VORTEX:
+        what = "vapor";
+        break;
+    case PM_STEAM_VORTEX:
+    case PM_MUD_ELEMENTAL:
+        what = "steam";
+        break;
+    case PM_ACID_ELEMENTAL:
+        what = "toxic fumes";
+        break;
+    case PM_ENERGY_VORTEX:
+    case PM_PLASMA_ELEMENTAL:
+        what = "sparks";
+        break;
+    case PM_EARTH_ELEMENTAL:
+    case PM_DUST_VORTEX:
+        what = "dust";
+        break;
+    case PM_FIRE_ELEMENTAL:
+    case PM_MAGMA_ELEMENTAL:
+        what = "flame";
+        break;
+    case PM_FUSION_ELEMENTAL:
+        what = "elements";
+        break;
+    default:
+        what = "smoke";
         break;
     }
     return what;

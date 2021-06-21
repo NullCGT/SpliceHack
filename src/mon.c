@@ -624,7 +624,7 @@ make_corpse(struct monst *mtmp, unsigned int corpseflags)
             if (!valid_obj_material(obj, GLASS)
                 || obj->oclass == POTION_CLASS) {
                 delobj(obj);
-                obj = mksobj_at((LAST_GEM + rnd(9)), x, y, TRUE, FALSE);
+                obj = mksobj_at(LAST_GEM + rnd(NUM_GLASS_GEMS), x, y, TRUE, FALSE);
             }
             obj->material = GLASS;
         }

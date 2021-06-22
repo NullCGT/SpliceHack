@@ -1,4 +1,4 @@
-/* NetHack 3.7	mondata.c	$NHDT-Date: 1624232729 2021/06/20 23:45:29 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.97 $ */
+/* NetHack 3.7	mondata.c	$NHDT-Date: 1624322866 2021/06/22 00:47:46 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.98 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -1323,11 +1323,13 @@ on_fire(struct permonst *mptr, struct attack *mattk)
 
 /* similar to on_fire(); creature is summoned in a cloud of <something> */
 const char *
-msummon_environ(struct permonst *mptr)
+msummon_environ(struct permonst *mptr, const char **cloud)
 {
     const char *what;
+    int mndx = (mptr->mlet != S_ANGEL) ? monsndx(mptr) : PM_ANGEL;
 
-    switch (monsndx(mptr)) {
+    *cloud = "cloud"; /* default is "cloud of <something>" */
+    switch (mndx) {
     case PM_WATER_DEMON:
     case PM_AIR_ELEMENTAL:
     case PM_ICE_ELEMENTAL:
@@ -1345,6 +1347,7 @@ msummon_environ(struct permonst *mptr)
         break;
     case PM_ENERGY_VORTEX:
     case PM_PLASMA_ELEMENTAL:
+        *cloud = "shower"; /* "shower of" instead of "cloud of" */
         what = "sparks";
         break;
     case PM_EARTH_ELEMENTAL:
@@ -1352,11 +1355,20 @@ msummon_environ(struct permonst *mptr)
         what = "dust";
         break;
     case PM_FIRE_ELEMENTAL:
-    case PM_MAGMA_ELEMENTAL:
+        *cloud = "burst"; /* "burst of" instead of "cloud of" */
         what = "flame";
         break;
+    case PM_MAGMA_ELEMENTAL:
+        *cloud = "eruption";
+        what = "lava";
+        break;
     case PM_FUSION_ELEMENTAL:
-        what = "elements";
+        *cloud = "swarm";
+        what = "elemental energy";
+        break;
+    case PM_ANGEL: /* actually any 'A'-class */
+        *cloud = "flash"; /* "flash of" instead of "cloud of" */
+        what = "light";
         break;
     default:
         what = "smoke";
@@ -1375,7 +1387,7 @@ msummon_environ(struct permonst *mptr)
  * We're assuming all insects can smell at a distance too.
  */
 boolean
-olfaction(struct permonst* mdat)
+olfaction(struct permonst *mdat)
 {
     if (is_golem(mdat)
         || mdat->mlet == S_EYE /* spheres  */

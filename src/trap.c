@@ -5823,6 +5823,22 @@ t_at(register int x, register int y)
     return (struct trap *) 0;
 }
 
+/* return number of traps of type ttyp on this level */
+int
+count_traps(int ttyp)
+{
+    int ret = 0;
+    struct trap *trap = g.ftrap;
+
+    while (trap) {
+        if (trap->ttyp == ttyp)
+            ret++;
+        trap = trap->ntrap;
+    }
+
+    return ret;
+}
+
 void
 deltrap(register struct trap* trap)
 {

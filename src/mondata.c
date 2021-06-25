@@ -1326,7 +1326,9 @@ const char *
 msummon_environ(struct permonst *mptr, const char **cloud)
 {
     const char *what;
-    int mndx = (mptr->mlet != S_ANGEL) ? monsndx(mptr) : PM_ANGEL;
+    int mndx = ((mptr->mlet == S_ANGEL) ? PM_ANGEL
+                : (mptr->mlet == S_LIGHT) ? PM_YELLOW_LIGHT
+                  : monsndx(mptr));
 
     *cloud = "cloud"; /* default is "cloud of <something>" */
     switch (mndx) {
@@ -1336,6 +1338,7 @@ msummon_environ(struct permonst *mptr, const char **cloud)
     case PM_WATER_ELEMENTAL:
     case PM_FOG_CLOUD:
     case PM_ICE_VORTEX:
+    case PM_FREEZING_SPHERE:
         what = "vapor";
         break;
     case PM_STEAM_VORTEX:
@@ -1347,7 +1350,8 @@ msummon_environ(struct permonst *mptr, const char **cloud)
         break;
     case PM_ENERGY_VORTEX:
     case PM_PLASMA_ELEMENTAL:
-        *cloud = "shower"; /* "shower of" instead of "cloud of" */
+    case PM_SHOCKING_SPHERE:
+        *cloud = "shower"; /* "shower of sparks" instead of "cloud of..." */
         what = "sparks";
         break;
     case PM_EARTH_ELEMENTAL:
@@ -1355,7 +1359,10 @@ msummon_environ(struct permonst *mptr, const char **cloud)
         what = "dust";
         break;
     case PM_FIRE_ELEMENTAL:
-        *cloud = "burst"; /* "burst of" instead of "cloud of" */
+    case PM_FIRE_VORTEX:
+    case PM_FLAMING_SPHERE:
+    /*case PM_SALAMANDER:*/
+        *cloud = "ball"; /* "ball of flame" instead of "cloud of..." */
         what = "flame";
         break;
     case PM_MAGMA_ELEMENTAL:
@@ -1367,7 +1374,8 @@ msummon_environ(struct permonst *mptr, const char **cloud)
         what = "elemental energy";
         break;
     case PM_ANGEL: /* actually any 'A'-class */
-        *cloud = "flash"; /* "flash of" instead of "cloud of" */
+    case PM_YELLOW_LIGHT: /* any 'y'-class */
+        *cloud = "flash"; /* "flash of light" instead of "cloud of..." */
         what = "light";
         break;
     default:

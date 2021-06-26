@@ -378,7 +378,7 @@ join(register int a, register int b, boolean nxcor)
     yy = cc.y;
     tx = tt.x - dx;
     ty = tt.y - dy;
-    if (nxcor && levl[xx + dx][yy + dy].typ)
+    if (nxcor && levl[xx + dx][yy + dy].typ != STONE)
         return;
     if (okdoor(xx, yy) || !nxcor)
         dodoor(xx, yy, croom);

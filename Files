@@ -47,6 +47,7 @@ Val-strt.lua  Wiz-fila.lua  Wiz-filb.lua  Wiz-goal.lua  Wiz-loca.lua
 Wiz-strt.lua  air.lua       asmodeus.lua  astral.lua    baalz.lua
 bigrm-1.lua   bigrm-2.lua   bigrm-3.lua   bigrm-4.lua   bigrm-5.lua
 bigrm-6.lua   bigrm-7.lua   bigrm-8.lua   bigrm-9.lua   bigrm-10.lua
+bigrm-11.lua
 bogusmon.txt  castle.lua    cmdhelp       data.base     dungeon.lua
 earth.lua     engrave.txt   epitaph.txt   fakewiz1.lua  fakewiz2.lua
 fire.lua      help          hh            history       juiblex.lua

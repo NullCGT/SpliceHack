@@ -1282,6 +1282,12 @@ rloc(
         return TRUE;
     }
 
+    if (mtmp->rider_id) {
+        /* teleport rider along with steed */
+        struct monst *rider = get_mon_rider(mtmp);
+        return rloc(rider, suppress_impossible);
+    }
+
     if (mtmp->iswiz && mtmp->mx) { /* Wizard, not just arriving */
         stairway *stway;
 

@@ -32,6 +32,7 @@
 - Unlocking tools can degrade and break.
 
 ### Small Tweaks / Bugfixes
+- If monster steed is teleported, take its rider along with it.
 - Fixed manticore spikes causing an error when initializing objects.
 - Moved manticore spikes out of the venoms class.
 - Fixed manticore spikes producing error messages when thrown.

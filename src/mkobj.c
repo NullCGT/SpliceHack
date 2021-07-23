@@ -7,7 +7,6 @@
 
 static void mkbox_cnts(struct obj *);
 static unsigned nextoid(struct obj *, struct obj *);
-static void maybe_adjust_light(struct obj *, int);
 static void obj_timer_checks(struct obj *, xchar, xchar, int);
 static void container_weight(struct obj *);
 static struct obj *save_mtraits(struct obj *, struct monst *);
@@ -1373,8 +1372,8 @@ start_corpse_timeout(struct obj* body)
     (void) start_timer(when, TIMER_OBJECT, action, obj_to_any(body));
 }
 
-static void
-maybe_adjust_light(struct obj* obj, int old_range)
+void
+maybe_adjust_light(struct obj *obj, int old_range)
 {
     char buf[BUFSZ];
     xchar ox, oy;
@@ -1384,9 +1383,9 @@ maybe_adjust_light(struct obj* obj, int old_range)
        so will change after blessing or cursing */
     if (delta) {
         obj_adjust_light_radius(obj, new_range);
-        /* simplifying assumptions:  hero is wielding this object;
-           artifacts have to be in use to emit light and monsters'
-           gear won't change bless or curse state */
+        /* simplifying assumptions:  hero is wielding or wearing this object;
+           artifacts have to be in use to emit light and monsters' gear won't
+           change bless or curse state */
         if (!Blind && get_obj_location(obj, &ox, &oy, 0)) {
             *buf = '\0';
             if (iflags.last_msg == PLNMSG_OBJ_GLOWS)

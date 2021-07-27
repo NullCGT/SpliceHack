@@ -1812,6 +1812,7 @@ back_to_glyph(xchar x, xchar y)
 {
     int idx;
     struct rm *ptr = &(levl[x][y]);
+    struct stairway *sway;
 
     switch (ptr->typ) {
     case SCORR:
@@ -1863,10 +1864,18 @@ back_to_glyph(xchar x, xchar y)
         idx = S_pool;
         break;
     case STAIRS:
-        idx = (ptr->ladder & LA_DOWN) ? S_dnstair : S_upstair;
+        sway = stairway_at(x, y);
+        if (sway && (sway->tolev.dnum != u.uz.dnum))
+            idx = (ptr->ladder & LA_DOWN) ? S_brdnstair : S_brupstair;
+        else
+            idx = (ptr->ladder & LA_DOWN) ? S_dnstair : S_upstair;
         break;
     case LADDER:
-        idx = (ptr->ladder & LA_DOWN) ? S_dnladder : S_upladder;
+        sway = stairway_at(x, y);
+        if (sway && (sway->tolev.dnum != u.uz.dnum))
+            idx = (ptr->ladder & LA_DOWN) ? S_brdnladder : S_brupladder;
+        else
+            idx = (ptr->ladder & LA_DOWN) ? S_dnladder : S_upladder;
         break;
     case FOUNTAIN:
         idx = S_fountain;
@@ -2288,13 +2297,6 @@ map_glyphinfo(xchar x, xchar y, int glyph,
         } else if (iflags.use_color && offset == S_litcorr
                    && g.showsyms[idx] == g.showsyms[S_corr + SYM_OFF_P]) {
             color = CLR_WHITE;
-        /* show branch stairs in a different color */
-        } else if (iflags.use_color
-                   && (offset == S_upstair || offset == S_dnstair)
-                   && ((sway = stairway_at(x, y)) != 0 && sway->tolev.dnum != u.uz.dnum)
-                   && (g.showsyms[idx] == g.showsyms[S_upstair + SYM_OFF_P]
-                       || g.showsyms[idx] == g.showsyms[S_dnstair + SYM_OFF_P])) {
-            color = CLR_YELLOW;
         } else if (iflags.use_color && offset >= S_vwall && offset <= S_trwall) {
             /* special room walls */
             if (getroomtype(x, y) == BEEHIVE && !On_W_tower_level(&u.uz))

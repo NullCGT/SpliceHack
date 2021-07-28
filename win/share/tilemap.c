@@ -699,7 +699,7 @@ struct {
     int idx;
     const char *betterlabel;
     const char *expectedlabel;
-} altlabels[] = {
+} altlabels[MAXPCHARS] = {
 {S_stone,    "dark part of a room", "dark part of a room"},
 {S_vwall,    "vertical wall", "wall"},
 {S_hwall,    "horizontal wall", "wall"},

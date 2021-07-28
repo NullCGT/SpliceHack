@@ -55,7 +55,7 @@ MAXPLAYERS=0
 
 # If not null, added to string "To get local support, " in the support
 # information help.
-SUPPORT=yell at AntiGulp on freenode irc channel #hardfought.
+SUPPORT=yell at AntiGulp on channel #hardfought at irc server Libera.chat.
 
 # If not null, displayed at the end of a panic-save sequence.
 #RECOVER=Run the recover program.

@@ -978,7 +978,9 @@ nhl_doturn(lua_State *L)
 }
 
 /* set debugging flags. debugging use only, of course. */
-/* nh.debug_flags({ mongen = false, hunger = false }); */
+/* nh.debug_flags({ mongen = false,
+                    hunger = false,
+                    overwrite_stairs = true }); */
 static int
 nhl_debug_flags(lua_State *L)
 {
@@ -1006,6 +1008,12 @@ nhl_debug_flags(lua_State *L)
     val = get_table_boolean_opt(L, "hunger", -1);
     if (val != -1) {
         iflags.debug_hunger = !(boolean)val; /* value in lua is negated */
+    }
+
+    /* allow overwriting stairs */
+    val = get_table_boolean_opt(L, "overwrite_stairs", -1);
+    if (val != -1) {
+        iflags.debug_overwrite_stairs = (boolean)val;
     }
 
     return 0;

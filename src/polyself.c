@@ -438,7 +438,7 @@ polyself(int psflags)
     old_light = emits_light(g.youmonst.data);
     mntmp = NON_PM;
 
-    if (formrevert){
+    if (formrevert) {
         mntmp = g.youmonst.cham;
         monsterpoly = TRUE;
         controllable_poly = FALSE;
@@ -482,6 +482,7 @@ polyself(int psflags)
                 /* in wizard mode, picking own role while poly'd reverts to
                    normal without newman()'s chance of level or sex change */
                 rehumanize();
+                old_light = 0; /* rehumanize() extinguishes u-as-mon light */
                 goto made_change;
             } else if (iswere && (were_beastie(mntmp) == u.ulycn
                                   || mntmp == counter_were(u.ulycn)

@@ -1,4 +1,4 @@
-/* NetHack 3.7	mkobj.c	$NHDT-Date: 1620923920 2021/05/13 16:38:40 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.200 $ */
+/* NetHack 3.7	mkobj.c	$NHDT-Date: 1629332223 2021/08/19 00:17:03 $  $NHDT-Branch: NetHack-3.7 $:$NHDT-Revision: 1.204 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Derek S. Ray, 2015. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -12,6 +12,7 @@ static void container_weight(struct obj *);
 static struct obj *save_mtraits(struct obj *, struct monst *);
 static void objlist_sanity(struct obj *, int, const char *);
 static void mon_obj_sanity(struct monst *, const char *);
+static void insane_obj_bits(struct obj *, struct monst *);
 static const char *where_name(struct obj *);
 static void insane_object(struct obj *, const char *, const char *,
                           struct monst *);
@@ -81,7 +82,7 @@ static const struct icp nofoodprobs[] = { { 12, WEAPON_CLASS },
 static const struct oextra zerooextra = DUMMY;
 
 static void
-init_oextra(struct oextra* oex)
+init_oextra(struct oextra *oex)
 {
     *oex = zerooextra;
 }
@@ -97,7 +98,7 @@ newoextra(void)
 }
 
 void
-dealloc_oextra(struct obj* o)
+dealloc_oextra(struct obj *o)
 {
     struct oextra *x = o->oextra;
 
@@ -115,7 +116,7 @@ dealloc_oextra(struct obj* o)
 }
 
 void
-newomonst(struct obj* otmp)
+newomonst(struct obj *otmp)
 {
     if (!otmp->oextra)
         otmp->oextra = newoextra();
@@ -129,7 +130,7 @@ newomonst(struct obj* otmp)
 }
 
 void
-free_omonst(struct obj* otmp)
+free_omonst(struct obj *otmp)
 {
     if (otmp->oextra) {
         struct monst *m = OMONST(otmp);
@@ -144,7 +145,7 @@ free_omonst(struct obj* otmp)
 }
 
 void
-newomid(struct obj* otmp)
+newomid(struct obj *otmp)
 {
     if (!otmp->oextra)
         otmp->oextra = newoextra();
@@ -152,13 +153,13 @@ newomid(struct obj* otmp)
 }
 
 void
-free_omid(struct obj* otmp)
+free_omid(struct obj *otmp)
 {
     OMID(otmp) = 0;
 }
 
 void
-new_omailcmd(struct obj* otmp, const char * response_cmd)
+new_omailcmd(struct obj *otmp, const char *response_cmd)
 {
     if (!otmp->oextra)
         otmp->oextra = newoextra();
@@ -168,7 +169,7 @@ new_omailcmd(struct obj* otmp, const char * response_cmd)
 }
 
 void
-free_omailcmd(struct obj* otmp)
+free_omailcmd(struct obj *otmp)
 {
     if (otmp->oextra && OMAILCMD(otmp)) {
         free((genericptr_t) OMAILCMD(otmp));
@@ -258,7 +259,7 @@ mkobj(int oclass, boolean artif)
 }
 
 static void
-mkbox_cnts(struct obj* box)
+mkbox_cnts(struct obj *box)
 {
     register int n;
     register struct obj *otmp;
@@ -363,7 +364,7 @@ rndmonnum(void)
 }
 
 void
-copy_oextra(struct obj* obj2, struct obj* obj1)
+copy_oextra(struct obj *obj2, struct obj *obj1)
 {
     if (!obj2 || !obj1 || !obj1->oextra)
         return;
@@ -404,7 +405,7 @@ copy_oextra(struct obj* obj2, struct obj* obj1)
  * in the nobj chain (and nexthere chain when on the floor).
  */
 struct obj *
-splitobj(struct obj* obj, long num)
+splitobj(struct obj *obj, long num)
 {
     struct obj *otmp;
 
@@ -445,7 +446,7 @@ splitobj(struct obj* obj, long num)
 /* when splitting a stack that has o_id-based shop prices, pick an
    o_id value for the new stack that will maintain the same price */
 static unsigned
-nextoid(struct obj* oldobj, struct obj* newobj)
+nextoid(struct obj *oldobj, struct obj *newobj)
 {
     int olddif, newdif, trylimit = 256; /* limit of 4 suffices at present */
     unsigned oid = g.context.ident - 1; /* loop increment will reverse -1 */
@@ -464,7 +465,7 @@ nextoid(struct obj* oldobj, struct obj* newobj)
 /* try to find the stack obj was split from, then merge them back together;
    returns the combined object if unsplit is successful, null otherwise */
 struct obj *
-unsplitobj(struct obj* obj)
+unsplitobj(struct obj *obj)
 {
     unsigned target_oid = 0;
     struct obj *oparent = 0, *ochild = 0, *list = 0;
@@ -549,7 +550,7 @@ clear_splitobjs(void)
  * not actually moving something.
  */
 void
-replace_object(struct obj* obj, struct obj* otmp)
+replace_object(struct obj *obj, struct obj *otmp)
 {
     otmp->where = obj->where;
     switch (obj->where) {
@@ -592,7 +593,7 @@ replace_object(struct obj* obj, struct obj* otmp)
 /* is 'obj' inside a container whose contents aren't known?
    if so, return the outermost container meeting that criterium */
 struct obj *
-unknwn_contnr_contents(struct obj* obj)
+unknwn_contnr_contents(struct obj *obj)
 {
     struct obj *result = 0, *parent;
 
@@ -620,7 +621,7 @@ unknwn_contnr_contents(struct obj* obj)
  * usage of an object.
  */
 void
-bill_dummy_object(struct obj* otmp)
+bill_dummy_object(struct obj *otmp)
 {
     register struct obj *dummy;
     long cost = 0L;
@@ -660,7 +661,7 @@ static const char *const alteration_verbs[] = {
 
 /* possibly bill for an object which the player has just modified */
 void
-costly_alteration(struct obj* obj, int alter_type)
+costly_alteration(struct obj *obj, int alter_type)
 {
     xchar ox, oy;
     char objroom;
@@ -1297,7 +1298,7 @@ set_corpsenm(struct obj *obj, int id)
 
 /* Return the number of turns after which a Rider corpse revives */
 long
-rider_revival_time(struct obj* body, boolean retry)
+rider_revival_time(struct obj *body, boolean retry)
 {
     long when;
     long minturn = retry ? 3L : (body->corpsenm == PM_DEATH) ? 6L : 12L;
@@ -1315,7 +1316,7 @@ rider_revival_time(struct obj* body, boolean retry)
  * This takes the age of the corpse into consideration as of 3.4.0.
  */
 void
-start_corpse_timeout(struct obj* body)
+start_corpse_timeout(struct obj *body)
 {
     long when;       /* rot away when this old */
     long age;        /* age of corpse          */
@@ -1414,7 +1415,7 @@ maybe_adjust_light(struct obj *obj, int old_range)
  */
 
 void
-bless(struct obj* otmp)
+bless(struct obj *otmp)
 {
     int old_light = 0;
 
@@ -1436,7 +1437,7 @@ bless(struct obj* otmp)
 }
 
 void
-unbless(struct obj* otmp)
+unbless(struct obj *otmp)
 {
     int old_light = 0;
 
@@ -1452,7 +1453,7 @@ unbless(struct obj* otmp)
 }
 
 void
-curse(struct obj* otmp)
+curse(struct obj *otmp)
 {
     unsigned already_cursed;
     int old_light = 0;
@@ -1491,7 +1492,7 @@ curse(struct obj* otmp)
 }
 
 void
-uncurse(struct obj* otmp)
+uncurse(struct obj *otmp)
 {
     int old_light = 0;
 
@@ -1510,7 +1511,7 @@ uncurse(struct obj* otmp)
 }
 
 void
-blessorcurse(struct obj* otmp, int chance)
+blessorcurse(struct obj *otmp, int chance)
 {
     if (otmp->blessed || otmp->cursed)
         return;
@@ -1565,14 +1566,16 @@ const int matdensities[] = {
 };
 
 int
-bcsign(struct obj* otmp)
+bcsign(struct obj *otmp)
 {
     return (!!otmp->blessed - !!otmp->cursed);
 }
 
 /* set the object's bless/curse-state known flag */
 void
-set_bknown(struct obj* obj, unsigned int onoff /* 1 or 0 */)
+set_bknown(
+    struct obj *obj,
+    unsigned int onoff) /* 1 or 0 */
 {
     if (obj->bknown != onoff) {
         obj->bknown = onoff;
@@ -1590,7 +1593,7 @@ set_bknown(struct obj* obj, unsigned int onoff /* 1 or 0 */)
  *         container's weight.
  */
 int
-weight(struct obj* obj)
+weight(struct obj *obj)
 {
     int wt = (int) objects[obj->otyp].oc_weight;
 
@@ -1817,7 +1820,7 @@ mkcorpstat(
  * The return value is an index into mons[].
  */
 int
-corpse_revive_type(struct obj* obj)
+corpse_revive_type(struct obj *obj)
 {
     int revivetype = obj->corpsenm;
     struct monst *mtmp;
@@ -1835,7 +1838,7 @@ corpse_revive_type(struct obj* obj)
  * a lasting association between the two.
  */
 struct obj *
-obj_attach_mid(struct obj* obj, unsigned int mid)
+obj_attach_mid(struct obj *obj, unsigned int mid)
 {
     if (!mid || !obj)
         return (struct obj *) 0;
@@ -1845,7 +1848,7 @@ obj_attach_mid(struct obj* obj, unsigned int mid)
 }
 
 static struct obj *
-save_mtraits(struct obj* obj, struct monst* mtmp)
+save_mtraits(struct obj *obj, struct monst *mtmp)
 {
     if (mtmp->ispriest)
         forget_temple_entry(mtmp); /* EPRI() */
@@ -1888,7 +1891,7 @@ save_mtraits(struct obj* obj, struct monst* mtmp)
  * the one contained within the obj.
  */
 struct monst *
-get_mtraits(struct obj* obj, boolean copyof)
+get_mtraits(struct obj *obj, boolean copyof)
 {
     struct monst *mtmp = (struct monst *) 0;
     struct monst *mnew = (struct monst *) 0;
@@ -1957,7 +1960,7 @@ mk_named_object(
 }
 
 boolean
-is_flammable(struct obj* otmp)
+is_flammable(struct obj *otmp)
 {
     int otyp = otmp->otyp;
     int omat = otmp->material;
@@ -1976,19 +1979,19 @@ is_flammable(struct obj* otmp)
 }
 
 boolean
-is_rottable(struct obj* otmp)
+is_rottable(struct obj *otmp)
 {
     return (boolean) (otmp->material <= WOOD && otmp->material != LIQUID);
 }
 
 /*
- * These routines maintain the single-linked lists headed in g.level.objects[][]
+ * These routines maintain the single-linked lists headed in level.objects[][]
  * and threaded through the nexthere fields in the object-instance structure.
  */
 
 /* put the object at the given location */
 void
-place_object(struct obj* otmp, int x, int y)
+place_object(struct obj *otmp, int x, int y)
 {
     register struct obj *otmp2 = g.level.objects[x][y];
 
@@ -2072,7 +2075,7 @@ obj_ice_effects(int x, int y, boolean do_buried)
  * restarted etc.
  */
 long
-peek_at_iced_corpse_age(struct obj* otmp)
+peek_at_iced_corpse_age(struct obj *otmp)
 {
     long age, retval = otmp->age;
 
@@ -2090,7 +2093,7 @@ peek_at_iced_corpse_age(struct obj* otmp)
 
 static void
 obj_timer_checks(
-    struct obj* otmp,
+    struct obj *otmp,
     xchar x, xchar y, 
     int force) /* 0 = no force so do checks, <0 = force off, >0 force on */
 {
@@ -2165,7 +2168,7 @@ obj_timer_checks(
 #undef ROT_ICE_ADJUSTMENT
 
 void
-remove_object(struct obj* otmp)
+remove_object(struct obj *otmp)
 {
     xchar x = otmp->ox;
     xchar y = otmp->oy;
@@ -2183,7 +2186,7 @@ remove_object(struct obj* otmp)
 
 /* throw away all of a monster's inventory */
 void
-discard_minvent(struct monst* mtmp, boolean uncreate_artifacts)
+discard_minvent(struct monst *mtmp, boolean uncreate_artifacts)
 {
     struct obj *otmp;
 
@@ -2213,7 +2216,7 @@ discard_minvent(struct monst* mtmp, boolean uncreate_artifacts)
  *      OBJ_LUAFREE     obj is dealloc'd from core, but still used by lua
  */
 void
-obj_extract_self(struct obj* obj)
+obj_extract_self(struct obj *obj)
 {
     switch (obj->where) {
     case OBJ_FREE:
@@ -2251,7 +2254,7 @@ obj_extract_self(struct obj* obj)
 
 /* Extract the given object from the chain, following nobj chain. */
 void
-extract_nobj(struct obj* obj, struct obj** head_ptr)
+extract_nobj(struct obj *obj, struct obj **head_ptr)
 {
     struct obj *curr, *prev;
 
@@ -2278,7 +2281,7 @@ extract_nobj(struct obj* obj, struct obj** head_ptr)
  * in tandem with extract_nobj, which does set it.
  */
 void
-extract_nexthere(struct obj* obj, struct obj** head_ptr)
+extract_nexthere(struct obj *obj, struct obj **head_ptr)
 {
     struct obj *curr, *prev;
 
@@ -2303,7 +2306,7 @@ extract_nexthere(struct obj* obj, struct obj** head_ptr)
  * Otherwise 0 is returned.
  */
 int
-add_to_minv(struct monst *mon, struct obj* obj)
+add_to_minv(struct monst *mon, struct obj *obj)
 {
     struct obj *otmp;
 
@@ -2327,7 +2330,7 @@ add_to_minv(struct monst *mon, struct obj* obj)
  * The input obj may be deleted in the process.
  */
 struct obj *
-add_to_container(struct obj* container, struct obj* obj)
+add_to_container(struct obj *container, struct obj *obj)
 {
     struct obj *otmp;
 
@@ -2349,7 +2352,7 @@ add_to_container(struct obj* container, struct obj* obj)
 }
 
 void
-add_to_migration(struct obj* obj)
+add_to_migration(struct obj *obj)
 {
     if (obj->where != OBJ_FREE)
         panic("add_to_migration: obj not free");
@@ -2366,7 +2369,7 @@ add_to_migration(struct obj* obj)
 }
 
 void
-add_to_buried(struct obj* obj)
+add_to_buried(struct obj *obj)
 {
     if (obj->where != OBJ_FREE)
         panic("add_to_buried: obj not free");
@@ -2378,7 +2381,7 @@ add_to_buried(struct obj* obj)
 
 /* Recalculate the weight of this container and all of _its_ containers. */
 static void
-container_weight(struct obj* container)
+container_weight(struct obj *container)
 {
     container->owt = weight(container);
     if (container->where == OBJ_CONTAINED)
@@ -2394,7 +2397,7 @@ container_weight(struct obj* container)
  * them to be deallocated.
  */
 void
-dealloc_obj(struct obj* obj)
+dealloc_obj(struct obj *obj)
 {
     if (obj->where != OBJ_FREE && obj->where != OBJ_LUAFREE)
         panic("dealloc_obj: obj not free");
@@ -2438,8 +2441,8 @@ dealloc_obj(struct obj* obj)
 /* create an object from a horn of plenty; mirrors bagotricks(makemon.c) */
 int
 hornoplenty(
-    struct obj* horn,
-    boolean tipping) /* caller emptying entire contents; affects shop handling */
+    struct obj *horn,
+    boolean tipping) /* caller emptying entire contents; affects shop mesgs */
 {
     int objcount = 0;
 
@@ -2525,13 +2528,6 @@ obj_sanity_check(void)
     int x, y;
     struct obj *obj;
 
-    /*
-     * TODO:
-     *  Should check whether the obj->bypass and/or obj->nomerge bits
-     *  are set.  Those are both used for temporary purposes and should
-     *  be clear between moves.
-     */
-
     objlist_sanity(fobj, OBJ_FLOOR, "floor sanity");
 
     /* check that the map's record of floor objects is consistent;
@@ -2583,7 +2579,7 @@ obj_sanity_check(void)
 
 /* sanity check for objects on specified list (fobj, &c) */
 static void
-objlist_sanity(struct obj* objlist, int wheretype, const char * mesg)
+objlist_sanity(struct obj *objlist, int wheretype, const char *mesg)
 {
     struct obj *obj;
 
@@ -2624,15 +2620,19 @@ objlist_sanity(struct obj* objlist, int wheretype, const char * mesg)
                 }
                 break;
             }
-            if (obj->globby)
-                check_glob(obj, mesg);
         }
+        if (obj->globby)
+            check_glob(obj, mesg);
+        /* temporary flags that might have been set but which should
+           be clear by the time this sanity check is taking place */
+        if (obj->in_use || obj->bypass || obj->nomerge)
+            insane_obj_bits(obj, (struct monst *) 0);
     }
 }
 
 /* sanity check for objects carried by all monsters in specified list */
 static void
-mon_obj_sanity(struct monst* monlist, const char* mesg)
+mon_obj_sanity(struct monst *monlist, const char *mesg)
 {
     struct monst *mon;
     struct obj *obj, *mwep;
@@ -2655,19 +2655,33 @@ mon_obj_sanity(struct monst* monlist, const char* mesg)
             if (obj->globby)
                 check_glob(obj, mesg);
             check_contained(obj, mesg);
+            if (obj->in_use || obj->bypass || obj->nomerge)
+                insane_obj_bits(obj, mon);
         }
     }
 }
 
+static void
+insane_obj_bits(struct obj *obj, struct monst *mon)
+{
+    char infobuf[QBUFSZ];
+
+    Sprintf(infobuf, "flagged%s%s%s",
+            obj->in_use ? " in_use" : "",
+            obj->bypass ? " bypass" : "",
+            obj->nomerge ? " nomerge" : "");
+    insane_object(obj, ofmt0, infobuf, mon);
+}
+
 /* This must stay consistent with the defines in obj.h. */
-static const char *obj_state_names[NOBJ_STATES] = { "free",      "floor",
-                                                    "contained", "invent",
-                                                    "minvent",   "migrating",
-                                                    "buried",    "onbill",
-                                                    "luafree" };
+static const char *const obj_state_names[NOBJ_STATES] = {
+    "free", "floor", "contained", "invent",
+    "minvent", "migrating", "buried", "onbill",
+    "luafree"
+};
 
 static const char *
-where_name(struct obj* obj)
+where_name(struct obj *obj)
 {
     static char unknown[32]; /* big enough to handle rogue 64-bit int */
     int where;
@@ -2684,10 +2698,10 @@ where_name(struct obj* obj)
 
 static void
 insane_object(
-    struct obj* obj,
-    const char* fmt,
-    const char* mesg,
-    struct monst* mon)
+    struct obj *obj,
+    const char *fmt,
+    const char *mesg,
+    struct monst *mon)
 {
     const char *objnm, *monnm;
     char altfmt[BUFSZ];
@@ -2703,7 +2717,7 @@ insane_object(
         if (mon)
             monnm = x_monnam(mon, ARTICLE_A, (char *) 0, EXACT_NAME, TRUE);
         impossible(altfmt, mesg, fmt_ptr((genericptr_t) obj), where_name(obj),
-              objnm, fmt_ptr((genericptr_t) mon), monnm);
+                   objnm, fmt_ptr((genericptr_t) mon), monnm);
     } else {
         impossible(fmt, mesg, fmt_ptr((genericptr_t) obj), where_name(obj),
                    objnm);
@@ -2716,7 +2730,7 @@ insane_object(
  * take an obj pointer to work.
  */
 struct obj *
-init_dummyobj(struct obj* obj, short otyp, long oquan)
+init_dummyobj(struct obj *obj, short otyp, long oquan)
 {
      if (obj) {
          *obj = cg.zeroobj;
@@ -2739,7 +2753,7 @@ init_dummyobj(struct obj* obj, short otyp, long oquan)
 
 /* obj sanity check: check objects inside container */
 static void
-check_contained(struct obj* container, const char *mesg)
+check_contained(struct obj *container, const char *mesg)
 {
     struct obj *obj;
     /* big enough to work with, not too big to blow out stack in recursion */
@@ -2785,7 +2799,7 @@ check_contained(struct obj* container, const char *mesg)
 
 /* called when 'obj->globby' is set so we don't recheck it here */
 static void
-check_glob(struct obj* obj, const char *mesg)
+check_glob(struct obj *obj, const char *mesg)
 {
 #define LOWEST_GLOB GLOB_OF_GRAY_OOZE
 #define HIGHEST_GLOB GLOB_OF_BLACK_PUDDING
@@ -2806,7 +2820,7 @@ check_glob(struct obj* obj, const char *mesg)
 
 /* check an object in hero's or monster's inventory which has worn mask set */
 static void
-sanity_check_worn(struct obj* obj)
+sanity_check_worn(struct obj *obj)
 {
 #if (NH_DEVEL_STATUS != NH_STATUS_RELEASED) || defined(DEBUG)
     static unsigned long wearbits[] = {
@@ -3002,7 +3016,7 @@ sanity_check_worn(struct obj* obj)
  * wrapper to make "near this object" convenient
  */
 struct obj *
-obj_nexto(struct obj* otmp)
+obj_nexto(struct obj *otmp)
 {
     if (!otmp) {
         impossible("obj_nexto: wasn't given an object to check");
@@ -3020,7 +3034,7 @@ obj_nexto(struct obj* otmp)
  * reliably predict which one we want to 'find' first
  */
 struct obj *
-obj_nexto_xy(struct obj* obj, int x, int y, boolean recurs)
+obj_nexto_xy(struct obj *obj, int x, int y, boolean recurs)
 {
     struct obj *otmp;
     int fx, fy, ex, ey, otyp = obj->otyp;
@@ -3158,7 +3172,7 @@ obj_meld(struct obj** obj1, struct obj** obj2)
 
 /* give a message if hero notices two globs merging [used to be in pline.c] */
 void
-pudding_merge_message(struct obj* otmp, struct obj* otmp2)
+pudding_merge_message(struct obj *otmp, struct obj *otmp2)
 {
     boolean visible = (cansee(otmp->ox, otmp->oy)
                        || cansee(otmp2->ox, otmp2->oy)),

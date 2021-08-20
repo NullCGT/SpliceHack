@@ -10,6 +10,7 @@
  */
 #include "hack.h"
 
+static int odd_material_damage(struct obj *);
 static int weapon_distribution_bonus(int, boolean, int);
 static void give_may_advance_msg(int);
 static void finish_towel_change(struct obj *obj, int);
@@ -43,6 +44,9 @@ static void skill_advance(int);
 #define PN_BACKSTAB (-20)
 
 #define PN_SPIDER_FRIEND (-21)
+
+#define is_odd_material(obj, mat) \
+    ((obj)->material == (mat) && !(objects[(obj)->otyp].oc_material == (mat)))
 
 static NEARDATA const short skill_names_indices[P_NUM_SKILLS] = {
     0, DAGGER, KNIFE, AXE, PICK_AXE, SHORT_SWORD, BROADSWORD, LONG_SWORD,
@@ -294,22 +298,24 @@ char*
 describe_dmgval(char *buf, struct obj *otmp, boolean bigmonst) {
     boolean Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
     int otyp = otmp->otyp;
-    int flatbon = bigmonst ? (objects[otyp].oc_wsdam ? objects[otyp].oc_wsdam : 0)
-                  : (objects[otyp].oc_wldam ? objects[otyp].oc_wldam : 0);
+    int flatbon = bigmonst ? (objects[otyp].oc_wldam ? objects[otyp].oc_wldam : 0)
+                  : (objects[otyp].oc_wsdam ? objects[otyp].oc_wsdam : 0);
+    int spebon = 0;
+    int matbon = 0;
     int low_dmg, high_dmg;
 
     if (Is_weapon && otmp->known) {
-        flatbon += otmp->spe;
-        if (flatbon < 0)
-            flatbon = 0;
+        spebon += otmp->spe;
     }
 
+    matbon += odd_material_damage(otmp);
     flatbon -= greatest_erosion(otmp);
+    flatbon += spebon;
     if (flatbon < 1)
         flatbon = 1;
 
-    low_dmg = 1 + weapon_distribution_bonus(otyp, bigmonst, LOW_ROLL);
-    high_dmg = flatbon + weapon_distribution_bonus(otyp, bigmonst, HIGH_ROLL);
+    low_dmg = 1 + spebon + matbon + weapon_distribution_bonus(otyp, bigmonst, LOW_ROLL);
+    high_dmg = flatbon + matbon + weapon_distribution_bonus(otyp, bigmonst, HIGH_ROLL);
     
     Sprintf(eos(buf), "%d-%d", low_dmg, high_dmg);
     return buf;
@@ -417,6 +423,44 @@ weapon_distribution_bonus(int otyp, boolean bigmonst, int distribution) {
     return ret;
 }
 
+static int
+odd_material_damage(struct obj * otmp) {
+    int tmp = 0;
+    if ((is_odd_material(otmp, GLASS) || is_odd_material(otmp, ADAMANTINE)
+         || is_odd_material(otmp, GEMSTONE))
+        && (objects[otmp->otyp].oc_dir & (PIERCE | SLASH))) {
+        /* glass, crystal, and adamantine are sharp */
+        tmp += 3;
+    }
+    else if (is_odd_material(otmp, GOLD) || is_odd_material(otmp, PLATINUM)) {
+        /* heavy metals */
+        if (objects[otmp->otyp].oc_dir == WHACK) {
+            tmp += 2;
+        }
+    }
+    else if (is_odd_material(otmp, MINERAL)) {
+        /* stone is heavy */
+        if (objects[otmp->otyp].oc_dir == WHACK) {
+            tmp += 1;
+        }
+    }
+    else if (is_odd_material(otmp, PLASTIC) || is_odd_material(otmp, PAPER)) {
+        /* just terrible weapons all around */
+        tmp -= 2;
+    }
+    else if (is_odd_material(otmp, SLIME)) {
+        /* even worse... */
+        tmp -= 4;
+    }
+    else if (is_odd_material(otmp, WOOD)) {
+        /* poor at holding an edge */
+        if (is_blade(otmp)) {
+            tmp -= 1;
+        }
+    }
+    return tmp;
+}
+
 /* Historical note: The original versions of Hack used a range of damage
  * which was similar to, but not identical to the damage used in Advanced
  * Dungeons and Dragons.  I figured that since it was so close, I may as well
@@ -464,45 +508,11 @@ dmgval(struct obj *otmp, struct monst *mon)
     if (Is_weapon) {
         tmp += otmp->spe;
     /* adjust for various materials */
-#define is_odd_material(obj, mat) \
-    ((obj)->material == (mat) && !(objects[(obj)->otyp].oc_material == (mat)))
-    if ((is_odd_material(otmp, GLASS) || is_odd_material(otmp, ADAMANTINE)
-         || is_odd_material(otmp, GEMSTONE))
-        && (objects[otmp->otyp].oc_dir & (PIERCE | SLASH))) {
-        /* glass, crystal, and adamantine are sharp */
-        tmp += 3;
-    }
-    else if (is_odd_material(otmp, GOLD) || is_odd_material(otmp, PLATINUM)) {
-        /* heavy metals */
-        if (objects[otmp->otyp].oc_dir == WHACK) {
-            tmp += 2;
-        }
-    }
-    else if (is_odd_material(otmp, MINERAL)) {
-        /* stone is heavy */
-        if (objects[otmp->otyp].oc_dir == WHACK) {
-            tmp += 1;
-        }
-    }
-    else if (is_odd_material(otmp, PLASTIC) || is_odd_material(otmp, PAPER)) {
-        /* just terrible weapons all around */
-        tmp -= 2;
-    }
-    else if (is_odd_material(otmp, SLIME)) {
-        /* even worse... */
-        tmp -= 4;
-    }
-    else if (is_odd_material(otmp, WOOD)) {
-        /* poor at holding an edge */
-        if (is_blade(otmp)) {
-            tmp -= 1;
-        }
-    }
+    tmp += odd_material_damage(otmp);
 
     /* negative modifiers mustn't produce negative damage */
     if (tmp < 0)
         tmp = 0;
-
     }
 
     if (otmp->material <= LEATHER && thick_skinned(ptr))
@@ -1535,6 +1545,8 @@ skill_advance(int skill)
     You("are now %s skilled in %s.",
         P_SKILL(skill) >= P_MAX_SKILL(skill) ? "most" : "more",
         P_NAME(skill));
+    /* botl will need update because of to-hit bonus */
+    g.context.botl = 1;
 }
 
 static const struct skill_range {

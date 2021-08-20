@@ -67,7 +67,7 @@ const struct Role roles[NUM_ROLES+1] = {
       10,
       A_INT,
       SPE_MAGIC_MAPPING,
-      -4 },
+      -20 },
     { { "Barbarian", 0, 0 },
       { { "Plunderer", "Plunderess", 0 },
         { "Pillager", 0, 0 },
@@ -109,7 +109,7 @@ const struct Role roles[NUM_ROLES+1] = {
       8,
       A_INT,
       SPE_HASTE_SELF,
-      -4 },
+      -40 },
     { { "Caveman", "Cavewoman", "Cave Dweller" },
       { { "Troglodyte", 0, 0 },
         { "Aborigine", 0, 0 },
@@ -152,7 +152,7 @@ const struct Role roles[NUM_ROLES+1] = {
       8,
       A_INT,
       SPE_DIG,
-      -4 },
+      -30 },
     { {"Convict", 0, 0}, {
         {"Detainee", 0,     0},
         {"Inmate", 0,   0},
@@ -229,7 +229,7 @@ const struct Role roles[NUM_ROLES+1] = {
       9,
       A_INT,
       SPE_FIREBALL,
-      -4 },
+      -20 },
     { { "Healer", 0, 0 },
       { { "Rhizotomist", 0, 0 },
         { "Empiric", 0, 0 },
@@ -442,7 +442,7 @@ const struct Role roles[NUM_ROLES+1] = {
       9,
       A_INT,
       SPE_CAUSE_FEAR,
-      -4 },
+      -40 },
     /* Note:  Rogue precedes Ranger so that use of `-R' on the command line
        retains its traditional meaning. */
     { { "Rogue", 0, 0},
@@ -487,7 +487,7 @@ const struct Role roles[NUM_ROLES+1] = {
       9,
       A_INT,
       SPE_DETECT_TREASURE,
-      -4 },
+      -40 },
     { { "Ranger", 0 },
       {
 #if 0 /* OBSOLETE */
@@ -543,7 +543,7 @@ const struct Role roles[NUM_ROLES+1] = {
       10,
       A_INT,
       SPE_INVISIBILITY,
-      -4 },
+      -40 },
     { { "Samurai", 0, 0 },
       { { "Hatamoto", 0, 0 },       /* Banner Knight */
         { "Ronin", 0, 0 },          /* no allegiance */
@@ -585,7 +585,7 @@ const struct Role roles[NUM_ROLES+1] = {
       8,
       A_INT,
       SPE_CLAIRVOYANCE,
-      -4 },
+      -50 },
     { { "Tourist", 0, 0 },
       { { "Rambler", 0, 0 },
         { "Sightseer", 0, 0 },
@@ -669,7 +669,7 @@ const struct Role roles[NUM_ROLES+1] = {
       9,
       A_WIS,
       SPE_CONE_OF_COLD,
-      -4 },
+      -50 },
     { { "Wizard", 0, 0 },
       { { "Evoker", 0, 0 },
         { "Conjurer", 0, 0 },

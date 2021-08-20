@@ -35,6 +35,20 @@ or outright removed. Rationale will be provided for all removed content upon req
 - Removed the statuary level. Overtaken by theme rooms.
 - Removed aligned glyph traps. They were more dangerous and less interesting than hoped.
 
+Combat System Changes
+- Luck no longer gives a to-hit bonus.
+- Base attack bonus is partially determined by the role one is playing.
+- Weapons have gone through a rebalance.
+    -Many weapons now have bonuses or penalties to hit, and can also influence AC when wielded.
+    - Given the emphasis on to-hit bonus, these small bonuses and penalties are now much more
+      important than they would otherwise be.
+    - [PLANNED] These values can be influenced by the material of the weapon.
+- [PLANNED] AC and DR have been split. This system is similar to the one in dnethack, but with
+  some significant changes.
+- [PLANNED] Port dnethack BAB?
+- [PLANNED] Role-based power regen?
+- [PLANNED] Dexterity contributes to AC, but the amount it contributes depends on weight?
+
 QOL
 - Added a number of QOL fixes to the wish parser. Many of these were pulled from the NetHack YANI
   archive.
@@ -112,18 +126,6 @@ in its own way.
 - Juiblex's lair has a 50% chance of containing Juiblex and a 50% chance of containing
   Zuggotomoy.
 - Levels have dynamically generated names.
-
-Combat System Changes
-- Luck no longer gives a to-hit bonus.
-- Weapons have gone through a rebalance.
-    -Many weapons now have bonuses or penalties to hit, and can also influence AC when wielded.
-    - Given the emphasis on to-hit bonus, these small bonuses and penalties are now much more
-      important than they would otherwise be.
-    - [PLANNED] These values can be influenced by the material of the weapon.
-- [PLANNED] AC and DR have been split. This system is similar to the one in dnethack, but with
-  some significant changes.
-- [PLANNED] Port dnethack BAB?
-- [PLANNED] Dexterity contributes to AC, but the amount it contributes depends on weight?
 
 Monster Changes
 - Many monsters have gender-variant names. For example, female pigs are sows.
@@ -228,6 +230,8 @@ Role Changes
 - Priest
   - Priests can be of any race.
 - Added a few new role/race/alignment combinations.
+- All roles automatically learn their special spell at level 12. The chance of successfully
+  casting a special spell is greatly increased for martial roles.
 
 Interface Changes
 - Ridden monsters are highlighted in bright magenta.

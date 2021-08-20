@@ -184,15 +184,35 @@ base_hitbonus(struct obj *otmp) {
     return tmp;
 }
 
+float
+role_bab()
+{
+    switch(Role_switch) {
+    case PM_WIZARD:
+    case PM_TOURIST:
+    case PM_CONVICT:
+    case PM_HEALER:
+        return 0.5;
+    case PM_MONK:
+    case PM_ARCHEOLOGIST:
+    case PM_CLERIC:
+    case PM_ROGUE:
+    case PM_DRAGON_RIDER:
+        return 0.75;
+    default:
+        return 1;
+    }
+}
+
 int
 botl_hitbonus()
 {
-    int tmp, tmp2;
+    int tmp, tmp2, role_mul;
     uchar aatyp = g.youmonst.data->mattk[0].aatyp;
     struct obj *weapon = uwep;
 
     /* tmp = abon() + u.uhitinc + maybe_polyd(g.youmonst.data->mlevel, u.ulevel); */
-    tmp = abon() + u.uhitinc + (int) maybe_polyd(g.youmonst.data->mlevel, u.ulevel) * 3 / 4;
+    tmp = abon() + u.uhitinc + (int) (maybe_polyd(g.youmonst.data->mlevel, u.ulevel) * role_bab());
 
     /* role/race adjustments */
     if (Role_if(PM_MONK) && !Upolyd) {

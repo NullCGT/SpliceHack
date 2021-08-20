@@ -7,6 +7,8 @@
 #include "hack.h"
 #include <ctype.h>
 
+#define SPECSPEL_LEV 12
+
 /* part of the output on gain or loss of attribute */
 static const char
     *const plusattr[] = { "strong", "smart", "wise",
@@ -555,11 +557,11 @@ exerper(void)
    phrased as "You must have been [][0]." or "You haven't been [][1]." */
 static NEARDATA const char *const exertext[A_MAX][2] = {
     { "exercising diligently", "exercising properly" },           /* Str */
-    { 0, 0 },                                                     /* Int */
+    { "using your brain", "thinking very much" },                 /* Int */
     { "very observant", "paying attention" },                     /* Wis */
     { "working on your reflexes", "working on reflexes lately" }, /* Dex */
     { "leading a healthy life-style", "watching your health" },   /* Con */
-    { 0, 0 },                                                     /* Cha */
+    { "paying attention to others", "ignoring others" },          /* Cha */
 };
 
 void
@@ -962,6 +964,7 @@ adjabil(int oldlevel, int newlevel)
 {
     register const struct innate *abil, *rabil;
     long prevabil, mask = FROMEXPER;
+    int i;
 
     abil = role_abil(Role_switch);
 
@@ -1035,6 +1038,19 @@ adjabil(int oldlevel, int newlevel)
             add_weapon_skill(newlevel - oldlevel);
         else
             lose_weapon_skill(oldlevel - newlevel);
+    }
+
+    /* Learn your special spell! */
+    if (oldlevel < SPECSPEL_LEV && newlevel >= SPECSPEL_LEV
+        && u.ulevelmax == u.ulevel) {
+        for (i = 0; i < MAXSPELL; i++)
+            if (spellid(i) == g.urole.spelspec || spellid(i) == NO_SPELL)
+                break;
+        if (spellid(i) == NO_SPELL)
+            You("learn how to cast %s!", OBJ_NAME(objects[g.urole.spelspec]));
+        g.spl_book[i].sp_id = g.urole.spelspec;
+        g.spl_book[i].sp_lev = objects[g.urole.spelspec].oc_level;
+        g.spl_book[i].sp_know = 20000;
     }
 }
 

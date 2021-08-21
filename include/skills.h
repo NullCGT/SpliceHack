@@ -66,20 +66,24 @@ enum p_skills {
     P_RIDING             = 39, /* How well you control your steed */
 
     /* Role-Based Skills by Kestrel Gregorich-Trevor */
+    /* Cave Dweller */
+    P_POWER_ATTACK        = 40,
+
     /* Monk */
-    P_FLAMING_FISTS      = 40,
-    P_FREEZING_FISTS     = 41,
-    P_SHOCKING_FISTS     = 42,
-    P_STUNNING_FIST      = 43,
+    P_FLAMING_FISTS      = 41,
+    P_FREEZING_FISTS     = 42,
+    P_SHOCKING_FISTS     = 43,
+    P_STUNNING_FIST      = 44,
 
     /* Rogue */
-    P_BACKSTAB           = 44,
+    P_BACKSTAB           = 45,
+    P_CAREFUL_ATTACK     = 46,
 
     /* Racial Skills by Kestrel Gregorich-Trevor */
-    P_SPIDER_FRIEND      = 45,
+    P_SPIDER_FRIEND      = 47,
 
 
-    P_NUM_SKILLS         = 46
+    P_NUM_SKILLS         = 48
 };
 
 #define P_MARTIAL_ARTS P_BARE_HANDED_COMBAT /* Role distinguishes */
@@ -93,8 +97,8 @@ enum p_skills {
 #define P_LAST_H_TO_H P_RIDING
 #define P_FIRST_H_TO_H P_BARE_HANDED_COMBAT
 
-#define P_FIRST_ROLE P_FLAMING_FISTS
-#define P_LAST_ROLE P_STUNNING_FIST
+#define P_FIRST_ROLE P_POWER_ATTACK
+#define P_LAST_ROLE P_CAREFUL_ATTACK
 
 #define P_FIRST_RACE P_SPIDER_FRIEND
 #define P_LAST_RACE P_SPIDER_FRIEND

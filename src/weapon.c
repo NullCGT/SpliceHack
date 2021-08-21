@@ -37,13 +37,15 @@ static void skill_advance(int);
 #define PN_ESCAPE_SPELL (-14)
 #define PN_MATTER_SPELL (-15)
 
-#define PN_FLAMING_FISTS (-16)
-#define PN_FREEZING_FISTS (-17)
-#define PN_SHOCKING_FISTS (-18)
-#define PN_STUNNING_FIST (-19)
-#define PN_BACKSTAB (-20)
+#define PN_POWER_ATTACK (-16)
+#define PN_FLAMING_FISTS (-17)
+#define PN_FREEZING_FISTS (-18)
+#define PN_SHOCKING_FISTS (-19)
+#define PN_STUNNING_FIST (-20)
+#define PN_BACKSTAB (-21)
+#define PN_CAREFUL_ATTACK (-22)
 
-#define PN_SPIDER_FRIEND (-21)
+#define PN_SPIDER_FRIEND (-23)
 
 #define is_odd_material(obj, mat) \
     ((obj)->material == (mat) && !(objects[(obj)->otyp].oc_material == (mat)))
@@ -58,9 +60,9 @@ static NEARDATA const short skill_names_indices[P_NUM_SKILLS] = {
     PN_ENCHANTMENT_SPELL, PN_CLERIC_SPELL, PN_ESCAPE_SPELL, PN_MATTER_SPELL,
     PN_BARE_HANDED, PN_TWO_WEAPONS, PN_RIDING,
 
+    PN_POWER_ATTACK,
     PN_FLAMING_FISTS, PN_FREEZING_FISTS, PN_SHOCKING_FISTS, PN_STUNNING_FIST,
-
-    PN_BACKSTAB,
+    PN_BACKSTAB, PN_CAREFUL_ATTACK,
 
     PN_SPIDER_FRIEND
 };
@@ -72,8 +74,9 @@ static NEARDATA const char *const odd_skill_names[] = {
     "whip", "attack spells", "healing spells", "divination spells",
     "enchantment spells", "clerical spells", "escape spells", "matter spells",
 
+    "power attack",
     "flaming fists", "freezing fists", "shocking fists", "stunning fist",
-    "sneak attack",
+    "sneak attack", "careful attack"
 
     "spider friend"
 };
@@ -226,6 +229,10 @@ botl_hitbonus()
             tmp += (u.ulevel / 3) + 2;
     }
 
+    /* Power attack penalty */
+    tmp -= P_SKILL(P_POWER_ATTACK);
+    tmp += P_SKILL(P_CAREFUL_ATTACK);
+
     if (uwep && (uwep->otyp == HEAVY_IRON_BALL)) {
         tmp += 4;
     }
@@ -259,6 +266,10 @@ hitval(struct obj *otmp, struct monst *mon)
 
     /* Add the weapon's basic to-hit bonus */
     tmp += base_hitbonus(otmp);
+
+    /* Power attack penalty */
+    tmp -= P_SKILL(P_POWER_ATTACK);
+    tmp += P_SKILL(P_CAREFUL_ATTACK);
 
     /* Put weapon vs. monster type "to hit" bonuses in below: */
 
@@ -309,6 +320,8 @@ describe_dmgval(char *buf, struct obj *otmp, boolean bigmonst) {
     }
 
     matbon += odd_material_damage(otmp);
+    matbon += P_SKILL(P_POWER_ATTACK);
+    matbon -= P_SKILL(P_CAREFUL_ATTACK);
     flatbon -= greatest_erosion(otmp);
     flatbon += spebon;
     if (flatbon < 1)
@@ -532,6 +545,10 @@ dmgval(struct obj *otmp, struct monst *mon)
                 tmp = 25; /* objects[].oc_wldam */
         }
     }
+
+    /* power attack yields a flat damage bonus increase. */
+    tmp += P_SKILL(P_POWER_ATTACK);
+    tmp -= P_SKILL(P_CAREFUL_ATTACK);
 
     /* Put weapon vs. monster type damage bonuses in below: */
     if (Is_weapon || otmp->oclass == GEM_CLASS || otmp->oclass == BALL_CLASS

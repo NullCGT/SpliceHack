@@ -1,4 +1,4 @@
-                  SpliceHack 1.0.0 -- General information
+#                  SpliceHack 1.0.0 -- General information
 
 SpliceHack is an in-progress fork of NetHack 3.7, made with the goal of adding
 additional monsters, items, special levels, and game features without changing
@@ -6,7 +6,7 @@ too much of the core gameplay. The end goal is a "kitchen sink" variant similar
 to SLASH'EM that is still intuitive and easy to pick up and play for anyone
 familiar with vanilla NetHack.
 
-Features:
+## Features
 - Monsters riding other monsters.
 - The option to play as nonbinary and choose your orientation.
 - Hundreds of new foes to fight.
@@ -19,13 +19,13 @@ work in progress, and as such bugs and balance issues may exist. Bug reports,
 suggestions for new features, questions, and pull requests can be directed 
 to this variant's github page.
 
-# How to Play:
+## How to Play
 - The latest stable SpliceHack release can be downloaded from https://github.com/NullCGT/SpliceHack/releases.
 - SpliceHack is hosted online at https://www.hardfought.org.
 - Advanced users can compile SpliceHack from the source using the same steps as one
   would use to compile NetHack 3.7.
 
-# Configuration
+## Configuration
 For information about customizing NetHack, refer to https://nethackwiki.com/wiki/Options.
 The steps for customizing SpliceHack are the same as the steps for
 customizing NetHack, except the file to edit is named .splicehackrc if you are
@@ -36,27 +36,27 @@ repository contains a file named .splicehackrc.example for Unix systems. Simply
 copy the file to the relevant location, rename it, and modify it to your heart's
 content.
 
-# Tileset
+## Tileset
 SpliceHack contains a tileset, and can be played in graphical or ascii mode depending
 on the preference of the user.
 
 A copy of this tileset is included for reference. Feel free to modify it or use it as
 a basis for your own tilesets.
 
-# Why the Rewrite?
+## Why the Rewrite?
 
 When I started writing SpliceHack, I was not as opinionated or as strong of a developer
 as I am now, and I had much less experience in balancing a game and making it fun to play.
 This rewrite is an effort to improve both the code and the gameplay of SpliceHack, so 
 that it is more enjoyable and easier to maintain.
 
-# Disclaimer
+## Disclaimer
 
 SpliceHack follows the conditions put forth in the license provided by the
 NetHack Dev Team (see dat/license). If you are aware of any licensing or
 permissions issues with SpliceHack, please contact us through github.
 
-                  SpliceHack - The Design Philosophy
+#                  SpliceHack - The Design Philosophy
 
 SpliceHack's design philosophy has evolved over time. At present, these are the standards
 that should be considered when creating a pull request for SpliceHack.
@@ -90,6 +90,6 @@ that should be considered when creating a pull request for SpliceHack.
    for everyone.
 
 
-                  -- Good luck, and happy Hacking --
+#                  -- Good luck, and happy Hacking --
                   
-# NetHack may be freely redistributed.  See license for details.
+NetHack may be freely redistributed.  See license for details.

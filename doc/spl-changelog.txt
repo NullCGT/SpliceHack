@@ -250,6 +250,8 @@ Known Bugs
 - Removing a mask that transformed you into a light-emitting monster will cause a program in disorder.
 - Phoenix egg revival via fire is very buggy.
 - Occasional rn2(0) when entering a level.
+- Rare weapon_oname segfault
+- Rare write_ls: can't find
 
                             Version 0.8.3
 

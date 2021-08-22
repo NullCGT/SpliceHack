@@ -666,7 +666,7 @@ mkchasms(void)
     int passes, wallcnt;
     int maxpasses = 5;
     int pooltyp = CORR;  
-    
+
     /* Initial pass; randomly fill level. */
     for (x = 0; x < COLNO; x++) {
         for (y = 0; y < ROWNO; y++) {
@@ -1840,7 +1840,7 @@ mkvent(int mazeflag, struct mkroom *croom)
 
     levl[m.x][m.y].typ = VENT;
     g.level.flags.nvents++;
-    if (depth(&u.uz) > 6 && rn2(depth(&u.uz - 4)))
+    if (depth(&u.uz) > 6 && rn2(depth(&u.uz) - 4))
         levl[m.x][m.y].poisonvnt = 1;
     (void) start_timer((long) rnd(10), TIMER_LEVEL, FIXTURE_ACTIVATE,
                            long_to_any(((long) m.x << 16) | (long) m.y));

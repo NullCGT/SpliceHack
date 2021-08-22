@@ -2069,7 +2069,7 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
     case SCR_EARTH:
         /* TODO: handle steeds */
         if (!Is_rogue_level(&u.uz) && has_ceiling(&u.uz)
-            && (!In_endgame(&u.uz) || Is_earthlevel(&u.uz))) {
+            && (!In_endgame(&u.uz) || Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz))) {
             register int x, y;
             int nboulders = 0;
 

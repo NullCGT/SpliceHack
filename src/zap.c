@@ -17,7 +17,6 @@ static void create_polymon(struct obj *, int);
 static int stone_to_flesh_obj(struct obj *);
 static boolean zap_updown(struct obj *);
 static void zhitu(int, int, const char *, xchar, xchar);
-static void revive_egg(struct obj *);
 static boolean zap_steed(struct obj *);
 static void skiprange(int, int *, int *);
 static int zap_hit(int, int);
@@ -1051,7 +1050,7 @@ revive(struct obj *corpse, boolean by_hero)
     return mtmp;
 }
 
-static void
+void
 revive_egg(struct obj *obj)
 {
     /*
@@ -2278,6 +2277,11 @@ bhito(struct obj *obj, struct obj *otmp)
         case WAN_HEALING:
         case WAN_WONDER:
             res = 0;
+            break;
+        case WAN_FIRE:
+            if (obj->otyp == EGG && obj->corpsenm == PM_PHOENIX) {
+                revive_egg(obj);
+            }
             break;
         case SPE_STONE_TO_FLESH:
             res = stone_to_flesh_obj(obj);
@@ -5717,6 +5721,8 @@ destroy_mitem(struct monst *mtmp, int osym, int dmgtyp)
                 if (obj->otyp == GLOB_OF_GREEN_SLIME) {
                     dindx = 1; /* boil and explode */
                     tmp += (obj->owt + 19) / 20;
+                } else if (obj->otyp == EGG && obj->corpsenm == PM_PHOENIX) {
+                    revive_egg(obj);
                 } else {
                     skip++;
                 }

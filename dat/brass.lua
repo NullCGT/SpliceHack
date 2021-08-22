@@ -137,7 +137,7 @@ des.monster("fire vortex")
 des.monster({ id = "hell hound pup",peaceful=1 })
 des.monster({ id = "phoenix", peaceful=0 })
 des.monster({ id = "phoenix", peaceful=0 })
-des.monster({ id = "vent wurm", peaceful=0 })
+des.monster({ id = "phoenix", peaceful=0 })
 
 des.monster({ id = "salamander", peaceful=0 })
 des.monster({ id = "salamander", peaceful=0 })

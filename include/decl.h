@@ -28,8 +28,11 @@ struct dgn_topology { /* special dungeon levels for speed */
     d_level d_portal_level;    /* only in goto_level() [do.c] */
     d_level d_sanctum_level;
     d_level d_earth_level;
+    d_level d_gem_level;
     d_level d_water_level;
+    d_level d_brass_level;
     d_level d_fire_level;
+    d_level d_iceplane_level;
     d_level d_air_level;
     d_level d_astral_level;
     xchar d_tower_dnum;
@@ -61,8 +64,11 @@ struct dgn_topology { /* special dungeon levels for speed */
 #define portal_level            (g.dungeon_topology.d_portal_level)
 #define sanctum_level           (g.dungeon_topology.d_sanctum_level)
 #define earth_level             (g.dungeon_topology.d_earth_level)
+#define gem_level               (g.dungeon_topology.d_gem_level)
 #define water_level             (g.dungeon_topology.d_water_level)
+#define brass_level             (g.dungeon_topology.d_brass_level)
 #define fire_level              (g.dungeon_topology.d_fire_level)
+#define iceplane_level          (g.dungeon_topology.d_iceplane_level)
 #define air_level               (g.dungeon_topology.d_air_level)
 #define astral_level            (g.dungeon_topology.d_astral_level)
 #define tower_dnum              (g.dungeon_topology.d_tower_dnum)

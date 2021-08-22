@@ -1113,7 +1113,7 @@ is_ok_location(xchar x, xchar y, int humidity)
 {
     register int typ;
 
-    if (Is_waterlevel(&u.uz))
+    if (Is_waterlevel(&u.uz) || Is_iceplanelevel(&u.uz))
         return TRUE; /* accept any spot */
 
     /* TODO: Should perhaps check if wall is diggable/passwall? */

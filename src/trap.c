@@ -2889,7 +2889,7 @@ blow_up_landmine(struct trap* trap)
     }
     /* convert landmine into pit */
     if (trap) {
-        if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz)) {
+        if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz) || Is_iceplanelevel(&u.uz)) {
             /* no pits here */
             deltrap(trap);
         } else {
@@ -4125,6 +4125,9 @@ fire_damage(
           *     awful luck (Luck<-4):  100%
           */
         return FALSE;
+    } else if (obj->otyp == EGG && obj->corpsenm == PM_PHOENIX) {
+        revive_egg(obj);
+        return FALSE;
     } else if (obj->oclass == SCROLL_CLASS || obj->oclass == SPBOOK_CLASS) {
         if (obj->otyp == SCR_FIRE || obj->otyp == SPE_FIREBALL)
             return FALSE;
@@ -4200,6 +4203,10 @@ lava_damage(struct obj* obj, xchar x, xchar y)
        and books--let fire damage deal with them), cloth, leather, wood, bone
        unless it's inherently or explicitly fireproof or contains something;
        note: potions are glass so fall through to fire_damage() and boil */
+    if (obj->otyp == EGG && obj->corpsenm == PM_PHOENIX) {
+        revive_egg(obj);
+        return FALSE;
+    }
     if (obj->material < DRAGON_HIDE
         && ocls != SCROLL_CLASS && ocls != SPBOOK_CLASS
         && objects[otyp].oc_oprop != FIRE_RES

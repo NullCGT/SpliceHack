@@ -493,6 +493,7 @@ num_horns(struct permonst* ptr)
     case PM_MINOTAUR:
     case PM_ASMODEUS:
     case PM_BALROG:
+    case PM_GORISTRO:
     case PM_BLACK_DRAGON:
     case PM_MEPHISTOPHOLES:
     case PM_BAPHOMET:

@@ -676,8 +676,10 @@ static struct level_map {
                   { "astral", &astral_level },
                   { "baalz", &baalzebub_level },
                   { "bigrm", &bigroom_level },
+                  { "brass", &brass_level },
                   { "castle", &stronghold_level },
                   { "earth", &earth_level },
+                  { "gemarray", &gem_level },
                   { "fakewiz1", &portal_level },
                   { "fire", &fire_level },
                   { "juiblex", &juiblex_level },
@@ -689,6 +691,7 @@ static struct level_map {
                   { "orcus", &orcus_level },
                   { "rogue", &rogue_level },
                   { "sanctum", &sanctum_level },
+                  { "ice", &iceplane_level },
                   { "valley", &valley_level },
                   { "water", &water_level },
                   { "wizard1", &wiz1_level },
@@ -1676,7 +1679,7 @@ boolean
 has_ceiling(d_level *lev)
 {
     /* [what about level 1 of the quest?] */
-    return (boolean) (!Is_airlevel(lev) && !Is_waterlevel(lev));
+    return (boolean) (!Is_airlevel(lev) && !Is_waterlevel(lev) && !Is_iceplanelevel(lev));
 }
 
 /*
@@ -2308,6 +2311,8 @@ print_dungeon(boolean bymenu, schar *rlev, xchar *rdgn)
         /* only report "no portal found" when actually expecting a portal */
         else if (Is_earthlevel(&u.uz) || Is_waterlevel(&u.uz)
                  || Is_firelevel(&u.uz) || Is_airlevel(&u.uz)
+                 || Is_iceplanelevel(&u.uz)
+                 || Is_gemlevel(&u.uz)
                  || Is_qstart(&u.uz) || at_dgn_entrance("The Quest")
                  || Is_knox(&u.uz))
             Strcpy(buf, "No portal found.");
@@ -3169,17 +3174,26 @@ endgamelevelname(char *outbuf, int indx)
 
     *outbuf = '\0';
     switch (indx) {
-    case -5:
+    case -8:
         Strcpy(outbuf, "Astral Plane");
         break;
-    case -4:
+    case -7:
         planename = "Water";
         break;
-    case -3:
+    case -6:
+        planename = "Fire, City of Brass";
+        break;
+    case -5:
         planename = "Fire";
         break;
-    case -2:
+    case -4:
+        planename = "Ice";
+        break;
+    case -3:
         planename = "Air";
+        break;
+    case -2:
+        planename = "Earth, Gemstone Array";
         break;
     case -1:
         planename = "Earth";

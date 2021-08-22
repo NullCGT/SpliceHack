@@ -204,9 +204,13 @@ surface(register int x, register int y)
         return "headstone";
     else if (IS_FOUNTAIN(levl[x][y].typ))
         return "fountain";
-    else if ((IS_ROOM(lev->typ) && !Is_earthlevel(&u.uz))
+    else if ((IS_ROOM(lev->typ) && !Is_earthlevel(&u.uz) && !Is_gemlevel(&u.uz))
              || IS_WALL(lev->typ) || IS_DOOR(lev->typ) || lev->typ == SDOOR)
         return "floor";
+    else if (Is_firelevel(&u.uz))
+        return "obsidian";
+    else if (Is_iceplanelevel(&u.uz))
+        return "ice";
     else
         return "ground";
 }
@@ -233,7 +237,7 @@ ceiling(register int x, register int y)
         what = "sky";
     else if (Underwater)
         what = "water's surface";
-    else if ((IS_ROOM(lev->typ) && !Is_earthlevel(&u.uz))
+    else if ((IS_ROOM(lev->typ) && !Is_earthlevel(&u.uz) && !Is_gemlevel(&u.uz))
              || IS_WALL(lev->typ) || IS_DOOR(lev->typ) || lev->typ == SDOOR)
         what = "ceiling";
     else

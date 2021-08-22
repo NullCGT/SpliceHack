@@ -924,6 +924,7 @@ mon_explodes(struct monst *mon, struct attack *mattk)
 {
     int dmg;
     int type;
+    struct obj *obj;
     if (mattk->damn) {
         dmg = d((int) mattk->damn, (int) mattk->damd);
     }
@@ -960,8 +961,18 @@ mon_explodes(struct monst *mon, struct attack *mattk)
             s_suffix(pmname(mon->data, Mgender(mon))));
     g.killer.format = KILLED_BY_AN;
 
-    explode(mon->mx, mon->my, type, dmg, MON_EXPLODE,
-            adtyp_to_expltype(mattk->adtyp));
+    if (mon->data == &mons[PM_PHOENIX]) {
+        explode(mon->mx, mon->my, -1, dmg, MON_EXPLODE, EXPL_FIERY);
+        /* eggs have to be done here instead of in the corpse
+            function because otherwise the explosion destroys the egg */
+        obj = mksobj_at(EGG, mon->mx, mon->my, TRUE, FALSE);
+        obj->corpsenm = PM_PHOENIX;
+        obj->blessed = TRUE;
+        obj->quan = 1;
+        attach_egg_hatch_timeout(obj, 10L);
+    } else {
+        explode(mon->mx, mon->my, -1, dmg, MON_EXPLODE, EXPL_NOXIOUS);
+    }
 
     /* reset killer */
     g.killer.name[0] = '\0';

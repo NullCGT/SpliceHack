@@ -1339,6 +1339,7 @@ extern void water_friction(void);
 extern void save_waterlevel(NHFILE *);
 extern void restore_waterlevel(NHFILE *);
 extern const char *waterbody_name(xchar, xchar);
+extern void changemaze(void);
 
 /* ### mkobj.c ### */
 
@@ -3250,6 +3251,7 @@ extern int dowrite(struct obj *);
 
 /* ### zap.c ### */
 
+extern void revive_egg(struct obj *);
 extern void learnwand(struct obj *);
 extern int bhitm(struct monst *, struct obj *);
 extern void release_hold(void);

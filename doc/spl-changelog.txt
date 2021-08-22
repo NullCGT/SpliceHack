@@ -248,6 +248,8 @@ Bug Fixes
 Known Bugs
 - Rare failed sanity check for improper mon data, possibly due to vampiric monsters shapeshifting.
 - Removing a mask that transformed you into a light-emitting monster will cause a program in disorder.
+- Phoenix egg revival via fire is very buggy.
+- Occasional rn2(0) when entering a level.
 
                             Version 0.8.3
 

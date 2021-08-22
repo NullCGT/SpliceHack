@@ -697,6 +697,7 @@ hurtle_step(genericptr_t arg, int x, int y)
             dmg = rnd(2 + *range);
             losehp(Maybe_Half_Phys(dmg), s, KILLED_BY);
             wake_nearto(x,y, 10);
+            unmul((char *) 0);
             return FALSE;
         }
         if (levl[x][y].typ == IRONBARS) {
@@ -705,6 +706,7 @@ hurtle_step(genericptr_t arg, int x, int y)
             losehp(Maybe_Half_Phys(dmg), "crashing into iron bars",
                    KILLED_BY);
             wake_nearto(x,y, 20);
+            unmul((char *) 0);
             return FALSE;
         }
         if ((obj = sobj_at(BOULDER, x, y)) != 0) {
@@ -712,6 +714,7 @@ hurtle_step(genericptr_t arg, int x, int y)
             dmg = rnd(2 + *range);
             losehp(Maybe_Half_Phys(dmg), "bumping into a boulder", KILLED_BY);
             wake_nearto(x,y, 10);
+            unmul((char *) 0);
             return FALSE;
         }
         if (!may_pass) {
@@ -721,6 +724,7 @@ hurtle_step(genericptr_t arg, int x, int y)
             losehp(Maybe_Half_Phys(dmg), "touching the edge of the universe",
                    KILLED_BY);
             wake_nearto(x,y, 10);
+            unmul((char *) 0);
             return FALSE;
         }
         if ((u.ux - x) && (u.uy - y) && bad_rock(g.youmonst.data, u.ux, y)
@@ -735,6 +739,7 @@ hurtle_step(genericptr_t arg, int x, int y)
                 losehp(Maybe_Half_Phys(dmg), "wedging into a narrow crevice",
                        KILLED_BY);
                 wake_nearto(x,y, 10);
+                unmul((char *) 0);
                 return FALSE;
             }
         }
@@ -2274,7 +2279,6 @@ breaktest(struct obj *obj)
     switch (obj->oclass == POTION_CLASS ? POT_WATER : obj->otyp) {
     case EXPENSIVE_CAMERA:
     case POT_WATER: /* really, all potions */
-    case EGG:
     case CREAM_PIE:
     case MELON:
     case ACID_VENOM:
@@ -2284,6 +2288,9 @@ breaktest(struct obj *obj)
     case FLAMING_LASH:
     case SLICE_OF_CAKE:
         return 1;
+    case EGG:
+        if (obj->corpsenm != PM_PHOENIX)
+            return 1;
     default:
         return 0;
     }

@@ -1538,6 +1538,13 @@ NEARDATA struct permonst mons_init[] = {
         SIZ(30, 20, MS_SQEEK, MZ_SMALL), MR_POISON, 0,
         M1_FLY | M1_ANIMAL | M1_NOHANDS | M1_OMNIVORE,
         M2_HOSTILE, M3_INFRAVISIBLE, 9, HI_GOLD),
+    MON("phoenix", S_BAT, LVL(15, 20, -7, 40, 7), (G_GENO | G_NOCORPSE | 2),
+        A(ATTK(AT_BITE, AD_PHYS, 2, 6), ATTK(AT_CLAW, AD_PHYS, 3, 6),
+          ATTK(AT_CLAW, AD_PHYS, 3, 6), ATTK(AT_BOOM, AD_FIRE, 8, 6),
+          NO_ATTK, NO_ATTK),
+        SIZ(40, 20, MS_SQAWK, MZ_SMALL), MR_FIRE, MR_FIRE,
+        M1_FLY | M1_ANIMAL | M1_NOHANDS | M1_HERBIVORE | M1_OVIPAROUS,
+        M2_WANDER | M2_STRONG | M2_NASTY, M3_INFRAVISIBLE, 20, CLR_ORANGE),
     /*
      * Centaurs
      */
@@ -2061,6 +2068,14 @@ struct permonst _mons2[] = {
         M1_ANIMAL | M1_HUMANOID | M1_CARNIVORE,
         M2_HOSTILE | M2_STRONG | M2_NASTY, M3_INFRAVISIBLE | M3_INFRAVISION,
         17, CLR_BROWN),
+    MON2("goristro", S_GIANT, LVL(20, 15, 6, 60, -8), (G_GENO | G_HELL | 2),
+        A(ATTK(AT_CLAW, AD_PHYS, 4, 8), ATTK(AT_CLAW, AD_PHYS, 4, 8),
+          ATTK(AT_BUTT, AD_PHYS, 3, 8), ATTK(AT_HUGS, AD_PHYS, 2, 8),
+          NO_ATTK, NO_ATTK),
+        SIZ(1500, 700, MS_MOO, MZ_LARGE), MR_FIRE, 0,
+        M1_HUMANOID | M1_CARNIVORE,
+        M2_HOSTILE | M2_STRONG | M2_NASTY | M2_STALK, 
+        M3_INFRAVISIBLE | M3_INFRAVISION, MH_DEMON, 22, CLR_ORANGE),
     /*
      * Invisible
      * S_invisible=='I' is a visual marker for all invisible monsters
@@ -3537,6 +3552,14 @@ struct permonst _mons2[] = {
         SIZ(1500, 400, MS_DJINNI, MZ_HUMAN), MR_POISON | MR_STONE, 0,
         M1_HUMANOID | M1_FLY | M1_POIS, M2_NOPOLY | M2_STALK | M2_COLLECT,
         M3_INFRAVISIBLE, 8, CLR_YELLOW),
+    MON("efreet", S_DEMON, LVL(15, 15, 4, 42, 0), (G_NOGEN | G_NOCORPSE),
+        A(ATTK(AT_WEAP, AD_PHYS, 4, 8), ATTK(AT_TUCH, AD_FIRE, 3, 4), 
+          ATTK(AT_TUCH, AD_WIND, 2, 2), NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(1800, 600, MS_DJINNI, MZ_HUMAN), 
+        MR_POISON | MR_STONE | MR_FIRE, 0,
+        M1_HUMANOID | M1_FLY | M1_POIS | M1_SEE_INVIS, 
+        M2_NOPOLY | M2_STALK | M2_COLLECT | M2_STRONG,
+        M3_INFRAVISIBLE, 8, CLR_WHITE),
     /*
      * sea monsters
      */

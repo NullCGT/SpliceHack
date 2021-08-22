@@ -371,8 +371,10 @@ moveloop(boolean resuming)
  * things that are active and need to be handled that is dynamically
  * maintained and not a list of special cases. */
                     /* underwater and waterlevel vision are done here */
-                    if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz))
+                    if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz) || Is_iceplanelevel(&u.uz))
                         movebubbles();
+                    else if (Is_gemlevel(&u.uz) && !rn2(4))
+                        changemaze();
                     else if (Is_firelevel(&u.uz))
                         fumaroles();
                     else if (Underwater)

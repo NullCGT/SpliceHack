@@ -45,6 +45,11 @@
     <Luafiles Include = "knox.lua"/>
     <Luafiles Include = "rats.lua"/>
     <Luafiles Include = "bar.lua"/>
+    <Luafiles Include = "foogardens.lua"/>
+    <Luafiles Include = "mephisto.lua"/>
+    <Luafiles Include = "ice.lua"/>
+    <Luafiles Include = "gemarray.lua"/>
+    <Luafiles Include = "brass.lua"/>
     <Luafiles Include = "minefill.lua"/>
     <Luafiles Include = "minend-1.lua"/>
     <Luafiles Include = "minend-2.lua"/>

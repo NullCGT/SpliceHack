@@ -28,6 +28,7 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 ]]);
 des.teleport_region({ region = {0,0,25,19} })
 des.levregion({ type="portal", region={51,0,75,19}, name="fire" })
+des.region(selection.area(00,00,75,19),"lit")
 
 -- Elementals!
 des.monster({ id = "air elemental", peaceful=0 })
@@ -43,9 +44,9 @@ des.monster({ id = "ice elemental", peaceful=0 })
 des.monster({ id = "ice elemental", peaceful=0 })
 des.monster({ id = "ice elemental", peaceful=0 })
 des.monster({ id = "ice elemental", peaceful=0 })
-des.monster({ id = "storm elemental", peaceful=0 })
-des.monster({ id = "storm elemental", peaceful=0 })
-des.monster({ id = "storm elemental", peaceful=0 })
+des.monster({ id = "plasma elemental", peaceful=0 })
+des.monster({ id = "plasma elemental", peaceful=0 })
+des.monster({ id = "plasma elemental", peaceful=0 })
 
 -- Some fish
 des.monster("kraken")
@@ -80,7 +81,6 @@ des.monster({ id = "red dragon", peaceful=0 })
 des.monster({ id = "red dragon", peaceful=0 })
 des.monster({ id = "silver dragon", peaceful=0 })
 des.monster({ id = "white dragon", peaceful=0 })
-des.monster({ id = "razor dragon", peaceful=0 })
 des.monster({ id = "energy vortex", peaceful=0 })
 des.monster({ id = "energy vortex", peaceful=0 })
 des.monster({ id = "ice vortex", peaceful=0 })

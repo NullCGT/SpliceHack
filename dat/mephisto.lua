@@ -59,7 +59,7 @@ des.monster({id="hezrou", x=32, y=07})
 des.monster({id="hezrou", x=41, y=07})
 des.monster({id="hezrou", x=33, y=08})
 des.monster({id="hezrou", x=40, y=08})
-des.monster({id="mephisto", x=36, y=12})
+des.monster({id="Mephistopholes", x=36, y=12})
 --
 des.object()
 des.object()

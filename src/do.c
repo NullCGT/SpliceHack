@@ -1422,7 +1422,7 @@ goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean portal
        aren't saved with the level and restored upon return (new ones are
        created instead), we need to discard them to avoid a memory leak;
        so bubbles are now discarded as we leave the level they're used on */
-    if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz)) {
+    if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz) || Is_iceplanelevel(&u.uz)) {
         NHFILE tmpnhfp;
 
         zero_nhfile(&tmpnhfp);
@@ -1495,7 +1495,7 @@ goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean portal
         /* when in wizard mode, it is possible to leave from and return to
            any level in the endgame; above, we discarded bubble/cloud info
            when leaving Plane of Water or Air so recreate some now */
-        if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz)) {
+        if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz) || Is_iceplanelevel(&u.uz)) {
             NHFILE tmpnhfp;
 
             zero_nhfile(&tmpnhfp);
@@ -1619,7 +1619,7 @@ goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean portal
     initrack();
 
     /* initial movement of bubbles just before vision_recalc */
-    if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz))
+    if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz) || Is_iceplanelevel(&u.uz))
         movebubbles();
     else if (Is_firelevel(&u.uz))
         fumaroles();

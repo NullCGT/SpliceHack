@@ -39,6 +39,7 @@ static boolean muse_unslime(struct monst *, struct obj *, struct trap *,
                             boolean);
 static int cures_sliming(struct monst *, struct obj *);
 static boolean green_mon(struct monst *);
+static void mmake_wish(struct monst *);
 
 /* Any preliminary checks which may result in the monster being unable to use
  * the item.  Returns 0 if nothing happened, 2 if the monster can't do
@@ -91,7 +92,7 @@ precheck(struct monst* mon, struct obj* obj)
                 return 0;
             mquaffmsg(mon, obj);
             m_useup(mon, obj);
-            mtmp = makemon(&mons[PM_DJINNI], cc.x, cc.y, NO_MM_FLAGS);
+            mtmp = makemon(&mons[rn2(5) ? PM_DJINNI : PM_EFREET], cc.x, cc.y, NO_MM_FLAGS);
             if (!mtmp) {
                 if (vis)
                     pline1(empty);
@@ -102,6 +103,12 @@ precheck(struct monst* mon, struct obj* obj)
                 /* I suspect few players will be upset that monsters */
                 /* can't wish for wands of death here.... */
                 if (rn2(2)) {
+                    verbalize("Thank you for freeing me! I will grant you a wish in gratitude!");
+                    mmake_wish(mon);
+                    if (vis)
+                        pline("%s vanishes.", Monnam(mtmp));
+                    mongone(mtmp);
+                } else if (rn2(2)) {
                     verbalize("You freed me!");
                     mtmp->mpeaceful = 1;
                     set_malign(mtmp);
@@ -1499,7 +1506,7 @@ find_offensive(struct monst* mtmp)
             && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 2
             && mtmp->mcansee && haseyes(mtmp->data)
             && !Is_rogue_level(&u.uz)
-            && (!In_endgame(&u.uz) || Is_earthlevel(&u.uz))) {
+            && (!In_endgame(&u.uz) || Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz))) {
             g.m.offensive = obj;
             g.m.has_offense = MUSE_SCR_EARTH;
         }
@@ -1995,6 +2002,7 @@ rnd_offensive_item(struct monst* mtmp)
 #define MUSE_BAG 10
 /* splice muse */
 #define MUSE_POT_REFLECT 11
+#define MUSE_WISH 15
 
 boolean
 find_misc(struct monst* mtmp)
@@ -2119,6 +2127,12 @@ find_misc(struct monst* mtmp)
         if (obj->otyp == POT_SPEED && mtmp->mspeed != MFAST && !mtmp->isgd) {
             g.m.misc = obj;
             g.m.has_misc = MUSE_POT_SPEED;
+        }
+        nomore(MUSE_WISH);
+        if (mtmp->data == &mons[PM_EFREET] && In_endgame(&u.uz) 
+            && !mtmp->mcan && m_canseeu(mtmp) && !mtmp->mpeaceful) {
+            g.m.misc = NULL;
+            g.m.has_misc = MUSE_WISH;
         }
         nomore(MUSE_POT_REFLECT);
         if (obj->otyp == POT_REFLECTION && !mtmp->mreflect &&
@@ -2380,6 +2394,10 @@ use_misc(struct monst* mtmp)
            monster becomes "one stage faster" permanently */
         mon_adjust_speed(mtmp, 1, otmp);
         m_useup(mtmp, otmp);
+        return 2;
+    case MUSE_WISH:
+        mmake_wish(mtmp);
+        mtmp->mcan = 1;
         return 2;
     case MUSE_POT_REFLECT:
         mquaffmsg(mtmp, otmp);
@@ -3159,6 +3177,71 @@ green_mon(struct monst* mon)
         break;
     }
     return FALSE;
+}
+
+/* The monster chooses what to wish for. This code is based off the code in
+   makemon.c. */
+static void
+mmake_wish(mon)
+struct monst *mon;
+{
+    register int cnt;
+    register struct obj *otmp;
+    const char* str;
+
+    otmp = NULL;
+    str = "something";
+    switch(rn2(5)) {
+        case 0:
+            otmp = mksobj(FIGURINE, FALSE, FALSE);
+            bless(otmp);
+            otmp->corpsenm = PM_WOODCHUCK;
+            oname(otmp, "Carl");
+            (void) mpickobj(mon, otmp);
+            break;
+        case 1:
+            for (cnt = 0; cnt < 1 + rn2(3); cnt++) {
+                otmp = mksobj(POT_GAIN_LEVEL, FALSE, FALSE);
+                (void) mpickobj(mon, otmp);
+            }
+            break;
+        case 2:
+            otmp = mksobj(AMULET_OF_LIFE_SAVING, FALSE, FALSE);
+            bless(otmp);
+            (void) mpickobj(mon, otmp);
+            break;
+        case 3:
+            /* This is fine for dragons, because an artifact would be a good
+               addition to their hoard. */
+            otmp = mk_artifact((struct obj *)0, mon->malign);
+            if (otmp) {
+                bless(otmp);
+                (void) mpickobj(mon, otmp);
+            }
+            break;
+        case 4:
+            if (mon->mreflect == 1 || monsndx(mon->data) == PM_SILVER_DRAGON
+                                   || monsndx(mon->data) == PM_BABY_SILVER_DRAGON) {
+                if (humanoid(mon->data))
+                    otmp = mksobj(SILVER_DRAGON_SCALE_MAIL, FALSE, FALSE);
+                else
+                    otmp = mksobj(AMULET_OF_REFLECTION, FALSE, FALSE);
+                bless(otmp);
+                (void) mpickobj(mon, otmp);
+                break;
+            }
+        /* FALLTHRU */
+        default:
+            /* Dragons don't have a use for wands of death */
+            (void) mkmonmoney(mon, 5000);
+            str = "gold";
+    }
+    if (otmp)
+        str = an(xname(otmp));
+    if (canseemon(mon)) {
+        pline("%s wishes for %s!", Monnam(mon), str);
+    }
+    m_dowear(mon, FALSE);
 }
 
 /*muse.c*/

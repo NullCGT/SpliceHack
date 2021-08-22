@@ -144,7 +144,7 @@ static void
 unplacebc_core(void)
 {
     if (u.uswallow) {
-        if (Is_waterlevel(&u.uz)) {
+        if (Is_waterlevel(&u.uz) || Is_iceplanelevel(&u.uz)) {
             /* we need to proceed with the removal from the floor
              * so that movebubbles() processing will disregard it as
              * intended. Ignore all the vision stuff.

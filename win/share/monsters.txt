@@ -7589,6 +7589,44 @@ Z = (195, 195, 195)
   ................
   ................
 }
+# tile 251 (phoenix,male)
+{
+  ................
+  ..............D.
+  ..H..........DID
+  ...HH.......DICD
+  ...HDD......DICD
+  D...DBD....DDCHD
+  DD..DDD...DIDID.
+  HID..IDDDDICDDD.
+  CCDIIDIDCDDDID..
+  .IDHIIDCCIIDD...
+  .IDDCDDDICDIC...
+  ..DCHD.DIICHDCC.
+  ........DDHCHD.D
+  .........DHCDDD.
+  .........CDDD..C
+  ........DC.H.I..
+}
+# tile 251 (phoenix,female)
+{
+  ................
+  ..............D.
+  ..H..........DID
+  ...HH.......DICD
+  ...HDD......DICD
+  D...DBD....DDCHD
+  DD..DDD...DIDID.
+  HID..IDDDDICDDD.
+  CCDIIDIDCDDDID..
+  .IDHIIDCCIIDD...
+  .IDDCDDDICDIC...
+  ..DCHD.DIICHDCC.
+  ........DDHCHD.D
+  .........DHCDDD.
+  .........CDDD..C
+  ........DC.H.I..
+}
 # tile 382 (plains centaur,male)
 {
   ................
@@ -10020,6 +10058,44 @@ Z = (195, 195, 195)
   .LL.JJJJJJJLLAAA
   ....CLCACLCAAAAA
   ..LLLLL.LLLLLAA.
+}
+# tile 337 (goristro,male)
+{
+  .OO........OO...
+  .O..........O...
+  .OOOLLLLLLOOO...
+  ..OOLLKLLLOO....
+  ...LGAKLGALA....
+  ...LLLKLLLLA....
+  ....LLKLLLAAA...
+  ....LKKKLAAAA...
+  ..CDLALAKADCAA.A
+  .CDDLLLLLADDCAAA
+  .DDCDAAAADCDDAA.
+  .DAACDDDDCAADAA.
+  .DD.JJJJJJJDDAAA
+  .DD.JJJJJJJDDAAA
+  ....CDCACDCAAAAA
+  ..DDDDD.DDDDDAA.
+}
+# tile 337 (goristro,female)
+{
+  .OO........OO...
+  .O..........O...
+  .OOOLLLLLLOOO...
+  ..OOLLKLLLOO....
+  ...LGAKLGALA....
+  ...LLLKLLLLA....
+  ....LLKLLLAAA...
+  ....LKKKLAAAA...
+  ..CDLALAKADCAA.A
+  .CDDLLLLLADDCAAA
+  .DDCDAAAADCDDAA.
+  .DAACDDDDCAADAA.
+  .DD.JJJJJJJDDAAA
+  .DD.JJJJJJJDDAAA
+  ....CDCACDCAAAAA
+  ..DDDDD.DDDDDAA.
 }
 # tile 510 (jabberwock,male)
 {
@@ -16745,6 +16821,44 @@ Z = (195, 195, 195)
   .......FEDAAA...
   .......I.GEA.A..
   .........IFED...
+  ................
+}
+# tile 570 (efreet,male)
+{
+  JDDWWWWWWWWWWWWW
+  .DD.WDDDWWWWWW..
+  ..D..GDG..D.....
+  ..JDADDDADJA....
+  ..DJDKKKCJDAAA..
+  ...DJCKCJDAAAA..
+  ....DNCDNA..AAAA
+  ....NNNNCAAAA..A
+  ....CNCCNAAAAAAA
+  ....NCFCAAAAAAAA
+  .....DCANAAAAA..
+  .....NGNFAAAA...
+  .......FCDAAA...
+  .......N.GCA.A..
+  .........NFCD...
+  ................
+}
+# tile 570 (efreet,female)
+{
+  JDDWWWWWWWWWWWWW
+  .DD.WDDDWWWWWW..
+  ..D..GDG..D.....
+  ..JDADDDADJA....
+  ..DJDKKKCJDAAA..
+  ...DJCKCJDAAAA..
+  ....DNCDNA..AAAA
+  ....NNNNCAAAA..A
+  ....CNCCNAAAAAAA
+  ....NCFCAAAAAAAA
+  .....DCANAAAAA..
+  .....NGNFAAAA...
+  .......FCDAAA...
+  .......N.GCA.A..
+  .........NFCD...
   ................
 }
 # tile 844 (jellyfish,male)

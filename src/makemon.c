@@ -37,17 +37,18 @@ is_home_elemental(struct permonst *ptr)
         switch (monsndx(ptr)) {
         case PM_AIR_ELEMENTAL:
         case PM_PLASMA_ELEMENTAL:
-            return Is_airlevel(&u.uz);
+            return Is_airlevel(&u.uz) || Is_iceplanelevel(&u.uz);
         case PM_FIRE_ELEMENTAL:
         case PM_MAGMA_ELEMENTAL:
             return Is_firelevel(&u.uz);
         case PM_ACID_ELEMENTAL:
         case PM_EARTH_ELEMENTAL:
-        case PM_MUD_ELEMENTAL:
-            return Is_earthlevel(&u.uz);
+            return Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz);
         case PM_WATER_ELEMENTAL:
         case PM_ICE_ELEMENTAL:
-            return Is_waterlevel(&u.uz);
+            return Is_waterlevel(&u.uz) || Is_iceplanelevel(&u.uz);
+        case PM_MUD_ELEMENTAL:
+            return Is_earthlevel(&u.uz) || Is_waterlevel(&u.uz);
         case PM_FUSION_ELEMENTAL:
             return Is_astralevel(&u.uz);
         }
@@ -62,7 +63,7 @@ wrong_elem_type(struct permonst *ptr)
 {
     if (ptr->mlet == S_ELEMENTAL) {
         return (boolean) !is_home_elemental(ptr);
-    } else if (Is_earthlevel(&u.uz)) {
+    } else if (Is_earthlevel(&u.uz) || Is_gemlevel(&u.uz)) {
         /* no restrictions? */
     } else if (Is_waterlevel(&u.uz)) {
         /* just monsters that can swim */
@@ -70,6 +71,9 @@ wrong_elem_type(struct permonst *ptr)
             return TRUE;
     } else if (Is_firelevel(&u.uz)) {
         if (!pm_resistance(ptr, MR_FIRE))
+            return TRUE;
+    } else if (Is_iceplanelevel(&u.uz)) {
+        if (!pm_resistance(ptr, MR_COLD))
             return TRUE;
     } else if (Is_airlevel(&u.uz)) {
         if (!(is_flyer(ptr) && ptr->mlet != S_TRAPPER) && !is_floater(ptr)
@@ -764,6 +768,9 @@ m_initweap(register struct monst *mtmp)
             otmp = mksobj(TRIPLE_FLAIL, FALSE, FALSE);
             otmp->material = BONE;
             mpickobj(mtmp, otmp);
+            break;
+        case PM_EFREET:
+            (void) mongets(mtmp, TWO_HANDED_SWORD);
             break;
         case PM_ARMANITE:
             (void) mongets(mtmp, CROSSBOW);

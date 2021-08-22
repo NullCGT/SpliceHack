@@ -3618,7 +3618,7 @@ dynamic_levname(void)
             return 1;
         }
     }
-    if (u.uz.dnum != 0)
+    if (u.uz.dnum != 0 || !rn2(3) || depth(&u.uz) == 1)
         return 0;
 
     if (g.level.flags.nfurnaces && !rn2(3)) {

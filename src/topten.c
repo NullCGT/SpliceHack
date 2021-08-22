@@ -1363,7 +1363,7 @@ tt_name(void)
 {
     struct toptenentry *tt = get_rnd_toptenentry();
     if (!tt)
-        return NULL;
+        return "Carl";
     else
         return tt->name;
 

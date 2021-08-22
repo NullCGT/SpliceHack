@@ -1272,6 +1272,9 @@ do_oname(register struct obj *obj)
 struct obj *
 weapon_oname(struct obj *wpn)
 {
+    /* If we somehow get here without a weapon, instantly get out */
+    if (!wpn)
+        return wpn;
     /* Don't randomly name stacks. */
     if (wpn->quan > 1)
         return wpn;
@@ -1308,7 +1311,7 @@ weapon_oname(struct obj *wpn)
         "%s of Harm",     "%s of Mercy",   "%s of the Godless",
         "%s of the Peerless", "%s of the End", "%s of the Beginning",
         "%s of Protection",   "%s of the Infinite", "%s of Swift Defeat",
-        "%s of the Planes",   "%s of Insanity", "%s of Death"
+        "%s of the Planes",   "%s of Insanity", "%s of Death",
         "Righteous %s",   "Mighty %s",     "Unstoppable %s", "Unlimited %s",
         "Lucky %s",       "Unlucky %s",    "Hungry %s",      "Desecrated %s",
         "Death %s",       "Dudley's %s",   "Gilgamesh's %s", "Punished %s",
@@ -1316,10 +1319,10 @@ weapon_oname(struct obj *wpn)
         "Due Process",    "Puddingbane",
         "Newtsbane",      "Aggressive Negotiation",
         "Orphan Maker",   "Monster Slayer",
-        "Astral Caller",   "Danger",
+        "Astral Caller",   "Danger"
     };
     char buf[BUFSZ];
-    if (!rn2(25 - (2 * wpn->spe))) {
+    if (!rn2(max(2, 25 - (2 * wpn->spe)))) {
         char nbuf[PL_NSIZ+1];
         const char* ttname = tt_name();
         if (ttname) {

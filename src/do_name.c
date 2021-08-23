@@ -630,8 +630,8 @@ getpos(coord *ccp, boolean force, const char *goal)
     static struct {
         int nhkf, ret;
     } const pick_chars_def[] = {
-        { NHKF_GETPOS_PICK, LOOK_TRADITIONAL },
-        { NHKF_GETPOS_PICK_Q, LOOK_QUICK },
+        { NHKF_GETPOS_PICK, LOOK_ONCE },
+        { NHKF_GETPOS_PICK_Q, LOOK_ONCE },
         { NHKF_GETPOS_PICK_O, LOOK_ONCE },
         { NHKF_GETPOS_PICK_V, LOOK_VERBOSE }
     };

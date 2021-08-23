@@ -14,7 +14,7 @@ static int append_str(char *, const char *);
 static void look_at_object(char *, int, int, int);
 static void look_at_monster(char *, char *, struct monst *, int, int);
 static struct permonst *lookat(int, int, char *, char *);
-static void checkfile(char *, struct permonst *, boolean, boolean,
+static void checkfile(char *, struct permonst *, boolean, boolean, winid,
                       char *);
 static void look_all(boolean,boolean);
 static void do_supplemental_info(char *, struct permonst *, boolean);
@@ -696,6 +696,7 @@ struct permonst * pm;
 {
     char buf[BUFSZ];
     char buf2[BUFSZ];
+    char buf3[BUFSZ];
     int gen = pm->geno;
     int freq = (gen & G_FREQ);
     boolean uniq = !!(gen & G_UNIQ);
@@ -725,20 +726,31 @@ struct permonst * pm;
     }
 #define MONPUTSTR(str) putstr(datawin, ATR_NONE, str)
 
+    Sprintf(buf, "%s (%c) - %s%s:",
+            pm->pmnames[NEUTRAL], 
+            def_monsyms[(int) pm->mlet].sym,
+            uniq ? "unique " : "",
+            def_monsyms[(int) pm->mlet].explain);
+    upstart(buf);
+    putstr(datawin, ATR_INVERSE, buf);
+    MONPUTSTR("");
+    putstr(datawin, ATR_BOLD, "Statistics:\n");
+
     if ((g.mvitals[monsndx(pm)].mvflags & G_KNOWN) == 0 && !wizard) {
         MONPUTSTR("You do not know enough about this monster yet to ascertain its exact statistics.");
-        MONPUTSTR("Such information could be gained in the following ways, for example:");
+        MONPUTSTR("Such information could be gained in the following ways:");
         MONPUTSTR("- Slaying it");
         MONPUTSTR("- Probing it");
         MONPUTSTR("- Speaking with it (if peaceful)");
-        return;
-    }
 
-    Sprintf(buf, "\"%s\" - %s %s:", pm->pmnames[NEUTRAL], 
-            uniq ? "unique" : "",
-            def_monsyms[(int) pm->mlet].explain);
-    putstr(datawin, ATR_BOLD, buf);
-    MONPUTSTR("");
+        if (!is_unkdemon(pm)) {
+            buf3[0] = '\0';
+            MONPUTSTR("");
+            putstr(datawin, ATR_BOLD, "Encyclopedia Entry:\n");
+            checkfile(buf3, pm, FALSE, TRUE, datawin, (char *) 0);
+            return;
+        }
+    }
 
     /* Misc */
 
@@ -942,12 +954,19 @@ struct permonst * pm;
             APPENDC(TRUE, buf2);
         }
     }
+    MONPUTSTR("");
+    putstr(datawin, ATR_BOLD, "Attacks:\n");
     if (*buf) {
-        Snprintf(buf2, sizeof(buf2), "Attacks:\n %s", buf);
+        Snprintf(buf2, sizeof(buf2), "%s", buf);
         MONPUTSTR(buf2);
     }
     else
         MONPUTSTR("Has no attacks.");
+
+    buf3[0] = '\0';
+    MONPUTSTR("");
+    putstr(datawin, ATR_BOLD, "Encyclopedia Entry:\n");
+    checkfile(buf3, pm, FALSE, TRUE, datawin, (char *) 0);
 }
 #undef ADDPROP
 #undef ADDMR
@@ -966,7 +985,7 @@ struct permonst * pm;
  */
 static void
 checkfile(char *inp, struct permonst *pm, boolean user_typed_name,
-          boolean without_asking, char *supplemental_name)
+          boolean without_asking, winid existing_win, char *supplemental_name)
 {
     dlb *fp;
     char buf[BUFSZ], newstr[BUFSZ], givenname[BUFSZ];
@@ -1198,7 +1217,8 @@ checkfile(char *inp, struct permonst *pm, boolean user_typed_name,
                         pline("? Seek error on 'data' file!");
                         goto checkfile_done;
                     }
-                    datawin = create_nhwindow(NHW_MENU);
+                    if (!existing_win)
+                        datawin = create_nhwindow(NHW_MENU);
                     for (i = 0; i < entry_count; i++) {
                         /* room for 1-tab or 8-space prefix + BUFSZ-1 + \0 */
                         char tabbuf[BUFSZ + 8], *tp;
@@ -1228,10 +1248,16 @@ checkfile(char *inp, struct permonst *pm, boolean user_typed_name,
                            at the end of quotes typically have them */
                         if (index(tp, '\t') != 0)
                             (void) tabexpand(tp);
-                        putstr(datawin, 0, tp);
+                        if (!existing_win)
+                            putstr(datawin, 0, tp);
+                        else {
+                            putstr(existing_win, 0, tp);
+                        }
                     }
-                    display_nhwindow(datawin, FALSE);
-                    destroy_nhwindow(datawin), datawin = WIN_ERR;
+                    if (!existing_win) {
+                        display_nhwindow(datawin, FALSE);
+                        destroy_nhwindow(datawin), datawin = WIN_ERR;
+                    }
                 }
             } else if (user_typed_name && pass == 0 && !pass1found_in_file)
                 pline("You don't have any information on those things.");
@@ -1704,7 +1730,7 @@ do_look(int mode, coord *click_cc)
                     break;
                 }
             if (*out_str)
-                checkfile(out_str, pm, TRUE, TRUE, (char *) 0);
+                checkfile(out_str, pm, TRUE, TRUE, (void *) NULL, (char *) 0);
             return 0;
           }
         case '?':
@@ -1718,7 +1744,7 @@ do_look(int mode, coord *click_cc)
                 return 0;
 
             if (out_str[1]) { /* user typed in a complete string */
-                checkfile(out_str, pm, TRUE, TRUE, (char *) 0);
+                checkfile(out_str, pm, TRUE, TRUE, NULL, (char *) 0);
                 return 0;
             }
             sym = out_str[0];
@@ -1802,7 +1828,7 @@ do_look(int mode, coord *click_cc)
                 supplemental_name[0] = '\0';
                 Strcpy(temp_buf, firstmatch);
                 checkfile(temp_buf, pm, FALSE,
-                          (boolean) (ans == LOOK_VERBOSE), supplemental_name);
+                          (boolean) (ans == LOOK_VERBOSE), NULL, supplemental_name);
                 if (supplemental_pm)
                     do_supplemental_info(supplemental_name, supplemental_pm,
                                          (boolean) (ans == LOOK_VERBOSE));

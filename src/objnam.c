@@ -1390,7 +1390,6 @@ doname_base(struct obj* obj, unsigned int doname_flags)
         if (obj->known) {
             Sprintf(eos(bp), " [%dAC]", ARM_BONUS(obj));
         } else {
-            pline("HUH");
             Sprintf(eos(bp), " [%dAC]", ARM_BONUS(obj) - max(0, obj->spe));
         }
     }

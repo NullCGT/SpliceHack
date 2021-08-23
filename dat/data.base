@@ -125,6 +125,7 @@ amber*
 *amnesia
 maud
 memory hound
+thought eater
 	Get thee hence, nor come again,
 	Mix not memory with doubt,
 	Pass, thou deathlike type of pain,
@@ -629,9 +630,11 @@ ooze
 		[ At the Mountains of Madness, by H.P. Lovecraft ]
 bloodshot eye
 blinking eye
-	Sometimes when you stare into the void, the void stares back.
+	The eyes are the windows to your soul.
+		[ William Shakespeare ]
 blue jelly
 spotted jelly
+magical eye
 	I'd planned how to prevent the lock from sealing behind me; it
 	required a temporary sacrifice, not cleverness.  I used the door
 	itself to help me cut off a portion of my body, after shunting all
@@ -767,7 +770,7 @@ brigit
 buer
 	This demon often manifests in the form of a lion's head surrounded
 	by five clawed limbs.
-bugbear
+bugbear*
 	Bugbears are relatives of goblins, although they tend to be
 	larger and more hairy.  They are aggressive carnivores and
 	sometimes kill just for the treasure their victims may be
@@ -928,6 +931,7 @@ gnom* cave*man
 	And sank into a sleep too deep for dream.
 		[ The Dreamer, by Robert Service ]
 *centaur
+armanite
 	Of all the monsters put together by the Greek imagination
 	the Centaurs (Kentauroi) constituted a class in themselves.
 	Despite a strong streak of sensuality, in their make-up,
@@ -959,7 +963,7 @@ centipede
 			by Dr. David Livingstone ]
 cerastes
 	A creature of Greek legend, a serpent that is incredibly
-	flexible—so much so that it is said to have no spine. Cerastae
+	flexible--so much so that it is said to have no spine. Cerastae
 	can have either two large ram-like horns or four pairs of smaller
 	horns.
 		[ Wikipedia, the free encyclopedia ]
@@ -1247,6 +1251,7 @@ critical strike
 	This technique is less powerful against monsters with bizarre
 	anatomies.
 *crocodile
+killer croc
 	A big animal with the appearance of a lizard, constituting
 	an order of the reptiles (_Loricata_ or _Crocodylia_), the
 	crocodile is a large, dangerous predator native to tropical
@@ -1451,7 +1456,7 @@ deepest one
 		I was somehow glad that they had no more than four limbs.
 		Their croaking, baying voices, clearly used for articulate speech,
 		held all the dark shades of expression which their staring faces lacked...
-		They were the blasphemous fish-frogs of the nameless design—living and horrible.
+		They were the blasphemous fish-frogs of the nameless design--living and horrible.
 			[ The Shadow over Innsmouth, by H.P. Lovecraft ]
 # takes "major demon" when specifying '&'
 demon
@@ -1659,9 +1664,13 @@ dragon blitz
 dragon call
 	The user of this technique calls all dragons on the level to their location,
 	and also can attract new dragons.
+dragon rider
+	Dragonborn, huh? Was it your ma or pa that was the dragon?
+		[ The Elder Scrolls V: Skyrim ]
 draugr
+draugar
 	Draugar live in their graves, often guarding treasure buried with
-	them in their burial mound. They are animated corpses—unlike ghosts
+	them in their burial mound. They are animated corpses--unlike ghosts
 	they have a corporeal body with similar physical abilities as in life.
 		[ Wikipedia, the free encyclopedia ]
 draw blood
@@ -2811,6 +2820,7 @@ barbed devil
 warhorse
 sea horse
 nightmare
+horse
 	King Richard III: A horse! a horse! my kingdom for a horse!
 	Catesby: Withdraw, my lord; I'll help you to a horse.
 	King Richard III: Slave, I have set my life upon a cast,
@@ -2886,7 +2896,6 @@ nurse
 ronin
 student
 warrior
-*watch*
 human or elf*
 	These strange creatures live mostly on the surface of the
 	earth, gathering together in societies of various forms, but
@@ -2948,12 +2957,14 @@ imp or minor demon
 		[ A Dictionary of Fairies, by Katharine Briggs ]
 incubus
 succubus
+amorous demon
 	The incubus and succubus are male and female versions of the
 	same demon, one who lies with a human for its own purposes,
 	usually to the detriment of the mortals who are unwise in
 	their dealings with them.
 *insect
 *insects
+locust
 	A minute invertebrate animal; one of the class _Insecta_.
 	The true insects or hexapods have the body divided into a
 	head, a thorax of 3 segments, each of which bears a pair of
@@ -3419,6 +3430,7 @@ latke
         A fried potato pancake, often prepared to celebrate Hanukkah.
 lava
 * lava
+lava demon
 	You are on the edge of a breath-taking view.  Far below you
 	is an active volcano, from which great gouts of molten lava
 	come surging out, cascading back down into the depths.  The
@@ -3456,7 +3468,7 @@ leash
 	putting the Dearlys on the leash to lead them over crossings.
 		[ The Hundred and One Dalmatians, by Dodie Smith ]
 legendary lichen
-	There is a low mist in the woods—It is a good day to study lichens.
+	There is a low mist in the woods--It is a good day to study lichens.
 		[Henry David Thoreau, A Year in Thoreau's Journal: 1851]
 lembas*
 	In the morning, as they were beginning to pack their slender
@@ -3518,6 +3530,8 @@ leprechaun
 		[ A Field Guide to the Little People
 		    by Nancy Arrowsmith & George Moorse ]
 *lich
+eye of fear and flame
+eye of flame and fear
 	But on its heels ere the sunset faded, there came a second
 	apparition, striding with incredible strides and halting when
 	it loomed almost upon me in the red twilight-the monstrous mummy
@@ -3978,6 +3992,7 @@ gnomish mines
 	armor and weapons (_wondrous_).
 	  [ The Tough Guide to Fantasyland, by Diana Wynne Jones ]
 minotaur
+baphomet
 	The Minotaur was a monster, half bull, half human, the
 	offspring of Minos' wife Pasiphae and a wonderfully beautiful
 	bull. ...  When the Minotaur was born Minos did not kill him.
@@ -4106,6 +4121,12 @@ master kaen
 	Therefore, my robe is eating the food, not me."
 		[ Dining with a General - a Zen Buddhism Koan,
 		  translation by Yiu-man Chan ]
+molydeus
+	The boa was not feathery, as they had originally presumed. Rather,
+	it was a live constrictor, curling around the woman's neck like
+	a vermillion choker. The woman's face too had changed. Her nose
+	had elongated into a terrible snout, and patches of dark fur
+	had begun to cover her skin.
 monkey
 lemur
 	"Listen, man-cub," said the Bear, and his voice rumbled like
@@ -4557,6 +4578,13 @@ panther
 			by Douglas and Graham Walker ]
 parrot
 	Polly desires a compressed edible concoction of wheat!
+pazuzu
+	"I'm not Regan."
+	"Well, then let's introduce ourselves. I'm Damien Karras." 
+	"And I'm the devil. Now kindly undo these straps." 
+	"If you're the devil, why not make the straps disappear?"
+	"That's much too vulgar a display of power, Karras."
+		[ The Exorcist ]
 pelias
 	Conan cried out sharply and recoiled, thrusting his companion
 	back.  Before them rose the great shimmering white form of Satha,
@@ -4898,6 +4926,10 @@ prisoner
 		You are Number 6.
 	I am not a number!  I am a free man!
 		[ The Prisoner, by Patrick McGoohan ]
+prison guard
+	"The Panopticon is a marvelous machine which, whatever use one
+	 may wish to put it to, produces homogeneous effects of power."
+	 	[ Michael Foucault ]
 ptah
 	Known under various names (Nu, Neph, Cenubis, Amen-Kneph,
 	Khery-Bakef), Ptah is the creator god and god of craftsmen.
@@ -5413,6 +5445,14 @@ scroll *
 		[ Endymion, by John Keats ]
 serpopard
 	A leopard with a long, serpentine body and neck.
+serval
+	The serval is a slender, medium-sized cat that stands
+	54–62 cm (21–24 in) at the shoulder and weighs 9–18 kg (20–40 lb).
+	It is characterised by a small head, large ears, a golden-yellow
+	to buff coat spotted and striped with black, and a short, 
+	black-tipped tail. The serval has the longest legs of any cat 
+	relative to its body size. 
+		[ Wikipedia, the free encyclopedia ]
 anubite
 set
 seth
@@ -5648,6 +5688,7 @@ sokoban
 sergeant
 lieutenant
 captain
+general
 	The soldiers of Yendor are well-trained in the art of war,
 	many trained by the Wizard himself.  Some say the soldiers
 	are explorers who were unfortunate enough to be captured,
@@ -5729,6 +5770,13 @@ spirit bomb
 	against which you cannot prepare a perfect defense.
 					--Human aphorism
 		[ The Dosadi Experiment, by Frank Herbert ]
+sphere of the void
+sphere of annihalation
+	Oh, come on! It's just a big old statue of a devil! I'm sure
+	there's nothing scary inside its mouth.
+
+	For once, Hans was correct. There was indeed Nothing inside
+	the statue's mouth.
 squeaky board
 	A floorboard creaked.  Galder had spent many hours tuning them,
 	always a wise precaution with an ambitious assistant who walked
@@ -5924,8 +5972,6 @@ thoth*amon
 	Thutothmes seeks hidden power [The Heart of Ahriman] to
 	overthrow the Great One.
 		[ Conan the Conqueror, by Robert E. Howard ]
-thought hound
-	Some dogs hunt for meals more enticing than flesh.
 *throne
 	Methought I saw the footsteps of a throne
 	Which mists and vapours from mine eyes did shroud--
@@ -6303,6 +6349,12 @@ vampire lord
 	corpse), supposed to seek nourishment, or do harm, by sucking
 	the blood of sleeping persons. ..."
 		[]
+vampire mage
+	Real terror is not the sight of death, it is the fear of death.
+	What is the fear of death? Terror of the unknown. Is it these 
+	eyes you peer into? No, I am not the unknown. You and I are closer
+	kin than you and it were.
+		[ Vampire the Masquerade: Bloodlines ]
 vanish
 	This technique makes you temporarily fleet of foot and
 	invisible to the naked eye -- perfect for last-minute escapes
@@ -6420,6 +6472,17 @@ war*hammer
 ichneumon *
 	These insects are feared for their ability to lay eggs inside
 	the bodies of their prey.
+watch captain
+	Cheery was aware that Commander Vimes didn't like the phrase
+	"The innocent have nothing to fear", believing the innocent
+	had everything to fear, mostly from the guilty but in the longer
+	term even more from those who say things like "The innocent have
+	nothing to fear'."
+		[ Snuff, by Terry Pratchett ]
+watchman
+	Two types of people laugh at the law: those that break it and those
+	that make it.
+		[ Night Watch, by Terry Pratchett ]
 water
 	Day after day, day after day,
 	We stuck, nor breath nor motion;

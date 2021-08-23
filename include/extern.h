@@ -377,6 +377,9 @@ extern void set_wall_state(void);
 extern void unset_seenv(struct rm *, int, int, int, int);
 extern int warning_of(struct monst *);
 extern void map_glyphinfo(xchar, xchar, int, unsigned, glyph_info *);
+extern void add_blood(int, int, int);
+extern int blood_color(int);
+extern void wipe_blood(int, int);
 
 /* ### do.c ### */
 

@@ -2266,7 +2266,7 @@ map_glyphinfo(xchar x, xchar y, int glyph,
                 else if (In_mines(&u.uz))
         		    color = CLR_BROWN;
         		else if (Is_juiblex_level(&u.uz))
-                color = CLR_GREEN;
+                    color = CLR_GREEN;
 #endif
         /* try to provide a visible difference between water and lava
            if they use the same symbol and color is disabled */
@@ -2328,6 +2328,11 @@ map_glyphinfo(xchar x, xchar y, int glyph,
             }
         } else {
             cmap_color(offset);
+        }
+
+        /* blood overrides other colors */
+        if (levl[x][y].splatpm && cansee(x, y)) {
+            color = blood_color(levl[x][y].splatpm);
         }
     } else if ((offset = (glyph - GLYPH_OBJ_OFF)) >= 0) { /* object */
         idx = objects[offset].oc_class + SYM_OFF_O;
@@ -3147,6 +3152,26 @@ wall_angle(struct rm *lev)
         idx = S_stone;
     }
     return idx;
+}
+
+void
+add_blood(int x, int y, int pm) {
+    levl[x][y].splatpm = pm;
+    newsym(x, y);
+}
+
+int
+blood_color(int pm) {
+    return CLR_RED;
+}
+
+void
+wipe_blood(int x, int y) {
+    if (levl[x][y].splatpm) {
+        levl[x][y].splatpm = 0;
+        newsym(x, y);
+    }
+    return;
 }
 
 /*display.c*/

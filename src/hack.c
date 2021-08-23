@@ -2154,6 +2154,9 @@ maybe_smudge_engr(int x1, int y1, int x2, int y2)
         if ((x2 != x1 || y2 != y1)
                 && (ep = engr_at(x2, y2)) && ep->engr_type != HEADSTONE)
             wipe_engr_at(x2, y2, rnd(5), FALSE);
+        /* Wipe away any blood on the floor */
+        if (levl[x1][y1].splatpm && !rn2(5))
+            wipe_blood(x1, y1);
     }
 }
 

@@ -2827,7 +2827,7 @@ corpse_chance(
 {
     struct permonst *mdat = mon->data;
     struct obj *otmp;
-    int i, tmp;
+    int i, tmp, x, y;
 
     if (mdat == &mons[PM_VLAD_THE_IMPALER] || mdat->mlet == S_LICH) {
         if (cansee(mon->mx, mon->my) && !was_swallowed)
@@ -2893,6 +2893,14 @@ corpse_chance(
             mon_explodes(mon, &mdat->mattk[i]);
             return FALSE;
         }
+    }
+
+    /* Create a blood splatter. */
+    if (has_blood(mdat)) {
+        x = mon->mx - 1 + rn2(3);
+        y = mon->my - 1 + rn2(3);
+        if (isok(x, y))
+            add_blood(x, y, mon->mnum);
     }
 
     /* It should still be possible to receive food spawns on no food levels, but it should

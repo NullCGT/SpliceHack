@@ -197,7 +197,7 @@ unsigned mgflags;
                 else if (In_mines(&u.uz))
         		    color = CLR_BROWN;
         		else if (Is_juiblex_level(&u.uz))
-                color = CLR_GREEN;
+                    color = CLR_GREEN;
 #endif
         /* try to provide a visible difference between water and lava
            if they use the same symbol and color is disabled */
@@ -259,6 +259,11 @@ unsigned mgflags;
             }
         } else {
             cmap_color(offset);
+        }
+
+        /* blood overrides other colors */
+        if (levl[x][y].splatpm && cansee(x, y)) {
+            color = blood_color(levl[x][y].splatpm);
         }
     } else if ((offset = (glyph - GLYPH_OBJ_OFF)) >= 0) { /* object */
         idx = objects[offset].oc_class + SYM_OFF_O;

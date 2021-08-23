@@ -1446,6 +1446,7 @@ dosacrifice(void)
                 /* curse the lawful/neutral altar */
                 pline_The("altar is stained with %s blood.", g.urace.adj);
                 levl[u.ux][u.uy].altarmask = AM_CHAOTIC;
+                add_blood(u.ux, u.uy, g.urace.malenum);
                 newsym(u.ux, u.uy); /* in case Invisible to self */
                 angry_priest();
             } else {

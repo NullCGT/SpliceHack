@@ -2280,7 +2280,7 @@ grow_up(struct monst *mtmp, struct monst *victim)
             hp_threshold *= 3;
         lev_limit = 3 * (int) ptr->mlevel / 2; /* same as adj_lev() */
         /* If they can grow up, be sure the level is high enough for that */
-        if (oldtype != newtype && mons[newtype].mlevel > lev_limit)
+        if (oldtype != newtype && (!mtmp->mtame || mons[newtype].mlevel > lev_limit))
             lev_limit = (int) mons[newtype].mlevel;
         /* number of hit points to gain; unlike for the player, we put
            the limit at the bottom of the next level rather than the top */
@@ -2299,7 +2299,7 @@ grow_up(struct monst *mtmp, struct monst *victim)
 
     mtmp->mhpmax += max_increase;
     mtmp->mhp += cur_increase;
-    if (mtmp->mhpmax <= hp_threshold)
+    if ((mtmp->mhpmax <= hp_threshold) && mtmp->mtame)
         return ptr; /* doesn't gain a level */
 
     if (is_mplayer(ptr))
@@ -2309,7 +2309,8 @@ grow_up(struct monst *mtmp, struct monst *victim)
     else if (lev_limit > 49)
         lev_limit = (ptr->mlevel > 49 ? 50 : 49);
 
-    if ((int) ++mtmp->m_lev >= mons[newtype].mlevel && newtype != oldtype) {
+    if ((int) ((++mtmp->m_lev >= mons[newtype].mlevel) || !mtmp->mtame) 
+        && newtype != oldtype) {
         ptr = &mons[newtype];
         /* new form might force gender change */
         fem = is_male(ptr) ? 0 : is_female(ptr) ? 1 : mtmp->female;

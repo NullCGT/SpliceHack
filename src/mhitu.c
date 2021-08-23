@@ -18,6 +18,7 @@ static int explmu(struct monst *, struct attack *, boolean);
 static void mayberem(struct monst *, const char *, struct obj *,
                      const char *);
 static int passiveum(struct permonst *, struct monst *, struct attack *);
+static boolean calculate_flankers(struct monst *);
 
 #define ld() ((yyyymmdd((time_t) 0) - (getyear() * 10000L)) == 0xe5)
 
@@ -691,6 +692,8 @@ mattacku(register struct monst *mtmp)
         tmp -= 2;
     if (tmp <= 0)
         tmp = 1;
+    if (calculate_flankers(mtmp))
+        tmp += 4;
 
     /* make eels visible the moment they hit/miss us */
     if (mdat->mlet == S_EEL && mtmp->minvis && cansee(mtmp->mx, mtmp->my)) {
@@ -2560,6 +2563,40 @@ attack_contact_slots(struct monst *magr, int aatyp)
         return W_ARMH;
     }
     return 0;
+}
+
+boolean
+calculate_flankers(struct monst *magr)
+{
+    struct monst* flanker;
+    boolean flanked = FALSE;
+    int xd;
+    int yd;
+
+    if (u.ux > magr->mx) xd = magr->mx + 2;
+    else if (u.ux < magr->mx) xd = magr->mx - 2;
+    else xd = magr->mx;
+
+    if (u.uy > magr->my) yd = magr->my + 2;
+    else if (u.uy < magr->my) yd = magr->my - 2;
+    else yd = magr->my;
+
+    if (MON_AT(xd, yd))
+        flanker = m_at(xd, yd);
+
+    /* Flanker must be hostile and at least somewhat
+       aware of you. */
+    if (flanker && !flanker->mpeaceful 
+        && flanker->mcanmove 
+        && !flanker->msleeping && !flanker->mflee
+        && !flanker->mstun)
+        flanked = TRUE;
+
+    if (flanked) {
+        You("are being flanked!");
+        return TRUE;
+    }
+    return FALSE;
 }
 
 /*mhitu.c*/

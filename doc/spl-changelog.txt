@@ -38,6 +38,9 @@ or outright removed. Rationale will be provided for all removed content upon req
 Combat System Changes
 - Luck no longer gives a to-hit bonus.
 - Base attack bonus is partially determined by the role one is playing.
+- Whenever a non-tame monster kills another monster, it will automatically grow up.
+- Monsters gain a large bonus to hit when flanking the player (located on opposite sides of
+  the player's position),
 - Weapons have gone through a rebalance.
     -Many weapons now have bonuses or penalties to hit, and can also influence AC when wielded.
     - Given the emphasis on to-hit bonus, these small bonuses and penalties are now much more

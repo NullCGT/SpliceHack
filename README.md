@@ -1,18 +1,19 @@
 #                  SpliceHack 1.0.0 -- General information
 
-SpliceHack is an in-progress fork of NetHack 3.7, made with the goal of adding
+SpliceHack is an in-progress fork of NetHack 3.7 (and in part, SLASH'EM), made with the goal of adding
 additional monsters, items, special levels, and game features without changing
-too much of the core gameplay. The end goal is a "kitchen sink" variant similar
-to SLASH'EM that is still intuitive and easy to pick up and play for anyone
-familiar with vanilla NetHack.
+too much of the core gameplay. The end goal is a "kitchen sink" variant that is 
+still intuitive and easy to pick up and play for anyone familiar with vanilla NetHack.
+
+![Screenshot](images/curses.png)
 
 ## Features
-- Monsters riding other monsters.
-- The option to play as nonbinary and choose your orientation.
-- Hundreds of new foes to fight.
-- Dozens of new items to collect.
-- An extended, more challenging endgame.
-- So much more...
+* Monsters riding other monsters.
+* The option to play as nonbinary and choose your orientation.
+* Hundreds of new foes to fight.
+* Dozens of new items to collect.
+* An extended, more challenging endgame.
+* So much more...
 
 Suggestions and criticism of the game are welcome. This variant is very much a
 work in progress, and as such bugs and balance issues may exist. Bug reports, 
@@ -26,22 +27,33 @@ to this variant's github page.
   would use to compile NetHack 3.7.
 
 ## Configuration
-For information about customizing NetHack, refer to https://nethackwiki.com/wiki/Options.
+The first question most new players have about NetHack is how to configure the game
+so that it looks nice, they can disable autopickup, and so on and so forth. For 
+information about customizing NetHack, refer to https://nethackwiki.com/wiki/Options.
 The steps for customizing SpliceHack are the same as the steps for
-customizing NetHack, except the file to edit is named .splicehackrc if you are
-on a Unix system.
+customizing NetHack, except the file to edit is named .splicehackrc.
 
 If you don't want to spend time writing a configuration file from scratch, this
 repository contains a file named .splicehackrc.example for Unix systems. Simply
 copy the file to the relevant location, rename it, and modify it to your heart's
 content.
 
-## Tileset
+### Configuration File Locations
+
+* **Windows:** %USERPROFILE%\NetHack\.splicehackrc
+* **OSX:** ~/.splicehackrc
+* **Linux:** ~/.splicehackrc
+
+## Tiled Mode
 SpliceHack contains a tileset, and can be played in graphical or ascii mode depending
-on the preference of the user.
+on the preference of the user. Some of the tiles in the tileset are based on those
+found in vanilla, others are based on tiles from SLASH'EM, and others still are entirely
+original.
 
 A copy of this tileset is included for reference. Feel free to modify it or use it as
 a basis for your own tilesets.
+
+![Screenshot](images/tiles.png)
 
 ## Why the Rewrite?
 

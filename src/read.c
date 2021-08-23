@@ -940,6 +940,7 @@ forget_single_object(int obj_id)
         objects[obj_id].oc_uname = 0;
     }
     undiscover_object(obj_id); /* after clearing oc_name_known */
+    g.context.botl = TRUE;
 
     /* clear & free object names from matching inventory items too? */
 }

@@ -530,7 +530,7 @@ static struct istat_s initblstats[MAXBLSTATS] = {
     INIT_BLSTAT("power-max", "(%s)", ANY_INT, 10, BL_ENEMAX),
     INIT_BLSTATP("experience-level", " Xp:%s", ANY_INT, 10, BL_EXP, BL_XP),
     INIT_BLSTAT("armor-class", " AC:%s", ANY_INT, 10, BL_AC),
-    INIT_BLSTAT("to-hit", " TH:%s", ANY_INT, 10, BL_TOHIT),
+    INIT_BLSTAT("to-hit", " HIT:%s", ANY_INT, 10, BL_TOHIT),
     INIT_BLSTAT("HD", " HD:%s", ANY_INT, 10, BL_HD),
     INIT_BLSTAT("time", " T:%s", ANY_LONG, 20, BL_TIME),
     /* hunger used to be 'ANY_UINT'; see note below in bot_via_windowport() */

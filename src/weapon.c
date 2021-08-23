@@ -245,6 +245,8 @@ botl_hitbonus()
     if (aatyp == AT_WEAP || aatyp == AT_CLAW) {
         if (weapon)
             tmp += base_hitbonus(uwep);
+        if (weapon && !weapon->known)
+            tmp -= max(0, weapon->spe);
         tmp += weapon_hit_bonus(weapon);
     } else if (aatyp == AT_KICK && martial_bonus()) {
         tmp += weapon_hit_bonus((struct obj *) 0);

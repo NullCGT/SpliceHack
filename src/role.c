@@ -488,11 +488,10 @@ const struct Role roles[NUM_ROLES+1] = {
       S_NYMPH,
       S_NAGA,
       ART_MASTER_KEY_OF_THIEVERY,
-      MH_HUMAN | MH_ELF | MH_GNOME | MH_ORC
-        | MH_DEMON | MH_UNDEAD | MH_MERFOLK,
+      MH_HUMAN | MH_ELF | MH_ORC
+        | MH_DEMON | MH_UNDEAD,
       ROLE_MALE | ROLE_NEUTER | ROLE_FEMALE
         | ROLE_CHAOTIC,
-      /* XXX exception will need to be made if Mer Rog is an intended combo */
       /* Str Int Wis Dex Con Cha */
       { 7, 7, 7, 10, 7, 6 },
       { 20, 10, 10, 30, 20, 10 },

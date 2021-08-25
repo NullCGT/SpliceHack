@@ -785,6 +785,8 @@ hmon_hitmon(struct monst *mon,
           don't give double bonus. */
         tmp += special_dmgval(&g.youmonst, mon, (W_ARMG | W_RINGL | W_RINGR),
                              &hated_obj);
+         /* Fighting bare-handed? Glove enchantment ~= weapon enchantment */
+        if (uarmg) tmp += uarmg->spe;
 
     } else {
         if (!(artifact_light(obj) && obj->lamplit))

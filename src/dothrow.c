@@ -1715,7 +1715,11 @@ thitmonst(register struct monst *mon,
         tmp -= 2;
     else if (ACURR(A_DEX) < 8)
         tmp -= 1;
-    else if (ACURR(A_DEX) >= 14)
+    else if (ACURR(A_DEX) > 12)
+        tmp += 1;
+    else if (ACURR(A_DEX) > 14)
+        tmp += 2;
+    else if (ACURR(A_DEX) > 16)
         tmp += (ACURR(A_DEX) - 14);
 
     /* Modify to-hit depending on distance; but keep it sane.

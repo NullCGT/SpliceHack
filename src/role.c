@@ -163,17 +163,17 @@ const struct Role roles[NUM_ROLES+1] = {
         {"Desperado", 0,     0},
         {"Felon", 0,    0},
         {"Fugitive", 0,  0} },
-        "Ilmater", "Grumbar", "_Tymora",	/* Faerunian */
+        "Ilmater", "Grumbar", "_Tymora",    /* Faerunian */
         "Con", "Castle Waterdeep Dungeon", "the Warden's Level",
-        PM_CONVICT, 
+        PM_CONVICT,
         NON_PM,
         PM_SEWER_RAT,
-        PM_ROBERT_THE_LIFER, 
-        PM_INMATE, 
+        PM_ROBERT_THE_LIFER,
+        PM_INMATE,
         PM_WARDEN_ARIANNA,
-        PM_GIANT_BEETLE, 
-        PM_SOLDIER_ANT, 
-        S_RODENT, 
+        PM_GIANT_BEETLE,
+        PM_SOLDIER_ANT,
+        S_RODENT,
         S_SPIDER,
         ART_IRON_BALL_OF_LIBERATION,
         MH_HUMAN | MH_DWARF | MH_GNOME | MH_ORC | MH_UNDEAD,
@@ -182,11 +182,11 @@ const struct Role roles[NUM_ROLES+1] = {
         {  10,  7,  7,  7, 13,  6 },
         {  20, 20, 10, 20, 20, 10 },
         /* Init   Lower  Higher */
-        {  8, 0,  0, 8,  0, 0 },	/* Hit points */
-        {  1, 0,  0, 1,  0, 1 },10,	/* Energy */
-        -10, 5, 0, 2, 10, 
-        A_INT, 
-        SPE_TELEPORT_AWAY,   
+        {  8, 0,  0, 8,  0, 0 },    /* Hit points */
+        {  1, 0,  0, 1,  0, 1 },10, /* Energy */
+        -10, 5, 0, 2, 10,
+        A_INT,
+        SPE_TELEPORT_AWAY,
         -4 },
     { { "Dragon Rider", 0, 0 },
       { { "Servant of Scales", 0, 0 },
@@ -400,15 +400,15 @@ const struct Role roles[NUM_ROLES+1] = {
       SPE_REMOVE_CURSE,
       -4 },
     {  {"Pirate", 0, 0}, {
-     	{"Landlubber",  0, 0},
-     	{"Swabbie",        	0, 0},
-     	{"Cutthroat",   0, 0},
-     	{"Bosun",      		0, 0},
-     	{"Second Mate",     0, 0},
-     	{"First Mate",      0, 0},
-     	{"Captain",			0, 0},
-     	{"Pirate Lord",   	"Pirate Lady", 0},
-     	{"Dread Pirate",  	0, 0} },
+        {"Landlubber",  0, 0},
+        {"Swabbie",         0, 0},
+        {"Cutthroat",   0, 0},
+        {"Bosun",           0, 0},
+        {"Second Mate",     0, 0},
+        {"First Mate",      0, 0},
+        {"Captain",         0, 0},
+        {"Pirate Lord",     "Pirate Lady", 0},
+        {"Dread Pirate",    0, 0} },
       "Davy Jones", "_the deep blue sea", "_the storm",
       /* Davy Jones would be chaotic, but we want something all pirates are
         opposed to. */
@@ -433,12 +433,12 @@ const struct Role roles[NUM_ROLES+1] = {
       {   8,  7, 7,  8,  8,  7 },
       {  20, 15, 10, 20, 25, 10 },
       /* Init   Lower  Higher */
-      { 10, 0,  0, 8,  1, 0 },	/* Hit points */
-      {  1, 0,  0, 1,  0, 1 },12,	/* Energy */
-      10, 
+      { 10, 0,  0, 8,  1, 0 },  /* Hit points */
+      {  1, 0,  0, 1,  0, 1 },12,   /* Energy */
+      10,
       8,
       0,
-      2, 
+      2,
       9,
       A_INT,
       SPE_CAUSE_FEAR,
@@ -569,7 +569,7 @@ const struct Role roles[NUM_ROLES+1] = {
       S_DOG,
       S_ELEMENTAL,
       ART_TSURUGI_OF_MURAMASA,
-      MH_HUMAN | MH_GNOME | MH_DEMON, 
+      MH_HUMAN | MH_GNOME | MH_DEMON,
       ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_LAWFUL,
       /* Str Int Wis Dex Con Cha */
       { 10, 8, 7, 10, 17, 6 },
@@ -768,21 +768,21 @@ const struct Race races[] = {
         "droven",
         "drovenkind",
         "Dro",
-    	{ "hedrow", "drow", "drow" },
-    	PM_DROW,
+        { "hedrow", "drow", "drow" },
+        PM_DROW,
         NON_PM,
         PM_ELF_MUMMY,
         PM_ELF_ZOMBIE,
-    	MH_ELF | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_CHAOTIC,
-    	MH_ELF,
+        MH_ELF | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER | ROLE_CHAOTIC,
+        MH_ELF,
         0,
         MH_ORC | MH_DWARF | MH_GNOME,
-      	/*  Str    Int Wis Dex Con Cha */
-      	{    3,     3,  3,  3,  3,  3 },
-      	{   18,    20, 20, 18, 16, 18 },
-      	/* Init   Lower  Higher */
-      	{  1, 0,  0, 1,  1, 0 },	/* Hit points */
-      	{  2, 0,  3, 0,  3, 0 }		/* Energy */
+        /*  Str    Int Wis Dex Con Cha */
+        {    3,     3,  3,  3,  3,  3 },
+        {   18,    20, 20, 18, 16, 18 },
+        /* Init   Lower  Higher */
+        {  1, 0,  0, 1,  1, 0 },    /* Hit points */
+        {  2, 0,  3, 0,  3, 0 }     /* Energy */
     },
     {
         "dwarf",
@@ -892,27 +892,27 @@ const struct Race races[] = {
         { 1, 0, 0, 1, 0, 0 }, /* Hit points */
         { 1, 0, 1, 0, 1, 0 }  /* Energy */
     },
-    {	
-        "vampire", 
-        "vampiric", 
-        "kindred", 
+    {
+        "vampire",
+        "vampiric",
+        "kindred",
         "Vam",
         {0, 0, 0},
         PM_VAMPIRE,
         NON_PM,
-        PM_HUMAN_MUMMY, 
+        PM_HUMAN_MUMMY,
         PM_HUMAN_ZOMBIE,
-        MH_UNDEAD | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER 
+        MH_UNDEAD | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER
             | ROLE_CHAOTIC,
-        MH_UNDEAD, 
-        0, 
+        MH_UNDEAD,
+        0,
         MH_ELF | MH_GNOME | MH_DWARF | MH_ORC,
         /* Str Int Wis Dex Con Cha */
         {  4,  0,  0,  4,  3,  4 },
         { STR19(19), 18, 18, 20, 20, 20 },
         /* Init   Lower  Higher */
-        {  3, 0,  0, 3,  2, 0 },	/* Hit points */
-        {  3, 0,  4, 0,  4, 0 }		/* Energy */
+        {  3, 0,  0, 3,  2, 0 },    /* Hit points */
+        {  3, 0,  4, 0,  4, 0 }     /* Energy */
     },
     /* Array terminator */
     { 0, 0, 0, 0 }
@@ -1751,7 +1751,7 @@ root_plselection_prompt(
 
 char *
 build_plselection_prompt(
-    char *buf, int buflen, 
+    char *buf, int buflen,
     int rolenum, int racenum, int gendnum, int alignnum)
 {
     const char *defprompt = "Shall I pick a character for you? [ynaq] ";

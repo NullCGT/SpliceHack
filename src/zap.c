@@ -57,7 +57,7 @@ const char *const flash_types[] =       /* also used in buzzmu(mcastu.c) */
     {
         "magic missile", /* Wands must be 0-9 */
         "bolt of fire", "bolt of cold", "sleep ray", "death ray",
-        "bolt of lightning", "poison gas", "acid stream", 
+        "bolt of lightning", "poison gas", "acid stream",
         "sonic beam", "psionic beam",
 
         "magic missile", /* Spell equivalents must be 10-19 */
@@ -2416,8 +2416,8 @@ zapnodir(struct obj *obj)
                                 (struct permonst *) 0, FALSE);
         break;
     case WAN_CREATE_HORDE:
-  			known = create_critters(rn1(7,4), (struct permonst *) 0, FALSE);
-  			break;
+            known = create_critters(rn1(7,4), (struct permonst *) 0, FALSE);
+            break;
     case WAN_WISHING:
         known = TRUE;
         if (Luck + rn2(5) < 0) {
@@ -2594,7 +2594,7 @@ zapyourself(struct obj *obj, boolean ordinary)
             exercise(A_STR, FALSE);
         }
         break;
-    
+
     case WAN_WINDSTORM:
         learn_it = TRUE;
         pline("Whoosh!");
@@ -2627,7 +2627,7 @@ zapyourself(struct obj *obj, boolean ordinary)
         destroy_item(RING_CLASS, AD_ELEC);
         (void) flashburn((long) rnd(100));
         break;
-    
+
     case SPE_POISON_BLAST:
         poisoned("blast", A_DEX, "poisoned blast", 15, FALSE, 0);
         break;
@@ -2688,7 +2688,7 @@ zapyourself(struct obj *obj, boolean ordinary)
             You("get drenched!");
         uwatereffects();
         break;
-    
+
     case WAN_SONICS:
     case HORN_OF_BLASTING:
         learn_it = TRUE;

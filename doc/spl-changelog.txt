@@ -65,6 +65,12 @@ Furnaces
   - Certain artifacts are only obtainable via furnaces:
     - Frostburn: Deals double damage to all monsters that are not both cold and fire resistant.
       Created by fusing Frost Brand and Fire Brand.
+- By combining armor, weapon, or a weptool with a corpse or tin, you can imbue that item with its
+  essence.
+  - Imbued weapons deal damage depending on the attack of the monster that was imbued. For example,
+    a long sword imbued with blue dragon essence will shock enemies.
+  - When polymorphed while wearing imbued body armor, you will polymorph into whatever monster that
+    armor is imbued with. This includes not normally polymorphable monsters.
 
 Skill System
 - Rather than techniques, SpliceHack uses a skill system.

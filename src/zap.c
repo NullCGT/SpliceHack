@@ -1278,6 +1278,10 @@ drain_item(struct obj *obj, boolean by_you)
 {
     boolean u_ring;
 
+    /* Imbued items may no longer be imbued. */
+    if (is_imbued(obj) && !rn2(5)) {
+        obj->corpsenm = 0;
+    }
     /* Is this a charged/enchanted object? */
     if (!obj
         || (!objects[obj->otyp].oc_charged && obj->oclass != WEAPON_CLASS

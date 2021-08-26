@@ -889,7 +889,7 @@ hmon_hitmon(struct monst *mon,
                     hittxt = TRUE;
                 }
 
-                if (obj->oartifact
+                if ((obj->oartifact || is_imbued(obj))
                     && artifact_hit(&g.youmonst, mon, obj, &tmp, dieroll)) {
                     /* artifact_hit updates 'tmp' but doesn't inflict any
                        damage; however, it might cause carried items to be
@@ -3748,9 +3748,17 @@ mhitm_ad_halu(struct monst *magr, struct attack *mattk UNUSED,
 
     if (magr == &g.youmonst) {
         /* uhitm */
+        if (haseyes(g.youmonst.data) && !Blind) {
+            if (g.vis && canseemon(mdef))
+                pline("%s looks %sconfused.", Monnam(mdef),
+                      mdef->mconf ? "more " : "");
+            mdef->mconf = 1;
+            mdef->mstrategy &= ~STRAT_WAITFORU;
+        }
         mhm->damage = 0;
     } else if (mdef == &g.youmonst) {
         /* mhitu */
+        make_hallucinated((long) mhm->damage, TRUE, 0L);
         mhm->damage = 0;
     } else {
         /* mhitm */
@@ -4171,9 +4179,9 @@ mhitm_ad_phys(struct monst *magr, struct attack *mattk, struct monst *mdef,
                     mhm->damage += rn1(4, 3); /* 3..6 */
                 if (mhm->damage <= 0)
                     mhm->damage = 1;
-                if (!(otmp->oartifact && artifact_hit(magr, mdef, otmp,
-                                                      &mhm->damage,
-                                                      g.mhitu_dieroll)))
+                if (!(((otmp->oartifact || is_imbued(otmp)) 
+                    && artifact_hit(magr, mdef, otmp,
+                        &mhm->damage, g.mhitu_dieroll))))
                     hitmsg(magr, mattk);
                 /* glass breakage from the attack */
                 break_glass_obj(MON_WEP(magr));
@@ -4242,7 +4250,7 @@ mhitm_ad_phys(struct monst *magr, struct attack *mattk, struct monst *mdef,
                 mhm->damage += rn1(4, 3); /* 3..6 */
             if (mhm->damage < 1) /* is this necessary?  mhitu.c has it... */
                 mhm->damage = 1;
-            if (mwep->oartifact) {
+            if (mwep->oartifact || is_imbued(mwep)) {
                 /* when magr's weapon is an artifact, caller suppressed its
                    usual 'hit' message in case artifact_hit() delivers one;
                    now we'll know and might need to deliver skipped message

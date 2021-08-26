@@ -650,14 +650,26 @@ doforging(void)
     }
     obj1 = getobj("use as a base", any_obj_ok, GETOBJ_PROMPT);
     obj2 = getobj("combine with the base item", any_obj_ok, GETOBJ_PROMPT);
-    if (obj1 == obj2) {
-        pline("You cannot combine an item with itself!");
-        return 1;
-    }
     if (!obj1 && !obj2) {
         pline("You need more than one object.");
         return 1;
     }
+    if (obj1 == obj2) {
+        pline("You cannot combine an item with itself!");
+        return 1;
+    }
+    if (is_worn(obj1) || is_worn(obj2)) {
+        pline("You cannot forge with something you are wearing!");
+    }
+    /* No, you cannot imbue weapons with cockatrice or Rider essence. Sorry.
+       Literally anything else is fair game though! */
+    feel_cockatrice(obj1, TRUE);
+    if (rider_corpse_revival(obj1, FALSE))
+        return 1;
+    feel_cockatrice(obj2, TRUE);
+    if (rider_corpse_revival(obj2, FALSE))
+        return 1;
+    /* Artifacts can never be applied to a non-arficat base. */
     if (obj2->oartifact && !obj1->oartifact) {
         obj1 = obj2;
     }
@@ -680,6 +692,21 @@ doforging(void)
             return 1;
         }
     }
+    /* Imbuing items */
+    if ((obj2->otyp == CORPSE || obj2->otyp == TIN)
+        && obj2->corpsenm != NON_PM) {
+        pline("You imbue %s with the %s essence.",
+            yobjnam(obj1, (char *) 0),
+            mons[obj2->corpsenm].pmnames[NEUTRAL]);
+        obj1->corpsenm = obj2->corpsenm;
+        useup(obj2);
+        update_inventory();
+        pline("The lava in the furnace cools.");
+        levl[u.ux][u.uy].typ = ROOM;
+        newsym(u.ux, u.uy);
+        g.level.flags.nfurnaces--;
+        return 0;
+    }
     /* Mundane item fusions */
     if (!combi_done) {
         for (int i = 0; fusions[i][0] > 0; i++) {
@@ -696,7 +723,10 @@ doforging(void)
     if (obj2->spe > obj1->spe) obj1->spe = min(obj2->spe, 10);
     /* Keep curses around. */
     if (obj2->cursed) obj1->cursed = TRUE;
+    /* Transfer corpsenm */
+    if (obj2->corpsenm) obj1->corpsenm = obj2->corpsenm;
     useup(obj2);
+    update_inventory();
     /* Print a message. */
     if (!combi_done) pline("You combine the items in the furnace.");
     /* Destroy the furnace. */

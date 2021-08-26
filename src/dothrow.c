@@ -1149,7 +1149,7 @@ toss_up(struct obj *obj, boolean hitsroof)
         boolean less_damage = uarmh && is_metallic(uarmh), artimsg = FALSE;
         int dmg = dmgval(obj, &g.youmonst);
 
-        if (obj->oartifact)
+        if (obj->oartifact || is_imbued(obj))
             /* need a fake die roll here; rn1(18,2) avoids 1 and 20 */
             artimsg = artifact_hit((struct monst *) 0, &g.youmonst, obj, &dmg,
                                    rn1(18, 2));

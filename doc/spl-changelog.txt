@@ -112,6 +112,10 @@ in its own way.
 - Juiblex's lair has a 50% chance of containing Juiblex and a 50% chance of containing
   Zuggotomoy.
 - Levels have dynamically generated names.
+- While there are no variant castle levels, a number of minor features of the castle level are
+  randomly generated. For example, the moat may take a slightly different shape, or there may
+  be iron bars from which the soldiers can attack.
+- Occasionally, mines level will generate with a number of trees in them.
 
 Monster Changes
 - Spiked monsters always deal passive damage, instead of only 50% of the time.

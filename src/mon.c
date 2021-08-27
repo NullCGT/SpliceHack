@@ -1262,6 +1262,8 @@ register struct obj *otmp;
             mon_givit(mtmp, &mons[otmp->corpsenm]);
             if (mtmp->data == &mons[PM_ZUGGOTOMOY]) {
                 makemon(&mons[PM_ASPECT_OF_ZUGGOTOMOY], u.ux, u.uy, NO_MINVENT);
+            } else if (mtmp->data == &mons[PM_MAGGOT]) {
+                makemon(&mons[rn2(3) ? PM_GIANT_FLY : PM_WORM_THAT_WALKS], u.ux, u.uy, NO_MINVENT);
             } else
                 clone_mon(mtmp, 0, 0);
             delobj(otmp);
@@ -2596,6 +2598,19 @@ mondead(register struct monst* mtmp)
     lifesaved_monster(mtmp);
     if (!DEADMONSTER(mtmp))
         return;
+    
+    if (mtmp->data == &mons[PM_WORM_THAT_WALKS]) {
+        if (cansee(mtmp->mx, mtmp->my)) {
+            pline_The("body of %s dissolves into maggots!", mon_nam(mtmp));
+        } else {
+            You_hear("the slithering of many bodies.");
+        }
+        for (i = 0; i < (mtmp->data == &mons[PM_WORM_THAT_WALKS] ? rnd(10) : rnd(20)); i++) {
+            if (!enexto(&cc, mtmp->mx, mtmp->my, 0))
+                break;
+            makemon(&mons[PM_MAGGOT], cc.x, cc.y, NO_MINVENT);
+        }
+    }
 
     /* Fusion elementals break apart into several elementals */
     if (mtmp->data == &mons[PM_FUSION_ELEMENTAL]) {
@@ -2831,7 +2846,8 @@ corpse_chance(
     struct obj *otmp;
     int i, tmp, x, y;
 
-    if (mdat == &mons[PM_VLAD_THE_IMPALER] || mdat->mlet == S_LICH) {
+    if (mdat == &mons[PM_VLAD_THE_IMPALER] ||
+        (mdat->mlet == S_LICH && mdat != &mons[PM_WORM_THAT_WALKS])) {
         if (cansee(mon->mx, mon->my) && !was_swallowed)
             pline("%s body crumbles into dust.", s_suffix(Monnam(mon)));
         return FALSE;

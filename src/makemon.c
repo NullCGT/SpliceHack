@@ -1080,6 +1080,8 @@ m_initinv(register struct monst *mtmp)
     case S_LICH:
         if (ptr == &mons[PM_MASTER_LICH] && !rn2(13))
             (void) mongets(mtmp, (rn2(7) ? ATHAME : WAN_NOTHING));
+        else if (ptr == &mons[PM_WORM_THAT_WALKS])
+            (void) mongets(mtmp, EXECUTIONER_S_MACE);
         else if (ptr == &mons[PM_ARCH_LICH] && !rn2(3)) {
             otmp = mksobj(rn2(3) ? ATHAME : QUARTERSTAFF, TRUE,
                           rn2(13) ? FALSE : TRUE);

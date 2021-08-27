@@ -1155,6 +1155,8 @@ static const short grownups[][2] = {
     { PM_DEEPER_ONE, PM_DEEPEST_ONE },
     { PM_PIG, PM_FERAL_HOG },
     { PM_RATMAN, PM_RATMAN_SQUEAKER },
+    { PM_GIANT_SPIDER, PM_MONSTROUS_SPIDER },
+    { PM_MAGGOT, PM_GIANT_FLY },
     { NON_PM, NON_PM }
 };
 

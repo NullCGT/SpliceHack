@@ -550,6 +550,8 @@ done_in_by(struct monst *mtmp, int how)
         u.ugrave_arise = zombie_form(g.youmonst.data);
     else if (mptr->mlet == S_VAMPIRE && Race_if(PM_HUMAN))
         u.ugrave_arise = PM_VAMPIRE;
+    else if (mptr == &mons[PM_WORM_THAT_WALKS])
+        u.ugrave_arise = Role_if(PM_WIZARD) ? PM_WORM_THAT_WALKS : PM_GHOUL;
     else if (mptr == &mons[PM_GHOUL])
         u.ugrave_arise = PM_GHOUL;
     /* this could happen if a high-end vampire kills the hero

@@ -891,7 +891,17 @@ domonnoise(register struct monst* mtmp)
         }
         break;
     case MS_GRUNT:
-        pline_msg = "grunts.";
+        if (Hallucination && mtmp->data->mlet == S_TROLL) {
+            static const char *const troll_msg[3] = {
+                /* Classic forum flame bait. Please do not take this seriously. */
+                "Vim > Emacs.",
+                "Shiki can kill servants. Discuss.",
+                "Trololololol!",
+            };
+            verbl_msg = troll_msg[rn2(3)];
+        } else {
+            pline_msg = "grunts.";
+        }
         break;
     case MS_NEIGH:
         if (mtmp->mtame < 5)

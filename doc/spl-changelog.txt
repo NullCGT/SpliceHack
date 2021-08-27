@@ -6,7 +6,7 @@ Removed Content
 Since this release is a rewrite, a number of pieces of existing content have been heavily altered
 or outright removed. Rationale will be provided for all removed content upon request.
 - Removed the following monsters: Anubites, Nuckelavees, Plant Monsters, Lords of Worms, Penguins,
-  Mystic Scarabs, Memory Hounds, Goblin Windmages, Walruses, Werephants.
+  Mystic Scarabs, Memory Hounds, Goblin Windmages, Walruses, Werephants, Vent Wurms, Crevasse Wurms.
 - Removed the following objects:
   - Razor whip.
   - Robe of the blood magus.
@@ -180,6 +180,12 @@ Monster Changes
   - Brood wasps have been renamed to Ichneumon. Carrying larva is no longer considered a curable trouble.
   - Having larvae hatch inside you deals 1d5 damage, then halves your hit points.
   - Drinking a potion of sickness kills all larvae.
+- Worms that Walk Changes
+  - When a worm that walk kills a player, that player will only arise as a worm that walks if
+    they are a wizard.
+  - Worms that walk wield executioner's maces.
+  - When a worm that walks dies, it dissolves into maggots. If one of these maggots infests a corpse,
+    that corpse has the potential to arise as another worm that walks.
 - The Dark One is no longer a human.
 - Allow grid bugs to grow up into more powerful electric bugs.
 - Piercers can grow up into more powerful piercers. This includes god piercers, which
@@ -193,6 +199,8 @@ Object Changes
 - Zapping a wand of water at an item will extinguish it.
 - Masks last longer and give an indication that they are wearing out.
 - Coffins are always trapped, and looting them will occasionally produce vampires.
+- New Object: Executioner's Mace.
+  - Does not generate randomly. Dropped only by Worms that Walk.
 
 Race Changes
 - Drow
@@ -253,6 +261,7 @@ Bug Fixes
 YAFM
 - Whenever you are polymorphed into a bear, all instances of the word "bare" are replaced
   with the word "bear."
+- Chatting with a troll will yield one of several classic "flame bait" messages.
 
 Known Bugs
 - Rare failed sanity check for improper mon data, possibly due to vampiric monsters shapeshifting.

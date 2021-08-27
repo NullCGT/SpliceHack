@@ -1002,7 +1002,8 @@ m_move(register struct monst* mtmp, register int after)
     }
     /* Zuggotomoy infests corpses. */
     if (ptr == &mons[PM_ZUGGOTOMOY] ||
-        ptr == &mons[PM_ASPECT_OF_ZUGGOTOMOY])
+        ptr == &mons[PM_ASPECT_OF_ZUGGOTOMOY] ||
+        ptr == &mons[PM_MAGGOT])
         minfestcorpse(mtmp);
 
     /* Where does 'mtmp' think you are?  Not necessary if m_move() called

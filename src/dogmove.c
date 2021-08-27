@@ -215,7 +215,8 @@ dog_eat(struct monst *mtmp,
 
     deadmimic = (obj->otyp == CORPSE && (obj->corpsenm == PM_SMALL_MIMIC
                                          || obj->corpsenm == PM_LARGE_MIMIC
-                                         || obj->corpsenm == PM_GIANT_MIMIC));
+                                         || obj->corpsenm == PM_GIANT_MIMIC
+                                         || obj->corpsenm == PM_KILLER_MIMIC));
     slimer = (obj->otyp == GLOB_OF_GREEN_SLIME);
     poly = polyfodder(obj);
     grow = mlevelgain(obj);
@@ -1021,6 +1022,7 @@ dog_move(register struct monst *mtmp,
                     && mtmp->mcansee && haseyes(mtmp->data) && mtmp2->mcansee
                     && (perceives(mtmp->data) || !mtmp2->minvis))
                 || (mtmp2->data == &mons[PM_GELATINOUS_CUBE] && rn2(10))
+                || mtmp2->data == &mons[PM_HEDGEHOG]
                 || (max_passive_dmg(mtmp2, mtmp) >= mtmp->mhp)
                 || ((mtmp->mhp * 4 < mtmp->mhpmax
                      || mtmp2->data->msound == MS_GUARDIAN

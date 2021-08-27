@@ -1962,6 +1962,10 @@ x_monnam(register struct monst *mtmp, int article,
             Strcat(buf, name);
             name_at_start = TRUE;
         }
+    } else if (mdat == &mons[PM_HYDRA] && mtmp->m_lev - mtmp->data->mlevel > -1) {
+        Sprintf(eos(buf), "%d-headed hydra",
+            mtmp->m_lev - mtmp->data->mlevel + 2);
+        name_at_start = FALSE;
     } else if (is_mplayer(mdat) && !In_endgame(&u.uz)) {
         char pbuf[BUFSZ];
 

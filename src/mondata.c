@@ -271,7 +271,7 @@ boolean
 ranged_attk(struct permonst* ptr)
 {
     register int i, atyp;
-    long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_GAZE);
+    long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_VOLY) | (1L << AT_GAZE);
 
     /* was: (attacktype(ptr, AT_BREA) || attacktype(ptr, AT_WEAP)
      *       || attacktype(ptr, AT_SPIT) || attacktype(ptr, AT_GAZE)
@@ -759,6 +759,9 @@ name_to_monplus(
     else if (!strncmp(str, "the ", 4))
         str += 4;
 
+    if (strstr(str, " hydra") != NULL)
+        return PM_HYDRA;
+
     slen = strlen(str);
     term = str + slen;
 
@@ -1150,6 +1153,8 @@ static const short grownups[][2] = {
     { PM_HUMAN_WEREWOLF, PM_HUMAN_PACK_LORD },
     { PM_DEEP_ONE, PM_DEEPER_ONE },
     { PM_DEEPER_ONE, PM_DEEPEST_ONE },
+    { PM_PIG, PM_FERAL_HOG },
+    { PM_RATMAN, PM_RATMAN_SQUEAKER },
     { NON_PM, NON_PM }
 };
 

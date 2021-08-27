@@ -2715,6 +2715,37 @@ struct mhitm_data *mhm;
 }
 
 void
+mhitm_ad_quil(magr, mattk, mdef, mhm)
+struct monst *magr;
+struct attack *mattk;
+struct monst *mdef;
+struct mhitm_data *mhm;
+{
+    if (magr == &g.youmonst) {
+        /* uhitm */
+        if (!thick_skinned(mdef->data))
+            mhm->damage += rn2(4);
+        mhitm_ad_phys(magr, mattk, mdef, mhm);
+        if (mhm->done)
+            return;
+    } else if (mdef == &g.youmonst) {
+        /* mhitu */
+        hitmsg(magr, mattk);
+        pline("Yeeowch! Spiky!");
+        if (!thick_skinned(g.youmonst.data))
+            mhm->damage += rn2(4);
+        return;
+    } else {
+        /* mhitm */
+        if (!thick_skinned(mdef->data))
+            mhm->damage += rn2(4);
+        mhitm_ad_phys(magr, mattk, mdef, mhm);
+        if (mhm->done)
+            return;
+    }
+}
+
+void
 mhitm_ad_sgld(struct monst *magr, struct attack *mattk, struct monst *mdef,
               struct mhitm_data *mhm)
 {
@@ -3839,6 +3870,39 @@ struct mhitm_data *mhm;
 }
 
 void
+mhitm_ad_lost(magr, mattk, mdef, mhm)
+struct monst *magr;
+struct attack *mattk;
+struct monst *mdef;
+struct mhitm_data *mhm;
+{
+    if (magr == &g.youmonst) {
+        /* uhitm */
+        mhitm_ad_phys(magr, mattk, mdef, mhm);
+        if (mhm->done)
+            return;
+    } else if (mdef == &g.youmonst) {
+        /* mhitu */
+        int armpro = magic_negation(mdef);
+        boolean uncancelled = !magr->mcan && (rn2(10) >= 3 * armpro);
+        
+        hitmsg(magr, mattk);
+        if (uncancelled) {
+            if (flags.verbose)
+                You("suddenly have no idea where you are!");
+            forget_map(ALL_MAP);
+            forget_traps();
+            tele();
+        }
+    } else {
+        /* mhitm */
+        mhitm_ad_phys(magr, mattk, mdef, mhm);
+        if (mhm->done)
+            return;
+    }
+}
+
+void
 mhitm_ad_larv(magr, mattk, mdef, mhm)
 struct monst *magr;
 struct attack *mattk;
@@ -4857,9 +4921,11 @@ mhitm_adtyping(struct monst *magr, struct attack *mattk, struct monst *mdef,
     case AD_LOUD: mhitm_ad_loud(magr, mattk, mdef, mhm); break;
     case AD_VOID: mhitm_ad_void(magr, mattk, mdef, mhm); break;
     case AD_MEMR: mhitm_ad_memr(magr, mattk, mdef, mhm); break;
+    case AD_QUIL: mhitm_ad_quil(magr, mattk, mdef, mhm); break;
     case AD_WIND: mhitm_ad_wind(magr, mattk, mdef, mhm); break;
     case AD_CALM: mhitm_ad_calm(magr, mattk, mdef, mhm); break;
     case AD_LUCK: mhitm_ad_luck(magr, mattk, mdef, mhm); break;
+    case AD_LOST: mhitm_ad_lost(magr, mattk, mdef, mhm); break;
     case AD_LARV: mhitm_ad_larv(magr, mattk, mdef, mhm); break;
     case AD_HNGY:  mhitm_ad_hngy(magr, mattk, mdef, mhm); break;
     case AD_FUMB:  mhitm_ad_fumb(magr, mattk, mdef, mhm); break;
@@ -5625,6 +5691,7 @@ hmonas(struct monst *mon)
 
         case AT_BREA:
         case AT_SPIT:
+        case AT_VOLY:
         case AT_GAZE: /* all done using #monster command */
             dhit = 0;
             break;
@@ -5739,6 +5806,16 @@ passive(struct monst *mon,
                 passive_obj(mon, weapon, &(ptr->mattk[i]));
         }
         break;
+    case AD_QUIL:
+        if (monnear(mon, u.ux, u.uy) && mhitb) {
+            if (Blind || !flags.verbose) {
+                You("are jabbed by something sharp!");
+            } else {
+                You("are jabbed by %s spikes!", s_suffix(mon_nam(mon)));
+            }
+            mdamageu(mon, tmp);
+        }
+        break;
     case AD_ACID:
         if (mhitb && rn2(2)) {
             if (Blind || !flags.verbose)
@@ -5843,6 +5920,29 @@ passive(struct monst *mon,
      */
     if (malive && !mon->mcan && rn2(3)) {
         switch (ptr->mattk[i].adtyp) {
+        case AD_HYDR: /* grow additional heads (hydra) */
+            if (mhit && !mon->mcan && weapon && rn2(3)) {
+                if ((is_blade(weapon) || is_axe(weapon))
+                      && weapon->oartifact != ART_FIRE_BRAND) {
+                    pline("You decapitate %s, but two more heads spring forth!",
+                        mon_nam(mon));
+                    grow_up(mon, (struct monst *) 0);
+                }
+            }
+            break;
+        case AD_BLND:
+            if (!mon->mcan && !rn2(2)) {
+                pline("%s sprays you! Ugh!", Monnam(mon));
+                make_blinded(Blinded + 1 + rn2(3), FALSE);
+                exercise(A_CHA, FALSE);
+            }
+            break;
+        case AD_STCK:
+            if (!mon->mcan && !u.ustuck && !sticks(g.youmonst.data)) {
+                pline("You stick to %s!", mon_nam(mon));
+                u.ustuck = mon;
+            }
+            break;
         case AD_PLYS:
             if (ptr == &mons[PM_FLOATING_EYE]) {
                 if (!canseemon(mon)) {

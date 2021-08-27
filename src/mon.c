@@ -2700,6 +2700,8 @@ mondead(register struct monst* mtmp)
         mtmp->cham = NON_PM;
     } else if (mtmp->data == &mons[PM_WEREJACKAL])
         set_mon_data(mtmp, &mons[PM_HUMAN_WEREJACKAL]);
+    else if (mtmp->data == &mons[PM_WEREBEAR])
+        set_mon_data(mtmp, &mons[PM_HUMAN_WEREBEAR]);
     else if (mtmp->data == &mons[PM_WEREWOLF])
         set_mon_data(mtmp, &mons[PM_HUMAN_WEREWOLF]);
     else if (mtmp->data == &mons[PM_WERECOCKATRICE])
@@ -3770,6 +3772,7 @@ m_respond(struct monst* mtmp)
             case PM_ORC_SHAMAN:
             case PM_GNOLL_SHAMAN:
             case PM_KOBOLD_SHAMAN:
+            case PM_RATMAN_SQUEAKER:
             default:
                 if (mon->mhp < mon->mhpmax && canseemon(mon)) {
                     pline("%s looks better.", Monnam(mon));

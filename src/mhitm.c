@@ -26,14 +26,27 @@ static int passivemm(struct monst *, struct monst *, boolean, int,
 static void
 noises(register struct monst *magr, register struct attack *mattk)
 {
+    const char* noise;
     boolean farq = (distu(magr->mx, magr->my) > 15);
 
     if (!Deaf && (farq != g.far_noise || g.moves - g.noisetime > 10)) {
         g.far_noise = farq;
         g.noisetime = g.moves;
-        You_hear("%s%s.",
-                 (mattk->aatyp == AT_EXPL) ? "an explosion" : "some noises",
-                 farq ? " in the distance" : "");
+        switch(mattk->aatyp) {
+        case AT_VOLY:
+            noise = "a series of rapid impacts";
+            break;
+        case AT_SCRE:
+            noise = "a furious scream";
+            break;
+        case AT_EXPL:
+            noise = "an explosion";
+            break;
+        default:
+            noise = "some noises";
+            break;
+        }
+        You_hear("%s%s.", noise, farq ? " in the distance" : "");
     }
 }
 
@@ -285,6 +298,7 @@ mattackm(register struct monst *magr, register struct monst *mdef)
         attk,       /* attack attempted this time */
         struck = 0, /* hit at least once */
         res[NATTK], /* results of all attacks */
+        k,          /* hydra head counter */
         dieroll = 0;
     struct attack *mattk, alt_attk;
     struct obj *mwep;
@@ -358,6 +372,11 @@ mattackm(register struct monst *magr, register struct monst *mdef)
      * and it shouldn't move again.
      */
     magr->mlstmv = g.monstermoves;
+
+    /* handle multiple hydra attacks */
+    if (magr->data == &mons[PM_HYDRA]) {
+        k = min(magr->m_lev - magr->data->mlevel + 1, 10);
+    }
 
     /* controls whether a mind flayer uses all of its tentacle-for-DRIN
        attacks; when fighting a headless monster, stop after the first
@@ -518,6 +537,20 @@ mattackm(register struct monst *magr, register struct monst *mdef)
                 strike = 0;
             break;
 
+        case AT_VOLY:
+            if (!monnear(magr, mdef->mx, mdef->my)) {
+                strike = volleymm(magr, mattk, mdef);
+
+                /* We don't really know if we hit or not; pretend we did. */
+                if (strike)
+                    res[i] |= MM_HIT;
+                if (DEADMONSTER(mdef))
+                    res[i] = MM_DEF_DIED;
+                if (DEADMONSTER(magr))
+                    res[i] |= MM_AGR_DIED;
+            }
+            break;
+
         case AT_SPIT:
             if (!monnear(magr, mdef->mx, mdef->my)) {
                 strike = (spitmm(magr, mattk, mdef) == MM_MISS) ? 0 : 1;
@@ -552,6 +585,12 @@ mattackm(register struct monst *magr, register struct monst *mdef)
             return res[i];
         if (res[i] & MM_HIT)
             struck = 1; /* at least one hit */
+
+        /* handle multiple hydra attacks */
+        if (magr->data == &mons[PM_HYDRA] && mattk->aatyp == AT_BITE && k > 0) {
+            i -= 1;
+            k -= 1;
+        }
     }
 
     return (struck ? MM_HIT : MM_MISS);
@@ -1199,6 +1238,56 @@ passivemm(register struct monst *magr, register struct monst *mdef,
     /* These affect the enemy only if defender is still alive */
     if (rn2(3))
         switch (mddat->mattk[i].adtyp) {
+        case AD_HYDR: /* grow additional heads (hydra) */
+            if (mhit && !mdef->mcan && MON_WEP(magr) && rn2(3)) {
+                if ((is_blade(MON_WEP(magr)) || is_axe(MON_WEP(magr)))
+                      && MON_WEP(magr)->oartifact != ART_FIRE_BRAND) {
+                    pline("%s decapitates %s, but two more heads spring forth!",
+                      Monnam(magr), mon_nam(mdef));
+                    grow_up(mdef, (struct monst *) 0);
+                }
+            }
+            tmp = 0;
+            break;
+        case AD_BLND:
+            if (!mdef->mcan && !rn2(2)) {
+                pline("%s sprays %s!", Monnam(mdef), mon_nam(magr));
+                mdef->mcansee = 0;
+                mdef->mblinded = 1 + rn2(3);
+            }
+            tmp = 0;
+            break;
+        case AD_STCK:
+            if (!mdef->mcan)
+                tmp = 0;
+            break;
+        case AD_QUIL:
+            if (mhit && !rn2(2)) {
+                Strcpy(buf, Monnam(magr));
+                if (canseemon(magr)) {
+                    pline("%s is jabbed by %s quills!", buf,
+                            s_suffix(mon_nam(mdef)));
+                    golemeffects(magr, AD_PHYS, tmp);
+                }
+                goto assess_dmg;
+            }
+            break;
+        /* Nephi's Grudge patch. */
+        case AD_MAGM:
+        /* wrath of gods for attacking Oracle */
+            if(resists_magm(magr)) {
+                if(canseemon(magr)) {
+                    shieldeff(magr->mx, magr->my);
+                    pline("A hail of magic missiles narrowly misses %s!",
+                        mon_nam(magr));
+                }
+            } else {
+                if(canseemon(magr))
+                    pline(magr->data == &mons[PM_WOODCHUCK] ? "ZOT!" :
+                        "%s is hit by magic missiles appearing from thin air!",
+                        Monnam(magr));
+                goto assess_dmg;
+            } break;
         case AD_PLYS: /* Floating eye */
             if (tmp > 127)
                 tmp = 127;
@@ -1322,6 +1411,7 @@ attk_protection(int aatyp)
     case AT_GAZE:
     case AT_BREA:
     case AT_MAGC:
+    case AT_VOLY:
         w_mask = ~0L; /* special case; no defense needed */
         break;
     case AT_CLAW:

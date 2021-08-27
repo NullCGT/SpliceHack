@@ -129,8 +129,8 @@ m_initgrp(struct monst *mtmp, int x, int y, int n, int mmflags)
     mm.x = x;
     mm.y = y;
     /* Create a supporter monster. */
-    if (cnt >= 3 && is_orc(mtmp->data)) {
-        leader_type = PM_ORC_SHAMAN;
+    if (cnt >= 3 && (is_orc(mtmp->data) || mtmp->data == &mons[PM_RATMAN])) {
+        leader_type = is_orc(mtmp->data) ? PM_ORC_SHAMAN : PM_RATMAN_SQUEAKER;
         if (enexto(&mm, mm.x, mm.y, mtmp->data)) {
             mon = makemon(&mons[leader_type], mm.x, mm.y, (mmflags | MM_NOGRP));
             if (mon) {
@@ -608,6 +608,20 @@ m_initweap(register struct monst *mtmp)
             m_initthrow(mtmp, CREAM_PIE, 2);
         if (!rn2(3))
             (void) mongets(mtmp, (rn2(2)) ? CLUB : RUBBER_HOSE);
+        break;
+    case S_RODENT:
+        switch(mm) {
+        case PM_RATMAN:
+            if (!rn2(3))
+                (void) mongets(mtmp, KNIFE);
+            if (!rn2(3))
+                (void) mongets(mtmp, DENTED_POT);
+            else if (!rn2(10))
+                (void) mongets(mtmp, FEDORA);
+            break;
+        default:
+            break;
+        }
         break;
     case S_ORC:
         if (rn2(2))

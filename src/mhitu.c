@@ -455,7 +455,7 @@ int
 mattacku(register struct monst *mtmp)
 {
     struct attack *mattk, alt_attk;
-    int i, j = 0, tmp, sum[NATTK];
+    int i, j, k = 0, tmp, sum[NATTK];
     struct permonst *mdat = mtmp->data;
     struct obj * marmf = which_armor(mtmp, W_ARMF);
     /*
@@ -732,6 +732,11 @@ mattacku(register struct monst *mtmp)
             return (foo == 1);
     }
 
+    /* handle multiple hydra attacks */
+    if (mtmp->data == &mons[PM_HYDRA]) {
+        k = min(mtmp->m_lev - mtmp->data->mlevel + 1, 10);
+    }
+
     g.skipdrin = FALSE; /* [see mattackm(mhitm.c)] */
 
     for (i = 0; i < NATTK; i++) {
@@ -825,6 +830,10 @@ mattacku(register struct monst *mtmp)
                 sum[i] = spitmu(mtmp, mattk);
             /* Note: spitmu takes care of displacement */
             break;
+        case AT_VOLY:
+            if (range2)
+                sum[i] = volleymu(mtmp, mattk);
+            break;
         case AT_WEAP:
             if (range2) {
                 if (!Is_rogue_level(&u.uz))
@@ -887,6 +896,12 @@ mattacku(register struct monst *mtmp)
         if ((sum[i] & MM_AGR_DONE))
             break; /* attacker teleported, no more attacks */
         /* sum[i] == 0: unsuccessful attack */
+
+        /* handle multiple hydra attacks */
+        if (mtmp->data == &mons[PM_HYDRA] && mattk->aatyp == AT_BITE && k > 0) {
+            i -= 1;
+            k -= 1;
+        }
     }
     return 0;
 }
@@ -2417,6 +2432,19 @@ passiveum(struct permonst *olduasmon, struct monst *mtmp, struct attack *mattk)
                 You("explode!");
                 /* KMH, balance patch -- this is okay with unchanging */
                 rehumanize();
+                goto assess_dmg;
+            }
+            break;
+        case AD_QUIL:
+            if (oldu_mattk->aatyp == AT_NONE) {
+                if (!rn2(2)) {
+                    pline("%s is jabbed by %squills!", Monnam(mtmp),
+                          /* temporary? hack for sequencing issue:  "your acid"
+                             looks strange coming immediately after player has
+                             been told that hero has reverted to normal form */
+                          !Upolyd ? "" : "your ");
+                } else
+                    tmp = 0;
                 goto assess_dmg;
             }
             break;

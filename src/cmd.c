@@ -688,6 +688,8 @@ domonability(void)
         return dobreathe();
     else if (attacktype(g.youmonst.data, AT_SPIT))
         return dospit();
+    else if (attacktype(g.youmonst.data, AT_VOLY))
+        return dovolley();
     else if (g.youmonst.data->mlet == S_NYMPH)
         return doremove();
     else if (attacktype(g.youmonst.data, AT_GAZE))

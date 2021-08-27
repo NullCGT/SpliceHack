@@ -1603,6 +1603,8 @@ artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
                     if (magr->mhp > magr->mhpmax)
                         magr->mhp = magr->mhpmax;
                 }
+                if (mdef->data == &mons[PM_HYDRA])
+                    pline("One of %s heads swells up and explodes!", s_suffix(mon_nam(mdef)));
             }
             return vis;
         } else { /* youdefend */

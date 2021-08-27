@@ -210,9 +210,12 @@ vpline(const char *line, va_list the_args)
         dumplogmsg(line);
 #endif
 
-    if(Role_if(PM_PIRATE)){
-     		line = piratesay(line);
+    if (Role_if(PM_PIRATE)){
+     	line = piratesay(line);
    	}
+    if (is_bear(g.youmonst.data)) {
+        line = replace(line,"bare","bear");
+    }
 
     /* use raw_print() if we're called too early (or perhaps too late
        during shutdown) or if we're being called recursively (probably

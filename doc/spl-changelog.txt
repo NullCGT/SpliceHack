@@ -6,7 +6,7 @@ Removed Content
 Since this release is a rewrite, a number of pieces of existing content have been heavily altered
 or outright removed. Rationale will be provided for all removed content upon request.
 - Removed the following monsters: Anubites, Nuckelavees, Plant Monsters, Lords of Worms, Penguins,
-  Mystic Scarabs, Memory Hounds.
+  Mystic Scarabs, Memory Hounds, Goblin Windmages, Walruses, Werephants.
 - Removed the following objects:
   - Razor whip.
   - Robe of the blood magus.
@@ -114,7 +114,11 @@ in its own way.
 - Levels have dynamically generated names.
 
 Monster Changes
+- Spiked monsters always deal passive damage, instead of only 50% of the time.
 - Many monsters have gender-variant names. For example, female pigs are sows.
+- Cows can be tamed again. No idea why this was removed, since they are so slow that
+  they are not very practical pets anyway.
+- Werebears generate peaceful.
 - Altered the tiles for gnolls again to bring them closer in line with other humanoid tiles.
 - Gnolls have been reduced to medium size so that they can wear the armor they spawn with.
 - Monster fleeing AI has been altered.
@@ -183,6 +187,7 @@ Monster Changes
 - Dust vorticies can grow up into dust devils.
 - Polymorphing into a nosferatu drops your charisma to 3.
 - Malcanthet's gender and associated tile oscillate constantly.
+- Hydras are lower level, deal more damange, and have been moved to the lizard monster class.
 
 Object Changes
 - Zapping a wand of water at an item will extinguish it.
@@ -244,6 +249,10 @@ Bug Fixes
 - Fixed parrots not using the birdname option from a config file.
 - Fixed grenade explosions being treated as if they were caused by the player, even when they
   were not.
+
+YAFM
+- Whenever you are polymorphed into a bear, all instances of the word "bare" are replaced
+  with the word "bear."
 
 Known Bugs
 - Rare failed sanity check for improper mon data, possibly due to vampiric monsters shapeshifting.

@@ -916,7 +916,8 @@ m_balks_at_approaching(struct monst* mtmp)
 
     /* has ammo+launcher or can spit */
     if (m_has_launcher_and_ammo(mtmp)
-        || attacktype(mtmp->data, AT_SPIT))
+        || attacktype(mtmp->data, AT_SPIT)
+        || attacktype(mtmp->data, AT_VOLY))
         return TRUE;
 
     /* is using a polearm and in range */

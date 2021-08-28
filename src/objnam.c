@@ -94,6 +94,17 @@ static struct Jitem Japanese_items[] = { { SHORT_SWORD, "wakizashi" },
                                              { POT_BOOZE, "sake" },
                                              { 0, "" } };
 
+static struct Jitem Cartomancer_items[] = {
+                                            { LARGE_BOX, "deck box" },
+                                            { LOCK_PICK, "worthless card" },
+                                            { SHURIKEN, "razor card" },
+                                            { HAWAIIAN_SHIRT, "graphic tee" },
+                                            { EXPENSIVE_CAMERA, "holographic card" },
+                                            { CREDIT_CARD, "banned card" },
+                                            { SACK, "card bag" },
+                                            { 0, "" } };
+
+static const char *Cartomancer_rarity(int otyp);
 static const char *Alternate_item_name(int i, struct Jitem *);
 
 static char *
@@ -147,6 +158,8 @@ obj_typename(int otyp)
 
     if (Role_if(PM_SAMURAI) && Alternate_item_name(otyp,Japanese_items))
         actualn = Alternate_item_name(otyp,Japanese_items);
+    else if (Role_if(PM_CARTOMANCER) && Alternate_item_name(otyp,Cartomancer_items))
+     		actualn = Alternate_item_name(otyp,Cartomancer_items);
     else if (Role_if(PM_PIRATE) && Alternate_item_name(otyp,Pirate_items))
      	actualn = Alternate_item_name(otyp,Pirate_items);
 
@@ -158,7 +171,10 @@ obj_typename(int otyp)
         Strcpy(buf, "potion");
         break;
     case SCROLL_CLASS:
-        Strcpy(buf, "scroll");
+        if (Role_if(PM_CARTOMANCER))
+            Strcpy(buf, "spell card");
+        else
+            Strcpy(buf, "scroll");
         break;
     case WAND_CLASS:
         Strcpy(buf, "wand");
@@ -466,6 +482,8 @@ xname_flags(
     buf = nextobuf() + PREFIX; /* leave room for "17 -3 " */
     if (Role_if(PM_SAMURAI) && Alternate_item_name(typ, Japanese_items))
         actualn = Alternate_item_name(typ, Japanese_items);
+    else if (Role_if(PM_CARTOMANCER) && Alternate_item_name(typ,Cartomancer_items))
+     		actualn = Alternate_item_name(typ,Cartomancer_items);
     else if (Role_if(PM_PIRATE) && Alternate_item_name(typ,Pirate_items))
      	actualn = Alternate_item_name(typ,Pirate_items);
     /* As of 3.6.2: this used to be part of 'dn's initialization, but it
@@ -694,10 +712,16 @@ xname_flags(
         }
         break;
     case SCROLL_CLASS:
-        Strcpy(buf, "scroll");
+        if (Role_if(PM_CARTOMANCER)) {
+            Strcpy(buf, Cartomancer_rarity(typ));
+        } else
+            Strcpy(buf, "scroll");
         if (!dknown)
             break;
-        if (nn) {
+        if (nn && obj->corpsenm != NON_PM) {
+            Strcat(buf, " - ");
+            Strcat(buf, mons[obj->corpsenm].pmnames[NEUTRAL]);
+        } else if (nn) {
             Strcat(buf, " of ");
             Strcat(buf, actualn);
         } else if (un) {
@@ -3476,6 +3500,18 @@ const char * in_str;
             return j->item;
         }
     }
+    /* try Pirate names */
+    for (j = Pirate_items; j->item != 0; j++) {
+        if (!strcmpi(in_str, j->name)) {
+            return j->item;
+        }
+    }
+    /* try Cartomancer names */
+    for (j = Cartomancer_items; j->item != 0; j++) {
+        if (!strcmpi(in_str, j->name)) {
+            return j->item;
+        }
+    }
     /* try fruits */
     if (fruit_from_name(in_str, FALSE, NULL))
         return SLIME_MOLD;
@@ -4260,7 +4296,7 @@ readobjnam_postparse3(struct _readobjnam_data* d)
     d->typ = 0;
 
     if (d->actualn) {
-        struct Jitem *j[] = {Japanese_items,Pirate_items};
+        struct Jitem *j[] = {Japanese_items,Pirate_items,Cartomancer_items};
     		for(i = 0; (unsigned long) i < sizeof(j) / sizeof(j[0]); i++)
     		{
          		while(j[i]->item) {
@@ -4874,6 +4910,25 @@ rnd_class(int first, int last)
                 return i;
     }
     return (first == last) ? first : STRANGE_OBJECT;
+}
+
+static const char*
+Cartomancer_rarity(int otyp)
+{
+    int price = objects[otyp].oc_cost;
+    if (otyp == SCR_CREATE_MONSTER) {
+        return "monster card";
+    } else if (price < 60) {
+        return "common spell card";
+    } else if (price < 100) {
+        return "uncommon spell card";
+    } else if (price < 200) {
+        return "rare spell card";
+    } else if (price < 300) {
+        return "super rare spell card";
+    } else {
+        return "mythic spell card";
+    }
 }
 
 static const char *

@@ -153,6 +153,49 @@ const struct Role roles[NUM_ROLES+1] = {
       A_INT,
       SPE_DIG,
       -4 },
+    { { "Cartomancer", 0, 0 },
+      { { "Learner", 0, 0 },
+        { "Shuffler", 0, 0 },
+        { "Player", 0, 0 },
+        { "Reader", 0, 0 },
+        { "Strategist", 0, 0 },
+        { "Deck Stacker", 0, 0 },
+        { "Card Collector", 0, 0 },
+        { "Deck Stacker", 0, 0 },
+        { "King of Games", "Queen of Games", "Monarch of Games" } },
+      "Johnny", "Spike", "Timmy", /* Card player archetypes */
+      "Car",
+      "the Card Training School",
+      "the Great Card Arena",
+      PM_CARTOMANCER,
+      NON_PM,
+      PM_LITTLE_DOG,
+      PM_KING_OF_GAMES,
+      PM_STUDENT, /* Reusing students to avoid redundancy */
+      PM_DAL_ZETHIRE,
+      PM_COBRA,
+      PM_GUARDIAN_NAGA,
+      S_SNAKE,
+      S_NAGA,
+      ART_HOLOGRAPHIC_VOID_LILY,
+      MH_HUMAN | MH_DWARF | MH_ELF | MH_GNOME | MH_DEMON | MH_UNDEAD,
+      ROLE_MALE | ROLE_FEMALE | ROLE_NEUTER |
+          ROLE_LAWFUL | ROLE_NEUTRAL | ROLE_CHAOTIC,
+      /* Str Int Wis Dex Con Cha */
+      { 7, 10, 7, 7, 7, 7 },
+      { 10, 30, 10, 20, 20, 10 },
+      /* Init   Lower  Higher */
+      { 10, 0, 0, 8, 1, 0 }, /* Hit points */
+      { 4, 3, 0, 2, 0, 3 },
+      12, /* Energy */
+      0,
+      1,
+      0,
+      3,
+      10,
+      A_INT,
+      SPE_CREATE_MONSTER,
+      -4 },
     { {"Convict", 0, 0}, {
         {"Detainee", 0,     0},
         {"Inmate", 0,   0},
@@ -1806,7 +1849,7 @@ build_plselection_prompt(
     if (num_post_attribs) {
         if (g.role_pa[BP_RACE]) {
             (void) promptsep(eos(buf), num_post_attribs);
-            Strcat(buf, "race");
+            Strcat(buf, "species");
         }
         if (g.role_pa[BP_ROLE]) {
             (void) promptsep(eos(buf), num_post_attribs);
@@ -1949,7 +1992,7 @@ role_selection_prolog(int which, winid where)
             Sprintf(eos(buf), "/%s", roles[r].name.f);
     }
     putstr(where, 0, buf);
-    Sprintf(buf, "%12s ", "race:");
+    Sprintf(buf, "%12s ", "species:");
     Strcat(buf, (which == RS_RACE) ? choosing : (c == ROLE_NONE)
                                                     ? not_yet
                                                     : (c == ROLE_RANDOM)
@@ -2006,7 +2049,7 @@ role_menu_extra(int which, winid where, boolean preselect)
         }
         break;
     case RS_RACE:
-        what = "race";
+        what = "species";
         f = flags.initrace;
         c = ROLE_NONE; /* override player's setting */
         if (r >= 0) {
@@ -2021,7 +2064,7 @@ role_menu_extra(int which, winid where, boolean preselect)
                 /* if there is only one race choice available due to user
                    options disallowing others, race menu entry is disabled */
                 constrainer = "filter";
-                forcedvalue = "race";
+                forcedvalue = "species";
             }
         }
         break;
@@ -2073,7 +2116,7 @@ role_menu_extra(int which, winid where, boolean preselect)
             else if (allowmask == AM_CHAOTIC)
                 a = 2; /* aligns[chaotic] */
             if (a >= 0)
-                constrainer = "race";
+                constrainer = "species";
         }
         if (f >= 0 && !constrainer
             && (ROLE_ALIGNMASK & ~g.rfilter.mask) == aligns[f].allow) {

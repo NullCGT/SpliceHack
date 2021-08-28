@@ -36,6 +36,9 @@ static const struct innate {
   cav_abil[] = { { 7, &(HFast), "quick", "slow" },
                  { 15, &(HWarning), "sensitive", "" },
                  { 0, 0, 0, 0 } },
+  car_abil[] = { { 1, &(HSearching), "perceptive", "" },
+                 { 7, &(HWarning), "in touch with your deck's heart", "" },
+                 { 0, 0, 0, 0 } },
 
   con_abil[] = { { 1, &(HSick_resistance), "", "" },
                  { 7, &(HPoison_resistance), "healthy", "" },
@@ -740,6 +743,7 @@ role_abil(int r)
     } roleabils[] = {
         { PM_ARCHEOLOGIST, arc_abil },
         { PM_BARBARIAN, bar_abil },
+        { PM_CARTOMANCER, car_abil },
         { PM_CAVE_DWELLER, cav_abil },
         { PM_CONVICT, con_abil},
         { PM_DRAGON_RIDER, dra_abil},

@@ -1067,6 +1067,15 @@ domonnoise(register struct monst* mtmp)
             case PM_TOURIST:
                 verbl_msg = "Aloha.";
                 break;
+            case PM_WIZARD:
+                pline_msg = "discusses spellbooks.";
+                break;
+            case PM_RANGER:
+                verbl_msg = Hallucination ? "I am the bone of my sword." : "I can't talk for long, I'm on the hunt.";
+                break;
+            case PM_CARTOMANCER:
+                pline_msg = "informs you that their deck has no pathetic cards.";
+                break;
             case PM_DRAGON_RIDER:
                 verbl_msg = "The only authority I answer to is that of the wyrm.";
                 break;

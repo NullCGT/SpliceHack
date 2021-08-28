@@ -312,13 +312,11 @@ struct obj *obj;
     struct monst *mtmp;
     struct obj *otmp;
 
-/*
     if (obj->blessed || Role_if(PM_CARTOMANCER)) {
         goodcards = TRUE;
     } else if (obj->cursed) {
         badcards = TRUE;
     }
-*/
 
     if (obj->otyp == PLAYING_CARD_DECK) {
         int card_luck;

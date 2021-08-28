@@ -2691,6 +2691,16 @@ mondead(register struct monst* mtmp)
     if (be_sad)
         You("have a sad feeling for a moment, then it passes.");
 
+    /* Anything killed while playing as a cartomancer has a chance of leaving behind
+       a monster card. */
+    if (Role_if(PM_CARTOMANCER) && !(mtmp->data->geno & G_UNIQ)
+        && !mtmp->mtame && rn2(2)) {
+        otmp = mksobj(SCR_CREATE_MONSTER, FALSE, FALSE);
+        otmp->corpsenm = monsndx(mtmp->data);
+        place_object(otmp, mtmp->mx, mtmp->my);
+        newsym(mtmp->mx, mtmp->my);
+    }
+
     /* dead vault guard is actually kept at coordinate <0,0> until
        his temporary corridor to/from the vault has been removed;
        need to do this after life-saving and before m_detach() */

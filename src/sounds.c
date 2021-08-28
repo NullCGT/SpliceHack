@@ -892,13 +892,17 @@ domonnoise(register struct monst* mtmp)
         break;
     case MS_GRUNT:
         if (Hallucination && mtmp->data->mlet == S_TROLL) {
-            static const char *const troll_msg[3] = {
+            static const char *const troll_msg[7] = {
                 /* Classic forum flame bait. Please do not take this seriously. */
                 "Vim > Emacs.",
                 "Shiki can kill servants. Discuss.",
                 "Trololololol!",
+                "Looks like you forgot to engrave Elbereth.",
+                "Well, you were burdened, so...",
+                "I heard you like sokoban, so I rotated it.",
+                "Thank you for freeing me!",
             };
-            verbl_msg = troll_msg[rn2(3)];
+            verbl_msg = troll_msg[rn2(7)];
         } else {
             pline_msg = "grunts.";
         }

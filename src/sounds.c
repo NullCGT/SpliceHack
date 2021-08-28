@@ -233,8 +233,8 @@ dosounds(void)
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if ((mtmp->msleeping || 
-                mtmp->data->mlet == 'P' || 
+            if ((mtmp->msleeping ||
+                mtmp->data->mlet == 'P' ||
                 mtmp->data->mlet == 'R')
                 && mon_in_room(mtmp, ARMORY)) {
                 You_hear1(armory_msg[rn2(2) + hallu]);
@@ -258,7 +258,7 @@ dosounds(void)
                     case 2:
                     You_hear("a weeping willow!");
                     break;
-                }	
+                }
             } else {
                 switch (rn2(6)) {
                     case 0:
@@ -892,13 +892,17 @@ domonnoise(register struct monst* mtmp)
         break;
     case MS_GRUNT:
         if (Hallucination && mtmp->data->mlet == S_TROLL) {
-            static const char *const troll_msg[3] = {
+            static const char *const troll_msg[7] = {
                 /* Classic forum flame bait. Please do not take this seriously. */
                 "Vim > Emacs.",
                 "Shiki can kill servants. Discuss.",
                 "Trololololol!",
+                "Looks like you forgot to engrave Elbereth.",
+                "Well, you were burdened, so...",
+                "I heard you like sokoban, so I rotated it.",
+                "Thank you for freeing me!",
             };
-            verbl_msg = troll_msg[rn2(3)];
+            verbl_msg = troll_msg[rn2(7)];
         } else {
             pline_msg = "grunts.";
         }

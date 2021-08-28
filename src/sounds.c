@@ -233,8 +233,8 @@ dosounds(void)
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if ((mtmp->msleeping || 
-                mtmp->data->mlet == 'P' || 
+            if ((mtmp->msleeping ||
+                mtmp->data->mlet == 'P' ||
                 mtmp->data->mlet == 'R')
                 && mon_in_room(mtmp, ARMORY)) {
                 You_hear1(armory_msg[rn2(2) + hallu]);
@@ -258,7 +258,7 @@ dosounds(void)
                     case 2:
                     You_hear("a weeping willow!");
                     break;
-                }	
+                }
             } else {
                 switch (rn2(6)) {
                     case 0:

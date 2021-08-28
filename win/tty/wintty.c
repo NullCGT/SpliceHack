@@ -696,7 +696,7 @@ tty_player_selection(void)
                         role_menu_extra(RS_ALGNMNT, win, FALSE);
                         role_menu_extra(RS_filter, win, FALSE);
                         role_menu_extra(ROLE_NONE, win, FALSE); /* quit */
-                        Strcpy(pbuf, "Pick a race or species");
+                        Strcpy(pbuf, "Pick a species or culture");
                         end_menu(win, pbuf);
                         n = select_menu(win, PICK_ONE, &selected);
                         if (n > 0) {
@@ -788,7 +788,7 @@ tty_player_selection(void)
                         role_menu_extra(RS_ALGNMNT, win, FALSE);
                         role_menu_extra(RS_filter, win, FALSE);
                         role_menu_extra(ROLE_NONE, win, FALSE); /* quit */
-                        Strcpy(pbuf, "Pick a gender or sex");
+                        Strcpy(pbuf, "Pick a gender or identity");
                         end_menu(win, pbuf);
                         n = select_menu(win, PICK_ONE, &selected);
                         if (n > 0) {
@@ -1103,7 +1103,8 @@ setup_rolemenu(winid win,
     anything any;
     int i;
     boolean role_ok;
-    char thisch, lastch = '\0', rolenamebuf[50];
+    char rolenamebuf[50];
+    char thisch = 'a';
 
     any = cg.zeroany; /* zero out all bits */
     for (i = 0; roles[i].name.m; i++) {
@@ -1118,9 +1119,6 @@ setup_rolemenu(winid win,
             any.a_int = i + 1;
         else
             any.a_string = roles[i].name.m;
-        thisch = lowc(*roles[i].name.m);
-        if (thisch == lastch)
-            thisch = highc(thisch);
         Strcpy(rolenamebuf, roles[i].name.m);
         if (roles[i].name.f) {
             /* role has distinct name for female (C,P) */
@@ -1133,13 +1131,24 @@ setup_rolemenu(winid win,
                 Strcat(rolenamebuf, roles[i].name.f);
             }
         }
+        if (roles[i].name.n) {
+            /* role has distinct name for female (C,P) */
+            if (gend == 2) {
+                /* female already chosen; replace male name */
+                Strcpy(rolenamebuf, roles[i].name.n);
+            } else if (gend < 0) {
+                /* not chosen yet; append slash+female name */
+                Strcat(rolenamebuf, "/");
+                Strcat(rolenamebuf, roles[i].name.n);
+            }
+        }
         /* !filtering implies reset_role_filtering() where we want to
            mark this role as preseleted if current filter excludes it */
-        add_menu(win, &nul_glyphinfo, &any, thisch, 0,
-                 ATR_NONE, an(rolenamebuf),
-                 (!filtering && !role_ok)
-                    ? MENU_ITEMFLAGS_SELECTED : MENU_ITEMFLAGS_NONE);
-        lastch = thisch;
+        add_menu(win, &nul_glyphinfo, &any, thisch, 0, ATR_NONE, an(rolenamebuf),
+                 (!filtering && !role_ok) ? MENU_ITEMFLAGS_SELECTED : MENU_ITEMFLAGS_NONE);
+        thisch++;
+        if (thisch == 'q')
+            thisch = 'r';
     }
 }
 
@@ -1169,11 +1178,6 @@ setup_racemenu(winid win, boolean filtering, int role, int gend, int algn)
         if (this_ch == 'd') {
             if (!strcmp(races[i].noun, "drow"))
                 this_ch = 'D';
-            else
-                high_ch = 0;
-        } else if (this_ch == 'g') {
-            if (!strcmp(races[i].noun, "ghoul"))
-                this_ch = 'G';
             else
                 high_ch = 0;
         }

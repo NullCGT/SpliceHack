@@ -93,6 +93,11 @@
     <Luafiles Include = "bar-goal.lua"/>
     <Luafiles Include = "bar-loca.lua"/>
     <Luafiles Include = "bar-strt.lua"/>
+    <Luafiles Include = "car-fila.lua"/>
+    <Luafiles Include = "car-filb.lua"/>
+    <Luafiles Include = "car-goal.lua"/>
+    <Luafiles Include = "car-loca.lua"/>
+    <Luafiles Include = "car-strt.lua"/>
     <Luafiles Include = "cav-fila.lua"/>
     <Luafiles Include = "cav-filb.lua"/>
     <Luafiles Include = "cav-goal.lua"/>

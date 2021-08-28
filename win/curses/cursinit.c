@@ -549,7 +549,7 @@ curses_choose_character(void)
         choices[n] = (const char *) 0;
         if (n > 1)
             sel = curses_character_dialog(choices,
-                                        "Choose one of the following roles:");
+                                        "Please choose your role.");
         else
             sel = 0;
         if (sel >= 0)
@@ -611,7 +611,7 @@ curses_choose_character(void)
             /* Permit the user to pick, if there is more than one */
             if (n > 1)
                 sel = curses_character_dialog(choices,
-                                        "Choose one of the following races:");
+                                        "Please choose your species.");
             else
                 sel = 0;
             if (sel >= 0)
@@ -671,7 +671,7 @@ curses_choose_character(void)
             /* Permit the user to pick, if there is more than one */
             if (n > 1)
                 sel = curses_character_dialog(choices,
-                                      "Choose one of the following genders:");
+                                      "Please choose your gender.");
             else
                 sel = 0;
             if (sel >= 0)
@@ -729,7 +729,7 @@ curses_choose_character(void)
             /* Permit the user to pick, if there is more than one */
             if (n > 1)
                 sel = curses_character_dialog(choices,
-                                   "Choose one of the following alignments:");
+                                   "Please choose your alignment.");
             else
                 sel = 0;
             if (sel >= 0)
@@ -758,36 +758,57 @@ curses_character_dialog(const char **choices, const char *prompt)
 {
     int count, count2, ret, curletter;
     char used_letters[52];
+    char buf[BUFSZ];
     anything identifier;
     menu_item *selected = NULL;
     winid wid = curses_get_wid(NHW_MENU);
 
     identifier.a_void = 0;
+    curletter = 'a';
     curses_start_menu(wid, MENU_BEHAVE_STANDARD);
 
+    Sprintf(buf, "Role: %s", 
+            flags.initrole >= 0 ? roles[flags.initrole].name.m : "Not Selected");
+    putstr(wid, ATR_ULINE, buf);
+    buf[0] = '\0';
+    Sprintf(buf, "Species: %s",
+            flags.initrace >= 0 ? races[flags.initrace].noun : "Not Selected");
+    putstr(wid, ATR_ULINE, buf);
+    buf[0] = '\0';
+    Sprintf(buf, "Alignment: %s",
+            flags.initalign >= 0 ? aligns[flags.initalign].adj : "Not Selected");
+    putstr(wid, ATR_ULINE, buf);
+    buf[0] = '\0';
+    Sprintf(buf, "Gender: %s",
+            flags.initgend >= 0 ? genders[flags.initgend].adj : "Not Selected");
+    putstr(wid, ATR_ULINE, buf);
+    putstr(wid, ATR_NONE, "");
+
     for (count = 0; choices[count]; count++) {
-        curletter = tolower(choices[count][0]);
-        for (count2 = 0; count2 < count; count2++) {
-            if (curletter == used_letters[count2]) {
-                curletter = toupper(curletter);
-            }
-        }
+        if (curletter == 'q')
+            curletter++;
 
         identifier.a_int = (count + 1); /* Must be non-zero */
         curses_add_menu(wid, &nul_glyphinfo, &identifier, curletter, 0,
                         A_NORMAL, choices[count], MENU_ITEMFLAGS_NONE);
         used_letters[count] = curletter;
+        curletter++;
+        for (count2 = 0; count2 < count; count2++) {
+            if (curletter == used_letters[count2]) {
+                curletter = toupper(curletter);
+            }
+        }
     }
 
     /* Random Selection */
     identifier.a_int = ROLE_RANDOM;
-    curses_add_menu(wid, &nul_glyphinfo, &identifier, '*', 0,
-                    A_NORMAL, "Random", MENU_ITEMFLAGS_NONE);
+    curses_add_menu(wid, &nul_glyphinfo, &identifier, '*', 0, A_NORMAL, "Random",
+                    MENU_ITEMFLAGS_NONE);
 
     /* Quit prompt */
     identifier.a_int = ROLE_NONE;
-    curses_add_menu(wid, &nul_glyphinfo, &identifier, 'q', 0,
-                    A_NORMAL, "Quit", MENU_ITEMFLAGS_NONE);
+    curses_add_menu(wid, &nul_glyphinfo, &identifier, 'q', 0, A_NORMAL, "Quit",
+                    MENU_ITEMFLAGS_NONE);
     curses_end_menu(wid, prompt);
     ret = curses_select_menu(wid, PICK_ONE, &selected);
     if (ret == 1) {

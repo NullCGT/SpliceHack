@@ -1469,8 +1469,11 @@ create_polymon(struct obj *obj, int okind)
         pm_index = PM_IRON_GOLEM;
         material = "metal ";
         break;
-    case COPPER:
     case SILVER:
+        pm_index = PM_SILVER_GOLEM;
+        material = "silvery ";
+        break;
+    case COPPER:
     case PLATINUM:
     case GEMSTONE:
     case MINERAL:
@@ -1514,6 +1517,10 @@ create_polymon(struct obj *obj, int okind)
     case PAPER:
         pm_index = PM_PAPER_GOLEM;
         material = "paper ";
+        break;
+    case WAX:
+        pm_index = PM_WAX_GOLEM;
+        material = "wax ";
         break;
     default:
         /* if all else fails... */

@@ -909,7 +909,7 @@ hmon_hitmon(struct monst *mon,
                     tmp -= 2 * Luck;
                 } else if (obj && obj->oartifact &&
                     obj->oartifact == ART_WAR_S_SWORD) {
-                    tmp += (min(num_genocides(), 20) + num_extinct());
+                    tmp += (min(num_genocides(), 20));
                 }
                 if (mon_hates_material(mon, obj->material)) {
                     /* dmgval() already added bonus damage */
@@ -4924,6 +4924,7 @@ mhitm_adtyping(struct monst *magr, struct attack *mattk, struct monst *mdef,
     case AD_VOID: mhitm_ad_void(magr, mattk, mdef, mhm); break;
     case AD_MEMR: mhitm_ad_memr(magr, mattk, mdef, mhm); break;
     case AD_QUIL: mhitm_ad_quil(magr, mattk, mdef, mhm); break;
+    case AD_DSRM: mhitm_ad_dsrm(magr, mattk, mdef, mhm); break;
     case AD_WIND: mhitm_ad_wind(magr, mattk, mdef, mhm); break;
     case AD_CALM: mhitm_ad_calm(magr, mattk, mdef, mhm); break;
     case AD_LUCK: mhitm_ad_luck(magr, mattk, mdef, mhm); break;
@@ -4988,6 +4989,34 @@ damageum(
         return MM_DEF_DIED;
     }
     return MM_HIT;
+}
+
+void
+mhitm_ad_dsrm(magr, mattk, mdef, mhm)
+struct monst *magr;
+struct attack *mattk;
+struct monst *mdef;
+struct mhitm_data *mhm;
+{
+    if (magr == &g.youmonst) {
+        /* uhitm */
+        mhitm_ad_phys(magr, mattk, mdef, mhm);
+        if (mhm->done)
+            return;
+    } else if (mdef == &g.youmonst) {
+        /* mhitu */
+        hitmsg(magr, mattk);
+        if (!rn2(6) && uwep) {
+            pline("%s disarms you!", Monnam(magr));
+            dropx(uwep);
+        }
+        return;
+    } else {
+        /* mhitm */
+        mhitm_ad_phys(magr, mattk, mdef, mhm);
+        if (mhm->done)
+            return;
+    }
 }
 
 void

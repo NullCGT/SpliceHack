@@ -117,7 +117,7 @@ themerooms = {
          });
       end
    },
-
+--[=[
    -- Storage room
    -- In SLASH'EM, this was a special level, but it works much better as
    -- a themed room. I added a number of messages to confuse and unnerve
@@ -167,7 +167,7 @@ themerooms = {
          });
       end
    },
-
+--]=]
    -- Trap room
    function()
       des.room({ type = "themed", filled = 0,

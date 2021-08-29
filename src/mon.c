@@ -582,6 +582,18 @@ make_corpse(register struct monst* mtmp, unsigned int corpseflags)
         obj = mkcorpstat(CORPSE, mtmp, &mons[num], x, y, corpstatflags);
         obj->age -= (TAINT_AGE + 1); /* this is an *OLD* corpse */
         break;
+    case PM_SILVER_GOLEM:
+        num = d(1, 2);
+        while (num--) {
+            obj = mkobj_at(RANDOM_CLASS, x, y, FALSE);
+            if (!valid_obj_material(obj, SILVER)) {
+                delobj(obj);
+                obj = mksobj_at(DAGGER, x, y, TRUE, FALSE);
+            }
+            obj->material = SILVER;
+        }
+        free_mgivenname(mtmp); /* don't christen obj */
+        break;
     case PM_IRON_GOLEM:
         num = d(2, 6);
         while (num--) {
@@ -612,6 +624,39 @@ make_corpse(register struct monst* mtmp, unsigned int corpseflags)
         obj->quan = (long) (rn2(20) + 50);
         obj->owt = weight(obj);
         free_mgivenname(mtmp);
+        break;
+    case PM_RUBY_GOLEM:
+        /* [DS] Mik's original Lethe fobbed off the player with coloured
+         * glass even for the higher golems. We'll play fair here - if
+         * you can kill one of these guys, you deserve the gems. */
+        num = d(2,4);
+        while (num--)
+            obj = mksobj_at(RUBY, x, y, TRUE, FALSE);
+        free_mgivenname(mtmp);
+        break;
+    case PM_SAPPHIRE_GOLEM:
+        num = d(2,4);
+        while (num--)
+            obj = mksobj_at(SAPPHIRE, x, y, TRUE, FALSE);
+        free_mgivenname(mtmp);
+        break;
+    case PM_STEEL_GOLEM:
+        num = d(2,6);
+        /* [DS] Add steel chains (or handcuffs!) for steel golems? */
+        while (num--)
+            obj = mksobj_at(IRON_CHAIN, x, y, TRUE, FALSE);
+        free_mgivenname(mtmp);
+        break;
+    case PM_CRYSTAL_GOLEM:
+        /* [DS] Generate gemstones of various hues */
+        num = d(2,4);
+        {
+            int gemspan = LAST_GEM - g.bases[GEM_CLASS] + 1;
+            while (num--)
+          obj = mksobj_at(g.bases[GEM_CLASS] + rn2(gemspan), x, y,
+                  TRUE, FALSE);
+            free_mgivenname(mtmp);
+        }
         break;
     case PM_STONE_GOLEM:
         corpstatflags &= ~CORPSTAT_INIT;
@@ -663,6 +708,18 @@ make_corpse(register struct monst* mtmp, unsigned int corpseflags)
         }
         free_mgivenname(mtmp);
         break;
+    case PM_WAX_GOLEM:
+        num = d(2,4);
+        while (num--) {
+            obj = mkobj_at(RANDOM_CLASS, x, y, FALSE);
+            if (!valid_obj_material(obj, WAX)) {
+                delobj(obj);
+                obj = mksobj_at(WAX_CANDLE, x, y, TRUE, FALSE);
+            }
+            obj->material = WAX;
+        }
+        free_mgivenname(mtmp);
+    	break;
     /* expired puddings will congeal into a large blob;
        like dragons, relies on the order remaining consistent */
     case PM_GRAY_OOZE:

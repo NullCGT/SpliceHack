@@ -73,6 +73,8 @@ barehitmsg(struct monst *mtmp)
               return "lash";
       }
       if (mtmp->data == &mons[PM_MONK] || mtmp->data == &mons[PM_SAMURAI]
+              || mtmp->data == &mons[PM_GRANDMASTER]
+              || mtmp->data == &mons[PM_MARTIAL_ARTIST]
               || (martial_bonus() &&
                   (mtmp == &g.youmonst ||
                   /* Assumes monk or samurai quest monsters */
@@ -1273,6 +1275,8 @@ gulpmu(struct monst *mtmp, struct attack *mattk)
             pline("%s lunges forward and plucks you off %s!", Monnam(mtmp),
                   buf);
             dismount_steed(DISMOUNT_ENGULFED);
+        } else if (has_head(mtmp->data)) {
+            pline("%s swallows you whole!", Monnam(mtmp));
         } else if (mtmp->data == &mons[PM_FIRE_VORTEX] &&
             Role_if(PM_CARTOMANCER)) {
             pline("That tornado\'s carrying a car!"); /* Sonic 06 */
@@ -1909,8 +1913,12 @@ mdamageu(struct monst *mtmp, int n)
             rehumanize();
     } else {
         u.uhp -= n;
-        if (u.uhp < 1)
-            done_in_by(mtmp, MURDERED);
+        if (u.uhp < 1) {
+            if (mtmp->data == &mons[PM_T_REX])
+                done_in_by(mtmp, TREX);
+            else
+                done_in_by(mtmp, MURDERED);
+        }
     }
 }
 

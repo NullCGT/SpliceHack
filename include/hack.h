@@ -137,21 +137,22 @@ enum getpos_retval {
 enum game_end_types {
     DIED         =  0,
     MURDERED     =  1,
-    CHOKING      =  2,
-    POISONING    =  3,
-    STARVING     =  4,
-    DROWNING     =  5,
-    BURNING      =  6,
-    DISSOLVED    =  7,
-    CRUSHING     =  8,
-    STONING      =  9,
-    TURNED_SLIME = 10,
-    GENOCIDED    = 11,
-    PANICKED     = 12,
-    TRICKED      = 13,
-    QUIT         = 14,
-    ESCAPED      = 15,
-    ASCENDED     = 16
+    TREX         =  2,
+    CHOKING      =  3,
+    POISONING    =  4,
+    STARVING     =  5,
+    DROWNING     =  6,
+    BURNING      =  7,
+    DISSOLVED    =  8,
+    CRUSHING     =  9,
+    STONING      = 10,
+    TURNED_SLIME = 11,
+    GENOCIDED    = 12,
+    PANICKED     = 13,
+    TRICKED      = 14,
+    QUIT         = 15,
+    ESCAPED      = 16,
+    ASCENDED     = 17
 };
 
 typedef struct strbuf {

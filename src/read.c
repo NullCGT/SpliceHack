@@ -3033,7 +3033,8 @@ boolean
 cant_revive(int* mtype, boolean revival, struct obj* from_obj)
 {
     /* SHOPKEEPERS can be revived now */
-    if (*mtype == PM_GUARD || (*mtype == PM_SHOPKEEPER && !revival)
+    if (*mtype == PM_GUARD 
+        || ((*mtype == PM_SHOPKEEPER || *mtype == PM_EXTRAPLANAR_MERCHANT) && !revival)
         || *mtype == PM_HIGH_CLERIC || *mtype == PM_ALIGNED_CLERIC
         || *mtype == PM_ANGEL) {
         *mtype = PM_HUMAN_ZOMBIE;

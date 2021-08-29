@@ -1157,6 +1157,9 @@ static const short grownups[][2] = {
     { PM_RATMAN, PM_RATMAN_SQUEAKER },
     { PM_GIANT_SPIDER, PM_MONSTROUS_SPIDER },
     { PM_MAGGOT, PM_GIANT_FLY },
+    { PM_KRAKEN, PM_THING_FROM_BELOW },
+    { PM_GHOST, PM_SPECTRE },
+    { PM_MARTIAL_ARTIST, PM_GRANDMASTER },
     { NON_PM, NON_PM }
 };
 
@@ -1350,11 +1353,18 @@ monmaterial(int mndx)
         return WOOD;
     case PM_CLAY_GOLEM:
     case PM_STONE_GOLEM:
+    case PM_RUBY_GOLEM:
+    case PM_SAPPHIRE_GOLEM:
+    case PM_CRYSTAL_GOLEM:
         return MINERAL;
     case PM_GLASS_GOLEM:
         return GLASS;
     case PM_IRON_GOLEM:
         return IRON;
+    case PM_STEEL_GOLEM:
+        return METAL;
+    case PM_SILVER_GOLEM:
+        return SILVER;
     default:
         return 0;
     }

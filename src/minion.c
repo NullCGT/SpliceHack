@@ -199,7 +199,7 @@ summon_minion(aligntyp alignment, boolean talk)
             EMIN(mon)->min_align = alignment;
             EMIN(mon)->renegade = FALSE;
         }
-    } else if (mnum != PM_SHOPKEEPER && mnum != PM_GUARD
+    } else if (!is_shopkeeper(&mons[mnum]) && mnum != PM_GUARD
                && mnum != PM_ALIGNED_CLERIC && mnum != PM_HIGH_CLERIC) {
         /* This was mons[mnum].pxlth == 0 but is this restriction
            appropriate or necessary now that the structures are separate? */

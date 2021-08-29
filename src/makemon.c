@@ -153,10 +153,6 @@ m_initgrp(struct monst *mtmp, int x, int y, int n, int mmflags)
                 mon->mpeaceful = FALSE;
                 mon->mavenge = 0;
                 set_malign(mon);
-                if (leader_type == monsndx(mtmp->data)) {
-                    newetemplate(mtmp);
-                    initetemplate(mtmp, template_chance(mtmp, 20));
-                }
                 cnt--;
             }
         }
@@ -775,6 +771,10 @@ m_initweap(register struct monst *mtmp)
         case PM_BAPHOMET:
             (void) mongets(mtmp, RANSEUR);
             break;
+        case PM_JANN:
+            (void) mongets(mtmp, SHORT_SWORD);
+            (void) mongets(mtmp, SHORT_SWORD);
+            break;
         case PM_MALCANTHET:
             (void) mongets(mtmp, BULLWHIP);
             break;
@@ -802,7 +802,8 @@ m_initweap(register struct monst *mtmp)
         /* prevent djinn and mail daemons from leaving objects when
          * they vanish
          */
-        if (!is_demon(ptr) && mm != PM_DAMNED_PIRATE)
+        if (!is_demon(ptr) && mm != PM_MARID && mm != PM_JANN &&
+            mm != PM_DAMNED_PIRATE)
             break;
         /*FALLTHRU*/
     default:
@@ -1002,6 +1003,22 @@ m_initinv(register struct monst *mtmp)
                 /*FALLTHRU*/
             case 3:
                 (void) mongets(mtmp, WAN_STRIKING);
+            }
+        } else if (ptr == &mons[PM_EXTRAPLANAR_MERCHANT]) {
+            (void) mongets(mtmp, SKELETON_KEY);
+            switch (rn2(4)) {
+            /* MAJOR fall through ... */
+            case 0:
+                (void) mongets(mtmp, KATANA);
+                /*FALLTHRU*/
+            case 1:
+                (void) mongets(mtmp, POT_FULL_HEALING);
+                /*FALLTHRU*/
+            case 2:
+                (void) mongets(mtmp, POT_HALLUCINATION);
+                /*FALLTHRU*/
+            case 3:
+                (void) mongets(mtmp, WAN_SPEED_MONSTER);
             }
         } else if (ptr == &mons[PM_ARMS_DEALER]) {
               otmp = mksobj(TWO_HANDED_SWORD, FALSE, FALSE);
@@ -2460,6 +2477,8 @@ golemhp(int type)
         return 30;
     case PM_LEATHER_GOLEM:
         return 40;
+    case PM_WAX_GOLEM:
+        return 40;
     case PM_GOLD_GOLEM:
         return 60;
     case PM_WOOD_GOLEM:
@@ -2472,8 +2491,18 @@ golemhp(int type)
         return 100;
     case PM_GLASS_GOLEM:
         return 80;
+    case PM_SILVER_GOLEM:
+        return 100;
     case PM_IRON_GOLEM:
         return 120;
+    case PM_RUBY_GOLEM:
+        return 150;
+    case PM_SAPPHIRE_GOLEM:
+        return 180;
+    case PM_STEEL_GOLEM:
+        return 210;
+    case PM_CRYSTAL_GOLEM:
+        return 250;
     default:
         return 0;
     }
@@ -2937,7 +2966,7 @@ template_chance(struct monst *mtmp, int modifier) {
         return template;
     } else {
         do {
-            template = rn2(NUMTEMPLATES);
+            template = MT_ELVEN + rn2(NUMTEMPLATES - MT_ELVEN);
             if (is_valid_template(mtmp, template)) break;
             tryct++;
         } while (tryct < 50);

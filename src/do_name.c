@@ -1895,7 +1895,7 @@ x_monnam(register struct monst *mtmp, int article,
             return buf;
         }
         Strcat(buf, shkname(mtmp));
-        if (mdat == &mons[PM_SHOPKEEPER] && !do_invis)
+        if (is_shopkeeper(mdat) && !do_invis)
             return buf;
         Strcat(buf, " the ");
         if (do_invis)

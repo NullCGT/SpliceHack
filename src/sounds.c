@@ -969,6 +969,8 @@ domonnoise(register struct monst* mtmp)
                 pline_msg = "gurgles.";
             else if (ptr == &mons[PM_LAVA_DEMON])
                 pline_msg = "gargles.";
+            else if (ptr == &mons[PM_MARID])
+                pline_msg = "gorgles.";
             else
                 verbl_msg = "I'm free!";
         } else {

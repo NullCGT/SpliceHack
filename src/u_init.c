@@ -1278,6 +1278,12 @@ u_init(void)
         break;
     }
 
+    /* For cavemen, extinct monsters are generated. */
+    if (Role_if(PM_CAVE_DWELLER)) {
+        mons[PM_VELOCIRAPTOR].geno &= ~(G_NOGEN);
+        mons[PM_T_REX].geno &= ~(G_NOGEN);
+    }
+
     shambler_init();
 
     return;

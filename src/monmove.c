@@ -1014,6 +1014,11 @@ m_move(register struct monst* mtmp, register int after)
         mtmp->female = rn2(2);
         newsym(mtmp->mx, mtmp->my);
     }
+    /* Crystal golems scintilate. */
+    if (mtmp->data == &mons[PM_CRYSTAL_GOLEM]) {
+        mons[PM_CRYSTAL_GOLEM].mcolor = rn2(CLR_MAX);
+        newsym(mtmp->mx, mtmp->my);
+    }
     /* Zuggotomoy infests corpses. */
     if (ptr == &mons[PM_ZUGGOTOMOY] ||
         ptr == &mons[PM_ASPECT_OF_ZUGGOTOMOY] ||

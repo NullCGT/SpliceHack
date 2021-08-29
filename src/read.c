@@ -1606,6 +1606,7 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
             if (!scursed)
                 initedog(mtmp);
             g.known = TRUE;
+            mtmp->msummoned = TRUE;
             break;
         }
         if (create_critters(1 + ((confused || scursed) ? 12 : 0)

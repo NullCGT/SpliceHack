@@ -194,7 +194,7 @@ void
 mon_regen(struct monst* mon, boolean digest_meal)
 {
     if (mon->mhp < mon->mhpmax && (g.moves % 20 == 0 || regenerates(mon->data)))
-        mon->mhp++;
+        if (!mon->msummoned) mon->mhp++;
     if (mon->mspec_used)
         mon->mspec_used--;
     if (digest_meal) {
@@ -204,7 +204,7 @@ mon_regen(struct monst* mon, boolean digest_meal)
                 finish_meating(mon);
         }
     }
-    if (u.uroleplay.marathon) {
+    if (u.uroleplay.heaven_or_hell) {
         mon->mhp = 1;
         mon->mhpmax = 1;
     }

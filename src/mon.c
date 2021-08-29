@@ -2863,6 +2863,15 @@ corpse_chance(
         return FALSE;
     }
 
+    if (mon->msummoned) {
+        if (cansee(mon->mx, mon->my) && !was_swallowed) {
+            pline(Hallucination ? 
+                "%s explodes into multicolored polygons!" : 
+                "%s vanishes in a puff of smoke.", Monnam(mon));
+        }
+        return FALSE;
+    }
+
     /* magma elementals dissolve into a pile of lava */
     if (mdat == &mons[PM_MAGMA_ELEMENTAL]) {
         if (levl[mon->mx][mon->my].typ != STAIRS &&

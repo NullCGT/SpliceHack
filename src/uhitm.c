@@ -320,7 +320,7 @@ find_roll_to_hit(struct monst *mtmp,
     if (is_orc(mtmp->data)
         && maybe_polyd(is_elf(g.youmonst.data), Race_if(PM_ELF)))
         tmp++;
-        
+
     /* Adding iron ball as a weapon skill gives a -4 penalty for
     unskilled vs no penalty for non-weapon objects.  Add 4 to
     compensate. */
@@ -621,7 +621,7 @@ hitum_cleave(struct monst *target, /* non-Null; forcefight at nothing doesn't
         dieroll = rnd(20);
         mhit = (tmp > dieroll);
         g.bhitpos.x = tx, g.bhitpos.y = ty; /* normally set up by
-					       do_attack() */
+                           do_attack() */
         (void) known_hitum(mtmp, uwep, &mhit, tmp, armorpenalty,
                            uattk, dieroll);
         (void) passive(mtmp, uwep, mhit, !DEADMONSTER(mtmp), AT_WEAP, !uwep);
@@ -785,6 +785,8 @@ hmon_hitmon(struct monst *mon,
           don't give double bonus. */
         tmp += special_dmgval(&g.youmonst, mon, (W_ARMG | W_RINGL | W_RINGR),
                              &hated_obj);
+         /* Fighting bare-handed? Glove enchantment ~= weapon enchantment */
+        if (uarmg) tmp += uarmg->spe;
 
     } else {
         if (!(artifact_light(obj) && obj->lamplit))
@@ -846,7 +848,7 @@ hmon_hitmon(struct monst *mon,
                        let it also hit from behind or shatter foes' weapons */
                     || (hand_to_hand && obj->oartifact == ART_CLEAVER)) {
                     ; /* no special bonuses */
-                } else if (mon->mflee && (Role_if(PM_ROGUE) || P_SKILL(P_BACKSTAB)) 
+                } else if (mon->mflee && (Role_if(PM_ROGUE) || P_SKILL(P_BACKSTAB))
                             && !Upolyd
                            /* multi-shot throwing is too powerful here */
                            && hand_to_hand) {
@@ -1371,7 +1373,7 @@ hmon_hitmon(struct monst *mon,
     } else if (unarmed && tmp > 1 && !thrown && !obj && !Upolyd) {
         /* VERY small chance of stunning opponent if unarmed. */
         if (rnd(100) < (P_SKILL(P_BARE_HANDED_COMBAT) + P_SKILL(P_STUNNING_FIST)
-            || (rnd(50) && uarmg && uarmg->otyp == BOXING_GLOVES)) 
+            || (rnd(50) && uarmg && uarmg->otyp == BOXING_GLOVES))
             && !bigmonst(mdat)
             && !thick_skinned(mdat)) {
             if (canspotmon(mon))
@@ -2006,18 +2008,18 @@ mhitm_ad_drli(struct monst *magr, struct attack *mattk, struct monst *mdef,
             mhm->damage = d(2, 6); /* Stormbringer uses monhp_per_lvl
                                     * (usually 1d8) */
             if (maybe_polyd(is_vampire(g.youmonst.data),
-			    Race_if(PM_VAMPIRE)) && mattk->aatyp == AT_BITE &&
-			    has_blood(mdef->data)) {
-				/* For the life of a creature is in the blood
-				   (Lev 17:11) */
-				if (flags.verbose)
-				    You("feed on the lifeblood.");
-				/* [ALI] Biting monsters does not count against
-				   eating conducts. The draining of life is
-				   considered to be primarily a non-physical
-				   effect */
-				lesshungry(mhm->damage * 10);
-			}
+                Race_if(PM_VAMPIRE)) && mattk->aatyp == AT_BITE &&
+                has_blood(mdef->data)) {
+                /* For the life of a creature is in the blood
+                   (Lev 17:11) */
+                if (flags.verbose)
+                    You("feed on the lifeblood.");
+                /* [ALI] Biting monsters does not count against
+                   eating conducts. The draining of life is
+                   considered to be primarily a non-physical
+                   effect */
+                lesshungry(mhm->damage * 10);
+            }
             pline("%s becomes weaker!", Monnam(mdef));
             if (mdef->mhpmax - mhm->damage > (int) mdef->m_lev) {
                 mdef->mhpmax -= mhm->damage;
@@ -2695,7 +2697,7 @@ struct mhitm_data *mhm;
         /* mhitu */
         int armpro = magic_negation(mdef);
         boolean uncancelled = !magr->mcan && (rn2(10) >= 3 * armpro);
-        
+
         hitmsg(magr, mattk);
         if (uncancelled) {
             if (Hallucination) {
@@ -3853,11 +3855,11 @@ struct mhitm_data *mhm;
         /* mhitu */
         int armpro = magic_negation(mdef);
         boolean uncancelled = !magr->mcan && (rn2(10) >= 3 * armpro);
-        
+
         hitmsg(magr, mattk);
         if (uncancelled) {
             change_luck(-1);
-            You(is_undead(g.youmonst.data) ? "feel like someone just walked over your grave." 
+            You(is_undead(g.youmonst.data) ? "feel like someone just walked over your grave."
                                          : "feel like you just walked under a ladder.");
         }
         return;
@@ -3928,7 +3930,7 @@ struct mhitm_data *mhm;
         /* mhitu */
         int armpro = magic_negation(mdef);
         boolean uncancelled = !magr->mcan && (rn2(10) >= 3 * armpro);
-        
+
         hitmsg(magr, mattk);
         if (uncancelled && !thick_skinned(g.youmonst.data)
               && !LarvaCarrier && !rn2(4)) {
@@ -3950,7 +3952,7 @@ struct mhitm_data *mhm;
 }
 
 void
-mhitm_ad_hngy(struct monst *magr, struct attack *mattk, 
+mhitm_ad_hngy(struct monst *magr, struct attack *mattk,
               struct monst *mdef, struct mhitm_data *mhm)
 {
     if (magr == &g.youmonst) {
@@ -4003,7 +4005,7 @@ struct mhitm_data *mhm;
         int armpro = magic_negation(mdef);
         boolean uncancelled = !magr->mcan && (rn2(10) >= 3 * armpro);
         hitmsg(magr, mattk);
-        if (uncancelled && !thick_skinned(g.youmonst.data) 
+        if (uncancelled && !thick_skinned(g.youmonst.data)
             && (Cold_resistance ? !rn2(3) : !rn2(2))) {
             You_feel(Hallucination ? "wiggly" : "chilled to the bone.");
             incr_itimeout(&HFumbling, rnd(30));
@@ -4053,7 +4055,7 @@ struct mhitm_data *mhm;
 }
 
 void
-mhitm_ad_vorp(struct monst *magr, struct attack *mattk, 
+mhitm_ad_vorp(struct monst *magr, struct attack *mattk,
               struct monst *mdef, struct mhitm_data *mhm)
 {
     if (magr == &g.youmonst) {
@@ -5324,7 +5326,7 @@ missum(struct monst *mdef, struct attack *mattk, boolean wouldhavehit)
             pline("%s parries %s with %s %s.", Monnam(mdef),
                 yobjnam(uwep, (const char *) 0), mhis(mdef), simpleonames(MON_WEP(mdef)));
         } else {
-            pline("%s %s %s%s.", Monnam(mdef), 
+            pline("%s %s %s%s.", Monnam(mdef),
                 rn2(2) ? "dodges out of the way of" : "ducks past",
                 uwep ? "" : "your ",
                 uwep ? yobjnam(uwep, (const char *) 0) : barehitmsg(&g.youmonst));
@@ -5457,14 +5459,14 @@ hmonas(struct monst *mon)
             /*FALLTHRU*/
         case AT_BITE:
             /* [ALI] Vampires are also smart. They avoid biting
-			   monsters if doing so would be fatal */
-			if ((uwep || (u.twoweap && uswapwep)) &&
-				maybe_polyd(is_vampire(g.youmonst.data), Race_if(PM_VAMPIRE)) &&
-				(is_rider(mon->data) ||
+               monsters if doing so would be fatal */
+            if ((uwep || (u.twoweap && uswapwep)) &&
+                maybe_polyd(is_vampire(g.youmonst.data), Race_if(PM_VAMPIRE)) &&
+                (is_rider(mon->data) ||
                  mon->data == &mons[PM_GRIM_REAPER] ||
-				 mon->data == &mons[PM_GREEN_SLIME] ||
+                 mon->data == &mons[PM_GREEN_SLIME] ||
                  touch_petrifies(mon->data)))
-			    break;
+                break;
         case AT_KICK:
         case AT_STNG:
         case AT_BUTT:
@@ -5754,9 +5756,9 @@ passive(struct monst *mon,
     int malive = maliveb ? MM_HIT : MM_MISS;
 
     if (mhit && aatyp == AT_BITE && maybe_polyd(is_vampire(g.youmonst.data), Race_if(PM_VAMPIRE))) {
-	    if (bite_monster(mon))
-		return 2;			/* lifesaved */
-	}
+        if (bite_monster(mon))
+        return 2;           /* lifesaved */
+    }
     for (i = 0;; i++) {
         if (i >= NATTK)
             return (malive | mhit); /* no passive attacks */
@@ -6331,29 +6333,29 @@ static boolean
 bite_monster(struct monst *mon)
 {
     switch(monsndx(mon->data)) {
-	case PM_LIZARD:
-	    if (Stoned) fix_petrification();
-	    break;
-	case PM_DEATH:
-	case PM_PESTILENCE:
-	case PM_FAMINE:
+    case PM_LIZARD:
+        if (Stoned) fix_petrification();
+        break;
+    case PM_DEATH:
+    case PM_PESTILENCE:
+    case PM_FAMINE:
     case PM_GRIM_REAPER:
-	    pline("Unfortunately, eating any of it is fatal.");
-	    done_in_by(mon, CHOKING);
-	    return TRUE;		/* lifesaved */
+        pline("Unfortunately, eating any of it is fatal.");
+        done_in_by(mon, CHOKING);
+        return TRUE;        /* lifesaved */
 
-	case PM_GREEN_SLIME:
-	    if (!Unchanging && g.youmonst.data != &mons[PM_FIRE_VORTEX] &&
-			    g.youmonst.data != &mons[PM_FIRE_ELEMENTAL] &&
-			    g.youmonst.data != &mons[PM_GREEN_SLIME]) {
-		You("don't feel very well.");
-		Slimed = 10L;
-	    }
-	    /* Fall through */
-	default:
-	    if (acidic(mon->data) && Stoned)
-		fix_petrification();
-	    break;
+    case PM_GREEN_SLIME:
+        if (!Unchanging && g.youmonst.data != &mons[PM_FIRE_VORTEX] &&
+                g.youmonst.data != &mons[PM_FIRE_ELEMENTAL] &&
+                g.youmonst.data != &mons[PM_GREEN_SLIME]) {
+        You("don't feel very well.");
+        Slimed = 10L;
+        }
+        /* Fall through */
+    default:
+        if (acidic(mon->data) && Stoned)
+        fix_petrification();
+        break;
     }
     return FALSE;
 }

@@ -32,9 +32,6 @@ kickdmg(struct monst *mon, boolean clumsy)
     boolean trapkilled = FALSE;
     struct obj* hated_obj = NULL;
 
-    if (uarmf && uarmf->otyp == KICKING_BOOTS)
-        dmg += 5;
-
     /* excessive wt affects dex, so it affects dmg */
     if (clumsy)
         dmg /= 2;
@@ -42,6 +39,9 @@ kickdmg(struct monst *mon, boolean clumsy)
     /* kicking a dragon or an elephant will not harm it */
     if (thick_skinned(mon->data))
         dmg = 0;
+
+    if (uarmf && uarmf->otyp == KICKING_BOOTS)
+        dmg += 5;
 
     /* attacking a shade is normally useless */
     if (mon->data == &mons[PM_SHADE])
@@ -222,9 +222,19 @@ kick_monster(struct monst *mon, xchar x, xchar y)
     i = -inv_weight();
     j = weight_cap();
 
+
+    /* What the following confusing if statements mean:
+     * If you are over 70% of carrying capacity, you go through a "deal no
+     * damage" check, and if that fails, a "clumsy kick" check.
+     * At this % of carrycap | Chance of no damage | Chance of clumsiness
+     *             [70%-80%) |                 1/4 |                  1/3
+     *             [80%-90%) |                 1/3 |                  1/2
+     *            [90%-100%) |                 1/2 |                   1
+     * As in other variants: martial artists or magical kickers are exempt.
+     */
     if (i < (j * 3) / 10) {
         if (!rn2((i < j / 10) ? 2 : (i < j / 5) ? 3 : 4)) {
-            if (martial() && !rn2(2))
+            if (martial())
                 goto doit;
             Your("clumsy kick does no damage.");
             (void) passive(mon, uarmf, FALSE, 1, AT_KICK, FALSE);
@@ -997,9 +1007,12 @@ dokick(void)
                 if (g.maploc->doormask == D_ISOPEN
                     || g.maploc->doormask == D_NODOOR)
                     unblock_point(x, y); /* vision */
-                return 1;
-            } else
-                goto ouch;
+            } else {
+                /* Don't reveal whether secret door or secret corridor. */
+                pline(Deaf ? "The wall gives way a little."
+                           : "The wall responds with a hollow thump.");
+            }
+            return 1;
         }
         if (g.maploc->typ == SCORR) {
             if (!Levitation && rn2(30) < avrg_attrib) {
@@ -1008,9 +1021,12 @@ dokick(void)
                 g.maploc->typ = CORR;
                 feel_newsym(x, y); /* we know it's gone */
                 unblock_point(x, y); /* vision */
-                return 1;
-            } else
-                goto ouch;
+            } else {
+                /* Don't reveal whether secret door or secret corridor. */
+                pline(Deaf ? "The wall gives way a little."
+                           : "The wall responds with a hollow thump.");
+            }
+            return 1;
         }
         if (IS_THRONE(g.maploc->typ)) {
             register int i;
@@ -1068,7 +1084,13 @@ dokick(void)
         if (IS_FOUNTAIN(g.maploc->typ)) {
             if (Levitation)
                 goto dumb;
-            You("kick %s.", (Blind ? something : "the fountain"));
+            You("kick %s%s", (Blind ? something : "the fountain"),
+                    (martial() ? "! CRASH!" : "."));
+            if (martial()) {
+                dogushforth(FALSE);
+                SET_FOUNTAIN_WARNED(x, y); /* force dryup */
+                dryup(x, y, TRUE);
+            }
             if (!rn2(3))
                 goto ouch;
             /* make metal boots rust */
@@ -1083,11 +1105,10 @@ dokick(void)
         if (IS_FURNACE(g.maploc->typ)) {
             if (Levitation)
                 goto dumb;
-            You("kick %s.", (Blind ? something : "the furnace"));
-            if (martial()) {
+            You("kick %s%s", (Blind ? something : "the furnace"),
+                    (martial() ? "! CRASH!" : "."));
+            if (martial())
                 breakfurnace(x, y);
-                You_feel("it shatter to pieces as your foot crashes through it!");
-            }
             if (!rn2(3))
                 goto ouch;
             /* make flammable boots burn */
@@ -1101,7 +1122,7 @@ dokick(void)
         if (IS_GRAVE(g.maploc->typ)) {
             if (Levitation)
                 goto dumb;
-            if (rn2(4))
+            if (rn2(4) && !martial())
                 goto ouch;
             exercise(A_WIS, FALSE);
             if (Role_if(PM_ARCHEOLOGIST) || Role_if(PM_SAMURAI)
@@ -1235,6 +1256,9 @@ dokick(void)
                     g.maploc->looted |= S_LRING;
                 }
                 return 1;
+            } else if (martial() && !rn2(3)) {
+                pline("CRASH!");
+                breaksink(x, y);
             }
             goto ouch;
         }
@@ -1256,7 +1280,7 @@ dokick(void)
                     g.maploc = &levl[x][y];
                 }
             }
-            if (!rn2(3))
+            if (!rn2(3) && !martial())
                 set_wounded_legs(RIGHT_SIDE, 5 + rnd(5));
             dmg = rnd(ACURR(A_CON) > 15 ? 3 : 5);
             losehp(Maybe_Half_Phys(dmg), kickstr(buf, kickobjnam), KILLED_BY);

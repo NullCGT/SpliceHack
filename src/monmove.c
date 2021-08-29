@@ -481,6 +481,20 @@ dochug(register struct monst* mtmp)
     /* not frozen or sleeping: wipe out texts written in the dust */
     wipe_engr_at(mtmp->mx, mtmp->my, 1, FALSE);
 
+    /* Summoned monsters gradually vanish. */
+    if (mtmp->msummoned && (g.moves % 20 == 0)) {
+        mtmp->mhp -= 1;
+        if (DEADMONSTER(mtmp))
+            monkilled(mtmp, "", AD_DETH);
+    }
+
+    /* wither away */
+    if (mtmp->mwither) {
+        mtmp->mhp -= 1;
+        if (DEADMONSTER(mtmp))
+            monkilled(mtmp, "", AD_DETH);
+    }
+
     /* confused monsters get unconfused with small probability */
     if (mtmp->mconf && !rn2(50))
         mtmp->mconf = 0;

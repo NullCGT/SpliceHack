@@ -234,7 +234,7 @@ Role Changes
   - Priests can be of any race.
 - Cartomancer
   - Summoned monsters attack monsters of any level and remain forever, but leave no corpse and do
-    not regenerate health.
+    not regenerate health. They also lose health very slowly over time.
 - Added a few new role/race/alignment combinations.
 
 Display Changes

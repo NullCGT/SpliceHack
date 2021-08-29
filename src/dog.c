@@ -577,6 +577,8 @@ mon_catchup_elapsed_time(struct monst *mtmp,
         mtmp->mconf = 0;
     if (mtmp->mstun && rn2(imv + 1) > 10 / 2)
         mtmp->mstun = 0;
+    if (mtmp->mwither && rn2(imv + 1) > 10 / 2)
+        mtmp->mwither = 0;
 
     /* might finish eating or be able to use special ability again */
     if (imv > mtmp->meating)

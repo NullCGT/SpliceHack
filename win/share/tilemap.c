@@ -65,10 +65,10 @@ struct conditionals_t {
     { MON_GLYPH, PM_FAMINE, "mail daemon" },
 #endif
     /* commented out in monst.c at present */
-    { MON_GLYPH, PM_SHAMAN_KARNOV, "Earendil" },
-    { MON_GLYPH, PM_SHAMAN_KARNOV, "Elwing" },
+    { MON_GLYPH, PM_KING_OF_GAMES, "Earendil" },
+    { MON_GLYPH, PM_KING_OF_GAMES, "Elwing" },
     /* commented out in monst.c at present */
-    { MON_GLYPH, PM_CHROMATIC_DRAGON, "Goblin King" },
+    { MON_GLYPH, PM_DAL_ZETHIRE, "Goblin King" },
     { MON_GLYPH, PM_NEANDERTHAL, "High-elf" },
 /* allow slime mold to look like slice of pizza, since we
  * don't know what a slime mold should look like when renamed anyway

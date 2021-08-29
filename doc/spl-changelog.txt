@@ -6,7 +6,8 @@ Removed Content
 Since this release is a rewrite, a number of pieces of existing content have been heavily altered
 or outright removed. Rationale will be provided for all removed content upon request.
 - Removed the following monsters: Anubites, Nuckelavees, Plant Monsters, Lords of Worms, Penguins,
-  Mystic Scarabs, Memory Hounds.
+  Mystic Scarabs, Memory Hounds, Goblin Windmages, Walruses, Werephants, Vent Wurms, Crevasse Wurms,
+  Sludge Golems.
 - Removed the following objects:
   - Razor whip.
   - Robe of the blood magus.
@@ -128,10 +129,12 @@ in its own way.
 - Juiblex's lair has a 50% chance of containing Juiblex and a 50% chance of containing
   Zuggotomoy.
 - Levels have dynamically generated names.
+- While there are no variant castle levels, a number of minor features of the castle level are
+  randomly generated. For example, the moat may take a slightly different shape, or there may
+  be iron bars from which the soldiers can attack.
+- Occasionally, mines level will generate with a number of trees in them.
 
 Monster Changes
-- Many monsters have gender-variant names. For example, female pigs are sows.
-- Altered the tiles for gnolls again to bring them closer in line with other humanoid tiles.
 - Gnolls have been reduced to medium size so that they can wear the armor they spawn with.
 - Monster fleeing AI has been altered.
   - When a monster turns to flee, it immediately gains a turn of movement points.
@@ -163,7 +166,6 @@ Monster Changes
   - Not randomly generated.
   - Only appear when a lower level monster grows up.
 - Ported UnnetHack Aleaxes: Aleaxes are generated with copies of the player's items.
-- Purple dragons have been renamed to violet dragons.
 - Dragons have been significantly altered.
   - Dragons have adjectives attached to their names that describe their age categories. 
     The level of a dragon determines its age category.
@@ -192,18 +194,19 @@ Monster Changes
   - Brood wasps have been renamed to Ichneumon. Carrying larva is no longer considered a curable trouble.
   - Having larvae hatch inside you deals 1d5 damage, then halves your hit points.
   - Drinking a potion of sickness kills all larvae.
-- The Dark One is no longer a human.
-- Allow grid bugs to grow up into more powerful electric bugs.
-- Piercers can grow up into more powerful piercers. This includes god piercers, which
-  have been significantly altered.
-- Dust vorticies can grow up into dust devils.
-- Polymorphing into a nosferatu drops your charisma to 3.
-- Malcanthet's gender and associated tile oscillate constantly.
+- Worms that Walk Changes
+  - When a worm that walk kills a player, that player will only arise as a worm that walks if
+    they are a wizard.
+  - Worms that walk wield executioner's maces.
+  - When a worm that walks dies, it dissolves into maggots. If one of these maggots infests a corpse,
+    that corpse has the potential to arise as another worm that walks.
 
 Object Changes
 - Zapping a wand of water at an item will extinguish it.
 - Masks last longer and give an indication that they are wearing out.
 - Coffins are always trapped, and looting them will occasionally produce vampires.
+- New Object: Executioner's Mace.
+  - Does not generate randomly. Dropped only by Worms that Walk.
 
 Race Changes
 - Drow
@@ -231,6 +234,11 @@ Role Changes
   - Allow baby black dragons as starting pets.
 - Priest
   - Priests can be of any race.
+- Cartomancer
+  - Summoned monsters attack monsters of any level and remain forever, but leave no corpse and do
+    not regenerate health. They also lose health very slowly over time.
+- Cave Dwellers
+  - T-Rexes and Velociraptors only randomly generate when playing this role.
 - Added a few new role/race/alignment combinations.
 - All roles automatically learn their special spell at level 12. The chance of successfully
   casting a special spell is greatly increased for martial roles.
@@ -269,11 +277,35 @@ Bug Fixes
 - Fixed grenade explosions being treated as if they were caused by the player, even when they
   were not.
 
+YAFM
+- Whenever you are polymorphed into a bear, all instances of the word "bare" are replaced
+  with the word "bear."
+- Chatting with a troll will yield one of several classic "flame bait" messages.
+
+Misc Changes
+- The Dark One is no longer a human.
+- Allow grid bugs to grow up into more powerful electric bugs.
+- Piercers can grow up into more powerful piercers. This includes god piercers, which
+  have been significantly altered.
+- Dust vorticies can grow up into dust devils.
+- Polymorphing into a nosferatu drops your charisma to 3.
+- Malcanthet's gender and associated tile oscillate constantly.
+- Hydras are lower level, deal more damange, and have been moved to the lizard monster class.
+- Crystal golems change color every turn.
+- Many monsters have been renamed.
+- Spiked monsters always deal passive damage, instead of only 50% of the time.
+- Many monsters have gender-variant names. For example, female pigs are sows.
+- Cows can be tamed again. No idea why this was removed, since they are so slow that
+  they are not very practical pets anyway.
+- Werebears generate peaceful.
+- Altered the tiles for many existing monsters in order to improve visual clarity.
+
 Known Bugs
 - Rare failed sanity check for improper mon data, possibly due to vampiric monsters shapeshifting.
 - Removing a mask that transformed you into a light-emitting monster will cause a program in disorder.
 - Phoenix egg revival via fire is very buggy.
 - Rare write_ls: can't find
+- Hand grenade explosions are magical.
 
                             Version 0.8.3
 

@@ -57,7 +57,7 @@ const char *const flash_types[] =       /* also used in buzzmu(mcastu.c) */
     {
         "magic missile", /* Wands must be 0-9 */
         "bolt of fire", "bolt of cold", "sleep ray", "death ray",
-        "bolt of lightning", "poison gas", "acid stream", 
+        "bolt of lightning", "poison gas", "acid stream",
         "sonic beam", "psionic beam",
 
         "magic missile", /* Spell equivalents must be 10-19 */
@@ -1469,8 +1469,11 @@ create_polymon(struct obj *obj, int okind)
         pm_index = PM_IRON_GOLEM;
         material = "metal ";
         break;
-    case COPPER:
     case SILVER:
+        pm_index = PM_SILVER_GOLEM;
+        material = "silvery ";
+        break;
+    case COPPER:
     case PLATINUM:
     case GEMSTONE:
     case MINERAL:
@@ -1514,6 +1517,10 @@ create_polymon(struct obj *obj, int okind)
     case PAPER:
         pm_index = PM_PAPER_GOLEM;
         material = "paper ";
+        break;
+    case WAX:
+        pm_index = PM_WAX_GOLEM;
+        material = "wax ";
         break;
     default:
         /* if all else fails... */
@@ -2416,8 +2423,8 @@ zapnodir(struct obj *obj)
                                 (struct permonst *) 0, FALSE);
         break;
     case WAN_CREATE_HORDE:
-  			known = create_critters(rn1(7,4), (struct permonst *) 0, FALSE);
-  			break;
+            known = create_critters(rn1(7,4), (struct permonst *) 0, FALSE);
+            break;
     case WAN_WISHING:
         known = TRUE;
         if (Luck + rn2(5) < 0) {
@@ -2594,7 +2601,7 @@ zapyourself(struct obj *obj, boolean ordinary)
             exercise(A_STR, FALSE);
         }
         break;
-    
+
     case WAN_WINDSTORM:
         learn_it = TRUE;
         pline("Whoosh!");
@@ -2627,7 +2634,7 @@ zapyourself(struct obj *obj, boolean ordinary)
         destroy_item(RING_CLASS, AD_ELEC);
         (void) flashburn((long) rnd(100));
         break;
-    
+
     case SPE_POISON_BLAST:
         poisoned("blast", A_DEX, "poisoned blast", 15, FALSE, 0);
         break;
@@ -2688,7 +2695,7 @@ zapyourself(struct obj *obj, boolean ordinary)
             You("get drenched!");
         uwatereffects();
         break;
-    
+
     case WAN_SONICS:
     case HORN_OF_BLASTING:
         learn_it = TRUE;
@@ -4493,10 +4500,16 @@ burn_floor_objects(int x, int y,
 /* will zap/spell/breath attack score a hit against armor class `ac'? */
 static int
 zap_hit(int ac,
-        int type) /* either hero cast spell type or 0 */
+        int type) /* either hero cast spell type,
+                   * or a lil bonus for high Dex, or 0 */
 {
     int chance = rn2(20);
-    int spell_bonus = type ? spell_hit_bonus(type) : 0;
+    int spell_bonus = 0;
+
+    if (type)
+        spell_bonus = spell_hit_bonus(type);
+    else if (ACURR(A_DEX) > 17)
+        spell_bonus = (ACURR(A_DEX) - 17);
 
     /* small chance for naked target to avoid being hit */
     if (!chance)

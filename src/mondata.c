@@ -271,7 +271,7 @@ boolean
 ranged_attk(struct permonst* ptr)
 {
     register int i, atyp;
-    long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_GAZE);
+    long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_VOLY) | (1L << AT_GAZE);
 
     /* was: (attacktype(ptr, AT_BREA) || attacktype(ptr, AT_WEAP)
      *       || attacktype(ptr, AT_SPIT) || attacktype(ptr, AT_GAZE)
@@ -759,6 +759,9 @@ name_to_monplus(
     else if (!strncmp(str, "the ", 4))
         str += 4;
 
+    if (strstr(str, " hydra") != NULL)
+        return PM_HYDRA;
+
     slen = strlen(str);
     term = str + slen;
 
@@ -1150,6 +1153,13 @@ static const short grownups[][2] = {
     { PM_HUMAN_WEREWOLF, PM_HUMAN_PACK_LORD },
     { PM_DEEP_ONE, PM_DEEPER_ONE },
     { PM_DEEPER_ONE, PM_DEEPEST_ONE },
+    { PM_PIG, PM_FERAL_HOG },
+    { PM_RATMAN, PM_RATMAN_SQUEAKER },
+    { PM_GIANT_SPIDER, PM_MONSTROUS_SPIDER },
+    { PM_MAGGOT, PM_GIANT_FLY },
+    { PM_KRAKEN, PM_THING_FROM_BELOW },
+    { PM_GHOST, PM_SPECTRE },
+    { PM_MARTIAL_ARTIST, PM_GRANDMASTER },
     { NON_PM, NON_PM }
 };
 
@@ -1343,11 +1353,18 @@ monmaterial(int mndx)
         return WOOD;
     case PM_CLAY_GOLEM:
     case PM_STONE_GOLEM:
+    case PM_RUBY_GOLEM:
+    case PM_SAPPHIRE_GOLEM:
+    case PM_CRYSTAL_GOLEM:
         return MINERAL;
     case PM_GLASS_GOLEM:
         return GLASS;
     case PM_IRON_GOLEM:
         return IRON;
+    case PM_STEEL_GOLEM:
+        return METAL;
+    case PM_SILVER_GOLEM:
+        return SILVER;
     default:
         return 0;
     }

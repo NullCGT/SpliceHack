@@ -892,7 +892,7 @@ X11_player_selection_dialog(void)
     /* race label */
     num_args = 0;
     XtSetArg(args[num_args], nhStr(XtNjustify), XtJustifyLeft); num_args++;
-    XtSetArg(args[num_args], nhStr(XtNlabel), "Race"); num_args++;
+    XtSetArg(args[num_args], nhStr(XtNlabel), "Species"); num_args++;
     racelabel = XtCreateManagedWidget("race_label",
                                       labelWidgetClass, race_form,
                                       args, num_args);

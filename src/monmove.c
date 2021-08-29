@@ -194,7 +194,7 @@ void
 mon_regen(struct monst* mon, boolean digest_meal)
 {
     if (mon->mhp < mon->mhpmax && (g.moves % 20 == 0 || regenerates(mon->data)))
-        mon->mhp++;
+        if (!mon->msummoned) mon->mhp++;
     if (mon->mspec_used)
         mon->mspec_used--;
     if (digest_meal) {
@@ -204,7 +204,7 @@ mon_regen(struct monst* mon, boolean digest_meal)
                 finish_meating(mon);
         }
     }
-    if (u.uroleplay.marathon) {
+    if (u.uroleplay.heaven_or_hell) {
         mon->mhp = 1;
         mon->mhpmax = 1;
     }
@@ -480,6 +480,20 @@ dochug(register struct monst* mtmp)
 
     /* not frozen or sleeping: wipe out texts written in the dust */
     wipe_engr_at(mtmp->mx, mtmp->my, 1, FALSE);
+
+    /* Summoned monsters gradually vanish. */
+    if (mtmp->msummoned && (g.moves % 20 == 0)) {
+        mtmp->mhp -= 1;
+        if (DEADMONSTER(mtmp))
+            monkilled(mtmp, "", AD_DETH);
+    }
+
+    /* wither away */
+    if (mtmp->mwither) {
+        mtmp->mhp -= 1;
+        if (DEADMONSTER(mtmp))
+            monkilled(mtmp, "", AD_DETH);
+    }
 
     /* confused monsters get unconfused with small probability */
     if (mtmp->mconf && !rn2(50))
@@ -916,7 +930,8 @@ m_balks_at_approaching(struct monst* mtmp)
 
     /* has ammo+launcher or can spit */
     if (m_has_launcher_and_ammo(mtmp)
-        || attacktype(mtmp->data, AT_SPIT))
+        || attacktype(mtmp->data, AT_SPIT)
+        || attacktype(mtmp->data, AT_VOLY))
         return TRUE;
 
     /* is using a polearm and in range */
@@ -999,9 +1014,15 @@ m_move(register struct monst* mtmp, register int after)
         mtmp->female = rn2(2);
         newsym(mtmp->mx, mtmp->my);
     }
+    /* Crystal golems scintilate. */
+    if (mtmp->data == &mons[PM_CRYSTAL_GOLEM]) {
+        mons[PM_CRYSTAL_GOLEM].mcolor = rn2(CLR_MAX);
+        newsym(mtmp->mx, mtmp->my);
+    }
     /* Zuggotomoy infests corpses. */
     if (ptr == &mons[PM_ZUGGOTOMOY] ||
-        ptr == &mons[PM_ASPECT_OF_ZUGGOTOMOY])
+        ptr == &mons[PM_ASPECT_OF_ZUGGOTOMOY] ||
+        ptr == &mons[PM_MAGGOT])
         minfestcorpse(mtmp);
 
     /* Where does 'mtmp' think you are?  Not necessary if m_move() called

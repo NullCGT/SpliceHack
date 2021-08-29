@@ -233,8 +233,8 @@ dosounds(void)
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if ((mtmp->msleeping || 
-                mtmp->data->mlet == 'P' || 
+            if ((mtmp->msleeping ||
+                mtmp->data->mlet == 'P' ||
                 mtmp->data->mlet == 'R')
                 && mon_in_room(mtmp, ARMORY)) {
                 You_hear1(armory_msg[rn2(2) + hallu]);
@@ -258,7 +258,7 @@ dosounds(void)
                     case 2:
                     You_hear("a weeping willow!");
                     break;
-                }	
+                }
             } else {
                 switch (rn2(6)) {
                     case 0:
@@ -891,7 +891,21 @@ domonnoise(register struct monst* mtmp)
         }
         break;
     case MS_GRUNT:
-        pline_msg = "grunts.";
+        if (Hallucination && mtmp->data->mlet == S_TROLL) {
+            static const char *const troll_msg[7] = {
+                /* Classic forum flame bait. Please do not take this seriously. */
+                "Vim > Emacs.",
+                "Shiki can kill servants. Discuss.",
+                "Trololololol!",
+                "Looks like you forgot to engrave Elbereth.",
+                "Well, you were burdened, so...",
+                "I heard you like sokoban, so I rotated it.",
+                "Thank you for freeing me!",
+            };
+            verbl_msg = troll_msg[rn2(7)];
+        } else {
+            pline_msg = "grunts.";
+        }
         break;
     case MS_NEIGH:
         if (mtmp->mtame < 5)
@@ -955,6 +969,8 @@ domonnoise(register struct monst* mtmp)
                 pline_msg = "gurgles.";
             else if (ptr == &mons[PM_LAVA_DEMON])
                 pline_msg = "gargles.";
+            else if (ptr == &mons[PM_MARID])
+                pline_msg = "gorgles.";
             else
                 verbl_msg = "I'm free!";
         } else {
@@ -1052,6 +1068,15 @@ domonnoise(register struct monst* mtmp)
                 break;
             case PM_TOURIST:
                 verbl_msg = "Aloha.";
+                break;
+            case PM_WIZARD:
+                pline_msg = "discusses spellbooks.";
+                break;
+            case PM_RANGER:
+                verbl_msg = Hallucination ? "I am the bone of my sword." : "I can't talk for long, I'm on the hunt.";
+                break;
+            case PM_CARTOMANCER:
+                pline_msg = "informs you that their deck has no pathetic cards.";
                 break;
             case PM_DRAGON_RIDER:
                 verbl_msg = "The only authority I answer to is that of the wyrm.";

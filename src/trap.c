@@ -1365,7 +1365,7 @@ trapeffect_bear_trap(
             pline("%s bear trap closes on your %s!", A_Your[trap->madeby_u],
                   body_part(FOOT));
             set_wounded_legs(rn2(2) ? RIGHT_SIDE : LEFT_SIDE, rn1(10, 10));
-            if (u.umonnum == PM_OWLBEAR || u.umonnum == PM_BUGBEAR)
+            if (is_bear(g.youmonst.data))
                 You("howl in anger!");
             losehp(Maybe_Half_Phys(dmg), "bear trap", KILLED_BY_AN);
         }
@@ -1383,8 +1383,7 @@ trapeffect_bear_trap(
                       a_your[trap->madeby_u]);
                 seetrap(trap);
             } else {
-                if (mptr == &mons[PM_OWLBEAR]
-                    || mptr == &mons[PM_BUGBEAR])
+                if (is_bear(mptr))
                     You_hear("the roaring of an angry bear!");
             }
         } else if (g.force_mintrap) {
@@ -2180,11 +2179,13 @@ trapeffect_web(
         case PM_IRON_GOLEM:
         case PM_BALROG:
         case PM_KRAKEN:
+        case PM_THING_FROM_BELOW:
         case PM_MASTODON:
         case PM_ORION:
         case PM_NORN:
         case PM_CYCLOPS:
         case PM_LORD_SURTUR:
+        case PM_SILVER_GOLEM:
             tear_web = TRUE;
             break;
         }

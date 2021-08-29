@@ -41,6 +41,47 @@ des.map([[
 }}}}}}}}}.............................................}}}}}}}}}
 ]]);
 
+-- Random level layout modifications
+local pillars = { {5, 5}, {5, 11}, {57, 5}, {57, 11} };
+local corners = { {2, 3}, {2, 13}, {60, 3}, {60, 13} };
+local pillarpools = { {4, 6}, {4, 10}, {58, 6}, {58, 10} };
+local bars = { {6, 6}, {6, 10} };
+-- 50% chance to change shape of moat.
+if percent(50) then
+    for pos=1,4 do
+        des.terrain(pillars[pos], "-")
+    end
+    for pos=1,4 do
+        des.terrain(pillarpools[pos], "}")
+    end
+end
+
+-- 30% chance to add corners to towers.
+if percent(30) then
+    for pos=1,4 do
+        des.terrain(corners[pos], "-")
+    end
+end
+
+-- 10% chance to add bars for soldiers to shoot through.
+if percent(10) then
+    for pos=1,2 do
+        des.terrain(bars[pos], "F")
+    end 
+end
+
+-- 15% chance to turn the courtyard into a garden.
+if percent(15) then 
+    des.replace_terrain({ region={05,05, 11,12}, fromterrain=".", toterrain="T", chance=20 })
+end
+
+-- 20% chance to add a barred corridor
+if percent(50) then
+    des.terrain(selection.line(16,7, 24,7), 'F')
+    des.terrain(selection.line(16,9, 24,9), 'F')
+end
+
+
 -- Random registers initialisation
 local object = { "[", ")", "*", "%" };
 shuffle(object)
@@ -57,7 +98,13 @@ shuffle(monster)
 des.teleport_region({ region = {01,00,10,20}, region_islev=1, exclude={1,1,61,15}, dir="down" })
 des.teleport_region({ region = {69,00,79,20}, region_islev=1, exclude={1,1,61,15}, dir="up" })
 des.levregion({ region = {01,00,10,20}, region_islev=1, exclude={0,0,62,16}, type="stair-up" })
-des.feature("fountain", 10,08)
+
+-- 50% chance to replace the fountain with a historic statue of some type of local monster.
+if percent(50) then
+    des.feature("fountain", 10,08)
+else
+    des.object({id="statue", x=10, y=08, montype=monster[10], historic=false})
+end
 -- Doors
 des.door("closed",07,03)
 des.door("closed",55,03)

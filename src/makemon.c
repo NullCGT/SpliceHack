@@ -129,8 +129,8 @@ m_initgrp(struct monst *mtmp, int x, int y, int n, int mmflags)
     mm.x = x;
     mm.y = y;
     /* Create a supporter monster. */
-    if (cnt >= 3 && is_orc(mtmp->data)) {
-        leader_type = PM_ORC_SHAMAN;
+    if (cnt >= 3 && (is_orc(mtmp->data) || mtmp->data == &mons[PM_RATMAN])) {
+        leader_type = is_orc(mtmp->data) ? PM_ORC_SHAMAN : PM_RATMAN_SQUEAKER;
         if (enexto(&mm, mm.x, mm.y, mtmp->data)) {
             mon = makemon(&mons[leader_type], mm.x, mm.y, (mmflags | MM_NOGRP));
             if (mon) {
@@ -153,10 +153,6 @@ m_initgrp(struct monst *mtmp, int x, int y, int n, int mmflags)
                 mon->mpeaceful = FALSE;
                 mon->mavenge = 0;
                 set_malign(mon);
-                if (leader_type == monsndx(mtmp->data)) {
-                    newetemplate(mtmp);
-                    initetemplate(mtmp, template_chance(mtmp, 20));
-                }
                 cnt--;
             }
         }
@@ -609,6 +605,20 @@ m_initweap(register struct monst *mtmp)
         if (!rn2(3))
             (void) mongets(mtmp, (rn2(2)) ? CLUB : RUBBER_HOSE);
         break;
+    case S_RODENT:
+        switch(mm) {
+        case PM_RATMAN:
+            if (!rn2(3))
+                (void) mongets(mtmp, KNIFE);
+            if (!rn2(3))
+                (void) mongets(mtmp, DENTED_POT);
+            else if (!rn2(10))
+                (void) mongets(mtmp, FEDORA);
+            break;
+        default:
+            break;
+        }
+        break;
     case S_ORC:
         if (rn2(2))
             (void) mongets(mtmp, ORCISH_HELM);
@@ -761,6 +771,10 @@ m_initweap(register struct monst *mtmp)
         case PM_BAPHOMET:
             (void) mongets(mtmp, RANSEUR);
             break;
+        case PM_JANN:
+            (void) mongets(mtmp, SHORT_SWORD);
+            (void) mongets(mtmp, SHORT_SWORD);
+            break;
         case PM_MALCANTHET:
             (void) mongets(mtmp, BULLWHIP);
             break;
@@ -788,7 +802,8 @@ m_initweap(register struct monst *mtmp)
         /* prevent djinn and mail daemons from leaving objects when
          * they vanish
          */
-        if (!is_demon(ptr) && mm != PM_DAMNED_PIRATE)
+        if (!is_demon(ptr) && mm != PM_MARID && mm != PM_JANN &&
+            mm != PM_DAMNED_PIRATE)
             break;
         /*FALLTHRU*/
     default:
@@ -989,6 +1004,22 @@ m_initinv(register struct monst *mtmp)
             case 3:
                 (void) mongets(mtmp, WAN_STRIKING);
             }
+        } else if (ptr == &mons[PM_EXTRAPLANAR_MERCHANT]) {
+            (void) mongets(mtmp, SKELETON_KEY);
+            switch (rn2(4)) {
+            /* MAJOR fall through ... */
+            case 0:
+                (void) mongets(mtmp, KATANA);
+                /*FALLTHRU*/
+            case 1:
+                (void) mongets(mtmp, POT_FULL_HEALING);
+                /*FALLTHRU*/
+            case 2:
+                (void) mongets(mtmp, POT_HALLUCINATION);
+                /*FALLTHRU*/
+            case 3:
+                (void) mongets(mtmp, WAN_SPEED_MONSTER);
+            }
         } else if (ptr == &mons[PM_ARMS_DEALER]) {
               otmp = mksobj(TWO_HANDED_SWORD, FALSE, FALSE);
               otmp = oname(otmp, artiname(ART_THIEFBANE));
@@ -1014,6 +1045,16 @@ m_initinv(register struct monst *mtmp)
                                                  : CLOAK_OF_MAGIC_RESISTANCE);
             (void) mongets(mtmp, SMALL_SHIELD);
             mkmonmoney(mtmp, (long) rn1(10, 20));
+        } else if(ptr == &mons[PM_DAL_ZETHIRE]) {
+            for (cnt = rn2(3); cnt < 4; cnt++) {
+                otmp = mksobj(SCR_CREATE_MONSTER, FALSE, FALSE);
+                curse(otmp);
+                (void) mpickobj(mtmp, otmp);
+            }
+            (void) mongets(mtmp, SCR_FIRE);
+            (void) mongets(mtmp, SCR_EARTH);
+            (void) mongets(mtmp, SCR_TELEPORTATION);
+            (void) mongets(mtmp, EXPENSIVE_CAMERA);
         } else if (quest_mon_represents_role(ptr, PM_MONK)) {
             (void) mongets(mtmp, rn2(11) ? ROBE : CLOAK_OF_MAGIC_RESISTANCE);
         } else if (ptr == &mons[PM_MINER]) {
@@ -1066,6 +1107,8 @@ m_initinv(register struct monst *mtmp)
     case S_LICH:
         if (ptr == &mons[PM_MASTER_LICH] && !rn2(13))
             (void) mongets(mtmp, (rn2(7) ? ATHAME : WAN_NOTHING));
+        else if (ptr == &mons[PM_WORM_THAT_WALKS])
+            (void) mongets(mtmp, EXECUTIONER_S_MACE);
         else if (ptr == &mons[PM_ARCH_LICH] && !rn2(3)) {
             otmp = mksobj(rn2(3) ? ATHAME : QUARTERSTAFF, TRUE,
                           rn2(13) ? FALSE : TRUE);
@@ -2435,6 +2478,8 @@ golemhp(int type)
         return 30;
     case PM_LEATHER_GOLEM:
         return 40;
+    case PM_WAX_GOLEM:
+        return 40;
     case PM_GOLD_GOLEM:
         return 60;
     case PM_WOOD_GOLEM:
@@ -2447,8 +2492,18 @@ golemhp(int type)
         return 100;
     case PM_GLASS_GOLEM:
         return 80;
+    case PM_SILVER_GOLEM:
+        return 100;
     case PM_IRON_GOLEM:
         return 120;
+    case PM_RUBY_GOLEM:
+        return 150;
+    case PM_SAPPHIRE_GOLEM:
+        return 180;
+    case PM_STEEL_GOLEM:
+        return 210;
+    case PM_CRYSTAL_GOLEM:
+        return 250;
     default:
         return 0;
     }
@@ -2912,7 +2967,7 @@ template_chance(struct monst *mtmp, int modifier) {
         return template;
     } else {
         do {
-            template = rn2(NUMTEMPLATES);
+            template = MT_ELVEN + rn2(NUMTEMPLATES - MT_ELVEN);
             if (is_valid_template(mtmp, template)) break;
             tryct++;
         } while (tryct < 50);

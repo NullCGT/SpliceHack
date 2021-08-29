@@ -289,6 +289,9 @@ WEAPON("bec de corbin", "beaked polearm",
 WEAPON("mace", None,
        1, 0, 0, 40,  30,   5,  6,  6, 0, 0, B,   P_MACE, IRON, HI_METAL),
         /* +1 small */
+WEAPON("executioner's mace", None,
+       1, 0, 0,  0,  30,   5,  12, 12, 0, 0, B|S,   P_MACE, IRON, HI_METAL),
+        /* +1 small */
 WEAPON("ornate mace", None,
        1, 0, 0, 0,  30,   5,  6,  6, 2, 0, B,   P_MACE, GOLD, HI_METAL),
        /* +1 small */
@@ -301,7 +304,7 @@ WEAPON("war hammer", None,
 WEAPON("club", None,
        1, 0, 0, 12,  30,   3,  6,  3, 1, 0, B,   P_CLUB, WOOD, HI_WOOD),
 WEAPON("baseball bat", None,
-       1, 0, 0, 0,  50,   3,  6,  3, 2, 1, B,   P_CLUB, WOOD, HI_WOOD),
+       1, 0, 0, 0,  50,   3,  6,  6, 2, 1, B,   P_CLUB, WOOD, HI_WOOD),
 WEAPON("rubber hose", None,
        1, 0, 0,  0,  20,   3,  4,  3, 0, 0, B,   P_WHIP, PLASTIC, CLR_BROWN),
 WEAPON("quarterstaff", "staff",
@@ -1315,6 +1318,11 @@ OBJECT(OBJ("splash of acid venom", "splash of venom"),
        BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, LIQUID), 0,
        VENOM_CLASS, 500, 0, 1, 0, 6, 6, 0, 0, 0, HI_ORGANIC),
         /* +d6 small or large */
+
+/* manticore quills */
+OBJECT(OBJ("spike", None),
+      BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, BONE), 0,
+      VENOM_CLASS, 0, 0, 1, 0, 6, 6, 0, 0, 0, HI_ORGANIC),
 
 /* fencepost, the deadly Array Terminator -- name [1st arg] *must* be NULL */
 OBJECT(OBJ(None, None),

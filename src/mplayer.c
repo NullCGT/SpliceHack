@@ -170,6 +170,17 @@ mk_mplayer(struct permonst *ptr, xchar x, xchar y, boolean special)
             if (helm == HELM_OF_BRILLIANCE)
                 helm = STRANGE_OBJECT;
             break;
+        case PM_CARTOMANCER:
+            if (rn2(2)) {
+                armor = rn2(2) ? BLACK_DRAGON_SCALE_MAIL
+                               : SILVER_DRAGON_SCALE_MAIL;
+                cloak = CLOAK_OF_MAGIC_RESISTANCE;
+            }
+            if (rn2(4))
+                helm = HELM_OF_BRILLIANCE;
+            shield = STRANGE_OBJECT;
+            (void) mongets(mtmp, SCR_CREATE_MONSTER);
+            break;
         case PM_CAVE_DWELLER:
             if (rn2(4))
                 weapon = MACE;

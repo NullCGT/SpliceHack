@@ -2738,7 +2738,10 @@ mon_reflects(struct monst* mon, const char* str)
         if (str)
             pline(str, s_suffix(mon_nam(mon)), "scales");
         return TRUE;
-    } else if (mon->mreflect) {
+    } else if (mon->data == &mons[PM_SILVER_GOLEM]
+            || mon->data == &mons[PM_CRYSTAL_GOLEM]
+            || mon->data == &mons[PM_SAPPHIRE_GOLEM]
+            || mon->mreflect) {
         if (str)
             pline(str, s_suffix(mon_nam(mon)), "body");
         return TRUE;
@@ -2779,6 +2782,18 @@ ureflects(const char* fmt, const char* str)
     } else if (g.youmonst.data == &mons[PM_SILVER_DRAGON]) {
         if (fmt && str)
             pline(fmt, str, "scales");
+        return TRUE;
+    } else if (g.youmonst.data == &mons[PM_SILVER_GOLEM]
+            || g.youmonst.data == &mons[PM_CRYSTAL_GOLEM]
+            || g.youmonst.data == &mons[PM_SAPPHIRE_GOLEM]) {
+        if (fmt && str)
+            pline(fmt, str, "body");
+        return TRUE;
+    } else if (Reflecting) {
+        /* intrinsic or extrinsic reflection from other source
+         * e.g. cartomancer artifact */
+        if (fmt && str)
+            pline(fmt, str, "body");
         return TRUE;
     }
     return FALSE;

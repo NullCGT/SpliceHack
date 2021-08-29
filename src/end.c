@@ -285,7 +285,7 @@ NH_panictrace_gdb(void)
  */
 static NEARDATA const char *deaths[] = {
     /* the array of death */
-    "died", "died", "choked", "poisoned", "starvation", "drowning", "burning",
+    "died", "died", "tyranosaurus rekt", "choked", "poisoned", "starvation", "drowning", "burning",
     "dissolving under the heat and pressure", "crushed", "turned to stone",
     "turned into slime", "genocided", "panic", "trickery", "quit",
     "escaped", "ascended"
@@ -293,7 +293,8 @@ static NEARDATA const char *deaths[] = {
 
 static NEARDATA const char *ends[] = {
     /* "when you %s" */
-    "died", "died", "choked", "were poisoned",
+    "died", "died", "got tyranosaurus rekt",
+    "choked", "were poisoned",
     "starved", "drowned", "burned",
     "dissolved in the lava",
     "were crushed", "turned to stone",
@@ -550,8 +551,12 @@ done_in_by(struct monst *mtmp, int how)
         u.ugrave_arise = zombie_form(g.youmonst.data);
     else if (mptr->mlet == S_VAMPIRE && Race_if(PM_HUMAN))
         u.ugrave_arise = PM_VAMPIRE;
+    else if (mptr == &mons[PM_WORM_THAT_WALKS])
+        u.ugrave_arise = Role_if(PM_WIZARD) ? PM_WORM_THAT_WALKS : PM_GHOUL;
     else if (mptr == &mons[PM_GHOUL])
         u.ugrave_arise = PM_GHOUL;
+    else if (mptr == &mons[PM_SPECTRE] || u.ulevel > 15)
+        u.ugrave_arise = PM_SPECTRE;
     /* this could happen if a high-end vampire kills the hero
        when ordinary vampires are genocided; ditto for wraiths */
     if (u.ugrave_arise >= LOW_PM

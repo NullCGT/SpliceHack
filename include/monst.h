@@ -154,6 +154,7 @@ struct monst {
     Bitfield(wormno, 5);    /* at most 31 worms on any level */
     Bitfield(mwither, 1);   /* is withering away */
     Bitfield(mtemplit, 1);  /* temporarily seen; only valid during bhit() */
+    Bitfield(msummoned, 1);  /* summoned by a cartomancer */
     /* 7 free bits */
 
 #define MAX_NUM_WORMS 32    /* should be 2^(wormno bitfield size) */

@@ -74,6 +74,8 @@ barehitmsg(struct monst *mtmp)
               return "lash";
       }
       if (mtmp->data == &mons[PM_MONK] || mtmp->data == &mons[PM_SAMURAI]
+              || mtmp->data == &mons[PM_GRANDMASTER]
+              || mtmp->data == &mons[PM_MARTIAL_ARTIST]
               || (martial_bonus() &&
                   (mtmp == &g.youmonst ||
                   /* Assumes monk or samurai quest monsters */
@@ -456,7 +458,7 @@ int
 mattacku(register struct monst *mtmp)
 {
     struct attack *mattk, alt_attk;
-    int i, j = 0, tmp, sum[NATTK];
+    int i, j, k = 0, tmp, sum[NATTK];
     struct permonst *mdat = mtmp->data;
     struct obj * marmf = which_armor(mtmp, W_ARMF);
     /*
@@ -735,6 +737,11 @@ mattacku(register struct monst *mtmp)
             return (foo == 1);
     }
 
+    /* handle multiple hydra attacks */
+    if (mtmp->data == &mons[PM_HYDRA]) {
+        k = min(mtmp->m_lev - mtmp->data->mlevel + 1, 10);
+    }
+
     g.skipdrin = FALSE; /* [see mattackm(mhitm.c)] */
 
     for (i = 0; i < NATTK; i++) {
@@ -828,6 +835,10 @@ mattacku(register struct monst *mtmp)
                 sum[i] = spitmu(mtmp, mattk);
             /* Note: spitmu takes care of displacement */
             break;
+        case AT_VOLY:
+            if (range2)
+                sum[i] = volleymu(mtmp, mattk);
+            break;
         case AT_WEAP:
             if (range2) {
                 if (!Is_rogue_level(&u.uz))
@@ -890,6 +901,12 @@ mattacku(register struct monst *mtmp)
         if ((sum[i] & MM_AGR_DONE))
             break; /* attacker teleported, no more attacks */
         /* sum[i] == 0: unsuccessful attack */
+
+        /* handle multiple hydra attacks */
+        if (mtmp->data == &mons[PM_HYDRA] && mattk->aatyp == AT_BITE && k > 0) {
+            i -= 1;
+            k -= 1;
+        }
     }
     return 0;
 }
@@ -1261,6 +1278,11 @@ gulpmu(struct monst *mtmp, struct attack *mattk)
             pline("%s lunges forward and plucks you off %s!", Monnam(mtmp),
                   buf);
             dismount_steed(DISMOUNT_ENGULFED);
+        } else if (has_head(mtmp->data)) {
+            pline("%s swallows you whole!", Monnam(mtmp));
+        } else if (mtmp->data == &mons[PM_FIRE_VORTEX] &&
+            Role_if(PM_CARTOMANCER)) {
+            pline("That tornado\'s carrying a car!"); /* Sonic 06 */
         } else {
             pline("%s engulfs you!", Monnam(mtmp));
         }
@@ -1894,8 +1916,12 @@ mdamageu(struct monst *mtmp, int n)
             rehumanize();
     } else {
         u.uhp -= n;
-        if (u.uhp < 1)
-            done_in_by(mtmp, MURDERED);
+        if (u.uhp < 1) {
+            if (mtmp->data == &mons[PM_T_REX])
+                done_in_by(mtmp, TREX);
+            else
+                done_in_by(mtmp, MURDERED);
+        }
     }
 }
 
@@ -2420,6 +2446,19 @@ passiveum(struct permonst *olduasmon, struct monst *mtmp, struct attack *mattk)
                 You("explode!");
                 /* KMH, balance patch -- this is okay with unchanging */
                 rehumanize();
+                goto assess_dmg;
+            }
+            break;
+        case AD_QUIL:
+            if (oldu_mattk->aatyp == AT_NONE) {
+                if (!rn2(2)) {
+                    pline("%s is jabbed by %squills!", Monnam(mtmp),
+                          /* temporary? hack for sequencing issue:  "your acid"
+                             looks strange coming immediately after player has
+                             been told that hero has reverted to normal form */
+                          !Upolyd ? "" : "your ");
+                } else
+                    tmp = 0;
                 goto assess_dmg;
             }
             break;

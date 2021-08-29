@@ -16,6 +16,11 @@ des.level_flags("mazelevel", "noflip");
 
 des.level_init({ style="mines", fg=".", bg=" ", smoothed=true ,joined=true, lit="random", walled=true })
 
+-- Sometimes the mines have trees in them. - Kes.
+if percent(10) then 
+    des.replace_terrain({ region={05,00, 76,19}, fromterrain=".", toterrain="T", chance=3 })
+end
+
 --
 des.stair("up")
 des.stair("down")

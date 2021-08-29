@@ -1663,6 +1663,7 @@ extern int thitu(int, int, struct obj **, const char *);
 extern int ohitmon(struct monst *, struct obj *, int, boolean);
 extern void thrwmu(struct monst *);
 extern int spitmu(struct monst *, struct attack *);
+extern int volleymu(struct monst *, struct attack *);
 extern int breamu(struct monst *, struct attack *);
 extern boolean linedup_callback(xchar, xchar, xchar, xchar,
                                 boolean(*)(int,int));
@@ -1670,6 +1671,7 @@ extern boolean linedup(xchar, xchar, xchar, xchar, int);
 extern boolean lined_up(struct monst *);
 extern struct obj *m_carrying(struct monst *, int);
 extern int thrwmm(struct monst *, struct monst *);
+extern int volleymm(struct monst *, struct attack *, struct monst *);
 extern int spitmm(struct monst *, struct attack *, struct monst *);
 extern int breamm(struct monst *, struct attack *, struct monst *);
 extern void m_useupall(struct monst *, struct obj *);
@@ -2045,6 +2047,7 @@ extern int polymon(int);
 extern void rehumanize(void);
 extern int dobreathe(void);
 extern int dospit(void);
+extern int dovolley(void);
 extern int doremove(void);
 extern int dospinweb(void);
 extern int dosummon(void);
@@ -2845,6 +2848,8 @@ extern void mhitm_ad_sedu(struct monst *, struct attack *, struct monst *,
 extern void mhitm_ad_ssex(struct monst *, struct attack *, struct monst *,
                           struct mhitm_data *);
 extern void mhtim_ad_hngy(struct monst *, struct attack *, struct monst *,
+                          struct mhitm_data *);
+extern void mhitm_ad_dsrm(struct monst *, struct attack *, struct monst *, 
                           struct mhitm_data *);
 extern void mhitm_ad_wind(struct monst *, struct attack *, struct monst *, 
                           struct mhitm_data *);

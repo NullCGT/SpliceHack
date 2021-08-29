@@ -582,6 +582,18 @@ make_corpse(register struct monst* mtmp, unsigned int corpseflags)
         obj = mkcorpstat(CORPSE, mtmp, &mons[num], x, y, corpstatflags);
         obj->age -= (TAINT_AGE + 1); /* this is an *OLD* corpse */
         break;
+    case PM_SILVER_GOLEM:
+        num = d(1, 2);
+        while (num--) {
+            obj = mkobj_at(RANDOM_CLASS, x, y, FALSE);
+            if (!valid_obj_material(obj, SILVER)) {
+                delobj(obj);
+                obj = mksobj_at(DAGGER, x, y, TRUE, FALSE);
+            }
+            obj->material = SILVER;
+        }
+        free_mgivenname(mtmp); /* don't christen obj */
+        break;
     case PM_IRON_GOLEM:
         num = d(2, 6);
         while (num--) {
@@ -612,6 +624,39 @@ make_corpse(register struct monst* mtmp, unsigned int corpseflags)
         obj->quan = (long) (rn2(20) + 50);
         obj->owt = weight(obj);
         free_mgivenname(mtmp);
+        break;
+    case PM_RUBY_GOLEM:
+        /* [DS] Mik's original Lethe fobbed off the player with coloured
+         * glass even for the higher golems. We'll play fair here - if
+         * you can kill one of these guys, you deserve the gems. */
+        num = d(2,4);
+        while (num--)
+            obj = mksobj_at(RUBY, x, y, TRUE, FALSE);
+        free_mgivenname(mtmp);
+        break;
+    case PM_SAPPHIRE_GOLEM:
+        num = d(2,4);
+        while (num--)
+            obj = mksobj_at(SAPPHIRE, x, y, TRUE, FALSE);
+        free_mgivenname(mtmp);
+        break;
+    case PM_STEEL_GOLEM:
+        num = d(2,6);
+        /* [DS] Add steel chains (or handcuffs!) for steel golems? */
+        while (num--)
+            obj = mksobj_at(IRON_CHAIN, x, y, TRUE, FALSE);
+        free_mgivenname(mtmp);
+        break;
+    case PM_CRYSTAL_GOLEM:
+        /* [DS] Generate gemstones of various hues */
+        num = d(2,4);
+        {
+            int gemspan = LAST_GEM - g.bases[GEM_CLASS] + 1;
+            while (num--)
+          obj = mksobj_at(g.bases[GEM_CLASS] + rn2(gemspan), x, y,
+                  TRUE, FALSE);
+            free_mgivenname(mtmp);
+        }
         break;
     case PM_STONE_GOLEM:
         corpstatflags &= ~CORPSTAT_INIT;
@@ -663,6 +708,18 @@ make_corpse(register struct monst* mtmp, unsigned int corpseflags)
         }
         free_mgivenname(mtmp);
         break;
+    case PM_WAX_GOLEM:
+        num = d(2,4);
+        while (num--) {
+            obj = mkobj_at(RANDOM_CLASS, x, y, FALSE);
+            if (!valid_obj_material(obj, WAX)) {
+                delobj(obj);
+                obj = mksobj_at(WAX_CANDLE, x, y, TRUE, FALSE);
+            }
+            obj->material = WAX;
+        }
+        free_mgivenname(mtmp);
+    	break;
     /* expired puddings will congeal into a large blob;
        like dragons, relies on the order remaining consistent */
     case PM_GRAY_OOZE:
@@ -1262,6 +1319,8 @@ register struct obj *otmp;
             mon_givit(mtmp, &mons[otmp->corpsenm]);
             if (mtmp->data == &mons[PM_ZUGGOTOMOY]) {
                 makemon(&mons[PM_ASPECT_OF_ZUGGOTOMOY], u.ux, u.uy, NO_MINVENT);
+            } else if (mtmp->data == &mons[PM_MAGGOT]) {
+                makemon(&mons[rn2(3) ? PM_GIANT_FLY : PM_WORM_THAT_WALKS], u.ux, u.uy, NO_MINVENT);
             } else
                 clone_mon(mtmp, 0, 0);
             delobj(otmp);
@@ -2596,6 +2655,19 @@ mondead(register struct monst* mtmp)
     lifesaved_monster(mtmp);
     if (!DEADMONSTER(mtmp))
         return;
+    
+    if (mtmp->data == &mons[PM_WORM_THAT_WALKS]) {
+        if (cansee(mtmp->mx, mtmp->my)) {
+            pline_The("body of %s dissolves into maggots!", mon_nam(mtmp));
+        } else {
+            You_hear("the slithering of many bodies.");
+        }
+        for (i = 0; i < (mtmp->data == &mons[PM_WORM_THAT_WALKS] ? rnd(10) : rnd(20)); i++) {
+            if (!enexto(&cc, mtmp->mx, mtmp->my, 0))
+                break;
+            makemon(&mons[PM_MAGGOT], cc.x, cc.y, NO_MINVENT);
+        }
+    }
 
     /* Fusion elementals break apart into several elementals */
     if (mtmp->data == &mons[PM_FUSION_ELEMENTAL]) {
@@ -2676,6 +2748,16 @@ mondead(register struct monst* mtmp)
     if (be_sad)
         You("have a sad feeling for a moment, then it passes.");
 
+    /* Anything killed while playing as a cartomancer has a chance of leaving behind
+       a monster card. */
+    if (Role_if(PM_CARTOMANCER) && !(mtmp->data->geno & G_UNIQ)
+        && !mtmp->mtame && rn2(2)) {
+        otmp = mksobj(SCR_CREATE_MONSTER, FALSE, FALSE);
+        otmp->corpsenm = monsndx(mtmp->data);
+        place_object(otmp, mtmp->mx, mtmp->my);
+        newsym(mtmp->mx, mtmp->my);
+    }
+
     /* dead vault guard is actually kept at coordinate <0,0> until
        his temporary corridor to/from the vault has been removed;
        need to do this after life-saving and before m_detach() */
@@ -2700,6 +2782,8 @@ mondead(register struct monst* mtmp)
         mtmp->cham = NON_PM;
     } else if (mtmp->data == &mons[PM_WEREJACKAL])
         set_mon_data(mtmp, &mons[PM_HUMAN_WEREJACKAL]);
+    else if (mtmp->data == &mons[PM_WEREBEAR])
+        set_mon_data(mtmp, &mons[PM_HUMAN_WEREBEAR]);
     else if (mtmp->data == &mons[PM_WEREWOLF])
         set_mon_data(mtmp, &mons[PM_HUMAN_WEREWOLF]);
     else if (mtmp->data == &mons[PM_WERECOCKATRICE])
@@ -2829,9 +2913,19 @@ corpse_chance(
     struct obj *otmp;
     int i, tmp, x, y;
 
-    if (mdat == &mons[PM_VLAD_THE_IMPALER] || mdat->mlet == S_LICH) {
+    if (mdat == &mons[PM_VLAD_THE_IMPALER] ||
+        (mdat->mlet == S_LICH && mdat != &mons[PM_WORM_THAT_WALKS])) {
         if (cansee(mon->mx, mon->my) && !was_swallowed)
             pline("%s body crumbles into dust.", s_suffix(Monnam(mon)));
+        return FALSE;
+    }
+
+    if (mon->msummoned) {
+        if (cansee(mon->mx, mon->my) && !was_swallowed) {
+            pline(Hallucination ? 
+                "%s explodes into multicolored polygons!" : 
+                "%s vanishes in a puff of smoke.", Monnam(mon));
+        }
         return FALSE;
     }
 
@@ -3770,6 +3864,7 @@ m_respond(struct monst* mtmp)
             case PM_ORC_SHAMAN:
             case PM_GNOLL_SHAMAN:
             case PM_KOBOLD_SHAMAN:
+            case PM_RATMAN_SQUEAKER:
             default:
                 if (mon->mhp < mon->mhpmax && canseemon(mon)) {
                     pline("%s looks better.", Monnam(mon));

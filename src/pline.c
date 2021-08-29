@@ -78,6 +78,17 @@ piratesay(const char *orig)
 		return orig;
 }
 
+const char *
+cartsay(orig)
+const char *orig;
+{
+    orig = replace(orig,"read the scroll","play the spell card");
+    orig = replace(orig," reads a"," plays a");
+    orig = replace(orig,"scroll","spell card");
+    orig = replace(orig,"scroll of genocide","forbidden spell card");
+    return orig;
+}
+
 /* keep the most recent DUMPLOG_MSG_COUNT messages */
 void
 dumplogmsg(const char *line)
@@ -210,9 +221,14 @@ vpline(const char *line, va_list the_args)
         dumplogmsg(line);
 #endif
 
-    if(Role_if(PM_PIRATE)){
-     		line = piratesay(line);
-   	}
+    if (Role_if(PM_PIRATE)){
+     	line = piratesay(line);
+   	} else if(Role_if(PM_CARTOMANCER)) {
+        line = cartsay(line);
+    }
+    if (is_bear(g.youmonst.data)) {
+        line = replace(line,"bare","bear");
+    }
 
     /* use raw_print() if we're called too early (or perhaps too late
        during shutdown) or if we're being called recursively (probably

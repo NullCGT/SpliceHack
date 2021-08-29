@@ -62,6 +62,22 @@ as I am now, and I had much less experience in balancing a game and making it fu
 This rewrite is an effort to improve both the code and the gameplay of SpliceHack, so 
 that it is more enjoyable and easier to maintain.
 
+## Collborators and Acknowledgements
+
+SpliceHack's development is currently being driven by the following individuals.
+
+- AntiGulp (Admin)
+- SpicyCebollaFlump
+
+Special thanks go out to qt, K2, aosdict for being frequent contributors to and
+influences on the code, and K2 for hosting it publicly. Credit to the vanilla dev
+team and all unnamed contributors to vanilla NetHack as well, without whom none
+of this would exist.
+
+SpliceHack is largely derived from NetHack 3.7 and SLASH'EM, but pulls features
+from numerous other NetHack variants. A more comprehensive list of sources can
+be found in the [sources file](sources.txt).
+
 ## Disclaimer
 
 SpliceHack follows the conditions put forth in the license provided by the
@@ -70,8 +86,7 @@ permissions issues with SpliceHack, please contact us through github.
 
 #                  SpliceHack - The Design Philosophy
 
-SpliceHack's design philosophy has evolved over time. At present, these are the standards
-that should be considered when creating a pull request for SpliceHack.
+SpliceHack's design philosophy has evolved over time. At present, these are the standards that should be considered when creating a pull request for SpliceHack.
 
 1. SpliceHack should remain as accessible to new players as possible. There are a number of
    ways to ensure this:

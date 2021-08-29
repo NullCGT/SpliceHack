@@ -866,7 +866,7 @@ const struct Race races[] = {
         PM_DWARF_MUMMY,
         PM_DWARF_ZOMBIE,
         MH_DWARF | ALL_GENDERS
-           | ALL_ALIGNS,
+           | ROLE_LAWFUL,
         MH_DWARF,
         MH_DWARF | MH_GNOME,
         MH_ORC,
@@ -888,7 +888,7 @@ const struct Race races[] = {
         PM_GNOME_MUMMY,
         PM_GNOME_ZOMBIE,
         MH_GNOME | ALL_GENDERS
-           | ALL_ALIGNS,
+           | ROLE_NEUTRAL,
         MH_GNOME,
         MH_DWARF | MH_GNOME,
         MH_HUMAN,

@@ -225,15 +225,13 @@ WEAPON("elven broadsword", "runed broadsword",
 WEAPON("long sword", None,
        1, 0, 0, 50,  40,  15,  8, 12, 0, 0, S,   P_LONG_SWORD, IRON, HI_METAL),
 WEAPON("two-handed sword", None,
-       1, 0, 1, 22, 150,  50, 12,  6, -2, 0, S,   P_TWO_HANDED_SWORD,
-                                                            IRON, HI_METAL),
+       1, 0, 1, 22, 150,  50, 12,  6, -2, 0, S,   P_TWO_HANDED_SWORD, IRON, HI_METAL),
         /* +2d6 large */
 WEAPON("katana", "samurai sword",
        0, 0, 0,  4,  40,  80, 10, 12, 1, 0, S,   P_LONG_SWORD, IRON, HI_METAL),
 /* special swords set up for artifacts */
 WEAPON("tsurugi", "long samurai sword",
-       0, 0, 1,  1,  60, 500, 16,  8, 2, 0, S,   P_TWO_HANDED_SWORD,
-                                                            METAL, HI_METAL),
+       0, 0, 1,  1,  60, 500, 16,  8, 2, 0, S,   P_TWO_HANDED_SWORD, METAL, HI_METAL),
         /* +2d6 large */
 WEAPON("runesword", "runed broadsword",
        0, 0, 0,  0,  40, 300,  4,  6, 1, 0, S,   P_BROAD_SWORD, IRON, CLR_BLACK),

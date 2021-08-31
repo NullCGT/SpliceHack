@@ -14,7 +14,7 @@ static const char *artifact_names[] = {
 
 #define A(nam, typ, s1, s2, mt, atk, dfn, cry, inv, al, cl, rac, cost, clr) \
     {                                                                       \
-        typ, nam, s1, s2, mt, atk, dfn, cry, inv, al, cl, rac, cost, clr    \
+        nam, typ, s1, s2, mt, atk, dfn, cry, inv, al, cl, rac, cost, clr    \
     }
 
 /* clang-format off */

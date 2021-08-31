@@ -63,6 +63,16 @@ hack_artifacts(void)
         artilist[g.urole.questarti].alignment = alignmnt;
         artilist[g.urole.questarti].role = Role_switch;
     }
+
+    /* Handle artifacts with varying base weapons. The artifacts that vary are
+       largely ones with no canonical mythical appearance. */
+    artilist[ART_FIRE_BRAND].otyp = artilist[ART_FROST_BRAND].otyp
+        = artilist[ART_FROSTBURN].otyp
+        = FIRST_SWORD + rn2(LAST_SWORD - FIRST_SWORD);
+    artilist[ART_ACIDFALL].otyp = FIRST_SWORD + rn2(LAST_SWORD - FIRST_SWORD);
+    artilist[ART_SUNSWORD].otyp = FIRST_SWORD + rn2(LAST_SWORD - FIRST_SWORD);
+    artilist[ART_WAR_S_SWORD].otyp = FIRST_SWORD + rn2(RUNESWORD - FIRST_SWORD);
+    artilist[ART_CARNWENNAN].otyp = DAGGER + rn2(STILETTO - DAGGER);
     return;
 }
 
@@ -78,20 +88,33 @@ init_artifacts(void)
 void
 save_artifacts(NHFILE *nhfp)
 {
+    int i;
+    struct artifact *artibegin = &artilist[0];
+    int namesize = sizeof(artibegin->name);
     if (nhfp->structlevel) {
         bwrite(nhfp->fd, (genericptr_t) g.artiexist, sizeof g.artiexist);
         bwrite(nhfp->fd, (genericptr_t) g.artidisco, sizeof g.artidisco);
+        for (i = 0; i < ART_EYE_OF_THE_AETHIOPICA; i++) {
+            if (perform_bwrite(nhfp))
+                if (nhfp->structlevel)
+                    bwrite(nhfp->fd, (genericptr_t) ((char *) &artilist[i] + namesize), sizeof(struct artifact) - namesize);
+        }
     }
 }
 
 void
 restore_artifacts(NHFILE *nhfp)
 {
+    int i;
+    struct artifact *artibegin = &artilist[0];
+    int namesize = sizeof(artibegin->name);
     if (nhfp->structlevel) {
         mread(nhfp->fd, (genericptr_t) g.artiexist, sizeof g.artiexist);
         mread(nhfp->fd, (genericptr_t) g.artidisco, sizeof g.artidisco);
+        for (i = 0; i < ART_EYE_OF_THE_AETHIOPICA; i++) {
+            mread(nhfp->fd, (genericptr_t) &artilist[i]  + namesize, sizeof(struct artifact) - namesize);
+        }
     }
-    hack_artifacts();	/* redo non-saved special cases */
 }
 
 const char *

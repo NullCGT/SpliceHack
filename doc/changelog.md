@@ -1,51 +1,52 @@
-#                             Version 1.0.0 - SpliceHack-Rewrite
+#                             Splicehack-Rewrite
+##                             Version 1.0.0
 
-## Species Changes
+### Species Changes
 - Different species have different night vision ranges.
 - Maximum Dexterity is now 20 for Elves, and 18 for Dwarves. 
-### Drow
+#### Drow
   - Male drow are referred to as "hedrow."
   - Potions of sickness in the starting inventories of drow are replaced by potions of sleeping.
   - The unarmed attacks of drow no longer inflict sleep.
   - All weapons in the starting inventory of drow are automatically drugged.
   - Drow automatically worship the goddess Lolth.
-### Infernal
+#### Infernal
   - Infernals no longer receive hungerless regeneration.
   - Infernals are automatically hated by all humans (aside from quest monsters).
   - Infernals automatically recognize all demons.
-### Vampire
+#### Vampire
   - Vampires no longer feed by draining corpses. Instead, they gain a larger amount of nutrition
     from draining the blood of living monsters. This change is due to player dissatisfaction with
     the tedium of draining blood from corpses, as well as the large number of bugs that the corpse
     draining code introduced to the game.
 
-## Role Changes
-### Dragon Rider
+### Role Changes
+#### Dragon Rider
   - Rename dragonmasters to dragon riders. This name change puts greater emphasis on the bond the
     character has with dragons.
   - Allow baby black dragons as starting pets.
-### Priest
+#### Priest
   - Priests can be of any species.
-### Cartomancer
+#### Cartomancer
   - Summoned monsters attack monsters of any level and remain forever, but leave no corpse and do
     not regenerate health. They also lose health very slowly over time.
-### Cave Dwellers
+#### Cave Dwellers
   - T-Rexes and Velociraptors only randomly generate when playing this role.
 - Added a few new role/species/alignment combinations.
-### Kicking & Punching
+#### Kicking & Punching
 - Martial artists and players wearing kicking boots can destroy most dungeon features with a kick.
 - Martial artists and players wearing kicking boots can't have clumsy kicks.
 - Kicking a secret door doesn't injure the character.
 - The enchantment value of gloves is added to unarmed attacks.
 
-## Object Changes
+### Object Changes
 - Zapping a wand of water at an item will extinguish it.
 - Masks last longer and give an indication that they are wearing out.
 - Coffins are always trapped, and looting them will occasionally produce vampires.
 - New Object: Executioner's Mace.
   - Does not generate randomly. Dropped only by Worms that Walk.
 
-## Skill System
+### Skill System
 - Rather than techniques, SpliceHack uses a skill system.
 - In addition to the regular skills offered in NetHack, roles and species provide access to their
   own sets of skills. By investing points in these skills, a character can use unique abilities,
@@ -56,7 +57,7 @@
   levels in numerous skills from other roles.
 - A full list of skills and what they do can be found in an attached text document.
 
-## QOL
+### QOL
 - Added several QOL fixes to the wish parser. Many of these came from the NetHack YANI archive.
   - Wishing for a common community abbreviation, such as comr, boh, or gdsm will result in the
     appropriate item.
@@ -81,7 +82,7 @@
 - Dexterity improves hit chance starting at 12 dex, instead of 16 dex.
 - Dexterity of 18 or higher improves hit chance with wand zaps.
 
-## Dungeon Changes
+### Dungeon Changes
 One goal of this release of SpliceHack is to make regular dungeon levels more interesting and
 dynamic to explore. Each level should present unique challenges and be interesting to explore
 in its own way.
@@ -119,7 +120,7 @@ in its own way.
   randomly generated. For example, the moat may take a slightly different shape, or there may
   be iron bars from which the soldiers can attack.
 - Occasionally, mines level will generate with several trees in them.
-### Furnaces
+#### Furnaces
 - Furnaces can be used to combine items. While at a furnace, the player can use the #forge command
   to combine two items into one more powerful item.
   - Certain artifacts are only obtainable via furnaces:
@@ -127,7 +128,7 @@ in its own way.
       created by fusing Frost Brand and Fire Brand.
 
 
-## Monster Changes
+### Monster Changes
 - Gnolls have been reduced to medium size so that they can wear the armor they spawn with.
 - Monster fleeing AI has been altered.
   - When a monster turns to flee, it immediately gains a turn of movement points.
@@ -190,12 +191,12 @@ in its own way.
   - When a worm that walks dies, it dissolves into maggots. If one of these maggots infests a
     corpse, that corpse has the potential to arise as another worm that walks.
 
-## Display Changes
+### Display Changes
 - Ridden monsters are highlighted in bright magenta.
 - The floor of the gnomish mines is rendered in the same color as the walls.
 - The walls of the black market have unique tiles in graphical builds.
 
-## Balancing
+### Balancing
 - Potions of paralysis injected via dipped weapons no longer paralyze monsters for rnd(25) turns.
   While no one has abused this yet, the potential for stunlock was pretty crazy. Even now, this
   remains a very strong option.
@@ -208,12 +209,12 @@ in its own way.
   degenerate play, and should not affect regular players much.
 - While the player is level one, they get hungry much more slowly.
 
-## YAFM
+### YAFM
 - Whenever you are polymorphed into a bear, all instances of the word "bare" are replaced
   with the word "bear."
 - Chatting with a troll will yield one of several classic "flame bait" messages.
 
-## Misc/Minor Changes
+### Misc/Minor Changes
 - The Dark One is no longer a human.
 - Allow grid bugs to grow up into more powerful electric bugs.
 - Piercers can grow up into more powerful piercers. This includes god piercers, which
@@ -231,7 +232,7 @@ in its own way.
 - Werebears generate peaceful.
 - Altered the tiles for many existing monsters in order to improve visual clarity.
 
-## Removed Content
+### Removed Content
 Since this release is a rewrite, several pieces of existing content have been heavily altered
 or outright removed. Rationale can be provided for removed content upon request.
 - Removed the following monsters: Anubites, Nuckelavees, Plant Monsters, Lords of Worms, Penguins,
@@ -265,7 +266,7 @@ or outright removed. Rationale can be provided for removed content upon request.
 - Removed the statuary level. Overtaken by theme rooms.
 - Removed aligned glyph traps. They were more dangerous and less interesting than hoped.
 
-## Bug Fixes
+### Bug Fixes
 - While porting the previous SpliceHack code, numerous bugs were discovered and fixed. The full
   scope of these bugs exceeds the capacity of this changelog, but suffice to say several
   crashes and instances of odd behavior that previously went unnoticed have been fixed.
@@ -274,7 +275,7 @@ or outright removed. Rationale can be provided for removed content upon request.
 - Fixed parrots not using the birdname option from a config file.
 - Fixed grenade explosions being incorrectly blamed on the player.
 
-## Known Bugs
+### Known Bugs
 - Rare failed sanity check for improper mon data, possibly due to vampiric monsters shapeshifting.
 - Removing a mask that changed you into a light-emitting monster will cause a program in disorder.
 - Phoenix egg revival via fire is very buggy.

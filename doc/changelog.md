@@ -1,6 +1,9 @@
 #                             Splicehack-Rewrite
 ##                             Version 1.0.0
 
+*note- some items and monsters were implemented in older versions of splicehack.*
+*information about those older versions can be found in oldChangelog.txt*
+
 ### Species Changes
 - Different species have different night vision ranges.
 - Maximum Dexterity is now 20 for Elves, and 18 for Dwarves. 

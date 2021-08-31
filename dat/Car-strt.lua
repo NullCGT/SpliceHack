@@ -55,7 +55,7 @@ des.door("locked",38,10)
 des.door("locked",36,16)
 des.door("locked",37,16)
 -- The Lord of the Cards
-des.monster({id="Lord of the Cards", x=17, y=08})
+des.monster({id="King of Games", x=17, y=08})
 -- The treasure of the Lord of the Cards
 des.object("chest", 18, 05)
 -- students of the card training school

@@ -300,7 +300,7 @@ static NEARDATA struct artifact artilist[] = {
 
     A("Excalibur", LONG_SWORD, (SPFX_NOGEN | SPFX_RESTR | SPFX_SEEK
                                 | SPFX_DEFN | SPFX_INTEL | SPFX_SEARCH),
-      0, 0, PHYS(5, 10), DRLI(0, 0), NO_CARY, HOLY_LANCE, A_LAWFUL, PM_KNIGHT, NON_PM,
+      0, 0, PHYS(0, 8), DRLI(0, 0), NO_CARY, HOLY_LANCE, A_LAWFUL, PM_KNIGHT, NON_PM,
       4000L, NO_COLOR),
     /*
      *      Stormbringer only has a 2 because it can drain a level,
@@ -411,7 +411,7 @@ static NEARDATA struct artifact artilist[] = {
      *                      --Koko, Lord high executioner of Titipu
      *                        (From Sir W.S. Gilbert's "The Mikado")
      */
-    A("Snickersnee", KATANA, SPFX_RESTR, 0, 0, PHYS(0, 8), NO_DFNS, NO_CARY,
+    A("Snickersnee", KATANA, SPFX_RESTR, 0, 0, PHYS(5, 10), NO_DFNS, NO_CARY,
       0, A_LAWFUL, PM_SAMURAI, NON_PM, 1200L, NO_COLOR),
 
     A("Sunsword", LONG_SWORD, (SPFX_RESTR | SPFX_WARN | SPFX_DFLAGH), 0, MH_UNDEAD,

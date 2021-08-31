@@ -28,6 +28,7 @@ static int skill_hit_effects(struct monst *);
 static boolean bite_monster(struct monst *);
 
 #define PROJECTILE(obj) ((obj) && is_ammo(obj))
+#define KILL_FAMILIARITY 20
 
 /* multi_reason is usually a literal string; here we generate one that
    has the causing monster's type included */
@@ -507,6 +508,7 @@ known_hitum(struct monst *mon, struct obj *weapon, int *mhit, int rollneeded,
             struct attack *uattk,
             int dieroll)
 {
+    int curseproc;
     boolean malive = TRUE,
             /* hmon() might destroy weapon; remember aspect for cutworm */
             slice_or_chop = (weapon && (is_blade(weapon) || is_axe(weapon)));
@@ -517,6 +519,11 @@ known_hitum(struct monst *mon, struct obj *weapon, int *mhit, int rollneeded,
         if (flags.verbose)
             Your("bloodthirsty blade attacks!");
     }
+
+    /* cursed weapons proc */
+    curseproc = cursed_weapon_proc(&g.youmonst, mon);
+    if (curseproc == 2) return malive;
+    else if (curseproc) return FALSE;
 
     if (!*mhit) {
         missum(mon, uattk, (rollneeded + armorpenalty > dieroll));
@@ -850,13 +857,15 @@ hmon_hitmon(struct monst *mon,
                        let it also hit from behind or shatter foes' weapons */
                     || (hand_to_hand && obj->oartifact == ART_CLEAVER)) {
                     ; /* no special bonuses */
-                } else if (mon->mflee && (Role_if(PM_ROGUE) || P_SKILL(P_BACKSTAB))
+                } else if (mon->mflee && (Role_if(PM_ROGUE) || P_SKILL(P_BACKSTAB) > P_UNSKILLED)
                             && !Upolyd
                            /* multi-shot throwing is too powerful here */
                            && hand_to_hand) {
                     You("strike %s from behind!", mon_nam(mon));
-                    if (P_SKILL(P_BACKSTAB)) tmp += rnd(u.ulevel * (1 + P_SKILL(P_BACKSTAB)));
-                    else tmp += rnd(u.ulevel);
+                    if (P_SKILL(P_BACKSTAB) > P_UNSKILLED)
+                        tmp += rnd(u.ulevel * (1 + P_SKILL(P_BACKSTAB)));
+                    else
+                        tmp += rnd(u.ulevel);
                     hittxt = TRUE;
                 } else if (dieroll == 2 && obj == uwep
                            && obj->oclass == WEAPON_CLASS
@@ -1482,6 +1491,20 @@ hmon_hitmon(struct monst *mon,
         if (!noncorporeal(mdat) && !amorphous(mdat))
             whom = strcat(s_suffix(whom), " flesh");
         pline(fmt, whom);
+    }
+    /* Weapons have a chance to id after a certain number of kills with
+        them. The more powerful a weapon, the lower this chance is. This
+        way, there is uncertainty about when a weapon will ID, but spoiled
+        players can make an educated guess. */
+    if (destroyed && uwep 
+        && (uwep->oclass == WEAPON_CLASS || is_weptool(uwep)) && !uwep->known) {
+        uwep->wep_kills++;
+        if (uwep->wep_kills > KILL_FAMILIARITY && !rn2(min(2, uwep->spe))) {
+            You("have developed a bond of familiarity with your %s.", 
+                yobjnam(uwep, (char *) 0));
+            uwep->known = TRUE;
+            update_inventory();
+        } 
     }
     /* if a "no longer poisoned" message is coming, it will be last;
        obj->opoisoned was cleared above and any message referring to
@@ -6319,7 +6342,7 @@ skill_hit_effects(struct monst *mon) {
     int damage_bonus = 0;
     /* Martial arts skills */
     if (!uwep && !uarm && !uarms) {
-        if (P_SKILL(P_FLAMING_FISTS) && rn2(20) < P_SKILL(P_FLAMING_FISTS)) {
+        if (P_SKILL(P_FLAMING_FISTS) > P_UNSKILLED && rn2(20) < P_SKILL(P_FLAMING_FISTS)) {
             if (resists_fire(mon)) {
                 shieldeff(mon->mx, mon->my);
             } else {
@@ -6330,7 +6353,7 @@ skill_hit_effects(struct monst *mon) {
             damage_bonus += destroy_mitem(mon, POTION_CLASS, AD_FIRE);
             ignite_items(mon->minvent);
         }
-        if (P_SKILL(P_FREEZING_FISTS) && rn2(25) < P_SKILL(P_FREEZING_FISTS)) {
+        if (P_SKILL(P_FREEZING_FISTS) > P_UNSKILLED && rn2(25) < P_SKILL(P_FREEZING_FISTS)) {
             if (resists_cold(mon)) {
                 shieldeff(mon->mx, mon->my);
             } else {
@@ -6340,7 +6363,7 @@ skill_hit_effects(struct monst *mon) {
             }
             damage_bonus += destroy_mitem(mon, POTION_CLASS, AD_COLD);
         }
-        if (P_SKILL(P_SHOCKING_FISTS) && rn2(100) < P_SKILL(P_SHOCKING_FISTS)) {
+        if (P_SKILL(P_SHOCKING_FISTS) > P_UNSKILLED && rn2(100) < P_SKILL(P_SHOCKING_FISTS)) {
             if (resists_cold(mon)) {
                 shieldeff(mon->mx, mon->my);
             } else {

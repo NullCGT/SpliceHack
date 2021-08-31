@@ -64,8 +64,11 @@ static int wield_ok(struct obj *);
      || (optr)->otyp == HEAVY_IRON_BALL || (optr)->otyp == IRON_CHAIN)
 
 /* used by welded(), and also while wielding */
+/* #define will_weld(optr) \
+    ((optr)->cursed && (erodeable_wep(optr) || (optr)->otyp == TIN_OPENER)) */
+/* Tin openers still weld. Everything else uses the new cursing system. - Kes. */
 #define will_weld(optr) \
-    ((optr)->cursed && (erodeable_wep(optr) || (optr)->otyp == TIN_OPENER))
+    ((optr)->otyp == TIN_OPENER)
 
 /* to dual-wield, 'obj' must be a weapon or a weapon-tool, and not a bow
    or arrow or missile (dart, shuriken, boomerang), so not matching the

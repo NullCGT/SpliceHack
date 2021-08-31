@@ -1554,6 +1554,7 @@ start_tin(struct obj *otmp)
         case STILETTO:
         case CRYSKNIFE:
         case SACRIFICIAL_KNIFE:
+        case PARAZONIUM:
             tmp = 3;
             break;
         case PICK_AXE:

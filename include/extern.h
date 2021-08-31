@@ -1248,6 +1248,7 @@ extern void slept_monst(struct monst *);
 extern void xdrainenergym(struct monst *, boolean);
 extern long attk_protection(int);
 extern void rustm(struct monst *, struct obj *);
+extern int cursed_weapon_proc(struct monst *, struct monst *);
 
 /* ### mhitu.c ### */
 
@@ -2535,6 +2536,7 @@ extern void book_disappears(struct obj *);
 extern void book_substitution(struct obj *, struct obj *);
 extern void age_spells(void);
 extern int docast(void);
+extern const char *spelltypemnemonic(int);
 extern int spell_skilltype(int);
 extern int spelleffects(int, boolean);
 extern int tport_spell(int);
@@ -3260,6 +3262,7 @@ extern void extract_from_minvent(struct monst *, struct obj *, boolean,
 
 /* ### write.c ### */
 
+extern int ink_cost(short);
 extern int dowrite(struct obj *);
 
 /* ### zap.c ### */

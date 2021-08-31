@@ -796,9 +796,9 @@ mksobj(int otyp, boolean init, boolean artif)
             otmp->quan = is_multigen(otmp) ? (long) rn1(6, 6) : 1L;
             if (!rn2(11)) {
                 otmp->spe = rne(3);
-                otmp->blessed = rn2(2);
+                blessorcurse(otmp, 2);
             } else if (!rn2(10)) {
-                curse(otmp);
+                blessorcurse(otmp, 2);
                 otmp->spe = -rne(3);
             } else
                 blessorcurse(otmp, 10);

@@ -75,6 +75,8 @@ QOL
 - The grim reaper can no longer appear in bones files.
 - Wands of wonder now automatically identify themselves when used, and notify the player
   with a message.
+- After killing a certain number of monsters with your weapon, that weapon will automatically
+  be identified.
 
 Furnaces
 - Furnaces can be used to combine items. While at a furnace, the player can use the #forge command
@@ -207,6 +209,19 @@ Object Changes
 - Coffins are always trapped, and looting them will occasionally produce vampires.
 - New Object: Executioner's Mace.
   - Does not generate randomly. Dropped only by Worms that Walk.
+- New Object: Parazonium.
+  - Dagger that deals greater damage.
+  - Very rare. Most often found in the inventory of skeletons.
+- New Object: Gladius.
+  - Unique in that it deals much more damage to small monsters than large monsters.
+  - Found only in the inventory of skeletons.
+- New Object: Falchion.
+  - Two-handed scimitar.
+  - Deals high damage.
+- Cursed weapons no longer weld themselves to your hand. Instead, curse weapons will occasionally
+  have weird effects when swung, such as breaking, flying out of your hand, or rebounding and
+  hitting you.
+- In a change inspired by dNetHack, a number of artifacts have shuffled base items every game.
 
 Race Changes
 - Drow
@@ -264,9 +279,6 @@ Balancing
   degenerate play, and should not affect regular players much.
 - While the player is level one, they get hungry much more slowly.
 
-Minor Changes
-- Double-headed axes are now referred to as "double-bitted."
-
 Bug Fixes
 - While porting the previous SpliceHack code, numerous bugs were discovered and fixed. The full
   scope of these bugs exceeds the capacity of this changelog, but suffice to say a number of
@@ -276,11 +288,6 @@ Bug Fixes
 - Fixed parrots not using the birdname option from a config file.
 - Fixed grenade explosions being treated as if they were caused by the player, even when they
   were not.
-
-YAFM
-- Whenever you are polymorphed into a bear, all instances of the word "bare" are replaced
-  with the word "bear."
-- Chatting with a troll will yield one of several classic "flame bait" messages.
 
 Misc Changes
 - The Dark One is no longer a human.
@@ -299,6 +306,10 @@ Misc Changes
   they are not very practical pets anyway.
 - Werebears generate peaceful.
 - Altered the tiles for many existing monsters in order to improve visual clarity.
+- Whenever you are polymorphed into a bear, all instances of the word "bare" are replaced
+  with the word "bear."
+- Chatting with a troll will yield one of several classic "flame bait" messages.
+- Double-headed axes are now referred to as "double-bitted."
 
 Known Bugs
 - Rare failed sanity check for improper mon data, possibly due to vampiric monsters shapeshifting.
@@ -306,6 +317,7 @@ Known Bugs
 - Phoenix egg revival via fire is very buggy.
 - Rare write_ls: can't find
 - Hand grenade explosions are magical.
+- Occasional flanking messages in odd situations.
 
                             Version 0.8.3
 

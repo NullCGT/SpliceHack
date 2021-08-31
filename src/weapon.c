@@ -76,7 +76,7 @@ static NEARDATA const char *const odd_skill_names[] = {
 
     "power attack",
     "flaming fists", "freezing fists", "shocking fists", "stunning fist",
-    "sneak attack", "careful attack"
+    "sneak attack", "careful attack",
 
     "spider friend"
 };
@@ -230,8 +230,11 @@ botl_hitbonus()
     }
 
     /* Power attack penalty */
-    tmp -= P_SKILL(P_POWER_ATTACK);
-    tmp += P_SKILL(P_CAREFUL_ATTACK);
+    if (P_SKILL(P_POWER_ATTACK) > P_UNSKILLED
+        || P_SKILL(P_CAREFUL_ATTACK) > P_UNSKILLED) {
+        tmp -= P_SKILL(P_POWER_ATTACK);
+        tmp += P_SKILL(P_CAREFUL_ATTACK);
+    }
 
     if (uwep && (uwep->otyp == HEAVY_IRON_BALL)) {
         tmp += 4;
@@ -322,8 +325,11 @@ describe_dmgval(char *buf, struct obj *otmp, boolean bigmonst) {
     }
 
     matbon += odd_material_damage(otmp);
-    matbon += P_SKILL(P_POWER_ATTACK);
-    matbon -= P_SKILL(P_CAREFUL_ATTACK);
+    if (P_SKILL(P_POWER_ATTACK) > P_UNSKILLED
+        || P_SKILL(P_CAREFUL_ATTACK) > P_UNSKILLED) {
+        matbon += P_SKILL(P_POWER_ATTACK);
+        matbon -= P_SKILL(P_CAREFUL_ATTACK);
+    }
     flatbon -= greatest_erosion(otmp);
     flatbon += spebon;
     if (flatbon < 1)
@@ -332,7 +338,7 @@ describe_dmgval(char *buf, struct obj *otmp, boolean bigmonst) {
     low_dmg = 1 + spebon + matbon + weapon_distribution_bonus(otyp, bigmonst, LOW_ROLL);
     high_dmg = flatbon + matbon + weapon_distribution_bonus(otyp, bigmonst, HIGH_ROLL);
     
-    Sprintf(eos(buf), "%d-%d", low_dmg, high_dmg);
+    Sprintf(eos(buf), "%d-%d%s", low_dmg, high_dmg, otmp->oartifact ? "++" : "");
     return buf;
 }
 
@@ -1035,7 +1041,7 @@ static const NEARDATA short hwep[] = {
     CORPSE, /* cockatrice corpse */
     SPIKED_CHAIN,
     TSURUGI, RUNESWORD, ORNATE_MACE, FLAMING_LASH, DWARVISH_MATTOCK,
-    TWO_HANDED_SWORD, BATTLE_AXE, EXECUTIONER_S_MACE,
+    TWO_HANDED_SWORD, FALCHION, BATTLE_AXE, EXECUTIONER_S_MACE,
     KATANA, UNICORN_HORN, CRYSKNIFE, TRIDENT, LONG_SWORD, ELVEN_BROADSWORD,
     BROADSWORD, SCIMITAR, SABER, MORNING_STAR, ELVEN_SHORT_SWORD,
     DARK_ELVEN_SHORT_SWORD,
@@ -1564,7 +1570,8 @@ skill_advance(int skill)
     You("are now %s skilled in %s.",
         P_SKILL(skill) >= P_MAX_SKILL(skill) ? "most" : "more",
         P_NAME(skill));
-    /* botl will need update because of to-hit bonus */
+    /* botl and inv will need update because of to-hit bonus */
+    update_inventory();
     g.context.botl = 1;
 }
 

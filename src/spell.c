@@ -41,7 +41,6 @@ static char *spellretention(int, char *);
 static int throwspell(void);
 static void cast_protection(void);
 static void spell_backfire(int);
-static const char *spelltypemnemonic(int);
 static boolean spell_aim_step(genericptr_t, int, int);
 
 /* The roles[] table lists the role-specific values for tuning
@@ -826,7 +825,7 @@ docast(void)
     return 0;
 }
 
-static const char *
+const char *
 spelltypemnemonic(int skill)
 {
     switch (skill) {

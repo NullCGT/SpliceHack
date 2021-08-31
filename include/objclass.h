@@ -233,6 +233,10 @@ extern uchar oc_syms[MAXOCLASSES];      /* current class symbols */
 #define CHAIN_SYM '_'
 #define VENOM_SYM '.'
 
+/* Used for ranges */
+#define FIRST_SWORD SHORT_SWORD
+#define LAST_SWORD KATANA
+
 struct fruit {
     char fname[PL_FSIZ];
     int fid;

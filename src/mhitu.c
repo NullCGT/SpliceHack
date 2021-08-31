@@ -856,6 +856,10 @@ mattacku(register struct monst *mtmp)
                     if (mon_wield_item(mtmp) != 0)
                         break;
                 }
+                if (cursed_weapon_proc(mtmp, &g.youmonst) == 1) {
+                    sum[i] |= MM_AGR_DIED;
+                    break;
+                }
                 if (foundyou) {
                     mon_currwep = MON_WEP(mtmp);
                     if (mon_currwep) {
@@ -2631,7 +2635,7 @@ calculate_flankers(struct monst *magr)
         && !flanker->mstun)
         flanked = TRUE;
 
-    if (flanked) {
+    if (flanked && canseemon(magr) && canseemon(flanker)) {
         You("are being flanked!");
         return TRUE;
     }

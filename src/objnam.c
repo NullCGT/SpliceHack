@@ -1021,7 +1021,7 @@ erosion_matters(struct obj* obj)
 
 #define DONAME_WITH_PRICE 1
 #define DONAME_VAGUE_QUAN 2
-#define DONAME_ITEM_STATS 3
+#define DONAME_ITEM_STATS 4
 
 static char *
 doname_base(struct obj* obj, unsigned int doname_flags)
@@ -1391,10 +1391,12 @@ doname_base(struct obj* obj, unsigned int doname_flags)
         }
     }
 
-    if (equip_stats && (obj->oclass == WEAPON_CLASS || is_weptool(obj)) && !is_ammo(obj)) {
-        if (obj->oartifact) {
-            Sprintf(eos(bp), " [???]");
-        } else if (obj->known) {
+    /* Only display these for non-artifacts. In addition to artifact formatting
+       being difficult, this should help players distinguish real artifacts and
+       named items. */
+    if (equip_stats && (obj->oclass == WEAPON_CLASS || is_weptool(obj))
+        && !obj->oartifact && !is_ammo(obj)) {
+        if (obj->known) {
             Sprintf(eos(bp), " [+%d|", base_hitbonus(obj));
             if (W_ARM_BONUS(obj) > 0)
                 Sprintf(eos(bp), "%dAC|", W_ARM_BONUS(obj));
@@ -1415,8 +1417,7 @@ doname_base(struct obj* obj, unsigned int doname_flags)
         if (obj->known) {
             Sprintf(eos(bp), " [%dAC]", ARM_BONUS(obj));
         } else {
-            Sprintf(eos(bp), " [%dAC]", 
-                    obj->spe < 0 ? (ARM_BONUS(obj) + abs(obj->spe)) : ARM_BONUS(obj) - max(0, obj->spe));
+            Sprintf(eos(bp), " [%dAC]", UNK_ARM_BONUS(obj));
         }
     }
 

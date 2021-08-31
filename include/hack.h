@@ -597,6 +597,11 @@ enum optset_restrictions {
      - min((int) greatest_erosion(obj), \
           objects[(obj)->otyp].a_ac + material_bonus(obj)))
 
+#define UNK_ARM_BONUS(obj)                      \
+    (objects[(obj)->otyp].a_ac + material_bonus(obj) \
+     - min((int) greatest_erosion(obj), \
+          objects[(obj)->otyp].a_ac + material_bonus(obj)))
+
 #define W_ARM_BONUS(obj) \
     ((is_weptool((obj)) || (obj)->oclass == WEAPON_CLASS) ? \
         (objects[(obj)->otyp].w_acbon) : 0)

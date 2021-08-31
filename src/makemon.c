@@ -514,7 +514,7 @@ m_initweap(register struct monst *mtmp)
                 else
                     (void) mongets(mtmp, RED_DRAGON_SCALE_MAIL);
 
-                (void) mongets(mtmp, ATHAME);
+                (void) mongets(mtmp, PARAZONIUM);
                 m_initthrow(mtmp, SHURIKEN, 12);
                 (void) mongets(mtmp, rnd_offensive_item(mtmp));
                 (void) mongets(mtmp, rnd_offensive_item(mtmp));
@@ -706,8 +706,9 @@ m_initweap(register struct monst *mtmp)
         case PM_SKELETON:
             if (!rn2(4))
             (void) mongets(mtmp, LIGHT_ARMOR);
+        /* Skeletons wield weird, ancient weaponry. */
         if (!rn2(4))
-            (void) mongets(mtmp, (rn2(3) ? KNIFE : SHORT_SWORD));
+            (void) mongets(mtmp, (rn2(3) ? PARAZONIUM : GLADIUS));
             break;
         case PM_SKELETAL_PIRATE:
             otmp = rn2(2) ? mksobj(SCIMITAR, FALSE, FALSE) :

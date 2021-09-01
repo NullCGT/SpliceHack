@@ -26,15 +26,15 @@ des.map([[
 }-------}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}-------}
 }|.....|-----------------------------------------------|.....|}
 }|.....+...............................................+.....|}
-}-------------------------------+-----------------------------}
+}-------------------------------+--------------K--------------}
 }}}}}}|........|..........+...........|.......S.S.......|}}}}}}
 .....}|........|..........|...........|.......|.|.......|}.....
-.....}|........------------...........---------S---------}.....
-.....}|...{....+..........+.........\.S.................+......
-.....}|........------------...........---------S---------}.....
+.....}|........--SS----SS--........W.W--------SSS--------}.....
+.....}|...{....+..........+...........S.................+......
+.....}|........--SS----SS--........W.W--------SSS--------}.....
 .....}|........|..........|...........|.......|.|.......|}.....
 }}}}}}|........|..........+...........|.......S.S.......|}}}}}}
-}-------------------------------+-----------------------------}
+}-------------------------------+--------------K--------------}
 }|.....+...............................................+.....|}
 }|.....|-----------------------------------------------|.....|}
 }-------}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}-------}
@@ -42,14 +42,18 @@ des.map([[
 ]]);
 
 -- Random level layout modifications
-local pillars = { {5, 5}, {5, 11}, {57, 5}, {57, 11} };
-local corners = { {2, 3}, {2, 13}, {60, 3}, {60, 13} };
-local pillarpools = { {4, 6}, {4, 10}, {58, 6}, {58, 10} };
-local bars = { {6, 6}, {6, 10} };
+local pillars     = { {05, 05}, {05, 11}, {57, 05}, {57, 11} };
+local corners     = { {02, 03}, {02, 13}, {60, 03}, {60, 13}, {02, 02}, {02, 14}, {60, 02}, {60, 14} };
+local pillarpools = { {04, 06}, {04, 10}, {58, 06}, {58, 10} };
+local turretbars1 = { {06, 06}, {06, 10} };
+-- local turretbars2 = { {06, 06}, {06, 10} };
+local thronetrees = { {36, 07}, {36, 09} };
+-- local dragonbars  = { {47, 04}, {47, 07}, {47, 09}, {47, 13} };
+
 -- 50% chance to change shape of moat.
 if percent(50) then
     for pos=1,4 do
-        des.terrain(pillars[pos], "-")
+        des.terrain(pillars[pos], "T")
     end
     for pos=1,4 do
         des.terrain(pillarpools[pos], "}")
@@ -58,29 +62,57 @@ end
 
 -- 30% chance to add corners to towers.
 if percent(30) then
-    for pos=1,4 do
-        des.terrain(corners[pos], "-")
+    for pos=1,8 do
+        des.terrain(corners[pos], " ")
     end
 end
 
+-- "turrets"
 -- 10% chance to add bars for soldiers to shoot through.
 if percent(10) then
     for pos=1,2 do
-        des.terrain(bars[pos], "F")
+        des.terrain(turretbars1[pos], "F")
     end 
 end
 
--- 15% chance to turn the courtyard into a garden.
-if percent(15) then 
-    des.replace_terrain({ region={05,05, 11,12}, fromterrain=".", toterrain="T", chance=20 })
-end
-
--- 20% chance to add a barred corridor
+-- 50% chance to put trees next to the throne
 if percent(50) then
-    des.terrain(selection.line(16,7, 24,7), 'F')
-    des.terrain(selection.line(16,9, 24,9), 'F')
+    for pos=1,2 do
+        des.terrain(thronetrees[pos], "T")
+    end
+-- 15% chance (a 30% chance in a 50% chance) to turn the courtyard into a garden.
+    if percent(30) then 
+        des.replace_terrain({ region={08,06, 10,13}, fromterrain=".", toterrain="T", chance=25 })
+    end
 end
 
+-- 20% chance to put fountains next to the throne
+if percent(20) then
+    des.replace_terrain({ region={35, 07, 37, 09}, fromterrain="W", toterrain="{", chance=90 })
+    des.replace_terrain({ region={35, 07, 37, 09}, fromterrain="W", toterrain=".", chance=100 })
+else
+    des.replace_terrain({ region={35, 07, 37, 09}, fromterrain="W", toterrain=".", chance=100 })
+end
+
+-- "shooting gallery" bars for soldiers or dragons
+-- 20% chance to add a barred corridor. it's pretty dangerous, so give player an altar as a reward
+if percent(20) then
+    des.replace_terrain({ region={15, 07, 26, 09}, fromterrain="S", toterrain="F", chance=100 });
+    des.replace_terrain({ region={47, 04, 47, 12}, fromterrain="K", toterrain="-", chance=100 });
+    des.door("locked",47,07)
+    des.door("locked",47,09)
+    des.altar({ x=36, y=08 });
+else
+    des.replace_terrain({ region={15, 07, 26, 09}, fromterrain="S", toterrain="-", chance=100 });
+    des.feature({ type = "throne", x=36, y=08 });
+    -- 32% chance (due to nested "if") for barred dragons
+    if percent(40) then
+        des.replace_terrain({ region={46, 07, 48, 09}, fromterrain="S", toterrain="F", chance=100 });
+        des.replace_terrain({ region={47, 04, 47, 12}, fromterrain="K", toterrain="S", chance=100 });
+    else
+        des.replace_terrain({ region={47, 04, 47, 12}, fromterrain="K", toterrain="F", chance=100 });
+end
+end
 
 -- Random registers initialisation
 local object = { "[", ")", "*", "%" };
@@ -95,9 +127,9 @@ place:set(58,14);
 local monster = { "L", "N", "E", "H", "M", "O", "R", "T", "X", "Z" }
 shuffle(monster)
 
-des.teleport_region({ region = {01,00,10,20}, region_islev=1, exclude={1,1,61,15}, dir="down" })
-des.teleport_region({ region = {69,00,79,20}, region_islev=1, exclude={1,1,61,15}, dir="up" })
-des.levregion({ region = {01,00,10,20}, region_islev=1, exclude={0,0,62,16}, type="stair-up" })
+des.teleport_region({ region = {01,00,10,20}, region_islev=1, exclude={01,1,61,15}, dir="down" })
+des.teleport_region({ region = {69,00,79,20}, region_islev=1, exclude={01,1,61,15}, dir="up" })
+des.levregion({ region = {01,00,10,20}, region_islev=1, exclude={00,0,62,16}, type="stair-up" })
 
 -- 50% chance to replace the fountain with a historic statue of some type of local monster.
 if percent(50) then
@@ -112,12 +144,10 @@ des.door("locked",32,04)
 des.door("locked",26,05)
 des.door("locked",46,05)
 des.door("locked",48,05)
-des.door("locked",47,07)
 des.door("closed",15,08)
 des.door("closed",26,08)
 des.door("locked",38,08)
 des.door("locked",56,08)
-des.door("locked",47,09)
 des.door("locked",26,11)
 des.door("locked",46,11)
 des.door("locked",48,11)

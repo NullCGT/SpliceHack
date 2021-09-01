@@ -3567,7 +3567,7 @@ static const char *const neutral_adj[] = {
     /* natural places, forest, fountains, etc   */
     "Infinite",     "Dusty",        "Mossy",
     "Misty",        "Verdant",      "Noisome",
-    "Damp",         "Windy",        "Fungus-covered"
+    "Damp",         "Windy",        "Fungus-covered",
     "Sulphurous",   "Feral",        "Narrow",
     "Puckish",      "Viny",         "Slimy",
 };

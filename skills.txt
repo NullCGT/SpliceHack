@@ -1,6 +1,9 @@
 Cautious Strike
     Increase the to-hit bonus of the user by a flat amount at the cost of a
     damage penalty of the same amount.
+Disarm
+    Disarm allows the user to attempt to disarm opponents with your weapon. To use
+    this ability, use the #disarm extended command.
 Flaming Fists
     Flaming fists allows the user to set enemies on fire using their unarmed
     strikes. This increases damage dealt by 1d6 and may destroy potions in the
@@ -29,6 +32,13 @@ Sneak Attack
 Stunning Fist
     Stunning fist increases the chances of stunning a monster with unarmed
     attacks, provided the user already had the ability to do so.
+Sunder
+    Sunder allows the user to attempt to destroy the weapons or equipment of an
+    enemy character. To use this ability, use the #sunder extended command.
+Tumble
+    Tumble allows the user to switch places with an opponent, and is useful for
+    getting out of dangerous situations. Note that tumbling costs at least one
+    turn, however.
 
 
 IDEAS

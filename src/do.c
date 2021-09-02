@@ -2171,4 +2171,166 @@ heal_legs(int how) /* 0: ordinary, 1: dismounting steed,
     }
 }
 
+/* This code is a modified version of SLASH'EM's disarm tech. */
+int
+dodisarm(void)
+{
+    struct obj *obj;
+    struct monst *mtmp;
+    int roll;
+
+    if (!uwep) {
+        You("must be wielding a weapon.");
+        return 0;
+    }
+    if (P_SKILL(P_DISARM) <= P_UNSKILLED) {
+        You("are not technically skilled enough to attempt to disarm others.");
+        return 0;
+    }
+    if (u.uswallow) {
+        pline("What do you think %s is?  A sword swallower?",
+        mon_nam(u.ustuck));
+        return 0;
+    }
+    if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return 0;
+    if (!u.dx && !u.dy) {
+        if (uwep) drop(uwep);
+        return 0;
+    }
+    mtmp = m_at(u.ux + u.dx, u.uy + u.dy);
+    if (!mtmp || !canspotmon(mtmp)) {
+        You("don't see anything there!");
+        return 0;
+    }
+    obj = MON_WEP(mtmp);
+    if (!obj) {
+        You_cant("disarm an unarmed foe!");
+        return 0;
+    }
+
+    roll = rn2(6);
+    if (roll < (P_SKILL(P_DISARM) + P_SKILL(weapon_type(uwep)))) {
+        You("disarm %s!", mon_nam(mtmp));
+        obj_extract_self(obj);
+        possibly_unwield(mtmp, FALSE);
+        setmnotwielded(mtmp, obj);
+        place_object(obj, mtmp->mx, mtmp->my);
+        stackobj(obj);
+    } else {
+        pline("%s keeps ahold of %s weapon.", Monnam(mtmp), mhis(mtmp));
+    }
+    setmangry(mtmp, TRUE);
+    return 1;
+}
+
+int
+dosunder(void)
+{
+    struct obj *otmp;
+    struct monst *mtmp;
+    int roll;
+
+    if (P_SKILL(P_SUNDER) <= P_UNSKILLED) {
+        You("are not technically skilled enough to attempt to sunder objects.");
+        return 0;
+    }
+    if (u.uswallow) {
+        pline("Try attacking, instead.");
+        return 0;
+    }
+    if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return 0;
+    if (!u.dx && !u.dy) {
+        if (uwep) You("cannot break your own weapon!");
+        else pline("Break your %s? You need those!", makeplural(body_part(HAND)));
+    }
+    mtmp = m_at(u.ux + u.dx, u.uy + u.dy);
+    if (!mtmp || !canspotmon(mtmp)) {
+        You("don't see anyone with equipment to sunder!");
+        return 0;
+    }
+    if (!MON_WEP(mtmp)) {
+        pline("%s does not have a weapon for you to sunder.", Monnam(mtmp));
+        return 0;
+    }
+    roll = rn2(6);
+    otmp = MON_WEP(mtmp);
+    if (roll >= (P_SKILL(P_SUNDER) - (otmp->oartifact ? 0 : 2))) {
+        pline("%d %d", roll, P_SKILL(P_SUNDER));
+        You("fail to sunder %s's weapon.", mon_nam(mtmp));
+        return 1;
+    }
+
+    You("sunder %s's %s!", mon_nam(mtmp), xname(otmp));
+    if (touch_petrifies(&mons[otmp->corpsenm])) {
+        if (!uwep && !Stone_resistance) {
+            Sprintf(g.killer.name, "sundering %s with an unarmed strike",
+                    killer_xname(otmp));
+            instapetrify(g.killer.name);
+        } else if (!uwep) {
+            uwep->material = STONE;
+        }
+        update_inventory();
+        g.context.botl = 1;
+    }
+    setmangry(mtmp, TRUE);
+    m_useup(mtmp, otmp);
+    return 1;
+}
+
+int
+dotumble(void)
+{
+    int roll;
+    struct monst *mtmp;
+    struct trap *trtmp;
+    int tx, ty;
+
+    if (u.uswallow) {
+        You("tumble in place.");
+        return 1;
+    }
+    if (u.utrap) {
+        You("cannot tumble until you extricate yourself.");
+        return 1;
+    }
+    if (Fumbling) {
+        You("slip and land on your %s!", body_part(HEAD));
+        losehp(Maybe_Half_Phys(rnd(20)), "ill-advised gymnastics",
+                       KILLED_BY);
+        return 1;
+    }
+    roll = rn2(6);
+    if (P_SKILL(P_TUMBLING) <= P_UNSKILLED || roll > P_SKILL(P_TUMBLING)) {
+        You(Hallucination ? "are too busy tripping!" : "trip!");
+        return 1;
+    }
+    if (!getdir((char *)0) || !isok(u.ux + u.dx, u.uy + u.dy)) return 0;
+    if (!u.dx && !u.dy) {
+        You("do a sommersault.");
+        return 1;
+    }
+    mtmp = m_at(u.ux + u.dx, u.uy + u.dy);
+    if (!mtmp || !canspotmon(mtmp)) {
+        You("don't see anyone to tumble past in that direction.");
+        return 0;
+    }
+    You("tumble past %s.", mon_nam(mtmp));
+    tx = u.ux;
+    ty = u.uy;
+    u.ux = mtmp->mx;
+    u.uy = mtmp->my;
+    remove_monster(mtmp->mx, mtmp->my);
+    place_monster(mtmp, tx, ty);
+    trtmp = t_at(u.ux, u.uy);
+    if (trtmp) dotrap(trtmp, FORCETRAP);
+    if (roll > P_SKILL(P_TUMBLING)) {
+        nomul(-rnd(2));
+        g.multi_reason = "recovering from a tumble";
+        g.nomovemsg = "You recover from your tumble.";
+    }
+    newsym(u.ux, u.uy);
+    newsym(mtmp->mx, mtmp->my);
+    return 1;
+}
+
 /*do.c*/

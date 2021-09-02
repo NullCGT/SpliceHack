@@ -44,8 +44,11 @@ static void skill_advance(int);
 #define PN_STUNNING_FIST (-20)
 #define PN_BACKSTAB (-21)
 #define PN_CAREFUL_ATTACK (-22)
+#define PN_DISARM (-23)
+#define PN_SUNDER (-24)
+#define PN_TUMBLING (-25)
 
-#define PN_SPIDER_FRIEND (-23)
+#define PN_SPIDER_FRIEND (-26)
 
 #define is_odd_material(obj, mat) \
     ((obj)->material == (mat) && !(objects[(obj)->otyp].oc_material == (mat)))
@@ -62,7 +65,7 @@ static NEARDATA const short skill_names_indices[P_NUM_SKILLS] = {
 
     PN_POWER_ATTACK,
     PN_FLAMING_FISTS, PN_FREEZING_FISTS, PN_SHOCKING_FISTS, PN_STUNNING_FIST,
-    PN_BACKSTAB, PN_CAREFUL_ATTACK,
+    PN_BACKSTAB, PN_CAREFUL_ATTACK, PN_DISARM, PN_SUNDER, PN_TUMBLING,
 
     PN_SPIDER_FRIEND
 };
@@ -76,7 +79,7 @@ static NEARDATA const char *const odd_skill_names[] = {
 
     "power attack",
     "flaming fists", "freezing fists", "shocking fists", "stunning fist",
-    "sneak attack", "careful attack",
+    "sneak attack", "careful attack", "disarm", "sunder", "tumbling",
 
     "spider friend"
 };
@@ -1583,7 +1586,7 @@ static const struct skill_range {
     { P_FIRST_WEAPON, P_LAST_WEAPON, "Weapon Skills" },
     { P_FIRST_SPELL, P_LAST_SPELL, "Spellcasting Skills" },
     { P_FIRST_ROLE, P_LAST_ROLE, "Role-Specific Skills" },
-    { P_FIRST_RACE, P_LAST_RACE, "Racial Skills" }
+    { P_FIRST_RACE, P_LAST_RACE, "Cultural Skills" }
 };
 
 /*

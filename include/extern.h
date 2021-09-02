@@ -412,6 +412,9 @@ extern int dowipe(void);
 extern void legs_in_no_shape(const char *, boolean);
 extern void set_wounded_legs(long, int);
 extern void heal_legs(int);
+extern int dodisarm(void);
+extern int dosunder(void);
+extern int dotumble(void);
 
 /* ### do_name.c ### */
 

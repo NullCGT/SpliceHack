@@ -79,11 +79,15 @@ enum p_skills {
     P_BACKSTAB           = 45,
     P_CAREFUL_ATTACK     = 46,
 
-    /* Racial Skills by Kestrel Gregorich-Trevor */
-    P_SPIDER_FRIEND      = 47,
+    P_DISARM             = 47,
+    P_SUNDER             = 48,
+    P_TUMBLING           = 49,
+
+    /* Cultural Skills by Kestrel Gregorich-Trevor */
+    P_SPIDER_FRIEND      = 50,
 
 
-    P_NUM_SKILLS         = 48
+    P_NUM_SKILLS         = 51
 };
 
 #define P_MARTIAL_ARTS P_BARE_HANDED_COMBAT /* Role distinguishes */
@@ -98,7 +102,7 @@ enum p_skills {
 #define P_FIRST_H_TO_H P_BARE_HANDED_COMBAT
 
 #define P_FIRST_ROLE P_POWER_ATTACK
-#define P_LAST_ROLE P_CAREFUL_ATTACK
+#define P_LAST_ROLE P_TUMBLING
 
 #define P_FIRST_RACE P_SPIDER_FRIEND
 #define P_LAST_RACE P_SPIDER_FRIEND

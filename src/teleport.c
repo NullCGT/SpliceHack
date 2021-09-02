@@ -484,11 +484,16 @@ scrolltele(struct obj* scroll)
     coord cc;
 
     /* Disable teleportation in stronghold && Vlad's Tower */
-    if (noteleport_level(&g.youmonst) && !wizard) {
-        pline("A mysterious force prevents you from teleporting!");
-        if (scroll)
-            learnscroll(scroll); /* this is obviously a teleport scroll */
-        return;
+    if (noteleport_level(&g.youmonst)) {
+        if (!wizard) {
+            pline("A mysterious force prevents you from teleporting!");
+            if (scroll)
+                learnscroll(scroll); /* this is obviously a teleport scroll */
+            return;
+        }
+        else {
+            pline("Overriding non-teleport flag.");
+        }
     }
 
     /* don't show trap if "Sorry..." */
@@ -526,7 +531,9 @@ scrolltele(struct obj* scroll)
                 return; /* abort */
             /* possible extensions: introduce a small error if
                magic power is low; allow transfer to solid rock */
-            if (teleok(cc.x, cc.y, FALSE)) {
+            if (teleok(cc.x, cc.y, FALSE)
+                || (wizard
+                    && yn("You can't normally teleport here. Do it anyway?") == 'y')) {
                 /* for scroll, discover it regardless of destination */
                 teleds(cc.x, cc.y, TELEDS_TELEPORT);
                 if (iflags.travelcc.x == u.ux && iflags.travelcc.y == u.uy)

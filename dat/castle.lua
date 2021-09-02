@@ -30,7 +30,7 @@ des.map([[
 }}}}}}|........|..........+...........|.......S.S.......|}}}}}}
 .....}|........|..........|...........|.......|.|.......|}.....
 .....}|........--SS----SS--........W.W--------SSS--------}.....
-.....}|...{....+..........+...........S.................+......
+.....}|........+..........+...........S.................+......
 .....}|........--SS----SS--........W.W--------SSS--------}.....
 .....}|........|..........|...........|.......|.|.......|}.....
 }}}}}}|........|..........+...........|.......S.S.......|}}}}}}
@@ -50,67 +50,25 @@ local turretbars1 = { {06, 06}, {06, 10} };
 local thronetrees = { {36, 07}, {36, 09} };
 -- local dragonbars  = { {47, 04}, {47, 07}, {47, 09}, {47, 13} };
 
--- 50% chance to change shape of moat.
-if percent(50) then
-    for pos=1,4 do
-        des.terrain(pillars[pos], "T")
-    end
-    for pos=1,4 do
-        des.terrain(pillarpools[pos], "}")
-    end
-end
-
--- 30% chance to add corners to towers.
-if percent(30) then
-    for pos=1,8 do
-        des.terrain(corners[pos], " ")
-    end
-end
-
--- "turrets"
--- 10% chance to add bars for soldiers to shoot through.
-if percent(10) then
-    for pos=1,2 do
-        des.terrain(turretbars1[pos], "F")
-    end 
-end
-
--- 50% chance to put trees next to the throne
-if percent(50) then
-    for pos=1,2 do
-        des.terrain(thronetrees[pos], "T")
-    end
--- 15% chance (a 30% chance in a 50% chance) to turn the courtyard into a garden.
-    if percent(30) then 
-        des.replace_terrain({ region={08,06, 10,13}, fromterrain=".", toterrain="T", chance=25 })
-    end
-end
-
--- 20% chance to put fountains next to the throne
-if percent(20) then
-    des.replace_terrain({ region={35, 07, 37, 09}, fromterrain="W", toterrain="{", chance=90 })
-    des.replace_terrain({ region={35, 07, 37, 09}, fromterrain="W", toterrain=".", chance=100 })
-else
-    des.replace_terrain({ region={35, 07, 37, 09}, fromterrain="W", toterrain=".", chance=100 })
-end
-
 -- "shooting gallery" bars for soldiers or dragons
 -- 20% chance to add a barred corridor. it's pretty dangerous, so give player an altar as a reward
 if percent(20) then
-    des.replace_terrain({ region={15, 07, 26, 09}, fromterrain="S", toterrain="F", chance=100 });
-    des.replace_terrain({ region={47, 04, 47, 12}, fromterrain="K", toterrain="-", chance=100 });
-    des.door("locked",47,07)
-    des.door("locked",47,09)
-    des.altar({ x=36, y=08 });
+    des.replace_terrain({ region={15,07, 26,09}, fromterrain="S", toterrain="F", chance=100 });
+    des.replace_terrain({ region={47,04, 47,12}, fromterrain="K", toterrain="-", chance=100 });
+    des.door("locked",47,07);
+    des.door("locked",47,09);
+    des.altar({ x=36, y=08, align="random" });
+    des.region({ region={27,05, 37,11},lit=1,type="temple", filled=1 });
 else
-    des.replace_terrain({ region={15, 07, 26, 09}, fromterrain="S", toterrain="-", chance=100 });
+    des.region({ region={27,05, 37,11},lit=1,type="throne", filled=2 });
+    des.replace_terrain({ region={15,07, 26,09}, fromterrain="S", toterrain="-", chance=100 });
     des.feature({ type = "throne", x=36, y=08 });
     -- 32% chance (due to nested "if") for barred dragons
     if percent(40) then
-        des.replace_terrain({ region={46, 07, 48, 09}, fromterrain="S", toterrain="F", chance=100 });
-        des.replace_terrain({ region={47, 04, 47, 12}, fromterrain="K", toterrain="S", chance=100 });
+        des.replace_terrain({ region={46,07, 48,09}, fromterrain="S", toterrain="F", chance=100 });
+        des.replace_terrain({ region={47,04, 47,12}, fromterrain="K", toterrain="S", chance=100 });
     else
-        des.replace_terrain({ region={47, 04, 47, 12}, fromterrain="K", toterrain="F", chance=100 });
+        des.replace_terrain({ region={47,04, 47,12}, fromterrain="K", toterrain="F", chance=100 });
 end
 end
 
@@ -131,12 +89,6 @@ des.teleport_region({ region = {01,00,10,20}, region_islev=1, exclude={01,1,61,1
 des.teleport_region({ region = {69,00,79,20}, region_islev=1, exclude={01,1,61,15}, dir="up" })
 des.levregion({ region = {01,00,10,20}, region_islev=1, exclude={00,0,62,16}, type="stair-up" })
 
--- 50% chance to replace the fountain with a historic statue of some type of local monster.
-if percent(50) then
-    des.feature("fountain", 10,08)
-else
-    des.object({id="statue", x=10, y=08, montype=monster[10], historic=false})
-end
 -- Doors
 des.door("closed",07,03)
 des.door("closed",55,03)
@@ -253,6 +205,26 @@ des.monster("soldier",03,14)
 des.monster("soldier",05,14)
 des.monster("soldier",57,14)
 des.monster("soldier",59,14)
+-- 60% chance to replace the single fountain with either
+-- 4 fountains or a historic statue of some type of local monster.
+if percent(40) then
+    des.feature("fountain", 10,08)
+elseif percent(50) then
+    des.feature("fountain", 09,08)
+    des.feature("fountain", 11,08)
+    des.feature("fountain", 10,07)
+    des.feature("fountain", 10,09)
+else
+    des.object({id="statue", x=10, y=08, montype=monster[10], historic=true})
+end
+
+--20% chance of several statues in the courtyard
+if percent (20) then
+    des.object({id="statue", x=09, y=07, montype=monster[1], historic=false})
+    des.object({id="statue", x=09, y=09, montype=monster[2], historic=false})
+    des.object({id="statue", x=11, y=07, montype=monster[3], historic=false})
+    des.object({id="statue", x=11, y=09, montype=monster[4], historic=false})
+end
 -- The four dragons that are guarding the storerooms
 des.monster("D",47,05)
 des.monster("D",47,06)
@@ -303,31 +275,82 @@ des.non_diggable(selection.area(00,00,62,16))
 -- Subrooms:
 --   Entire castle area
 des.region(selection.area(00,00,62,16),"unlit")
+--   Moat
+-- 50% chance to change shape of moat.
+if percent(50) then
+    for pos=1,4 do
+        des.terrain(pillars[pos], "T")
+    end
+    for pos=1,4 do
+        des.terrain(pillarpools[pos], "}")
+    end
+end
 --   Courtyards
 des.region(selection.area(00,05,05,11),"lit")
 des.region(selection.area(57,05,62,11),"lit")
---   Throne room
-des.region({ region={27,05, 37,11},lit=1,type="throne", filled=2 })
+-- "turrets"; 10% chance to add bars for soldiers to shoot through.
+if percent(10) then
+    for pos=1,2 do
+        des.terrain(turretbars1[pos], "F")
+    end
+end
+
+--   Throne room / temple
+-- 40% chance to put trees next to the throne/altar
+if percent(40) then
+    for pos=1,2 do
+        des.terrain(thronetrees[pos], "T");
+    end
+end
+-- 20% chance to put fountains next to the throne/altar
+if percent(20) then
+    des.replace_terrain({ region={35,07, 37,09}, fromterrain="W", toterrain="{", chance=90 })
+    des.replace_terrain({ region={35,07, 37,09}, fromterrain="W", toterrain=".", chance=100 })
+else
+    des.replace_terrain({ region={35,07, 37,09}, fromterrain="W", toterrain=".", chance=100 })
+end
+
 --   Antechamber
-des.region(selection.area(07,05,14,11),"lit")
+des.region(selection.area(07,05,14,11),"lit");
+-- 20% chance to turn the antechamber into a garden.
+-- the garden could be even prettier if we cherrypick grass terrain from xnethack
+if percent(25) then
+    local garden = selection.circle(10,08, 2, 1);
+    local tree = selection.percentage(garden, 20);
+    des.replace_terrain({ selection=tree, fromterrain=".", toterrain="T" });
+--        the following code should do roughly the same thing as the above code
+--        however, there is a bug, for which copperwater has submitted a PR in vanilla nethack
+--        des.replace_terrain({ region={08,06, 13,10}, fromterrain=".", toterrain="T", chance=20 });
+end
+
 --   Storerooms
 des.region(selection.area(39,05,45,06),"lit")
 des.region(selection.area(39,10,45,11),"lit")
 des.region(selection.area(49,05,55,06),"lit")
 des.region(selection.area(49,10,55,11),"lit")
+
 --   Corners
 des.region(selection.area(02,02,06,03),"lit")
 des.region(selection.area(56,02,60,03),"lit")
 des.region(selection.area(02,13,06,14),"lit")
 des.region(selection.area(56,13,60,14),"lit")
+-- 30% chance to add corners to towers.
+if percent(30) then
+    for pos=1,8 do
+        des.terrain(corners[pos], " ")
+    end
+end
+
 --   Barracks
 des.region({ region={16,05, 25,06},lit=1,type="barracks", filled=1 })
 des.region({ region={16,10, 25,11},lit=1,type="barracks", filled=1 })
+
 --   Hallways
 des.region(selection.area(08,03,54,03),"unlit")
 des.region(selection.area(08,13,54,13),"unlit")
 des.region(selection.area(16,08,25,08),"unlit")
 des.region(selection.area(39,08,55,08),"unlit")
+
 --   Storeroom alcoves
 des.region(selection.area(47,05,47,06),"unlit")
 des.region(selection.area(47,10,47,11),"unlit")

@@ -6,7 +6,7 @@
 
 ### Species Changes
 - Different species have different night vision ranges.
-- Maximum Dexterity is now 20 for Elves, and 18 for Dwarves. 
+- Maximum Dexterity is now 20 for Elves, and 18 for Dwarves.
 #### Drow
   - Male drow are referred to as "hedrow."
   - Potions of sickness in the starting inventories of drow are replaced by potions of sleeping.
@@ -123,6 +123,8 @@ in its own way.
   randomly generated. For example, the moat may take a slightly different shape, or there may
   be iron bars from which the soldiers can attack.
 - Occasionally, mines level will generate with several trees in them.
+- Two Oracle levels arrived from xNetHack, and the standard level varies a bit.
+- Secret corridors no longer generate; secret doors still exist.
 #### Furnaces
 - Furnaces can be used to combine items. While at a furnace, the player can use the #forge command
   to combine two items into one more powerful item.

@@ -123,6 +123,7 @@ in its own way.
   randomly generated. For example, the moat may take a slightly different shape, or there may
   be iron bars from which the soldiers can attack.
 - Occasionally, mines level will generate with several trees in them.
+- The orcs in orctown have built a kitchen, complete with furnace, sink, and icebox!
 - Two Oracle levels arrived from xNetHack, and the standard level varies a bit.
 - Secret corridors no longer generate; secret doors still exist.
 #### Furnaces

@@ -123,6 +123,7 @@ in its own way.
   randomly generated. For example, the moat may take a slightly different shape, or there may
   be iron bars from which the soldiers can attack.
 - Occasionally, mines level will generate with several trees in them.
+- The orcs in orctown have built a kitchen, complete with furnace, sink, and icebox!
 #### Furnaces
 - Furnaces can be used to combine items. While at a furnace, the player can use the #forge command
   to combine two items into one more powerful item.

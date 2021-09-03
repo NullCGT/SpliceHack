@@ -35,14 +35,14 @@ des.map([[
 .....................................
 ]]);
 
--- Don't let the player fall into his likely death; used to explicitly exclude
+-- Don't let the player fall into their likely death; used to explicitly exclude
 -- the town, but that meant that you couldn't teleport out as well as not in.
 des.teleport_region({ region={01,01,20,19}, region_islev=1 })
 des.region(selection.area(01,01,35,17), "lit")
 des.levregion({ type="stair-up", region={01,03,20,19}, region_islev=1,
-		exclude={00,01,36,17} });
+      exclude={00,01,36,17} });
 des.levregion({ type="stair-down", region={61,03,75,19}, region_islev=1,
-		exclude={00,01,36,17} })
+      exclude={00,01,36,17} })
 
 -- shame we can't make polluted fountains
 des.feature("fountain",16,09)
@@ -112,6 +112,38 @@ des.object({ id = "striking", coord = place[3], buc="uncursed", spe=0 })
 des.object({ id = "striking", coord = place[4], buc="uncursed", spe=0 })
 des.object({ id = "magic missile", coord = place[4], buc="uncursed", spe=0 })
 des.object({ id = "magic missile", coord = place[5], buc="uncursed", spe=0 })
+
+-- resourceful orcs have set up a kitchen, and are preparing to   12,04-14,06
+-- "process" the former residents of minetown to feed the troops
+if percent(50) then
+   des.object({ id = "ice box", trapped = 1, locked = 0, x = 12, y = 04 });
+end
+des.object({ id = "ice box", trapped = 1, locked = 0, x = 12, y = 05,
+             contents = function()
+               des.object({ id = "corpse", montype="gnome", quantity=math.random(1,3) });
+               des.object({ id = "corpse", montype="dwarf", quantity=math.random(1,2) });
+               des.object({ id = "corpse", montype="human", quantity=math.random(0,2) });
+               des.object({ id = "corpse", montype="goblin", quantity=math.random(0,1) });
+               des.object({ id = "corpse", montype="orc-captain", quantity=math.random(0,1) });
+             end
+});
+des.feature("furnace",  13,04)
+des.feature("sink",     14,04)
+if percent (80) then
+des.object("dented pot", 13, 05)
+end
+if percent (80) then
+des.object("knife", 13, 05)
+end
+if percent (80) then
+des.object("apron", 13, 05)
+end
+if percent (80) then
+des.object("tin opener", 13, 05)
+end
+if percent (80) then
+   des.monster({ id = "orc", x=13, y=05, name = "Cookie of Glothris" });
+end
 
 -- the Orcish Army
 

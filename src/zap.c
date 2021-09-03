@@ -4140,7 +4140,7 @@ zhitm(struct monst *mon, int type, int nd,
                 tmp = 0;
                 break;
             }
-            if (nonliving(mon->data) || is_demon(mon->data)
+            if (nonliving(mon->data) || is_demon(mon->data) || resists_death(mon->data)
                 || is_vampshifter(mon) || resists_magm(mon)) {
                 /* similar to player */
                 sho_shieldeff = TRUE;

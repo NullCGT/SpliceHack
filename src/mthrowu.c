@@ -201,6 +201,8 @@ monmulti(struct monst* mtmp, struct obj* otmp, struct obj* mwep)
         /* fake players treated as skilled (regardless of role limits) */
         else if (is_mplayer(mtmp->data))
             multishot++;
+        else if (monsndx(mtmp->data) == PM_HOUND_ARCHON)
+            multishot += 3;
 
         /* this portion is different from hero multishot; from slash'em?
          */

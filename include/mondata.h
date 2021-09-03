@@ -43,6 +43,13 @@
     (is_undead(ptr) || is_demon(ptr) || is_were(ptr) \
      || ptr == &mons[PM_DEATH] || ptr == &mons[PM_GRIM_REAPER])
 
+#define resists_death(ptr) \
+    ((ptr == &mons[PM_MOVANIC_DEVA]) || \
+     (ptr == &mons[PM_MONADIC_DEVA]) || \
+     (ptr == &mons[PM_ASTRAL_DEVA]) || \
+     (ptr == &mons[PM_PLANETAR]) || \
+     (ptr == &mons[PM_SOLAR]))
+
 #define resists_sickness(ptr) \
     (is_undead(ptr) || amorphous(ptr) || is_rider(ptr) \
     || is_demon(ptr) \
@@ -89,6 +96,7 @@
 #define has_horns(ptr) (num_horns(ptr) > 0)
 #define has_beak(ptr) (is_bird(ptr) || \
                         (ptr) == &mons[PM_TENGU] || \
+                        (ptr) == &mons[PM_FELL_BEAST] || \
                         (ptr) == &mons[PM_VROCK])
 #define is_bear(ptr) ((ptr) == &mons[PM_BUGBEAR] || \
                       (ptr) == &mons[PM_OWLBEAR] || \

@@ -535,8 +535,14 @@ find_defensive(struct monst* mtmp)
         }
     }
 
-    if (nohands(mtmp->data)) /* can't use objects */
+    if (nohands(mtmp->data) && !is_dragon(mtmp->data)) /* can't use objects */
         goto botm;
+
+    if (mtmp->data == &mons[PM_HERALD_ARCHON]
+          && (obj = m_carrying(mtmp, BUGLE)) != 0) {
+        g.m.defensive = obj;
+        g.m.has_defense = MUSE_BUGLE;
+    }
 
     if (is_mercenary(mtmp->data) && (obj = m_carrying(mtmp, BUGLE)) != 0) {
         int xx, yy;
@@ -740,9 +746,18 @@ use_defensive(struct monst* mtmp)
     case MUSE_BUGLE:
         if (vismon)
             pline("%s plays %s!", Monnam(mtmp), doname(otmp));
+        else if (!Deaf && mtmp->data == &mons[PM_HERALD_ARCHON])
+            if (Hallucination)
+                pline("Hark, the herald archon sings!");
+            else
+                You_hear("a piercing series of trumpet blasts!");
         else if (!Deaf)
             You_hear("a bugle playing reveille!");
-        awaken_soldiers(mtmp);
+        if (mtmp->data == &mons[PM_HERALD_ARCHON]) {
+            (void) makemon(mkclass(S_ANGEL, 0), 0, 0, NO_MM_FLAGS);
+            aggravate();
+        } else
+            awaken_soldiers(mtmp);
         return 2;
     case MUSE_WAN_TELEPORTATION_SELF:
         if ((mtmp->isshk && inhishop(mtmp)) || mtmp->isgd || mtmp->ispriest)

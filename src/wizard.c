@@ -645,8 +645,8 @@ nasty(struct monst *summoner)
                        not in nasties[] but could be chosen as random
                        replacement for a genocided selection) */
                     if (mtmp->data == &mons[PM_ARCH_LICH]
-                        || mtmp->data == &mons[PM_ARCHON]) {
-                        tmp = min(mons[PM_ARCHON].difficulty, /* A:26 */
+                        || mtmp->data == &mons[PM_THRONE_ARCHON]) {
+                        tmp = min(mons[PM_THRONE_ARCHON].difficulty, /* A:26 */
                                   mons[PM_ARCH_LICH].difficulty); /* L:31 */
                         if (!difcap || difcap > tmp)
                             difcap = tmp; /* rest must be lower difficulty */

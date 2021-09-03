@@ -2959,7 +2959,7 @@ mhitm_ad_blnd(
                    telepathically (canspotmon suffices) but additional
                    info about archon's glow is only given if seen */
                 Snprintf(buf, sizeof buf, "%s is blinded", Monnam(mdef));
-                if (mdef->data == &mons[PM_ARCHON] && canseemon(mdef))
+                if (mdef->data == &mons[PM_THRONE_ARCHON] && canseemon(mdef))
                     Snprintf(eos(buf), sizeof buf - strlen(buf),
                              " by %s radiance", s_suffix(mon_nam(magr)));
                 pline("%s.", buf);
@@ -3901,6 +3901,56 @@ struct mhitm_data *mhm;
         mhitm_ad_phys(magr, mattk, mdef, mhm);
         if (mhm->done)
             return;
+    }
+}
+
+void
+mhitm_ad_tckl(magr, mattk, mdef, mhm)
+struct monst *magr;
+struct attack *mattk;
+struct monst *mdef;
+struct mhitm_data *mhm;
+{
+    if (magr == &g.youmonst) {
+        /* uhitm */
+        int armpro = magic_negation(mdef);
+        /* since hero can't be cancelled, only defender's armor applies */
+        boolean negated = !(rn2(10) >= 3 * armpro);
+        if (!negated && mdef->mcanmove && !rn2(3) && mhm->damage < mdef->mhp) {
+            if (!Blind) You("mercilessly tickle %s!", mon_nam(mdef));
+            mdef->mcanmove = 0;
+            mdef->mfrozen = rnd(10);
+        }
+    } else if (mdef == &g.youmonst) {
+        /* mhitu */
+        int armpro = magic_negation(mdef);
+        boolean uncancelled = !magr->mcan && (rn2(10) >= 3 * armpro);
+        
+        hitmsg(magr, mattk);
+        if (uncancelled && g.multi >= 0 && !rn2(3)) {
+            if (Free_action)
+                You_feel("horrible tentacles probing your flesh!");
+            else {
+                if (Blind) You("are mercilessly tickled!");
+                else You("are mercilessly tickled by %s!", mon_nam(magr));
+                g.nomovemsg = 0;	/* default: "you can move again" */
+                nomul(-rnd(10));
+                exercise(A_DEX, FALSE);
+                exercise(A_CON, FALSE);
+            }
+        }
+    } else {
+        /* mhitm */
+        int armpro = magic_negation(mdef);
+        boolean cancelled = magr->mcan || !(rn2(10) >= 3 * armpro);
+        if (!cancelled && mdef->mcanmove) {
+            if (g.vis) {
+                pline("%s mercilessly tickles %s.", Monnam(magr), mon_nam(mdef));
+            }
+            mdef->mcanmove = 0;
+            mdef->mfrozen = rnd(10);
+            mdef->mstrategy &= ~STRAT_WAITFORU;
+        }
     }
 }
 
@@ -4929,6 +4979,7 @@ mhitm_adtyping(struct monst *magr, struct attack *mattk, struct monst *mdef,
     case AD_CALM: mhitm_ad_calm(magr, mattk, mdef, mhm); break;
     case AD_LUCK: mhitm_ad_luck(magr, mattk, mdef, mhm); break;
     case AD_LOST: mhitm_ad_lost(magr, mattk, mdef, mhm); break;
+    case AD_TCKL:  mhitm_ad_tckl(magr, mattk, mdef, mhm); break;
     case AD_LARV: mhitm_ad_larv(magr, mattk, mdef, mhm); break;
     case AD_HNGY:  mhitm_ad_hngy(magr, mattk, mdef, mhm); break;
     case AD_FUMB:  mhitm_ad_fumb(magr, mattk, mdef, mhm); break;

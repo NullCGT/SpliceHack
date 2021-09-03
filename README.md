@@ -53,7 +53,7 @@ original.
 A copy of this tileset is included for reference. Feel free to modify it or use it as
 a basis for your own tilesets.
 
-![Screenshot](images/tiles.png)
+![Screenshot](images/tiles.bmp)
 
 ## Why the Rewrite?
 

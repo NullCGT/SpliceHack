@@ -428,53 +428,83 @@ m_initweap(register struct monst *mtmp)
         break;
 
     case S_ANGEL:
-        if (humanoid(ptr)) {
-            if (mm == PM_ALEAX) {
-                /* mimic your weapon */
-                if (uwep && (uwep->oclass == WEAPON_CLASS || is_weptool(uwep)))
-                    m_inityour(mtmp, uwep);
-                else (void) mongets(mtmp, LONG_SWORD);
-                if (uswapwep && (uswapwep->oclass == WEAPON_CLASS ||
-                            is_weptool(uswapwep)))
-                    m_inityour(mtmp, uswapwep);
-                if (uquiver && (is_ammo(uquiver) || is_missile(uquiver)))
-                    m_inityour(mtmp, uquiver);
+        switch(mm) {
+        case PM_HOUND_ARCHON:
+            otmp = mksobj(YUMI, FALSE, FALSE);
+            bless(otmp);
+            otmp->oerodeproof = TRUE;
+            spe2 = rn2(5);
+            otmp->spe = max(otmp->spe, spe2);
+            (void) mpickobj(mtmp, otmp);
 
-                /* mimic your armor */
-                if (uarm) m_inityour(mtmp, uarm);
-                if (uarmc) m_inityour(mtmp, uarmc);
-                if (uarmh) m_inityour(mtmp, uarmh);
-                if (uarms) m_inityour(mtmp, uarms);
-                if (uarmg) m_inityour(mtmp, uarmg);
-                if (uarmf) m_inityour(mtmp, uarmf);
-                if (uarmu) m_inityour(mtmp, uarmu);
-                /* same chance for an amulet of reflection as other
-                   angelic beings have for a shield of reflection */
-                if (!rn2(4)) (void)mongets(mtmp, AMULET_OF_REFLECTION);
-            } else {
-                /* create minion stuff; can't use mongets */
-                otmp = mksobj(LONG_SWORD, FALSE, FALSE);
+            m_initthrow(mtmp, LIGHT_ARROW, 50);
+            (void) mongets(mtmp, rnd_defensive_item(mtmp));
+            (void) mongets(mtmp, rnd_misc_item(mtmp));
+            break;
+        case PM_HERALD_ARCHON:
+            (void) mongets(mtmp, BUGLE);
+            otmp = mksobj(FLAIL, FALSE, FALSE);
+            bless(otmp);
+            otmp->oerodeproof = TRUE;
+            otmp->spe = rn2(4);
+            (void) mpickobj(mtmp, otmp);
 
-                /* maybe make it special */
-                if (!rn2(20) || is_lord(ptr))
-                    otmp = oname(otmp,
-                                artiname(rn2(2) ? ART_DEMONBANE : ART_SUNSWORD));
-                bless(otmp);
-                otmp->oerodeproof = TRUE;
-                otmp->spe = rn2(4);
-                (void) mpickobj(mtmp, otmp);
+            otmp = mksobj(!rn2(4) || is_lord(ptr) ? SHIELD_OF_REFLECTION
+                                                  : LARGE_SHIELD,
+                          FALSE, FALSE);
+            /* uncurse(otmp); -- mksobj(,FALSE,) item is always uncursed */
+            otmp->oerodeproof = TRUE;
+            otmp->spe = 0;
+            (void) mpickobj(mtmp, otmp);
+            break;
+        default:
+            if (humanoid(ptr)) {
+                if (mm == PM_ALEAX) {
+                    /* mimic your weapon */
+                    if (uwep && (uwep->oclass == WEAPON_CLASS || is_weptool(uwep)))
+                        m_inityour(mtmp, uwep);
+                    else (void) mongets(mtmp, LONG_SWORD);
+                    if (uswapwep && (uswapwep->oclass == WEAPON_CLASS ||
+                                is_weptool(uswapwep)))
+                        m_inityour(mtmp, uswapwep);
+                    if (uquiver && (is_ammo(uquiver) || is_missile(uquiver)))
+                        m_inityour(mtmp, uquiver);
 
-                otmp = mksobj(!rn2(4) || is_lord(ptr) ? SHIELD_OF_REFLECTION
-                                                    : LARGE_SHIELD,
-                            FALSE, FALSE);
-                /* uncurse(otmp); -- mksobj(,FALSE,) item is always uncursed */
-                otmp->oerodeproof = TRUE;
-                otmp->spe = 0;
-                (void) mpickobj(mtmp, otmp);
+                    /* mimic your armor */
+                    if (uarm) m_inityour(mtmp, uarm);
+                    if (uarmc) m_inityour(mtmp, uarmc);
+                    if (uarmh) m_inityour(mtmp, uarmh);
+                    if (uarms) m_inityour(mtmp, uarms);
+                    if (uarmg) m_inityour(mtmp, uarmg);
+                    if (uarmf) m_inityour(mtmp, uarmf);
+                    if (uarmu) m_inityour(mtmp, uarmu);
+                    /* same chance for an amulet of reflection as other
+                    angelic beings have for a shield of reflection */
+                    if (!rn2(4)) (void)mongets(mtmp, AMULET_OF_REFLECTION);
+                } else {
+                    /* create minion stuff; can't use mongets */
+                    otmp = mksobj(LONG_SWORD, FALSE, FALSE);
+
+                    /* maybe make it special */
+                    if (!rn2(20) || is_lord(ptr))
+                        otmp = oname(otmp,
+                                    artiname(rn2(2) ? ART_DEMONBANE : ART_SUNSWORD));
+                    bless(otmp);
+                    otmp->oerodeproof = TRUE;
+                    otmp->spe = rn2(4);
+                    (void) mpickobj(mtmp, otmp);
+
+                    otmp = mksobj(!rn2(4) || is_lord(ptr) ? SHIELD_OF_REFLECTION
+                                                        : LARGE_SHIELD,
+                                FALSE, FALSE);
+                    /* uncurse(otmp); -- mksobj(,FALSE,) item is always uncursed */
+                    otmp->oerodeproof = TRUE;
+                    otmp->spe = 0;
+                    (void) mpickobj(mtmp, otmp);
+                }
             }
+            break;
         }
-        break;
-
     case S_GNOLL:
         switch (mm) {
             case PM_GNOLL:
@@ -1657,6 +1687,9 @@ makemon(register struct permonst *ptr,
             case PM_HEADLESS_RIDER:
                 mount_monster(mtmp, PM_WARHORSE);
                 break;
+            case PM_NAZGUL:
+                mount_monster(mtmp, PM_FELL_BEAST);
+                break;
             #if 0
             case PM_DARK_KNIGHT:
                 mount_monster(mtmp, Inhell ? PM_NIGHTMARE : PM_PONY);
@@ -2046,6 +2079,8 @@ rndmonst(void)
         if (uncommon(mndx))
             continue;
         if (Inhell && (ptr->geno & G_NOHELL))
+            continue;
+        if (In_endgame(&u.uz) && (ptr->geno & G_NOPLANES))
             continue;
         if (is_domestic(ptr) && blkmarlev)
             continue;

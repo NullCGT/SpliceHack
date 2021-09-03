@@ -1160,6 +1160,8 @@ static const short grownups[][2] = {
     { PM_KRAKEN, PM_THING_FROM_BELOW },
     { PM_GHOST, PM_SPECTRE },
     { PM_MARTIAL_ARTIST, PM_GRANDMASTER },
+    { PM_MOVANIC_DEVA, PM_MONADIC_DEVA },
+    { PM_MONADIC_DEVA, PM_ASTRAL_DEVA },
     { NON_PM, NON_PM }
 };
 

@@ -2039,6 +2039,21 @@ armor_to_dragon(int atyp)
     case YELLOW_DRAGON_SCALE_MAIL:
     case YELLOW_DRAGON_SCALES:
         return PM_YELLOW_DRAGON;
+    case RAZOR_DRAGON_SCALE_MAIL:
+    case RAZOR_DRAGON_SCALES:
+        return PM_RAZOR_DRAGON;
+    case OOZE_DRAGON_SCALE_MAIL:
+    case OOZE_DRAGON_SCALES:
+        return PM_OOZE_DRAGON;
+    case FILTH_DRAGON_SCALE_MAIL:
+    case FILTH_DRAGON_SCALES:
+        return PM_FILTH_DRAGON;
+    case HEX_DRAGON_SCALE_MAIL:
+    case HEX_DRAGON_SCALES:
+        return PM_HEX_DRAGON;
+    case VOID_DRAGON_SCALE_MAIL:
+    case VOID_DRAGON_SCALES:
+        return PM_VOID_DRAGON;
     default:
         return -1;
     }

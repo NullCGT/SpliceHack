@@ -525,6 +525,11 @@ make_corpse(register struct monst* mtmp, unsigned int corpseflags)
     case PM_GREEN_DRAGON:
     case PM_GOLD_DRAGON:
     case PM_YELLOW_DRAGON:
+    case PM_OOZE_DRAGON:
+    case PM_RAZOR_DRAGON:
+    case PM_FILTH_DRAGON:
+    case PM_HEX_DRAGON:
+    case PM_VOID_DRAGON:
         /* Make dragon scales.  This assumes that the order of the
            dragons is the same as the order of the scales. */
         if (!rn2(mtmp->mrevived ? 20 : 3)) {
@@ -4550,7 +4555,7 @@ select_newcham_form(struct monst* mon)
     switch (mon->cham) {
     case PM_SANDESTIN:
         if (rn2(7))
-            mndx = pick_nasty(mons[PM_ARCHON].difficulty - 1);
+            mndx = pick_nasty(mons[PM_THRONE_ARCHON].difficulty - 1);
         break;
     case PM_DOPPELGANGER:
         if (!rn2(7)) {

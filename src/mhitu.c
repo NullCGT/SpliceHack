@@ -1758,7 +1758,7 @@ gazemu(struct monst *mtmp, struct attack *mattk)
                 already = (mtmp->mcansee == 0);
                 /* Archons gaze every round; we don't want cancelled ones
                    giving the "seems puzzled/dazzled" message that often */
-                if (mtmp->mcan && mtmp->data == &mons[PM_ARCHON] && rn2(5))
+                if (mtmp->mcan && mtmp->data == &mons[PM_THRONE_ARCHON] && rn2(5))
                     react = -1;
             } else {
                 int blnd = d((int) mattk->damn, (int) mattk->damd);

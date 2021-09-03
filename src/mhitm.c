@@ -686,7 +686,7 @@ gazemm(struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
     char buf[BUFSZ];
     /* an Archon's gaze affects target even if Archon itself is blinded */
-    boolean archon = (magr->data == &mons[PM_ARCHON]
+    boolean archon = (magr->data == &mons[PM_THRONE_ARCHON]
                       && mattk->adtyp == AD_BLND),
             altmesg = (archon && !magr->mcansee);
 

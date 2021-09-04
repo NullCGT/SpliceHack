@@ -6357,7 +6357,7 @@ trapname(int ttyp, boolean override)
             copynchars(roletrap,
                        rn2(3) ? ((fem && g.urole.name.f) ? g.urole.name.f
                                                          : g.urole.name.m)
-                              : rank_of(u.ulevel, Role_switch, fem),
+                              : rank_of(u.role_levels[flags.initrole], Role_switch, fem),
                        (int) (sizeof roletrap - sizeof " trap"));
             Strcat(roletrap, " trap");
             return lcase(roletrap);

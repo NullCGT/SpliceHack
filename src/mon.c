@@ -300,7 +300,8 @@ zombie_maker(struct monst *mon)
     switch (pm->mlet) {
     case S_ZOMBIE:
         /* Z-class monsters that aren't actually zombies go here */
-        if (pm == &mons[PM_GHOUL] || pm == &mons[PM_SKELETON])
+        if (is_ghoul(pm) || pm == &mons[PM_SKELETON]
+            || pm == &mons[PM_BONEWALKER])
             return FALSE;
         return TRUE;
     case S_LICH:
@@ -525,6 +526,11 @@ make_corpse(register struct monst* mtmp, unsigned int corpseflags)
     case PM_GREEN_DRAGON:
     case PM_GOLD_DRAGON:
     case PM_YELLOW_DRAGON:
+    case PM_OOZE_DRAGON:
+    case PM_RAZOR_DRAGON:
+    case PM_FILTH_DRAGON:
+    case PM_HEX_DRAGON:
+    case PM_VOID_DRAGON:
         /* Make dragon scales.  This assumes that the order of the
            dragons is the same as the order of the scales. */
         if (!rn2(mtmp->mrevived ? 20 : 3)) {
@@ -554,6 +560,7 @@ make_corpse(register struct monst* mtmp, unsigned int corpseflags)
     case PM_VAMPIRE_LEADER:
     case PM_VAMPIRE_MAGE:
     case PM_NOSFERATU:
+    case PM_BAOBHAN_SITH:
         /* include mtmp in the mkcorpstat() call */
         num = undead_to_corpse(mndx);
         corpstatflags |= CORPSTAT_INIT;
@@ -1308,7 +1315,7 @@ register struct obj *otmp;
                 if (cansee(mtmp->mx, mtmp->my) && flags.verbose)
                     pline("%s attempts to infest %s!", Monnam(mtmp),
                       distant_name(otmp,doname));
-                (void) revive_corpse(otmp);
+                (void) revive_corpse(otmp, FALSE);
                 return;
             }
             if (cansee(mtmp->mx,mtmp->my) && flags.verbose)
@@ -1357,7 +1364,7 @@ meatobj(struct monst* mtmp) /* for gelatinous cubes and other hungry monsters */
         /* touch sensitive items */
         if (otmp->otyp == CORPSE && is_rider(&mons[otmp->corpsenm])) {
             int ox = otmp->ox, oy = otmp->oy;
-            boolean revived_it = revive_corpse(otmp);
+            boolean revived_it = revive_corpse(otmp, FALSE);
 
             newsym(ox, oy);
             /* Rider corpse isn't just inedible; can't engulf it either */
@@ -1516,7 +1523,7 @@ meatcorpse(struct monst* mtmp) /* for purple worms and other voracious monsters 
             || (touch_petrifies(corpsepm) && !resists_ston(mtmp)))
             continue;
         if (is_rider(corpsepm)) {
-            boolean revived_it = revive_corpse(otmp);
+            boolean revived_it = revive_corpse(otmp, FALSE);
 
             newsym(x, y); /* corpse is gone; mtmp might be too so do this now
                              since we're bypassing the bottom of the loop */
@@ -2913,7 +2920,7 @@ corpse_chance(
     struct obj *otmp;
     int i, tmp, x, y;
 
-    if (mdat == &mons[PM_VLAD_THE_IMPALER] ||
+    if (mdat == &mons[PM_VLAD_THE_IMPALER] || mdat == &mons[PM_ALUCARD] ||
         (mdat->mlet == S_LICH && mdat != &mons[PM_WORM_THAT_WALKS])) {
         if (cansee(mon->mx, mon->my) && !was_swallowed)
             pline("%s body crumbles into dust.", s_suffix(Monnam(mon)));
@@ -3851,20 +3858,22 @@ m_respond(struct monst* mtmp)
     /* Supporter monsters. */
     if (is_supporter(mtmp->data)) {
         if (canseemon(mtmp)) {
-            pline("%s utters a complex chant.", Monnam(mtmp));
+            if (mtmp->data == &mons[PM_HEARTH_ARCHON]) {
+                verbalize("It's going to be OK.");
+            } else {
+                pline("%s utters a complex chant.", Monnam(mtmp));
+            }
         }
         for (mon = fmon; mon; mon = mon->nmon) {
             if (DEADMONSTER(mon))
                 continue;
             if (mon == mtmp)
                 continue;
-            if (!same_race(mtmp->data, mon->data))
+            if (mtmp->mpeaceful && !mon->mpeaceful)
+                continue;
+            if (!mtmp->mpeaceful && mon->mpeaceful)
                 continue;
             switch(monsndx(mtmp->data)) {
-            case PM_ORC_SHAMAN:
-            case PM_GNOLL_SHAMAN:
-            case PM_KOBOLD_SHAMAN:
-            case PM_RATMAN_SQUEAKER:
             default:
                 if (mon->mhp < mon->mhpmax && canseemon(mon)) {
                     pline("%s looks better.", Monnam(mon));
@@ -4433,6 +4442,10 @@ pickvampshape(struct monst* mon)
             break; /* leave mndx as is */
         wolfchance = 3;
     /*FALLTHRU*/
+    case PM_ALUCARD:
+        if (!uppercase_only) {
+            mndx = PM_BARGHEST;
+        }
     case PM_VAMPIRE_MAGE:
     case PM_VAMPIRE_LEADER: /* vampire lord or Vlad can become wolf */
         if (!rn2(wolfchance) && !uppercase_only) {
@@ -4550,7 +4563,7 @@ select_newcham_form(struct monst* mon)
     switch (mon->cham) {
     case PM_SANDESTIN:
         if (rn2(7))
-            mndx = pick_nasty(mons[PM_ARCHON].difficulty - 1);
+            mndx = pick_nasty(mons[PM_THRONE_ARCHON].difficulty - 1);
         break;
     case PM_DOPPELGANGER:
         if (!rn2(7)) {
@@ -4579,6 +4592,8 @@ select_newcham_form(struct monst* mon)
     case PM_VAMPIRE_MAGE:
     case PM_VAMPIRE_LEADER:
     case PM_VAMPIRE:
+    case PM_BAOBHAN_SITH:
+    case PM_ALUCARD:
         mndx = pickvampshape(mon);
         break;
     case NON_PM: /* ordinary */

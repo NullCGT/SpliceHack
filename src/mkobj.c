@@ -302,6 +302,7 @@ mkbox_cnts(struct obj* box)
             otmp->age = 0L;
             if (otmp->timed) {
                 (void) stop_timer(ROT_CORPSE, obj_to_any(otmp));
+                (void) stop_timer(MOLDY_CORPSE, obj_to_any(otmp));
                 (void) stop_timer(REVIVE_MON, obj_to_any(otmp));
             }
         } else {
@@ -353,7 +354,7 @@ rndmonnum(void)
         return monsndx(ptr);
 
     /* Plan B: get any common monster */
-    excludeflags = G_UNIQ | G_NOGEN | (Inhell ? G_NOHELL : G_HELL);
+    excludeflags = G_UNIQ | G_NOGEN | (Inhell ? G_NOHELL : G_HELL) | (In_endgame(&u.uz) ? G_NOPLANES : G_PLANES);
     do {
         i = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
         ptr = &mons[i];
@@ -1338,6 +1339,19 @@ start_corpse_timeout(struct obj* body)
         when = rn1(15, 5); /* 5..19 */
     }
 
+    if (action == ROT_CORPSE && !acidic(&mons[body->corpsenm])) {
+        /* Corpses get moldy.
+         * TODO: allow green molds to grow on acidic corpses. */
+        long age;
+        for (age = TAINT_AGE + 1; age <= ROT_AGE; age++) {
+            if (!rn2(MOLDY_CHANCE)) {    /* "revives" as a random s_fungus */
+                action = MOLDY_CORPSE;
+                when = age;
+                break;
+            }
+        }
+    }
+
     (void) start_timer(when, TIMER_OBJECT, action, obj_to_any(body));
 }
 
@@ -1652,6 +1666,7 @@ const int matac[] = {
      5,  // COLD IRON
      6,  // MITHRIL
      3,  // PLASTIC
+     3,  // SLIME
      5,  // GLASS
      7,  // GEMSTONE
      5,  // SHADOW
@@ -2068,6 +2083,10 @@ obj_timer_checks(
     if (otmp->otyp == CORPSE && (on_floor || buried) && is_ice(x, y)) {
         tleft = stop_timer(action, obj_to_any(otmp));
         if (tleft == 0L) {
+            action = MOLDY_CORPSE;
+            tleft = stop_timer(action, obj_to_any(otmp));
+        }
+        if (tleft == 0L) {
             action = REVIVE_MON;
             tleft = stop_timer(action, obj_to_any(otmp));
         }
@@ -2094,6 +2113,10 @@ obj_timer_checks(
     } else if (force < 0 || (otmp->otyp == CORPSE && otmp->on_ice
                              && !((on_floor || buried) && is_ice(x, y)))) {
         tleft = stop_timer(action, obj_to_any(otmp));
+        if (tleft == 0L) {
+            action = MOLDY_CORPSE;
+            tleft = stop_timer(action, obj_to_any(otmp));
+        }
         if (tleft == 0L) {
             action = REVIVE_MON;
             tleft = stop_timer(action, obj_to_any(otmp));
@@ -3389,7 +3412,7 @@ warp_material(obj,by_you)
 struct obj* obj;
 boolean by_you;
 {
-    if (obj->oartifact)
+    if (obj->oartifact && rn2(20))
         return FALSE;
     int origmat = obj->material;
 
@@ -3397,11 +3420,16 @@ boolean by_you;
     int newmat;
     while (j < 1000) {
         newmat = 1 + rn2(NUM_MATERIAL_TYPES);
-        if (newmat != origmat && valid_obj_material(obj, newmat))
+        if (newmat != origmat && newmat != VEGGY
+            && newmat != DRAGON_HIDE && newmat != FLESH
+            && newmat != LIQUID)
             break;
         j++;
     }
-    if (valid_obj_material(obj, newmat) && !Hate_material(newmat))
+    /* This can cause some *very* weird materials. DANGEROUS hack. */
+    if (!Hate_material(newmat) && newmat != VEGGY 
+        && newmat != DRAGON_HIDE && newmat != FLESH
+        && newmat != LIQUID)
         obj->material = newmat;
     else
         /* can use a 0 in the list to default to the base material */

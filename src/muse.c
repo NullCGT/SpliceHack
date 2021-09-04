@@ -535,8 +535,14 @@ find_defensive(struct monst* mtmp)
         }
     }
 
-    if (nohands(mtmp->data)) /* can't use objects */
+    if (nohands(mtmp->data) && !is_dragon(mtmp->data)) /* can't use objects */
         goto botm;
+
+    if (mtmp->data == &mons[PM_HERALD_ARCHON]
+          && (obj = m_carrying(mtmp, BUGLE)) != 0) {
+        g.m.defensive = obj;
+        g.m.has_defense = MUSE_BUGLE;
+    }
 
     if (is_mercenary(mtmp->data) && (obj = m_carrying(mtmp, BUGLE)) != 0) {
         int xx, yy;
@@ -740,9 +746,18 @@ use_defensive(struct monst* mtmp)
     case MUSE_BUGLE:
         if (vismon)
             pline("%s plays %s!", Monnam(mtmp), doname(otmp));
+        else if (!Deaf && mtmp->data == &mons[PM_HERALD_ARCHON])
+            if (Hallucination)
+                pline("Hark, the herald archon sings!");
+            else
+                You_hear("a piercing series of trumpet blasts!");
         else if (!Deaf)
             You_hear("a bugle playing reveille!");
-        awaken_soldiers(mtmp);
+        if (mtmp->data == &mons[PM_HERALD_ARCHON]) {
+            (void) makemon(mkclass(S_ANGEL, 0), 0, 0, NO_MM_FLAGS);
+            aggravate();
+        } else
+            awaken_soldiers(mtmp);
         return 2;
     case MUSE_WAN_TELEPORTATION_SELF:
         if ((mtmp->isshk && inhishop(mtmp)) || mtmp->isgd || mtmp->ispriest)
@@ -2002,6 +2017,7 @@ rnd_offensive_item(struct monst* mtmp)
 #define MUSE_BAG 10
 /* splice muse */
 #define MUSE_POT_REFLECT 11
+#define MUSE_CORPSE 12
 #define MUSE_WISH 15
 
 boolean
@@ -2133,6 +2149,11 @@ find_misc(struct monst* mtmp)
             && !mtmp->mcan && m_canseeu(mtmp) && !mtmp->mpeaceful) {
             g.m.misc = NULL;
             g.m.has_misc = MUSE_WISH;
+        }
+        nomore(MUSE_CORPSE);
+        if (obj->otyp == CORPSE && mtmp->data == &mons[PM_HEARTH_ARCHON]) {
+            g.m.misc = obj;
+            g.m.has_misc = MUSE_CORPSE;
         }
         nomore(MUSE_POT_REFLECT);
         if (obj->otyp == POT_REFLECTION && !mtmp->mreflect &&
@@ -2398,6 +2419,16 @@ use_misc(struct monst* mtmp)
     case MUSE_WISH:
         mmake_wish(mtmp);
         mtmp->mcan = 1;
+        return 2;
+    case MUSE_CORPSE:
+        if (canspotmon(mtmp) && !Blind) {
+            pline("%s sets %s down and breathes life back into its corpse.", Monnam(mtmp),
+                the(corpse_xname(otmp, (const char *) 0, CXN_SINGULAR)));
+            (void) revive_corpse(otmp, FALSE);
+        }
+        if (!Deaf) {
+            verbalize("Thy home beckons thee, young one. Thou art needed in this final hour.");
+        }
         return 2;
     case MUSE_POT_REFLECT:
         mquaffmsg(mtmp, otmp);
@@ -2681,7 +2712,8 @@ searches_for_item(struct monst* mon, struct obj* obj)
             return (boolean) (((mon->misc_worn_check & W_ARMG) != 0L
                                && touch_petrifies(&mons[obj->corpsenm]))
                               || (!resists_ston(mon)
-                                  && cures_stoning(mon, obj, FALSE)));
+                                  && cures_stoning(mon, obj, FALSE))
+                              || mon->data == &mons[PM_HEARTH_ARCHON]);
         if (typ == TIN)
             return (boolean) (mcould_eat_tin(mon)
                               && (!resists_ston(mon)

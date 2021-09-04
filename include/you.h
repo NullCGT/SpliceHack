@@ -499,6 +499,7 @@ struct you {
     int skills_advanced;     /* # of advances made so far */
     xchar skill_record[P_SKILL_LIMIT]; /* skill advancements */
     struct skills weapon_skills[P_NUM_SKILLS];
+    int role_levels[17]; /* Level in each role. Index into using the role flag. */
     boolean twoweap;         /* KMH -- Using two-weapon combat */
     short mcham;             /* vampire mndx if shapeshifted to bat/cloud */
     schar uachieved[N_ACH];  /* list of achievements in the order attained */

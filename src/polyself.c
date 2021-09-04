@@ -305,7 +305,8 @@ newman(void)
     if (g.sex_change_ok && !rn2(10))
         change_sex();
 
-    adjabil(oldlvl, (int) u.ulevel);
+    adjabil(oldlvl, (int) u.ulevel, flags.initrole, u.role_levels[flags.initrole], u.role_levels[flags.initrole] + newlvl);
+    u.role_levels[flags.initrole] += newlvl;
 
     /* random experience points for the new experience level */
     u.uexp = rndexp(FALSE);
@@ -2039,6 +2040,21 @@ armor_to_dragon(int atyp)
     case YELLOW_DRAGON_SCALE_MAIL:
     case YELLOW_DRAGON_SCALES:
         return PM_YELLOW_DRAGON;
+    case RAZOR_DRAGON_SCALE_MAIL:
+    case RAZOR_DRAGON_SCALES:
+        return PM_RAZOR_DRAGON;
+    case OOZE_DRAGON_SCALE_MAIL:
+    case OOZE_DRAGON_SCALES:
+        return PM_OOZE_DRAGON;
+    case FILTH_DRAGON_SCALE_MAIL:
+    case FILTH_DRAGON_SCALES:
+        return PM_FILTH_DRAGON;
+    case HEX_DRAGON_SCALE_MAIL:
+    case HEX_DRAGON_SCALES:
+        return PM_HEX_DRAGON;
+    case VOID_DRAGON_SCALE_MAIL:
+    case VOID_DRAGON_SCALES:
+        return PM_VOID_DRAGON;
     default:
         return -1;
     }
@@ -2060,6 +2076,10 @@ polysense(void)
     case PM_BABY_PURPLE_WORM:
         warnidx = PM_SHRIEKER;
         break;
+    case PM_BAOBHAN_SITH:
+        g.context.warntype.polyd = MH_HUMAN;
+        HWarn_of_mon |= FROMRACE;
+        return;
     case PM_VAMPIRE:
     case PM_VAMPIRE_LEADER:
     case PM_VAMPIRE_MAGE:

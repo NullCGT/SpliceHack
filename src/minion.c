@@ -526,8 +526,8 @@ dlord(aligntyp atyp)
 int
 llord(void)
 {
-    if (!(g.mvitals[PM_ARCHON].mvflags & G_GONE))
-        return PM_ARCHON;
+    if (!(g.mvitals[PM_THRONE_ARCHON].mvflags & G_GONE))
+        return PM_THRONE_ARCHON;
 
     return lminion(); /* approximate */
 }

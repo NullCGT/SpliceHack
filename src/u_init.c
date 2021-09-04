@@ -970,8 +970,8 @@ u_init(void)
     u.uhp = u.uhpmax = newhp();
     u.uen = u.uenmax = newpw();
     u.uspellprot = 0;
-    adjabil(0, 1);
-    u.ulevel = u.ulevelmax = 1;
+    adjabil(0, 1, flags.initrole, 0, 1);
+    u.ulevel = u.ulevelmax = u.role_levels[flags.initrole] = 1;
 
     /* Init heaven or hell. */
     if (u.uroleplay.heaven_or_hell) {
@@ -1347,6 +1347,93 @@ u_init(void)
     return;
 }
 
+const struct def_skill*
+get_role_skills(int role) {
+    const struct def_skill *skills;
+    switch (roles[role].malenum) {
+    case PM_ARCHEOLOGIST:
+        skills = Skill_A;
+        break;
+    case PM_BARBARIAN:
+        skills = Skill_B;
+        break;
+    case PM_CAVE_DWELLER:
+        skills = Skill_C;
+        break;
+    case PM_CARTOMANCER:
+        skills = Skill_Car;
+        break;
+    case PM_CONVICT:
+        skills = Skill_Con;
+        break;
+    case PM_DRAGON_RIDER:
+        skills = Skill_D;
+        break;
+    case PM_HEALER:
+        skills = Skill_H;
+        break;
+    case PM_KNIGHT:
+        skills = Skill_K;
+        break;
+    case PM_MONK:
+        skills = Skill_Mon;
+        break;
+    case PM_CLERIC:
+        skills = Skill_P;
+        break;
+    case PM_PIRATE:
+        skills = Skill_Pir;
+        break;
+    case PM_RANGER:
+        skills = Skill_Ran;
+        break;
+    case PM_ROGUE:
+        skills = Skill_R;
+        break;
+    case PM_SAMURAI:
+        skills = Skill_S;
+        break;
+    case PM_TOURIST:
+        skills = Skill_T;
+        break;
+    case PM_VALKYRIE:
+        skills = Skill_V;
+        break;
+    case PM_WIZARD:
+        skills = Skill_W;
+        break;
+    default:
+        skills = 0; /* lint suppression */
+        break;
+    }
+    return skills;
+}
+
+void
+switch_role_skills(const struct def_skill *class_skill)
+{
+    int skmax, skill;
+    /* walk through array to set skill maximums */
+    for (skill = 0; skill < P_NUM_SKILLS; skill++) {
+        P_RESTRICTED(skill) = TRUE;
+    }
+    for (; class_skill->skill != P_NONE; class_skill++) {
+        skmax = class_skill->skmax;
+        skill = class_skill->skill;
+        P_RESTRICTED(skill) = FALSE;
+        P_MAX_SKILL(skill) = skmax;
+        if (P_SKILL(skill) == P_ISRESTRICTED) { /* skill pre-set */
+            P_SKILL(skill) = P_UNSKILLED;
+            P_RESTRICTED(skill) = FALSE;
+        }
+    }
+    if (Race_if(PM_MERFOLK)) {
+        P_MAX_SKILL(P_TRIDENT) = P_EXPERT;
+        P_RESTRICTED(P_TRIDENT) = FALSE;
+    }
+
+}
+
 /* skills aren't initialized, so we use the role-specific skill lists */
 static boolean
 restricted_spell_discipline(int otyp)
@@ -1384,6 +1471,9 @@ restricted_spell_discipline(int otyp)
         break;
     case PM_CLERIC:
         skills = Skill_P;
+        break;
+    case PM_PIRATE:
+        skills = Skill_Pir;
         break;
     case PM_RANGER:
         skills = Skill_Ran;

@@ -28,7 +28,6 @@
 
 #include "hack.h"
 
-static void awaken_monsters(int);
 static void put_monsters_to_sleep(int);
 static void charm_snakes(int);
 static void calm_nymphs(int);
@@ -40,7 +39,7 @@ static int do_improvisation(struct obj *);
  * Wake every monster in range...
  */
 
-static void
+void
 awaken_monsters(int distance)
 {
     register struct monst *mtmp;

@@ -43,6 +43,13 @@
     (is_undead(ptr) || is_demon(ptr) || is_were(ptr) \
      || ptr == &mons[PM_DEATH] || ptr == &mons[PM_GRIM_REAPER])
 
+#define resists_death(ptr) \
+    ((ptr == &mons[PM_MOVANIC_DEVA]) || \
+     (ptr == &mons[PM_MONADIC_DEVA]) || \
+     (ptr == &mons[PM_ASTRAL_DEVA]) || \
+     (ptr == &mons[PM_PLANETAR]) || \
+     (ptr == &mons[PM_SOLAR]))
+
 #define resists_sickness(ptr) \
     (is_undead(ptr) || amorphous(ptr) || is_rider(ptr) \
     || is_demon(ptr) \
@@ -89,6 +96,7 @@
 #define has_horns(ptr) (num_horns(ptr) > 0)
 #define has_beak(ptr) (is_bird(ptr) || \
                         (ptr) == &mons[PM_TENGU] || \
+                        (ptr) == &mons[PM_FELL_BEAST] || \
                         (ptr) == &mons[PM_VROCK])
 #define is_bear(ptr) ((ptr) == &mons[PM_BUGBEAR] || \
                       (ptr) == &mons[PM_OWLBEAR] || \
@@ -224,6 +232,10 @@
         || ((ptr) == &mons[PM_LEMURE] \
             || (ptr) == &mons[PM_MANES] \
             || (ptr) == &mons[PM_HELLCAT]))
+#define is_ghoul(ptr) ((ptr) == &mons[PM_GHOUL] \
+                       || (ptr) == &mons[PM_GHAST] \
+                       || (ptr) == &mons[PM_GHOUL_MAGE] \
+                       || (ptr) == &mons[PM_VOMITOUS_GHOUL])
 #define is_minion(ptr) (((ptr)->mflags2 & M2_MINION) != 0L)
 #define likes_gold(ptr) (((ptr)->mflags2 & M2_GREEDY) != 0L)
 #define likes_gems(ptr) (((ptr)->mflags2 & M2_JEWELS) != 0L)
@@ -368,6 +380,7 @@
 
 #define avoids_player(ptr) \
     (is_unicorn(ptr) \
+     || (ptr) == &mons[PM_ALCHEMIST] \
      || (ptr) == &mons[PM_MAGICAL_EYE])
 
 #define horizontal_mover(ptr) \
@@ -378,7 +391,8 @@
 
 #define is_bones_monster(ptr) ((ptr) == &mons[PM_GHOST] || (ptr) == &mons[PM_GHOUL]        \
                                || (ptr) == &mons[PM_VAMPIRE] || (ptr) == &mons[PM_WRAITH]  \
-                               || (ptr) == &mons[PM_GREEN_SLIME] || (ptr)->mlet == S_MUMMY)
+                               || (ptr) == &mons[PM_GREEN_SLIME] || (ptr)->mlet == S_MUMMY \
+                               || (ptr) == &mons[PM_BAOBHAN_SITH])
 /* Noise that a monster makes when engaged in combat. Assume that vocalizations
  * account for some noise, so monsters capable of vocalizing make more.
  * This gets used as an argument to wake_nearto, which expects a squared value,

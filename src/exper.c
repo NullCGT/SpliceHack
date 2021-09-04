@@ -9,6 +9,7 @@
 #endif
 
 static int enermod(int);
+static void levelup_menu(void);
 
 long
 newuexp(lev)
@@ -232,6 +233,8 @@ void
 losexp(const char *drainer) /* cause of death, if drain should be fatal */
 {
     register int num;
+    boolean found_drainable = FALSE;
+    int i, drained_role;
 
     /* override life-drain resistance when handling an explicit
        wizard mode request to reduce level; never fatal though */
@@ -248,8 +251,33 @@ losexp(const char *drainer) /* cause of death, if drain should be fatal */
         pline("%s level %d.", Goodbye(), u.ulevel);
     if (u.ulevel > 1) {
         u.ulevel -= 1;
+        /* This bit of ugly code handles level drains that occur when a character
+           has levels in a number of roles. Here's what happens:
+           1. Try to drain the current role.
+           2. If the current role is level one, drain a different role.
+           3. If all roles are level one, then kill the character for daring to make
+              things so complicated. */
+        if (u.role_levels[flags.initrole] > 1) {
+            u.role_levels[flags.initrole] -= 1;
+            drained_role = flags.initrole;
+        } else {
+            for (i = 0; i < NUM_ROLES; i++) {
+                if (u.role_levels[i] > 1) {
+                    u.role_levels[i]--;
+                    drained_role = i;
+                    found_drainable = TRUE;
+                    break;
+                }
+            }
+            if (!found_drainable && drainer) {
+                g.killer.format = KILLED_BY;
+                if (g.killer.name != drainer)
+                    Strcpy(g.killer.name, drainer);
+                done(DIED);
+            }
+        }
         /* remove intrinsic abilities */
-        adjabil(u.ulevel + 1, u.ulevel);
+        adjabil(u.ulevel + 1, u.ulevel, drained_role, u.role_levels[drained_role] + 1, u.role_levels[drained_role]);
     } else {
         if (drainer) {
             g.killer.format = KILLED_BY;
@@ -315,6 +343,10 @@ pluslvl(boolean incr) /* true iff via incremental experience growth */
     if (!incr)
         You_feel("more experienced.");
 
+    /* Role selection */
+    if (u.ulevel < MAXULEV)
+        levelup_menu();
+
     if (!u.uroleplay.marathon && !u.uroleplay.heaven_or_hell) {
         /* increase hit points (when polymorphed, do monster form first
            in order to retain normal human/whatever increase for later) */
@@ -347,12 +379,13 @@ pluslvl(boolean incr) /* true iff via incremental experience growth */
             u.uexp = newuexp(u.ulevel);
         }
         ++u.ulevel;
+        ++u.role_levels[flags.initrole];
         pline("Welcome %sto experience level %d.",
               (u.ulevelmax < u.ulevel) ? "" : "back ",
               u.ulevel);
         if (u.ulevelmax < u.ulevel)
             u.ulevelmax = u.ulevel;
-        adjabil(u.ulevel - 1, u.ulevel); /* give new intrinsics */
+        adjabil(u.ulevel - 1, u.ulevel, flags.initrole, u.role_levels[flags.initrole] - 1, u.role_levels[flags.initrole]); /* give new intrinsics */
         newrank = xlev_to_rank(u.ulevel);
         if (newrank > oldrank)
             record_achievement(achieve_rank(newrank));
@@ -386,6 +419,88 @@ rndexp(boolean gaining) /* gaining XP via potion vs setting XP for polyself */
             result = u.uexp;
     }
     return result;
+}
+
+/* For multiclassing */
+static void
+levelup_menu(void) {
+    winid win;
+    anything any;
+    int i, n;
+    boolean role_ok;
+    menu_item *selected;
+    char rolenamebuf[50];
+    char qbuf[BUFSZ];
+    short old_ldrnum, old_neminum, old_guardnum, old_questarti;
+    char *old_ngod;
+    char *old_lgod;
+    char *old_cgod;
+    char *old_filecode;
+
+
+    /* Convicts CANNOT switch roles. The player can certanly switch into convict if they want, although I
+       am not sure what purpose they would do so. Perhaps to defeat the rat king or prepare for demogorgon? - Kes */
+    if (Role_if(PM_CONVICT))
+        return;
+
+    win = create_nhwindow(NHW_MENU);
+    start_menu(win, MENU_BEHAVE_STANDARD);
+    any = cg.zeroany; /* zero out all bits */
+    for (i = 0; roles[i].name.m; i++) {
+        role_ok = ((ok_role(i, flags.initrace, flags.female, u.ualign.type)
+                    && ok_race(i, flags.initrace, flags.female, u.ualign.type)
+                    && ok_gend(i, flags.initrace, flags.female, u.ualign.type)
+                    && ok_align(i, flags.initrace, flags.female, u.ualign.type))
+                  || i == flags.initrole);
+        if (!role_ok)
+            continue;
+        Strcpy(rolenamebuf, roles[i].name.m);
+        if (roles[i].name.f && flags.female == FEMALE) {
+            Strcpy(rolenamebuf, roles[i].name.f);
+        } else if (roles[i].name.n && flags.female == NEUTRAL) {
+            Strcpy(rolenamebuf, roles[i].name.n);
+        }
+        any.a_int = i + 1;
+        add_menu(win, &nul_glyphinfo, &any, 0, 0, i == flags.initrole ? ATR_INVERSE : ATR_NONE, rolenamebuf,
+                 (!role_ok) ? MENU_ITEMFLAGS_SELECTED : MENU_ITEMFLAGS_NONE);
+    }
+    end_menu(win, "Which role do you want to level up?");
+    n = select_menu(win, PICK_ONE, &selected);
+    destroy_nhwindow(win);
+    if (n > 0) n = selected[0].item.a_int - 1;
+
+    qbuf[0] = '\0';
+    Sprintf(qbuf, "Are you sure you want to switch your active role from %s to %s?", roles[flags.initrole].name.m, roles[n].name.m);
+    if (n == flags.initrole || n >= NUM_ROLES || n < 0 ||
+        yn(qbuf) == 'n')
+        return;
+    else {
+        /* Add index for save and reload */
+        if (!flags.original_role) flags.original_role = flags.initrole;
+        /* Get old quest and god info. */
+        old_ldrnum = g.urole.ldrnum;
+        old_neminum = g.urole.neminum;
+        old_guardnum = g.urole.guardnum;
+        old_questarti = g.urole.questarti;
+        old_ngod = g.urole.ngod;
+        old_lgod = g.urole.lgod;
+        old_cgod = g.urole.cgod;
+        old_filecode = g.urole.filecode;
+        /* Switch roles. */
+        flags.initrole = n;
+        g.urole = roles[flags.initrole];
+        switch_role_skills(get_role_skills(flags.initrole));
+        You("are now %s.", an(roles[flags.initrole].name.m));
+        /* Transfer over quest and god info. */
+        g.urole.ldrnum = old_ldrnum;
+        g.urole.neminum = old_neminum;
+        g.urole.guardnum = old_guardnum;
+        g.urole.questarti = old_questarti;
+        g.urole.ngod = old_ngod;
+        g.urole.lgod = old_lgod;
+        g.urole.cgod = old_cgod;
+        g.urole.filecode = old_filecode;
+    }
 }
 
 /*exper.c*/

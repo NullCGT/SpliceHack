@@ -2438,8 +2438,6 @@ dig_corridor(
                 crm->typ = ftyp;
                 if (nxcor && !rn2(50))
                     (void) mksobj_at(BOULDER, xx, yy, TRUE, FALSE);
-            } else {
-                crm->typ = SCORR;
             }
         } else if (crm->typ != ftyp && crm->typ != SCORR) {
             /* strange ... */

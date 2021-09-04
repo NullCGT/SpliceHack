@@ -1022,6 +1022,10 @@ m_move(register struct monst* mtmp, register int after)
     /* Zuggotomoy infests corpses. */
     if (ptr == &mons[PM_ZUGGOTOMOY] ||
         ptr == &mons[PM_ASPECT_OF_ZUGGOTOMOY] ||
+        ptr == &mons[PM_BROWN_MOLDIER] ||
+        ptr == &mons[PM_GREEN_MOLDIER] ||
+        ptr == &mons[PM_YELLOW_MOLDIER] ||
+        ptr == &mons[PM_RED_MOLDIER] ||
         ptr == &mons[PM_MAGGOT])
         minfestcorpse(mtmp);
 
@@ -1270,6 +1274,7 @@ m_move(register struct monst* mtmp, register int after)
                                      && !is_rider(&mons[otmp->corpsenm]))))
                          || (likemagic && index(magical, otmp->oclass))
                          || (uses_items && searches_for_item(mtmp, otmp))
+                         || (ptr == &mons[PM_HEARTH_ARCHON] && otmp->otyp == CORPSE)
                          || (likerock && otmp->otyp == BOULDER)
                          || (likegems && otmp->oclass == GEM_CLASS
                              && otmp->material != MINERAL)

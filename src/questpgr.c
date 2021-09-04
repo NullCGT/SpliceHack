@@ -195,7 +195,7 @@ convert_arg(char c)
         str = rolename_gender(flags.female);
         break;
     case 'r':
-        str = rank_of(u.ulevel, Role_switch, flags.female);
+        str = rank_of(u.role_levels[flags.initrole], Role_switch, flags.female);
         break;
     case 'R':
         str = rank_of(MIN_QUEST_LEVEL, Role_switch, flags.female);

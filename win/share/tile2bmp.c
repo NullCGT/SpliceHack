@@ -47,7 +47,7 @@ extern void objects_globals_init(void);
 
 extern char *tilename(int, int);
 
-#define MAGICTILENO (340 + 440 + 231 + 340)
+#define MAGICTILENO (640 + 440 + 231 + 640)
 
 #if BITCOUNT == 4
 #define MAX_X 320 /* 2 per byte, 4 bits per pixel */
@@ -349,7 +349,7 @@ build_bmptile(pixel(*pixels)[TILE_X])
                     break;
             }
             if (cur_color >= num_colors)
-                Fprintf(stderr, "color not in colormap!\n");
+                Fprintf(stderr, "color %d not in colormap!\n", cur_color);
             y = (MAX_Y - 1) - (cur_y + yoffset);
             apply_color = cur_color;
 #if BITCOUNT == 4

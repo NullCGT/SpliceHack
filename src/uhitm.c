@@ -2773,6 +2773,39 @@ struct mhitm_data *mhm;
 }
 
 void
+mhitm_ad_pits(magr, mattk, mdef, mhm)
+struct monst *magr;
+struct attack *mattk;
+struct monst *mdef;
+struct mhitm_data *mhm;
+{
+    if (magr == &g.youmonst) {
+        /* uhitm */
+        pline("Your strike shakes the entire world around you!");
+        do_earthquake((u.ulevel - 1) / 3 + 1, u.ux, u.uy);
+        awaken_monsters(ROWNO * COLNO);
+        if (mhm->done)
+            return;
+    } else if (mdef == &g.youmonst) {
+        /* mhitu */
+        hitmsg(magr, mattk);
+        pline("The strike of %s shakes the entire world around you!",
+            mon_nam(magr));
+        do_earthquake(7, magr->mx, magr->my);
+        awaken_monsters(ROWNO * COLNO);
+        return;
+    } else {
+        /* mhitm */
+        pline("The strike of %s shakes the world!",
+            mon_nam(magr));
+        do_earthquake(7, magr->mx, magr->my);
+        awaken_monsters(ROWNO * COLNO);
+        if (mhm->done)
+            return;
+    }
+}
+
+void
 mhitm_ad_sgld(struct monst *magr, struct attack *mattk, struct monst *mdef,
               struct mhitm_data *mhm)
 {
@@ -2984,7 +3017,7 @@ mhitm_ad_blnd(
                    telepathically (canspotmon suffices) but additional
                    info about archon's glow is only given if seen */
                 Snprintf(buf, sizeof buf, "%s is blinded", Monnam(mdef));
-                if (mdef->data == &mons[PM_ARCHON] && canseemon(mdef))
+                if (mdef->data == &mons[PM_THRONE_ARCHON] && canseemon(mdef))
                     Snprintf(eos(buf), sizeof buf - strlen(buf),
                              " by %s radiance", s_suffix(mon_nam(magr)));
                 pline("%s.", buf);
@@ -3897,6 +3930,65 @@ struct mhitm_data *mhm;
 }
 
 void
+mhitm_ad_mtrl(magr, mattk, mdef, mhm)
+struct monst *magr;
+struct attack *mattk;
+struct monst *mdef;
+struct mhitm_data *mhm;
+{
+
+    if (magr == &g.youmonst) {
+        /* uhitm */
+        /* there's no msomearmor() function, so just do damage */
+    } else if (mdef == &g.youmonst) {
+        /* mhitu */
+        int armpro = magic_negation(mdef);
+        boolean uncancelled = !magr->mcan && (rn2(10) >= 3 * armpro);
+
+        hitmsg(magr, mattk);
+        /* uncancelled is sufficient enough; please
+           don't make this attack less frequent */
+        if (uncancelled) {
+            struct obj *obj = some_armor(&g.youmonst);
+            
+            if (!obj) {
+                /* some rings are susceptible;
+                   amulets and blindfolds aren't (at present) */
+                switch (rn2(5)) {
+                case 0:
+                    break;
+                case 1:
+                    obj = uright;
+                    break;
+                case 2:
+                    obj = uleft;
+                    break;
+                case 3:
+                    obj = uamul;
+                    break;
+                case 4:
+                    obj = ublindf;
+                    break;
+                }
+            }
+            if (obj && warp_material(obj, FALSE)) {
+                pline("That's odd, you don't remember putting on %s...", 
+                    an(xname_forcemat(obj)));
+                update_inventory();
+                g.context.botl = 1;
+            }
+            if (obj)
+                mhm->damage = 0;
+            if (!rn2(20))
+                (void) rloc(magr, TRUE);
+        }
+    } else {
+        /* mhitm */
+        /* there's no msomearmor() function, so just do damage */
+    }
+}
+
+void
 mhitm_ad_lost(magr, mattk, mdef, mhm)
 struct monst *magr;
 struct attack *mattk;
@@ -3926,6 +4018,56 @@ struct mhitm_data *mhm;
         mhitm_ad_phys(magr, mattk, mdef, mhm);
         if (mhm->done)
             return;
+    }
+}
+
+void
+mhitm_ad_tckl(magr, mattk, mdef, mhm)
+struct monst *magr;
+struct attack *mattk;
+struct monst *mdef;
+struct mhitm_data *mhm;
+{
+    if (magr == &g.youmonst) {
+        /* uhitm */
+        int armpro = magic_negation(mdef);
+        /* since hero can't be cancelled, only defender's armor applies */
+        boolean negated = !(rn2(10) >= 3 * armpro);
+        if (!negated && mdef->mcanmove && !rn2(3) && mhm->damage < mdef->mhp) {
+            if (!Blind) You("mercilessly tickle %s!", mon_nam(mdef));
+            mdef->mcanmove = 0;
+            mdef->mfrozen = rnd(10);
+        }
+    } else if (mdef == &g.youmonst) {
+        /* mhitu */
+        int armpro = magic_negation(mdef);
+        boolean uncancelled = !magr->mcan && (rn2(10) >= 3 * armpro);
+        
+        hitmsg(magr, mattk);
+        if (uncancelled && g.multi >= 0 && !rn2(3)) {
+            if (Free_action)
+                You_feel("horrible tentacles probing your flesh!");
+            else {
+                if (Blind) You("are mercilessly tickled!");
+                else You("are mercilessly tickled by %s!", mon_nam(magr));
+                g.nomovemsg = 0;	/* default: "you can move again" */
+                nomul(-rnd(10));
+                exercise(A_DEX, FALSE);
+                exercise(A_CON, FALSE);
+            }
+        }
+    } else {
+        /* mhitm */
+        int armpro = magic_negation(mdef);
+        boolean cancelled = magr->mcan || !(rn2(10) >= 3 * armpro);
+        if (!cancelled && mdef->mcanmove) {
+            if (g.vis) {
+                pline("%s mercilessly tickles %s.", Monnam(magr), mon_nam(mdef));
+            }
+            mdef->mcanmove = 0;
+            mdef->mfrozen = rnd(10);
+            mdef->mstrategy &= ~STRAT_WAITFORU;
+        }
     }
 }
 
@@ -4010,6 +4152,47 @@ mhitm_ad_hngy(struct monst *magr, struct attack *mattk,
         if (canseemon(mdef))
             pline("%s %s rumbles.",
                 s_suffix(Monnam(mdef)), mbodypart(mdef,STOMACH));
+    }
+}
+
+void
+mhitm_ad_potn(magr, mattk, mdef, mhm)
+struct monst *magr;
+struct attack *mattk;
+struct monst *mdef;
+struct mhitm_data *mhm;
+{
+    if (magr == &g.youmonst) {
+        /* uhitm */
+        mhitm_ad_phys(magr, mattk, mdef, mhm);
+        if (mhm->done)
+            return;
+    } else if (mdef == &g.youmonst) {
+        /* mhitu */
+        struct obj* pseudo;
+        mhm->damage = 0;
+        pline("%s splashes you!", Monnam(magr));
+        int i = POT_GAIN_ABILITY +
+            (magr->m_id % (POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY));
+        if (i == POT_GAIN_LEVEL ||
+             i == POT_EXTRA_HEALING ||
+             i == POT_HEALING ||
+             i == POT_FULL_HEALING ||
+             i == POT_GAIN_ABILITY ||
+             i == POT_GAIN_ENERGY) {
+            i = POT_ACID;
+        }
+        pseudo = mksobj(i, FALSE, FALSE);
+        pseudo->blessed = 0;
+        pseudo->cursed = rn2(2);
+        (void) peffects(pseudo);
+        obfree(pseudo, (struct obj *) 0); /* now, get rid of it */
+        return;
+    } else {
+        /* mhitm */
+        mhitm_ad_phys(magr, mattk, mdef, mhm);
+        if (mhm->done)
+            return;
     }
 }
 
@@ -4949,14 +5132,18 @@ mhitm_adtyping(struct monst *magr, struct attack *mattk, struct monst *mdef,
     case AD_VOID: mhitm_ad_void(magr, mattk, mdef, mhm); break;
     case AD_MEMR: mhitm_ad_memr(magr, mattk, mdef, mhm); break;
     case AD_QUIL: mhitm_ad_quil(magr, mattk, mdef, mhm); break;
+    case AD_PITS: mhitm_ad_pits(magr, mattk, mdef, mhm); break;
     case AD_DSRM: mhitm_ad_dsrm(magr, mattk, mdef, mhm); break;
     case AD_WIND: mhitm_ad_wind(magr, mattk, mdef, mhm); break;
     case AD_CALM: mhitm_ad_calm(magr, mattk, mdef, mhm); break;
     case AD_LUCK: mhitm_ad_luck(magr, mattk, mdef, mhm); break;
+    case AD_MTRL:  mhitm_ad_mtrl(magr, mattk, mdef, mhm); break;
     case AD_LOST: mhitm_ad_lost(magr, mattk, mdef, mhm); break;
+    case AD_TCKL: mhitm_ad_tckl(magr, mattk, mdef, mhm); break;
     case AD_LARV: mhitm_ad_larv(magr, mattk, mdef, mhm); break;
-    case AD_HNGY:  mhitm_ad_hngy(magr, mattk, mdef, mhm); break;
-    case AD_FUMB:  mhitm_ad_fumb(magr, mattk, mdef, mhm); break;
+    case AD_HNGY: mhitm_ad_hngy(magr, mattk, mdef, mhm); break;
+    case AD_POTN: mhitm_ad_potn(magr, mattk, mdef, mhm); break;
+    case AD_FUMB: mhitm_ad_fumb(magr, mattk, mdef, mhm); break;
     case AD_WTHR: mhitm_ad_wthr(magr, mattk, mdef, mhm); break;
     case AD_VORP: mhitm_ad_vorp(magr, mattk, mdef, mhm); break;
     /* case AD_FEAR: mhtim_ad_fear(magr, mattkm mdef, mhm); break; */
@@ -5808,6 +5995,7 @@ passive(struct monst *mon,
     register int i, tmp;
     int mhit = mhitb ? MM_HIT : MM_MISS;
     int malive = maliveb ? MM_HIT : MM_MISS;
+    struct obj *otmp;
 
     if (mhit && aatyp == AT_BITE && maybe_polyd(is_vampire(g.youmonst.data), Race_if(PM_VAMPIRE))) {
         if (bite_monster(mon))
@@ -5976,6 +6164,18 @@ passive(struct monst *mon,
      */
     if (malive && !mon->mcan && rn2(3)) {
         switch (ptr->mattk[i].adtyp) {
+        case AD_DSRM: /* adherer */
+            if (uwep) {
+                otmp = uwep;
+                pline("Your weapon sticks to %s!", mon_nam(mon));
+                dropx(uwep);
+                obj_extract_self(otmp);
+                add_to_minv(mon, otmp);
+            } else {
+                u.ustuck = mon;
+                pline("You stick to %s!", mon_nam(mon));
+            }
+            break;
         case AD_HYDR: /* grow additional heads (hydra) */
             if (mhit && !mon->mcan && weapon && rn2(3)) {
                 if ((is_blade(weapon) || is_axe(weapon))
@@ -5984,6 +6184,12 @@ passive(struct monst *mon,
                         mon_nam(mon));
                     grow_up(mon, (struct monst *) 0);
                 }
+            }
+            break;
+        case AD_SKEL: /* generate skeletons (bonewalker) */
+            if (mhit && !mon->mcan && rn2(3)) {
+                pline("Bits of %s assemble into a skeleton!", mon_nam(mon));
+                makemon(&mons[PM_SKELETON], u.ux, u.uy, NO_MINVENT);
             }
             break;
         case AD_BLND:
@@ -6115,7 +6321,7 @@ passive_obj(struct monst *mon,
     /* if caller hasn't specified an object, use uwep, uswapwep or uarmg */
     if (!obj) {
         obj = (u.twoweap && uswapwep && !rn2(2)) ? uswapwep : uwep;
-        if (!obj && mattk->adtyp == AD_ENCH)
+        if (!obj && (mattk->adtyp == AD_ENCH || mattk->adtyp == AD_MTRL))
             obj = uarmg; /* no weapon? then must be gloves */
         if (!obj)
             return; /* no object to affect */

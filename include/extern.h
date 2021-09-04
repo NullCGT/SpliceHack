@@ -118,7 +118,7 @@ extern void exercise(int, boolean);
 extern void exerchk(void);
 extern void init_attr(int);
 extern void redist_attr(void);
-extern void adjabil(int, int);
+extern void adjabil(int, int, int, int, int);
 extern int newhp(void);
 extern schar acurr(int);
 extern schar acurrstr(void);
@@ -403,8 +403,9 @@ extern void goto_level(d_level *, boolean, boolean, boolean);
 extern void maybe_lvltport_feedback(void);
 extern void schedule_goto(d_level *, int, const char *, const char *);
 extern void deferred_goto(void);
-extern boolean revive_corpse(struct obj *);
+extern boolean revive_corpse(struct obj *, boolean);
 extern void revive_mon(union any *, long);
+extern void moldy_corpse(union any *, long);
 extern void zombify_mon(union any *, long);
 extern boolean cmd_safety_prevention(const char *, const char *, int *);
 extern int donull(void);
@@ -1704,6 +1705,7 @@ extern boolean munslime(struct monst *, boolean);
 
 /* ### music.c ### */
 
+extern void awaken_monsters(int);
 extern void awaken_soldiers(struct monst *);
 extern void do_earthquake(int, int, int);
 extern int do_play_instrument(struct obj *);
@@ -1820,6 +1822,7 @@ extern struct fruit *fruit_from_indx(int);
 extern struct fruit *fruit_from_name(const char *, boolean, int *);
 extern void reorder_fruit(boolean);
 extern char *xname(struct obj *);
+extern char *xname_forcemat(struct obj *);
 extern char *mshot_xname(struct obj *);
 extern boolean the_unique_obj(struct obj *);
 extern boolean the_unique_pm(struct permonst *);
@@ -2754,6 +2757,8 @@ extern void ignite_items(struct obj *);
 /* ### u_init.c ### */
 
 extern void u_init(void);
+extern const struct def_skill *get_role_skills(int);
+extern void switch_role_skills(const struct def_skill *);
 
 /* ### uhitm.c ### */
 

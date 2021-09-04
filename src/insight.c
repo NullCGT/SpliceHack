@@ -345,7 +345,7 @@ static void
 background_enlightenment(int unused_mode UNUSED, int final)
 {
     const char *role_titl, *rank_titl;
-    int innategend, difgend, difalgn;
+    int innategend, difgend, difalgn, i;
     char buf[BUFSZ], tmpbuf[BUFSZ];
 
     /* note that if poly'd, we need to use u.mfemale instead of flags.female
@@ -353,7 +353,7 @@ background_enlightenment(int unused_mode UNUSED, int final)
     innategend = (Upolyd ? u.mfemale : flags.female);
     role_titl = (innategend && g.urole.name.f) ? g.urole.name.f
                                                : g.urole.name.m;
-    rank_titl = rank_of(u.ulevel, Role_switch, innategend);
+    rank_titl = rank_of(u.role_levels[flags.initrole], Role_switch, innategend);
 
     enlght_out(""); /* separator after title */
     enlght_out_attr(ATR_SUBHEAD, "Background:");
@@ -402,6 +402,17 @@ background_enlightenment(int unused_mode UNUSED, int final)
                 tmpbuf, g.urace.adj, role_titl);
     }
     you_are(buf, "");
+
+    /* report levels in other roles. */
+    you_have("experience in the following roles", "");
+    for (i = 0; i < NUM_ROLES; i++) {
+        if (u.role_levels[i] > 0) {
+            buf[0] = '\0';
+            Sprintf(eos(buf), "   * %s (level %d)", roles[i].name.m, u.role_levels[i]);
+            enlght_out(buf);
+        }
+    }
+
 
     /* report alignment (bypass you_are() in order to omit ending period);
        adverb is used to distinguish between temporary change (helm of opp.

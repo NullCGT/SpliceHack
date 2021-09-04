@@ -6,7 +6,7 @@
 
 ### Species Changes
 - Different species have different night vision ranges.
-- Maximum Dexterity is now 20 for Elves, and 18 for Dwarves. 
+- Maximum Dexterity is now 20 for Elves, and 18 for Dwarves.
 #### Drow
   - Male drow are referred to as "hedrow."
   - Potions of sickness in the starting inventories of drow are replaced by potions of sleeping.
@@ -24,6 +24,18 @@
     draining code introduced to the game.
 
 ### Role Changes
+#### Multiclass System
+  - The player is no longer limited to only a single role. Every time they level up, they may instead
+    choose to switch to and level up in another valid role.
+  - While this system is designed for interesting builds and powergaming, there are a few caveats:
+    - When hit by a monster with a level-draining attack, if you have only a single level of experience
+      in all of your roles, you die. As such, spreading yourself too thin can be dangerous, particularly
+      if you lack drain resistance.
+    - For each role in addition to your main role, the experience required to reach subsequent levels
+      will be higher.
+  - BUG: Godname is overwritten, leading to segfaults when leveling into a priest.
+  - BUG: Entering the quest as a role other than the one you began the game as causes a lot of weird
+         things to happen.
 #### Dragon Rider
   - Rename dragonmasters to dragon riders. This name change puts greater emphasis on the bond the
     character has with dragons.
@@ -139,6 +151,9 @@ in its own way.
   randomly generated. For example, the moat may take a slightly different shape, or there may
   be iron bars from which the soldiers can attack.
 - Occasionally, mines level will generate with several trees in them.
+- The orcs in orctown have built a kitchen, complete with furnace, sink, and icebox!
+- Two Oracle levels arrived from xNetHack, and the standard level varies a bit.
+- Secret corridors no longer generate; secret doors still exist.
 #### Furnaces
 - Furnaces can be used to combine items. While at a furnace, the player can use the #forge command
   to combine two items into one more powerful item.
@@ -175,6 +190,9 @@ in its own way.
 - New Adult Monsters: Killer Croc, Diamond Piercer
   - Not randomly generated.
   - Only appear when a lower level monster grows up.
+- New Monster: Adherer
+  - M-class monster.
+  - Weapons stick to it.
 - Ported UnnetHack Aleaxes: Aleaxes are generated with copies of the player's items.
 - Dragons have been significantly altered.
   - Dragons have adjectives attached to their names that describe their age categories. the level of
@@ -209,6 +227,11 @@ in its own way.
   - Worms that walk wield executioner's maces.
   - When a worm that walks dies, it dissolves into maggots. If one of these maggots infests a
     corpse, that corpse has the potential to arise as another worm that walks.
+- Hundred Handed One Changes
+  - Renamed to Hecatoncheire.
+  - Attack for a mere 1d1 damage, but may continue attacking until their attack misses, or 100
+    attacks have elapsed.
+  - Have +100 to multishot.
 
 ### Display Changes
 - Ridden monsters are highlighted in bright magenta.
@@ -250,13 +273,14 @@ in its own way.
   they are not very practical pets anyway.
 - Werebears generate peaceful.
 - Altered the tiles for many existing monsters in order to improve visual clarity.
+- Renamed Avatars of Akasha to Hearth Archons.
 
 ### Removed Content
 Since this release is a rewrite, several pieces of existing content have been heavily altered
 or outright removed. Rationale can be provided for removed content upon request.
 - Removed the following monsters: Anubites, Nuckelavees, Plant Monsters, Lords of Worms, Penguins,
   Mystic Scarabs, Memory Hounds, Goblin Windmages, Walruses, Werephants, Vent Wurms, Crevasse Wurms,
-  Sludge Golems.
+  Sludge Golems, Myconids, Legendary Lichens, Amalagamations, Bad Clones, Cerastes.
 - Removed the following objects:
   - Razor whip.
   - Robe of the blood magus.

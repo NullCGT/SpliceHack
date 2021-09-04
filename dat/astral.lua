@@ -75,6 +75,8 @@ place:set(51,9);
 
 -- Where the player will land on arrival
 des.teleport_region({ region = {29,15,45,15}, exclude = {30,15,44,15} })
+-- Lit level
+des.region(selection.area(00,00,75,19), "lit")
 -- Lit courts
 des.region({ region={01,05,16,14},lit=1,type="ordinary",irregular=1 })
 des.region({ region={31,01,44,10},lit=1,type="ordinary",irregular=1 })
@@ -175,13 +177,14 @@ des.monster({ id = "Angel",x=61,y=13,align="law",peaceful=1 })
 des.monster({ id = "Angel",x=62,y=13,align="neutral", peaceful=0 })
 des.monster({ id = "Angel",x=63,y=13,align="neutral",peaceful=1 })
 --
--- Assorted nasties
-des.monster({ class = "L", peaceful=0 })
-des.monster({ class = "L", peaceful=0 })
-des.monster({ class = "L", peaceful=0 })
-des.monster({ class = "V", peaceful=0 })
-des.monster({ class = "V", peaceful=0 })
-des.monster({ class = "V", peaceful=0 })
+-- Assorted nasties. This used to include liches and vampires, but that didn't
+-- make much sense thematically. Not to mention A-class monsters are much nastier.
+des.monster({ class = "A", peaceful=0 })
+des.monster({ class = "A", peaceful=0 })
+des.monster({ class = "A", peaceful=0 })
+des.monster({ peaceful=0 })
+des.monster({ peaceful=0 })
+des.monster({ peaceful=0 })
 des.monster({ class = "D", peaceful=0 })
 des.monster({ class = "D", peaceful=0 })
 des.monster({ class = "D", peaceful=0 })

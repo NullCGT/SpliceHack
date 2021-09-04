@@ -377,6 +377,9 @@ mattackm(register struct monst *magr, register struct monst *mdef)
     if (magr->data == &mons[PM_HYDRA]) {
         k = min(magr->m_lev - magr->data->mlevel + 1, 10);
     }
+    if (magr->data == &mons[PM_HECATONCHEIRE]) {
+        k = 100;
+    }
 
     /* controls whether a mind flayer uses all of its tentacle-for-DRIN
        attacks; when fighting a headless monster, stop after the first
@@ -593,6 +596,11 @@ mattackm(register struct monst *magr, register struct monst *mdef)
             i -= 1;
             k -= 1;
         }
+        /* hundred handed ones attack until they miss (up to 100 times) */
+        if (magr->data == &mons[PM_HECATONCHEIRE] && (res[i] & MM_HIT)) {
+            i -= 1;
+            k -= 1;
+        }
     }
 
     return (struck ? MM_HIT : MM_MISS);
@@ -688,7 +696,7 @@ gazemm(struct monst *magr, struct monst *mdef, struct attack *mattk)
 {
     char buf[BUFSZ];
     /* an Archon's gaze affects target even if Archon itself is blinded */
-    boolean archon = (magr->data == &mons[PM_ARCHON]
+    boolean archon = (magr->data == &mons[PM_THRONE_ARCHON]
                       && mattk->adtyp == AD_BLND),
             altmesg = (archon && !magr->mcansee);
 

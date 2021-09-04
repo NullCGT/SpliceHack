@@ -124,6 +124,23 @@ struct flag {
      * is initialized or restored (specifically, after role_init()
      * is called).
      */
+    /* Kestrel, multiclass patch
+     * So here's the thing: All of these variables were referreed to
+     * pretty frequently after role_init() was called, even before I
+     * went in and started changing things.
+     *
+     * The naming here is a bit confusing.
+     * - initrole is the flag used to track the player's current active
+     *   role.
+     * - original_role is the flag used to track the role chosen at character
+     *   creation.
+     *
+     * The reason this hack is necessary is because we need to have accurate
+     * quest data in g.urole after save and restore, and this was the easiest
+     * way to do it. I would make this a little cleaner, but frankly this code
+     * will never be added to vanilla.
+     */
+    int original_role; /* The ACTUAL starting role (index into roles[]) */
     int initrole;  /* starting role      (index into roles[])   */
     int initrace;  /* starting race      (index into races[])   */
     int initgend;  /* starting gender    (index into genders[]) */

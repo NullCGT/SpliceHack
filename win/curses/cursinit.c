@@ -911,25 +911,25 @@ curses_display_splash_window(void)
 
     if (iflags.wc_splash_screen) {
         if (iflags.wc2_guicolor) curses_toggle_color_attr(stdscr, CLR_RED, A_NORMAL, ON);
-        mvaddstr(y_start, x_start, SPLICEHACK_SPLASH_A);
-        mvaddstr(y_start + 1, x_start, SPLICEHACK_SPLASH_B);
+        mvaddstr(y_start, x_start + 9, SPLICEHACK_SPLASH_A);
+        mvaddstr(y_start + 1, x_start + 9, SPLICEHACK_SPLASH_B);
         if (iflags.wc2_guicolor) curses_toggle_color_attr(stdscr, CLR_ORANGE, A_NORMAL, ON);
-        mvaddstr(y_start + 2, x_start, SPLICEHACK_SPLASH_C);
+        mvaddstr(y_start + 2, x_start + 9, SPLICEHACK_SPLASH_C);
         if (iflags.wc2_guicolor) curses_toggle_color_attr(stdscr, CLR_YELLOW, A_NORMAL, ON);
-        mvaddstr(y_start + 3, x_start, SPLICEHACK_SPLASH_D);
+        mvaddstr(y_start + 3, x_start + 9, SPLICEHACK_SPLASH_D);
         if (iflags.wc2_guicolor) curses_toggle_color_attr(stdscr, CLR_GREEN, A_NORMAL, ON);
-        mvaddstr(y_start + 4, x_start, SPLICEHACK_SPLASH_E);
+        mvaddstr(y_start + 4, x_start + 9, SPLICEHACK_SPLASH_E);
         if (iflags.wc2_guicolor) curses_toggle_color_attr(stdscr, CLR_BLUE, A_NORMAL, ON);
-        mvaddstr(y_start + 5, x_start, SPLICEHACK_SPLASH_F);
+        mvaddstr(y_start + 5, x_start + 9, SPLICEHACK_SPLASH_F);
         if (iflags.wc2_guicolor) curses_toggle_color_attr(stdscr, CLR_MAGENTA, A_NORMAL, ON);
-        mvaddstr(y_start + 6, x_start, SPLICEHACK_SPLASH_G);
-        mvaddstr(y_start + 7, x_start, SPLICEHACK_SPLASH_H);
+        mvaddstr(y_start + 6, x_start + 9, SPLICEHACK_SPLASH_G);
+        mvaddstr(y_start + 7, x_start + 9, SPLICEHACK_SPLASH_H);
         y_start += 9;
     }
     if (iflags.wc2_guicolor)
          curses_toggle_color_attr(stdscr, CLR_WHITE, A_NORMAL, OFF);
 
-    for (i = 1; i <= 4; ++i) {
+    for (i = 2; i <= 4; ++i) {
          mvaddstr(y_start, x_start, copyright_banner_line(i));
          y_start++;
     }

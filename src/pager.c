@@ -702,6 +702,8 @@ struct permonst * pm;
     boolean uniq = !!(gen & G_UNIQ);
     boolean hell = !!(gen & G_HELL);
     boolean nohell = !!(gen & G_NOHELL);
+    boolean planes = !!(gen & G_PLANES);
+    boolean noplanes = !!(gen & G_NOPLANES);
     uchar mcon = pm->mconveys;
     mcon &= ~(MR_ACID | MR_STONE); /* these don't do anything */
     unsigned int mflag1 = pm->mflags1;
@@ -768,6 +770,8 @@ struct permonst * pm;
             Sprintf(buf, "Normally %s%s, %s.",
                     hell ? "only appears in Gehennom" :
                     nohell ? "only appears outside Gehennom" :
+                    planes ? "only appears in the Planes" :
+                    noplanes ? "only appears outside the Planes" :
                     "appears in any branch",
                     (gen & G_SGROUP) ? " in groups" :
                     (gen & G_LGROUP) ? " in large groups" : "",
@@ -909,6 +913,11 @@ struct permonst * pm;
             MONPUTSTR("May be eaten by vegans.");
         else if (vegetarian(pm))
             MONPUTSTR("May be eaten by vegetarians.");
+    }
+    if (pm == &mons[PM_HECATONCHEIRE]) {
+        MONPUTSTR("Attacks up to 100 times.");
+    } else if (pm == &mons[PM_HYDRA]) {
+        MONPUTSTR("Attacks an extra time for each head beyond the first.");
     }
     Sprintf(buf, "Is %sa valid polymorph form.",
             polyok(pm) ? "" : "not ");

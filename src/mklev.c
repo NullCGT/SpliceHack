@@ -868,12 +868,14 @@ fill_ordinary_room(struct mkroom *croom)
         (void) mkcorpstat(STATUE, (struct monst *) 0,
                             (struct permonst *) 0, pos.x,
                             pos.y, CORPSTAT_INIT);
+    #if 0
     /* light it up with some sconces */
     if ((rn2(max(2, depth(&u.uz) - 4)) <= 3)
         && somexyspace(croom, &pos)) {
         otmp = mksobj_at(SCONCE , pos.x, pos.y, FALSE, FALSE);
         begin_burn(otmp, FALSE);
     }
+    #endif
     /* put box/chest inside;
      *  40% chance for at least 1 box, regardless of number
      *  of rooms; about 5 - 7.5% for 2 boxes, least likely

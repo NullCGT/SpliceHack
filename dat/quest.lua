@@ -34,7 +34,7 @@ questtext = {
          output = "text",
          text = [[%p:	return(plname);
  %c:	return(pl_character);
- %r:	return((char *)rank_of(u.ulevel));
+ %r:	return((char *)rank_of(u.role_levels[flags.initrole]));
  %R:	return((char *)rank_of(MIN_QUEST_LEVEL));
  %s:	return (ubrother());
  %S:	return(uson());

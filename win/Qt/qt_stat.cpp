@@ -808,7 +808,7 @@ void NetHackQtStatusWindow::updateStats()
 	buf = nh_capitalize_words(pmname(&mons[u.umonnum],
                                   ::flags.female));
     } else {
-	buf = rank_of(u.ulevel, g.pl_character[0], ::flags.female);
+	buf = rank_of(u.role_levels[flags.initrole], g.pl_character[0], ::flags.female);
     }
     QString buf2;
     char buf3[BUFSZ];

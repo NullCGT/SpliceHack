@@ -77,7 +77,7 @@ revive_nasty(int x, int y, const char *msg)
                 rloc_to(mtmp, cc.x, cc.y);
             if (msg)
                 Norep("%s", msg);
-            revived = revive_corpse(otmp);
+            revived = revive_corpse(otmp, FALSE);
         }
     }
 

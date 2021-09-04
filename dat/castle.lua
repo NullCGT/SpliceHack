@@ -172,7 +172,7 @@ des.object(object[4],55,11)
 local px, py = place:rndcoord(1);
 des.object({ id = "chest", trapped = 0, locked = 1, x = px, y = py,
              contents = function()
-                des.object("wishing");
+                des.object( {id="wishing", buc = "uncursed", spe = 2 });
              end
 });
 -- Prevent monsters from eating it.  (@'s never eat objects)

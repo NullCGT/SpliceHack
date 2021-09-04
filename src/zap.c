@@ -2523,7 +2523,7 @@ dozap(void)
         obj = g.current_wand;
         g.current_wand = 0;
     }
-    if (obj && obj->spe < 0) {
+    if (obj && (obj->spe < 0 || (obj->otyp == WAN_WISHING && obj->spe == 0))) {
         pline("%s to dust.", Tobjnam(obj, "turn"));
         useupall(obj); /* calls freeinv() -> update_inventory() */
     } else

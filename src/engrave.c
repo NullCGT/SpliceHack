@@ -1002,7 +1002,8 @@ doengrave(void)
             pline_The("engraving now reads: \"%s\".", buf);
         ptext = FALSE;
     }
-    if (zapwand && (otmp->spe < 0)) {
+    if (zapwand && (otmp->spe < 0
+                    || otmp->otyp == WAN_WISHING && otmp->spe == 0)) {
         pline("%s %sturns to dust.", The(xname(otmp)),
               Blind ? "" : "glows violently, then ");
         if (!IS_GRAVE(levl[u.ux][u.uy].typ))

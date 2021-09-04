@@ -42,7 +42,13 @@ des.door("locked",08,07)
 des.door("locked",10,07)
 des.door("closed",03,06)
 -- treasures
-des.object("coffin", 07,05)
+-- Vlad's wand of wishing. It's cursed, because Vlad is a jerk. The coffin is untrapped,
+-- because Vlad lives in it.
+des.object({ id ="coffin", trapped = 0, coord = {07,05},
+            contents = function()
+              des.object({id = "wishing", buc = "cursed", spe = 1})
+            end
+});
 
 des.object("coffin",niches[6])
 des.object("coffin",niches[1])

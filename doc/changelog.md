@@ -114,6 +114,8 @@
 - Dexterity of 18 or higher improves hit chance with wand zaps.
 
 ### Dungeon Changes
+
+#### General
 One goal of this release of SpliceHack is to make regular dungeon levels more interesting and
 dynamic to explore. Each level should present unique challenges and be interesting to explore
 in its own way.
@@ -160,6 +162,14 @@ in its own way.
   - Certain artifacts are only obtainable via furnaces:
     - Frostburn: Deals double damage to all monsters that are not both cold and fire resistant.
       created by fusing Frost Brand and Fire Brand.
+
+#### Wands of Wishing
+- Use XNetHack's wand of wishing changes.
+  - There is a guaranteed wand of wishing at the castle with 2 charges.
+  - There is a guaranteed wand in Vlad's coffin with 1 charge.
+  - There is a guaranteed wand with the Book of the Dead with 1 charge.
+  - Wands of wishing cannot be recharged, and instantly dust upon reaching zero charges.
+- Unlike XNetHack, wands of wishing still generate randomly throughout the dungeon.
 
 
 ### Monster Changes

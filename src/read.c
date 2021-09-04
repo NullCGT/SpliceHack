@@ -672,8 +672,8 @@ recharge(struct obj* obj, int curse_bless)
          *      7 : 100     100
          */
         n = (int) obj->recharged;
-        if (n > 0 && (obj->otyp == WAN_WISHING
-                      || (n * n * n > rn2(7 * 7 * 7)))) { /* recharge_limit */
+        if (obj->otyp == WAN_WISHING
+            || (n > 0 && (n * n * n > rn2(7 * 7 * 7)))) { /* recharge_limit */
             wand_explode(obj, rnd(lim));
             return;
         }
@@ -692,10 +692,6 @@ recharge(struct obj* obj, int curse_bless)
                 obj->spe = n;
             else
                 obj->spe++;
-            if (obj->otyp == WAN_WISHING && obj->spe > 3) {
-                wand_explode(obj, 1);
-                return;
-            }
             if (obj->spe >= lim)
                 p_glow2(obj, NH_BLUE);
             else

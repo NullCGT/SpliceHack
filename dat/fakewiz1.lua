@@ -32,4 +32,6 @@ des.trap("board",04,03)
 des.trap("board",04,05)
 des.trap("board",03,04)
 des.trap("board",05,04)
+-- A wand of wishing!
+des.object({id = "wishing", coord = {03, 04}, spe = 1})
 

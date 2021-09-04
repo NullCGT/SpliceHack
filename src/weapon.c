@@ -1294,7 +1294,7 @@ skill_level_name(int skill, char *buf, boolean max)
         ptr = "Grand Master";
         break;
     default:
-        ptr = "Unknown";
+        ptr = "Restricted";
         break;
     }
     Strcpy(buf, ptr);
@@ -1484,7 +1484,7 @@ enhance_weapon_skill(void)
                              iflags.menu_headings,
                              skill_ranges[pass].name, MENU_ITEMFLAGS_NONE);
 
-                if (P_RESTRICTED(i))
+                if (P_RESTRICTED(i) && P_SKILL(i) <= P_UNSKILLED)
                     continue;
                 /*
                  * Sigh, this assumes a monospaced font unless
@@ -1575,6 +1575,7 @@ unrestrict_weapon_skill(int skill)
         P_SKILL(skill) = P_UNSKILLED;
         P_MAX_SKILL(skill) = P_BASIC;
         P_ADVANCE(skill) = 0;
+        P_RESTRICTED(skill) = FALSE;
     }
 }
 
@@ -1900,6 +1901,7 @@ skill_init(const struct def_skill *class_skill)
         P_SKILL(skill) = P_ISRESTRICTED;
         P_MAX_SKILL(skill) = P_ISRESTRICTED;
         P_ADVANCE(skill) = 0;
+        P_RESTRICTED(skill) = TRUE;
     }
 
     /* Set skill for all weapons in inventory to be basic */
@@ -1911,18 +1913,24 @@ skill_init(const struct def_skill *class_skill)
             continue;
 
         skill = weapon_type(obj);
-        if (skill != P_NONE)
+        if (skill != P_NONE) {
             P_SKILL(skill) = P_BASIC;
+            P_RESTRICTED(skill) = FALSE;
+        }
     }
 
     /* set skills for magic */
     if (Role_if(PM_HEALER) || Role_if(PM_MONK)) {
         P_SKILL(P_HEALING_SPELL) = P_BASIC;
+        P_RESTRICTED(P_HEALING_SPELL) = FALSE;
     } else if (Role_if(PM_CLERIC)) {
         P_SKILL(P_CLERIC_SPELL) = P_BASIC;
+        P_RESTRICTED(P_CLERIC_SPELL) = FALSE;
     } else if (Role_if(PM_WIZARD)) {
         P_SKILL(P_ATTACK_SPELL) = P_BASIC;
         P_SKILL(P_ENCHANTMENT_SPELL) = P_BASIC;
+        P_RESTRICTED(P_ATTACK_SPELL) = FALSE;
+        P_RESTRICTED(P_ENCHANTMENT_SPELL) = FALSE;
     }
 
     /* walk through array to set skill maximums */
@@ -1931,22 +1939,29 @@ skill_init(const struct def_skill *class_skill)
         skill = class_skill->skill;
 
         P_MAX_SKILL(skill) = skmax;
-        if (P_SKILL(skill) == P_ISRESTRICTED) /* skill pre-set */
+        if (P_SKILL(skill) == P_ISRESTRICTED) { /* skill pre-set */
             P_SKILL(skill) = P_UNSKILLED;
+            P_RESTRICTED(skill) = FALSE;
+        }
     }
 
     /* High potential fighters already know how to use their hands. */
-    if (P_MAX_SKILL(P_BARE_HANDED_COMBAT) > P_EXPERT)
+    if (P_MAX_SKILL(P_BARE_HANDED_COMBAT) > P_EXPERT) {
         P_SKILL(P_BARE_HANDED_COMBAT) = P_BASIC;
+        P_RESTRICTED(skill) = FALSE;
+    }
 
     /* Roles that start with a mount know how to ride it */
-    if (g.urole.petnum == PM_PONY || Role_if(PM_DRAGON_RIDER))
+    if (g.urole.petnum == PM_PONY || Role_if(PM_DRAGON_RIDER)) {
         P_SKILL(P_RIDING) = P_BASIC;
+        P_RESTRICTED(skill) = TRUE;
+    }
 
     /* All merfolk can use tridents */
     if (Race_if(PM_MERFOLK)) {
         P_SKILL(P_TRIDENT) = P_BASIC;
         P_MAX_SKILL(P_TRIDENT) = P_EXPERT;
+        P_RESTRICTED(P_TRIDENT) = FALSE;
     }
 
     /*

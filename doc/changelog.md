@@ -24,6 +24,18 @@
     draining code introduced to the game.
 
 ### Role Changes
+#### Multiclass System
+  - The player is no longer limited to only a single role. Every time they level up, they may instead
+    choose to switch to and level up in another valid role.
+  - While this system is designed for interesting builds and powergaming, there are a few caveats:
+    - When hit by a monster with a level-draining attack, if you have only a single level of experience
+      in all of your roles, you die. As such, spreading yourself too thin can be dangerous, particularly
+      if you lack drain resistance.
+    - For each role in addition to your main role, the experience required to reach subsequent levels
+      will be higher.
+  - BUG: Godname is overwritten, leading to segfaults when leveling into a priest.
+  - BUG: Entering the quest as a role other than the one you began the game as causes a lot of weird
+         things to happen.
 #### Dragon Rider
   - Rename dragonmasters to dragon riders. This name change puts greater emphasis on the bond the
     character has with dragons.

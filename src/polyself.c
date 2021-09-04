@@ -305,7 +305,8 @@ newman(void)
     if (g.sex_change_ok && !rn2(10))
         change_sex();
 
-    adjabil(oldlvl, (int) u.ulevel);
+    adjabil(oldlvl, (int) u.ulevel, flags.initrole, u.role_levels[flags.initrole], u.role_levels[flags.initrole] + newlvl);
+    u.role_levels[flags.initrole] += newlvl;
 
     /* random experience points for the new experience level */
     u.uexp = rndexp(FALSE);

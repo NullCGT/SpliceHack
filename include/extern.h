@@ -118,7 +118,7 @@ extern void exercise(int, boolean);
 extern void exerchk(void);
 extern void init_attr(int);
 extern void redist_attr(void);
-extern void adjabil(int, int);
+extern void adjabil(int, int, int, int, int);
 extern int newhp(void);
 extern schar acurr(int);
 extern schar acurrstr(void);
@@ -2751,6 +2751,8 @@ extern void ignite_items(struct obj *);
 /* ### u_init.c ### */
 
 extern void u_init(void);
+extern const struct def_skill *get_role_skills(int);
+extern void switch_role_skills(const struct def_skill *);
 
 /* ### uhitm.c ### */
 

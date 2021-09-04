@@ -1479,7 +1479,7 @@ update_val(struct X_status_value *attr_rec, long new_value)
                 Strcat(buf, mnam);
             } else
                 Strcat(buf,
-                       rank_of(u.ulevel, g.pl_character[0], flags.female));
+                       rank_of(u.role_levels[flags.initrole], g.pl_character[0], flags.female));
 
         } else if (attr_rec == &shown_stats[F_DLEVEL]) {
             if (!describe_level(buf)) {

@@ -141,8 +141,7 @@ const struct Role roles[NUM_ROLES+1] = {
       S_HUMANOID,
       S_GIANT,
       ART_SCEPTRE_OF_MIGHT,
-      MH_HUMAN | MH_DWARF | MH_GNOME
-        | MH_UNDEAD,
+      MH_HUMAN | MH_DWARF | MH_GNOME,
       ALL_GENDERS
         | ROLE_LAWFUL | ROLE_NEUTRAL,
       /* Str Int Wis Dex Con Cha */
@@ -229,7 +228,7 @@ const struct Role roles[NUM_ROLES+1] = {
         MH_HUMAN | MH_DWARF | MH_GNOME | MH_ORC
           | MH_UNDEAD,
         ALL_GENDERS
-          | ROLE_CHAOTIC,
+          | ROLE_NEUTRAL | ROLE_CHAOTIC,
         /* Str Int Wis Dex Con Cha */
         {  10,  7,  7,  7, 13,  6 },
         {  20, 20, 10, 20, 20, 10 },
@@ -866,7 +865,7 @@ const struct Race races[] = {
         PM_DWARF_MUMMY,
         PM_DWARF_ZOMBIE,
         MH_DWARF | ALL_GENDERS
-           | ROLE_LAWFUL,
+           | ROLE_LAWFUL | ROLE_NEUTRAL,
         MH_DWARF,
         MH_DWARF | MH_GNOME,
         MH_ORC,
@@ -888,7 +887,7 @@ const struct Race races[] = {
         PM_GNOME_MUMMY,
         PM_GNOME_ZOMBIE,
         MH_GNOME | ALL_GENDERS
-           | ROLE_NEUTRAL,
+           | ROLE_LAWFUL | ROLE_NEUTRAL,
         MH_GNOME,
         MH_DWARF | MH_GNOME,
         MH_HUMAN,
@@ -2218,6 +2217,7 @@ role_init(void)
 {
     int alignmnt;
     struct permonst *pm;
+    struct Role origrole;
 
     /* Strip the role letter out of the player name.
      * This is included for backwards compatibility.
@@ -2231,6 +2231,11 @@ role_init(void)
             /* None specified; pick a random role */
             flags.initrole = randrole_filtered();
     }
+
+    /* Multiclass Hack, Part One */
+    /* If we do not have an original role set up, then set it up.
+       This should only happen when creating a new game. */
+    if (!flags.original_role) flags.original_role = flags.initrole;
 
     /* We now have a valid role index.  Copy the role name back. */
     /* This should become OBSOLETE */
@@ -2260,6 +2265,22 @@ role_init(void)
     /* Initialize g.urole and g.urace */
     g.urole = roles[flags.initrole];
     g.urace = races[flags.initrace];
+
+    /* Multiclass Hack, Part Two */
+    /* If our original role is different than g.urole, then we will have to
+       update a number of entries in order to prevent the quest from
+       breaking. */
+    if (flags.original_role) {
+        origrole = roles[flags.original_role];
+        g.urole.lgod = origrole.lgod;
+        g.urole.cgod = origrole.cgod;
+        g.urole.ngod = origrole.ngod;
+        g.urole.filecode = origrole.filecode;
+        g.urole.ldrnum = origrole.ldrnum;
+        g.urole.guardnum = origrole.guardnum;
+        g.urole.neminum = origrole.neminum;
+        g.urole.questarti = origrole.questarti;
+    }
 
     /* Fix up the quest leader */
     if (g.urole.ldrnum != NON_PM) {

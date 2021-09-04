@@ -23,25 +23,25 @@ static const struct innate {
     schar ulevel;
     long *ability;
     const char *gainstr, *losestr;
-} arc_abil[] = { { 1, &(HStealth), "", "" },
-                 { 1, &(HFast), "", "" },
-                 { 10, &(HSearching), "perceptive", "" },
+} arc_abil[] = { { 1, &(HStealth), "stealthy", "noticeable" },
+                 { 1, &(HFast), "quick", "slow" },
+                 { 10, &(HSearching), "perceptive", "unaware" },
                  { 0, 0, 0, 0 } },
 
-  bar_abil[] = { { 1, &(HPoison_resistance), "", "" },
+  bar_abil[] = { { 1, &(HPoison_resistance), "healthy", "unhealthy" },
                  { 7, &(HFast), "quick", "slow" },
-                 { 15, &(HStealth), "stealthy", "" },
+                 { 15, &(HStealth), "stealthy", "noticeable" },
                  { 0, 0, 0, 0 } },
 
   cav_abil[] = { { 7, &(HFast), "quick", "slow" },
-                 { 15, &(HWarning), "sensitive", "" },
+                 { 15, &(HWarning), "sensitive", "insensitive" },
                  { 0, 0, 0, 0 } },
-  car_abil[] = { { 1, &(HSearching), "perceptive", "" },
-                 { 7, &(HWarning), "in touch with your deck's heart", "" },
+  car_abil[] = { { 1, &(HSearching), "perceptive", "unaware" },
+                 { 7, &(HWarning), "in touch with your deck's heart", "insensitive" },
                  { 0, 0, 0, 0 } },
 
-  con_abil[] = { { 1, &(HSick_resistance), "", "" },
-                 { 7, &(HPoison_resistance), "healthy", "" },
+  con_abil[] = { { 1, &(HSick_resistance), "hardy", "wimpy" },
+                 { 7, &(HPoison_resistance), "healthy", "unhealthy" },
                  { 20, &(HSearching), "perceptive", "unaware" },
                  { 0, 0, 0, 0 } },
 
@@ -54,18 +54,18 @@ static const struct innate {
                  { 23, &(HDisint_resistance), "as stable as a black dragon", "vulnerable" },
                  { 0, 0, 0, 0 } },
 
-  hea_abil[] = { { 1, &(HPoison_resistance), "", "" },
-                 { 15, &(HWarning), "sensitive", "" },
+  hea_abil[] = { { 1, &(HPoison_resistance), "healthy", "unhealthy" },
+                 { 15, &(HWarning), "sensitive", "insensitive" },
                  { 0, 0, 0, 0 } },
 
   kni_abil[] = { { 7, &(HFast), "quick", "slow" }, { 0, 0, 0, 0 } },
 
-  mon_abil[] = { { 1, &(HFast), "", "" },
-                 { 1, &(HSleep_resistance), "", "" },
-                 { 1, &(HSee_invisible), "", "" },
-                 { 3, &(HPoison_resistance), "healthy", "" },
+  mon_abil[] = { { 1, &(HFast), "quick", "slow" },
+                 { 1, &(HSleep_resistance), "awake", "tired" },
+                 { 1, &(HSee_invisible), "connected", "disconnected" },
+                 { 3, &(HPoison_resistance), "healthy", "unhealthy" },
                  { 5, &(HStealth), "stealthy", "" },
-                 { 7, &(HWarning), "sensitive", "" },
+                 { 7, &(HWarning), "sensitive", "insensitive" },
                  { 9, &(HSearching), "perceptive", "unaware" },
                  { 11, &(HFire_resistance), "cool", "warmer" },
                  { 13, &(HCold_resistance), "warm", "cooler" },
@@ -73,38 +73,38 @@ static const struct innate {
                  { 17, &(HTeleport_control), "controlled", "uncontrolled" },
                  { 0, 0, 0, 0 } },
 
-  pir_abil[] = {  {1, &(HSwimming), "", ""  },
-                  {	7, &(HStealth), "stealthy", ""  },	/* with cat-like tread ... */
+  pir_abil[] = {  {1, &(HSwimming), "better at swimming", "worse at swimming"  },
+                  {	7, &(HStealth), "stealthy", "clumsy"  },	/* with cat-like tread ... */
                   {  11, &(HFast), "quick", "slow" },
                   {	 0, 0, 0, 0 } },
 
-  pri_abil[] = { { 15, &(HWarning), "sensitive", "" },
+  pri_abil[] = { { 15, &(HWarning), "sensitive", "insensitive" },
                  { 20, &(HFire_resistance), "cool", "warmer" },
                  { 0, 0, 0, 0 } },
 
-  ran_abil[] = { { 1, &(HSearching), "", "" },
-                 { 7, &(HStealth), "stealthy", "" },
+  ran_abil[] = { { 1, &(HSearching), "perceptive", "unaware" },
+                 { 7, &(HStealth), "stealthy", "loud" },
                  { 15, &(HSee_invisible), "", "" },
                  { 0, 0, 0, 0 } },
 
-  rog_abil[] = { { 1, &(HStealth), "", "" },
-                 { 10, &(HSearching), "perceptive", "" },
+  rog_abil[] = { { 1, &(HStealth), "stealthy", "loud" },
+                 { 10, &(HSearching), "perceptive", "unaware" },
                  { 0, 0, 0, 0 } },
 
-  sam_abil[] = { { 1, &(HFast), "", "" },
-                 { 15, &(HStealth), "stealthy", "" },
+  sam_abil[] = { { 1, &(HFast), "quick", "slow" },
+                 { 15, &(HStealth), "stealthy", "loud" },
                  { 0, 0, 0, 0 } },
 
-  tou_abil[] = { { 10, &(HSearching), "perceptive", "" },
-                 { 20, &(HPoison_resistance), "hardy", "" },
+  tou_abil[] = { { 10, &(HSearching), "perceptive", "unaware" },
+                 { 20, &(HPoison_resistance), "healthy", "unhealthy" },
                  { 0, 0, 0, 0 } },
 
-  val_abil[] = { { 1, &(HCold_resistance), "", "" },
-                 { 1, &(HStealth), "", "" },
+  val_abil[] = { { 1, &(HCold_resistance), "pleasantly warm", "chilly" },
+                 { 1, &(HStealth), "stealthy", "loud" },
                  { 7, &(HFast), "quick", "slow" },
                  { 0, 0, 0, 0 } },
 
-  wiz_abil[] = { { 15, &(HWarning), "sensitive", "" },
+  wiz_abil[] = { { 15, &(HWarning), "sensitive", "insensitive" },
                  { 17, &(HTeleport_control), "controlled", "uncontrolled" },
                  { 0, 0, 0, 0 } },
 
@@ -962,12 +962,12 @@ from_what(int propidx) /* special cases can have negative values */
 RESTORE_WARNING_FORMAT_NONLITERAL
 
 void
-adjabil(int oldlevel, int newlevel)
+adjabil(int oldlevel, int newlevel, int role_index, int oldrolelevel, int newrolelevel)
 {
     register const struct innate *abil, *rabil;
     long prevabil, mask = FROMEXPER;
 
-    abil = role_abil(Role_switch);
+    abil = role_abil(roles[role_index].malenum);
 
     switch (Race_switch) {
     case PM_MERFOLK:
@@ -1005,7 +1005,8 @@ adjabil(int oldlevel, int newlevel)
             mask = FROMRACE;
         }
         prevabil = *(abil->ability);
-        if (oldlevel < abil->ulevel && newlevel >= abil->ulevel) {
+        if (((mask == FROMRACE) ? oldlevel : oldrolelevel) < abil->ulevel 
+            && ((mask == FROMRACE) ? newlevel : newrolelevel) >= abil->ulevel) {
             /* Abilities gained at level 1 can never be lost
              * via level loss, only via means that remove _any_
              * sort of ability.  A "gain" of such an ability from
@@ -1020,7 +1021,8 @@ adjabil(int oldlevel, int newlevel)
                 if (*(abil->gainstr))
                     You_feel("%s!", abil->gainstr);
             }
-        } else if (oldlevel >= abil->ulevel && newlevel < abil->ulevel) {
+        } else if (((mask == FROMRACE) ? oldlevel : oldrolelevel) >= abil->ulevel
+                    && ((mask == FROMRACE) ? newlevel : newrolelevel) < abil->ulevel) {
             *(abil->ability) &= ~mask;
             if (!(*(abil->ability) & INTRINSIC)) {
                 if (*(abil->losestr))

@@ -2748,6 +2748,39 @@ struct mhitm_data *mhm;
 }
 
 void
+mhitm_ad_pits(magr, mattk, mdef, mhm)
+struct monst *magr;
+struct attack *mattk;
+struct monst *mdef;
+struct mhitm_data *mhm;
+{
+    if (magr == &g.youmonst) {
+        /* uhitm */
+        pline("Your strike shakes the entire world around you!");
+        do_earthquake((u.ulevel - 1) / 3 + 1, u.ux, u.uy);
+        awaken_monsters(ROWNO * COLNO);
+        if (mhm->done)
+            return;
+    } else if (mdef == &g.youmonst) {
+        /* mhitu */
+        hitmsg(magr, mattk);
+        pline("The strike of %s shakes the entire world around you!",
+            mon_nam(magr));
+        do_earthquake(7, magr->mx, magr->my);
+        awaken_monsters(ROWNO * COLNO);
+        return;
+    } else {
+        /* mhitm */
+        pline("The strike of %s shakes the world!",
+            mon_nam(magr));
+        do_earthquake(7, magr->mx, magr->my);
+        awaken_monsters(ROWNO * COLNO);
+        if (mhm->done)
+            return;
+    }
+}
+
+void
 mhitm_ad_sgld(struct monst *magr, struct attack *mattk, struct monst *mdef,
               struct mhitm_data *mhm)
 {
@@ -5074,6 +5107,7 @@ mhitm_adtyping(struct monst *magr, struct attack *mattk, struct monst *mdef,
     case AD_VOID: mhitm_ad_void(magr, mattk, mdef, mhm); break;
     case AD_MEMR: mhitm_ad_memr(magr, mattk, mdef, mhm); break;
     case AD_QUIL: mhitm_ad_quil(magr, mattk, mdef, mhm); break;
+    case AD_PITS: mhitm_ad_pits(magr, mattk, mdef, mhm); break;
     case AD_DSRM: mhitm_ad_dsrm(magr, mattk, mdef, mhm); break;
     case AD_WIND: mhitm_ad_wind(magr, mattk, mdef, mhm); break;
     case AD_CALM: mhitm_ad_calm(magr, mattk, mdef, mhm); break;

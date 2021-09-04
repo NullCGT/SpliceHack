@@ -1916,7 +1916,10 @@ revive_corpse(struct obj *corpse)
 
         case OBJ_MINVENT: /* probably a nymph's */
             if (cansee(mtmp->mx, mtmp->my)) {
-                if (canseemon(mcarry))
+                if (mcarry->data == &mons[PM_HEARTH_ARCHON] && canseemon(mcarry))
+                        pline("%s gently sets %s down and it revives!",
+                              Monnam(mcarry), an(cname));
+                else if (canseemon(mcarry))
                     pline("Startled, %s drops %s as it revives!",
                           mon_nam(mcarry), an(cname));
                 else

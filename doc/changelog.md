@@ -159,6 +159,9 @@ in its own way.
 - New Adult Monsters: Killer Croc, Diamond Piercer
   - Not randomly generated.
   - Only appear when a lower level monster grows up.
+- New Monster: Adherer
+  - M-class monster.
+  - Weapons stick to it.
 - Ported UnnetHack Aleaxes: Aleaxes are generated with copies of the player's items.
 - Dragons have been significantly altered.
   - Dragons have adjectives attached to their names that describe their age categories. the level of
@@ -193,6 +196,11 @@ in its own way.
   - Worms that walk wield executioner's maces.
   - When a worm that walks dies, it dissolves into maggots. If one of these maggots infests a
     corpse, that corpse has the potential to arise as another worm that walks.
+- Hundred Handed One Changes
+  - Renamed to Hecatoncheire.
+  - Attack for a mere 1d1 damage, but may continue attacking until their attack misses, or 100
+    attacks have elapsed.
+  - Have +100 to multishot.
 
 ### Display Changes
 - Ridden monsters are highlighted in bright magenta.
@@ -234,13 +242,14 @@ in its own way.
   they are not very practical pets anyway.
 - Werebears generate peaceful.
 - Altered the tiles for many existing monsters in order to improve visual clarity.
+- Renamed Avatars of Akasha to Hearth Archons.
 
 ### Removed Content
 Since this release is a rewrite, several pieces of existing content have been heavily altered
 or outright removed. Rationale can be provided for removed content upon request.
 - Removed the following monsters: Anubites, Nuckelavees, Plant Monsters, Lords of Worms, Penguins,
   Mystic Scarabs, Memory Hounds, Goblin Windmages, Walruses, Werephants, Vent Wurms, Crevasse Wurms,
-  Sludge Golems.
+  Sludge Golems, Myconids, Legendary Lichens, Amalagamations, Bad Clones, Cerastes.
 - Removed the following objects:
   - Razor whip.
   - Robe of the blood magus.

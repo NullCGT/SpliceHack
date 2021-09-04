@@ -1652,6 +1652,7 @@ const int matac[] = {
      5,  // COLD IRON
      6,  // MITHRIL
      3,  // PLASTIC
+     3,  // SLIME
      5,  // GLASS
      7,  // GEMSTONE
      5,  // SHADOW
@@ -3389,7 +3390,7 @@ warp_material(obj,by_you)
 struct obj* obj;
 boolean by_you;
 {
-    if (obj->oartifact)
+    if (obj->oartifact && rn2(20))
         return FALSE;
     int origmat = obj->material;
 
@@ -3397,11 +3398,16 @@ boolean by_you;
     int newmat;
     while (j < 1000) {
         newmat = 1 + rn2(NUM_MATERIAL_TYPES);
-        if (newmat != origmat && valid_obj_material(obj, newmat))
+        if (newmat != origmat && newmat != VEGGY
+            && newmat != DRAGON_HIDE && newmat != FLESH
+            && newmat != LIQUID)
             break;
         j++;
     }
-    if (valid_obj_material(obj, newmat) && !Hate_material(newmat))
+    /* This can cause some *very* weird materials. DANGEROUS hack. */
+    if (!Hate_material(newmat) && newmat != VEGGY 
+        && newmat != DRAGON_HIDE && newmat != FLESH
+        && newmat != LIQUID)
         obj->material = newmat;
     else
         /* can use a 0 in the list to default to the base material */

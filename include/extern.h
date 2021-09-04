@@ -1816,6 +1816,7 @@ extern struct fruit *fruit_from_indx(int);
 extern struct fruit *fruit_from_name(const char *, boolean, int *);
 extern void reorder_fruit(boolean);
 extern char *xname(struct obj *);
+extern char *xname_forcemat(struct obj *);
 extern char *mshot_xname(struct obj *);
 extern boolean the_unique_obj(struct obj *);
 extern boolean the_unique_pm(struct permonst *);

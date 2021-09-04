@@ -220,7 +220,7 @@ m_initweap(register struct monst *mtmp)
     register struct permonst *ptr = mtmp->data;
     register int mm = monsndx(ptr);
     struct obj *otmp;
-    int bias, w1, w2, spe2;
+    int bias, w1, w2, spe2, hbold;
 
     if (Is_rogue_level(&u.uz))
         return;
@@ -241,6 +241,10 @@ m_initweap(register struct monst *mtmp)
     case S_GIANT:
         if (rn2(2))
             (void) mongets(mtmp, (mm != PM_ETTIN) ? BOULDER : CLUB);
+        if (mm == PM_HECATONCHEIRE) {
+            for (hbold = 0; hbold < rn1(3, 4); hbold++)
+              (void) mongets(mtmp, BOULDER);
+        }
         break;
     case S_IMP:
         if (mm == PM_REDCAP) {
@@ -688,6 +692,12 @@ m_initweap(register struct monst *mtmp)
                                          : SCIMITAR);
         }
         break;
+    case S_VAMPIRE:
+        if (ptr == &mons[PM_ALUCARD])
+            (void) mongets(mtmp, KATANA);
+        else if (ptr == &mons[PM_BAOBHAN_SITH] && !rn2(20))
+            (void) mongets(mtmp, GOWN);
+        break;
     case S_OGRE:
         if (!rn2(mm == PM_OGRE_TYRANT ? 3 : mm == PM_OGRE_LEADER ? 6 : 12))
             (void) mongets(mtmp, BATTLE_AXE);
@@ -1100,6 +1110,12 @@ m_initinv(register struct monst *mtmp)
         }
         break;
     case S_VAMPIRE:
+        if (ptr == &mons[PM_ALUCARD]) {
+            for (cnt = rn2(2); cnt < 4; cnt++) {
+                (void) mongets(mtmp, POT_VAMPIRE_BLOOD);
+            }
+            break;
+        }
         if (rn2(2)) {
             if ((int) mtmp->m_lev > rn2(30))
                 (void) mongets(mtmp, POT_VAMPIRE_BLOOD);
@@ -1171,6 +1187,15 @@ m_initinv(register struct monst *mtmp)
                 otmp->owt = weight(otmp);
             }
             (void) mpickobj(mtmp, otmp);
+        }
+        if (ptr == &mons[PM_ALCHEMIST]) {
+            for (cnt = rnd(3); cnt; cnt--) {
+                otmp = mksobj(rnd_class(POT_REFLECTION, POT_OIL),
+                              FALSE, FALSE);
+                (void) mpickobj(mtmp, otmp);
+            }
+            (void) mongets(mtmp, POT_ACID);
+            (void) mongets(mtmp, POT_ACID);
         }
         break;
     case S_LEPRECHAUN:
@@ -1769,7 +1794,7 @@ makemon(register struct permonst *ptr,
         /* this is a shapechanger after all */
         mtmp->cham = mcham;
         /* Vlad stays in his normal shape so he can carry the Candelabrum */
-        if (mndx != PM_VLAD_THE_IMPALER
+        if (mndx != PM_VLAD_THE_IMPALER && mndx != PM_ALUCARD
             /* Note:  shapechanger's initial form used to be chosen here
                with rndmonst(), yielding a monster which was appropriate
                to the level's difficulty but ignoring the changer's usual

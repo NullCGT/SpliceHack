@@ -331,7 +331,8 @@ hates_material(struct permonst *ptr, int material)
     else if (material == IRON || material == COLD_IRON) {
         /* cold iron: fairy/fae creatures hate it */
         return (is_elf(ptr) || ptr->mlet == S_NYMPH
-                || ptr->mlet == S_IMP);
+                || ptr->mlet == S_IMP
+                || ptr->mlet == S_IMP || ptr == &mons[PM_BAOBHAN_SITH]);
     }
     else if (material == COPPER) {
         /* copper has antibacterial and antifungal properties,
@@ -1162,6 +1163,12 @@ static const short grownups[][2] = {
     { PM_MARTIAL_ARTIST, PM_GRANDMASTER },
     { PM_MOVANIC_DEVA, PM_MONADIC_DEVA },
     { PM_MONADIC_DEVA, PM_ASTRAL_DEVA },
+    { PM_SHRIEKER, PM_SCREAMER },
+    { PM_RED_MOLD, PM_RED_MOLDIER },
+    { PM_YELLOW_MOLD, PM_YELLOW_MOLDIER },
+    { PM_GREEN_MOLD, PM_GREEN_MOLDIER },
+    { PM_BROWN_MOLD, PM_BROWN_MOLDIER },
+    { PM_GHOUL, PM_GHAST },
     { NON_PM, NON_PM }
 };
 

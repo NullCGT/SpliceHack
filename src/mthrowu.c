@@ -203,6 +203,9 @@ monmulti(struct monst* mtmp, struct obj* otmp, struct obj* mwep)
             multishot++;
         else if (monsndx(mtmp->data) == PM_HOUND_ARCHON)
             multishot += 3;
+        /* Some people might call this stupid. They would be right. */
+        else if (monsndx(mtmp->data) == PM_HECATONCHEIRE)
+            multishot += 100;
 
         /* this portion is different from hero multishot; from slash'em?
          */

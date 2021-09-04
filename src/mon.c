@@ -300,7 +300,8 @@ zombie_maker(struct monst *mon)
     switch (pm->mlet) {
     case S_ZOMBIE:
         /* Z-class monsters that aren't actually zombies go here */
-        if (pm == &mons[PM_GHOUL] || pm == &mons[PM_SKELETON])
+        if (is_ghoul(pm) || pm == &mons[PM_SKELETON]
+            || pm == &mons[PM_BONEWALKER])
             return FALSE;
         return TRUE;
     case S_LICH:
@@ -559,6 +560,7 @@ make_corpse(register struct monst* mtmp, unsigned int corpseflags)
     case PM_VAMPIRE_LEADER:
     case PM_VAMPIRE_MAGE:
     case PM_NOSFERATU:
+    case PM_BAOBHAN_SITH:
         /* include mtmp in the mkcorpstat() call */
         num = undead_to_corpse(mndx);
         corpstatflags |= CORPSTAT_INIT;
@@ -2918,7 +2920,7 @@ corpse_chance(
     struct obj *otmp;
     int i, tmp, x, y;
 
-    if (mdat == &mons[PM_VLAD_THE_IMPALER] ||
+    if (mdat == &mons[PM_VLAD_THE_IMPALER] || mdat == &mons[PM_ALUCARD] ||
         (mdat->mlet == S_LICH && mdat != &mons[PM_WORM_THAT_WALKS])) {
         if (cansee(mon->mx, mon->my) && !was_swallowed)
             pline("%s body crumbles into dust.", s_suffix(Monnam(mon)));
@@ -3856,20 +3858,22 @@ m_respond(struct monst* mtmp)
     /* Supporter monsters. */
     if (is_supporter(mtmp->data)) {
         if (canseemon(mtmp)) {
-            pline("%s utters a complex chant.", Monnam(mtmp));
+            if (mtmp->data == &mons[PM_HEARTH_ARCHON]) {
+                verbalize("It's going to be OK.");
+            } else {
+                pline("%s utters a complex chant.", Monnam(mtmp));
+            }
         }
         for (mon = fmon; mon; mon = mon->nmon) {
             if (DEADMONSTER(mon))
                 continue;
             if (mon == mtmp)
                 continue;
-            if (!same_race(mtmp->data, mon->data))
+            if (mtmp->mpeaceful && !mon->mpeaceful)
+                continue;
+            if (!mtmp->mpeaceful && mon->mpeaceful)
                 continue;
             switch(monsndx(mtmp->data)) {
-            case PM_ORC_SHAMAN:
-            case PM_GNOLL_SHAMAN:
-            case PM_KOBOLD_SHAMAN:
-            case PM_RATMAN_SQUEAKER:
             default:
                 if (mon->mhp < mon->mhpmax && canseemon(mon)) {
                     pline("%s looks better.", Monnam(mon));
@@ -4438,6 +4442,10 @@ pickvampshape(struct monst* mon)
             break; /* leave mndx as is */
         wolfchance = 3;
     /*FALLTHRU*/
+    case PM_ALUCARD:
+        if (!uppercase_only) {
+            mndx = PM_BARGHEST;
+        }
     case PM_VAMPIRE_MAGE:
     case PM_VAMPIRE_LEADER: /* vampire lord or Vlad can become wolf */
         if (!rn2(wolfchance) && !uppercase_only) {
@@ -4584,6 +4592,8 @@ select_newcham_form(struct monst* mon)
     case PM_VAMPIRE_MAGE:
     case PM_VAMPIRE_LEADER:
     case PM_VAMPIRE:
+    case PM_BAOBHAN_SITH:
+    case PM_ALUCARD:
         mndx = pickvampshape(mon);
         break;
     case NON_PM: /* ordinary */

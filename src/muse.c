@@ -2017,6 +2017,7 @@ rnd_offensive_item(struct monst* mtmp)
 #define MUSE_BAG 10
 /* splice muse */
 #define MUSE_POT_REFLECT 11
+#define MUSE_CORPSE 12
 #define MUSE_WISH 15
 
 boolean
@@ -2148,6 +2149,11 @@ find_misc(struct monst* mtmp)
             && !mtmp->mcan && m_canseeu(mtmp) && !mtmp->mpeaceful) {
             g.m.misc = NULL;
             g.m.has_misc = MUSE_WISH;
+        }
+        nomore(MUSE_CORPSE);
+        if (obj->otyp == CORPSE && mtmp->data == &mons[PM_HEARTH_ARCHON]) {
+            g.m.misc = obj;
+            g.m.has_misc = MUSE_CORPSE;
         }
         nomore(MUSE_POT_REFLECT);
         if (obj->otyp == POT_REFLECTION && !mtmp->mreflect &&
@@ -2413,6 +2419,16 @@ use_misc(struct monst* mtmp)
     case MUSE_WISH:
         mmake_wish(mtmp);
         mtmp->mcan = 1;
+        return 2;
+    case MUSE_CORPSE:
+        if (canspotmon(mtmp) && !Blind) {
+            pline("%s sets %s down and breathes life back into its corpse.", Monnam(mtmp),
+                the(corpse_xname(otmp, (const char *) 0, CXN_SINGULAR)));
+            (void) revive_corpse(otmp);
+        }
+        if (!Deaf) {
+            verbalize("Thy home beckons thee, young one. Thou art needed in this final hour.");
+        }
         return 2;
     case MUSE_POT_REFLECT:
         mquaffmsg(mtmp, otmp);
@@ -2696,7 +2712,8 @@ searches_for_item(struct monst* mon, struct obj* obj)
             return (boolean) (((mon->misc_worn_check & W_ARMG) != 0L
                                && touch_petrifies(&mons[obj->corpsenm]))
                               || (!resists_ston(mon)
-                                  && cures_stoning(mon, obj, FALSE)));
+                                  && cures_stoning(mon, obj, FALSE))
+                              || mon->data == &mons[PM_HEARTH_ARCHON]);
         if (typ == TIN)
             return (boolean) (mcould_eat_tin(mon)
                               && (!resists_ston(mon)

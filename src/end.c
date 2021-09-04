@@ -545,6 +545,13 @@ done_in_by(struct monst *mtmp, int how)
         u.ugrave_arise = PM_BODAK;
     else if (mptr->mlet == S_WRAITH)
         u.ugrave_arise = PM_WRAITH;
+    else if (mptr == &mons[PM_BAOBHAN_SITH]) {
+        if (flags.female == FEMALE)
+            u.ugrave_arise = PM_BAOBHAN_SITH;
+        else
+            u.ugrave_arise = NON_PM;
+    } else if (mptr->mlet == S_WRAITH)
+        u.ugrave_arise = PM_WRAITH;
     else if (mptr->mlet == S_MUMMY && g.urace.mummynum != NON_PM)
         u.ugrave_arise = g.urace.mummynum;
     else if (zombie_maker(mtmp) && zombie_form(g.youmonst.data) != NON_PM)
@@ -557,6 +564,14 @@ done_in_by(struct monst *mtmp, int how)
         u.ugrave_arise = PM_GHOUL;
     else if (mptr == &mons[PM_SPECTRE] || u.ulevel > 15)
         u.ugrave_arise = PM_SPECTRE;
+    else if (mptr == &mons[PM_RED_MOLDIER])
+        u.ugrave_arise = PM_RED_MOLDIER;
+    else if (mptr == &mons[PM_YELLOW_MOLDIER])
+        u.ugrave_arise = PM_YELLOW_MOLDIER;
+    else if (mptr == &mons[PM_GREEN_MOLDIER])
+        u.ugrave_arise = PM_GREEN_MOLDIER;
+    else if (mptr == &mons[PM_BROWN_MOLDIER])
+        u.ugrave_arise = PM_BROWN_MOLDIER;
     /* this could happen if a high-end vampire kills the hero
        when ordinary vampires are genocided; ditto for wraiths */
     if (u.ugrave_arise >= LOW_PM

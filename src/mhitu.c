@@ -15,6 +15,7 @@ static void summonmu(struct monst *, boolean);
 static int hitmu(struct monst *, struct attack *);
 static int gulpmu(struct monst *, struct attack *);
 static int explmu(struct monst *, struct attack *, boolean);
+static int screamu(struct monst *, struct attack*, int);
 static void mayberem(struct monst *, const char *, struct obj *,
                      const char *);
 static int passiveum(struct permonst *, struct monst *, struct attack *);
@@ -738,6 +739,9 @@ mattacku(register struct monst *mtmp)
     if (mtmp->data == &mons[PM_HYDRA]) {
         k = min(mtmp->m_lev - mtmp->data->mlevel + 1, 10);
     }
+    if (mtmp->data == &mons[PM_HECATONCHEIRE]) {
+        k = 100;
+    }
 
     g.skipdrin = FALSE; /* [see mattackm(mhitm.c)] */
 
@@ -880,6 +884,13 @@ mattacku(register struct monst *mtmp)
             else
                 sum[i] = castmu(mtmp, mattk, TRUE, foundyou);
             break;
+        case AT_SCRE:
+    	    if (ranged) {
+    		      sum[i] = screamu(mtmp, mattk, 
+                    d((int) mattk->damn, (int) mattk->damd));
+    	    }
+    	    /* if you're nice and close, don't bother */
+    	    break;
 
         default: /* no attack */
             break;
@@ -901,6 +912,13 @@ mattacku(register struct monst *mtmp)
 
         /* handle multiple hydra attacks */
         if (mtmp->data == &mons[PM_HYDRA] && mattk->aatyp == AT_BITE && k > 0) {
+            i -= 1;
+            k -= 1;
+        }
+        /* handle hundred-handed ones */
+        if (mtmp->data == &mons[PM_HECATONCHEIRE] 
+            && mattk->aatyp == AT_WEAP && k > 0
+            && sum[i] == MM_HIT) {
             i -= 1;
             k -= 1;
         }
@@ -1243,6 +1261,7 @@ static int
 gulpmu(struct monst *mtmp, struct attack *mattk)
 {
     struct trap *t = t_at(u.ux, u.uy);
+    struct obj *pseudo;
     int tmp = d((int) mattk->damn, (int) mattk->damd);
     int tim_tmp;
     struct obj *otmp2;
@@ -1391,6 +1410,24 @@ gulpmu(struct monst *mtmp, struct attack *mattk)
             exercise(A_STR, FALSE);
         }
         break;
+    case AD_POTN:
+        You("get some of %s in your mouth!", mon_nam(mtmp));
+        i = POT_GAIN_ABILITY +
+            (mtmp->m_id % (POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY));
+        if (i == POT_GAIN_LEVEL ||
+             i == POT_EXTRA_HEALING ||
+             i == POT_HEALING ||
+             i == POT_FULL_HEALING ||
+             i == POT_GAIN_ABILITY ||
+             i == POT_GAIN_ENERGY) {
+            i = POT_ACID;
+        }
+        pseudo = mksobj(i, FALSE, FALSE);
+        pseudo->blessed = 0;
+        pseudo->cursed = rn2(2);
+        (void) peffects(pseudo);
+        obfree(pseudo, (struct obj *) 0); /* now, get rid of it */
+        /*FALLTHRU*/
     case AD_ACID:
         if (Acid_resistance) {
             You("are covered with a seemingly harmless goo.");
@@ -1667,7 +1704,7 @@ gazemu(struct monst *mtmp, struct attack *mattk)
         if (!mtmp->mcan && canseemon(mtmp)
             && couldsee(mtmp->mx, mtmp->my) && !is_fainted()
             && !mtmp->mspec_used && rn2(4)
-            && g.multi>=0 && !((is_undead(g.youmonst.data) || Race_if(PM_GHOUL)
+            && g.multi>=0 && !((is_undead(g.youmonst.data)
                 || is_demon(g.youmonst.data)) && is_undead(mtmp->data))) {
             pline("%s aberrant stare frightens you to the core!",
                 s_suffix(Monnam(mtmp)));
@@ -2333,6 +2370,79 @@ mayberem(struct monst *mon,
                                  : hairbuf);
     }
     remove_worn_item(obj, TRUE);
+}
+
+/* The Nazgul's scream attack effect, pulled from SporkHack.
+ * I've modified it here to be more in-line with how 3.6.x
+ * employs its gaze stun attack, which allows a bit more
+ * fine-tuning --K2 */
+static int
+screamu(mtmp, mattk, dmg)
+struct monst *mtmp;
+struct attack *mattk;
+int dmg;
+{
+    boolean cancelled = (mtmp->mcan != 0);
+    /* assumes that hero has to hear the monster's scream in
+       order to be affected */
+        /* Only screams when a certain distance from our hero, can see them, and has the
+       available mspec */
+    if (distu(mtmp->mx,mtmp->my) > 85 
+        || !m_canseeu(mtmp) 
+        || mtmp->mspec_used 
+        || !rn2(5)) {
+        return FALSE;
+    }
+
+    if (canseemon(mtmp) && (Deaf || Sonic_resistance)) {
+        pline("It looks as if %s is yelling at you.", mon_nam(mtmp));
+    }
+    if (!cancelled && ((m_canseeu(mtmp) && Blind && Deaf) || Sonic_resistance)) {
+        You("sense a disturbing vibration in the air.");
+    } else if (m_canseeu(mtmp) && canseemon(mtmp) && !Deaf && cancelled) {
+        pline("%s croaks hoarsely.", Monnam(mtmp));
+    } else if (cancelled && !Deaf) {
+        You_hear("a hoarse croak nearby.");
+    }
+
+    mtmp->mspec_used = mtmp->mspec_used + (dmg + rn2(6));
+    if (cancelled || Deaf || Sonic_resistance)
+        return FALSE;
+
+    /* scream attacks */
+    switch (mattk->adtyp) {
+	case AD_STUN:
+        if (m_canseeu(mtmp)) {
+            pline("%s lets out a bloodcurdling scream!", Monnam(mtmp));
+        } else {
+            You_hear("a horrific scream!");
+        }
+        if (u.usleep && m_canseeu(mtmp) && (!Deaf)) {
+            unmul("You are frightened awake!");
+        }
+        Your("mind reels from the noise!");
+        make_stunned((HStun & TIMEOUT) + (long) dmg, TRUE);
+        aggravate(); /* Nazgul scream VERY loudly */
+        stop_occupation();
+        break;
+    case AD_FEAR:
+        if (m_canseeu(mtmp)) {
+            pline("%s lets out a horrific wail!", Monnam(mtmp));
+        } else {
+            You_hear("a terrible wail!");
+        }
+        if (u.usleep && m_canseeu(mtmp)) {
+            unmul("What a horrible nightmare! You wake up!");
+        }
+        You("are struck with a sudden, terrible fear.");
+        make_afraid((HAfraid & TIMEOUT) + (long) dmg, TRUE);
+        aggravate();
+        stop_occupation();
+        break;
+    default:
+        break;
+    }
+    return TRUE;
 }
 
 /* FIXME:

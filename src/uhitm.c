@@ -3769,7 +3769,8 @@ mhitm_ad_deth(struct monst *magr, struct attack *mattk UNUSED,
         mhm->damage = 0;
     } else if (mdef == &g.youmonst) {
         /* mhitu */
-        pline("%s reaches out with its deadly touch.", Monnam(magr));
+        pline("%s reaches out with %s deadly touch.", Monnam(magr),
+            mhis(magr));
         if (is_undead(pd)) {
             /* Still does normal damage */
             pline("Was that the touch of death?");
@@ -3925,7 +3926,7 @@ struct mhitm_data *mhm;
            don't make this attack less frequent */
         if (uncancelled) {
             struct obj *obj = some_armor(&g.youmonst);
-            
+
             if (!obj) {
                 /* some rings are susceptible;
                    amulets and blindfolds aren't (at present) */
@@ -3947,7 +3948,7 @@ struct mhitm_data *mhm;
                 }
             }
             if (obj && warp_material(obj, FALSE)) {
-                pline("That's odd, you don't remember putting on %s...", 
+                pline("That's odd, you don't remember putting on %s...",
                     an(xname_forcemat(obj)));
                 update_inventory();
                 g.context.botl = 1;
@@ -3979,7 +3980,7 @@ struct mhitm_data *mhm;
         /* mhitu */
         int armpro = magic_negation(mdef);
         boolean uncancelled = !magr->mcan && (rn2(10) >= 3 * armpro);
-        
+
         hitmsg(magr, mattk);
         if (uncancelled) {
             if (flags.verbose)
@@ -4017,7 +4018,7 @@ struct mhitm_data *mhm;
         /* mhitu */
         int armpro = magic_negation(mdef);
         boolean uncancelled = !magr->mcan && (rn2(10) >= 3 * armpro);
-        
+
         hitmsg(magr, mattk);
         if (uncancelled && g.multi >= 0 && !rn2(3)) {
             if (Free_action)

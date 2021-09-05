@@ -166,6 +166,13 @@ in its own way.
       created by fusing Frost Brand and Fire Brand.
     - Mortality Dial: Prevents trolls from reviving. While wielded, monsters do not regenerate.
     - Squall: Deals double sonic damage, like a brand, and also fires lightning bolts.
+- By combining armor, weapon, or a weptool with a corpse or tin, you can imbue that item with its
+  essence.
+  - Imbued weapons deal damage depending on the attack of the monster that was imbued. For example,
+    a long sword imbued with blue dragon essence will shock enemies.
+  - When polymorphed while wearing imbued body armor, you will polymorph into whatever monster that
+    armor is imbued with. This includes not normally polymorphable monsters.
+
 
 #### Wands of Wishing
 - Use XNetHack's wand of wishing changes.

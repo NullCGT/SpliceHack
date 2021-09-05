@@ -1518,6 +1518,8 @@ ini_inv(struct trobj *trop)
             obj = mksobj(otyp, TRUE, FALSE);
             /* See my comment on start scumming object materials below - Kes */
             if (rn2(50)) obj->material = objects[obj->otyp].oc_material;
+            /* Do not allow starting inventory objects to be imbued. */
+            if (is_imbued(obj)) obj->corpsenm = NON_PM;
             /* Don't allow weapons to roll high enchantment and get an oname
              * when they'll then have their enchantment set after this */
             if ((Hate_material(SILVER) && obj->material == SILVER)
@@ -1583,6 +1585,7 @@ ini_inv(struct trobj *trop)
                excited to occasionally start with some sort of weird item.
                - Kes */
             if (rn2(50)) obj->material = objects[obj->otyp].oc_material;
+            if (is_imbued(obj)) obj->corpsenm = NON_PM;
             /* Don't start with +0 or negative rings */
             if (objects[otyp].oc_charged && obj->spe <= 0)
                 obj->spe = rne(3);

@@ -376,6 +376,12 @@ struct obj {
     ((obj)->otyp == LUCKSTONE || (obj)->otyp == LOADSTONE \
      || (obj)->otyp == FLINT || (obj)->otyp == TOUCHSTONE)
 
+/* imbued */
+#define is_imbued(obj) \
+    (((obj)->oclass == WEAPON_CLASS || (obj)->oclass == ARMOR_CLASS \
+        || is_weptool(obj)) \
+    && (obj)->corpsenm != NON_PM)
+
 /* worthless glass -- assumes all GLASS * are worthless glass */
 #define is_worthless_glass(obj) \
     ((obj)->oclass == GEM_CLASS && obj->material == GLASS)

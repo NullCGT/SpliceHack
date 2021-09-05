@@ -1235,6 +1235,28 @@ artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
                        /* feel the effect even if not seen */
                        || (youattack && mdef == u.ustuck));
 
+    /* Imbued objects. */
+    if (is_imbued(otmp) && rn2(2)) {
+        struct mhitm_data mhm;
+        struct attack *mattk = &mons[otmp->corpsenm].mattk[0];
+        if (realizes_damage) {
+            pline("The %s%sessence in %s bursts forth!", 
+                otmp->known ? mons[otmp->corpsenm].pmnames[NEUTRAL] : "", 
+                otmp->known ? " " : "",
+                the(distant_name(otmp, xname)));
+        }
+        mhm.damage = d(min(2, (int) mattk->damn), (int) min(6, mattk->damd));
+        mhm.hitflags = MM_MISS;
+        mhm.permdmg = 0;
+        mhm.specialdmg = 0;
+        mhm.done = FALSE;
+        if ((mattk->adtyp == AD_STON || mattk->adtyp == AD_VOID) && rn2(30))
+            mhitm_ad_phys(magr, mattk, mdef, &mhm);
+        else
+            mhitm_adtyping(magr, mattk, mdef, &mhm);
+        return realizes_damage;
+    }
+
     /* the four basic attacks: fire, cold, shock and missiles */
     if (attacks(AD_FIRE, otmp)) {
         if (realizes_damage)

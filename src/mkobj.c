@@ -808,11 +808,15 @@ mksobj(int otyp, boolean init, boolean artif)
                 if (!rn2(8)) otmp->opoisoned = POT_GAIN_ABILITY + rn2(POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY);
                 else otmp->opoisoned = POT_SICKNESS;
             }
+            if ((is_weptool(otmp) || otmp->oclass == WEAPON_CLASS 
+                || otmp->oclass == ARMOR_CLASS) && !rn2(200)) {
+                otmp->corpsenm = rn2(NUMMONS);
+            }
 
             if (artif && !rn2(Role_if(PM_PIRATE) ? 5 : 20))
                 otmp = mk_artifact(otmp, (aligntyp) A_NONE);
             if (!otmp->oartifact && !otmp->cursed
-                && (otmp->spe + otmp->oerodeproof > rnd(5)))
+                && (otmp->spe + (otmp->corpsenm ? 3 : 0) + otmp->oerodeproof > rnd(5)))
                 otmp = weapon_oname(otmp);
             break;
         case FOOD_CLASS:

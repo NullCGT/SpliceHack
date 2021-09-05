@@ -234,6 +234,8 @@ in its own way.
   their hunger increases the total time of their prayer timeout. This is meant to eliminate slow,
   degenerate play, and should not affect regular players much.
 - While the player is level one, they get hungry much more slowly.
+- Excalibur's and Snickersnee's artifact attack/damage bonuses have been swapped, so
+that Excalibur doesn't crowd out all the other artifact weapons as much.
 
 ### YAFM
 - Whenever you are polymorphed into a bear, all instances of the word "bare" are replaced

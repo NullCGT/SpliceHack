@@ -5124,6 +5124,13 @@ NEARDATA struct permonst montemplates[] = {
         A(NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
             ATTK(AT_BOOM, AD_PHYS, 4, 10)),
         SIZ(0, 0, 0, 0), 0, 0, 0L, 0L, 0, 1, 0),
+    MON("spiny", S_DEMON, LVL(0, 0, 5, 0, 0), (0),
+        A(NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
+            ATTK(AT_NONE, AD_QUIL, 3, 5), ATTK(AT_VOLY, AD_QUIL, 8, 2)),
+        SIZ(0, 0, 0, 0), MR_SLEEP | MR_POISON, MR_POISON,
+        M1_POIS | M1_THICK_HIDE,
+        M2_STALK | M2_HOSTILE,
+        M3_INFRAVISION | M3_INFRAVISIBLE, 2, 0),
 
     /*
      * array terminator

@@ -105,7 +105,7 @@ opt_##a,
                 &flags.autodig)
     NHOPTB(autoopen, 0, opt_out, set_in_game, On, Yes, No, No, NoAlias,
                 &flags.autoopen)
-    NHOPTB(autopickup, 0, opt_out, set_in_game, On, Yes, No, No, NoAlias,
+    NHOPTB(autopickup, 0, opt_out, set_in_game, Off, Yes, No, No, NoAlias,
                 &flags.pickup)
     NHOPTO("autopickup exceptions", o_autopickup_exceptions, BUFSZ, opt_in,
            set_in_game, No, Yes, No, NoAlias, "edit autopickup exceptions")
@@ -133,10 +133,10 @@ opt_##a,
     NHOPTC(catname, PL_PSIZ, opt_in, set_gameview, No, Yes, No, No, NoAlias,
                 "name of your starting pet if it is a kitten")
 #ifdef INSURANCE
-    NHOPTB(checkpoint, 0, opt_out, set_in_sysconf, On, Yes, No, No, NoAlias,
+    NHOPTB(checkpoint, 0, opt_out, set_in_game, On, Yes, No, No, NoAlias,
                 &flags.ins_chkpt)
 #else
-    NHOPTB(checkpoint, 0, opt_out, set_in_sysconf, Off, No, No, No, NoAlias,
+    NHOPTB(checkpoint, 0, opt_out, set_in_game, On, No, No, No, NoAlias,
                 (boolean *) 0)
 #endif
     NHOPTB(clicklook, 0, opt_in, set_in_game, Off, Yes, No, No, NoAlias,
@@ -145,7 +145,7 @@ opt_##a,
                 &u.uroleplay.clumsy)
     NHOPTB(cmdassist, 0, opt_out, set_in_game, On, Yes, No, No, NoAlias,
                 &iflags.cmdassist)
-    NHOPTB(color, 0, opt_in, set_in_game, Off, Yes, No, No, "colour",
+    NHOPTB(color, 0, opt_in, set_in_game, On, Yes, No, No, "colour",
                 &iflags.wc_color)
     NHOPTB(confirm, 0, opt_out, set_in_game, On, Yes, No, No, NoAlias,
                 &flags.confirm)
@@ -178,6 +178,8 @@ opt_##a,
                 &iflags.extmenu)
     /* NHOPTB(female, 0, opt_in, set_in_config, Off, Yes, No, No, "male",
                 &flags.female) */
+    NHOPTB(fireassist, 0, opt_out, set_in_game, On, Yes, No, No, NoAlias,
+                &iflags.fireassist)
     NHOPTB(fixinv, 0, opt_out, set_in_game, On, Yes, No, No, NoAlias,
                 &flags.invlet_constant)
     NHOPTC(font_map, 40, opt_in, set_gameview, Yes, Yes, Yes, No, NoAlias,

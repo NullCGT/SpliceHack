@@ -1428,6 +1428,8 @@ dospinweb(void)
     if (ttmp) {
         ttmp->madeby_u = 1;
         feeltrap(ttmp);
+        if (*in_rooms(u.ux, u.uy, SHOPBASE))
+            add_damage(u.ux, u.uy, SHOP_WEB_COST);
     }
     return 1;
 }

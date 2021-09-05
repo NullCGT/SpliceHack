@@ -354,7 +354,7 @@ const struct Role roles[NUM_ROLES+1] = {
       MH_HUMAN | MH_DWARF
         | MH_UNDEAD,
       ALL_GENDERS
-        | ROLE_LAWFUL,
+        | ROLE_LAWFUL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */
       { 13, 7, 14, 8, 10, 17 },
       { 30, 15, 15, 10, 20, 10 },

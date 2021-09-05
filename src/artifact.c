@@ -1687,6 +1687,20 @@ artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
         }
         return realizes_damage;
     }
+    if (otmp->oartifact == ART_SQUALL && !rn2(3)) {
+        if (realizes_damage) {
+            pline("The world shakes!");
+            if (youattack) {
+                dobuzz((int) (-20 - (AD_ELEC)), 3,
+                       u.ux, u.uy, u.dx, u.dy, TRUE);
+            } else {
+                dobuzz((int) (-20 - (AD_ELEC)), 3,
+                       magr->mx, magr->my, sgn(g.tbx), sgn(g.tby), TRUE);
+            }
+            
+        }
+        return realizes_damage;
+    }
     if (otmp->oartifact == ART_OGRESMASHER && !rn2(8)) {
         if (realizes_damage) {
             pline_The("massive war hammer slams %s to the ground!", hittee);

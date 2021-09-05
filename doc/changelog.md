@@ -162,6 +162,8 @@ in its own way.
   - Certain artifacts are only obtainable via furnaces:
     - Frostburn: Deals double damage to all monsters that are not both cold and fire resistant.
       created by fusing Frost Brand and Fire Brand.
+    - Mortality Dial: Prevents trolls from reviving. While wielded, monsters do not regenerate.
+    - Squall: Deals double sonic damage, like a brand, and also fires lightning bolts.
 
 #### Wands of Wishing
 - Use XNetHack's wand of wishing changes.
@@ -260,6 +262,8 @@ in its own way.
   their hunger increases the total time of their prayer timeout. This is meant to eliminate slow,
   degenerate play, and should not affect regular players much.
 - While the player is level one, they get hungry much more slowly.
+- Excalibur's and Snickersnee's artifact attack/damage bonuses have been swapped, so
+that Excalibur doesn't crowd out all the other artifact weapons as much.
 
 ### YAFM
 - Whenever you are polymorphed into a bear, all instances of the word "bare" are replaced

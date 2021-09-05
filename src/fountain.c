@@ -308,9 +308,15 @@ drinkfountain(void)
             pline_The("feeling subsides.");
             break;
         case 20: /* Foul water */
-            pline_The("water is foul!  You gag and vomit.");
-            morehungry(rn1(20, 11));
-            vomit();
+            if (Is_oracle_level(&u.uz)) {
+                pline("Oh wow!  Great stuff!");
+                (void) make_hallucinated((HHallucination & TIMEOUT) +
+                        rnd(100), FALSE, 0L);
+            } else {
+                pline_The("water is foul!  You gag and vomit.");
+                morehungry(rn1(20, 11));
+                vomit();
+            }
             break;
         case 21: /* Poisonous */
             pline_The("water is contaminated!");
@@ -636,6 +642,11 @@ static const short fusions[][3] = {
     /* scale mail + dragon scales = dsm */
 };
 
+static const short artifusions[][3] = {
+    { ART_FROST_BRAND, ART_FIRE_BRAND, ART_FROSTBURN },
+    { ART_TROLLSBANE, ART_WEREBANE, ART_MORTALITY_DIAL },
+};
+
 int
 doforging(void)
 {
@@ -663,10 +674,13 @@ doforging(void)
     }
     /* Artifact fusions. */
     if (obj1->oartifact && obj2->oartifact) {
-        if (obj1->oartifact == ART_FROST_BRAND && obj2->oartifact == ART_FIRE_BRAND
-            || obj1->oartifact == ART_FIRE_BRAND && obj2->oartifact == ART_FROST_BRAND) {
-            arti_id = ART_FROSTBURN;
-            combi_done = TRUE;
+        for (int i = 0; fusions[i][0] > 0; i++) {
+            if ((obj1->oartifact == artifusions[i][0] && obj2->oartifact == artifusions[i][1]) ||
+                (obj2->oartifact == artifusions[i][0] && obj1->oartifact == artifusions[i][1])) {
+                arti_id = artifusions[i][2];
+                combi_done = TRUE;
+                break;
+            }
         }
         if (combi_done) {
             obj1->oartifact = 0;

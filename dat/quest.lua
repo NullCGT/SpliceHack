@@ -167,7 +167,7 @@ torment you; strange figures astride terrible beasts haunt
 your dreams.
 
 The wind picks up, and a foul stench issues from the
-mouth of the dungeon. Your hour of destiny has come. 
+mouth of the dungeon. Your hour of destiny has come.
 Once again, it is time to go bravely with %d.]],
       },
       legacy_convict = {
@@ -185,7 +185,7 @@ night, the same words:
 
 Unable to cope with the nightmares, you escaped your
 prison, seeking to redeem yourself by recovering the
-Amulet for %d.  You are determined to recover the Amulet 
+Amulet for %d.  You are determined to recover the Amulet
 for your deity, or die in the attempt.  Your hour of
 destiny has come. Once more, you must go bravely with %d.
          ]],
@@ -227,10 +227,10 @@ As an angel of %d, you must follow these edicts:
          text = [[
 Flight.
 Climb.
-Ascension. 
+Ascension.
 
 Your blood rushes in your ears as you break free of the dungeon.
-The screams of demons, the roaring of beasts and the scrape of claws on 
+The screams of demons, the roaring of beasts and the scrape of claws on
 stone echo behind you.
 
 As the sunlight graces your face, you cast one last look over your shoulder.
@@ -240,7 +240,7 @@ like a half-remembered dream.
 You feel a yank from the Amulet of Yendor, and the world begins to shimmer
 and fade around you. The last thing you see before you are pulled into the
 beyond is a cloaked figure, tearing his way free of the rapidly vanishing
-dungeon as a pebble breaching the surface of a pond. His hands crackle with 
+dungeon as a pebble breaching the surface of a pond. His hands crackle with
 dark energy, and his features are twisted in hate. He leaps at you, and his
 hands sieze upon the Amulet.
 
@@ -267,7 +267,7 @@ Juiblex, the Faceless Lord, has arrived.
 is composed of a patchwork of vile mold and fungi, and the scent that emanates
 from it makes you feel physically ill. Instead of legs, its lower body tapers
 off into a mass of fungoid tendrils.
-         
+
 Zuggotomoy, the Queen of Fungi, is here.]],
       },
       Buer = {
@@ -408,9 +408,9 @@ Demogorgon.]],
          output = "menu",
          text = [[Blocking the way in front of you stands a huge horse, pale as the moon.
 Its rider is cloaked in a black robe, taller than a man, and holding a
-gleaming scythe. He turns to face you, revealing his head to be a grinning
-skull. Instead of eyes, two icy blue pinpoints of light shine as brightly
-as stars.]],
+gleaming scythe. The rider turns to face you, revealing a head that is naught
+but a grinning skull. Instead of eyes, two icy blue pinpoints of light shine
+as brightly as stars.]],
       },
       Pestilence = {
          synopsis = "[You encounter Pestilence.]",
@@ -418,17 +418,16 @@ as stars.]],
          text = [[A disgusting stench assaults your nose as a blinding white horse thunders
 to a stop ahead. Its rider wears a sickly green cloak covered in splotches
 of mildew and circled by several flies. A glittering crown, looking
-rather out of place, rests on his head. With a ghastly leer he extends a
+rather out of place, rests on their head. With a ghastly leer they extend a
 diseased finger toward you.]],
       },
       Famine = {
          synopsis = "[You encounter Famine.]",
          output = "menu",
          text = [[A horse, dark as midnight, rears up before you, with a hunched figure
-seated on its back. He is wearing a thin gray cowl and clutching a set of
-black iron balance scales. He lowers his hood and glares at you, revealing
-a badly emaciated face. Under his fevered gaze, a pang of hunger goes
-through your stomach.]],
+seated on its back. The rider wears a thin gray cowl and clutches a set of
+black iron balance scales. A badly emaciated face glares at you from beneath
+the gray hood. A pang of hunger lances your stomach under that fevered gaze.]],
       },
       Wizard_of_Yendor = {
          synopsis = "[You encounter the Wizard of Yendor!]",
@@ -1404,7 +1403,7 @@ part of your training.
          output = "text",
          text = [["Alas, %p, you are yet too inexperienced to deal with the rigors
 of such a task.  You must be able to draw on the knowledge of botany,
-alchemy and veterinary practices before I can send you on this quest 
+alchemy and veterinary practices before I can send you on this quest
 with good conscience.
 
 "Return when you wear %Ra's caduceus."]],
@@ -1823,7 +1822,7 @@ may be the last time you stand before %l.]],
          synopsis = "[\"Take down %n and get %o back.\"]",
          output = "text",
          text = [["Excellent dancing, %p. Now, I shall fill you in.
-         
+
 In a fit of hubris, a number of our dancers performed a corrupted version of our usual ritual.
 The elemental they summoned was not of this reality. It slew them, and retreated deep within
 %i.
@@ -1871,7 +1870,7 @@ defeat %n Come back when you have quciker feet!"]],
          "\"Do not lose hope! All of us will be there in spirt.\"",
          "\"It is a great thing you are doing, %p.\"",
       },
-      firsttime = {  
+      firsttime = {
          synopsis = "[You arrive at %H, but something is amiss.]",
          output = "text",
          text = [[You suddenly find yourself at %H.
@@ -1977,7 +1976,7 @@ and trembles.]],
 
     "Congratulations, %p. You have done what we could not, and defeated %n. Your dance skills
     far exceed my own, and you are truly worthy of retrieving the Amulet of Yendor."
-    
+
     "Go now. Continue to make me proud."]],
       },
       offeredit2 = {
@@ -2001,7 +2000,7 @@ and trembles.]],
          text = [[The seven heads of your Mother glare down at you. Her gaze
 is not full of love, nor pride, but rather barely contained fury. It is all
 you can do not to cower in fear.
-            
+
 "You have probably already guessed what has happened, %p.
 Your once companion %n appeared, leading an army of filthy cave dwellers toward us.
 %nh was mounted on his draconic brother, Voanairruth. The group attacked our nests,
@@ -2052,7 +2051,7 @@ Only %Ra with the help of %d could ever hope to take revenge on our foe."]],
          "\"Do not lose yourself in vengance. We value you more than we do the death of %n and Voanairruth.\"",
          "\"We are sure you will do great things one day, %p.\"",
       },
-      firsttime = {  
+      firsttime = {
          synopsis = "[You arrive at %H, but something is amiss.]",
          output = "text",
          text = [[You suddenly find yourself at %H.
@@ -2543,7 +2542,7 @@ clarity in her eyes.
 
 "What have I done?  Those demons have been clouding my mind.
 Please forgive me, %p, although I know that I
-probably do not deserve it.  Take 
+probably do not deserve it.  Take
 %o back to %l
 with my blessing."
 

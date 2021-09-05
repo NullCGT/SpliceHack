@@ -409,6 +409,7 @@ polyself(int psflags)
             formrevert = (psflags == 3),
             ismolydeus = (psflags == 4),
             draconian = (uarm && Is_dragon_armor(uarm)),
+            imbued = (uarm && is_imbued(uarm)),
             iswere = (u.ulycn >= LOW_PM),
             isvamp = (is_vampire(g.youmonst.data)
                       || is_vampshifter(&g.youmonst)),
@@ -426,7 +427,7 @@ polyself(int psflags)
     }
     /* being Stunned|Unaware doesn't negate this aspect of Poly_control */
     if (!Polymorph_control && !forcecontrol && !draconian && !iswere
-        && !isvamp && !ismolydeus) {
+        && !isvamp && !ismolydeus && !imbued) {
         if (rn2(20) > ACURR(A_CON)) {
             You1(shudder_for_moment);
             losehp(rnd(30), "system shock", KILLED_BY_AN);
@@ -517,12 +518,12 @@ polyself(int psflags)
         if (!tryct)
             pline1(thats_enough_tries);
         /* allow skin merging, even when polymorph is controlled */
-        if (draconian && (tryct <= 0 || mntmp == armor_to_dragon(uarm->otyp)))
+        if ((draconian || imbued) && (tryct <= 0 || mntmp == armor_to_dragon(uarm->otyp)))
             goto do_merge;
         if (isvamp && (tryct <= 0 || mntmp == PM_WOLF || mntmp == PM_FOG_CLOUD
                        || is_bat(&mons[mntmp])))
             goto do_vampyr;
-    } else if (draconian || iswere || isvamp || ismolydeus) {
+    } else if (draconian || imbued || iswere || isvamp || ismolydeus) {
         /* special changes that don't require polyok() */
         if (draconian) {
  do_merge:
@@ -559,6 +560,13 @@ polyself(int psflags)
                 uskin->owornmask |= I_SPECIAL;
                 update_inventory();
             }
+        } else if (imbued) {
+            mntmp = uarm->corpsenm;
+            You("merge with the essence contained in your armor.");
+            uskin = uarm;
+            uarm = (struct obj *) 0;
+            uskin->owornmask |= I_SPECIAL;
+            update_inventory();
         } else if (iswere) {
  do_shift:
             if (Upolyd && were_beastie(mntmp) != u.ulycn)
@@ -773,7 +781,7 @@ polymon(int mntmp)
 #endif
     }
 
-    if (uskin && mntmp != armor_to_dragon(uskin->otyp))
+    if (uskin && mntmp != armor_to_dragon(uskin->otyp) && mntmp != uskin->corpsenm)
         skinback(FALSE);
     break_armor();
     drop_weapon(1);

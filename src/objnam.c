@@ -1031,6 +1031,7 @@ doname_base(struct obj* obj, unsigned int doname_flags)
     char tmpbuf[PREFIX + 1]; /* for when we have to add something at
                                 the start of prefix instead of the
                                 end (Strcat is used on the end) */
+    char imbuebuf[PREFIX];
     register char *bp = xname(obj);
 
     if (iflags.override_ID) {
@@ -1201,6 +1202,14 @@ doname_base(struct obj* obj, unsigned int doname_flags)
         if (known) {
             Strcat(prefix, sitoa(obj->spe));
             Strcat(prefix, " ");
+        }
+
+        if (is_imbued(obj)) {
+            if (!known) Strcat(prefix, "imbued ");
+            else {
+                Sprintf(imbuebuf, "{%s} ", mons[obj->corpsenm].pmnames[NEUTRAL]);
+                Strcat(prefix, imbuebuf);
+            }
         }
 
         if (is_grenade(obj))

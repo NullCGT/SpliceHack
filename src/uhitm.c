@@ -4417,6 +4417,10 @@ mhitm_ad_phys(struct monst *magr, struct attack *mattk, struct monst *mdef,
                     mhm->damage = 1;
             }
         }
+        if (mattk->adtyp == AD_CLOB && mhm->damage > 0 && !rn2(5)) {
+            You("knock %s back with an awesome blow!", mon_nam(mdef));
+            mhurtle(mdef, u.ux - mdef->mx, u.uy - mdef->my, rnd(2) + 1);
+        }
     } else if (mdef == &g.youmonst) {
         /* mhitu */
         if (mattk->aatyp == AT_HUGS && !sticks(pd)) {
@@ -4501,6 +4505,10 @@ mhitm_ad_phys(struct monst *magr, struct attack *mattk, struct monst *mdef,
                        || magr != u.ustuck)
                 hitmsg(magr, mattk);
         }
+        if (mattk->adtyp == AD_CLOB && mhm->damage > 0 && !rn2(5)) {
+            pline("%s knocks you back with an awesome blow!", Monnam(magr));
+            hurtle(u.ux - magr->mx, u.uy - magr->my, rnd(2) + 1, FALSE);
+        }
     } else {
         /* mhitm */
         struct obj *mwep = MON_WEP(magr);
@@ -4561,6 +4569,12 @@ mhitm_ad_phys(struct monst *magr, struct attack *mattk, struct monst *mdef,
                the subsequent engulf attack should accomplish that */
             if (mhm->damage >= mdef->mhp && mdef->mhp > 1)
                 mhm->damage = mdef->mhp - 1;
+        }
+
+        if (mattk->adtyp == AD_CLOB && mhm->damage > 0 && !rn2(5)) {
+            if (canseemon(mdef) && canseemon(magr))
+                pline("%s knocks %s back with an awesome blow!", Monnam(magr), mon_nam(mdef));
+            mhurtle(magr, magr->mx - mdef->mx, magr->my - mdef->my, rnd(2) + 1);
         }
     }
 }
@@ -5101,6 +5115,7 @@ mhitm_adtyping(struct monst *magr, struct attack *mattk, struct monst *mdef,
     case AD_LEGS: mhitm_ad_legs(magr, mattk, mdef, mhm); break;
     case AD_WERE: mhitm_ad_were(magr, mattk, mdef, mhm); break;
     case AD_HEAL: mhitm_ad_heal(magr, mattk, mdef, mhm); break;
+    case AD_CLOB:
     case AD_PHYS: mhitm_ad_phys(magr, mattk, mdef, mhm); break;
     case AD_FIRE: mhitm_ad_fire(magr, mattk, mdef, mhm); break;
     case AD_COLD: mhitm_ad_cold(magr, mattk, mdef, mhm); break;

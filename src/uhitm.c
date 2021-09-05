@@ -3769,7 +3769,8 @@ mhitm_ad_deth(struct monst *magr, struct attack *mattk UNUSED,
         mhm->damage = 0;
     } else if (mdef == &g.youmonst) {
         /* mhitu */
-        pline("%s reaches out with its deadly touch.", Monnam(magr));
+        pline("%s reaches out with %s deadly touch.", Monnam(magr),
+            mhis(magr));
         if (is_undead(pd)) {
             /* Still does normal damage */
             pline("Was that the touch of death?");

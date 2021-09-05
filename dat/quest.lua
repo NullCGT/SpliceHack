@@ -408,9 +408,9 @@ Demogorgon.]],
          output = "menu",
          text = [[Blocking the way in front of you stands a huge horse, pale as the moon.
 Its rider is cloaked in a black robe, taller than a man, and holding a
-gleaming scythe. He turns to face you, revealing his head to be a grinning
-skull. Instead of eyes, two icy blue pinpoints of light shine as brightly
-as stars.]],
+gleaming scythe. The rider turns to face you, revealing a head that is naught
+but a grinning skull. Instead of eyes, two icy blue pinpoints of light shine
+as brightly as stars.]],
       },
       Pestilence = {
          synopsis = "[You encounter Pestilence.]",
@@ -418,17 +418,16 @@ as stars.]],
          text = [[A disgusting stench assaults your nose as a blinding white horse thunders
 to a stop ahead. Its rider wears a sickly green cloak covered in splotches
 of mildew and circled by several flies. A glittering crown, looking
-rather out of place, rests on his head. With a ghastly leer he extends a
+rather out of place, rests on their head. With a ghastly leer they extend a
 diseased finger toward you.]],
       },
       Famine = {
          synopsis = "[You encounter Famine.]",
          output = "menu",
          text = [[A horse, dark as midnight, rears up before you, with a hunched figure
-seated on its back. He is wearing a thin gray cowl and clutching a set of
-black iron balance scales. He lowers his hood and glares at you, revealing
-a badly emaciated face. Under his fevered gaze, a pang of hunger goes
-through your stomach.]],
+seated on its back. The rider wears a thin gray cowl and clutches a set of
+black iron balance scales. A badly emaciated face glares at you from beneath
+the gray hood. A pang of hunger lances your stomach under that fevered gaze.]],
       },
       Wizard_of_Yendor = {
          synopsis = "[You encounter the Wizard of Yendor!]",

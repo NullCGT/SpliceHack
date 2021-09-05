@@ -60,6 +60,8 @@
 - Coffins are always trapped, and looting them will occasionally produce vampires.
 - New Object: Executioner's Mace.
   - Does not generate randomly. Dropped only by Worms that Walk.
+- New Artifact: Shamblestick
+  - Has stats randomly determined at the beginning of the game, like a shambling horror.
 
 ### Skill System
 - Rather than techniques, SpliceHack uses a skill system.

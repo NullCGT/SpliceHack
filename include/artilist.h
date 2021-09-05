@@ -210,6 +210,10 @@ static NEARDATA struct artifact artilist[] = {
     A("Poseidon\'s Trident", TRIDENT, (SPFX_RESTR | SPFX_BREATHE), 0, 0, PHYS(3, 7),
       NO_DFNS, NO_CARY, WWALKING, A_CHAOTIC, NON_PM, NON_PM, 1500L, NO_COLOR),
 
+    A("Shamblestick", QUARTERSTAFF, (SPFX_RESTR), 0, 0,
+      PHYS(0, 0), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 500L,
+      CLR_MAGENTA),
+
     /*
     *       Resisted by very few monsters, but is a morning star and also
     *       happens to destroy tons of items.

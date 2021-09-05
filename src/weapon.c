@@ -105,7 +105,9 @@ give_may_advance_msg(int skill)
              (skill == P_NONE) ? ""
                  : (skill <= P_LAST_WEAPON) ? "weapon "
                      : (skill <= P_LAST_SPELL) ? "spell casting "
-                         : "fighting ");
+                        : (skill < P_FIRST_ROLE) ? "fighting "
+                          : (skill <= P_LAST_ROLE) ? "class "
+                            : "cultural ");
 
     if (!g.context.enhance_tip) {
         g.context.enhance_tip = TRUE;
@@ -1526,10 +1528,6 @@ can_advance(int skill, boolean speedy)
         return FALSE;
 
     if (wizard && speedy)
-        return TRUE;
-
-    if (skill >= P_FIRST_ROLE && skill <= P_LAST_ROLE
-        && u.weapon_slots >= slots_required(skill))
         return TRUE;
 
     return (boolean) ((int) P_ADVANCE(skill)

@@ -1058,8 +1058,6 @@ NEARDATA struct permonst mons_init[] = {
         M1_CLING | M1_HIDE | M1_ANIMAL | M1_NOEYES | M1_NOLIMBS | M1_CARNIVORE
             | M1_NOTAKE,
         M2_HOSTILE, 0, 9, CLR_BLUE),
-    /* God piercer level is very high in order to avoid degenerate
-       imbue strats. */
     MON("god piercer", S_PIERCER, LVL(20, 1, 0, 0, 3), (G_GENO | G_NOGEN),
         A(ATTK(AT_BITE, AD_PHYS, 16, 6), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
           NO_ATTK),

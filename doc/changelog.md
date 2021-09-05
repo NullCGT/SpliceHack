@@ -172,6 +172,8 @@ in its own way.
     a long sword imbued with blue dragon essence will shock enemies.
   - When polymorphed while wearing imbued body armor, you will polymorph into whatever monster that
     armor is imbued with. This includes not normally polymorphable monsters.
+  - Imbuing an item at a furnace may cause the furnace to power down.
+- Furnaces generate below level 15 in the dungeon.
 
 
 #### Wands of Wishing

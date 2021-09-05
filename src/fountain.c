@@ -645,6 +645,7 @@ static const short fusions[][3] = {
 static const short artifusions[][3] = {
     { ART_FROST_BRAND, ART_FIRE_BRAND, ART_FROSTBURN },
     { ART_TROLLSBANE, ART_WEREBANE, ART_MORTALITY_DIAL },
+    { ART_SUNSPOT, ART_SONICBOOM, ART_SQUALL },
 };
 
 int
@@ -670,7 +671,8 @@ doforging(void)
         return 1;
     }
     if (is_worn(obj1) || is_worn(obj2)) {
-        pline("You cannot forge with something you are wearing!");
+        pline("You must remove the items you wish to forge.");
+        return 1;
     }
     /* No, you cannot imbue weapons with cockatrice or Rider essence. Sorry.
        Literally anything else is fair game though! */
@@ -707,7 +709,7 @@ doforging(void)
         }
     }
     /* Imbuing items */
-    if ((obj2->otyp == CORPSE || obj2->otyp == TIN)
+    if ((obj2->otyp == CORPSE || obj2->otyp == TIN || obj2->otyp == FIGURINE || obj2->otyp == MASK)
         && obj2->corpsenm != NON_PM) {
         pline("You imbue %s with the %s essence.",
             yobjnam(obj1, (char *) 0),
@@ -715,10 +717,14 @@ doforging(void)
         obj1->corpsenm = obj2->corpsenm;
         useup(obj2);
         update_inventory();
-        pline("The lava in the furnace cools.");
-        levl[u.ux][u.uy].typ = ROOM;
-        newsym(u.ux, u.uy);
-        g.level.flags.nfurnaces--;
+        if (!rn2(2)) {
+            pline("The lava in the furnace cools.");
+            levl[u.ux][u.uy].typ = ROOM;
+            newsym(u.ux, u.uy);
+            g.level.flags.nfurnaces--;
+        } else {
+            pline("The lava in the furnace bubbles ominously.");
+        }
         return 0;
     }
     /* Mundane item fusions */

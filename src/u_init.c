@@ -529,7 +529,6 @@ static const struct def_skill Skill_Mon[] = {
     { P_STUNNING_FIST, P_GRAND_MASTER },
     { P_DISARM, P_EXPERT },
     { P_SUNDER, P_EXPERT },
-    { P_TUMBLING, P_SKILLED },
     { P_NONE, 0 }
 };
 static const struct def_skill Skill_P[] = {
@@ -652,7 +651,6 @@ static const struct def_skill Skill_Ran[] = {
 
     { P_CAREFUL_ATTACK, P_BASIC },
     { P_SUNDER, P_EXPERT },
-    { P_TUMBLING, P_SKILLED },
     { P_NONE, 0 }
 };
 static const struct def_skill Skill_S[] = {

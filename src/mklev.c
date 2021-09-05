@@ -855,7 +855,7 @@ fill_ordinary_room(struct mkroom *croom)
         mksink(croom);
     if (!rn2(60))
         mkaltar(croom);
-    if (!rn2(70))
+    if (!rn2(70) && depth(&u.uz) >= 15)
         mkfurnace(croom);
     x = 80 - (depth(&u.uz) * 2);
     if (x < 2)

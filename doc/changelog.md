@@ -144,6 +144,8 @@ in its own way.
   - Certain artifacts are only obtainable via furnaces:
     - Frostburn: Deals double damage to all monsters that are not both cold and fire resistant.
       created by fusing Frost Brand and Fire Brand.
+    - Mortality Dial: Prevents trolls from reviving. While wielded, monsters do not regenerate.
+    - Squall: Deals double sonic damage, like a brand, and also fires lightning bolts.
 
 
 ### Monster Changes

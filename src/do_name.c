@@ -1424,6 +1424,7 @@ oname(struct obj *obj, const char *name)
             obj->material = COPPER;
             break;
         case ART_TROLLSBANE:
+        case ART_MORTALITY_DIAL:
             obj->material = COLD_IRON;
             break;
         case ART_SUNSWORD:

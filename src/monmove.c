@@ -196,7 +196,8 @@ onscary(int x, int y, struct monst* mtmp)
 void
 mon_regen(struct monst* mon, boolean digest_meal)
 {
-    if (mon->mhp < mon->mhpmax && (g.moves % 20 == 0 || regenerates(mon->data)))
+    if (mon->mhp < mon->mhpmax && (g.moves % 20 == 0 || regenerates(mon->data))
+        && !(uwep && uwep->oartifact && uwep->oartifact == ART_MORTALITY_DIAL))
         if (!mon->msummoned) mon->mhp++;
     if (mon->mspec_used)
         mon->mspec_used--;

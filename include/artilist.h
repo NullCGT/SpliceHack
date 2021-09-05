@@ -292,8 +292,26 @@ static NEARDATA struct artifact artilist[] = {
     /* FUSION ARTIFACTS */
     /* These artifacts are only possible to obtain by combining multiple artifacts at a forge. */
 
+    /*
+     * Created by fusing frost brand and fire brand.
+     */
     A("Frostburn", LONG_SWORD, (SPFX_RESTR | SPFX_ATTK | SPFX_DEFN | SPFX_NOGEN | SPFX_RESTR), 0, 0,
       SCLD(5, 0), COLD(0, 0), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 5000L,
+      NO_COLOR),
+
+    /*
+    * Created by fusing werebane and trollsbane. Original idea by Spicy. Prevents all monster
+    * regen.
+    */
+    A("Mortality Dial", EXECUTIONER_S_MACE, (SPFX_RESTR | SPFX_REGEN | SPFX_NOGEN | SPFX_RESTR), 
+      0, 0, PHYS(10, 10), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 5000L,
+      NO_COLOR),
+
+    /*
+    * Created by fusing sonicboom and sunspot. Shoots bolts of lightning.
+    */
+    A("Squall", MORNING_STAR, (SPFX_RESTR | SPFX_ATTK | SPFX_DEFN | SPFX_BLIND), 0, 0,
+      LOUD(5, 0), LOUD(0, 0), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 3000L,
       NO_COLOR),
 
     /* VANILLA ARTIFACTS */

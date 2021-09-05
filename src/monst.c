@@ -43,21 +43,25 @@
  *      For AT_BREA attacks, '# sides' is ignored; 6 is used for most
  *      damage types, 25 for sleep, not applicable for death or poison.
  */
+// The standard vanilla monster struct.
 #define MON(nam, sym, lvl, gen, atk, siz, mr1, mr2, flg1, flg2, flg3, d, col) \
     {                                                                      \
         {(const char *) 0, (const char *) 0, nam}, \
         sym, lvl, gen, atk, siz, mr1, mr2, flg1, flg2, flg3, 0, d, C(col), 0   \
     }
+// The standard vanilla monster struct, with an additional field for racial flags.
 #define MON2(nam, sym, lvl, gen, atk, siz, mr1, mr2, flg1, flg2, flg3, flgm, d, col) \
     {                                                                      \
         {(const char *) 0, (const char *) 0, nam}, \
         sym, lvl, gen, atk, siz, mr1, mr2, flg1, flg2, flg3, flgm, d, C(col), 0   \
     }
+// The standard vanilla monster struct for a monster with a name that changes based on gender.
 #define MON3(namm, namf, namn, sym, lvl, gen, atk, siz, mr1, mr2, flg1, flg2, flg3, d, col) \
     {                                                                      \
         {namm, namf, namn}, \
         sym, lvl, gen, atk, siz, mr1, mr2, flg1, flg2, flg3, 0, d, C(col), 0   \
     }
+// A gender-variant monster with a field for racial flags.
 #define MON4(namm, namf, namn, sym, lvl, gen, atk, siz, mr1, mr2, flg1, flg2, flg3, flgm, d, col) \
     {                                                                      \
         {namm, namf, namn}, \

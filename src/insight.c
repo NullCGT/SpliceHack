@@ -1399,14 +1399,22 @@ attributes_enlightenment(int unused_mode UNUSED, int final)
         you_are("magic-protected", from_what(ANTIMAGIC));
     if (Fire_resistance)
         you_are("fire resistant", from_what(FIRE_RES));
+    if (u_adtyp_resistance_obj(AD_FIRE))
+        enl_msg("Your items ", "are", "were", " protected from fire", "");
     if (Cold_resistance)
         you_are("cold resistant", from_what(COLD_RES));
+    if (u_adtyp_resistance_obj(AD_COLD))
+        enl_msg("Your items ", "are", "were", " protected from cold", "");
     if (Sleep_resistance)
         you_are("sleep resistant", from_what(SLEEP_RES));
     if (Disint_resistance)
         you_are("disintegration-resistant", from_what(DISINT_RES));
+    if (u_adtyp_resistance_obj(AD_DISN))
+        enl_msg("Your items ", "are", "were", " protected from disintegration", "");
     if (Shock_resistance)
         you_are("shock resistant", from_what(SHOCK_RES));
+    if (u_adtyp_resistance_obj(AD_ELEC))
+        enl_msg("Your items ", "are", "were", " protected from electric shocks", "");
     if (Poison_resistance)
         you_are("poison resistant", from_what(POISON_RES));
     if (Acid_resistance)
@@ -1415,6 +1423,10 @@ attributes_enlightenment(int unused_mode UNUSED, int final)
         you_are("psychic resistant", from_what(PSYCHIC_RES));
     if (Sonic_resistance)
         you_are("sonic resistant", from_what(SONIC_RES));
+    if (u_adtyp_resistance_obj(AD_LOUD))
+        enl_msg("Your items ", "are", "were", " protected from sonic vibrations", "");
+    if (u_adtyp_resistance_obj(AD_ACID))
+        enl_msg("Your items ", "are", "were", " protected from acid", "");
     if (Drain_resistance)
         you_are("level-drain resistant", from_what(DRAIN_RES));
     if (Sick_resistance)

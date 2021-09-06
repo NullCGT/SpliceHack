@@ -3329,6 +3329,7 @@ extern void spec_fixture_activate(xchar, xchar);
 extern int zap_over_floor(xchar, xchar, int, boolean *, short);
 extern void fracture_rock(struct obj *);
 extern boolean break_statue(struct obj *);
+extern boolean u_adtyp_resistance_obj(int);
 extern void destroy_item(int, int);
 extern int destroy_mitem(struct monst *, int, int);
 extern int resist(struct monst *, char, int, int);

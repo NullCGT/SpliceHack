@@ -21,6 +21,7 @@ static boolean zap_steed(struct obj *);
 static void skiprange(int, int *, int *);
 static int zap_hit(int, int);
 static void disintegrate_mon(struct monst *, int, const char *);
+static int adtyp_to_prop(int);
 static void backfire(struct obj *);
 static int zap_ok(struct obj *);
 static void boxlock_invent(struct obj *);
@@ -4341,9 +4342,13 @@ zhitu(int type, int nd, const char *fltxt, xchar sx, xchar sy)
         break;
     case ZT_DEATH:
         if (abstyp == ZT_BREATH(ZT_DEATH)) {
+            boolean disn_prot = u_adtyp_resistance_obj(AD_DISN) && rn2(100);
+
             if (Disint_resistance) {
                 You("are not disintegrated.");
                 monstseesu(M_SEEN_DISINT);
+                break;
+            } else if (disn_prot) {
                 break;
             } else if (uarms) {
                 /* destroy shield; other possessions are safe */
@@ -5380,6 +5385,39 @@ break_statue(struct obj *obj)
     fracture_rock(obj);
     return TRUE;
 }
+
+/* convert attack damage AD_foo to property resistance */
+static int
+adtyp_to_prop(int dmgtyp)
+{
+    switch (dmgtyp) {
+    case AD_COLD: return COLD_RES;
+    case AD_FIRE: return FIRE_RES;
+    case AD_ELEC: return SHOCK_RES;
+    case AD_ACID: return ACID_RES;
+    case AD_DISN: return DISINT_RES;
+    case AD_LOUD: return SONIC_RES;
+    case AD_PSYC: return PSYC_RES;
+    default: return 0; /* prop_types start at 1 */
+    }
+}
+
+/* is hero wearing or wielding an object with resistance
+   to attack damage type */
+boolean
+u_adtyp_resistance_obj(int dmgtyp)
+{
+    int prop = adtyp_to_prop(dmgtyp);
+
+    if (!prop)
+        return FALSE;
+
+    if ((u.uprops[prop].extrinsic & (W_ARMOR | W_ACCESSORY | W_WEP)) != 0)
+        return TRUE;
+
+    return FALSE;
+}
+
 /*
  * destroy_strings[dindx][0:singular,1:plural,2:killer_reason]
  *      [0] freezing potion
@@ -5424,6 +5462,10 @@ destroy_one_item(struct obj *obj, int osym, int dmgtyp)
     /* lint suppression */
     dmg = dindx = 0;
     quan = 0L;
+
+    /* external worn item protects inventory? */
+    if (u_adtyp_resistance_obj(dmgtyp) && rn2(100))
+        return;
 
     switch (dmgtyp) {
     case AD_COLD:

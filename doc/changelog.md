@@ -33,9 +33,6 @@
       if you lack drain resistance.
     - For each role in addition to your main role, the experience required to reach subsequent levels
       will be higher.
-  - BUG: Godname is overwritten, leading to segfaults when leveling into a priest.
-  - BUG: Entering the quest as a role other than the one you began the game as causes a lot of weird
-         things to happen.
 #### Dragon Rider
   - Rename dragonmasters to dragon riders. This name change puts greater emphasis on the bond the
     character has with dragons.
@@ -111,7 +108,8 @@ in its own way.
     When this countdown ends, that tile will collapse as well.
 - Many levels generate with rope bridges. This replaces the underground rivers patch.
 - All rooms are dark by default, but generate with a torch sconce that helps to light them up.
-  As depth increases, sconces become less and less common.
+  As depth increases, sconces become less and less common. Currently commented out, due to being
+  unenjoyable, but sconces can still be wished for.
 - Ported the Rat King level from Slash'Em, with some alterations.
   - The Rat King is a valid polymorph form and has hands.
   - SpliceHack pack rats are used, rather than Slash'Em pack rats.

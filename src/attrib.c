@@ -461,7 +461,7 @@ exercise(int i, boolean inc_or_dec)
         return; /* can't exercise these */
 
     /* no physical exercise while polymorphed; the body's temporary */
-    if (Upolyd && i != A_WIS)
+    if (Upolyd && i != A_WIS && i != A_INT && i != A_CHA)
         return;
 
     if (abs(AEXE(i)) < AVAL) {
@@ -476,9 +476,9 @@ exercise(int i, boolean inc_or_dec)
          */
         AEXE(i) += (inc_or_dec) ? (rn2(19) > ACURR(i)) : -rn2(2);
         debugpline3("%s, %s AEXE = %d",
-                    (i == A_STR) ? "Str" : (i == A_WIS) ? "Wis" : (i == A_DEX)
-                                                                      ? "Dex"
-                                                                      : "Con",
+                    (i == A_STR) ? "Str" : (i == A_WIS) ? "Wis" :
+                    (i == A_DEX) ? "Dex" : (i == A_INT) ? "Int" :
+                    (i == A_CON) ? "Con" : (i == A_CHA) ? "Cha" : "???",
                     (inc_or_dec) ? "inc" : "dec", AEXE(i));
     }
     if (g.moves > 0 && (i == A_STR || i == A_CON))
@@ -605,7 +605,7 @@ exerchk(void)
                 goto nextattrib;
             /* can't exercise non-Wisdom while polymorphed; previous
                exercise/abuse gradually wears off without impact then */
-            if (Upolyd && i != A_WIS)
+            if (Upolyd && i != A_WIS && i != A_INT && i != A_CHA)
                 goto nextattrib;
 
             debugpline2("exerchk: testing %s (%d).",

@@ -5397,7 +5397,7 @@ adtyp_to_prop(int dmgtyp)
     case AD_ACID: return ACID_RES;
     case AD_DISN: return DISINT_RES;
     case AD_LOUD: return SONIC_RES;
-    case AD_PSYC: return PSYC_RES;
+    case AD_PSYC: return PSYCHIC_RES;
     default: return 0; /* prop_types start at 1 */
     }
 }

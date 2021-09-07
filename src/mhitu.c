@@ -2731,6 +2731,9 @@ calculate_flankers(struct monst *magr)
     int xd;
     int yd;
 
+    if (abs(magr->mx - u.ux) > 1 || abs(magr->my - u.uy) > 1)
+        return FALSE;
+
     if (u.ux > magr->mx) xd = magr->mx + 2;
     else if (u.ux < magr->mx) xd = magr->mx - 2;
     else xd = magr->mx;

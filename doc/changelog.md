@@ -185,7 +185,7 @@ in its own way.
   - There is a guaranteed wand in Vlad's coffin with 1 charge.
   - There is a guaranteed wand with the Book of the Dead with 1 charge.
   - Wands of wishing cannot be recharged, and instantly dust upon reaching zero charges.
-- Unlike XNetHack, wands of wishing still generate randomly throughout the dungeon.
+  - Wands of wishing do not generate randomly.
 
 
 ### Monster Changes
@@ -302,6 +302,8 @@ that Excalibur doesn't crowd out all the other artifact weapons as much.
 - Werebears generate peaceful.
 - Altered the tiles for many existing monsters in order to improve visual clarity.
 - Renamed Avatars of Akasha to Hearth Archons.
+- Monsters summoned by the Wizard of Yendor appear at the upstairs of a level, rather than surrounding
+  the player.
 
 ### Removed Content
 Since this release is a rewrite, several pieces of existing content have been heavily altered

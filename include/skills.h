@@ -66,28 +66,30 @@ enum p_skills {
     P_RIDING             = 39, /* How well you control your steed */
 
     /* Role-Based Skills by Kestrel Gregorich-Trevor */
-    /* Cave Dweller */
-    P_POWER_ATTACK        = 40,
-
-    /* Monk */
+    P_POWER_ATTACK       = 40,
     P_FLAMING_FISTS      = 41,
     P_FREEZING_FISTS     = 42,
     P_SHOCKING_FISTS     = 43,
     P_STUNNING_FIST      = 44,
-
-    /* Rogue */
     P_BACKSTAB           = 45,
     P_CAREFUL_ATTACK     = 46,
-
-    P_DISARM             = 47,
-    P_SUNDER             = 48,
-    P_TUMBLING           = 49,
+    P_RAT_TAMER          = 47,
+    P_DRAGON_TAMER       = 48,
+    P_ANIMAL_FRIENDSHIP  = 49,
+    P_BLOOD_RAGE         = 50,
+    P_PANACHE            = 51,
+    P_WILD_MAGIC         = 52,
+    P_BLOOD_MAGIC        = 53,
+    P_CODE_OF_HONOR      = 54,
+    P_DISARM             = 55,
+    P_SUNDER             = 56,
+    P_TUMBLING           = 57,
 
     /* Cultural Skills by Kestrel Gregorich-Trevor */
-    P_SPIDER_FRIEND      = 50,
+    P_SPIDER_FRIEND      = 58,
 
 
-    P_NUM_SKILLS         = 51
+    P_NUM_SKILLS         = 59
 };
 
 #define P_MARTIAL_ARTS P_BARE_HANDED_COMBAT /* Role distinguishes */

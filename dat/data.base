@@ -18,7 +18,78 @@
 # prevents "orc mummy" and "orc zombie" from matching.
 #
 
-
+# Skill Database Entries
+skill: animal friendship
+    Animal friendship makes animals spawn peaceful. This effect is influenced by
+    skill level.
+skill: backstab
+    Backstab increases the damage the user deals when attacking from behind,
+    or, if the user is not a rogue, gives them the ability to backstab. Maximum
+    backstab damage is multiplied by one plus the skill level.
+skill: blood magic
+	Blood magic allows you to draw on your own life force to cast spells. If you
+	would normally not have enough energy to cast a spell, you can cast it using
+	your own hit points as a power source. Magic cast in such a way is more powerful
+	than standard magic.
+skill: blood rage
+	Blood rage provides a bonus to melee weapon damage as long as you have less than
+	one quarter of your health remaining. This bonus doubles if you have less than
+	half your health remaining. Enhancing this skill will increase the damage bonus
+	of your blood rage.
+skill: cautious strike
+    Increase the to-hit bonus of the user by a flat amount at the cost of a
+    damage penalty of the same amount.
+skill: code of honor
+    Increases the to-hit bonus of the user by a flat amount. The alignment penalty
+    for being a caitiff increases sharply.
+skill: disarm
+    Disarm allows the user to use your weapon to attempt to disarm opponents.
+    Use the #disarm command to disarm.
+skill: dragon tamer
+    Allows the user to tame dragons by chatting with them. Additional ranks in
+    dragon tamer increases the chances of success.
+skill: flaming fists
+    Flaming fists allows the user to set enemies on fire using their unarmed
+    strikes. This increases damage dealt by 1d6 and may destroy potions in the
+    defender's inventory.
+    The chance of this effect activating on a given attack is skill_level / 20.
+skill: freezing fists
+    Flaming fists allows the user to  deal cold damage to enemies using their 
+    unarmed strikes. This increases damage dealt by 1d6 and may destroy potions
+    in the defender's inventory.
+    The chance of this effect activating on a given attack is skill_level / 25.
+skill: panache
+    Panache provides a passive bonus to the user's luck.
+skill: power attack
+    Power attack increases the damage dealt by the user by a flat amount at the
+	cost of a to-hit penalty of the same amount.
+skill: rat tamer
+    Allows the user to tame rats by chatting to them. Additional ranks in rat tamer
+    increases the chances of success.
+skill: shocking fists
+    Shocking fists allows the user to  deal electric damage to enemies using their 
+    unarmed strikes. This increases damage dealt by 1d20 and may destroy wands
+    in the defender's inventory.
+    The chance of this effect activating on a given attack is skill_level / 100.
+skill: stunning fist
+    Stunning fist increases the chances of stunning a monster with unarmed
+    attacks, provided the user already had the ability to do so.
+skill: sunder
+    Sunder allows the user to attempt to destroy the weapons or equipment of an
+    enemy character. To use this ability, use the #sunder extended command.
+    Use the #sunder command to sunder.
+skill: tumble
+    Tumble allows the user to switch places with an opponent, and is useful for
+    getting out of dangerous situations. Note that tumbling costs at least one
+    turn, however.
+    Use the #tumble command to tumble.
+skill: wild magic
+	Wild magic is a random and potentially dangerous skill. Any time you cast a spell,
+	there is a chance that you will cast a completely random spell instead, even if
+	that spell is not one normally on your list of known spells. When a spell is cast
+	randomly, its level is increased.
+	Additional levels in wild magic increase the chance of wild magic occurring.
+# Actual Database Entries
 abbot
 	For it had been long apparent to Count Landulf that nothing
 	could be done with his seventh son Thomas, except to make him

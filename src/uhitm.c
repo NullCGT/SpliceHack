@@ -268,11 +268,16 @@ check_caitiff(struct monst *mtmp)
     if (u.ualign.record <= -10)
         return;
 
-    if (Role_if(PM_KNIGHT) && u.ualign.type == A_LAWFUL
+    if ((Role_if(PM_KNIGHT) || P_SKILL(P_CODE_OF_HONOR) > P_UNSKILLED) 
+        && u.ualign.type == A_LAWFUL
         && (!mtmp->mcanmove || mtmp->msleeping
             || (mtmp->mflee && !mtmp->mavenge))) {
         You("caitiff!");
-        adjalign(-1);
+        if (P_SKILL(P_CODE_OF_HONOR) > P_UNSKILLED) {
+            adjalign(-3 * P_SKILL(P_CODE_OF_HONOR));
+        } else {
+            adjalign(-1);
+        }
     } else if (Role_if(PM_SAMURAI) && mtmp->mpeaceful) {
         /* attacking peaceful creatures is bad for the samurai's giri */
         You("dishonorably attack the innocent!");
@@ -6607,6 +6612,10 @@ skill_hit_effects(struct monst *mon) {
                 golemeffects(mon, AD_ELEC, damage_bonus);
             }
             damage_bonus += destroy_mitem(mon, WAND_CLASS, AD_ELEC);
+        }
+        if (P_SKILL(P_BLOOD_RAGE) > P_UNSKILLED && (u.uhp < (u.uhp / 2))) {
+            pline("Your rage strengthens your attack!");
+            damage_bonus += (P_SKILL(P_BLOOD_RAGE) *  (u.uhp < (u.uhp / 4) ? 2 : 1));
         }
     }
 

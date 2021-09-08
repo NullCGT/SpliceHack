@@ -2581,6 +2581,9 @@ peace_minded(register struct permonst *ptr)
 
     if (always_peaceful(ptr))
         return TRUE;
+    if (is_animal(ptr) && P_SKILL(P_ANIMAL_FRIENDSHIP) > P_UNSKILLED
+        && rn2(P_SKILL(P_ANIMAL_FRIENDSHIP)))
+        return TRUE;
     if (always_hostile(ptr))
         return FALSE;
     if (ptr->msound == MS_LEADER || ptr->msound == MS_GUARDIAN)

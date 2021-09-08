@@ -409,6 +409,9 @@ stone_luck(boolean parameter) /* So I can't think up of a good name.  So sue me.
             else if (parameter)
                 bonchance += otmp->quan;
         }
+    
+    if (P_SKILL(P_PANACHE) > P_UNSKILLED)
+        bonchance += (P_SKILL(P_PANACHE) - 1);
 
     return sgn((int) bonchance);
 }

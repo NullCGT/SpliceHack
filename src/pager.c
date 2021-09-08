@@ -15,8 +15,6 @@ static void trap_description(char *, int, int, int);
 static void look_at_object(char *, int, int, int);
 static void look_at_monster(char *, char *, struct monst *, int, int);
 static struct permonst *lookat(int, int, char *, char *);
-static void checkfile(char *, struct permonst *, boolean, boolean, winid,
-                      char *);
 static void look_all(boolean, boolean);
 static void look_traps(boolean);
 static void do_supplemental_info(char *, struct permonst *, boolean);
@@ -1406,7 +1404,7 @@ add_obj_info(winid datawin, short otyp)
  *       lcase() for data.base lookup so that we can have a clean key.
  *       Therefore, we create a copy of inp _just_ for data.base lookup.
  */
-static void
+void
 checkfile(char *inp, struct permonst *pm, boolean user_typed_name,
           boolean without_asking, winid existing_win, char *supplemental_name)
 {
@@ -2167,7 +2165,7 @@ do_look(int mode, coord *click_cc)
                     break;
                 }
             if (*out_str)
-                checkfile(out_str, pm, TRUE, TRUE, NULL, (char *) 0);
+                checkfile(out_str, pm, TRUE, TRUE, 0, (char *) 0);
             return 0;
           }
         case '?':
@@ -2181,7 +2179,7 @@ do_look(int mode, coord *click_cc)
                 return 0;
 
             if (out_str[1]) { /* user typed in a complete string */
-                checkfile(out_str, pm, TRUE, TRUE, NULL, (char *) 0);
+                checkfile(out_str, pm, TRUE, TRUE, 0, (char *) 0);
                 return 0;
             }
             sym = out_str[0];
@@ -2271,7 +2269,7 @@ do_look(int mode, coord *click_cc)
                 supplemental_name[0] = '\0';
                 Strcpy(temp_buf, firstmatch);
                 checkfile(temp_buf, pm, FALSE,
-                          (boolean) (ans == LOOK_VERBOSE), NULL, supplemental_name);
+                          (boolean) (ans == LOOK_VERBOSE), 0, supplemental_name);
                 if (supplemental_pm)
                     do_supplemental_info(supplemental_name, supplemental_pm,
                                          (boolean) (ans == LOOK_VERBOSE));

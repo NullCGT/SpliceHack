@@ -10,6 +10,7 @@
  */
 #include "hack.h"
 
+static void display_skill_db_info(int);
 static int odd_material_damage(struct obj *);
 static int weapon_distribution_bonus(int, boolean, int);
 static void give_may_advance_msg(int);
@@ -44,11 +45,19 @@ static void skill_advance(int);
 #define PN_STUNNING_FIST (-20)
 #define PN_BACKSTAB (-21)
 #define PN_CAREFUL_ATTACK (-22)
-#define PN_DISARM (-23)
-#define PN_SUNDER (-24)
-#define PN_TUMBLING (-25)
+#define PN_RAT_TAMER (-23)
+#define PN_DRAGON_TAMER (-24)
+#define PN_ANIMAL_FRIENDSHIP (-25)
+#define PN_BLOOD_RAGE (-26)
+#define PN_PANACHE (-27)
+#define PN_WILD_MAGIC (-28)
+#define PN_BLOOD_MAGIC (-29)
+#define PN_CODE_OF_HONOR (-30)
+#define PN_DISARM (-31)
+#define PN_SUNDER (-32)
+#define PN_TUMBLING (-33)
 
-#define PN_SPIDER_FRIEND (-26)
+#define PN_SPIDER_FRIEND (-34)
 
 #define is_odd_material(obj, mat) \
     ((obj)->material == (mat) && !(objects[(obj)->otyp].oc_material == (mat)))
@@ -65,7 +74,10 @@ static NEARDATA const short skill_names_indices[P_NUM_SKILLS] = {
 
     PN_POWER_ATTACK,
     PN_FLAMING_FISTS, PN_FREEZING_FISTS, PN_SHOCKING_FISTS, PN_STUNNING_FIST,
-    PN_BACKSTAB, PN_CAREFUL_ATTACK, PN_DISARM, PN_SUNDER, PN_TUMBLING,
+    PN_BACKSTAB, PN_CAREFUL_ATTACK, PN_RAT_TAMER, PN_DRAGON_TAMER, 
+    PN_ANIMAL_FRIENDSHIP, PN_BLOOD_RAGE, PN_PANACHE, PN_WILD_MAGIC,
+    PN_BLOOD_MAGIC, PN_CODE_OF_HONOR,
+    PN_DISARM, PN_SUNDER, PN_TUMBLING,
 
     PN_SPIDER_FRIEND
 };
@@ -78,8 +90,23 @@ static NEARDATA const char *const odd_skill_names[] = {
     "enchantment spells", "clerical spells", "escape spells", "matter spells",
 
     "power attack",
-    "flaming fists", "freezing fists", "shocking fists", "stunning fist",
-    "sneak attack", "careful attack", "disarm", "sunder", "tumbling",
+    "flaming fists",
+    "freezing fists",
+    "shocking fists",
+    "stunning fist",
+    "backstap",
+    "careful attack",
+    "rat tamer",
+    "dragon tamer",
+    "animal friendship",
+    "blood rage",
+    "panache",
+    "wild magic",
+    "blood magic",
+    "code of honor",
+    "disarm",
+    "sunder",
+    "tumbling",
 
     "spider friend"
 };
@@ -113,6 +140,14 @@ give_may_advance_msg(int skill)
         g.context.enhance_tip = TRUE;
         pline("(Use the #enhance command to advance them.)");
     }
+}
+
+static void
+display_skill_db_info(int skill) {
+    char tmpbuf[BUFSZ];
+    tmpbuf[0] = '\0';
+    Sprintf(tmpbuf, "skill: %s", P_NAME(skill));
+    checkfile(tmpbuf, (struct permonst *) 0, FALSE, TRUE, 0, (char *) 0);
 }
 
 /* weapon's skill category name for use as generalized description of weapon;
@@ -239,6 +274,7 @@ botl_hitbonus()
         || P_SKILL(P_CAREFUL_ATTACK) > P_UNSKILLED) {
         tmp -= P_SKILL(P_POWER_ATTACK);
         tmp += P_SKILL(P_CAREFUL_ATTACK);
+        tmp += P_SKILL(P_CODE_OF_HONOR);
     }
 
     if (uwep && (uwep->otyp == HEAVY_IRON_BALL)) {
@@ -280,6 +316,7 @@ hitval(struct obj *otmp, struct monst *mon)
     /* Power attack penalty */
     tmp -= P_SKILL(P_POWER_ATTACK);
     tmp += P_SKILL(P_CAREFUL_ATTACK);
+    tmp += P_SKILL(P_CODE_OF_HONOR);
 
     /* Put weapon vs. monster type "to hit" bonuses in below: */
 
@@ -1735,7 +1772,13 @@ enhance_weapon_skill(void)
         if (n > 0) {
             n = selected[0].item.a_int - 1; /* get item selected */
             free((genericptr_t) selected);
-            skill_advance(n);
+            /* display database info and ask for confirmation */
+            display_skill_db_info(n);
+            if (yn("Enhance this skill?") == 'y') {
+                skill_advance(n);
+            } else {
+                break;
+            }
             /* check for more skills able to advance, if so then .. */
             for (n = i = 0; i < P_NUM_SKILLS; i++) {
                 if (can_advance(i, speedy)) {

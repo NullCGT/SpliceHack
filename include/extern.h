@@ -1937,6 +1937,9 @@ extern void msgtype_free(void);
 
 /* ### pager.c ### */
 
+extern void checkfile(char *, struct permonst *, boolean, boolean, winid,
+                      char *);
+
 extern char *self_lookat(char *);
 extern char *monhealthdescr(struct monst *mon, boolean, char *);
 extern void mhidden_description(struct monst *, boolean, char *);

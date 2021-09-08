@@ -40,6 +40,9 @@
   - Rename dragonmasters to dragon riders. This name change puts greater emphasis on the bond the
     character has with dragons.
   - Allow baby black dragons as starting pets.
+  - Dragon Riders now tame dragons by chatting with them, as convicts do. Their chances of success are
+    determined by dragon hit dice and their level in the dragon tamer skill. At high level, they are
+    capable of taming elder dragons.
 #### Priest
   - Priests can be of any species.
 #### Cartomancer

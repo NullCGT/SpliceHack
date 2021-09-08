@@ -3555,7 +3555,7 @@ const char * in_str;
         }
     }
     /* try alternate spellings */
-    struct alt_spellings *as;
+    const struct alt_spellings *as;
 
     for (as = spellings; as->sp != 0; as++) {
         if (!strcmpi(in_str, as->sp)) {

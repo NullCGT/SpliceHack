@@ -80,6 +80,8 @@
 ### Combat System
 - Luck no longer gives a to-hit bonus.
 - Ported EvilHack / SporkHack partial resistances.
+- Ammo gains a bonus to damage equal to its own enchantment bonus or the enchantment bonus of
+  the launcher it was fired from, whichever is larger. Currently only implemented for players.
 - Base attack bonus is partially determined by the role one is playing.
 - Whenever a non-tame monster kills another monster, it will automatically grow up.
 - Monsters gain a large bonus to hit when flanking the player (located on opposite sides of
@@ -353,6 +355,7 @@ or outright removed. Rationale can be provided for removed content upon request.
 
 ### Known Bugs
 - Rare failed sanity check for improper mon data, possibly due to vampiric monsters shapeshifting.
+- Rare crash, also likely related to vampiric monsters shapeshifting while templated.
 - Removing a mask that changed you into a light-emitting monster will cause a program in disorder.
 - Phoenix egg revival via fire is very buggy.
 - Rare write_ls: can't find

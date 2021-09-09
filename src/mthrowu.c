@@ -550,7 +550,7 @@ m_throw(
   	else mwep = (struct obj *) 0;
   	if (mwep && is_ammo(singleobj) && ammo_and_launcher(singleobj, mwep)) {
   	    if (mwep->oartifact == ART_PLAGUE && is_poisonable(singleobj))
-  			singleobj->opoisoned = TRUE;
+  			singleobj->opoisoned = POT_SICKNESS;
   	}
 
     if ((singleobj->cursed || singleobj->greased) && (dx || dy) && !rn2(7)) {

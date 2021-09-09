@@ -79,6 +79,7 @@
 
 ### Combat System
 - Luck no longer gives a to-hit bonus.
+- Ported EvilHack / SporkHack partial resistances.
 - Base attack bonus is partially determined by the role one is playing.
 - Whenever a non-tame monster kills another monster, it will automatically grow up.
 - Monsters gain a large bonus to hit when flanking the player (located on opposite sides of
@@ -304,6 +305,7 @@ that Excalibur doesn't crowd out all the other artifact weapons as much.
 - Renamed Avatars of Akasha to Hearth Archons.
 - Monsters summoned by the Wizard of Yendor appear at the upstairs of a level, rather than surrounding
   the player.
+- While flying, you are unable to attack Pazuzu.
 
 ### Removed Content
 Since this release is a rewrite, several pieces of existing content have been heavily altered

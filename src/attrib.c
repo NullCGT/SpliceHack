@@ -332,7 +332,7 @@ poisoned(const char *reason,    /* controls what messages we display */
               isupper((uchar) *reason) ? "" : "The ", reason,
               plural ? "were" : "was");
     }
-    if (Poison_resistance) {
+    if (how_resistant(POISON_RES) == 100) {
         if (blast)
             shieldeff(u.ux, u.uy);
         pline_The("poison doesn't seem to affect you.");
@@ -351,7 +351,7 @@ poisoned(const char *reason,    /* controls what messages we display */
         kprefix = KILLED_BY;
     }
 
-    i = !fatal ? 1 : rn2(fatal + (thrown_weapon ? 20 : 0));
+    i = resist_reduce(!fatal ? 1 : rn2(fatal + (thrown_weapon ? 20 : 0)), POISON_RES);
     if (i == 0 && typ != A_CHA) {
         /* instant kill */
         u.uhp = -1;
@@ -361,14 +361,14 @@ poisoned(const char *reason,    /* controls what messages we display */
         boolean cloud = !strcmp(reason, "gas cloud");
 
         /* HP damage; more likely--but less severe--with missiles */
-        loss = thrown_weapon ? rnd(6) : rn1(10, 6);
+        loss = resist_reduce(thrown_weapon ? rnd(6) : rn1(10, 6), POISON_RES);
         if ((blast || cloud) && Half_gas_damage) /* worn towel */
             loss = (loss + 1) / 2;
         losehp(loss, pkiller, kprefix); /* poison damage */
     } else {
         /* attribute loss; if typ is A_STR, reduction in current and
            maximum HP will occur once strength has dropped down to 3 */
-        loss = (thrown_weapon || !fatal) ? 1 : d(2, 2); /* was rn1(3,3) */
+        loss = (thrown_weapon || !fatal) ? 1 : resist_reduce(d(2, 2), POISON_RES); /* was rn1(3,3) */
         /* check that a stat change was made */
         if (adjattrib(typ, -loss, 1))
             poisontell(typ, TRUE);
@@ -972,6 +972,7 @@ adjabil(int oldlevel, int newlevel, int role_index, int oldrolelevel, int newrol
     register const struct innate *abil, *rabil;
     long prevabil, mask = FROMEXPER;
     int i;
+    int bShowMsgAnyway = 0;
 
     abil = role_abil(roles[role_index].malenum);
 
@@ -1001,6 +1002,7 @@ adjabil(int oldlevel, int newlevel, int role_index, int oldrolelevel, int newrol
     }
 
     while (abil || rabil) {
+        bShowMsgAnyway = 0;
         /* Have we finished with the intrinsics list? */
         if (!abil || !abil->ability) {
             /* Try the race intrinsics */
@@ -1013,6 +1015,11 @@ adjabil(int oldlevel, int newlevel, int role_index, int oldrolelevel, int newrol
         prevabil = *(abil->ability);
         if (((mask == FROMRACE) ? oldlevel : oldrolelevel) < abil->ulevel 
             && ((mask == FROMRACE) ? newlevel : newrolelevel) >= abil->ulevel) {
+            /* Must do this check before we set the FROMEXPER flag */
+            if ((*(abil->ability) & TIMEOUT) < 100 && newlevel != 1) {
+                bShowMsgAnyway = 1;
+            }
+
             /* Abilities gained at level 1 can never be lost
              * via level loss, only via means that remove _any_
              * sort of ability.  A "gain" of such an ability from
@@ -1023,7 +1030,7 @@ adjabil(int oldlevel, int newlevel, int role_index, int oldrolelevel, int newrol
                 *(abil->ability) |= (mask | FROMOUTSIDE);
             else
                 *(abil->ability) |= mask;
-            if (!(*(abil->ability) & INTRINSIC & ~mask)) {
+            if (bShowMsgAnyway || !(*(abil->ability) & INTRINSIC & ~mask)) {
                 if (*(abil->gainstr))
                     You_feel("%s!", abil->gainstr);
             }

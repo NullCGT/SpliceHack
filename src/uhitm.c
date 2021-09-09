@@ -2178,10 +2178,12 @@ mhitm_ad_fire(struct monst *magr, struct attack *mattk, struct monst *mdef,
                 /* KMH -- this is okay with unchanging */
                 rehumanize();
                 return;
-            } else if (Fire_resistance) {
+            } else if (how_resistant(FIRE_RES) == 100) {
                 pline_The("fire doesn't feel hot!");
                 monstseesu(M_SEEN_FIRE);
                 mhm->damage = 0;
+            } else {
+                mhm->damage = resist_reduce(mhm->damage, AD_FIRE);
             }
             if ((int) magr->m_lev > rn2(20))
                 destroy_item(SCROLL_CLASS, AD_FIRE);
@@ -2269,10 +2271,12 @@ mhitm_ad_cold(struct monst *magr, struct attack *mattk, struct monst *mdef,
         hitmsg(magr, mattk);
         if (uncancelled) {
             pline("You're covered in frost!");
-            if (Cold_resistance) {
+            if (how_resistant(COLD_RES) == 100) {
                 pline_The("frost doesn't seem cold!");
                 monstseesu(M_SEEN_COLD);
                 mhm->damage = 0;
+            } else {
+                mhm->damage = resist_reduce(mhm->damage, AD_COLD);
             }
             if ((int) magr->m_lev > rn2(20))
                 destroy_item(POTION_CLASS, AD_COLD);
@@ -2334,10 +2338,12 @@ mhitm_ad_elec(struct monst *magr, struct attack *mattk, struct monst *mdef,
         hitmsg(magr, mattk);
         if (uncancelled) {
             You("get zapped!");
-            if (Shock_resistance) {
+            if (how_resistant(SHOCK_RES) == 100) {
                 pline_The("zap doesn't shock you!");
                 monstseesu(M_SEEN_ELEC);
                 mhm->damage = 0;
+            } else {
+                mhm->damage = resist_reduce(mhm->damage, AD_ELEC);
             }
             if ((int) magr->m_lev > rn2(20))
                 destroy_item(WAND_CLASS, AD_ELEC);
@@ -3473,11 +3479,11 @@ mhitm_ad_slee(struct monst *magr, struct attack *mattk, struct monst *mdef,
 
         hitmsg(magr, mattk);
         if (uncancelled && g.multi >= 0 && !rn2(5)) {
-            if (Sleep_resistance) {
+            if (how_resistant(SLEEP_RES) == 100) {
                 monstseesu(M_SEEN_SLEEP);
                 return;
             }
-            fall_asleep(-rnd(10), TRUE);
+            fall_asleep(-resist_reduce(rnd(10), SLEEP_RES), TRUE);
             if (Blind)
                 You("are put to sleep!");
             else
@@ -6286,7 +6292,7 @@ passive(struct monst *mon,
             break;
         case AD_COLD: /* brown mold or blue jelly */
             if (monnear(mon, u.ux, u.uy)) {
-                if (Cold_resistance) {
+                if (how_resistant(COLD_RES) == 100) {
                     shieldeff(u.ux, u.uy);
                     You_feel("a mild chill.");
                     monstseesu(M_SEEN_COLD);
@@ -6294,6 +6300,7 @@ passive(struct monst *mon,
                     break;
                 }
                 You("are suddenly very cold!");
+                tmp = resist_reduce(tmp, COLD_RES);
                 mdamageu(mon, tmp);
                 /* monster gets stronger with your heat! */
                 mon->mhp += tmp / 2;
@@ -6310,7 +6317,7 @@ passive(struct monst *mon,
             break;
         case AD_FIRE:
             if (monnear(mon, u.ux, u.uy)) {
-                if (Fire_resistance) {
+                if (how_resistant(FIRE_RES) == 100) {
                     shieldeff(u.ux, u.uy);
                     You_feel("mildly warm.");
                     monstseesu(M_SEEN_FIRE);
@@ -6318,11 +6325,12 @@ passive(struct monst *mon,
                     break;
                 }
                 You("are suddenly very hot!");
+                tmp = resist_reduce(tmp, FIRE_RES);
                 mdamageu(mon, tmp); /* fire damage */
             }
             break;
         case AD_ELEC:
-            if (Shock_resistance) {
+            if (how_resistant(SHOCK_RES) == 100) {
                 shieldeff(u.ux, u.uy);
                 You_feel("a mild tingle.");
                 monstseesu(M_SEEN_ELEC);
@@ -6330,7 +6338,26 @@ passive(struct monst *mon,
                 break;
             }
             You("are jolted with electricity!");
+            tmp = resist_reduce(tmp, SHOCK_RES);
             mdamageu(mon, tmp);
+	        break;
+	    case AD_DISE: /* specifically gray fungus */
+            if (Sick_resistance) {
+                You("are infected, but it appears you are immune.");
+            } else {
+                You("are diseased!");
+                mdamageu(mon, tmp);
+                make_sick(20, "bad case of the plague", TRUE, SICK_NONVOMITABLE);
+            }
+            break;
+        case AD_DRST: /* specifically green dragons */
+            if (how_resistant(POISON_RES) == 100) {
+                You("are immune to %s poisonous hide.", s_suffix(mon_nam(mon)));
+            } else {
+                You("have been poisoned!");
+                tmp = resist_reduce(tmp, POISON_RES);
+                mdamageu(mon, rnd(6));
+            }
             break;
         default:
             break;

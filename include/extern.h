@@ -2087,6 +2087,10 @@ extern const char *udeadinside(void);
 
 extern void set_itimeout(long *, long);
 extern void incr_itimeout(long *, int);
+extern void incr_resistance(long *, int);
+extern void decr_resistance(long *, int);
+extern int how_resistant(int);
+extern int resist_reduce(int, int);
 extern void make_confused(long, boolean);
 extern void make_stunned(long, boolean);
 extern void make_afraid(long, boolean);

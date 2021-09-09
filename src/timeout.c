@@ -597,7 +597,9 @@ nh_timeout(void)
 
     was_flying = Flying;
     for (upp = u.uprops; upp < u.uprops + SIZE(u.uprops); upp++)
-        if ((upp->intrinsic & TIMEOUT) && !(--upp->intrinsic & TIMEOUT)) {
+        if (!(upp->intrinsic & HAVEPARTIAL) /* partial intrinsics do not time out */
+            && (upp->intrinsic & TIMEOUT)
+            && !(--upp->intrinsic & TIMEOUT)) {
             kptr = find_delayed_killer((int) (upp - u.uprops));
             switch (upp - u.uprops) {
             case STONED:
@@ -739,11 +741,11 @@ nh_timeout(void)
                     stop_occupation();
                 break;
             case SLEEPY:
-                if (unconscious() || Sleep_resistance) {
+                if (unconscious() || how_resistant(SLEEP_RES) == 100) {
                     incr_itimeout(&HSleepy, rnd(100));
                 } else if (Sleepy) {
                     You("fall asleep.");
-                    sleeptime = rnd(20);
+                    sleeptime = resist_reduce(rnd(20), SLEEP_RES);
                     fall_asleep(-sleeptime, TRUE);
                     incr_itimeout(&HSleepy, sleeptime + rnd(100));
                 }

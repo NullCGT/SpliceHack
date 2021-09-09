@@ -925,6 +925,11 @@ hmon_hitmon(struct monst *mon,
                     hittxt = TRUE;
                 }
 
+                /* In SpliceHack, launchers contribute to damage. */
+                if (uwep && ammo_and_launcher(obj, uwep) && obj->spe < uwep->spe) {
+                    tmp += (uwep->spe - obj->spe);
+                }
+
                 /* handle the damages of special artifacts */
                 if (obj->oartifact && obj->oartifact == ART_LUCKLESS_FOLLY) {
                     tmp -= 2 * Luck;
@@ -6420,6 +6425,13 @@ passive_obj(struct monst *mon,
     case AD_CORR:
         if (!mon->mcan) {
             (void) erode_obj(obj, (char *) 0, ERODE_CORRODE, EF_GREASE);
+        }
+        break;
+    case AD_MTRL:
+        if (!mon->mcan) {
+            if (warp_material(obj, TRUE) && carried(obj)) {
+                pline("Your %s warps!", simpleonames(obj));
+            }
         }
         break;
     case AD_ENCH:

@@ -225,8 +225,9 @@ in its own way.
   - Dragons have adjectives attached to their names that describe their age categories. the level of
     a dragon determines its age category.
   - The higher level a dragon is, the more damage its breath weapon will deal.
-  - Blue dragons butt with a horn rather than using claws.
-  - Black dragons are treated as having a pair of horns.
+  - Blue dragons butt with a horn rather than using claws, and are slightly faster.
+  - Black dragons are treated as having a pair of horns, which they can butt with.
+  - Green dragons stalk the player.
   - Dragons have a chance of roaring at the player. This roar can inflict the afraid status effect,
     making the player flee from the dragon.
   - In order to offset many of their more powerful abilities, dragons periodically fall asleep and

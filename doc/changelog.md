@@ -360,8 +360,6 @@ or outright removed. Rationale can be provided for removed content upon request.
 - Fixed grenade explosions being incorrectly blamed on the player.
 
 ### Known Bugs
-- Rare failed sanity check for improper mon data, possibly due to vampiric monsters shapeshifting.
-- Rare crash, also likely related to vampiric monsters shapeshifting while templated.
 - Removing a mask that changed you into a light-emitting monster will cause a program in disorder.
 - Phoenix egg revival via fire is very buggy.
 - Rare write_ls: can't find

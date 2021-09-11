@@ -315,6 +315,7 @@ that Excalibur doesn't crowd out all the other artifact weapons as much.
 - While flying, you are unable to attack Pazuzu.
 - Due to expanded object materail lists, transmuters are much more dangeorus, since they can
   transmute metal into stone, potentially overloading the player.
+- Removing a mask no longer causes you to instantly rehumanize.
 
 ### Removed Content
 Since this release is a rewrite, several pieces of existing content have been heavily altered
@@ -360,7 +361,6 @@ or outright removed. Rationale can be provided for removed content upon request.
 - Fixed grenade explosions being incorrectly blamed on the player.
 
 ### Known Bugs
-- Removing a mask that changed you into a light-emitting monster will cause a program in disorder.
 - Phoenix egg revival via fire is very buggy.
 - Rare write_ls: can't find
-- Hand grenade explosions are magical.
+- Hand grenade explosions are magical, but only when hurled by an enemy, and only when using a frag grenade.

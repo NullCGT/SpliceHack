@@ -6086,7 +6086,7 @@ grenade_explode(struct obj *obj, int x, int y, boolean isyou)
         explode(x, y, ztype, d(50,6), WEAPON_CLASS,
             isyou * -1 * EXPL_FIERY);
     } else if (otyp == FRAG_GRENADE) {
-        ztype = isyou * 11;
+        ztype = isyou * ZT_SPELL(EXPL_FIERY);
         explode(x, y, ztype, d(3,6), WEAPON_CLASS,
             isyou * -1 * EXPL_FIERY);
     } else if (otyp == GAS_GRENADE) {

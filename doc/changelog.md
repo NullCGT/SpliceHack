@@ -65,6 +65,12 @@
   - Does not generate randomly. Dropped only by Worms that Walk.
 - New Artifact: Shamblestick
   - Has stats randomly determined at the beginning of the game, like a shambling horror.
+- New Materials:
+  - Orichalcum
+    - Can be safely enchanted to higher values.
+    - Stolen by gold-stealing monsters, since it is an alloy of a number of metals.
+    - If an orichalcum item is disenchanted, all of its enchantment instantly disappears,
+      since it is such a superb magical conductor.
 
 ### Skill System
 - Rather than techniques, SpliceHack uses a skill system.
@@ -309,6 +315,8 @@ that Excalibur doesn't crowd out all the other artifact weapons as much.
 - Monsters summoned by the Wizard of Yendor appear at the upstairs of a level, rather than surrounding
   the player.
 - While flying, you are unable to attack Pazuzu.
+- Due to expanded object materail lists, transmuters are much more dangeorus, since they can
+  transmute metal into stone, potentially overloading the player.
 
 ### Removed Content
 Since this release is a rewrite, several pieces of existing content have been heavily altered
@@ -360,3 +368,4 @@ or outright removed. Rationale can be provided for removed content upon request.
 - Phoenix egg revival via fire is very buggy.
 - Rare write_ls: can't find
 - Hand grenade explosions are magical.
+- Weapons getting named are always +0.

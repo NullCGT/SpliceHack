@@ -1286,7 +1286,7 @@ drain_item(struct obj *obj, boolean by_you)
     boolean u_ring;
 
     /* Imbued items may no longer be imbued. */
-    if (is_imbued(obj) && !rn2(5)) {
+    if (is_imbued(obj) && !rn2(3)) {
         obj->corpsenm = 0;
     }
     /* Is this a charged/enchanted object? */
@@ -1305,6 +1305,11 @@ drain_item(struct obj *obj, boolean by_you)
 
     /* Drain the object and any implied effects */
     obj->spe--;
+    /* Orichalcum is a supremely good conductor of magical
+       energy. Draining it will instantly remove any enchantment
+       it has. */
+    if (obj->material = ORICHALCUM) obj->spe = 0;
+
     u_ring = (obj == uleft) || (obj == uright);
     switch (obj->otyp) {
     case RIN_GAIN_STRENGTH:
@@ -1477,6 +1482,7 @@ create_polymon(struct obj *obj, int okind)
     case METAL:
     case MITHRIL:
     case ADAMANTINE:
+    case ORICHALCUM:
         pm_index = PM_IRON_GOLEM;
         material = "metal ";
         break;

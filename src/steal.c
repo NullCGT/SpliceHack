@@ -63,7 +63,8 @@ somegold(long lmoney)
 struct obj *
 findgold(register struct obj *chain, boolean only_coins)
 {
-    while (chain && (chain->material != GOLD
+    while (chain 
+        && ((chain->material != GOLD || chain->material != ORICHALCUM)
         || (only_coins && chain->otyp != GOLD_PIECE)))
         chain = chain->nobj;
     return chain;
@@ -83,7 +84,7 @@ stealgold(register struct monst* mtmp)
 
     /* look for gold on the floor */
     fgold = g.level.objects[u.ux][u.uy];
-    while (fgold && fgold->material != GOLD)
+    while (fgold && fgold->material != GOLD && fgold->material != ORICHALCUM)
         fgold = fgold->nexthere;
 
     /* Do you have real gold? */

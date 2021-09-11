@@ -239,6 +239,7 @@ role_bab()
     case PM_TOURIST:
     case PM_CONVICT:
     case PM_HEALER:
+    case PM_CARTOMANCER:
         return 0.5;
     case PM_MONK:
     case PM_ARCHEOLOGIST:

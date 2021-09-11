@@ -1194,7 +1194,7 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
     int cval, otyp = sobj->otyp;
     boolean confused = (Confusion != 0), sblessed = sobj->blessed,
             scursed = sobj->cursed, already_known, old_erodeproof,
-            new_erodeproof;
+            new_erodeproof, hypermagical;
     struct obj *otmp;
     struct monst *mtmp;
 
@@ -1286,6 +1286,8 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
         /* elven armor vibrates warningly when enchanted beyond a limit */
         special_armor = is_elven_armor(otmp)
                         || (Role_if(PM_WIZARD) && otmp->otyp == CORNUTHAUM);
+        hypermagical = otmp->material == ORICHALCUM;
+        
         if (scursed)
             same_color = (otmp->otyp == BLACK_DRAGON_SCALE_MAIL
                           || otmp->otyp == BLACK_DRAGON_SCALES);
@@ -1298,7 +1300,7 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
 
         /* KMH -- catch underflow */
         s = scursed ? -otmp->spe : otmp->spe;
-        if (s > (special_armor ? 5 : 3) && rn2(s)) {
+        if (s > (special_armor ? 5 : hypermagical ? 7 : 3) && rn2(s)) {
             otmp->in_use = TRUE;
             pline("%s violently %s%s%s for a while, then %s.", Yname2(otmp),
                   otense(otmp, Blind ? "vibrate" : "glow"),

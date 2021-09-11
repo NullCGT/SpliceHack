@@ -364,3 +364,5 @@ or outright removed. Rationale can be provided for removed content upon request.
 - Phoenix egg revival via fire is very buggy.
 - Rare write_ls: can't find
 - Hand grenade explosions are magical, but only when hurled by an enemy, and only when using a frag grenade.
+- Failed mon sanity checks with werecreatures.
+- Moldiers and other infesting mons spawn adjacent to player.

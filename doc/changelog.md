@@ -92,15 +92,13 @@
 - Whenever a non-tame monster kills another monster, it will automatically grow up.
 - Monsters gain a large bonus to hit when flanking the player (located on opposite sides of
   the player's position),
+- Power regen is based on role.
 - Weapons have gone through a rebalance.
   -Many weapons now have bonuses or penalties to hit, and can also influence AC when wielded.
   - Given the emphasis on to-hit bonus, these small bonuses and penalties are now much more
     important than they would otherwise be.
   - [PLANNED] These values can be influenced by the material of the weapon.
-- [PLANNED] AC and DR have been split. This system is similar to the one in dnethack, but with
-  some significant changes.
-- [PLANNED] Role-based power regen?
-- [PLANNED] Dexterity contributes to AC, but the amount it contributes depends on weight?
+- [PLANNED] AC and DR have been split.
 
 ### QOL
 - Added several QOL fixes to the wish parser. Many of these came from the NetHack YANI archive.
@@ -368,4 +366,3 @@ or outright removed. Rationale can be provided for removed content upon request.
 - Phoenix egg revival via fire is very buggy.
 - Rare write_ls: can't find
 - Hand grenade explosions are magical.
-- Weapons getting named are always +0.

@@ -253,6 +253,22 @@ role_bab()
 }
 
 int
+role_powregen()
+{
+    switch(Role_switch) {
+    case PM_WIZARD:
+        return 2;
+    case PM_TOURIST:
+    case PM_MONK:
+    case PM_ARCHEOLOGIST:
+    case PM_CLERIC:
+        return 3;
+    default:
+        return 4;
+    }
+}
+
+int
 botl_hitbonus()
 {
     int tmp, tmp2, role_mul;

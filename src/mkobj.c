@@ -816,7 +816,7 @@ mksobj(int otyp, boolean init, boolean artif)
             if (artif && !rn2(Role_if(PM_PIRATE) ? 5 : 20))
                 otmp = mk_artifact(otmp, (aligntyp) A_NONE);
             if (!otmp->oartifact && !otmp->cursed
-                && (otmp->spe + (otmp->corpsenm ? 3 : 0) + otmp->oerodeproof > rnd(5)))
+                && (otmp->spe + otmp->oerodeproof > (long) rnd(5)))
                 otmp = weapon_oname(otmp);
             break;
         case FOOD_CLASS:

@@ -616,7 +616,7 @@ nh_timeout(void)
                 break;
             case LARVACARRIER:
                 /* must be in this order for bones files. */
-                create_critters(2 + rn2(3), &mons[PM_ICHNEUMON_LARVA], TRUE);
+                create_critters(rnd(3), &mons[u.ueggpm], TRUE);
                 losehp(d(1, 5), "being eaten from the inside by insects", KILLED_BY);
                 u.uhp = (int) (u.uhp / 2);
                 break;

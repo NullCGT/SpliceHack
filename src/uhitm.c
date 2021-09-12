@@ -4117,7 +4117,7 @@ struct mhitm_data *mhm;
         if (!negated && !thick_skinned(mdef->data) && mdef->mhp < 5 && !rn2(4)) {
             mhm->damage = mdef->mhp;
             pline("%s burst out of %s!",
-                Hallucination ? rndmonnam(NULL) : "Wasp larvae",
+                Hallucination ? rndmonnam(NULL) : "larvae",
                 mon_nam(mdef));
             mtmp = makemon(&mons[PM_ICHNEUMON_LARVA],
                 u.ux, u.uy, MM_EDOG);
@@ -4133,6 +4133,10 @@ struct mhitm_data *mhm;
               && !LarvaCarrier && !rn2(4)) {
             pline("%s injects something into you!", Monnam(magr));
             make_carrier((long) 100 + rn2(200), TRUE);
+            if (big_to_little(magr->mnum))
+                u.ueggpm = big_to_little(magr->mnum);
+            else
+                u.ueggpm = magr->mnum;
         }
     } else {
         /* mhitm */

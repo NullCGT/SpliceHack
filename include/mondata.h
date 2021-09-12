@@ -220,16 +220,13 @@
     (is_demon(ptr) && (((ptr)->mflags2 & (M2_LORD | M2_PRINCE)) == 0L))
 #define is_dlord(ptr) (is_demon(ptr) && is_lord(ptr))
 #define is_dprince(ptr) (is_demon(ptr) && is_prince(ptr))
-#define is_unkdemon(ptr) ((is_ndemon(ptr) \
-        && (ptr)->mlet == S_DEMON \
+#define is_unkdemon(ptr) ((is_demon(ptr) \
+        && !is_dlord(ptr) && !is_dprince(ptr) \
         && (ptr) != &mons[PM_WATER_DEMON] \
         && (ptr) != &mons[PM_LAVA_DEMON] \
-        && (ptr) != &mons[PM_DJINNI] \
-        && (ptr) != &mons[PM_MARID] \
-        && (ptr) != &mons[PM_JANN]) \
         || ((ptr) == &mons[PM_LEMURE] \
             || (ptr) == &mons[PM_MANES] \
-            || (ptr) == &mons[PM_HELLCAT]))
+            || (ptr) == &mons[PM_HELLCAT])))
 #define is_ghoul(ptr) ((ptr) == &mons[PM_GHOUL] \
                        || (ptr) == &mons[PM_GHAST] \
                        || (ptr) == &mons[PM_GHOUL_MAGE] \
@@ -240,7 +237,8 @@
 #define likes_objs(ptr) (((ptr)->mflags2 & M2_COLLECT) != 0L || is_armed(ptr))
 #define likes_magic(ptr) (((ptr)->mflags2 & M2_MAGIC) != 0L)
 #define webmaker(ptr) \
-    ((ptr) == &mons[PM_CAVE_SPIDER] || (ptr) == &mons[PM_GIANT_SPIDER])
+    ((ptr) == &mons[PM_CAVE_SPIDER] || (ptr) == &mons[PM_GIANT_SPIDER] \
+        || (ptr) == &mons[PM_SPIBRAWULF])
 #define is_unicorn(ptr) ((ptr)->mlet == S_UNICORN && likes_gems(ptr))
 #define is_longworm(ptr)                                                   \
     (((ptr) == &mons[PM_BABY_LONG_WORM]) || ((ptr) == &mons[PM_LONG_WORM]) \
@@ -376,7 +374,8 @@
 #define is_bigeater(ptr) \
     ((ptr) == &mons[PM_GELATINOUS_CUBE] \
      || (ptr) == &mons[PM_TASMANIAN_DEVIL] \
-     || (ptr) == &mons[PM_LOCUST])
+     || (ptr) == &mons[PM_LOCUST] \
+     || (ptr) == &mons[PM_GEHENNAN_MAW])
 
 #define avoids_player(ptr) \
     (is_unicorn(ptr) \

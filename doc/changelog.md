@@ -224,7 +224,15 @@ in its own way.
 - New Monster: Adherer
   - M-class monster.
   - Weapons stick to it.
+- New Monster: Spibrawulf
+  - &-class monster.
+  - Can lay eggs inside opponents and spin webs.
+- New Monster: Gehennan Maw
+  - &-class monster.
+  - Big Eater.
+  - Weak, but appears in very large groups and is very common in Gehennom.
 - Ported UnnetHack Aleaxes: Aleaxes are generated with copies of the player's items.
+- Ported Chasmes from Slash'Em. Due to the partial resistances feature, they are actually quite threatening.
 - Dragons have been significantly altered.
   - Dragons have adjectives attached to their names that describe their age categories. the level of
     a dragon determines its age category.
@@ -253,7 +261,8 @@ in its own way.
 - Brood Wasp Changes
   - Brood wasps have been renamed to Ichneumon. Their larva is no longer a curable trouble.
   - Having larvae hatch inside you deals 1d5 damage, then halves your hit points.
-  - Drinking a potion of sickness kills all larvae.
+  - Drinking a potion of sickness kills all larvae, as does casting cure sickness. Prayer, however,
+    does not.
 - Worms that Walk Changes
   - When a worm that walk kills a player, that player will only arise as a WtW if they are a wizard.
   - Worms that walk wield executioner's maces.

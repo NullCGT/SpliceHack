@@ -1300,6 +1300,10 @@ spelleffects(int spell, boolean atme)
             You("are no longer ill.");
         if (Slimed)
             make_slimed(0L, "The slime disappears!");
+        if (LarvaCarrier) {
+            You("feel as if something inside you has just died.");
+            make_carrier(0L, FALSE);
+        }
         healup(0, 0, TRUE, FALSE);
         break;
     case SPE_CREATE_FAMILIAR:

@@ -502,6 +502,7 @@ struct you {
     int role_levels[17]; /* Level in each role. Index into using the role flag. */
     boolean twoweap;         /* KMH -- Using two-weapon combat */
     short mcham;             /* vampire mndx if shapeshifted to bat/cloud */
+    short ueggpm;            /* pm of the monster that will hatch from you */
     schar uachieved[N_ACH];  /* list of achievements in the order attained */
 }; /* end of `struct you' */
 

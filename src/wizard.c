@@ -560,6 +560,7 @@ nasty(struct monst *summoner)
     coord bypos;
     int i, j, count, census, tmp, makeindex,
         s_cls, m_cls, difcap, trylimit, castalign;
+    struct stairway *sway;
 
 #define MAXNASTIES 10 /* more than this can be created */
 
@@ -578,8 +579,14 @@ nasty(struct monst *summoner)
         tmp = (u.ulevel > 3) ? u.ulevel / 3 : 1;
         /* if we don't have a casting monster, nasties appear around hero,
            otherwise they'll appear around spot summoner thinks she's at */
-        bypos.x = u.ux;
-        bypos.y = u.uy;
+        sway = stairway_find_type_dir(FALSE, TRUE);
+        if (sway) {
+            bypos.x = sway->sx;
+            bypos.y = sway->sy;
+        } else {
+            bypos.x = u.ux;
+            bypos.y = u.uy;
+        }
         for (i = rnd(tmp); i > 0 && count < MAXNASTIES; --i) {
             /* Of the 44 nasties[], 10 are lawful, 14 are chaotic,
              * and 20 are neutral.  [These numbers are up date for
@@ -614,7 +621,7 @@ nasty(struct monst *summoner)
                          || (s_cls == S_DEMON && m_cls == S_ANGEL)
                          || (s_cls == S_ANGEL && m_cls == S_DEMON));
                 /* do this after picking the monster to place */
-                if (summoner && !enexto(&bypos, summoner->mux, summoner->muy,
+                if (summoner && !enexto(&bypos, sway ? sway->sx : summoner->mux, sway ? sway->sy : summoner->muy,
                                         &mons[makeindex]))
                     continue;
                 /* this honors genocide but overrides extinction; it ignores

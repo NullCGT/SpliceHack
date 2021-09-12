@@ -64,8 +64,11 @@ static int wield_ok(struct obj *);
      || (optr)->otyp == HEAVY_IRON_BALL || (optr)->otyp == IRON_CHAIN)
 
 /* used by welded(), and also while wielding */
+/* #define will_weld(optr) \
+    ((optr)->cursed && (erodeable_wep(optr) || (optr)->otyp == TIN_OPENER)) */
+/* Tin openers still weld. Everything else uses the new cursing system. - Kes. */
 #define will_weld(optr) \
-    ((optr)->cursed && (erodeable_wep(optr) || (optr)->otyp == TIN_OPENER))
+    ((optr)->otyp == TIN_OPENER)
 
 /* to dual-wield, 'obj' must be a weapon or a weapon-tool, and not a bow
    or arrow or missile (dart, shuriken, boomerang), so not matching the
@@ -426,6 +429,9 @@ dowield(void)
     if (flags.pushweapon && oldwep && uwep != oldwep)
         setuswapwep(oldwep);
     untwoweapon();
+    
+    /* Update botl with new weapon */
+    g.context.botl = TRUE;
 
     return result;
 }
@@ -866,6 +872,7 @@ chwepon(struct obj *otmp, int amount)
     const char *xtime, *wepname = "";
     boolean multiple;
     int otyp = STRANGE_OBJECT;
+    int limit = uwep->material == ORICHALCUM ? 7 : 5;
 
     if (!uwep || (uwep->oclass != WEAPON_CLASS && !is_weptool(uwep))) {
         char buf[BUFSZ];
@@ -941,7 +948,7 @@ chwepon(struct obj *otmp, int amount)
         return 1;
     }
     /* there is a (soft) upper and lower limit to uwep->spe */
-    if (((uwep->spe > 5 && amount >= 0) || (uwep->spe < -5 && amount < 0))
+    if (((uwep->spe > limit && amount >= 0) || (uwep->spe < (-1 * limit) && amount < 0))
         && rn2(3)) {
         if (!Blind)
             pline("%s %s for a while and then %s.",

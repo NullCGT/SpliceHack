@@ -3022,6 +3022,9 @@ use_whip(struct obj *obj)
         proficient--;
     else if (ACURR(A_DEX) >= 14)
         proficient += (ACURR(A_DEX) - 14);
+    if (P_SKILL(P_DISARM)) {
+        proficient += (P_SKILL(P_DISARM) - 1);
+    }
     if (Fumbling)
         --proficient;
     if (proficient > 3)

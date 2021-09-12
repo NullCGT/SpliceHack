@@ -1,3 +1,19 @@
+Animal Friendship
+    Animal friendship makes animals spawn peaceful. This effect is influenced by
+    skill level.
+Cautious Strike
+    Increase the to-hit bonus of the user by a flat amount at the cost of a
+    damage penalty of the same amount.
+Code of Honor
+    Increases the to-hit bonus of the user by a flat amount. The alignment penalty
+    for being a caitiff increases sharply.
+Disarm
+    Disarm allows the user to attempt to disarm opponents with your weapon.
+
+    Use the #disarm command to disarm.
+Dragon Tamer
+    Allows the user to tame dragons by chatting with them. Additional ranks in
+    dragon tamer increases the chances of success.
 Flaming Fists
     Flaming fists allows the user to set enemies on fire using their unarmed
     strikes. This increases damage dealt by 1d6 and may destroy potions in the
@@ -10,6 +26,14 @@ Freezing Fists
     in the defender's inventory.
 
     The chance of this effect activating on a given attack is skill_level / 25.
+Panache
+    Panache provides a passive bonus to the user's luck.
+Power Attack
+    Increases the damage dealt by the user by a flat amount at the cost of a
+    to-hit penalty of the same amount.
+Rat Tamer
+    Allows the user to tame rats by chatting to them. Additional ranks in rat tamer
+    increases the chances of success.
 Shocking Fists
     Shocking fists allows the user to  deal electric damage to enemies using their 
     unarmed strikes. This increases damage dealt by 1d20 and may destroy wands
@@ -23,6 +47,17 @@ Sneak Attack
 Stunning Fist
     Stunning fist increases the chances of stunning a monster with unarmed
     attacks, provided the user already had the ability to do so.
+Sunder
+    Sunder allows the user to attempt to destroy the weapons or equipment of an
+    enemy character. To use this ability, use the #sunder extended command.
+
+    Use the #sunder command to sunder.
+Tumble
+    Tumble allows the user to switch places with an opponent, and is useful for
+    getting out of dangerous situations. Note that tumbling costs at least one
+    turn, however.
+
+    Use the #tumble command to tumble.
 
 
 IDEAS
@@ -30,16 +65,17 @@ IDEAS
 - Healer: Heal enemies with unarmed strikes.
 - Ranger: Favored enemy (gain bonus damage).
 - Ranger: Beastmaster (tame animals).
+- Ranger: Nature's Friend (animals have chance to be generated peaceful)
 - Knight/Samurai: Code of Law. Increases penalty for breaking code, in exchange for... something?
 - Knight: Demon hunter. Like favored enemy, but for demons. Possibly know all demons?
 - Knight: Armored mage. Decreases spellcasting penalty, in exchange for... something?
 - Wizard/Cleric: Blood Magic. Cast from HP.
 - Humans get no skills. Instead, they get extra skill slots.
-- Potentially being in the dark is the same as being blind? That would make elves more interesting,
-  certainly, and also turn light sources into a time limit...
 - Wizard: Wild Magic. Spells have a chance of doing random things.
 - Orc: Blood Rage. Gain bonuses to attack when below half health.
 - Orc: Raging Clarity. Gain bonuses to spellcasting when below half health.
+
+- Cleave: Gain movement points upon killing a monster in melee.
 
 ARCHEOLOGIST IDEAS
 - Panache: Provides a passive bonus to luck.

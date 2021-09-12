@@ -338,13 +338,19 @@ newexplevel(void)
 void
 pluslvl(boolean incr) /* true iff via incremental experience growth */
 {                     /*        (false for potion of gain level)    */
-    int hpinc, eninc;
+    int hpinc, eninc, skill;
 
     if (!incr)
         You_feel("more experienced.");
 
+    /* Increase class and race-specific skills. */
+    for (skill = P_FIRST_ROLE; skill <= P_LAST_RACE; skill++) {
+        if (!P_RESTRICTED(skill))
+            use_skill(skill, 5 * P_SKILL(skill));
+    }
+
     /* Role selection */
-    if (u.ulevel < MAXULEV)
+    if (u.ulevel < MAXULEV && yn("Do you want to switch roles?") == 'y')
         levelup_menu();
 
     if (!u.uroleplay.marathon && !u.uroleplay.heaven_or_hell) {
@@ -432,10 +438,10 @@ levelup_menu(void) {
     char rolenamebuf[50];
     char qbuf[BUFSZ];
     short old_ldrnum, old_neminum, old_guardnum, old_questarti;
-    char *old_ngod;
-    char *old_lgod;
-    char *old_cgod;
-    char *old_filecode;
+    const char *old_ngod;
+    const char *old_lgod;
+    const char *old_cgod;
+    const char *old_filecode;
 
 
     /* Convicts CANNOT switch roles. The player can certanly switch into convict if they want, although I

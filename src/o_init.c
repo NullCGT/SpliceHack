@@ -425,6 +425,7 @@ discover_object(int oindx, boolean mark_as_known, boolean credit_hero)
             if (objects[oindx].oc_class == GEM_CLASS)
                 gem_learned(oindx); /* could affect price of unpaid gems */
             update_inventory();
+            g.context.botl = TRUE;
         }
     }
 }

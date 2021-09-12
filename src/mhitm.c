@@ -413,6 +413,8 @@ mattackm(register struct monst *magr, register struct monst *mdef)
                     res[i] |= MM_AGR_DIED;
                 break;
             }
+            if (cursed_weapon_proc(magr, mdef) == 1)
+                return MM_AGR_DIED;
             if (magr->weapon_check == NEED_WEAPON || !MON_WEP(magr)) {
                 magr->weapon_check = NEED_HTH_WEAPON;
                 if (mon_wield_item(magr) != 0)
@@ -1445,6 +1447,82 @@ attk_protection(int aatyp)
         break;
     }
     return w_mask;
+}
+
+/* 0 = Continue the attack
+   1 = Mon died
+   2 = Attack over */
+int
+cursed_weapon_proc(struct monst *magr, struct monst *mdef) {
+    int curse_id;
+    int dmg;
+    boolean youattack = (magr == &g.youmonst);
+    int ret = 0;
+    struct obj *obj = youattack ? uwep : MON_WEP(magr);
+    boolean observes = youattack || canseemon(magr);
+
+    /* Get out */
+    if (!obj || !obj->cursed)
+        return 0;
+    /* Cursed objects do not proc immediately. Instead, the curses hide
+       for a time. */
+    if (rn2(2)) return 0;
+
+    curse_id = obj->o_id % 2;
+
+    switch(curse_id) {
+    case 0:
+        /* Weapon rebounds and hurts the wielder. This will probably lead
+           to at least one person accidentally killing themselves with a
+           vorpal sword. */
+        dmg = rnd(10) + max(0, obj->spe);
+        if (youattack) {
+            pline("%s around and strikes you in the %s!",
+                Yobjnam2(obj, "curl"), body_part(SPINE));
+            if (obj->oartifact)
+                (void) artifact_hit((struct monst *) 0,
+                                    &g.youmonst, obj, &dmg, 0);
+            losehp(Maybe_Half_Phys(dmg), killer_xname(obj),
+                    KILLED_BY);
+        } else {
+            if (observes) { pline("%s attacks with %s.", Monnam(magr), an(xname(obj)));
+                pline("%s around and strikes %s!",
+                Tobjnam(obj, "curl"), mon_nam(magr));
+            }
+            (void) artifact_hit((struct monst *) 0,
+                                magr, obj, &dmg, 0);
+            magr->mhp -= dmg;
+            if (magr->mhp < 0) { 
+                ret = 1;
+                mondead(magr);
+            }
+            else ret = 2;
+        }
+        break;
+    default:
+        /* Weapons weakens, or breaks if it is too weak. The weaker a
+           weapon is, the more likely it breaks completely. */
+        obj->spe--;
+        if (!youattack && observes) pline("%s out a groan.", 
+            Tobjnam(obj, "let"));
+        if (youattack && observes) pline("%s out a groan.",
+            Yobjnam2(obj, "let"));
+        
+        if (youattack && obj && obj->spe < 0 && rn2(min(-1 * obj->spe, 2))) {
+            pline("%s!", Yobjnam2(obj, "break"));
+            uwepgone();
+            useup(obj);
+            ret = 2;
+        } else if (mcarried(obj) && obj->spe < 0 && rn2(min(-1 * obj->spe, 2))) {
+            if (observes) pline("%s!", Tobjnam(obj, "break"));
+            m_useup(magr, obj);
+            ret = 2;
+        }
+        break;
+    }
+    if (obj && observes) obj->bknown = TRUE;
+    if (youattack) update_inventory();
+    return ret;
 }
 
 /*mhitm.c*/

@@ -28,6 +28,7 @@ static int skill_hit_effects(struct monst *);
 static boolean bite_monster(struct monst *);
 
 #define PROJECTILE(obj) ((obj) && is_ammo(obj))
+#define KILL_FAMILIARITY 20
 
 /* multi_reason is usually a literal string; here we generate one that
    has the causing monster's type included */
@@ -267,11 +268,16 @@ check_caitiff(struct monst *mtmp)
     if (u.ualign.record <= -10)
         return;
 
-    if (Role_if(PM_KNIGHT) && u.ualign.type == A_LAWFUL
+    if ((Role_if(PM_KNIGHT) || P_SKILL(P_CODE_OF_HONOR) > P_UNSKILLED) 
+        && u.ualign.type == A_LAWFUL
         && (!mtmp->mcanmove || mtmp->msleeping
             || (mtmp->mflee && !mtmp->mavenge))) {
         You("caitiff!");
-        adjalign(-1);
+        if (P_SKILL(P_CODE_OF_HONOR) > P_UNSKILLED) {
+            adjalign(-3 * P_SKILL(P_CODE_OF_HONOR));
+        } else {
+            adjalign(-1);
+        }
     } else if (Role_if(PM_SAMURAI) && mtmp->mpeaceful) {
         /* attacking peaceful creatures is bad for the samurai's giri */
         You("dishonorably attack the innocent!");
@@ -290,8 +296,10 @@ find_roll_to_hit(struct monst *mtmp,
 
     *role_roll_penalty = 0; /* default is `none' */
 
-    tmp = 1 + Luck + abon() + find_mac(mtmp) + u.uhitinc
-          + maybe_polyd(g.youmonst.data->mlevel, u.ulevel);
+    /* In SpliceHack, luck and character level are not a factor */
+    /* tmp = 1 + Luck + abon() + find_mac(mtmp) + u.uhitinc
+          + maybe_polyd(g.youmonst.data->mlevel, u.ulevel); */
+    tmp = 1 + abon() + find_mac(mtmp) + u.uhitinc + (int) (maybe_polyd(g.youmonst.data->mlevel, u.ulevel) * role_bab());
 
     /* some actions should occur only once during multiple attacks */
     if (!(*attk_count)++) {
@@ -512,6 +520,7 @@ known_hitum(struct monst *mon, struct obj *weapon, int *mhit, int rollneeded,
             struct attack *uattk,
             int dieroll)
 {
+    int curseproc;
     boolean malive = TRUE,
             /* hmon() might destroy weapon; remember aspect for cutworm */
             slice_or_chop = (weapon && (is_blade(weapon) || is_axe(weapon)));
@@ -522,6 +531,11 @@ known_hitum(struct monst *mon, struct obj *weapon, int *mhit, int rollneeded,
         if (flags.verbose)
             Your("bloodthirsty blade attacks!");
     }
+
+    /* cursed weapons proc */
+    curseproc = cursed_weapon_proc(&g.youmonst, mon);
+    if (curseproc == 2) return malive;
+    else if (curseproc) return FALSE;
 
     if (!*mhit) {
         missum(mon, uattk, (rollneeded + armorpenalty > dieroll));
@@ -853,13 +867,15 @@ hmon_hitmon(struct monst *mon,
                        let it also hit from behind or shatter foes' weapons */
                     || (hand_to_hand && obj->oartifact == ART_CLEAVER)) {
                     ; /* no special bonuses */
-                } else if (mon->mflee && (Role_if(PM_ROGUE) || P_SKILL(P_BACKSTAB))
+                } else if (mon->mflee && (Role_if(PM_ROGUE) || P_SKILL(P_BACKSTAB) > P_UNSKILLED)
                             && !Upolyd
                            /* multi-shot throwing is too powerful here */
                            && hand_to_hand) {
                     You("strike %s from behind!", mon_nam(mon));
-                    if (P_SKILL(P_BACKSTAB)) tmp += rnd(u.ulevel * (1 + P_SKILL(P_BACKSTAB)));
-                    else tmp += rnd(u.ulevel);
+                    if (P_SKILL(P_BACKSTAB) > P_UNSKILLED)
+                        tmp += rnd(u.ulevel * (1 + P_SKILL(P_BACKSTAB)));
+                    else
+                        tmp += rnd(u.ulevel);
                     hittxt = TRUE;
                 } else if (dieroll == 2 && obj == uwep
                            && obj->oclass == WEAPON_CLASS
@@ -907,6 +923,11 @@ hmon_hitmon(struct monst *mon,
                     if (tmp == 0)
                         return TRUE;
                     hittxt = TRUE;
+                }
+
+                /* In SpliceHack, launchers contribute to damage. */
+                if (uwep && ammo_and_launcher(obj, uwep) && obj->spe < uwep->spe) {
+                    tmp += (uwep->spe - obj->spe);
                 }
 
                 /* handle the damages of special artifacts */
@@ -1485,6 +1506,20 @@ hmon_hitmon(struct monst *mon,
         if (!noncorporeal(mdat) && !amorphous(mdat))
             whom = strcat(s_suffix(whom), " flesh");
         pline(fmt, whom);
+    }
+    /* Weapons have a chance to id after a certain number of kills with
+        them. The more powerful a weapon, the lower this chance is. This
+        way, there is uncertainty about when a weapon will ID, but spoiled
+        players can make an educated guess. */
+    if (destroyed && uwep 
+        && (uwep->oclass == WEAPON_CLASS || is_weptool(uwep)) && !uwep->known) {
+        uwep->wep_kills++;
+        if (uwep->wep_kills > KILL_FAMILIARITY && !rn2(min(2, uwep->spe) && !uwep->known)) {
+            You("have developed a bond of familiarity with your %s.", 
+                yobjnam(uwep, (char *) 0));
+            uwep->known = TRUE;
+            update_inventory();
+        } 
     }
     /* if a "no longer poisoned" message is coming, it will be last;
        obj->opoisoned was cleared above and any message referring to
@@ -2148,10 +2183,12 @@ mhitm_ad_fire(struct monst *magr, struct attack *mattk, struct monst *mdef,
                 /* KMH -- this is okay with unchanging */
                 rehumanize();
                 return;
-            } else if (Fire_resistance) {
+            } else if (how_resistant(FIRE_RES) == 100) {
                 pline_The("fire doesn't feel hot!");
                 monstseesu(M_SEEN_FIRE);
                 mhm->damage = 0;
+            } else {
+                mhm->damage = resist_reduce(mhm->damage, AD_FIRE);
             }
             if ((int) magr->m_lev > rn2(20))
                 destroy_item(SCROLL_CLASS, AD_FIRE);
@@ -2239,10 +2276,12 @@ mhitm_ad_cold(struct monst *magr, struct attack *mattk, struct monst *mdef,
         hitmsg(magr, mattk);
         if (uncancelled) {
             pline("You're covered in frost!");
-            if (Cold_resistance) {
+            if (how_resistant(COLD_RES) == 100) {
                 pline_The("frost doesn't seem cold!");
                 monstseesu(M_SEEN_COLD);
                 mhm->damage = 0;
+            } else {
+                mhm->damage = resist_reduce(mhm->damage, AD_COLD);
             }
             if ((int) magr->m_lev > rn2(20))
                 destroy_item(POTION_CLASS, AD_COLD);
@@ -2304,10 +2343,12 @@ mhitm_ad_elec(struct monst *magr, struct attack *mattk, struct monst *mdef,
         hitmsg(magr, mattk);
         if (uncancelled) {
             You("get zapped!");
-            if (Shock_resistance) {
+            if (how_resistant(SHOCK_RES) == 100) {
                 pline_The("zap doesn't shock you!");
                 monstseesu(M_SEEN_ELEC);
                 mhm->damage = 0;
+            } else {
+                mhm->damage = resist_reduce(mhm->damage, AD_ELEC);
             }
             if ((int) magr->m_lev > rn2(20))
                 destroy_item(WAND_CLASS, AD_ELEC);
@@ -3443,11 +3484,11 @@ mhitm_ad_slee(struct monst *magr, struct attack *mattk, struct monst *mdef,
 
         hitmsg(magr, mattk);
         if (uncancelled && g.multi >= 0 && !rn2(5)) {
-            if (Sleep_resistance) {
+            if (how_resistant(SLEEP_RES) == 100) {
                 monstseesu(M_SEEN_SLEEP);
                 return;
             }
-            fall_asleep(-rnd(10), TRUE);
+            fall_asleep(-resist_reduce(rnd(10), SLEEP_RES), TRUE);
             if (Blind)
                 You("are put to sleep!");
             else
@@ -4392,6 +4433,10 @@ mhitm_ad_phys(struct monst *magr, struct attack *mattk, struct monst *mdef,
                     mhm->damage = 1;
             }
         }
+        if (mattk->adtyp == AD_CLOB && mhm->damage > 0 && !rn2(5)) {
+            You("knock %s back with an awesome blow!", mon_nam(mdef));
+            mhurtle(mdef, u.ux - mdef->mx, u.uy - mdef->my, rnd(2) + 1);
+        }
     } else if (mdef == &g.youmonst) {
         /* mhitu */
         if (mattk->aatyp == AT_HUGS && !sticks(pd)) {
@@ -4476,6 +4521,10 @@ mhitm_ad_phys(struct monst *magr, struct attack *mattk, struct monst *mdef,
                        || magr != u.ustuck)
                 hitmsg(magr, mattk);
         }
+        if (mattk->adtyp == AD_CLOB && mhm->damage > 0 && !rn2(5)) {
+            pline("%s knocks you back with an awesome blow!", Monnam(magr));
+            hurtle(u.ux - magr->mx, u.uy - magr->my, rnd(2) + 1, FALSE);
+        }
     } else {
         /* mhitm */
         struct obj *mwep = MON_WEP(magr);
@@ -4536,6 +4585,12 @@ mhitm_ad_phys(struct monst *magr, struct attack *mattk, struct monst *mdef,
                the subsequent engulf attack should accomplish that */
             if (mhm->damage >= mdef->mhp && mdef->mhp > 1)
                 mhm->damage = mdef->mhp - 1;
+        }
+
+        if (mattk->adtyp == AD_CLOB && mhm->damage > 0 && !rn2(5)) {
+            if (canseemon(mdef) && canseemon(magr))
+                pline("%s knocks %s back with an awesome blow!", Monnam(magr), mon_nam(mdef));
+            mhurtle(magr, magr->mx - mdef->mx, magr->my - mdef->my, rnd(2) + 1);
         }
     }
 }
@@ -4968,6 +5023,7 @@ mhitm_ad_sedu(struct monst *magr, struct attack *mattk, struct monst *mdef,
             mhm->done = TRUE;
             return;
         case 0:
+            mhm->done = TRUE;
             return;
         default:
             if (!is_animal(magr->data) && !tele_restrict(magr))
@@ -4977,9 +5033,9 @@ mhitm_ad_sedu(struct monst *magr, struct attack *mattk, struct monst *mdef,
                     pline("%s tries to %s away with %s.", Monnam(magr),
                           locomotion(magr->data, "run"), buf);
             }
-            monflee(magr, 0, FALSE, FALSE);
             mhm->hitflags = MM_AGR_DONE; /* return 3??? */
             mhm->done = TRUE;
+            monflee(magr, 0, FALSE, FALSE);
             return;
         }
     } else {
@@ -5076,6 +5132,7 @@ mhitm_adtyping(struct monst *magr, struct attack *mattk, struct monst *mdef,
     case AD_LEGS: mhitm_ad_legs(magr, mattk, mdef, mhm); break;
     case AD_WERE: mhitm_ad_were(magr, mattk, mdef, mhm); break;
     case AD_HEAL: mhitm_ad_heal(magr, mattk, mdef, mhm); break;
+    case AD_CLOB:
     case AD_PHYS: mhitm_ad_phys(magr, mattk, mdef, mhm); break;
     case AD_FIRE: mhitm_ad_fire(magr, mattk, mdef, mhm); break;
     case AD_COLD: mhitm_ad_cold(magr, mattk, mdef, mhm); break;
@@ -5924,6 +5981,7 @@ hmonas(struct monst *mon)
         case AT_BREA:
         case AT_SPIT:
         case AT_VOLY:
+        case AT_SCRE:
         case AT_GAZE: /* all done using #monster command */
             dhit = 0;
             break;
@@ -6241,7 +6299,7 @@ passive(struct monst *mon,
             break;
         case AD_COLD: /* brown mold or blue jelly */
             if (monnear(mon, u.ux, u.uy)) {
-                if (Cold_resistance) {
+                if (how_resistant(COLD_RES) == 100) {
                     shieldeff(u.ux, u.uy);
                     You_feel("a mild chill.");
                     monstseesu(M_SEEN_COLD);
@@ -6249,6 +6307,7 @@ passive(struct monst *mon,
                     break;
                 }
                 You("are suddenly very cold!");
+                tmp = resist_reduce(tmp, COLD_RES);
                 mdamageu(mon, tmp);
                 /* monster gets stronger with your heat! */
                 mon->mhp += tmp / 2;
@@ -6265,7 +6324,7 @@ passive(struct monst *mon,
             break;
         case AD_FIRE:
             if (monnear(mon, u.ux, u.uy)) {
-                if (Fire_resistance) {
+                if (how_resistant(FIRE_RES) == 100) {
                     shieldeff(u.ux, u.uy);
                     You_feel("mildly warm.");
                     monstseesu(M_SEEN_FIRE);
@@ -6273,11 +6332,12 @@ passive(struct monst *mon,
                     break;
                 }
                 You("are suddenly very hot!");
+                tmp = resist_reduce(tmp, FIRE_RES);
                 mdamageu(mon, tmp); /* fire damage */
             }
             break;
         case AD_ELEC:
-            if (Shock_resistance) {
+            if (how_resistant(SHOCK_RES) == 100) {
                 shieldeff(u.ux, u.uy);
                 You_feel("a mild tingle.");
                 monstseesu(M_SEEN_ELEC);
@@ -6285,7 +6345,26 @@ passive(struct monst *mon,
                 break;
             }
             You("are jolted with electricity!");
+            tmp = resist_reduce(tmp, SHOCK_RES);
             mdamageu(mon, tmp);
+	        break;
+	    case AD_DISE: /* specifically gray fungus */
+            if (Sick_resistance) {
+                You("are infected, but it appears you are immune.");
+            } else {
+                You("are diseased!");
+                mdamageu(mon, tmp);
+                make_sick(20, "bad case of the plague", TRUE, SICK_NONVOMITABLE);
+            }
+            break;
+        case AD_DRST: /* specifically green dragons */
+            if (how_resistant(POISON_RES) == 100) {
+                You("are immune to %s poisonous hide.", s_suffix(mon_nam(mon)));
+            } else {
+                You("have been poisoned!");
+                tmp = resist_reduce(tmp, POISON_RES);
+                mdamageu(mon, rnd(6));
+            }
             break;
         default:
             break;
@@ -6348,6 +6427,13 @@ passive_obj(struct monst *mon,
     case AD_CORR:
         if (!mon->mcan) {
             (void) erode_obj(obj, (char *) 0, ERODE_CORRODE, EF_GREASE);
+        }
+        break;
+    case AD_MTRL:
+        if (!mon->mcan) {
+            if (warp_material(obj, TRUE) && carried(obj)) {
+                pline("Your %s warps!", simpleonames(obj));
+            }
         }
         break;
     case AD_ENCH:
@@ -6537,7 +6623,7 @@ skill_hit_effects(struct monst *mon) {
     int damage_bonus = 0;
     /* Martial arts skills */
     if (!uwep && !uarm && !uarms) {
-        if (P_SKILL(P_FLAMING_FISTS) && rn2(20) < P_SKILL(P_FLAMING_FISTS)) {
+        if (P_SKILL(P_FLAMING_FISTS) > P_UNSKILLED && rn2(20) < P_SKILL(P_FLAMING_FISTS)) {
             if (resists_fire(mon)) {
                 shieldeff(mon->mx, mon->my);
             } else {
@@ -6548,7 +6634,7 @@ skill_hit_effects(struct monst *mon) {
             damage_bonus += destroy_mitem(mon, POTION_CLASS, AD_FIRE);
             ignite_items(mon->minvent);
         }
-        if (P_SKILL(P_FREEZING_FISTS) && rn2(25) < P_SKILL(P_FREEZING_FISTS)) {
+        if (P_SKILL(P_FREEZING_FISTS) > P_UNSKILLED && rn2(25) < P_SKILL(P_FREEZING_FISTS)) {
             if (resists_cold(mon)) {
                 shieldeff(mon->mx, mon->my);
             } else {
@@ -6558,7 +6644,7 @@ skill_hit_effects(struct monst *mon) {
             }
             damage_bonus += destroy_mitem(mon, POTION_CLASS, AD_COLD);
         }
-        if (P_SKILL(P_SHOCKING_FISTS) && rn2(100) < P_SKILL(P_SHOCKING_FISTS)) {
+        if (P_SKILL(P_SHOCKING_FISTS) > P_UNSKILLED && rn2(100) < P_SKILL(P_SHOCKING_FISTS)) {
             if (resists_cold(mon)) {
                 shieldeff(mon->mx, mon->my);
             } else {
@@ -6567,6 +6653,10 @@ skill_hit_effects(struct monst *mon) {
                 golemeffects(mon, AD_ELEC, damage_bonus);
             }
             damage_bonus += destroy_mitem(mon, WAND_CLASS, AD_ELEC);
+        }
+        if (P_SKILL(P_BLOOD_RAGE) > P_UNSKILLED && (u.uhp < (u.uhp / 2))) {
+            pline("Your rage strengthens your attack!");
+            damage_bonus += (P_SKILL(P_BLOOD_RAGE) *  (u.uhp < (u.uhp / 4) ? 2 : 1));
         }
     }
 

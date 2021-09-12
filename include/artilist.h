@@ -14,7 +14,7 @@ static const char *artifact_names[] = {
 
 #define A(nam, typ, s1, s2, mt, atk, dfn, cry, inv, al, cl, rac, cost, clr) \
     {                                                                       \
-        typ, nam, s1, s2, mt, atk, dfn, cry, inv, al, cl, rac, cost, clr    \
+        nam, typ, s1, s2, mt, atk, dfn, cry, inv, al, cl, rac, cost, clr    \
     }
 
 /* clang-format off */
@@ -210,6 +210,10 @@ static NEARDATA struct artifact artilist[] = {
     A("Poseidon\'s Trident", TRIDENT, (SPFX_RESTR | SPFX_BREATHE), 0, 0, PHYS(3, 7),
       NO_DFNS, NO_CARY, WWALKING, A_CHAOTIC, NON_PM, NON_PM, 1500L, NO_COLOR),
 
+    A("Shamblestick", QUARTERSTAFF, (SPFX_RESTR), 0, 0,
+      PHYS(0, 0), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 500L,
+      CLR_MAGENTA),
+
     /*
     *       Resisted by very few monsters, but is a morning star and also
     *       happens to destroy tons of items.
@@ -310,7 +314,7 @@ static NEARDATA struct artifact artilist[] = {
     /*
     * Created by fusing sonicboom and sunspot. Shoots bolts of lightning.
     */
-    A("Squall", MORNING_STAR, (SPFX_RESTR | SPFX_ATTK | SPFX_DEFN | SPFX_BLIND), 0, 0,
+    A("Squall", MORNING_STAR, (SPFX_RESTR | SPFX_NOGEN | SPFX_ATTK | SPFX_DEFN | SPFX_BLIND), 0, 0,
       LOUD(5, 0), LOUD(0, 0), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 3000L,
       NO_COLOR),
 

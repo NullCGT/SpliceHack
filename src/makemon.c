@@ -548,7 +548,7 @@ m_initweap(register struct monst *mtmp)
                 else
                     (void) mongets(mtmp, RED_DRAGON_SCALE_MAIL);
 
-                (void) mongets(mtmp, ATHAME);
+                (void) mongets(mtmp, PARAZONIUM);
                 m_initthrow(mtmp, SHURIKEN, 12);
                 (void) mongets(mtmp, rnd_offensive_item(mtmp));
                 (void) mongets(mtmp, rnd_offensive_item(mtmp));
@@ -746,8 +746,9 @@ m_initweap(register struct monst *mtmp)
         case PM_SKELETON:
             if (!rn2(4))
             (void) mongets(mtmp, LIGHT_ARMOR);
+        /* Skeletons wield weird, ancient weaponry. */
         if (!rn2(4))
-            (void) mongets(mtmp, (rn2(3) ? KNIFE : SHORT_SWORD));
+            (void) mongets(mtmp, (rn2(3) ? PARAZONIUM : GLADIUS));
             break;
         case PM_SKELETAL_PIRATE:
             otmp = rn2(2) ? mksobj(SCIMITAR, FALSE, FALSE) :
@@ -2383,7 +2384,7 @@ grow_up(struct monst *mtmp, struct monst *victim)
             hp_threshold *= 3;
         lev_limit = 3 * (int) ptr->mlevel / 2; /* same as adj_lev() */
         /* If they can grow up, be sure the level is high enough for that */
-        if (oldtype != newtype && mons[newtype].mlevel > lev_limit)
+        if (oldtype != newtype && (!mtmp->mtame || mons[newtype].mlevel > lev_limit))
             lev_limit = (int) mons[newtype].mlevel;
         /* number of hit points to gain; unlike for the player, we put
            the limit at the bottom of the next level rather than the top */
@@ -2402,7 +2403,7 @@ grow_up(struct monst *mtmp, struct monst *victim)
 
     mtmp->mhpmax += max_increase;
     mtmp->mhp += cur_increase;
-    if (mtmp->mhpmax <= hp_threshold)
+    if ((mtmp->mhpmax <= hp_threshold) && mtmp->mtame)
         return ptr; /* doesn't gain a level */
 
     if (is_mplayer(ptr))
@@ -2412,7 +2413,8 @@ grow_up(struct monst *mtmp, struct monst *victim)
     else if (lev_limit > 49)
         lev_limit = (ptr->mlevel > 49 ? 50 : 49);
 
-    if ((int) ++mtmp->m_lev >= mons[newtype].mlevel && newtype != oldtype) {
+    if ((int) ((++mtmp->m_lev >= mons[newtype].mlevel) || !mtmp->mtame) 
+        && newtype != oldtype) {
         ptr = &mons[newtype];
         /* new form might force gender change */
         fem = is_male(ptr) ? 0 : is_female(ptr) ? 1 : mtmp->female;
@@ -2578,6 +2580,9 @@ peace_minded(register struct permonst *ptr)
     aligntyp mal = ptr->maligntyp, ual = u.ualign.type;
 
     if (always_peaceful(ptr))
+        return TRUE;
+    if (is_animal(ptr) && P_SKILL(P_ANIMAL_FRIENDSHIP) > P_UNSKILLED
+        && rn2(P_SKILL(P_ANIMAL_FRIENDSHIP)))
         return TRUE;
     if (always_hostile(ptr))
         return FALSE;
@@ -2971,6 +2976,10 @@ initetemplate(struct monst *mtmp, int tindex)
 
 static boolean
 is_valid_template(struct monst *mtmp, int tindex) {
+    /* For now, we forbid vampshifters with templates, because they
+       seem to cause crashes. */
+    if (is_vampshifter(mtmp))
+        return FALSE;
     switch (tindex) {
     case MT_ELVEN:
     case MT_DWARVISH:

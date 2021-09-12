@@ -3,7 +3,6 @@
 
 #include "hack.h"
 
-static int cost(struct obj *);
 static boolean label_known(int, struct obj *);
 static int write_ok(struct obj *);
 static char *new_book_description(int, char *);
@@ -11,13 +10,13 @@ static char *new_book_description(int, char *);
 /*
  * returns basecost of a scroll or a spellbook
  */
-static int
-cost(struct obj *otmp)
+int
+ink_cost(short otyp)
 {
-    if (otmp->oclass == SPBOOK_CLASS)
-        return (10 * objects[otmp->otyp].oc_level);
+    if (objects[otyp].oc_class == SPBOOK_CLASS)
+        return (10 * objects[otyp].oc_level);
 
-    switch (otmp->otyp) {
+    switch (otyp) {
 #ifdef MAIL_STRUCTURES
     case SCR_MAIL:
         return 2;
@@ -247,7 +246,7 @@ found:
     check_unpaid(pen);
 
     /* see if there's enough ink */
-    basecost = cost(new_obj);
+    basecost = ink_cost(new_obj->otyp);
     if (new_obj->otyp == SCR_KNOWLEDGE) {
         You("cannot write something you do not know!");
         return 1;

@@ -1416,11 +1416,28 @@ dochat(void)
      !mtmp->mtame) {
         You("attempt to soothe the %s with chittering sounds.",
          l_monnam(mtmp));
-        if (rnl(10) < 2) {
+        if (rnl(10) - P_SKILL(P_RAT_TAMER) < 2) {
             (void) tamedog(mtmp, (struct obj *) 0);
         } else {
             if (rnl(10) > 8) {
                 pline("%s unfortunately ignores your overtures.",
+                 Monnam(mtmp));
+                return 0;
+            }
+            mtmp->mpeaceful = 1;
+            set_malign(mtmp);
+        }
+        return 0;
+    }
+
+    if ((Role_if(PM_DRAGON_RIDER) || P_SKILL(P_DRAGON_TAMER > P_UNSKILLED)) 
+        && is_dragon(mtmp->data) && !mtmp->mpeaceful && !mtmp->mtame) {
+        You("attempt to commune with %s.", l_monnam(mtmp));
+        if (rnl(10) - (P_SKILL(P_DRAGON_TAMER) * 3) + mtmp->m_lev < 2) {
+            (void) tamedog(mtmp, (struct obj *) 0);
+        } else {
+            if (rnl(10) > 8) {
+                pline("%s ignores your pleas.",
                  Monnam(mtmp));
                 return 0;
             }

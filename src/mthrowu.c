@@ -550,7 +550,7 @@ m_throw(
   	else mwep = (struct obj *) 0;
   	if (mwep && is_ammo(singleobj) && ammo_and_launcher(singleobj, mwep)) {
   	    if (mwep->oartifact == ART_PLAGUE && is_poisonable(singleobj))
-  			singleobj->opoisoned = TRUE;
+  			singleobj->opoisoned = POT_SICKNESS;
   	}
 
     if ((singleobj->cursed || singleobj->greased) && (dx || dy) && !rn2(7)) {
@@ -966,6 +966,15 @@ breamm(struct monst* mtmp, struct attack* mattk, struct monst* mtarg)
                     if (dog->hungrytime >= 10)
                         dog->hungrytime -= 10;
                 }
+            } else if (typ == AD_CURS) {
+                if (mtarg != &g.youmonst)
+                    return 0;
+                if (canseemon(mtmp))
+                    pline("%s spits a geyser of turgid water at you!", Monnam(mtmp));
+                if (!rn2(3))
+                    mtmp->mspec_used = 10 + rn2(20);
+                rndcurse();
+                nomul(0);
             } else impossible("Breath weapon %d used", typ-1);
         } else
             return MM_MISS;

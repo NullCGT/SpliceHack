@@ -2704,7 +2704,7 @@ display_pickinv(
             map_glyphinfo(0, 0, tmpglyph, 0U, &tmpglyphinfo);
             add_menu(win, &tmpglyphinfo, &any, ilet,
                      wizid ? def_oc_syms[(int) otmp->oclass].sym : 0,
-                     ATR_NONE, doname(otmp), MENU_ITEMFLAGS_NONE);
+                     ATR_NONE, doname_item_stats(otmp), MENU_ITEMFLAGS_NONE);
             gotsomething = TRUE;
         }
     }

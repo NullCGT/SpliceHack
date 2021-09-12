@@ -662,8 +662,8 @@ getpos(coord *ccp, boolean force, const char *goal)
     static struct {
         int nhkf, ret;
     } const pick_chars_def[] = {
-        { NHKF_GETPOS_PICK, LOOK_TRADITIONAL },
-        { NHKF_GETPOS_PICK_Q, LOOK_QUICK },
+        { NHKF_GETPOS_PICK, LOOK_ONCE },
+        { NHKF_GETPOS_PICK_Q, LOOK_ONCE },
         { NHKF_GETPOS_PICK_O, LOOK_ONCE },
         { NHKF_GETPOS_PICK_V, LOOK_VERBOSE }
     };
@@ -1447,6 +1447,10 @@ oname(struct obj *obj, const char *name)
             break;
         case ART_IRON_BALL_OF_LIBERATION:
             obj->material = IRON;
+            break;
+        /* Magicbane is of course made of the most magically conductive material. */
+        case ART_MAGICBANE:
+            obj->material = ORICHALCUM;
             break;
         default:
             /* prevent any wishes for materials on an artifact */

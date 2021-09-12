@@ -37,6 +37,9 @@
   - Rename dragonmasters to dragon riders. This name change puts greater emphasis on the bond the
     character has with dragons.
   - Allow baby black dragons as starting pets.
+  - Dragon Riders now tame dragons by chatting with them, as convicts do. Their chances of success are
+    determined by dragon hit dice and their level in the dragon tamer skill. At high level, they are
+    capable of taming elder dragons.
 #### Priest
   - Priests can be of any species.
 #### Cartomancer
@@ -57,6 +60,14 @@
 - Coffins are always trapped, and looting them will occasionally produce vampires.
 - New Object: Executioner's Mace.
   - Does not generate randomly. Dropped only by Worms that Walk.
+- New Artifact: Shamblestick
+  - Has stats randomly determined at the beginning of the game, like a shambling horror.
+- New Materials:
+  - Orichalcum
+    - Can be safely enchanted to higher values.
+    - Stolen by gold-stealing monsters, since it is an alloy of a number of metals.
+    - If an orichalcum item is disenchanted, all of its enchantment instantly disappears,
+      since it is such a superb magical conductor.
 
 ### Skill System
 - Rather than techniques, SpliceHack uses a skill system.
@@ -68,6 +79,23 @@
 - Tourists are unique in that they have no special skills of their own, but can attain basic
   levels in numerous skills from other roles.
 - A full list of skills and what they do can be found in an attached text document.
+
+### Combat System
+- Luck no longer gives a to-hit bonus.
+- Ported EvilHack / SporkHack partial resistances.
+- Ammo gains a bonus to damage equal to its own enchantment bonus or the enchantment bonus of
+  the launcher it was fired from, whichever is larger. Currently only implemented for players.
+- Base attack bonus is partially determined by the role one is playing.
+- Whenever a non-tame monster kills another monster, it will automatically grow up.
+- Monsters gain a large bonus to hit when flanking the player (located on opposite sides of
+  the player's position),
+- Power regen is based on role.
+- Weapons have gone through a rebalance.
+  -Many weapons now have bonuses or penalties to hit, and can also influence AC when wielded.
+  - Given the emphasis on to-hit bonus, these small bonuses and penalties are now much more
+    important than they would otherwise be.
+  - [PLANNED] These values can be influenced by the material of the weapon.
+- [PLANNED] AC and DR have been split.
 
 ### QOL
 - Added several QOL fixes to the wish parser. Many of these came from the NetHack YANI archive.
@@ -95,6 +123,8 @@
 - Dexterity of 18 or higher improves hit chance with wand zaps.
 
 ### Dungeon Changes
+
+#### General
 One goal of this release of SpliceHack is to make regular dungeon levels more interesting and
 dynamic to explore. Each level should present unique challenges and be interesting to explore
 in its own way.
@@ -150,7 +180,17 @@ in its own way.
     a long sword imbued with blue dragon essence will shock enemies.
   - When polymorphed while wearing imbued body armor, you will polymorph into whatever monster that
     armor is imbued with. This includes not normally polymorphable monsters.
+  - Imbuing an item at a furnace may cause the furnace to power down.
+- Furnaces generate below level 15 in the dungeon.
 
+
+#### Wands of Wishing
+- Use XNetHack's wand of wishing changes.
+  - There is a guaranteed wand of wishing at the castle with 2 charges.
+  - There is a guaranteed wand in Vlad's coffin with 1 charge.
+  - There is a guaranteed wand with the Book of the Dead with 1 charge.
+  - Wands of wishing cannot be recharged, and instantly dust upon reaching zero charges.
+  - Wands of wishing do not generate randomly.
 
 
 ### Monster Changes
@@ -189,8 +229,9 @@ in its own way.
   - Dragons have adjectives attached to their names that describe their age categories. the level of
     a dragon determines its age category.
   - The higher level a dragon is, the more damage its breath weapon will deal.
-  - Blue dragons butt with a horn rather than using claws.
-  - Black dragons are treated as having a pair of horns.
+  - Blue dragons butt with a horn rather than using claws, and are slightly faster.
+  - Black dragons are treated as having a pair of horns, which they can butt with.
+  - Green dragons stalk the player.
   - Dragons have a chance of roaring at the player. This roar can inflict the afraid status effect,
     making the player flee from the dragon.
   - In order to offset many of their more powerful abilities, dragons periodically fall asleep and
@@ -267,6 +308,12 @@ that Excalibur doesn't crowd out all the other artifact weapons as much.
 - Werebears generate peaceful.
 - Altered the tiles for many existing monsters in order to improve visual clarity.
 - Renamed Avatars of Akasha to Hearth Archons.
+- Monsters summoned by the Wizard of Yendor appear at the upstairs of a level, rather than surrounding
+  the player.
+- While flying, you are unable to attack Pazuzu.
+- Due to expanded object materail lists, transmuters are much more dangeorus, since they can
+  transmute metal into stone, potentially overloading the player.
+- Removing a mask no longer causes you to instantly rehumanize.
 
 ### Removed Content
 Since this release is a rewrite, several pieces of existing content have been heavily altered
@@ -312,8 +359,8 @@ or outright removed. Rationale can be provided for removed content upon request.
 - Fixed grenade explosions being incorrectly blamed on the player.
 
 ### Known Bugs
-- Rare failed sanity check for improper mon data, possibly due to vampiric monsters shapeshifting.
-- Removing a mask that changed you into a light-emitting monster will cause a program in disorder.
 - Phoenix egg revival via fire is very buggy.
 - Rare write_ls: can't find
-- Hand grenade explosions are magical.
+- Hand grenade explosions are magical, but only when hurled by an enemy, and only when using a frag grenade.
+- Failed mon sanity checks with werecreatures.
+- Moldiers and other infesting mons spawn adjacent to player.

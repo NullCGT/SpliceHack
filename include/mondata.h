@@ -183,9 +183,7 @@
                           (ptr) == &mons[PM_KANGAROO])
 #define is_golem(ptr) ((ptr)->mlet == S_GOLEM)
 #define is_jumper(ptr) (((ptr)->mflags2 & M2_JUMPER) != 0L)
-#define is_domestic(ptr) ((((ptr)->mflags2 & M2_DOMESTIC) != 0L) \
-     || (Role_if(PM_DRAGON_RIDER) && (((ptr) >= &mons[PM_BABY_GRAY_DRAGON] && \
-                             (ptr) <= &mons[PM_YELLOW_DRAGON]))))
+#define is_domestic(ptr) (((ptr)->mflags2 & M2_DOMESTIC) != 0L)
 #define is_demon(ptr) (((ptr)->mhflags & MH_DEMON) != 0L)
 #define is_mercenary(ptr) (((ptr)->mflags2 & M2_MERC) != 0L)
 #define is_male(ptr) (((ptr)->mflags2 & M2_MALE) != 0L)
@@ -358,7 +356,9 @@
     (((ptr) == &mons[PM_MONKEY] || (ptr) == &mons[PM_APE])               \
      ? (obj)->otyp == BANANA                                             \
      : ((is_domestic(ptr) ||                                           \
-        (is_rat(ptr) && (Role_if(PM_CONVICT) || (obj)->otyp == CHEESE))) \
+        (is_rat(ptr) && (Role_if(PM_CONVICT) || (obj)->otyp == CHEESE)) || \
+        (is_dragon(ptr) &&  \
+            (Role_if(PM_DRAGON_RIDER) || P_SKILL(P_DRAGON_TAMER) > P_UNSKILLED))) \
         && (obj)->oclass == FOOD_CLASS                  \
         && ((ptr)->mlet != S_UNICORN                                     \
             || obj->material == VEGGY                                  \

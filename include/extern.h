@@ -419,6 +419,9 @@ extern int dowipe(void);
 extern void legs_in_no_shape(const char *, boolean);
 extern void set_wounded_legs(long, int);
 extern void heal_legs(int);
+extern int dodisarm(void);
+extern int dosunder(void);
+extern int dotumble(void);
 
 /* ### do_name.c ### */
 
@@ -1257,6 +1260,7 @@ extern void slept_monst(struct monst *);
 extern void xdrainenergym(struct monst *, boolean);
 extern long attk_protection(int);
 extern void rustm(struct monst *, struct obj *);
+extern int cursed_weapon_proc(struct monst *, struct monst *);
 
 /* ### mhitu.c ### */
 
@@ -1833,6 +1837,7 @@ extern boolean the_unique_obj(struct obj *);
 extern boolean the_unique_pm(struct permonst *);
 extern boolean erosion_matters(struct obj *);
 extern char *doname(struct obj *);
+extern char *doname_item_stats(struct obj *);
 extern char *doname_with_price(struct obj *);
 extern char *doname_vague_quan(struct obj *);
 extern boolean not_fully_identified(struct obj *);
@@ -1931,6 +1936,9 @@ extern void hide_unhide_msgtypes(boolean, int);
 extern void msgtype_free(void);
 
 /* ### pager.c ### */
+
+extern void checkfile(char *, struct permonst *, boolean, boolean, winid,
+                      char *);
 
 extern char *self_lookat(char *);
 extern char *monhealthdescr(struct monst *mon, boolean, char *);
@@ -2079,6 +2087,10 @@ extern const char *udeadinside(void);
 
 extern void set_itimeout(long *, long);
 extern void incr_itimeout(long *, int);
+extern void incr_resistance(long *, int);
+extern void decr_resistance(long *, int);
+extern int how_resistant(int);
+extern int resist_reduce(int, int);
 extern void make_confused(long, boolean);
 extern void make_stunned(long, boolean);
 extern void make_afraid(long, boolean);
@@ -2546,6 +2558,7 @@ extern void book_disappears(struct obj *);
 extern void book_substitution(struct obj *, struct obj *);
 extern void age_spells(void);
 extern int docast(void);
+extern const char *spelltypemnemonic(int);
 extern int spell_skilltype(int);
 extern int spelleffects(int, boolean);
 extern int tport_spell(int);
@@ -3094,6 +3107,11 @@ extern int vms_get_saved_games(const char *, char ***);
 /* ### weapon.c ### */
 
 extern const char *weapon_descr(struct obj *);
+extern int base_hitbonus(struct obj *);
+extern float role_bab(void);
+extern int role_powregen(void);
+extern int botl_hitbonus(void);
+extern char *describe_dmgval(char *, struct obj *, boolean);
 extern int hitval(struct obj *, struct monst *);
 extern int dmgval(struct obj *, struct monst *);
 extern int special_dmgval(struct monst *, struct monst *, long, struct obj **);
@@ -3270,6 +3288,7 @@ extern void extract_from_minvent(struct monst *, struct obj *, boolean,
 
 /* ### write.c ### */
 
+extern int ink_cost(short);
 extern int dowrite(struct obj *);
 
 /* ### zap.c ### */

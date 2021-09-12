@@ -48,6 +48,7 @@ hack_artifacts(void)
 {
     struct artifact *art;
     int alignmnt = aligns[flags.initalign].value;
+    int i;
 
     /* Fix up the alignments of "gift" artifacts */
     for (art = artilist + 1; art->otyp; art++)
@@ -63,6 +64,29 @@ hack_artifacts(void)
         artilist[g.urole.questarti].alignment = alignmnt;
         artilist[g.urole.questarti].role = Role_switch;
     }
+
+    /* Handle artifacts with varying base weapons. The artifacts that vary are
+       largely ones with no canonical mythical appearance. */
+    artilist[ART_FIRE_BRAND].otyp = artilist[ART_FROST_BRAND].otyp
+        = artilist[ART_FROSTBURN].otyp
+        = FIRST_SWORD + rn2(LAST_SWORD - FIRST_SWORD);
+    artilist[ART_ACIDFALL].otyp = FIRST_SWORD + rn2(LAST_SWORD - FIRST_SWORD);
+    artilist[ART_SUNSWORD].otyp = FIRST_SWORD + rn2(LAST_SWORD - FIRST_SWORD);
+    artilist[ART_WAR_S_SWORD].otyp = FIRST_SWORD + rn2(RUNESWORD - FIRST_SWORD);
+    artilist[ART_CARNWENNAN].otyp = DAGGER + rn2(STILETTO - DAGGER);
+    artilist[ART_SHAMBLESTICK].otyp = CLUB + rn2(AKLYS - CLUB);
+
+    /* Shamblestick is random, becuase what NetHack clearly needs is more randomness. */
+    artilist[ART_SHAMBLESTICK].acolor = rn2(CLR_MAX);
+    for (i = 0; i < rnd(7); i++) {
+  		artilist[ART_SHAMBLESTICK].spfx |= (1 << rn2(32));
+  	}
+      for (i = 0; i < rnd(3); i++) {
+  		artilist[ART_SHAMBLESTICK].cspfx |= (1 << rn2(32));
+  	}
+    artilist[ART_SHAMBLESTICK].attk.adtyp = rn2(AD_SLEE);
+    artilist[ART_SHAMBLESTICK].attk.damn = rnd(10);
+    artilist[ART_SHAMBLESTICK].attk.damd = rnd(10);
     return;
 }
 
@@ -78,20 +102,33 @@ init_artifacts(void)
 void
 save_artifacts(NHFILE *nhfp)
 {
+    int i;
+    struct artifact *artibegin = &artilist[0];
+    int namesize = sizeof(artibegin->name);
     if (nhfp->structlevel) {
         bwrite(nhfp->fd, (genericptr_t) g.artiexist, sizeof g.artiexist);
         bwrite(nhfp->fd, (genericptr_t) g.artidisco, sizeof g.artidisco);
+        for (i = 0; i < ART_EYE_OF_THE_AETHIOPICA; i++) {
+            if (perform_bwrite(nhfp))
+                if (nhfp->structlevel)
+                    bwrite(nhfp->fd, (genericptr_t) ((char *) &artilist[i] + namesize), sizeof(struct artifact) - namesize);
+        }
     }
 }
 
 void
 restore_artifacts(NHFILE *nhfp)
 {
+    int i;
+    struct artifact *artibegin = &artilist[0];
+    int namesize = sizeof(artibegin->name);
     if (nhfp->structlevel) {
         mread(nhfp->fd, (genericptr_t) g.artiexist, sizeof g.artiexist);
         mread(nhfp->fd, (genericptr_t) g.artidisco, sizeof g.artidisco);
+        for (i = 0; i < ART_EYE_OF_THE_AETHIOPICA; i++) {
+            mread(nhfp->fd, (genericptr_t) &artilist[i]  + namesize, sizeof(struct artifact) - namesize);
+        }
     }
-    hack_artifacts();	/* redo non-saved special cases */
 }
 
 const char *
@@ -800,9 +837,9 @@ spec_applies(const struct artifact *weap, struct monst *mtmp)
             return FALSE;
         switch (weap->attk.adtyp) {
         case AD_FIRE:
-            return !(yours ? Fire_resistance : resists_fire(mtmp));
+            return !(!yours ? resists_fire(mtmp) : (how_resistant(FIRE_RES) > 99) ? TRUE : FALSE);
         case AD_COLD:
-            return !(yours ? Cold_resistance : resists_cold(mtmp));
+            return !(!yours ? resists_cold(mtmp) : (how_resistant(COLD_RES) > 99) ? TRUE : FALSE);
         case AD_LOUD:
             return !(yours ? Cold_resistance : resists_sonic(mtmp));
         case AD_ACID:
@@ -810,12 +847,12 @@ spec_applies(const struct artifact *weap, struct monst *mtmp)
         case AD_WIND:
             return !(yours ? (Stable && bigmonst(g.youmonst.data) ) : !bigmonst(mtmp->data));
         case AD_ELEC:
-            return !(yours ? Shock_resistance : resists_elec(mtmp));
+            return !(!yours ? resists_elec(mtmp) : (how_resistant(SHOCK_RES) > 99) ? TRUE : FALSE);
         case AD_MAGM:
         case AD_STUN:
             return !(yours ? Antimagic : (rn2(100) < ptr->mr));
         case AD_DRST:
-            return !(yours ? Poison_resistance : resists_poison(mtmp));
+            return !(!yours ? resists_poison(mtmp) : (how_resistant(POISON_RES) > 99) ? TRUE : FALSE);
         case AD_DRLI:
             return !(yours ? Drain_resistance : resists_drli(mtmp));
         case AD_STON:
@@ -1031,7 +1068,8 @@ Mb_hit(struct monst *magr, /* attacker */
     verb = mb_verb[!!Hallucination][attack_indx];
     if (youattack || youdefend || vis) {
         result = TRUE;
-        pline_The("magic-absorbing blade %s %s!",
+        pline_The("magic-absorbing %s %s %s!",
+                  is_blade(mb) ? "blade" : "weapon",
                   vtense((const char *) 0, verb), hittee);
         /* assume probing has some sort of noticeable feedback
            even if it is being done by one monster to another */
@@ -1222,7 +1260,8 @@ artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
     /* the four basic attacks: fire, cold, shock and missiles */
     if (attacks(AD_FIRE, otmp)) {
         if (realizes_damage)
-            pline_The("fiery blade %s %s%c",
+            pline_The("fiery %s %s %s%c",
+                      is_blade(otmp) ? "blade" : "weapon",
                       !g.spec_dbon_applies
                           ? "hits"
                           : (mdef->data == &mons[PM_WATER_ELEMENTAL])
@@ -1248,7 +1287,8 @@ artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
                         !g.spec_dbon_applies ? "hits" : "chills", hittee,
                         !g.spec_dbon_applies ? '.' : '!');
           else
-              pline_The("ice-cold blade %s %s%c",
+              pline_The("ice-cold %s %s %s%c",
+                        is_blade(otmp) ? "blade" : "weapon",
                         !g.spec_dbon_applies ? "hits" : "freezes", hittee,
                         !g.spec_dbon_applies ? '.' : '!');
         }
@@ -1258,7 +1298,8 @@ artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
     }
     if (attacks(AD_DGST, otmp)) {
         if (realizes_damage) {
-            pline_The("steaming blade %s %s%c",
+            pline_The("steaming %s %s %s%c",
+                        is_blade(otmp) ? "blade" : "weapon",
                         !g.spec_dbon_applies ? "hits" : (rn2(2) ? "parboils" : "flash freezes" ), hittee,
                         !g.spec_dbon_applies ? '.' : '!');
         }
@@ -1285,7 +1326,8 @@ artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
     }
     if (attacks(AD_PSYC, otmp)) {
         if (realizes_damage)
-            pline_The("iridescent blade %s %s%c",
+            pline_The("iridescent %s %s %s%c",
+                      is_blade(otmp) ? "blade" : "weapon",
                       !g.spec_dbon_applies ? "hits" : "psiblasts", hittee,
                       !g.spec_dbon_applies ? '.' : '!');
         return realizes_damage;
@@ -1487,7 +1529,8 @@ artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
     /* STEPHEN WHITE'S NEW CODE */
   	if (otmp->oartifact == ART_SERPENT_S_TONGUE) {
   	    otmp->dknown = TRUE;
-  	    pline_The("twisted blade poisons %s!",
+  	    pline_The("twisted %s poisons %s!",
+            is_blade(otmp) ? "blade" : "weapon",
   		    youdefend ? "you" : mon_nam(mdef));
   	    if (youdefend ? Poison_resistance : resists_poison(mdef)) {
         		if (youdefend)
@@ -1593,13 +1636,17 @@ artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
 
             if (vis) {
                 if (otmp->oartifact == ART_STORMBRINGER)
-                    pline_The("%s blade draws the %s from %s!",
+                    pline_The("%s %s draws the %s from %s!",
+                              is_blade(otmp) ? "blade" : "weapon",
                               hcolor(NH_BLACK), life, mon_nam(mdef));
                 else if (otmp->oartifact == ART_GAE_BULG)
-                    pline_The("terrible barbs of the %s spear tear into %s!",
-                              hcolor(NH_RED), mon_nam(mdef));
+                    pline_The("terrible barbs of the %s %s tear into %s!",
+                              is_blade(otmp) ? "blade" : "weapon",
+                              hcolor(NH_RED),
+                              mon_nam(mdef));
                 else if (otmp->oartifact == ART_GAE_BUIDHE)
-                    pline_The("yellow spear inflicts a cursed wound on %s!",
+                    pline_The("yellow %s inflicts a cursed wound on %s!",
+                              is_blade(otmp) ? "blade" : "weapon",
                               mon_nam(mdef));
                 else
                     pline("%s draws the %s from %s!",
@@ -1639,11 +1686,14 @@ artifact_hit(struct monst *magr, struct monst *mdef, struct obj *otmp,
                             : "object",
                          life);
             else if (otmp->oartifact == ART_STORMBRINGER)
-                pline_The("%s blade drains your %s!", hcolor(NH_BLACK), life);
+                pline_The("%s %s drains your %s!", 
+                    is_blade(otmp) ? "blade" : "weapon", hcolor(NH_BLACK), life);
             else if (otmp->oartifact == ART_GAE_BULG)
-                pline_The("terrible barbs of the spear tear into you!");
+                pline_The("terrible barbs of the %s tear into you!",
+                          is_blade(otmp) ? "blade" : "weapon");
             else if (otmp->oartifact == ART_GAE_BUIDHE)
-                pline_The("yellow spear inflicts a cursed wound on you!");
+                pline_The("yellow %s inflicts a cursed wound on you!",
+                          is_blade(otmp) ? "blade" : "weapon");
             else
                 pline("%s drains your %s!", The(distant_name(otmp, xname)),
                       life);

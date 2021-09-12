@@ -18,7 +18,78 @@
 # prevents "orc mummy" and "orc zombie" from matching.
 #
 
-
+# Skill Database Entries
+skill: animal friendship
+    Animal friendship makes animals spawn peaceful. This effect is influenced by
+    skill level.
+skill: backstab
+    Backstab increases the damage the user deals when attacking from behind,
+    or, if the user is not a rogue, gives them the ability to backstab. Maximum
+    backstab damage is multiplied by one plus the skill level.
+skill: blood magic
+	Blood magic allows you to draw on your own life force to cast spells. If you
+	would normally not have enough energy to cast a spell, you can cast it using
+	your own hit points as a power source. Magic cast in such a way is more powerful
+	than standard magic.
+skill: blood rage
+	Blood rage provides a bonus to melee weapon damage as long as you have less than
+	one quarter of your health remaining. This bonus doubles if you have less than
+	half your health remaining. Enhancing this skill will increase the damage bonus
+	of your blood rage.
+skill: cautious strike
+    Increase the to-hit bonus of the user by a flat amount at the cost of a
+    damage penalty of the same amount.
+skill: code of honor
+    Increases the to-hit bonus of the user by a flat amount. The alignment penalty
+    for being a caitiff increases sharply.
+skill: disarm
+    Disarm allows the user to use your weapon to attempt to disarm opponents.
+    Use the #disarm command to disarm.
+skill: dragon tamer
+    Allows the user to tame dragons by chatting with them. Additional ranks in
+    dragon tamer increases the chances of success.
+skill: flaming fists
+    Flaming fists allows the user to set enemies on fire using their unarmed
+    strikes. This increases damage dealt by 1d6 and may destroy potions in the
+    defender's inventory.
+    The chance of this effect activating on a given attack is skill_level / 20.
+skill: freezing fists
+    Flaming fists allows the user to  deal cold damage to enemies using their 
+    unarmed strikes. This increases damage dealt by 1d6 and may destroy potions
+    in the defender's inventory.
+    The chance of this effect activating on a given attack is skill_level / 25.
+skill: panache
+    Panache provides a passive bonus to the user's luck.
+skill: power attack
+    Power attack increases the damage dealt by the user by a flat amount at the
+	cost of a to-hit penalty of the same amount.
+skill: rat tamer
+    Allows the user to tame rats by chatting to them. Additional ranks in rat tamer
+    increases the chances of success.
+skill: shocking fists
+    Shocking fists allows the user to  deal electric damage to enemies using their 
+    unarmed strikes. This increases damage dealt by 1d20 and may destroy wands
+    in the defender's inventory.
+    The chance of this effect activating on a given attack is skill_level / 100.
+skill: stunning fist
+    Stunning fist increases the chances of stunning a monster with unarmed
+    attacks, provided the user already had the ability to do so.
+skill: sunder
+    Sunder allows the user to attempt to destroy the weapons or equipment of an
+    enemy character. To use this ability, use the #sunder extended command.
+    Use the #sunder command to sunder.
+skill: tumble
+    Tumble allows the user to switch places with an opponent, and is useful for
+    getting out of dangerous situations. Note that tumbling costs at least one
+    turn, however.
+    Use the #tumble command to tumble.
+skill: wild magic
+	Wild magic is a random and potentially dangerous skill. Any time you cast a spell,
+	there is a chance that you will cast a completely random spell instead, even if
+	that spell is not one normally on your list of known spells. When a spell is cast
+	randomly, its level is increased.
+	Additional levels in wild magic increase the chance of wild magic occurring.
+# Actual Database Entries
 abbot
 	For it had been long apparent to Count Landulf that nothing
 	could be done with his seventh son Thomas, except to make him
@@ -125,6 +196,7 @@ amber*
 *amnesia
 maud
 memory hound
+thought eater
 	Get thee hence, nor come again,
 	Mix not memory with doubt,
 	Pass, thou deathlike type of pain,
@@ -631,9 +703,11 @@ ooze
 		[ At the Mountains of Madness, by H.P. Lovecraft ]
 bloodshot eye
 blinking eye
-	Sometimes when you stare into the void, the void stares back.
+	The eyes are the windows to your soul.
+		[ William Shakespeare ]
 blue jelly
 spotted jelly
+magical eye
 	I'd planned how to prevent the lock from sealing behind me; it
 	required a temporary sacrifice, not cleverness.  I used the door
 	itself to help me cut off a portion of my body, after shunting all
@@ -769,7 +843,7 @@ brigit
 buer
 	This demon often manifests in the form of a lion's head surrounded
 	by five clawed limbs.
-bugbear
+bugbear*
 	Bugbears are relatives of goblins, although they tend to be
 	larger and more hairy.  They are aggressive carnivores and
 	sometimes kill just for the treasure their victims may be
@@ -930,6 +1004,7 @@ gnom* cave*man
 	And sank into a sleep too deep for dream.
 		[ The Dreamer, by Robert Service ]
 *centaur
+armanite
 	Of all the monsters put together by the Greek imagination
 	the Centaurs (Kentauroi) constituted a class in themselves.
 	Despite a strong streak of sensuality, in their make-up,
@@ -961,7 +1036,7 @@ centipede
 			by Dr. David Livingstone ]
 cerastes
 	A creature of Greek legend, a serpent that is incredibly
-	flexible—so much so that it is said to have no spine. Cerastae
+	flexible--so much so that it is said to have no spine. Cerastae
 	can have either two large ram-like horns or four pairs of smaller
 	horns.
 		[ Wikipedia, the free encyclopedia ]
@@ -1230,6 +1305,7 @@ coyote
 	This carnivore is known for its voracious appetite and
 	inflated view of its own intelligence.
 cram*
+sea biscuit
 	If you want to know what cram is, I can only say that I don't
 	know the recipe; but it is biscuitish, keeps good indefinitely,
 	is supposed to be sustaining, and is certainly not entertaining,
@@ -1251,6 +1327,7 @@ critical strike
 	This technique is less powerful against monsters with bizarre
 	anatomies.
 *crocodile
+killer croc
 	A big animal with the appearance of a lizard, constituting
 	an order of the reptiles (_Loricata_ or _Crocodylia_), the
 	crocodile is a large, dangerous predator native to tropical
@@ -1664,9 +1741,13 @@ dragon blitz
 dragon call
 	The user of this technique calls all dragons on the level to their location,
 	and also can attract new dragons.
+dragon rider
+	Dragonborn, huh? Was it your ma or pa that was the dragon?
+		[ The Elder Scrolls V: Skyrim ]
 draugr
+draugar
 	Draugar live in their graves, often guarding treasure buried with
-	them in their burial mound. They are animated corpses—unlike ghosts
+	them in their burial mound. They are animated corpses--unlike ghosts
 	they have a corporeal body with similar physical abilities as in life.
 		[ Wikipedia, the free encyclopedia ]
 draw blood
@@ -2970,12 +3051,14 @@ imp or minor demon
 		[ A Dictionary of Fairies, by Katharine Briggs ]
 incubus
 succubus
+amorous demon
 	The incubus and succubus are male and female versions of the
 	same demon, one who lies with a human for its own purposes,
 	usually to the detriment of the mortals who are unwise in
 	their dealings with them.
 *insect
 *insects
+locust
 	A minute invertebrate animal; one of the class _Insecta_.
 	The true insects or hexapods have the body divided into a
 	head, a thorax of 3 segments, each of which bears a pair of
@@ -3441,6 +3524,7 @@ latke
         A fried potato pancake, often prepared to celebrate Hanukkah.
 lava
 * lava
+lava demon
 	You are on the edge of a breath-taking view.  Far below you
 	is an active volcano, from which great gouts of molten lava
 	come surging out, cascading back down into the depths.  The
@@ -3478,7 +3562,7 @@ leash
 	putting the Dearlys on the leash to lead them over crossings.
 		[ The Hundred and One Dalmatians, by Dodie Smith ]
 legendary lichen
-	There is a low mist in the woods—It is a good day to study lichens.
+	There is a low mist in the woods--It is a good day to study lichens.
 		[Henry David Thoreau, A Year in Thoreau's Journal: 1851]
 lembas*
 	In the morning, as they were beginning to pack their slender
@@ -3540,6 +3624,8 @@ leprechaun
 		[ A Field Guide to the Little People
 		    by Nancy Arrowsmith & George Moorse ]
 *lich
+eye of fear and flame
+eye of flame and fear
 	But on its heels ere the sunset faded, there came a second
 	apparition, striding with incredible strides and halting when
 	it loomed almost upon me in the red twilight-the monstrous mummy
@@ -4006,6 +4092,7 @@ gnomish mines
 	armor and weapons (_wondrous_).
 	  [ The Tough Guide to Fantasyland, by Diana Wynne Jones ]
 minotaur
+baphomet
 	The Minotaur was a monster, half bull, half human, the
 	offspring of Minos' wife Pasiphae and a wonderfully beautiful
 	bull. ...  When the Minotaur was born Minos did not kill him.
@@ -4134,6 +4221,12 @@ master kaen
 	Therefore, my robe is eating the food, not me."
 		[ Dining with a General - a Zen Buddhism Koan,
 		  translation by Yiu-man Chan ]
+molydeus
+	The boa was not feathery, as they had originally presumed. Rather,
+	it was a live constrictor, curling around the woman's neck like
+	a vermillion choker. The woman's face too had changed. Her nose
+	had elongated into a terrible snout, and patches of dark fur
+	had begun to cover her skin.
 monkey
 lemur
 	"Listen, man-cub," said the Bear, and his voice rumbled like
@@ -4533,6 +4626,11 @@ uruk*hai
 	hunting for them.  There is nothing a horde of orcs cannot
 	use.
 		[ het Boek van de Regels; Het Oog des Meesters ]
+orichalcum
+	The art of forging this incredibly rare metal has been lost
+	to ages past. All that is known about it is that it is a
+	supremely good conductor of magical energy, allowing it to
+	take on enchantments far surpassing other metals.
 orion
 sirius
 	Orion was the son of Neptune. He was a handsome giant and a
@@ -4606,6 +4704,13 @@ panther
 			by Douglas and Graham Walker ]
 parrot
 	Polly desires a compressed edible concoction of wheat!
+pazuzu
+	"I'm not Regan."
+	"Well, then let's introduce ourselves. I'm Damien Karras." 
+	"And I'm the devil. Now kindly undo these straps." 
+	"If you're the devil, why not make the straps disappear?"
+	"That's much too vulgar a display of power, Karras."
+		[ The Exorcist ]
 pelias
 	Conan cried out sharply and recoiled, thrusting his companion
 	back.  Before them rose the great shimmering white form of Satha,
@@ -4953,6 +5058,10 @@ prisoner
 		You are Number 6.
 	I am not a number!  I am a free man!
 		[ The Prisoner, by Patrick McGoohan ]
+prison guard
+	"The Panopticon is a marvelous machine which, whatever use one
+	 may wish to put it to, produces homogeneous effects of power."
+	 	[ Michael Foucault ]
 ptah
 	Known under various names (Nu, Neph, Cenubis, Amen-Kneph,
 	Khery-Bakef), Ptah is the creator god and god of craftsmen.
@@ -5468,6 +5577,14 @@ scroll *
 		[ Endymion, by John Keats ]
 serpopard
 	A leopard with a long, serpentine body and neck.
+serval
+	The serval is a slender, medium-sized cat that stands
+	54–62 cm (21–24 in) at the shoulder and weighs 9–18 kg (20–40 lb).
+	It is characterised by a small head, large ears, a golden-yellow
+	to buff coat spotted and striped with black, and a short, 
+	black-tipped tail. The serval has the longest legs of any cat 
+	relative to its body size. 
+		[ Wikipedia, the free encyclopedia ]
 anubite
 set
 seth
@@ -5719,6 +5836,7 @@ sokoban
 sergeant
 lieutenant
 captain
+general
 	The soldiers of Yendor are well-trained in the art of war,
 	many trained by the Wizard himself.  Some say the soldiers
 	are explorers who were unfortunate enough to be captured,
@@ -5800,6 +5918,13 @@ spirit bomb
 	against which you cannot prepare a perfect defense.
 					--Human aphorism
 		[ The Dosadi Experiment, by Frank Herbert ]
+sphere of the void
+sphere of annihalation
+	Oh, come on! It's just a big old statue of a devil! I'm sure
+	there's nothing scary inside its mouth.
+
+	For once, Hans was correct. There was indeed Nothing inside
+	the statue's mouth.
 squeaky board
 	A floorboard creaked.  Galder had spent many hours tuning them,
 	always a wise precaution with an ambitious assistant who walked
@@ -5995,8 +6120,6 @@ thoth*amon
 	Thutothmes seeks hidden power [The Heart of Ahriman] to
 	overthrow the Great One.
 		[ Conan the Conqueror, by Robert E. Howard ]
-thought hound
-	Some dogs hunt for meals more enticing than flesh.
 *throne
 	Methought I saw the footsteps of a throne
 	Which mists and vapours from mine eyes did shroud--
@@ -6497,6 +6620,17 @@ war*hammer
 ichneumon *
 	These insects are feared for their ability to lay eggs inside
 	the bodies of their prey.
+watch captain
+	Cheery was aware that Commander Vimes didn't like the phrase
+	"The innocent have nothing to fear", believing the innocent
+	had everything to fear, mostly from the guilty but in the longer
+	term even more from those who say things like "The innocent have
+	nothing to fear'."
+		[ Snuff, by Terry Pratchett ]
+watchman
+	Two types of people laugh at the law: those that break it and those
+	that make it.
+		[ Night Watch, by Terry Pratchett ]
 water
 	Day after day, day after day,
 	We stuck, nor breath nor motion;

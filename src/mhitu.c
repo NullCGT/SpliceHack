@@ -19,6 +19,7 @@ static int screamu(struct monst *, struct attack*, int);
 static void mayberem(struct monst *, const char *, struct obj *,
                      const char *);
 static int passiveum(struct permonst *, struct monst *, struct attack *);
+static boolean calculate_flankers(struct monst *);
 
 #define ld() ((yyyymmdd((time_t) 0) - (getyear() * 10000L)) == 0xe5)
 
@@ -694,6 +695,8 @@ mattacku(register struct monst *mtmp)
         tmp -= 2;
     if (tmp <= 0)
         tmp = 1;
+    if (calculate_flankers(mtmp))
+        tmp += 4;
 
     /* make eels visible the moment they hit/miss us */
     if (mdat->mlet == S_EEL && mtmp->minvis && cansee(mtmp->mx, mtmp->my)) {
@@ -856,6 +859,10 @@ mattacku(register struct monst *mtmp)
                     /* mon_wield_item resets weapon_check as appropriate */
                     if (mon_wield_item(mtmp) != 0)
                         break;
+                }
+                if (cursed_weapon_proc(mtmp, &g.youmonst) == 1) {
+                    sum[i] |= MM_AGR_DIED;
+                    break;
                 }
                 if (foundyou) {
                     mon_currwep = MON_WEP(mtmp);
@@ -1465,39 +1472,45 @@ gulpmu(struct monst *mtmp, struct attack *mattk)
     case AD_ELEC:
         if (!mtmp->mcan && rn2(2)) {
             pline_The("air around you crackles with electricity.");
-            if (Shock_resistance) {
+            if (how_resistant(SHOCK_RES) == 100) {
                 shieldeff(u.ux, u.uy);
                 You("seem unhurt.");
                 monstseesu(M_SEEN_ELEC);
                 ugolemeffects(AD_ELEC, tmp);
                 tmp = 0;
-            }
+	    } else {
+		tmp = resist_reduce(tmp, SHOCK_RES);
+	    }
         } else
             tmp = 0;
         break;
     case AD_COLD:
         if (!mtmp->mcan && rn2(2)) {
-            if (Cold_resistance) {
+            if (how_resistant(COLD_RES) == 100) {
                 shieldeff(u.ux, u.uy);
                 You_feel("mildly chilly.");
                 monstseesu(M_SEEN_COLD);
                 ugolemeffects(AD_COLD, tmp);
                 tmp = 0;
-            } else
+            } else {
                 You("are freezing to death!");
+                tmp = resist_reduce(tmp, COLD_RES);
+            }
         } else
             tmp = 0;
         break;
     case AD_FIRE:
         if (!mtmp->mcan && rn2(2)) {
-            if (Fire_resistance) {
+            if (how_resistant(FIRE_RES) == 100) {
                 shieldeff(u.ux, u.uy);
                 You_feel("mildly hot.");
                 monstseesu(M_SEEN_FIRE);
                 ugolemeffects(AD_FIRE, tmp);
                 tmp = 0;
-            } else
+            } else {
                 You("are burning to a crisp!");
+                tmp = resist_reduce(tmp, FIRE_RES);
+            }
             burn_away_slime();
         } else
             tmp = 0;
@@ -1833,10 +1846,10 @@ gazemu(struct monst *mtmp, struct attack *mattk)
 
                 pline("%s attacks you with a fiery gaze!", Monnam(mtmp));
                 stop_occupation();
-                if (Fire_resistance) {
-                    pline_The("fire doesn't feel hot!");
+	            dmg = resist_reduce(dmg, FIRE_RES);
+		        if (dmg < 1) {
+                    pline_The("fire feels mildly hot.");
                     monstseesu(M_SEEN_FIRE);
-                    dmg = 0;
                 }
                 burn_away_slime();
                 if (lev > rn2(20))
@@ -1862,9 +1875,9 @@ gazemu(struct monst *mtmp, struct attack *mattk)
 
                 pline("%s attacks you with a chilling gaze!", Monnam(mtmp));
                 stop_occupation();
-                if (Cold_resistance) {
-                    pline_The("chilling gaze doesn't feel cold!");
-                    dmg = 0;
+		dmg = resist_reduce(dmg, COLD_RES);
+		if (dmg < 1) {
+                    pline_The("chilling gaze feels mildly cool.");
                 }
                 if (lev > rn2(20))
                     destroy_item(POTION_CLASS, AD_COLD);
@@ -1882,14 +1895,16 @@ gazemu(struct monst *mtmp, struct attack *mattk)
                 tele();
         }
         break;
+    /* Comment out the PM_BEHOLDER indef here so the below attack types function */
+    /* #ifdef PM_BEHOLDER */
     case AD_SLEE:
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee
-            && g.multi >= 0 && !rn2(5) && !Sleep_resistance) {
+            && g.multi >= 0 && !rn2(5) && (how_resistant(SLEEP_RES) < 100)) {
             if (cancelled) {
                 react = 6;                      /* "tired" */
                 already = (mtmp->mfrozen != 0); /* can't happen... */
             } else {
-                fall_asleep(-rnd(10), TRUE);
+                fall_asleep(-resist_reduce(rnd(10), SLEEP_RES), TRUE);
                 pline("%s gaze makes you very sleepy...",
                       s_suffix(Monnam(mtmp)));
             }
@@ -1927,6 +1942,86 @@ gazemu(struct monst *mtmp, struct attack *mattk)
             }
         }
         break;
+    /* Adding the parts here for disintegration and cancellation. The devteam probably
+     * never bothered to add these, even though the Beholder has these two attacks.
+     * Why you may ask? Because the Beholder was never enabled.
+     */
+    case AD_DISN:
+        if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee
+            && g.multi >= 0 && !rn2(7)) {
+            int dmg = d(8, 8);
+
+            pline("%s attacks you with a destructive gaze!",
+                  Monnam(mtmp));
+	    if (how_resistant(DISINT_RES) == 100) {
+	        pline("You bask in the %s aura of %s gaze.",
+		      hcolor(NH_BLACK), s_suffix(mon_nam(mtmp)));
+                monstseesu(M_SEEN_DISINT);
+		stop_occupation();
+	    } else if (how_resistant(DISINT_RES) > 0) {
+                You("aren't disintegrated, but that really hurts!");
+                dmg = resist_reduce(dmg, DISINT_RES);
+                if (ublindf
+                    && ublindf->oartifact == ART_EYES_OF_THE_OVERWORLD)
+                    dmg /= 2;
+                if (dmg)
+                    mdamageu(mtmp, dmg);
+                break;
+            /* The EotO can afford the player some protection when worn */
+            } else if (ublindf
+                       && ublindf->oartifact == ART_EYES_OF_THE_OVERWORLD) {
+                pline("%s partially protect you from %s destructive gaze.  That stings!",
+                      An(bare_artifactname(ublindf)), s_suffix(mon_nam(mtmp)));
+                if (dmg)
+                    mdamageu(mtmp, dmg);
+                break;
+	    } else if (uarms) {
+                /* destroy shield; other possessions are safe */
+                (void) destroy_arm(uarms);
+                break;
+            } else if (uarm) {
+                /* destroy suit; if present, cloak goes too */
+                if (uarmc)
+                    (void) destroy_arm(uarmc);
+                (void) destroy_arm(uarm);
+                break;
+            } else {
+                /* no shield or suit, you're dead; wipe out cloak
+                 * and/or shirt in case of life-saving or bones */
+                if (uarmc)
+                    (void) destroy_arm(uarmc);
+                if (uarmu)
+                    (void) destroy_arm(uarmu);
+                /* when killed by a disintegration beam, don't leave a corpse */
+                u.ugrave_arise = -3;
+                done_in_by(mtmp, DIED);
+            }
+        }
+        break;
+    case AD_CNCL:
+        if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my)
+            && mtmp->mcansee && !rn2(3)) {
+            int dmg;
+
+	    You("meet %s strange gaze.",
+                  s_suffix(mon_nam(mtmp)));
+            /* The EotO can afford the player some protection when worn */
+            if (ublindf
+                && ublindf->oartifact == ART_EYES_OF_THE_OVERWORLD) {
+                pline("%s partially protect you from %s strange gaze.  Ouch!",
+                      An(bare_artifactname(ublindf)), s_suffix(mon_nam(mtmp)));
+                dmg = d(2, 4);
+                if (dmg)
+                    mdamageu(mtmp, dmg);
+            } else {
+	        (void) cancel_monst(&g.youmonst, (struct obj *) 0, FALSE, TRUE, FALSE);
+                dmg = d(4, 4);
+                if (dmg)
+                    mdamageu(mtmp, dmg);
+            }
+        }
+	    break;
+    /* #endif */ /* BEHOLDER */
     default:
         impossible("Gaze attack %d?", mattk->adtyp);
         break;
@@ -2714,6 +2809,43 @@ attack_contact_slots(struct monst *magr, int aatyp)
         return W_ARMH;
     }
     return 0;
+}
+
+boolean
+calculate_flankers(struct monst *magr)
+{
+    struct monst* flanker;
+    boolean flanked = FALSE;
+    int xd;
+    int yd;
+
+    if (abs(magr->mx - u.ux) > 1 || abs(magr->my - u.uy) > 1)
+        return FALSE;
+
+    if (u.ux > magr->mx) xd = magr->mx + 2;
+    else if (u.ux < magr->mx) xd = magr->mx - 2;
+    else xd = magr->mx;
+
+    if (u.uy > magr->my) yd = magr->my + 2;
+    else if (u.uy < magr->my) yd = magr->my - 2;
+    else yd = magr->my;
+
+    if (MON_AT(xd, yd))
+        flanker = m_at(xd, yd);
+
+    /* Flanker must be hostile and at least somewhat
+       aware of you. */
+    if (flanker && !flanker->mpeaceful 
+        && flanker->mcanmove 
+        && !flanker->msleeping && !flanker->mflee
+        && !flanker->mstun)
+        flanked = TRUE;
+
+    if (flanked && canseemon(magr) && canseemon(flanker)) {
+        You("are being flanked!");
+        return TRUE;
+    }
+    return FALSE;
 }
 
 /*mhitu.c*/

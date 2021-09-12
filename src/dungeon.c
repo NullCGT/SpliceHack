@@ -3637,9 +3637,12 @@ dynamic_levname(void)
 {
     char buf[BUFSZ];
     mapseen *mptr;
+    boolean named = FALSE;
 
     if (!(mptr = find_mapseen(&u.uz)))
         return 0;
+
+    buf[0] = '\0';
 
     if (Is_special(&u.uz)) {
         if (Is_oracle_level(&u.uz)) {
@@ -3683,6 +3686,7 @@ dynamic_levname(void)
                 propernames[rn2(SIZE(propernames))]);
             break;
         }
+        named = TRUE;
     /* fountains are somewhat special */
     } else if (g.level.flags.nfountains && !rn2(2)) {
         switch (rn2(3)) {
@@ -3702,6 +3706,7 @@ dynamic_levname(void)
                     fountnames[rn2(SIZE(fountnames))]);
             break;
        }
+       named = TRUE;
     /* plain levels shouldn't get special names too often */
     } else if (!rn2(3)) {
         switch(rn2(5)) {
@@ -3726,8 +3731,10 @@ dynamic_levname(void)
                 standardnames[rn2(SIZE(standardnames))]);
             break;
         }
+        named = TRUE;
     }
-    mptr->custom = dupstr(buf);
+    if (named)
+        mptr->custom = dupstr(buf);
     return 1;
 }
 

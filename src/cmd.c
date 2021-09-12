@@ -1909,6 +1909,8 @@ struct ext_func_tab extcmdlist[] = {
               doconduct, IFBURIED | AUTOCOMPLETE, NULL },
     { M('d'), "dip", "dip an object into something",
               dodip, AUTOCOMPLETE, NULL },
+    { '\0',   "disarm", "disarm a foe",
+              dodisarm, IFBURIED | AUTOCOMPLETE, NULL },
     { '>',    "down", "go down a staircase",
               dodown, 0, NULL },
     { 'd',    "drop", "drop an item",
@@ -2044,6 +2046,8 @@ struct ext_func_tab extcmdlist[] = {
               dosit, AUTOCOMPLETE, NULL },
     { '\0',   "stats", "show memory statistics",
               wiz_show_stats, IFBURIED | AUTOCOMPLETE | WIZMODECMD, NULL },
+    { '\0',   "sunder", "sunder a foe's equipment",
+              dosunder, IFBURIED | AUTOCOMPLETE, NULL },
     { C('z'), "suspend", "push game to background ('fg' to come back)",
               dosuspend_core, (IFBURIED | GENERALCMD
 #ifndef SUSPEND
@@ -2076,6 +2080,8 @@ struct ext_func_tab extcmdlist[] = {
               dotip, AUTOCOMPLETE, NULL },
     { '_',    "travel", "travel to a specific location on the map",
               dotravel, 0, NULL },
+    { '\0',   "tumble", "switch places with an opponent",
+              dotumble, IFBURIED | AUTOCOMPLETE, NULL },
     { M('t'), "turn", "turn undead away",
               doturn, IFBURIED | AUTOCOMPLETE, NULL },
     { 'X',    "twoweapon", "toggle two-weapon combat",

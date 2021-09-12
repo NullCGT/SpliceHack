@@ -290,28 +290,32 @@ castmu(register struct monst *mtmp,
     case AD_FIRE:
         if (is_demon(mtmp->data)) {
             pline("You're enveloped in blazing pillar of hellfire!");
-            if (Fire_resistance) {
+            if (how_resistant(FIRE_RES) == 100) {
                 shieldeff(u.ux, u.uy);
-                pline("You only partially resist the effects.");
+                pline("You partially resist the effects.");
                 dmg = (dmg + 1) / 2;
             }
         } else {
             pline("You're enveloped in flames.");
-            if (Fire_resistance) {
+            if (how_resistant(FIRE_RES) == 100) {
                 shieldeff(u.ux, u.uy);
                 pline("But you resist the effects.");
                 dmg = 0;
+            } else {
+                dmg = resist_reduce(dmg, FIRE_RES);
             }
         }
         burn_away_slime();
         break;
     case AD_COLD:
         pline("You're covered in frost.");
-        if (Cold_resistance) {
+        if (how_resistant(COLD_RES) == 100) {
             shieldeff(u.ux, u.uy);
             pline("But you resist the effects.");
             monstseesu(M_SEEN_COLD);
             dmg = 0;
+        } else {
+            dmg = resist_reduce(dmg, COLD_RES);
         }
         break;
     case AD_PSYC:
@@ -555,6 +559,8 @@ cast_wizard_spell(struct monst *mtmp, int dmg, int spellnum)
 static void
 cast_cleric_spell(struct monst *mtmp, int dmg, int spellnum)
 {
+    boolean reflects;
+
     if (dmg == 0 && !is_undirected_spell(AD_CLRC, spellnum)) {
         impossible("cast directed cleric spell (%d) with dmg=0?", spellnum);
         return;
@@ -572,12 +578,12 @@ cast_cleric_spell(struct monst *mtmp, int dmg, int spellnum)
         break;
     case CLC_FIRE_PILLAR:
         pline("A pillar of fire strikes all around you!");
-        if (Fire_resistance) {
+        if (how_resistant(FIRE_RES) == 100) {
             shieldeff(u.ux, u.uy);
             monstseesu(M_SEEN_FIRE);
             dmg = 0;
         } else
-            dmg = d(8, 6);
+            dmg = resist_reduce(d(8, 6), FIRE_RES);
         if (Half_spell_damage)
             dmg = (dmg + 1) / 2;
         burn_away_slime();
@@ -589,27 +595,34 @@ cast_cleric_spell(struct monst *mtmp, int dmg, int spellnum)
         (void) burn_floor_objects(u.ux, u.uy, TRUE, FALSE);
         break;
     case CLC_LIGHTNING: {
-        boolean reflects;
 
         pline("A bolt of lightning strikes down at you from above!");
-        reflects = ureflects("It bounces off your %s%s.", "");
-        if (reflects || Shock_resistance) {
+        reflects = ureflects("Some of it bounces off your %s%s.", "");
+        if (reflects || (how_resistant(SHOCK_RES) == 100)) {
             shieldeff(u.ux, u.uy);
             dmg = 0;
             if (reflects) {
                 monstseesu(M_SEEN_REFL);
+                dmg = resist_reduce(d(4, 6), SHOCK_RES);
                 break;
             }
-            monstseesu(M_SEEN_ELEC);
-        } else
-            dmg = d(8, 6);
-        if (Half_spell_damage)
+            if (how_resistant(SHOCK_RES) == 100) {
+                pline("You aren't shocked.");
+                monstseesu(M_SEEN_ELEC);
+                dmg = 0;
+            }
+        } else {
+            dmg = resist_reduce(d(8, 6), SHOCK_RES);
+        }
+        if (dmg && Half_spell_damage)
             dmg = (dmg + 1) / 2;
-        destroy_item(WAND_CLASS, AD_ELEC);
-        destroy_item(RING_CLASS, AD_ELEC);
-        (void) flashburn((long) rnd(100));
+        }
+        if (!reflects) {
+            destroy_item(WAND_CLASS, AD_ELEC);
+            destroy_item(RING_CLASS, AD_ELEC);
+            (void) flashburn((long) rnd(100));
+        }
         break;
-    }
     case CLC_CURSE_ITEMS:
         You_feel("as if you need some help.");
         rndcurse();

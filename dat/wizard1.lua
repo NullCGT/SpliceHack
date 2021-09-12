@@ -53,6 +53,7 @@ des.monster("hell hound", 15, 05)
 des.monster("vampire lord", 17, 05)
 -- The local treasure
 des.object("Book of the Dead", 16, 05)
+des.object({id = "wishing", coord = {16, 05}, spe = 1})
 -- Surrounding terror
 des.monster("kraken", 14, 02)
 des.monster("giant eel", 17, 02)

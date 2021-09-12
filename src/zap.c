@@ -1287,7 +1287,7 @@ drain_item(struct obj *obj, boolean by_you)
     boolean u_ring;
 
     /* Imbued items may no longer be imbued. */
-    if (is_imbued(obj) && !rn2(5)) {
+    if (is_imbued(obj) && !rn2(3)) {
         obj->corpsenm = 0;
     }
     /* Is this a charged/enchanted object? */
@@ -1306,6 +1306,11 @@ drain_item(struct obj *obj, boolean by_you)
 
     /* Drain the object and any implied effects */
     obj->spe--;
+    /* Orichalcum is a supremely good conductor of magical
+       energy. Draining it will instantly remove any enchantment
+       it has. */
+    if (obj->material = ORICHALCUM) obj->spe = 0;
+
     u_ring = (obj == uleft) || (obj == uright);
     switch (obj->otyp) {
     case RIN_GAIN_STRENGTH:
@@ -1478,6 +1483,7 @@ create_polymon(struct obj *obj, int okind)
     case METAL:
     case MITHRIL:
     case ADAMANTINE:
+    case ORICHALCUM:
         pm_index = PM_IRON_GOLEM;
         material = "metal ";
         break;
@@ -2539,7 +2545,7 @@ dozap(void)
         obj = g.current_wand;
         g.current_wand = 0;
     }
-    if (obj && obj->spe < 0) {
+    if (obj && (obj->spe < 0 || (obj->otyp == WAN_WISHING && obj->spe == 0))) {
         pline("%s to dust.", Tobjnam(obj, "turn"));
         useupall(obj); /* calls freeinv() -> update_inventory() */
     } else
@@ -2636,9 +2642,9 @@ zapyourself(struct obj *obj, boolean ordinary)
         learn_it = TRUE;
         /* FALLTHRU */
     case SPE_LIGHTNING:
-        if (!Shock_resistance) {
+        if (how_resistant(SHOCK_RES) < 100) {
             You("shock yourself!");
-            damage = d(12, 6);
+            damage = resist_reduce(d(12, 6), SHOCK_RES);
             exercise(A_CON, FALSE);
         } else {
             shieldeff(u.ux, u.uy);
@@ -2662,14 +2668,14 @@ zapyourself(struct obj *obj, boolean ordinary)
     case WAN_FIRE:
     case FIRE_HORN:
         learn_it = TRUE;
-        if (Fire_resistance) {
+        if (how_resistant(FIRE_RES) == 100) {
             shieldeff(u.ux, u.uy);
             You_feel("rather warm.");
             monstseesu(M_SEEN_FIRE);
             ugolemeffects(AD_FIRE, d(12, 6));
         } else {
             pline("You've set yourself afire!");
-            damage = d(12, 6);
+            damage = resist_reduce(d(12, 6), FIRE_RES);
         }
         burn_away_slime();
         (void) burnarmor(&g.youmonst);
@@ -2751,14 +2757,14 @@ zapyourself(struct obj *obj, boolean ordinary)
     case SPE_CONE_OF_COLD:
     case FROST_HORN:
         learn_it = TRUE;
-        if (Cold_resistance) {
+        if (how_resistant(COLD_RES) == 100) {
             shieldeff(u.ux, u.uy);
             You_feel("a little chill.");
             monstseesu(M_SEEN_COLD);
             ugolemeffects(AD_COLD, d(12, 6));
         } else {
             You("imitate a popsicle!");
-            damage = d(12, 6);
+            damage = resist_reduce(d(12, 6), COLD_RES);
         }
         destroy_item(POTION_CLASS, AD_COLD);
         break;
@@ -2836,13 +2842,13 @@ zapyourself(struct obj *obj, boolean ordinary)
     case WAN_SLEEP:
     case SPE_SLEEP:
         learn_it = TRUE;
-        if (Sleep_resistance) {
+        if (how_resistant(SLEEP_RES) == 100) {
             shieldeff(u.ux, u.uy);
             You("don't feel sleepy!");
             monstseesu(M_SEEN_SLEEP);
         } else {
             pline_The("sleep ray hits you!");
-            fall_asleep(-rnd(50), TRUE);
+            fall_asleep(-resist_reduce(rnd(50), SLEEP_RES), TRUE);
         }
         break;
 
@@ -4298,46 +4304,52 @@ zhitu(int type, int nd, const char *fltxt, xchar sx, xchar sy)
         }
         break;
     case ZT_FIRE:
-        if (Fire_resistance) {
+        if (how_resistant(FIRE_RES) == 100) {
             shieldeff(sx, sy);
             You("don't feel hot!");
             monstseesu(M_SEEN_FIRE);
             ugolemeffects(AD_FIRE, d(nd, 6));
         } else {
-            dam = d(nd, 6);
+            dam = resist_reduce(d(nd, 6), FIRE_RES);
         }
         burn_away_slime();
-        if (burnarmor(&g.youmonst)) { /* "body hit" */
-            if (!rn2(3))
-                destroy_item(POTION_CLASS, AD_FIRE);
-            if (!rn2(3))
-                destroy_item(SCROLL_CLASS, AD_FIRE);
-            if (!rn2(5))
-                destroy_item(SPBOOK_CLASS, AD_FIRE);
-            if (!rn2(3))
-                ignite_items(g.invent);
-            destroy_item(FOOD_CLASS, AD_FIRE);
+        if (!Reflecting) {
+            if (burnarmor(&g.youmonst)) { /* "body hit" */
+                if (!rn2(3))
+                    destroy_item(POTION_CLASS, AD_FIRE);
+                if (!rn2(3))
+                    destroy_item(SCROLL_CLASS, AD_FIRE);
+                if (!rn2(5))
+                    destroy_item(SPBOOK_CLASS, AD_FIRE);
+                if (!rn2(3))
+                    ignite_items(g.invent);
+                destroy_item(FOOD_CLASS, AD_FIRE);
+            }
         }
         break;
     case ZT_COLD:
-        if (Cold_resistance) {
+        if (how_resistant(COLD_RES) == 100) {
             shieldeff(sx, sy);
             You("don't feel cold.");
             monstseesu(M_SEEN_COLD);
             ugolemeffects(AD_COLD, d(nd, 6));
         } else {
-            dam = d(nd, 6);
+            dam = resist_reduce(d(nd, 6), COLD_RES);
         }
-        if (!rn2(3))
-            destroy_item(POTION_CLASS, AD_COLD);
+        if (!Reflecting) {
+            if (!rn2(3))
+                destroy_item(POTION_CLASS, AD_COLD);
+        }
         break;
     case ZT_SLEEP:
-        if (Sleep_resistance) {
+        if (how_resistant(SLEEP_RES) == 100) {
             shieldeff(u.ux, u.uy);
             You("don't feel sleepy.");
             monstseesu(M_SEEN_SLEEP);
+        } else if (Reflecting) {
+            fall_asleep(-resist_reduce(d(1, 6), SLEEP_RES), TRUE);
         } else {
-            fall_asleep(-d(nd, 25), TRUE); /* sleep ray */
+            fall_asleep(-resist_reduce(d(nd, 25), SLEEP_RES), TRUE); /* sleep ray */
         }
         break;
     case ZT_DEATH:
@@ -4348,6 +4360,13 @@ zhitu(int type, int nd, const char *fltxt, xchar sx, xchar sy)
                 You("are not disintegrated.");
                 monstseesu(M_SEEN_DISINT);
                 break;
+            } else if (Reflecting) {
+                You("aren't disintegrated, but that hurts!");
+                dam = resist_reduce(d(6, 6), DISINT_RES);
+                break;
+            } else if (!Reflecting && (how_resistant(DISINT_RES) > 0)) {
+                You("aren't disintegrated, but that really hurts!");
+                dam = resist_reduce(d(12, 6), DISINT_RES);
             } else if (disn_prot) {
                 break;
             } else if (uarms) {
@@ -4363,18 +4382,43 @@ zhitu(int type, int nd, const char *fltxt, xchar sx, xchar sy)
             }
             /* no shield or suit, you're dead; wipe out cloak
                and/or shirt in case of life-saving or bones */
-            if (uarmc)
-                (void) destroy_arm(uarmc);
-            if (uarmu)
-                (void) destroy_arm(uarmu);
-        } else if (nonliving(g.youmonst.data) || is_demon(g.youmonst.data)) {
+            if (!Reflecting) {
+                if (uarmc)
+                    (void) destroy_arm(uarmc);
+                if (uarmu)
+                    (void) destroy_arm(uarmu);
+            }
+        } else if (nonliving(g.youmonst.data) || is_demon(g.youmonst.data)
+            || resists_death(g.youmonst.data)) {
             shieldeff(sx, sy);
             You("seem unaffected.");
             break;
         } else if (Antimagic) {
-            shieldeff(sx, sy);
-            monstseesu(M_SEEN_MAGR);
-            You("aren't affected.");
+            /* not as much damage as 'touch of death'
+             * but this will still leave a mark */
+            dam = d(4, 6);
+            if (Antimagic && Half_spell_damage) {
+                shieldeff(sx, sy);
+                monstseesu(M_SEEN_MAGR);
+                dam /= 2;
+            }
+            if (Reflecting) {
+                You("feel a little drained...");
+                u.uhpmax -= (dam / 3 + rn2(5)) / 2;
+            } else {
+                You("feel drained...");
+                u.uhpmax -= dam / 3 + rn2(5);
+            }
+            break;
+        } else if (Reflecting && !Antimagic) {
+            dam = d(4, 6);
+            if (Reflecting && Half_spell_damage) {
+                shieldeff(sx, sy);
+                monstseesu(M_SEEN_MAGR);
+                dam /= 2;
+            }
+            You("feel drained...");
+            u.uhpmax -= dam / 3 + rn2(5);
             break;
         }
         g.killer.format = KILLED_BY_AN;
@@ -4384,22 +4428,26 @@ zhitu(int type, int nd, const char *fltxt, xchar sx, xchar sy)
         done(DIED);
         return; /* lifesaved */
     case ZT_LIGHTNING:
-        if (Shock_resistance) {
+        if (how_resistant(SHOCK_RES) == 100) {
             shieldeff(sx, sy);
             You("aren't affected.");
             monstseesu(M_SEEN_ELEC);
             ugolemeffects(AD_ELEC, d(nd, 6));
         } else {
-            dam = d(nd, 6);
+            dam = resist_reduce(d(nd, 6), SHOCK_RES);
             exercise(A_CON, FALSE);
         }
-        if (!rn2(3))
-            destroy_item(WAND_CLASS, AD_ELEC);
-        if (!rn2(3))
-            destroy_item(RING_CLASS, AD_ELEC);
+        if (!Reflecting) {
+            if (!rn2(3))
+                destroy_item(WAND_CLASS, AD_ELEC);
+            if (!rn2(3))
+                destroy_item(RING_CLASS, AD_ELEC);
+        }
         break;
     case ZT_POISON_GAS:
-        poisoned("blast", A_DEX, "poisoned blast", 15, FALSE, 0);
+        if (!Reflecting) {
+            poisoned("blast", A_DEX, "poisoned blast", 15, FALSE, 0);
+        }
         break;
     case ZT_ACID:
         if (Acid_resistance) {
@@ -4412,12 +4460,14 @@ zhitu(int type, int nd, const char *fltxt, xchar sx, xchar sy)
             exercise(A_STR, FALSE);
         }
         /* using two weapons at once makes both of them more vulnerable */
-        if (!rn2(u.twoweap ? 3 : 6))
-            acid_damage(uwep);
-        if (u.twoweap && !rn2(3))
-            acid_damage(uswapwep);
-        if (!rn2(6))
-            erode_armor(&g.youmonst, ERODE_CORRODE);
+        if (!Reflecting) {
+            if (!rn2(u.twoweap ? 3 : 6))
+                acid_damage(uwep);
+            if (u.twoweap && !rn2(3))
+                acid_damage(uswapwep);
+            if (!rn2(6))
+                erode_armor(&g.youmonst, ERODE_CORRODE);
+        }
         break;
     case ZT_SONIC:
         if (Sonic_resistance) {
@@ -4765,17 +4815,18 @@ dobuzz(int type, int nd, xchar sx, xchar sy, int dx, int dy,
                 pline("%s hits you!", The(fltxt));
                 if (Reflecting) {
                     if (!Blind) {
-                        (void) ureflects("But %s reflects from your %s!",
+                        (void) ureflects("Some of %s reflects from your %s!",
                                          "it");
-                    } else
-                        pline("For some reason you are not affected.");
-                    monstseesu(M_SEEN_REFL);
+                    } else {
+                        pline("You appear to only be partially affected.");
+                        monstseesu(M_SEEN_REFL);
+                    }
                     dx = -dx;
                     dy = -dy;
                     shieldeff(sx, sy);
-                } else {
-                    zhitu(type, nd, fltxt, sx, sy);
+                    nd = (nd + 1) / 2;
                 }
+                zhitu(type, nd, fltxt, sx, sy);
             } else if (!Blind) {
                 pline("%s whizzes by you!", The(fltxt));
             } else if (abstype == ZT_LIGHTNING) {
@@ -5477,7 +5528,7 @@ destroy_one_item(struct obj *obj, int osym, int dmgtyp)
             skip++;
         break;
     case AD_FIRE:
-        xresist = (Fire_resistance && obj->oclass != POTION_CLASS
+        xresist = (how_resistant(FIRE_RES) == 100 && obj->oclass != POTION_CLASS
                    && obj->otyp != GLOB_OF_GREEN_SLIME);
         if (obj->otyp == SCR_FIRE || obj->otyp == SPE_FIREBALL)
             skip++;
@@ -5515,7 +5566,7 @@ destroy_one_item(struct obj *obj, int osym, int dmgtyp)
         }
         break;
     case AD_ELEC:
-        xresist = (Shock_resistance && obj->oclass != RING_CLASS);
+        xresist = (how_resistant(SHOCK_RES) == 100 && obj->oclass != RING_CLASS);
         quan = obj->quan;
         switch (osym) {
         case RING_CLASS:
@@ -6077,7 +6128,7 @@ grenade_explode(struct obj *obj, int x, int y, boolean isyou)
         explode(x, y, ztype, d(50,6), WEAPON_CLASS,
             isyou * -1 * EXPL_FIERY);
     } else if (otyp == FRAG_GRENADE) {
-        ztype = isyou * 11;
+        ztype = isyou * ZT_SPELL(EXPL_FIERY);
         explode(x, y, ztype, d(3,6), WEAPON_CLASS,
             isyou * -1 * EXPL_FIERY);
     } else if (otyp == GAS_GRENADE) {

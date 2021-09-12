@@ -1465,7 +1465,7 @@ domove_core(void)
                 || Flying || is_floater(g.youmonst.data)
                 || is_clinger(g.youmonst.data) || is_whirly(g.youmonst.data)) {
                 on_ice = FALSE;
-            } else if (!rn2(Cold_resistance ? 3 : 2)) {
+            } else if (!rn2((how_resistant(COLD_RES) > 50) ? 3 : 2)) {
                 HFumbling |= FROMOUTSIDE;
                 HFumbling &= ~TIMEOUT;
                 HFumbling += 1; /* slip on next move */

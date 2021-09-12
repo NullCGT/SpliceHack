@@ -475,6 +475,9 @@ find_mac(struct monst *mon)
             /* since ARM_BONUS is positive, subtracting it increases AC */
         }
     }
+    if (MON_WEP(mon)) {
+        base -= W_ARM_BONUS(MON_WEP(mon));
+    }
     /* same cap as for hero [find_ac(do_wear.c)] */
     if (abs(base) > AC_MAX)
         base = sgn(base) * AC_MAX;

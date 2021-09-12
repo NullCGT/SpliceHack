@@ -29,13 +29,14 @@ enum obj_material_types {
     ADAMANTINE  = 17,
     COLD_IRON   = 18, /* Iron that has been cold-forged */
     MITHRIL     = 19,
-    PLASTIC     = 20,
-    SLIME       = 21,
-    GLASS       = 22,
-    GEMSTONE    = 23,
-    SHADOW      = 24,
-    MINERAL     = 25,
-    NUM_MATERIAL_TYPES = 26
+    ORICHALCUM  = 20,
+    PLASTIC     = 21,
+    SLIME       = 22,
+    GLASS       = 23,
+    GEMSTONE    = 24,
+    SHADOW      = 25,
+    MINERAL     = 26,
+    NUM_MATERIAL_TYPES = 27
 };
 
 enum obj_armor_types {
@@ -116,7 +117,7 @@ struct objclass {
     /* Check the AD&D rules!  The FIRST is small monster damage. */
     /* for weapons, and tools, rocks, and gems useful as weapons */
     schar oc_wsdam, oc_wldam; /* max small/large monster damage */
-    schar oc_oc1, oc_oc2;
+    schar oc_oc1, oc_oc2;/*, oc_oc3; */
 #define w_ammotyp	oc_oc2		/* type of ammo taken by ranged weapon */
 #define WP_GENERIC	0		/* all ammo subclasses ok */
 #define WP_BULLET	1
@@ -124,9 +125,11 @@ struct objclass {
 #define WP_ROCKET	3
 #define WP_GRENADE	4
 #define oc_hitbon oc_oc1 /* weapons: "to hit" bonus */
+#define w_acbon oc_oc2 /* weapons: ac bonus */
 
 #define a_ac oc_oc1     /* armor class, used in ARM_BONUS in do.c */
 #define a_can oc_oc2    /* armor: used in mhitu.c */
+/* #define a_dr oc_oc3 */     /* armor damage reduction */
 #define oc_level oc_oc2 /* books: spell level */
 
     unsigned short oc_nutrition; /* food value */
@@ -230,6 +233,10 @@ extern uchar oc_syms[MAXOCLASSES];      /* current class symbols */
 #define BALL_SYM '0'
 #define CHAIN_SYM '_'
 #define VENOM_SYM '.'
+
+/* Used for ranges */
+#define FIRST_SWORD SHORT_SWORD
+#define LAST_SWORD KATANA
 
 struct fruit {
     char fname[PL_FSIZ];

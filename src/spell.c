@@ -41,7 +41,6 @@ static char *spellretention(int, char *);
 static int throwspell(void);
 static void cast_protection(void);
 static void spell_backfire(int);
-static const char *spelltypemnemonic(int);
 static boolean spell_aim_step(genericptr_t, int, int);
 
 /* The roles[] table lists the role-specific values for tuning
@@ -150,8 +149,8 @@ cursed_book(struct obj* bp)
         /* temp disable in_use; death should not destroy the book */
         was_in_use = bp->in_use;
         bp->in_use = FALSE;
-        losestr(Poison_resistance ? rn1(2, 1) : rn1(4, 3));
-        losehp(rnd(Poison_resistance ? 6 : 10), "contact-poisoned spellbook",
+        losestr(resist_reduce(rn1(4, 3), POISON_RES) + rn1(2, 1));
+        losehp(resist_reduce(rnd(6), POISON_RES) + rnd(6), "contact-poisoned spellbook",
                KILLED_BY_AN);
         bp->in_use = was_in_use;
         break;
@@ -826,7 +825,7 @@ docast(void)
     return 0;
 }
 
-static const char *
+const char *
 spelltypemnemonic(int skill)
 {
     switch (skill) {
@@ -1055,7 +1054,7 @@ spelleffects(int spell, boolean atme)
         res = 1; /* time is going to elapse even if spell doesn't get cast */
     }
 
-    if (energy > u.uen) {
+    if (P_SKILL(P_BLOOD_MAGIC) <= P_UNSKILLED && energy > u.uen) {
         You("don't have enough energy to cast that spell.");
         return res;
     } else {
@@ -1117,11 +1116,32 @@ spelleffects(int spell, boolean atme)
         return 1;
     }
 
-    u.uen -= energy;
+
+    /* only can hit this case if using blood magic */
+    if (energy > u.uen && P_SKILL(P_BLOOD_MAGIC) > P_UNSKILLED) {
+        energy -= u.uen;
+        u.uen = 0;
+        pline("You draw upon your own life force to cast the spell.");
+        losehp(energy, "reckless use of blood magic", KILLED_BY);
+        if (spellid(spell) == SPE_HEALING ||
+            spellid(spell) == SPE_EXTRA_HEALING)
+            losehp(3 * energy, "abuse of blood magic", KILLED_BY);
+    } else {
+        u.uen -= energy;
+    }
+
+    if (P_SKILL(P_WILD_MAGIC) > P_UNSKILLED && rn2(P_SKILL(P_WILD_MAGIC))) {
+        otyp = SPE_DIG + rn2(SPE_FREEZE_SPHERE - SPE_DIG);
+        role_skill += 1;
+        pline("The magic goes awry!");
+    } else {
+        otyp = spellid(spell);
+    }
+
     g.context.botl = 1;
     exercise(A_WIS, TRUE);
     /* pseudo is a temporary "false" object containing the spell stats */
-    pseudo = mksobj(spellid(spell), FALSE, FALSE);
+    pseudo = mksobj(otyp, FALSE, FALSE);
     pseudo->blessed = pseudo->cursed = 0;
     pseudo->quan = 20L; /* do not let useup get it */
     /*
@@ -1131,6 +1151,8 @@ spelleffects(int spell, boolean atme)
     otyp = pseudo->otyp;
     skill = spell_skilltype(otyp);
     role_skill = P_SKILL(skill);
+    if (u.uen <= 0 && P_SKILL(P_BLOOD_MAGIC) > P_UNSKILLED) 
+        role_skill += P_SKILL(P_BLOOD_MAGIC) - 1;
 
     switch (otyp) {
     /*

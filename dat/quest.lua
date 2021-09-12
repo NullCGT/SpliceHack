@@ -371,12 +371,12 @@ continually spews torrents of insects as it expands.
 
 Baalzebub, Lord of the Flies approaches.]],
       },
-      Mephisto = {
-         synopsis = "[Mephisto appears!]",
+      Mephistopholes = {
+         synopsis = "[Mephistopholes appears!]",
          output = "menu",
          text = [[The area in front of you is suddenly consumed in a roaring wave of hellfire.
 Out of the flames steps a demon, power radiating off him. You recognize him on
-sight. Mephisto.
+sight. Mephistopholes.
 
 "So, you are the latest pawn sent forth by %d. I hope you prove more
 entertaining than the previous guests I have entertained."]],

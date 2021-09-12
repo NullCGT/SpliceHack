@@ -66,20 +66,30 @@ enum p_skills {
     P_RIDING             = 39, /* How well you control your steed */
 
     /* Role-Based Skills by Kestrel Gregorich-Trevor */
-    /* Monk */
-    P_FLAMING_FISTS      = 40,
-    P_FREEZING_FISTS     = 41,
-    P_SHOCKING_FISTS     = 42,
-    P_STUNNING_FIST      = 43,
+    P_POWER_ATTACK       = 40,
+    P_FLAMING_FISTS      = 41,
+    P_FREEZING_FISTS     = 42,
+    P_SHOCKING_FISTS     = 43,
+    P_STUNNING_FIST      = 44,
+    P_BACKSTAB           = 45,
+    P_CAREFUL_ATTACK     = 46,
+    P_RAT_TAMER          = 47,
+    P_DRAGON_TAMER       = 48,
+    P_ANIMAL_FRIENDSHIP  = 49,
+    P_BLOOD_RAGE         = 50,
+    P_PANACHE            = 51,
+    P_WILD_MAGIC         = 52,
+    P_BLOOD_MAGIC        = 53,
+    P_CODE_OF_HONOR      = 54,
+    P_DISARM             = 55,
+    P_SUNDER             = 56,
+    P_TUMBLING           = 57,
 
-    /* Rogue */
-    P_BACKSTAB           = 44,
-
-    /* Racial Skills by Kestrel Gregorich-Trevor */
-    P_SPIDER_FRIEND      = 45,
+    /* Cultural Skills by Kestrel Gregorich-Trevor */
+    P_SPIDER_FRIEND      = 58,
 
 
-    P_NUM_SKILLS         = 46
+    P_NUM_SKILLS         = 59
 };
 
 #define P_MARTIAL_ARTS P_BARE_HANDED_COMBAT /* Role distinguishes */
@@ -93,8 +103,8 @@ enum p_skills {
 #define P_LAST_H_TO_H P_RIDING
 #define P_FIRST_H_TO_H P_BARE_HANDED_COMBAT
 
-#define P_FIRST_ROLE P_FLAMING_FISTS
-#define P_LAST_ROLE P_STUNNING_FIST
+#define P_FIRST_ROLE P_POWER_ATTACK
+#define P_LAST_ROLE P_TUMBLING
 
 #define P_FIRST_RACE P_SPIDER_FRIEND
 #define P_LAST_RACE P_SPIDER_FRIEND
@@ -106,7 +116,7 @@ enum p_skills {
  * These are the standard weapon skill levels.  It is important that
  * the lowest "valid" skill be be 1.  The code calculates the
  * previous amount to practice by calling  practice_needed_to_advance()
- * with the current skill-1.  To work out for the UNSKILLED case,
+ * with the current skill-1.  To work out for the P_UNSKILLED case,
  * a value of 0 needed.
  */
 enum skill_levels {

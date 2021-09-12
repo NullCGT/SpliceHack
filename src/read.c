@@ -672,8 +672,8 @@ recharge(struct obj* obj, int curse_bless)
          *      7 : 100     100
          */
         n = (int) obj->recharged;
-        if (n > 0 && (obj->otyp == WAN_WISHING
-                      || (n * n * n > rn2(7 * 7 * 7)))) { /* recharge_limit */
+        if (obj->otyp == WAN_WISHING
+            || (n > 0 && (n * n * n > rn2(7 * 7 * 7)))) { /* recharge_limit */
             wand_explode(obj, rnd(lim));
             return;
         }
@@ -692,10 +692,6 @@ recharge(struct obj* obj, int curse_bless)
                 obj->spe = n;
             else
                 obj->spe++;
-            if (obj->otyp == WAN_WISHING && obj->spe > 3) {
-                wand_explode(obj, 1);
-                return;
-            }
             if (obj->spe >= lim)
                 p_glow2(obj, NH_BLUE);
             else
@@ -966,6 +962,7 @@ forget_single_object(int obj_id)
         objects[obj_id].oc_uname = 0;
     }
     undiscover_object(obj_id); /* after clearing oc_name_known */
+    g.context.botl = TRUE;
 
     /* clear & free object names from matching inventory items too? */
 }
@@ -1197,7 +1194,7 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
     int cval, otyp = sobj->otyp;
     boolean confused = (Confusion != 0), sblessed = sobj->blessed,
             scursed = sobj->cursed, already_known, old_erodeproof,
-            new_erodeproof;
+            new_erodeproof, hypermagical;
     struct obj *otmp;
     struct monst *mtmp;
 
@@ -1289,6 +1286,8 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
         /* elven armor vibrates warningly when enchanted beyond a limit */
         special_armor = is_elven_armor(otmp)
                         || (Role_if(PM_WIZARD) && otmp->otyp == CORNUTHAUM);
+        hypermagical = otmp->material == ORICHALCUM;
+        
         if (scursed)
             same_color = (otmp->otyp == BLACK_DRAGON_SCALE_MAIL
                           || otmp->otyp == BLACK_DRAGON_SCALES);
@@ -1301,7 +1300,7 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
 
         /* KMH -- catch underflow */
         s = scursed ? -otmp->spe : otmp->spe;
-        if (s > (special_armor ? 5 : 3) && rn2(s)) {
+        if (s > (special_armor ? 5 : hypermagical ? 7 : 3) && rn2(s)) {
             otmp->in_use = TRUE;
             pline("%s violently %s%s%s for a while, then %s.", Yname2(otmp),
                   otense(otmp, Blind ? "vibrate" : "glow"),
@@ -1729,6 +1728,9 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
             sobj = 0; /* nothing enchanted: strange_feeling -> useup */
         if (uwep)
             cap_spe(uwep);
+
+        /* Update to-hit bonus on botl */
+        g.context.botl = 1;
         break;
     case SCR_TAMING:
     case SPE_CHARM_MONSTER: {
@@ -2067,7 +2069,7 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
             if (Underwater) {
                 pline("A little %s around you vaporizes.", hliquid("water"));
             }
-            else if (Fire_resistance) {
+            else if (how_resistant(FIRE_RES) == 100) {
                 shieldeff(u.ux, u.uy);
                 monstseesu(M_SEEN_FIRE);
                 if (!Blind)

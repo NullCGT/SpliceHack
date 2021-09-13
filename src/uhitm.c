@@ -1213,7 +1213,7 @@ hmon_hitmon(struct monst *mon,
                     get_dmg_bonus = FALSE;
                     tmp = 0;
                     break;
-                case ACID_VENOM: /* thrown (or spit) */
+                case ACIDIC_LIQUID: /* thrown (or spit) */
                     if (resists_acid(mon)) {
                         Your("venom hits %s harmlessly.", mon_nam(mon));
                         tmp = 0;

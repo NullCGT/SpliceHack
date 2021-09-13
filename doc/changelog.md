@@ -195,6 +195,7 @@ in its own way.
 
 ### Monster Changes
 - Gnolls have been reduced to medium size so that they can wear the armor they spawn with.
+- Gendered nymphs are referred to via their greek names.
 - Monster fleeing AI has been altered.
   - When a monster turns to flee, it immediately gains a turn of movement points.
   - Fleeing monsters gain bonus movement points every turn, allowing them to flee more quickly.
@@ -231,6 +232,9 @@ in its own way.
   - &-class monster.
   - Big Eater.
   - Weak, but appears in very large groups and is very common in Gehennom.
+- Added a few early game monsters: Llamas, Caryatid/Telamons. These monsters do not exist solely
+  for the purpose of adding diversity to the early game; each of them is designed to fill a unique
+  niche.
 - Ported UnnetHack Aleaxes: Aleaxes are generated with copies of the player's items.
 - Ported Chasmes from Slash'Em. Due to the partial resistances feature, they are actually quite threatening.
 - Dragons have been significantly altered.
@@ -373,3 +377,4 @@ or outright removed. Rationale can be provided for removed content upon request.
 - Hand grenade explosions are magical, but only when hurled by an enemy, and only when using a frag grenade.
 - Failed mon sanity checks with werecreatures.
 - Moldiers and other infesting mons spawn adjacent to player.
+- Crash when polymorphed by a molydeus at level one. Could not duplicate.

@@ -1981,7 +1981,7 @@ thitmonst(register struct monst *mon,
         }
 
     } else if ((otyp == EGG || otyp == CREAM_PIE || otyp == BLINDING_VENOM
-                || otyp == ACID_VENOM || otyp == PINEAPPLE)
+                || otyp == ACIDIC_LIQUID || otyp == PINEAPPLE)
                && (guaranteed_hit || ACURR(A_DEX) > rnd(25))) {
         (void) hmon(mon, obj, hmode, dieroll);
         return 1; /* hmon used it up */
@@ -2326,7 +2326,7 @@ breaktest(struct obj *obj)
     case POT_WATER: /* really, all potions */
     case CREAM_PIE:
     case MELON:
-    case ACID_VENOM:
+    case ACIDIC_LIQUID:
     case BLINDING_VENOM:
     case BULLET:
     case SHOTGUN_SHELL:
@@ -2386,7 +2386,7 @@ breakmsg(struct obj *obj, boolean in_view)
         if (in_view)
             pline("Dirt cake!");
         break;
-    case ACID_VENOM:
+    case ACIDIC_LIQUID:
     case BLINDING_VENOM:
         pline("Splash!");
         break;

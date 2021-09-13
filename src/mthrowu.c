@@ -68,7 +68,7 @@ thitu(
     onm = (obj && obj_is_pname(obj)) ? the(name)
           : (obj && obj->quan > 1L) ? name
             : an(name);
-    is_acid = (obj && obj->otyp == ACID_VENOM);
+    is_acid = (obj && obj->otyp == ACIDIC_LIQUID);
 
     if (u.uac + tlev <= (dieroll = rnd(20))) {
         ++g.mesg_given;
@@ -365,7 +365,7 @@ ohitmon(
         return 1;
     } else {
         damage = dmgval(otmp, mtmp);
-        if (otmp->otyp == ACID_VENOM && resists_acid(mtmp))
+        if (otmp->otyp == ACIDIC_LIQUID && resists_acid(mtmp))
             damage = 0;
 #if 0 /* can't use this because we don't have the attacker */
         if (is_orc(mtmp->data) && is_elf(?magr?))
@@ -409,7 +409,7 @@ ohitmon(
             /* Extra damage is already handled in dmgval(). */
             searmsg((struct monst *) 0, mtmp, otmp, vis);
         }
-        if (otmp->otyp == ACID_VENOM && cansee(mtmp->mx, mtmp->my)) {
+        if (otmp->otyp == ACIDIC_LIQUID && cansee(mtmp->mx, mtmp->my)) {
             if (resists_acid(mtmp)) {
                 if (vis || (verbose && !g.mtarget))
                     pline("%s is unaffected.", Monnam(mtmp));
@@ -838,12 +838,12 @@ spitmm(struct monst* mtmp, struct attack* mattk, struct monst* mtarg)
             impossible("bad attack type in spitmm");
             /*FALLTHRU*/
         case AD_ACID:
-            otmp = mksobj(ACID_VENOM, TRUE, FALSE);
+            otmp = mksobj(ACIDIC_LIQUID, TRUE, FALSE);
             break;
         }
         if (!rn2(BOLT_LIM-distmin(mtmp->mx,mtmp->my,tx,ty))) {
             if (canseemon(mtmp))
-                pline("%s spits venom!", Monnam(mtmp));
+                pline("%s spits!", Monnam(mtmp));
             if (!utarg)
                 g.mtarget = mtarg;
             m_throw(mtmp, mtmp->mx, mtmp->my, sgn(g.tbx), sgn(g.tby),

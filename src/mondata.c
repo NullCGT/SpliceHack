@@ -1418,6 +1418,7 @@ monmaterial(int mndx)
     case PM_GARGOYLE:
     case PM_WINGED_GARGOYLE:
     case PM_EARTH_ELEMENTAL:
+    case PM_LOADBEARER:
         return MINERAL;
     case PM_SKELETON:
         return BONE;

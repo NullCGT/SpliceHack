@@ -3000,7 +3000,7 @@ static NEARDATA const struct o_range o_ranges[] = {
     { "gun", 	WEAPON_CLASS, PISTOL, AUTO_SHOTGUN },
     { "machine gun", WEAPON_CLASS, SUBMACHINE_GUN, HEAVY_MACHINE_GUN },
     { "grenade", WEAPON_CLASS, FRAG_GRENADE, GAS_GRENADE },
-    { "venom", VENOM_CLASS, BLINDING_VENOM, ACID_VENOM },
+    { "venom", VENOM_CLASS, BLINDING_VENOM, ACIDIC_LIQUID },
     { "gray stone", GEM_CLASS, LUCKSTONE, FLINT },
     { "grey stone", GEM_CLASS, LUCKSTONE, FLINT },
 };
@@ -4727,7 +4727,7 @@ readobjnam(char *bp, struct obj *no_wish)
         /*FALLTHRU*/
 #endif
     /* splash of venom:  0: normal, and transitory; 1: wishing */
-    case ACID_VENOM:
+    case ACIDIC_LIQUID:
     case BLINDING_VENOM:
         d.otmp->spe = 1;
         break;

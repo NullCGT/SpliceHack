@@ -1144,6 +1144,11 @@ m_initinv(register struct monst *mtmp)
             }
         }
         break;
+    case S_GREMLIN:
+        if (ptr == &mons[PM_LOADBEARER]) {
+            (void) mongets(mtmp, BOULDER);
+        }
+        break;
     case S_WRAITH:
         if (ptr == &mons[PM_NAZGUL]) {
             otmp = mksobj(RIN_INVISIBILITY, FALSE, FALSE);

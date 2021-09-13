@@ -1290,7 +1290,7 @@ dospit(void)
             impossible("bad attack type in dospit");
             /*FALLTHRU*/
         case AD_ACID:
-            otmp = mksobj(ACID_VENOM, TRUE, FALSE);
+            otmp = mksobj(ACIDIC_LIQUID, TRUE, FALSE);
             break;
         }
         otmp->spe = 1; /* to indicate it's yours */

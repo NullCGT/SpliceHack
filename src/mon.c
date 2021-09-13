@@ -670,6 +670,7 @@ make_corpse(struct monst *mtmp, unsigned int corpseflags)
         }
         break;
     case PM_STONE_GOLEM:
+    case PM_LOADBEARER:
         corpstatflags &= ~CORPSTAT_INIT;
         obj = mkcorpstat(STATUE, (struct monst *) 0, mdat, x, y,
                          corpstatflags);

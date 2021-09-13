@@ -1328,7 +1328,7 @@ OBJECT(OBJ("iron chain", None),
 OBJECT(OBJ("splash of blinding venom", "splash of venom"),
        BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, LIQUID), 0,
        VENOM_CLASS, 500, 0, 1, 0, 0, 0, 0, 0, 0, HI_ORGANIC),
-OBJECT(OBJ("splash of acid venom", "splash of venom"),
+OBJECT(OBJ("splash of acidic liquid", "splash of acid"),
        BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, LIQUID), 0,
        VENOM_CLASS, 500, 0, 1, 0, 6, 6, 0, 0, 0, HI_ORGANIC),
         /* +d6 small or large */

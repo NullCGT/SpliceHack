@@ -427,7 +427,7 @@ weapon_distribution_bonus(int otyp, boolean bigmonst, int distribution) {
             sides = 4;
             break;
 
-        case ACID_VENOM:
+        case ACIDIC_LIQUID:
         case HALBERD:
         case SPETUM:
             num_dice = 1;
@@ -479,7 +479,7 @@ weapon_distribution_bonus(int otyp, boolean bigmonst, int distribution) {
             sides = 4;
             break;
 
-        case ACID_VENOM:
+        case ACIDIC_LIQUID:
             num_dice = 1;
             sides = 6;
             break;

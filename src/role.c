@@ -54,7 +54,7 @@ const struct Role roles[NUM_ROLES+1] = {
       S_MUMMY,
       ART_ORB_OF_DETECTION,
       MH_HUMAN | MH_DWARF | MH_GNOME
-        | MH_DEMON | MH_UNDEAD | MH_MERFOLK,
+        | MH_DEMON | MH_MERFOLK,
       ALL_GENDERS
         | ROLE_LAWFUL | ROLE_NEUTRAL,
       /* Str Int Wis Dex Con Cha */
@@ -352,7 +352,7 @@ const struct Role roles[NUM_ROLES+1] = {
       S_JELLY,
       ART_MAGIC_MIRROR_OF_MERLIN,
       MH_HUMAN | MH_DWARF
-        | MH_UNDEAD,
+        | MH_UNDEAD | MH_DEMON,
       ALL_GENDERS
         | ROLE_LAWFUL | ROLE_CHAOTIC,
       /* Str Int Wis Dex Con Cha */

@@ -634,7 +634,7 @@ typedef unsigned char uchar;
 #ifdef DUMPLOG
 
 #ifndef DUMPLOG_FILE
-#define DUMPLOG_FILE        "/tmp/nethack.%n.%d.log"
+#define DUMPLOG_FILE        "/tmp/splicehack.%n.%d.log"
 /* DUMPLOG_FILE allows following placeholders:
    %% literal '%'
    %v version (eg. "3.6.3-0")
@@ -654,7 +654,7 @@ typedef unsigned char uchar;
 #ifdef DUMPHTML
 
 #ifndef DUMPHTML_FILE
-#define DUMPHTML_FILE        "/tmp/nethack.%n.%d.html"
+#define DUMPHTML_FILE        "/tmp/splicehack.%n.%d.html"
 /* Placeholders as above
  * DUMPHTML_FILE is not used if SYSCF is defiined
  */

@@ -336,19 +336,11 @@ vmsmain.c     vmsmisc.c     vmstty.c      vmsunix.c
 
 sys/windows:
 (files for Windows 7/8.x/10 version)
-<<<<<<< HEAD
-.splicehackrc.template  Install.nt           Makefile.gcc
-Makefile.msc         console.rc           nethack.def
-nh340key.c           nhdefkey.c           nhico.uu
-nhraykey.c           nhsetup.bat          ntsound.c
-nttty.c              porthelp             stub-pdcscrn.c
-=======
-.nethackrc.template  Install.windows      Makefile.gcc
+.splicehackrc.template  Install.windows      Makefile.gcc
 Makefile.msc         console.rc           consoletty.c
 nethack.def          nh340key.c           nhdefkey.c
 nhico.uu             nhraykey.c           nhsetup.bat
 ntsound.c            porthelp             stub-pdcscrn.c
->>>>>>> 0fcc15170... cron daily Files update
 stubs.c              sysconf.template     travis-gcc.sh
 win10.c              win10.h              win32api.h
 windmain.c           windsys.c            winos.h

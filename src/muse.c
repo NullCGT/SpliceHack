@@ -299,7 +299,7 @@ mquaffmsg(struct monst* mtmp, struct obj* otmp)
 /* Splice muse */
 #define MUSE_WAN_CREATE_HORDE 21
 #define MUSE_WAN_HEALING 22
-#define MUSE_POT_VAMPIRE_BLOOD 23
+#define MUSE_POT_VAMPIRE_ESSENCE 23
 #define MUSE_SCR_ELEMENTALISM 24
 /*
 #define MUSE_INNATE_TPT 9999
@@ -337,9 +337,9 @@ m_use_healing(struct monst* mtmp)
         }
     }
      if (is_vampire(mtmp->data) &&
-		  (obj = m_carrying(mtmp, POT_VAMPIRE_BLOOD)) !=0) {
+		  (obj = m_carrying(mtmp, POT_VAMPIRE_ESSENCE)) !=0) {
 		    g.m.defensive = obj;
-		    g.m.has_defense = MUSE_POT_VAMPIRE_BLOOD;
+		    g.m.has_defense = MUSE_POT_VAMPIRE_ESSENCE;
 		    return TRUE;
 	}
     return FALSE;
@@ -667,10 +667,10 @@ find_defensive(struct monst* mtmp)
                 g.m.defensive = obj;
                 g.m.has_defense = MUSE_POT_HEALING;
             }
-            nomore(MUSE_POT_VAMPIRE_BLOOD);
-        	if(is_vampire(mtmp->data) && obj->otyp == POT_VAMPIRE_BLOOD) {
+            nomore(MUSE_POT_VAMPIRE_ESSENCE);
+        	if(is_vampire(mtmp->data) && obj->otyp == POT_VAMPIRE_ESSENCE) {
         			g.m.defensive = obj;
-        			g.m.has_defense = MUSE_POT_VAMPIRE_BLOOD;
+        			g.m.has_defense = MUSE_POT_VAMPIRE_ESSENCE;
         	}
         } else { /* Pestilence */
             nomore(MUSE_POT_FULL_HEALING);
@@ -1190,7 +1190,7 @@ use_defensive(struct monst* mtmp)
         /* not actually called for its unstoning effect */
         mon_consume_unstone(mtmp, otmp, FALSE, FALSE);
         return 2;
-    case MUSE_POT_VAMPIRE_BLOOD:
+    case MUSE_POT_VAMPIRE_ESSENCE:
         mquaffmsg(mtmp, otmp);
         if (!otmp->cursed) {
             i = rnd(8) + rnd(2);
@@ -1200,7 +1200,7 @@ use_defensive(struct monst* mtmp)
         }
         else if (vismon)
             pline("%s discards the congealed blood in disgust.", Monnam(mtmp));
-        if (oseen) makeknown(POT_VAMPIRE_BLOOD);
+        if (oseen) makeknown(POT_VAMPIRE_ESSENCE);
         m_useup(mtmp, otmp);
         return 2;
     case 0:
@@ -2674,7 +2674,7 @@ searches_for_item(struct monst* mon, struct obj* obj)
             return TRUE;
         break;
     case POTION_CLASS:
-        if (typ == POT_VAMPIRE_BLOOD)
+        if (typ == POT_VAMPIRE_ESSENCE)
             return is_vampire(mon->data);
         if (typ == POT_HEALING || typ == POT_EXTRA_HEALING
             || typ == POT_FULL_HEALING || typ == POT_POLYMORPH

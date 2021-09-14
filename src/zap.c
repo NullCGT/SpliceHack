@@ -174,7 +174,6 @@ bhitm(struct monst *mtmp, struct obj *otmp)
         learn_it = TRUE;
         break;
     case WAN_WATER:
-        You("fire off a powerful jet of water!");
         zap_type_text = "jet of water";
         reveal_invis = TRUE;
         if (u.uswallow && mtmp->data == &mons[PM_ICE_VORTEX]) {
@@ -3685,6 +3684,11 @@ bhit(int ddx, int ddy, int range,  /* direction and range */
         allow_skip = !rn2(3);
     }
 
+    if (obj && obj->otyp == WAN_WATER) {
+        You("fire off a powerful jet of water!");
+        makeknown(obj->otyp);
+    }
+
     if (weapon == FLASHED_LIGHT) {
         tmp_at(DISP_BEAM, cmap_to_glyph(S_flashbeam));
     } else if (weapon == THROWN_TETHERED_WEAPON && obj) {
@@ -3734,6 +3738,12 @@ bhit(int ddx, int ddy, int range,  /* direction and range */
             if (!Blind)
                 show_transient_light((struct obj *) 0,
                                      g.bhitpos.x, g.bhitpos.y);
+        }
+
+        /* Clean up blood with water. */
+        if (obj && obj->otyp == WAN_WATER && levl[g.bhitpos.x][g.bhitpos.y].splatpm) {
+            levl[g.bhitpos.x][g.bhitpos.y].splatpm = 0;
+            wipe_engr_at(x, y, d(2, 4), TRUE);
         }
 
         if (weapon == ZAPPED_WAND && find_drawbridge(&x, &y)) {

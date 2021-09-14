@@ -2208,7 +2208,7 @@ breakobj(struct obj *obj,
         obj->in_use = 1; /* in case it's fatal */
         if (obj->otyp == POT_OIL && obj->lamplit) {
             explode_oil(obj, x, y);
-        } else if ((obj->otyp == POT_VAMPIRE_BLOOD ||
+        } else if ((obj->otyp == POT_VAMPIRE_ESSENCE ||
                    obj->otyp == POT_BLOOD) &&
                    levl[x][y].altarmask != AM_CHAOTIC &&
                    levl[x][y].altarmask != AM_NONE) {

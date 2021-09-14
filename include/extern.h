@@ -680,6 +680,7 @@ extern int dynamic_levname(void);
 
 /* ### eat.c ### */
 
+extern boolean maybe_cannibal(int, boolean);
 extern void eatmupdate(void);
 extern boolean is_edible(struct obj *);
 extern void init_uhunger(void);

@@ -38,7 +38,6 @@ static void accessory_has_effect(struct obj *);
 static void eataccessory(struct obj *);
 static const char *foodword(struct obj *);
 static int tin_variety(struct obj *, boolean);
-static boolean maybe_cannibal(int, boolean);
 static int eat_ok(struct obj *);
 static int offer_ok(struct obj *);
 static int tin_ok(struct obj *);
@@ -634,7 +633,7 @@ eat_brains(struct monst *magr, struct monst *mdef,
 }
 
 /* eating a corpse or egg of one's own species is usually naughty */
-static boolean
+boolean
 maybe_cannibal(int pm, boolean allowmsg)
 {
     static NEARDATA long ate_brains = 0L;

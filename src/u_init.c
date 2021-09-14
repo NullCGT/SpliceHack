@@ -192,7 +192,8 @@ static struct trobj Tourist[] = {
     { 0, 0, 0, 0, 0 }
 };
 static struct trobj Valkyrie[] = {
-    { LONG_SWORD, 1, WEAPON_CLASS, 1, UNDEF_BLESS },
+#define V_MAJOR 0
+    { SPEAR, 1, WEAPON_CLASS, 1, UNDEF_BLESS },
     { DAGGER, 0, WEAPON_CLASS, 1, UNDEF_BLESS },
     { SMALL_SHIELD, 3, ARMOR_CLASS, 1, UNDEF_BLESS },
     { FOOD_RATION, 0, FOOD_CLASS, 1, 0 },
@@ -255,6 +256,7 @@ static struct inv_sub {
     { PM_MERFOLK, SACK, OILSKIN_SACK },
     { PM_MERFOLK, SPEAR, TRIDENT },
     { PM_MERFOLK, MACE, TRIDENT },
+    { PM_MERFOLK, LONG_SWORD, TRIDENT },
     { PM_MERFOLK, BOW, CROSSBOW },
     { PM_MERFOLK, ARROW, CROSSBOW_BOLT },
     { PM_ORC, DAGGER, ORCISH_DAGGER },
@@ -283,6 +285,7 @@ static struct inv_sub {
     { PM_DROW, ARROW, DARK_ELVEN_ARROW },
     { PM_DROW, POT_SICKNESS, POT_SLEEPING },
     { PM_VAMPIRE, POT_FRUIT_JUICE, POT_BLOOD },
+    { PM_INFERNAL, KNIFE, SACRIFICIAL_KNIFE },
     { NON_PM, STRANGE_OBJECT, STRANGE_OBJECT }
 };
 
@@ -1094,6 +1097,8 @@ u_init(void)
         if (!rn2(25))
             ini_inv(Lamp);
         knows_object(POT_FULL_HEALING);
+        knows_object(POT_BLOOD);
+        knows_object(POT_VAMPIRE_ESSENCE);
         skill_init(Skill_H);
         break;
     case PM_KNIGHT:
@@ -1192,6 +1197,9 @@ u_init(void)
         ini_inv(Valkyrie);
         if (!rn2(6))
             ini_inv(Lamp);
+        if (rn2(100) >= 50) { /* see above comment */
+            Barbarian[V_MAJOR].trotyp = WAR_HAMMER;
+        }
         knows_class(WEAPON_CLASS); /* excludes polearms */
         knows_class(ARMOR_CLASS);
         skill_init(Skill_V);
@@ -1297,7 +1305,7 @@ u_init(void)
         break;
 
     case PM_VAMPIRE:
-        knows_object(POT_VAMPIRE_BLOOD);
+        knows_object(POT_VAMPIRE_ESSENCE);
         knows_object(POT_BLOOD);
 	    /* Vampires start off with gods not as pleased, luck penalty */
 	    adjalign(-5);
@@ -1564,6 +1572,8 @@ ini_inv(struct trobj *trop)
                    || otyp == PUMPKIN
                    /* orcs start with poison resistance */
                    || (otyp == RIN_POISON_RESISTANCE && Race_if(PM_ORC))
+                   /* vamps can regenerate */
+                   || (otyp == RIN_REGENERATION && Race_if(PM_VAMPIRE))
                    /* Monks don't use weapons */
                    || (otyp == SCR_ENCHANT_WEAPON && Role_if(PM_MONK))
                    /* Infernals already resist fire and hate silver */
@@ -1646,9 +1656,18 @@ ini_inv(struct trobj *trop)
         }
 
         /* Create vampire blood */
-        if (g.urace.malenum == PM_VAMPIRE && obj->otyp == FOOD_RATION) {
+        if (g.urace.malenum == PM_VAMPIRE && 
+            (obj->otyp == FOOD_RATION || obj->otyp == CRAM_RATION)) {
             dealloc_obj(obj);
-            obj = mksobj(POT_VAMPIRE_BLOOD, TRUE, FALSE);
+            obj = mksobj(POT_VAMPIRE_ESSENCE, TRUE, FALSE);
+        } else if (g.urace.malenum == PM_VAMPIRE && obj->oclass == FOOD_CLASS) {
+            if (!rn2(7)) {
+                obj = mksobj(POT_BLOOD, TRUE, FALSE);
+            } else {
+                dealloc_obj(obj);
+                trop++;
+            }
+            continue;
         }
 
         /* nudist gets no armor */

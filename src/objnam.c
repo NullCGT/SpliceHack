@@ -699,6 +699,11 @@ xname_flags(
                     && (obj->blessed || obj->cursed)) {
                     Strcat(buf, obj->blessed ? "holy " : "unholy ");
                 }
+                if (typ == POT_BLOOD && known) {
+                    const char *pm_name = mons[obj->corpsenm].pmnames[NEUTRAL];
+                    Strcat(buf, pm_name);
+                    Strcat(buf, " ");
+                }
                 Strcat(buf, actualn);
             } else {
                 Strcat(buf, " called ");
@@ -3081,7 +3086,7 @@ static const struct alt_spellings {
     { "immortality", AMULET_OF_LIFE_SAVING },
     { "family", EGG },
     { "map", SCR_MAGIC_MAPPING },
-    { "vampire food", POT_VAMPIRE_BLOOD },
+    { "vampire food", POT_VAMPIRE_ESSENCE },
 #ifdef MAIL
     { "junk", SCR_MAIL },
 #endif
@@ -3695,7 +3700,7 @@ readobjnam_preparse(struct _readobjnam_data *d)
         } else if (!strncmpi(d->bp, "filth-crusted ", l = 14)) {
             d->ispoisoned = POT_FILTH;
         } else if (!strncmpi(d->bp, "potion-coated ", l = 14)) {
-            d->ispoisoned = POT_GAIN_ABILITY + rn2(POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY);
+            d->ispoisoned = POT_GAIN_ABILITY + rn2(POT_VAMPIRE_ESSENCE - POT_GAIN_ABILITY);
             /* "trapped" recognized but not honored outside wizard mode */
         } else if (!strncmpi(d->bp, "trapped ", l = 8)) {
             d->trapped = 0; /* undo any previous "untrapped" */
@@ -4765,6 +4770,12 @@ readobjnam(char *bp, struct obj *no_wish)
                 d.otmp->corpsenm = d.mntmp;
             }
             break;
+        case BLOOD:
+            if (!has_blood(&mons[d.mntmp])) {
+                d.otmp->corpsenm = PM_HUMAN;
+            } else {
+                set_corpsenm(d.otmp, d.mntmp);
+            }
         case CORPSE:
             if ((!(mons[d.mntmp].geno & G_UNIQ) || wizard)
                 && !(g.mvitals[d.mntmp].mvflags & G_NOCORPSE)) {

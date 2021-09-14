@@ -1928,7 +1928,9 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
             mtmp2 = mtmp->nmon;
             if (distu(mtmp->mx, mtmp->my) <= 2) {
                 mhurtle(mtmp, mtmp->mx - u.ux, mtmp->my - u.uy, i + rn2(4));
+                if (!Blind) pline("%s is buffeted by winds!", Monnam(mtmp));
                 setmangry(mtmp, TRUE);
+                mtmp->mstun = 1;
             }
         }
         break;

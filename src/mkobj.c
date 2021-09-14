@@ -805,7 +805,7 @@ mksobj(int otyp, boolean init, boolean artif)
                 blessorcurse(otmp, 10);
             if (is_poisonable(otmp) && !rn2(100)) {
                 /* small chance for a completely random type of poison. */
-                if (!rn2(8)) otmp->opoisoned = POT_GAIN_ABILITY + rn2(POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY);
+                if (!rn2(8)) otmp->opoisoned = POT_GAIN_ABILITY + rn2(POT_VAMPIRE_ESSENCE - POT_GAIN_ABILITY);
                 else otmp->opoisoned = POT_SICKNESS;
             }
             if ((is_weptool(otmp) || otmp->oclass == WEAPON_CLASS 
@@ -1072,6 +1072,14 @@ mksobj(int otyp, boolean init, boolean artif)
             if (otmp->otyp != SCR_MAIL)
 #endif
                 blessorcurse(otmp, 4);
+            if (otmp->otyp == POT_BLOOD) {
+                tryct = 0;
+                do
+                    otmp->corpsenm = rndmonnum();
+                while (!has_blood(&mons[otmp->corpsenm]) && tryct++ < 50);
+                if (!has_blood(&mons[otmp->corpsenm]) || is_vampire(&mons[otmp->corpsenm]))
+                    otmp->corpsenm = PM_HUMAN;
+            }
             break;
         case SPBOOK_CLASS:
             otmp->spestudied = 0;
@@ -1165,9 +1173,10 @@ mksobj(int otyp, boolean init, boolean artif)
     }
 
     /* some things must get done (corpsenm, timers) even if init = 0 */
-    switch ((otmp->oclass == POTION_CLASS && otmp->otyp != POT_OIL)
-            ? POT_WATER
-            : otmp->otyp) {
+    switch ((otmp->oclass == POTION_CLASS && otmp->otyp != POT_OIL
+            && otmp->otyp != POT_BLOOD)
+                ? POT_WATER
+                : otmp->otyp) {
     case CORPSE:
         if (otmp->corpsenm == NON_PM) {
             otmp->corpsenm = undead_to_corpse(rndmonnum());
@@ -1185,11 +1194,16 @@ mksobj(int otyp, boolean init, boolean artif)
     /* case TIN: */
         set_corpsenm(otmp, otmp->corpsenm);
         break;
+    case POT_BLOOD:
+        if (otmp->corpsenm == NON_PM)
+            otmp->corpsenm = PM_HUMAN;
+        set_corpsenm(otmp, otmp->corpsenm);
+        break;
     case POT_OIL:
         otmp->age = MAX_OIL_IN_FLASK; /* amount of oil */
         /*FALLTHRU*/
     case POT_WATER: /* POTION_CLASS */
-        otmp->fromsink = 0; /* overloads corpsenm, which was set to NON_PM */
+        otmp->fromsink = 0;
         break;
     case LEASH:
         otmp->leashmon = 0; /* overloads corpsenm, which was set to NON_PM */

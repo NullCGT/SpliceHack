@@ -4207,7 +4207,7 @@ struct mhitm_data *mhm;
         mhm->damage = 0;
         pline("%s splashes you!", Monnam(magr));
         int i = POT_GAIN_ABILITY +
-            (magr->m_id % (POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY));
+            (magr->m_id % (POT_VAMPIRE_ESSENCE - POT_GAIN_ABILITY));
         if (i == POT_GAIN_LEVEL ||
              i == POT_EXTRA_HEALING ||
              i == POT_HEALING ||

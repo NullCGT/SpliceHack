@@ -1460,7 +1460,7 @@ restore_menu(
             /* for tty; erase copyright notice and redo it in the menu */
             clear_nhwindow(bannerwin);
             /* COPYRIGHT_BANNER_[ABCD] */
-            for (k = 1; k <= 4; ++k)
+            for (k = 1; k <= 5; ++k)
                 add_menu(tmpwin, &nul_glyphinfo, &any, 0, 0, ATR_NONE,
                          copyright_banner_line(k), MENU_ITEMFLAGS_NONE);
             add_menu(tmpwin, &nul_glyphinfo, &any, 0, 0, ATR_NONE, "",

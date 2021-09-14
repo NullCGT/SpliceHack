@@ -3671,6 +3671,10 @@ mergable(register struct obj *otmp, register struct obj *obj)
     /* burning potions of oil never merge */
     if (obj->otyp == POT_OIL && obj->lamplit)
         return FALSE;
+    
+    /* only identical blood merges */
+    if (obj->otyp == POT_BLOOD && obj->corpsenm != otmp->corpsenm)
+        return FALSE;
 
     /* don't merge surcharged item with base-cost item */
     if (obj->unpaid && !same_price(obj, otmp))

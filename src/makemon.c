@@ -1113,13 +1113,13 @@ m_initinv(register struct monst *mtmp)
     case S_VAMPIRE:
         if (ptr == &mons[PM_ALUCARD]) {
             for (cnt = rn2(2); cnt < 4; cnt++) {
-                (void) mongets(mtmp, POT_VAMPIRE_BLOOD);
+                (void) mongets(mtmp, POT_VAMPIRE_ESSENCE);
             }
             break;
         }
         if (rn2(2)) {
             if ((int) mtmp->m_lev > rn2(30))
-                (void) mongets(mtmp, POT_VAMPIRE_BLOOD);
+                (void) mongets(mtmp, POT_VAMPIRE_ESSENCE);
             else
                 (void) mongets(mtmp, POT_BLOOD);
         }

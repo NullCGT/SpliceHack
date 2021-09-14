@@ -1376,7 +1376,7 @@ peffects(struct obj *otmp)
             polyself(0);
         break;
     case POT_BLOOD:
-  	case POT_VAMPIRE_BLOOD:
+  	case POT_VAMPIRE_ESSENCE:
         g.potion_unkn++;
         u.uconduct.unvegan++;
         if (maybe_polyd(is_vampire(g.youmonst.data), Race_if(PM_VAMPIRE))) {
@@ -1390,9 +1390,9 @@ peffects(struct obj *otmp)
                 otmp->odiluted ? "watery" : "thick");
             if (!otmp->cursed)
                 lesshungry((otmp->odiluted ? 1 : 2) *
-                    (otmp->otyp == POT_VAMPIRE_BLOOD ? 400 :
+                    (otmp->otyp == POT_VAMPIRE_ESSENCE ? 400 :
                     otmp->blessed ? 15 : 10));
-            if (otmp->otyp == POT_VAMPIRE_BLOOD && otmp->blessed) {
+            if (otmp->otyp == POT_VAMPIRE_ESSENCE && otmp->blessed) {
                 int num = newhp();
                 if (Upolyd) {
                     u.mhmax += num;
@@ -1402,7 +1402,7 @@ peffects(struct obj *otmp)
                     u.uhp += num;
                 }
             }
-        } else if (otmp->otyp == POT_VAMPIRE_BLOOD) {
+        } else if (otmp->otyp == POT_VAMPIRE_ESSENCE) {
             /* [CWC] fix conducts for potions of (vampire) blood -
                 doesn't use violated_vegetarian() to prevent
                 duplicated "you feel guilty" messages */
@@ -1420,6 +1420,7 @@ peffects(struct obj *otmp)
         } else {
             violated_vegetarian();
             pline("Ugh.  That was vile.");
+            (void) maybe_cannibal(otmp->corpsenm, TRUE);
             make_vomiting(Vomiting+d(10,8), TRUE);
         }
         break;
@@ -1675,7 +1676,7 @@ potionhit(struct monst *mon, struct obj *obj, int how)
                 polyself(0);
             break;
         case POT_BLOOD:
-        case POT_VAMPIRE_BLOOD:
+        case POT_VAMPIRE_ESSENCE:
             if (Blind)
                 You_feel("sticky!");
             else if (Race_if(PM_INFERNAL)) {
@@ -1843,7 +1844,7 @@ potionhit(struct monst *mon, struct obj *obj, int how)
             }
             break;
         case POT_BLOOD:
-        case POT_VAMPIRE_BLOOD:
+        case POT_VAMPIRE_ESSENCE:
             if (canspotmon(mon)) {
                 pline("%s is covered in blood!", Monnam(mon));
                 if (!Blind && (is_vampire(mon->data) || is_demon(mon->data)))
@@ -2259,7 +2260,7 @@ mixtype(struct obj *o1, struct obj *o2)
         case POT_BLINDNESS:
         case POT_CONFUSION:
         case POT_FILTH:
-        case POT_VAMPIRE_BLOOD:
+        case POT_VAMPIRE_ESSENCE:
             return POT_WATER;
         }
         break;
@@ -2287,7 +2288,7 @@ mixtype(struct obj *o1, struct obj *o2)
     case POT_FRUIT_JUICE:
         switch (o2typ) {
         case POT_BLOOD:
-            return POT_VAMPIRE_BLOOD;
+            return POT_VAMPIRE_ESSENCE;
         case POT_SICKNESS:
             return POT_SICKNESS;
         case POT_ENLIGHTENMENT:

@@ -1425,7 +1425,7 @@ gulpmu(struct monst *mtmp, struct attack *mattk)
     case AD_POTN:
         You("get some of %s in your mouth!", mon_nam(mtmp));
         i = POT_GAIN_ABILITY +
-            (mtmp->m_id % (POT_VAMPIRE_BLOOD - POT_GAIN_ABILITY));
+            (mtmp->m_id % (POT_VAMPIRE_ESSENCE - POT_GAIN_ABILITY));
         if (i == POT_GAIN_LEVEL ||
              i == POT_EXTRA_HEALING ||
              i == POT_HEALING ||

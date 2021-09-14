@@ -125,7 +125,7 @@ struct obj {
     int corpsenm;         /* type of corpse is mons[corpsenm] */
     int opoisoned;        /* type of poison (corresponds to potion otyp) */
 #define leashmon corpsenm /* gets m_id of attached pet */
-#define fromsink corpsenm /* a potion from a sink */
+#define fromsink olocked  /* a potion from a sink */
 #define novelidx corpsenm /* 3.6 tribute - the index of the novel title */
 #define migr_species corpsenm /* species to endow for MIGR_TO_SPECIES */
     int usecount;           /* overloaded for various things that tally */

@@ -3098,6 +3098,12 @@ apply_template(struct permonst basemon, int tindex)
     if (tindex == MT_ELVEN || tindex == MT_DWARVISH || tindex == MT_GNOMISH
         || tindex == MT_ORCISH)
         basemon.mhflags = template.mhflags;
+    
+    /* vampirism changes what you eat */
+    if (tindex == MT_VAMPIRIC) {
+        basemon.mflags1 &= ~M1_HERBIVORE;
+        basemon.mflags1 &= ~M1_CARNIVORE;
+    }
 
     return basemon;
 }

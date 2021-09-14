@@ -824,6 +824,32 @@ dogfood(struct monst *mon, struct obj *obj)
 	if (mon->data == &mons[PM_KOALA])
 		return (obj->otyp == EUCALYPTUS_LEAF ? DOGFOOD : APPORT);
 
+    /* ghouls prefer old corpses and unhatchable eggs, yum!
+           they'll eat fresh non-veggy corpses and hatchable eggs
+           when starving; they never eat stone-to-flesh'd meat */
+    if (is_ghoul(mptr)) {
+        if (obj->otyp == CORPSE)
+            return (peek_at_iced_corpse_age(obj) + 50L <= g.monstermoves
+                    && fptr != &mons[PM_LIZARD]
+                    && fptr != &mons[PM_LICHEN])
+                        ? DOGFOOD
+                        : (starving && !vegan(fptr))
+                            ? ACCFOOD
+                            : POISON;
+        if (obj->otyp == EGG)
+            return stale_egg(obj) ? CADAVER : starving ? ACCFOOD : POISON;
+        return TABU;
+    }
+    /* vampires only "eat" very fresh corpses ... 
+        * Assume meat -> blood
+        */
+    if (is_vampshifter(mon)) {
+        return (obj->otyp == CORPSE &&
+            has_blood(&mons[obj->corpsenm]) && !obj->oeaten &&
+            peek_at_iced_corpse_age(obj) + 5 >= g.monstermoves) ?
+            DOGFOOD : TABU;
+    }
+
     switch (obj->oclass) {
     case FOOD_CLASS:
         if (obj->otyp == CORPSE || obj->otyp == TIN || obj->otyp == EGG)
@@ -850,32 +876,6 @@ dogfood(struct monst *mon, struct obj *obj)
                     && EDOG(mon)->mhpmax_penalty);
         /* even carnivores will eat carrots if they're temporarily blind */
         mblind = (!mon->mcansee && haseyes(mon->data));
-
-        /* ghouls prefer old corpses and unhatchable eggs, yum!
-           they'll eat fresh non-veggy corpses and hatchable eggs
-           when starving; they never eat stone-to-flesh'd meat */
-        if (is_ghoul(mptr)) {
-            if (obj->otyp == CORPSE)
-                return (peek_at_iced_corpse_age(obj) + 50L <= g.monstermoves
-                        && fptr != &mons[PM_LIZARD]
-                        && fptr != &mons[PM_LICHEN])
-                           ? DOGFOOD
-                           : (starving && !vegan(fptr))
-                              ? ACCFOOD
-                              : POISON;
-            if (obj->otyp == EGG)
-                return stale_egg(obj) ? CADAVER : starving ? ACCFOOD : POISON;
-            return TABU;
-        }
-        /* vampires only "eat" very fresh corpses ... 
-	     * Assume meat -> blood
-	     */
-	    if (is_vampire(mon->data)) {
-	    	return (obj->otyp == CORPSE &&
-		      has_blood(&mons[obj->corpsenm]) && !obj->oeaten &&
-	    	  peek_at_iced_corpse_age(obj) + 5 >= g.monstermoves) ?
-			    DOGFOOD : TABU;
-	    }
 
         switch (obj->otyp) {
         case TRIPE_RATION:

@@ -66,7 +66,7 @@ Guidebook.dvi:	Guidebook.tex
 	latex Guidebook.tex
 
 
-GAME	= nethack
+GAME	= splicehack
 MANDIR	= /usr/man/man6
 MANEXT	= 6
 

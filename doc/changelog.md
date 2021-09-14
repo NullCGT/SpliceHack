@@ -327,6 +327,8 @@ that Excalibur doesn't crowd out all the other artifact weapons as much.
 - Due to expanded object materail lists, transmuters are much more dangeorus, since they can
   transmute metal into stone, potentially overloading the player.
 - Removing a mask no longer causes you to instantly rehumanize.
+- Vampire blood has been renamed to vampire essence.
+- Potions of blood are now associated with a monster.
 
 ### Removed Content
 Since this release is a rewrite, several pieces of existing content have been heavily altered
@@ -378,3 +380,4 @@ or outright removed. Rationale can be provided for removed content upon request.
 - Failed mon sanity checks with werecreatures.
 - Moldiers and other infesting mons spawn adjacent to player.
 - Crash when polymorphed by a molydeus at level one. Could not duplicate.
+- Wishing for specific types of blood fails.

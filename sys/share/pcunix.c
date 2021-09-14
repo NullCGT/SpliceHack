@@ -62,7 +62,7 @@ uptodate(int fd)
 	 */
 #ifdef MSDOS
 	    pline("Make sure that your system's date and time are correct.");
-	    pline("They must be more current than NetHack.EXE's date/time stamp.");
+	    pline("They must be more current than SpliceHack.EXE's date/time stamp.");
 #endif /* MSDOS */
 	return(0);
     }

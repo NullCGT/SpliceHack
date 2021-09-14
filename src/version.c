@@ -512,6 +512,10 @@ copyright_banner_line(int indx)
     if (indx == 4)
         return COPYRIGHT_BANNER_D;
 #endif
+#ifdef COPYRIGHT_BANNER_E
+    if (indx == 5)
+        return COPYRIGHT_BANNER_E;
+#endif
     return "";
 }
 

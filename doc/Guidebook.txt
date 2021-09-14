@@ -3597,7 +3597,7 @@
           you using the default template file.
 
                On MS-DOS,  it  is  "defaults.nh"  in  the  same  folder  as
-          nethack.exe.
+          splicehack.exe.
 
                Any  line  in  the  configuration  file starting with `#' is
           treated as a comment and ignored.  Empty lines are ignored.
@@ -3649,7 +3649,7 @@
 
           HACKDIR
             Default  location  of  files  NetHack needs. On Windows HACKDIR
-            defaults to the location of  the  NetHack.exe  or  NetHackw.exe
+            defaults to the location of  the  SpliceHack.exe  or  NetHackw.exe
             file  so setting HACKDIR to override that is not usually neces-
             sary or recommended.
 

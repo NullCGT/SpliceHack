@@ -129,7 +129,7 @@
 #ifndef DEFAULT_WINDOW_SYS
 #define DEFAULT_WINDOW_SYS "mswin"
 #endif
-#define HACKDIR "\\nethack"
+#define HACKDIR "\\splicehack"
 #endif
 
 #ifdef TTY_GRAPHICS
@@ -193,7 +193,7 @@
  *                           this does NOT default to compiled-in value)
  *              EXPLORERS    (who can use explore mode, aka discover mode)
  *              SHELLERS     (who can use ! to execute a shell subprocess)
- *              MAXPLAYERS   (see MAX_NR_OF_PLAYERS below and nethack.sh)
+ *              MAXPLAYERS   (see MAX_NR_OF_PLAYERS below and splicehack.sh)
  *              SUPPORT      (how to get local support) [no default]
  *              RECOVER      (how to recover a game at your site) [no default]
  *            For the record file (see topten.c):
@@ -388,7 +388,7 @@
  * otherwise it will be the current directory.
  */
 #ifndef HACKDIR
-#define HACKDIR "/usr/games/lib/nethackdir"
+#define HACKDIR "/usr/games/lib/splicehackdir"
 #endif
 
 /*

@@ -1069,9 +1069,10 @@ About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         SetDlgItemText(hDlg, IDC_ABOUT_VERSION,
                        NH_A2W(buf, wbuf, sizeof(wbuf)));
 
-        Sprintf(buf, "%s\n%s\n%s\n%s",
+        Sprintf(buf, "%s\n%s\n%s\n%s\n%s",
                 COPYRIGHT_BANNER_A, COPYRIGHT_BANNER_B,
-                COPYRIGHT_BANNER_C, COPYRIGHT_BANNER_D);
+                COPYRIGHT_BANNER_C, COPYRIGHT_BANNER_D,
+                COPYRIGHT_BANNER_E);
         SetDlgItemText(hDlg, IDC_ABOUT_COPYRIGHT,
                        NH_A2W(buf, wbuf, sizeof(wbuf)));
 

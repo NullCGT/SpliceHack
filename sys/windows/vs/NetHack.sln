@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetHackW", "NetHackW\NetHackW.vcxproj", "{CEC5D360-8804-454F-8591-002184C23499}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetHackW", "NetHackW\SpliceHackW.vcxproj", "{CEC5D360-8804-454F-8591-002184C23499}"
 	ProjectSection(ProjectDependencies) = postProject
 		{93F10526-209E-41D7-BBEA-775787876895} = {93F10526-209E-41D7-BBEA-775787876895}
 		{63F9B82B-F589-4082-ABE5-D4F0682050AB} = {63F9B82B-F589-4082-ABE5-D4F0682050AB}

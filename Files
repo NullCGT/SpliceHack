@@ -290,25 +290,25 @@ sys/unix:
 Install.unx     Makefile.dat    Makefile.doc    Makefile.src
 Makefile.top    Makefile.utl    NewInstall.unx  README.xcode
 XCode.xcconfig  depend.awk      gitinfo.sh      mkmkfile.sh
-nethack.sh      setup.sh        sysconf         unixmain.c
+splicehack.sh      setup.sh        sysconf         unixmain.c
 unixres.c       unixunix.c
 
 (files for replacement cpp, only needed by some ancient UNIX systems)
 cpp1.shr  cpp2.shr  cpp3.shr
 
-sys/unix/NetHack.xcodeproj:
+sys/unix/SpliceHack.xcodeproj:
 (file for UNIX versions)
 project.pbxproj
 
-sys/unix/NetHack.xcodeproj/project.xcworkspace:
+sys/unix/SpliceHack.xcodeproj/project.xcworkspace:
 (file for UNIX versions)
 contents.xcworkspacedata
 
-sys/unix/NetHack.xcodeproj/project.xcworkspace/xcshareddata:
+sys/unix/SpliceHack.xcodeproj/project.xcworkspace/xcshareddata:
 (files for UNIX versions)
 IDEWorkspaceChecks.plist      WorkspaceSettings.xcsettings
 
-sys/unix/NetHack.xcodeproj/xcshareddata/xcschemes:
+sys/unix/SpliceHack.xcodeproj/xcshareddata/xcschemes:
 (files for UNIX versions)
 NetHack.xcscheme   makedefs.xcscheme  recover.xcscheme
 
@@ -414,11 +414,11 @@ Wide310x150Logo.scale-400.png
 
 sys/windows/vs/NetHack:
 (files for Visual Studio 2017 or 2019 Community Edition builds)
-NetHack.vcxproj    afternethack.proj
+SpliceHack.vcxproj    afternethack.proj
 
 sys/windows/vs/NetHackW:
 (file for Visual Studio 2017 or 2019 Community Edition builds)
-NetHackW.vcxproj
+SpliceHackW.vcxproj
 
 sys/windows/vs/PDCurses:
 (file for Visual Studio 2017 or 2019 Community Edition builds)
@@ -528,7 +528,7 @@ getline.c  termcap.c  topl.c     wintty.c
 
 win/win32:
 (files for Windows versions - tested up to Windows 10)
-NetHackW.c             NetHackW.exe.manifest  NetHackW.rc
+SpliceHackW.c             SpliceHackW.exe.manifest  SpliceHackW.rc
 mhaskyn.c              mhaskyn.h              mhdlg.c
 mhdlg.h                mhfont.c               mhfont.h
 mhinput.c              mhinput.h              mhmain.c

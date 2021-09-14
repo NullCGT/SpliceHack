@@ -42,7 +42,7 @@ Guidebook.dvi :  Guidebook.tex
 all : $(ALLDOCS)
 	$(NOOP)
 
-GAME	= nethack
+GAME	= splicehack
 MANDIR	= HACKDIR:
 MANEXT	= man
 #MANDIR = /usr/man/man6

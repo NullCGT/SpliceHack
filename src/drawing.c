@@ -40,10 +40,10 @@ const struct class_sym def_oc_syms[MAXOCLASSES] = {
     { WAND_SYM, "wands", "wand" },
     { GOLD_SYM, "coins", "pile of coins" },
     { GEM_SYM, "rocks", "gem or rock" },
-    { ROCK_SYM, "large stones", "boulder or statue" },
+    { ROCK_SYM, "large stones", "boulder, statue, or sconce" },
     { BALL_SYM, "iron balls", "iron ball" },
     { CHAIN_SYM, "chains", "iron chain" },
-    { VENOM_SYM, "venoms", "splash of venom" }
+    { VENOM_SYM, "liquids", "splash of liquid" }
 };
 
 /* Default monster class symbols.  See monsym.h. */
@@ -55,9 +55,9 @@ const struct class_sym def_monsyms[MAXMCLASSES] = {
     { DEF_DOG, "", "canine" },
     { DEF_EYE, "", "eye or sphere" },
     { DEF_FELINE, "", "feline" },
-    { DEF_GREMLIN, "", "gremlin" },
+    { DEF_GREMLIN, "", "gremlin or grotesque" },
     { DEF_HUMANOID, "", "humanoid" },
-    { DEF_IMP, "", "imp or minor demon" },
+    { DEF_IMP, "", "minor demon or spirit" },
     { DEF_JELLY, "", "jelly" },
     { DEF_KOBOLD, "", "kobold" },
     { DEF_LEPRECHAUN, "", "leprechaun" },
@@ -107,7 +107,7 @@ const struct class_sym def_monsyms[MAXMCLASSES] = {
     { DEF_GOLEM, "", "golem" },
     { DEF_DEMON, "", "major demon" },
     { DEF_EEL, "", "sea monster" },
-    { DEF_LIZARD, "", "lizard" },
+    { DEF_LIZARD, "", "reptile" },
     { DEF_WORM_TAIL, "", "long worm tail" },
     { DEF_MIMIC_DEF, "", "mimic" },
 };

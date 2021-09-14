@@ -64,7 +64,7 @@ $	copy sys$input: sys$error:	!p1 usage
        "VAXC" -- use VAX C to compile everything
    or  "DECC" -- use DEC C to compile everything
    or  "GNUC" -- use GNU C to compile everything
-   or  "LINK" -- skip compilation, just relink nethack.exe
+   or  "LINK" -- skip compilation, just relink splicehack.exe
    or  "SPEC[IAL]" -- just compile and link dlb.exe and recover.exe
    or    ""   -- default operation (VAXC unless 'CC' is defined)
 
@@ -345,7 +345,7 @@ $ gosub compile_list
 $!
 $link:
 $ milestone "<linking...>"
-$ link/Exe=nethack.exe nethack.opt/Options,ident.opt/Options,crtl.opt/Options
+$ link/Exe=splicehack.exe nethack.opt/Options,ident.opt/Options,crtl.opt/Options
 $ milestone "NetHack"
 $     if c_opt.eq.o_LINK then  goto done	!"LINK" only
 $special:

@@ -18,7 +18,7 @@ WIZARDS=*
 # Only available if game has been compiled with DEBUG.
 #DEBUGFILES=*
 
-# Limit the number of simultaneous games (see also nethack.sh).
+# Limit the number of simultaneous games (see also splicehack.sh).
 #MAXPLAYERS=10
 
 # If not null, added to string "To get local support, " in the support
@@ -66,7 +66,7 @@ WIZARDS=*
 #
 # HACKDIR is the default location for everything.
 # Note: On Windows HACKDIR defaults to the location 
-#       of the NetHack.exe or NetHackw.exe file so
+#       of the SpliceHack.exe or NetHackw.exe file so
 #       setting HACKDIR below to override that is 
 #       not usually necessary or recommended.
 #HACKDIR=c:\games\nethack

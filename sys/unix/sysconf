@@ -42,7 +42,7 @@ EXPLORERS=nobody
 # instead of the user's login name.
 #CHECK_PLNAME=1
 
-# Limit the number of simultaneous games (see also nethack.sh).
+# Limit the number of simultaneous games (see also splicehack.sh).
 # Valid values are 0-25.
 # Commenting this out or setting the value to 0 constructs lock files
 # with UID and playername, so each user may have one game at a time,
@@ -160,7 +160,7 @@ PANICTRACE_GDB=1
 PANICTRACE_LIBC=2
 
 # 'portable_device_paths' is only supported for Windows.  Starting with
-# 3.6.3, nethack on Windows treats the folder containing nethack.exe and
+# 3.6.3, nethack on Windows treats the folder containing splicehack.exe and
 # nethackW.exe as read-only and puts data files which are generated or
 # modified during play or by the user in assorted folders derived from
 # user name.  3.6.4 added PORTABLE_DEVICE_PATHS to allow reverting to

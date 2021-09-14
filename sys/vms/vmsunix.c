@@ -317,7 +317,7 @@ verify_term()
    can simplify configuration for sites which don't already use termcap.
  */
 #define GNU_DEFAULT_TERMCAP "emacs_library:[etc]termcap.dat"
-#define NETHACK_DEF_TERMCAP "nethackdir:termcap"
+#define NETHACK_DEF_TERMCAP "splicehackdir:termcap"
 #define HACK_DEF_TERMCAP "hackdir:termcap"
 
 char *verify_termcap() /* called from startup(src/termcap.c) */
@@ -672,7 +672,7 @@ int how; /* 1: exit after traceback; 2: stay in debugger */
     /*
      * If we've been linked /noTraceback then we can't provide any
      * trace of the call stack.  Linking that way is required if
-     * nethack.exe is going to be installed with privileges, so the
+     * splicehack.exe is going to be installed with privileges, so the
      * SECURE configuration usually won't have any trace feedback.
      */
     if (!debuggable) {
@@ -718,7 +718,7 @@ extern unsigned lib$sig_to_ret(unsigned *, unsigned *);
    access to the debugger; fortunately, the linker knows now to find it
    without needing to link against sys.stb (VAX) or use LINK/System (Alpha).
    We won't be calling it, but we indirectly check whether it has already
-   been called by checking if nethack.exe has it as a transfer address. */
+   been called by checking if splicehack.exe has it as a transfer address. */
 extern unsigned sys$imgsta(void);
 
 /*

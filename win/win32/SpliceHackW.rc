@@ -345,7 +345,7 @@ BEGIN
             VALUE "FileVersion", "3.7.0"
             VALUE "InternalName", "NetHackW"
             VALUE "LegalCopyright", "Copyright (C) 1985 - 2021.  By Stichting Mathematisch Centrum and M. Stephenson.  See license for details."
-            VALUE "OriginalFilename", "NetHackW.exe"
+            VALUE "OriginalFilename", "SpliceHackW.exe"
             VALUE "PrivateBuild", "140606"
             VALUE "ProductName", "NetHack"
             VALUE "ProductVersion", "3.7.0"

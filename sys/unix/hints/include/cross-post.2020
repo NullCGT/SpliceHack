@@ -26,7 +26,7 @@ $(GAMEBIN) : $(HOBJ) $(LUACROSSLIB)
 dospkg: $(GAMEBIN) $(TARGETPFX)recover.exe ../dat/nhtiles.bmp
 	$(TARGET_STUBEDIT) $(GAMEBIN) minstack=2048K
 	mkdir -p $(TARGETPFX)pkg
-	cp $(GAMEBIN) $(TARGETPFX)pkg/NETHACK.EXE
+	cp $(GAMEBIN) $(TARGETPFX)pkg/SPLICEHACK.EXE
 	cp $(TARGETPFX)recover.exe $(TARGETPFX)pkg/RECOVER.EXE
 	cp ../dat/nhdat $(TARGETPFX)pkg/NHDAT
 	cp ../dat/license $(TARGETPFX)pkg/LICENSE

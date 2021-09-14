@@ -93,3 +93,4 @@ tiletool.pl
 
 # Dev
 src/sysconf
+src/splicehack

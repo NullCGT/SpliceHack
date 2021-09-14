@@ -874,7 +874,7 @@ curses_display_splash_window(void)
     if (iflags.wc2_guicolor)
          curses_toggle_color_attr(stdscr, CLR_WHITE, A_NORMAL, OFF);
 
-    for (i = 2; i <= 4; ++i) {
+    for (i = 2; i <= 5; ++i) {
          mvaddstr(y_start, x_start, copyright_banner_line(i));
          y_start++;
     }

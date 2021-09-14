@@ -326,7 +326,7 @@ static const struct def_skill Skill_B[] = {
     { P_BROAD_SWORD, P_SKILLED },
     { P_LONG_SWORD, P_SKILLED },
     { P_TWO_HANDED_SWORD, P_EXPERT },
-    { P_SCIMITAR, P_SKILLED },
+    { P_SCIMITAR, P_EXPERT },
     { P_SABER, P_BASIC },
     { P_CLUB, P_SKILLED },
     { P_MACE, P_SKILLED },
@@ -335,7 +335,7 @@ static const struct def_skill Skill_B[] = {
     { P_HAMMER, P_EXPERT },
     { P_QUARTERSTAFF, P_BASIC },
     { P_SPEAR, P_SKILLED },
-    { P_TRIDENT, P_SKILLED },
+    { P_TRIDENT, P_BASIC },
     { P_BOW, P_BASIC },
     { P_ATTACK_SPELL, P_BASIC },
     { P_ESCAPE_SPELL, P_BASIC }, /* special spell is haste self */
@@ -1053,6 +1053,9 @@ u_init(void)
         if (rn2(100) >= 50) { /* see above comment */
             Barbarian[B_MAJOR].trotyp = BATTLE_AXE;
             Barbarian[B_MINOR].trotyp = SHORT_SWORD;
+        } else if (rn2(100) >= 50) {
+            Barbarian[B_MAJOR].trotyp = FALCHION;
+            Barbarian[B_MINOR].trotyp = SCIMITAR;
         }
         ini_inv(Barbarian);
         if (!rn2(6))

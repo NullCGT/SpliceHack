@@ -505,11 +505,12 @@ make_corpse(struct monst *mtmp, unsigned int corpseflags)
     int mndx = monsndx(mdat);
     unsigned corpstatflags = corpseflags;
     boolean burythem = ((corpstatflags & CORPSTAT_BURIED) != 0);
+    int aged;
 
     /* TODO: Handle undead templated monsters. */
     if (has_etemplate(mtmp)) {
         if (is_undead(mtmp->data))
-            obj->age -= (TAINT_AGE + 1); /* this is an OLD corpse */
+            aged = (TAINT_AGE + 1); /* this is an OLD corpse */
         mndx = ETEMPLATE(mtmp)->data.orig_mnum;
     }
     if (mtmp->female)
@@ -772,6 +773,10 @@ make_corpse(struct monst *mtmp, unsigned int corpseflags)
 
     if (!obj)
         return (struct obj *) 0;
+    
+    /* Handle tainted template corpses */
+    if (aged)
+        obj->age -= aged;
 
     /* if polymorph or undead turning has killed this monster,
        prevent the same attack beam from hitting its corpse */

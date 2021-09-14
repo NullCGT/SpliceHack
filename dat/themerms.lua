@@ -149,6 +149,7 @@ themerooms = {
                end
       });
    end,
+--]=]
 
    -- Spider nest
    {
@@ -167,7 +168,7 @@ themerooms = {
          });
       end
    },
---]=]
+
    -- Trap room
    function()
       des.room({ type = "themed", filled = 0,

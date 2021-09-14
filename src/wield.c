@@ -872,7 +872,10 @@ chwepon(struct obj *otmp, int amount)
     const char *xtime, *wepname = "";
     boolean multiple;
     int otyp = STRANGE_OBJECT;
-    int limit = uwep->material == ORICHALCUM ? 7 : 5;
+    int limit = 5;
+
+    if (uwep && uwep->material == ORICHALCUM)
+        limit = 7;
 
     if (!uwep || (uwep->oclass != WEAPON_CLASS && !is_weptool(uwep))) {
         char buf[BUFSZ];

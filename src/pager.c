@@ -881,6 +881,7 @@ struct permonst * pm;
     APPENDC(pm_invisible(pm), "invisible");
     APPENDC(is_undead(pm), "undead");
     APPENDC(is_demon(pm), "demonic");
+    APPENDC(is_whirly(pm), "whirly");
     if (!is_undead(pm))
         APPENDC(nonliving(pm), "nonliving");
     if (*buf) {

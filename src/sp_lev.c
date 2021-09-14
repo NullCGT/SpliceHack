@@ -4925,8 +4925,8 @@ int
 lspo_feature(lua_State *L)
 {
     static const char *const features[] = { "fountain", "furnace", "sink", "pool",
-                                            "throne", "tree", NULL };
-    static const int features2i[] = { FOUNTAIN, FURNACE, SINK, POOL,
+                                            "vent", "throne", "tree", NULL };
+    static const int features2i[] = { FOUNTAIN, FURNACE, SINK, POOL, VENT,
                                       THRONE, TREE, STONE };
     xchar x, y;
     int typ;

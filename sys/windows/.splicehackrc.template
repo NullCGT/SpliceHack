@@ -23,8 +23,10 @@ OPTIONS=symset:IBMGraphics_2,roguesymset:RogueEpyx
 # for use by blind NetHack players
 #OPTIONS=symset:NHAccess,roguesymset:NHAccess
 
-# Optional curses port interface
-OPTIONS=windowtype:curses
+# Optional curses port interface -- Does not work on Windows. Use tty.
+#OPTIONS=windowtype:curses
+OPTIONS=windowtype:tty
+
 #
 # Keyboard handling
 # Different keyboard handlers can be loaded.

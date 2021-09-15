@@ -1897,7 +1897,6 @@ back_to_glyph(xchar x, xchar y)
         break;
     case GRASS:
         idx = S_grass;
-        engr_override = TRUE;
         break;
     case AIR:
         idx = S_air;

@@ -250,7 +250,7 @@ bad_location(xchar x, xchar y, xchar lx, xchar ly, xchar hx, xchar hy)
                       || !((levl[x][y].typ == CORR && g.level.flags.is_maze_lev)
                            || levl[x][y].typ == ROOM
                            || levl[x][y].typ == ICE
-                           || level[x][y].typ == BRIDGE
+                           || levl[x][y].typ == BRIDGE
                            || levl[x][y].typ == GRASS
                            || levl[x][y].typ == AIR));
 }

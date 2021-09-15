@@ -673,8 +673,11 @@ newgame(void)
     g.context.tribute.enabled = TRUE;   /* turn on 3.6 tributes    */
     g.context.tribute.tributesz = sizeof(struct tribute_info);
 
-    for (i = LOW_PM; i < NUMMONS; i++)
+    for (i = LOW_PM; i < NUMMONS; i++) {
         g.mvitals[i].mvflags = mons[i].geno & G_NOCORPSE;
+        /* Set up omnums. */
+        mons[i].omnum = i;
+    }
 
     init_objects(); /* must be before u_init() */
 

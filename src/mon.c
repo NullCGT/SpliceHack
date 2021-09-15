@@ -375,6 +375,7 @@ undead_to_corpse(int mndx)
     case PM_HUMAN_ZOMBIE:
     case PM_HUMAN_MUMMY:
     case PM_NOSFERATU:
+    case PM_DRAUGR:
         mndx = PM_HUMAN;
         break;
     case PM_GIANT_ZOMBIE:
@@ -511,7 +512,7 @@ make_corpse(struct monst *mtmp, unsigned int corpseflags)
     if (has_etemplate(mtmp)) {
         if (is_undead(mtmp->data))
             aged = (TAINT_AGE + 1); /* this is an OLD corpse */
-        mndx = ETEMPLATE(mtmp)->data.orig_mnum;
+        mndx = ETEMPLATE(mtmp)->data.omnum;
     }
     if (mtmp->female)
         corpstatflags |= CORPSTAT_FEMALE;
@@ -589,6 +590,7 @@ make_corpse(struct monst *mtmp, unsigned int corpseflags)
     case PM_GIANT_ZOMBIE:
     case PM_ETTIN_ZOMBIE:
     case PM_ZOMBIE_DRAGON:
+    case PM_DRAUGR:
         num = undead_to_corpse(mndx);
         corpstatflags |= CORPSTAT_INIT;
         obj = mkcorpstat(CORPSE, mtmp, &mons[num], x, y, corpstatflags);

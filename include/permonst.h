@@ -63,7 +63,7 @@ struct permonst {
 #ifdef TEXTCOLOR
     uchar mcolor; /* color to use */
 #endif
-    short orig_mnum;            /* templated monsters - This corresponds with
+    short omnum;            /* templated monsters - This corresponds with
                                    the pm of the base monster, so that we can
                                    find it with monsndx. */
 };

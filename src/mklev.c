@@ -21,6 +21,8 @@ static void mkaltar(struct mkroom *);
 static void mkgrave(struct mkroom *);
 static void makevtele(void);
 static void mkchasms(void);
+static void mklakes(void);
+static void mkgrass(void);
 void clear_level_structures(void);
 static void fill_ordinary_room(struct mkroom *);
 static void makelevel(void);
@@ -658,22 +660,19 @@ makevtele(void)
     makeniche(TELEP_TRAP);
 }
 
-static void
-mkchasms(void)
+void
+cellular(int chance, int maxpasses)
 {
     int x, y, x2, y2, x3, y3;
     boolean cells[COLNO][ROWNO];
-    boolean cells2[COLNO][ROWNO];
     int passes, wallcnt;
-    int maxpasses = 5;
-    int pooltyp = CORR;  
 
     /* Initial pass; randomly fill level. */
     for (x = 0; x < COLNO; x++) {
         for (y = 0; y < ROWNO; y++) {
-            if (rn2(100) < 45) { cells[x][y] = 1; }
-            else cells[x][y] = 0;
-            cells2[x][y] = 0;
+            if (rn2(100) < chance) { levl[x][y].bk = 1; }
+            else levl[x][y].bk = 0;
+            cells[x][y] = 0;
         }
     }
 
@@ -684,39 +683,91 @@ mkchasms(void)
                 wallcnt = 0;
                 for (x2 = x - 1; x2 <= x + 1; x2++) {
                     for (y2 = y - 1; y2 <= y + 1; y2++) {
-                        if (cells[x2][y2]) wallcnt += 1;
+                        if (levl[x2][y2].bk) wallcnt += 1;
                     }
                 }
-                if (wallcnt >= 5) cells2[x][y] = 1;
-                else cells2[x][y] = 0;
+                if (wallcnt >= 5) cells[x][y] = 1;
+                else cells[x][y] = 0;
             }
         }
         /* Transfer array */
         for (x = 0; x < COLNO; x++) {
             for (y = 0; y < ROWNO; y++) {
-                cells[x][y] = cells2[x][y];
+                levl[x][y].bk = cells[x][y];
             }
         }
     }
+}
+
+static void
+mkchasms(void)
+{
+    int x, y;
+
+    /* Run cellular automata */
+    cellular(45, 5);
 
     /* Transfer cells to map */
-    if (depth(&u.uz) >= 20)
-        pooltyp = rn2(2) ? MOAT : LAVAPOOL;
     for (x = 0; x < COLNO; x++) {
         for (y = 0; y < ROWNO; y++) {
-            if (cells[x][y]) {
-                if (levl[x][y].typ == CORR || levl[x][y].typ == SCORR) {
-                    levl[x][y].typ = pooltyp;
-                    create_rope_bridge(x, y);
-                }
-                else if (levl[x][y].typ == STONE) {
-                    levl[x][y].typ = pooltyp;
-                    if (pooltyp == CORR) maketrap(x, y, HOLE);
+            if (levl[x][y].bk) {
+                if (levl[x][y].typ == STONE) {
+                    levl[x][y].typ = g.level.flags.celltyp;
+                    if (g.level.flags.celltyp == CORR) maketrap(x, y, HOLE);
                 }
                 levl[x][y].lit = 1;
             }
+            if (levl[x][y].typ == CORR) {
+                levl[x][y].typ = g.level.flags.celltyp;
+                create_rope_bridge(x, y);
+            }
+            levl[x][y].bk = 0;
         }
     }
+}
+
+static void
+mklakes(void)
+{
+    int x, y;
+
+    cellular(50, 7);
+
+    for (x = 0; x < COLNO; x++) {
+        for (y = 0; y < ROWNO; y++) {
+            if (levl[x][y].bk) {
+                if (levl[x][y].typ == STONE) {
+                    levl[x][y].typ = g.level.flags.celltyp;
+                } else if (IS_WALL(levl[x][y].typ)) {
+                    levl[x][y].typ = ROOM;
+                }
+                levl[x][y].lit = 1;
+            }
+            levl[x][y].bk = 0;
+        }
+    }
+}
+
+static void
+mkgrass(void)
+{
+    int x, y;
+
+    int freq = max(30, 60 - (3 * depth(&u.uz)));
+    int passes = max(2, 8 - depth(&u.uz));
+    cellular(freq, passes);
+
+    for (x = 0; x < COLNO; x++) {
+        for (y = 0; y < ROWNO; y++) {
+            if (levl[x][y].bk) {
+                if (IS_ROOM(levl[x][y].typ)) {
+                    levl[x][y].typ = GRASS;
+                }
+            }
+            levl[x][y].bk = 0;
+        }
+    }
+
 }
 
 /* clear out various globals that keep information on the current level.
@@ -754,6 +805,7 @@ clear_level_structures(void)
     g.level.flags.nvents = 0;
     g.level.flags.nsinks = 0;
     g.level.flags.nfurnaces = 0;
+    g.level.flags.celltyp = 0;
     g.level.flags.has_shop = 0;
     g.level.flags.has_vault = 0;
     g.level.flags.has_zoo = 0;
@@ -977,10 +1029,22 @@ makelevel(void)
         makecorridors();
         make_niches();
 
-        /* Generate chasms. We do this before generating vaults, since that way
-           the lit flag will carry over. */
-        if (rn2(3) && depth(&u.uz) > 3)
+        /* Post-generation passes. Must be done before generating vaults. */
+        g.level.flags.celltyp = (depth(&u.uz) >= 15 && !rn2(4)) ? LAVAPOOL : MOAT;
+        /* make grass */
+        if (depth(&u.uz) <= 10 || !rn2(5))
+            mkgrass();
+        /* Possibly make either lakes or bridges chasms */
+        if (depth(&u.uz) > 3 && !rn2(4)) {
+            if (depth(&u.uz) >= 15) {
+                g.level.flags.celltyp = rn2(2) ? MOAT : LAVAPOOL;
+            } else {
+                g.level.flags.celltyp = CORR;
+            }
             mkchasms();
+        } else if (!rn2(3)) {
+            mklakes();
+        }
 
         /* make a secret treasure vault, not connected to the rest */
         if (do_vault()) {

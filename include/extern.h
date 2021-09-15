@@ -1316,6 +1316,7 @@ extern void makecorridors(void);
 extern void add_door(int, int, struct mkroom *);
 extern void clear_level_structures(void);
 extern void mklev(void);
+extern void cellular(int, int);
 #ifdef SPECIALIZATION
 extern void topologize(struct mkroom *, boolean));
 #else

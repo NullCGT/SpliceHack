@@ -1441,7 +1441,7 @@ static XtResource resources[] = {
     { nhStr("pet_mark_color"), nhStr("Pet_mark_color"), XtRPixel,
       sizeof(XtRPixel), XtOffset(AppResources *, pet_mark_color), XtRString,
       nhStr("Red") },
-      { nhStr("riding_mark_bitmap"), nhStr("Riding_mark_bitmap"), XtRString,
+    { nhStr("riding_mark_bitmap"), nhStr("Riding_mark_bitmap"), XtRString,
       sizeof(String), XtOffset(AppResources *, riding_mark_bitmap), XtRString,
       nhStr("riding_mark.xbm") },
     { nhStr("riding_mark_color"), nhStr("Riding_mark_color"), XtRPixel,

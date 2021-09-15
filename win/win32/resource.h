@@ -24,14 +24,14 @@
 #define IDD_EXTCMD                      139
 #define IDD_PLAYER_SELECTOR             141
 #define IDB_PETMARK                     143
-#define IDB_MENU_SEL_COUNT              144
-#define IDD_NHRIP                       145
-#define IDB_SPLASH                      146
-#define IDB_RIP                         147
-#define IDD_SPLASH                      148
-#define IDB_PILEMARK                    149
-#define IDB_RIDINGMARK                  150
-#define IDB_TEMPLATEMARK                151
+#define IDB_RIDINGMARK                  144
+#define IDB_TEMPLATEMARK                145
+#define IDB_MENU_SEL_COUNT              146
+#define IDD_NHRIP                       147
+#define IDB_SPLASH                      148
+#define IDB_RIP                         149
+#define IDD_SPLASH                      150
+#define IDB_PILEMARK                    151
 #define IDC_TEXT_VIEW                   1000
 #define IDC_TEXT_CONTROL                1000
 #define IDC_CMD_MOVE_NW                 1001
@@ -157,7 +157,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        146
+#define _APS_NEXT_RESOURCE_VALUE        148
 #define _APS_NEXT_COMMAND_VALUE         32801
 #define _APS_NEXT_CONTROL_VALUE         1342
 #define _APS_NEXT_SYMED_VALUE           110

@@ -304,7 +304,7 @@ themerooms = {
       local hei = 3 + (nh.rn2(3) * 2);
       des.room({ type = "ordinary", filled = 1, w = wid, h = hei,
                  contents = function(rm)
-                    local feature = { "C", "L", "I", "P", "T", "V" };
+                    local feature = { "C", "L", "I", "P", "T", "V", "g" };
                     shuffle(feature);
                     des.terrain((rm.width - 1) / 2, (rm.height - 1) / 2,
 				feature[1]);

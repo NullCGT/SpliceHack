@@ -4925,9 +4925,9 @@ int
 lspo_feature(lua_State *L)
 {
     static const char *const features[] = { "fountain", "furnace", "sink", "pool",
-                                            "vent", "throne", "tree", NULL };
+                                            "vent", "throne", "tree", "grass", NULL };
     static const int features2i[] = { FOUNTAIN, FURNACE, SINK, POOL, VENT,
-                                      THRONE, TREE, STONE };
+                                      THRONE, TREE, GRASS, STONE };
     xchar x, y;
     int typ;
     int argc = lua_gettop(L);

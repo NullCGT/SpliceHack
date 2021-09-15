@@ -43,6 +43,8 @@ des.replace_terrain({ region={65,00, 75,19}, fromterrain=".", toterrain="T", cha
 -- guarantee a path and free spot for the portal
 des.terrain(selection.randline(selection.new(), 37,7, 62,02, 7), ".")
 des.terrain({62,02}, ".")
+-- make grass
+des.replace_terrain({ region={00,00, 75,19}, fromterrain=".", toterrain="g" })
 
 -- Dungeon Description
 des.region(selection.area(00,00,75,19), "lit")

@@ -35,7 +35,7 @@
     <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <PackageCertificateKeyFile>NetHackPackage_StoreKey.pfx</PackageCertificateKeyFile>
-    <EntryPointProjectUniqueName>NetHackW\SpliceHackW.vcxproj</EntryPointProjectUniqueName>
+    <EntryPointProjectUniqueName>SpliceHackW\SpliceHackW.vcxproj</EntryPointProjectUniqueName>
     <PackageCertificateThumbprint>19591BE8832D6EFED75019EACE7C4CA42ABC90D4</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
@@ -138,7 +138,7 @@
     <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="NetHackW\SpliceHackW.vcxproj" />
+    <ProjectReference Include="SpliceHackW\SpliceHackW.vcxproj" />
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>

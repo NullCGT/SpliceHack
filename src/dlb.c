@@ -260,6 +260,13 @@ build_dlb_filename(const char *lf)
 {
     Sprintf(dlbfilename, "%s%d%d%d",
             lf ? lf : DLBBASENAME, VERSION_MAJOR, VERSION_MINOR, PATCHLEVEL);
+
+    //Fix nhdat filename to nhdat370 for Win32 build.
+    #ifdef WIN32
+        Sprintf(dlbfilename, "%s%d%d%d",
+                lf ? lf : DLBBASENAME, 3, 7, 0);
+    #endif
+
     return dlbfilename;
 }
 #endif

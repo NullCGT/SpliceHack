@@ -255,6 +255,7 @@ const struct {
                 { 'b', BRIDGE },
                 { 'W', WATER },
                 { 'T', TREE },
+                { 'g', GRASS },
                 { 'F', IRONBARS }, /* Fe = iron */
                 { 'x', MAX_TYPE }, /* "see-through" */
                 { 'B', CROSSWALL }, /* hack: boundary location */

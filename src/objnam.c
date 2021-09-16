@@ -1844,7 +1844,8 @@ just_an(char *outbuf, const char *str)
         /* single letter; might be used for named fruit or a musical note */
         Strcpy(outbuf, index("aefhilmnosx", c0) ? "an " : "a ");
     } else if (!strncmpi(str, "the ", 4) || !strcmpi(str, "molten lava")
-               || !strcmpi(str, "iron bars") || !strcmpi(str, "ice")) {
+               || !strcmpi(str, "iron bars") || !strcmpi(str, "ice")
+               || !strcmpi(str, "grass")) {
         ; /* no article */
     } else if (!strcmpi(str, "cheese")) {
         Strcpy(outbuf, "some ");
@@ -3240,6 +3241,10 @@ wizterrainwish(struct _readobjnam_data *d)
         lev->looted = d->looted ? F_LOOTED : 0; /* overlays 'flags' */
         lev->blessedftn = !strncmpi(bp, "magic ", 6);
         pline("A %sfountain.", lev->blessedftn ? "magic " : "");
+        madeterrain = TRUE;
+    } else if (!BSTRCMPI(bp, p - 5, "grass")) {
+        lev->typ = GRASS;
+        pline("Some grass.");
         madeterrain = TRUE;
     } else if (!BSTRCMPI(bp, p - 7, "furnace")) {
         lev->typ = FURNACE;

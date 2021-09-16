@@ -1141,7 +1141,7 @@ is_ok_location(xchar x, xchar y, int humidity)
     if (humidity & DRY) {
         typ = levl[x][y].typ;
         if (typ == ROOM || typ == AIR || typ == CLOUD || typ == ICE
-            || typ == CORR || typ == BRIDGE)
+            || typ == CORR || typ == BRIDGE || typ == GRASS)
             return TRUE;
     }
     if ((humidity & SPACELOC) && SPACE_POS(levl[x][y].typ))
@@ -4925,9 +4925,9 @@ int
 lspo_feature(lua_State *L)
 {
     static const char *const features[] = { "fountain", "furnace", "sink", "pool",
-                                            "throne", "tree", NULL };
-    static const int features2i[] = { FOUNTAIN, FURNACE, SINK, POOL,
-                                      THRONE, TREE, STONE };
+                                            "vent", "throne", "tree", "grass", NULL };
+    static const int features2i[] = { FOUNTAIN, FURNACE, SINK, POOL, VENT,
+                                      THRONE, TREE, GRASS, STONE };
     xchar x, y;
     int typ;
     int argc = lua_gettop(L);

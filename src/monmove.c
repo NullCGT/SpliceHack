@@ -1079,8 +1079,6 @@ m_move(register struct monst* mtmp, register int after)
             finish_meating(mtmp);
         return 3; /* still eating */
     }
-    if (hides_under(ptr) && OBJ_AT(mtmp->mx, mtmp->my) && rn2(10))
-        return 0; /* do not leave hiding place */
 
     /* Malcanthet's gender oscilates. */
     if (mtmp->data == &mons[PM_MALCANTHET]) {
@@ -1498,6 +1496,13 @@ m_move(register struct monst* mtmp, register int after)
         if ((info[chi] & ALLOW_M) || (nix == mtmp->mux && niy == mtmp->muy))
             return m_move_aggress(mtmp, nix, niy);
 
+        /* hiding-under monsters will attack things from their hiding spot but
+         * are less likely to venture out */
+        if (hides_under(ptr) && concealed_spot(mtmp->mx, mtmp->my)
+            && !concealed_spot(nix, niy) && rn2(10)) {
+            return 0;
+        }
+
         if ((info[chi] & ALLOW_MDISP)) {
             struct monst *mtmp2;
             int mstatus;
@@ -1797,6 +1802,32 @@ m_move(register struct monst* mtmp, register int after)
         }
     }
     return mmoved;
+}
+
+/* Return 1 or 2 if a hides_under monster can conceal itself at this spot.
+ * If the monster can hide under an object, return 2.
+ * Otherwise, monsters can hide in grass and under some types of dungeon
+ * furniture. If no object is available but the terrain is suitable, return 1.
+ * Return 0 if the monster can't conceal itself.
+ */
+int
+concealed_spot(x, y)
+register int x, y;
+{
+    if (OBJ_AT(x, y))
+        return 2;
+    switch (levl[x][y].typ) {
+    case GRASS:
+    case SINK:
+    case ALTAR:
+    case THRONE:
+    case LADDER:
+    case GRAVE:
+    case FURNACE:
+        return 1;
+    default:
+        return 0;
+    }
 }
 
 /* The part of m_move that deals with a monster attacking another monster (and

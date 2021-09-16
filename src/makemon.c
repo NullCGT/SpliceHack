@@ -746,9 +746,12 @@ m_initweap(register struct monst *mtmp)
         case PM_SKELETON:
             if (!rn2(4))
             (void) mongets(mtmp, LIGHT_ARMOR);
-        /* Skeletons wield weird, ancient weaponry. */
-        if (!rn2(4))
-            (void) mongets(mtmp, (rn2(3) ? PARAZONIUM : GLADIUS));
+            /* Skeletons wield weird, ancient weaponry. */
+            if (!rn2(4))
+                (void) mongets(mtmp, (rn2(3) ? PARAZONIUM : GLADIUS));
+                break;
+        case PM_DRAUGR:
+            mongets(mtmp, (rn2(4) ? WAR_HAMMER : RUNESWORD));
             break;
         case PM_SKELETAL_PIRATE:
             otmp = rn2(2) ? mksobj(SCIMITAR, FALSE, FALSE) :
@@ -2966,7 +2969,7 @@ initetemplate(struct monst *mtmp, int tindex)
     struct permonst newdata = mons[mtmp->mnum];
 
     /* Set the indicies */
-    newdata.orig_mnum = mtmp->mnum;
+    newdata.omnum = mtmp->mnum;
     ETEMPLATE(mtmp)->template_index = tindex; /* TODO: move later!!!! */
     /* Apply the template */
     newdata = apply_template(newdata, tindex);

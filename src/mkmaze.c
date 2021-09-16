@@ -240,7 +240,7 @@ maze0xy(coord * cc)
  * Bad if:
  *      pos is occupied OR
  *      pos is inside restricted region (lx,ly,hx,hy) OR
- *      NOT (pos is corridor and a maze level OR pos is a room OR pos is air)
+ *      NOT (pos is corridor and a maze level OR pos is a room OR grass OR air)
  */
 boolean
 bad_location(xchar x, xchar y, xchar lx, xchar ly, xchar hx, xchar hy)
@@ -250,6 +250,8 @@ bad_location(xchar x, xchar y, xchar lx, xchar ly, xchar hx, xchar hy)
                       || !((levl[x][y].typ == CORR && g.level.flags.is_maze_lev)
                            || levl[x][y].typ == ROOM
                            || levl[x][y].typ == ICE
+                           || levl[x][y].typ == BRIDGE
+                           || levl[x][y].typ == GRASS
                            || levl[x][y].typ == AIR));
 }
 

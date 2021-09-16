@@ -1895,6 +1895,9 @@ back_to_glyph(xchar x, xchar y)
     case BRIDGE:
         idx = S_bridge;
         break;
+    case GRASS:
+        idx = S_grass;
+        break;
     case AIR:
         idx = S_air;
         break;
@@ -2004,6 +2007,13 @@ glyphinfo_at(xchar x, xchar y, int glyph)
 }
 #endif
 
+const char *
+explain_terrain(int x, int y)
+{
+    char fbuf[QBUFSZ];
+    return dfeature_at(x, y, fbuf);
+}
+
 /*
  * This will be used to get the glyph for the background so that
  * it can potentially be merged into graphical window ports to
@@ -2042,6 +2052,8 @@ get_bk_glyph(xchar x, xchar y)
         case BRIDGE:
             idx = S_bridge;
             break;
+        case GRASS:
+           idx = S_grass;
         case AIR:
            idx = S_air;
            break;
@@ -2530,7 +2542,7 @@ static const char *type_names[MAX_TYPE] = {
     "IRON_BARS", "DOOR", "CORR", "ROOM", "STAIRS", "LADDER", "FOUNTAIN",
     "VENT",
     "THRONE", "SINK", "FURNACE", "GRAVE", "ALTAR", "ICE", "BRIDGE",
-    "DRAWBRIDGE_DOWN", "AIR",
+    "grass", "DRAWBRIDGE_DOWN", "AIR",
     "CLOUD"
 };
 

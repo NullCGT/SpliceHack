@@ -197,10 +197,16 @@ mhidden_description(struct monst *mon,
         Strcpy(outbuf, ", hiding");
         if (hides_under(mon->data)) {
             Strcat(outbuf, " under ");
-            /* remembered glyph, not glyph_at() which is 'mon' */
-            if (glyph_is_object(glyph))
-                goto objfrommap;
-            Strcat(outbuf, something);
+            int hidetyp = concealed_spot(x, y);
+            if (hidetyp == 1) { /* hiding with terrain */
+                Strcat(outbuf, explain_terrain(x, y));
+            }
+            else {
+                /* remembered glyph, not glyph_at() which is 'mon' */
+                if (glyph_is_object(glyph))
+                    goto objfrommap;
+                Strcat(outbuf, something);
+            }
         } else if (is_hider(mon->data)) {
             Sprintf(eos(outbuf), " on the %s",
                     ceiling_hider(mon->data) ? "ceiling"
@@ -881,6 +887,7 @@ struct permonst * pm;
     APPENDC(pm_invisible(pm), "invisible");
     APPENDC(is_undead(pm), "undead");
     APPENDC(is_demon(pm), "demonic");
+    APPENDC(is_whirly(pm), "whirly");
     if (!is_undead(pm))
         APPENDC(nonliving(pm), "nonliving");
     if (*buf) {
@@ -1878,6 +1885,7 @@ do_screen_description(coord cc, boolean looked, int sym, char *out_str,
                           : !(i == S_stone
                               || strcmp(x_str, "air") == 0
                               || strcmp(x_str, "land") == 0
+                              || strcmp(x_str, "grass") == 0
                               || water_or_lava);
 
             /* check if dark part of a room was already included above */

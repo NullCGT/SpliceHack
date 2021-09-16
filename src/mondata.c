@@ -694,8 +694,8 @@ monsndx(struct permonst* ptr)
     register int i;
 
     i = (int) (ptr - &mons[0]);
-    if (ptr->orig_mnum)
-        i = ptr->orig_mnum;
+    if (ptr->omnum)
+        i = ptr->omnum;
     if (i < LOW_PM || i >= NUMMONS) {
         panic("monsndx - could not index monster (%s)",
               fmt_ptr((genericptr_t) ptr));

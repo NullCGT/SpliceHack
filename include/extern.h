@@ -378,6 +378,7 @@ extern void flush_screen(int);
 extern int back_to_glyph(xchar, xchar);
 extern int zapdir_to_glyph(int, int, int);
 extern int glyph_at(xchar, xchar);
+extern const char *explain_terrain(int, int);
 extern void reglyph_darkroom(void);
 extern void set_wall_state(void);
 extern void unset_seenv(struct rm *, int, int, int, int);
@@ -1315,6 +1316,7 @@ extern void makecorridors(void);
 extern void add_door(int, int, struct mkroom *);
 extern void clear_level_structures(void);
 extern void mklev(void);
+extern void cellular(int, int);
 #ifdef SPECIALIZATION
 extern void topologize(struct mkroom *, boolean));
 #else
@@ -1598,6 +1600,7 @@ extern void mon_yells(struct monst *, const char *);
 extern int dochug(struct monst *);
 extern boolean m_digweapon_check(struct monst *, xchar, xchar);
 extern int m_move(struct monst *, int);
+extern int concealed_spot(int, int);
 extern int m_move_aggress(struct monst *, xchar, xchar);
 extern void dissolve_bars(int, int);
 extern boolean closed_door(int, int);

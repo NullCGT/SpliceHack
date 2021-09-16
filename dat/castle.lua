@@ -297,11 +297,13 @@ des.region(selection.area(07,05,14,11),"lit");
 if percent(40) then
     des.feature("fountain", 10,08)
 elseif percent(50) then
+    des.replace_terrain({ region={07,05,14,11}, fromterrain=".", toterrain="g" })
     des.feature("fountain", 09,08)
     des.feature("fountain", 11,08)
     des.feature("fountain", 10,07)
     des.feature("fountain", 10,09)
 else
+    des.replace_terrain({ region={07,05,14,11}, fromterrain=".", toterrain="g" })
     des.object({id="statue", x=10, y=08, montype=monster[10], historic=true})
 end
 --20% chance of several statues in the antechamber, a preview of what's coming

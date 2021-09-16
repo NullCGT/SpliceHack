@@ -658,7 +658,7 @@ find_defensive(struct monst* mtmp)
                 g.m.has_defense = MUSE_WAN_CREATE_HORDE;
             }
             nomore(MUSE_WAN_HEALING);
-            if (obj->otyp == WAN_HEALING) {
+            if (obj->otyp == WAN_HEALING && obj->spe > 0) {
                 g.m.defensive = obj;
                 g.m.has_defense = MUSE_WAN_HEALING;
             }

@@ -1062,8 +1062,8 @@ tileutil: $(U)gif2txt.exe $(U)gif2tx32.exe $(U)txt2ppm.exe
 
 $(O)SpliceHackW.res: $(TILEBMP16) $(MSWIN)\SpliceHackW.rc $(MSWIN)\mnsel.bmp \
 	$(MSWIN)\mnselcnt.bmp $(MSWIN)\mnunsel.bmp \
-	$(MSWIN)\petmark.bmp $(MSWIN)\pilemark.bmp $(MSWIN)\NetHack.ico $(MSWIN)\rip.bmp \
-	$(MSWIN)\splash.bmp $(MSWIN)\ridingmark.bmp $(MSWIN)\templatemark.bmp
+	$(MSWIN)\petmark.bmp $(MSWIN)\pilemark.bmp $(MSWIN)\ridingmark.bmp $(MSWIN)\templatemark.bmp $(MSWIN)\NetHack.ico \
+	$(MSWIN)\rip.bmp $(MSWIN)\splash.bmp
 	@$(rc) -r -fo$@ -i$(MSWIN) -dNDEBUG $(MSWIN)\SpliceHackW.rc
 
 $(O)console.res: $(MSWSYS)\console.rc $(MSWSYS)\NetHack.ico

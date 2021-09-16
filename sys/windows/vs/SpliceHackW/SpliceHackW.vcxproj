@@ -289,6 +289,7 @@
     <Image Include="$(WinWin32Dir)petmark.bmp" />
     <Image Include="$(WinWin32Dir)pilemark.bmp" />
     <Image Include="$(WinWin32Dir)ridingmark.bmp" />
+    <Image Include="$(WinWin32Dir)templatemark.bmp" />
     <Image Include="$(WinWin32Dir)rip.bmp" />
     <Image Include="$(WinWin32Dir)splash.bmp" />
     <Image Include="$(WinWin32Dir)tiles.bmp" />

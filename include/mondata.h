@@ -33,27 +33,27 @@
 #define resists_ston(mon) \
     ((mon_resistancebits(mon) & MR_STONE) != 0)
 
-#define immune_poisongas(ptr) ((ptr) == &mons[PM_HEZROU])
+#define immune_poisongas(ptr) ((ptr)->omnum == PM_HEZROU)
 
 #define resists_mgc(ptr) \
-    (dmgtype(ptr, AD_MAGM) || ptr == &mons[PM_BABY_GRAY_DRAGON] \
+    (dmgtype(ptr, AD_MAGM) || ptr->omnum == PM_BABY_GRAY_DRAGON \
      || dmgtype(ptr, AD_RBRE)) /* Chromatic Dragon */
 
 #define resists_drain(ptr) \
     (is_undead(ptr) || is_demon(ptr) || is_were(ptr) \
-     || ptr == &mons[PM_DEATH] || ptr == &mons[PM_GRIM_REAPER])
+     || ptr->omnum == PM_DEATH || ptr->omnum == PM_GRIM_REAPER)
 
 #define resists_death(ptr) \
-    ((ptr == &mons[PM_MOVANIC_DEVA]) || \
-     (ptr == &mons[PM_MONADIC_DEVA]) || \
-     (ptr == &mons[PM_ASTRAL_DEVA]) || \
-     (ptr == &mons[PM_PLANETAR]) || \
-     (ptr == &mons[PM_SOLAR]))
+    ((ptr->omnum == PM_MOVANIC_DEVA) || \
+     (ptr->omnum == PM_MONADIC_DEVA) || \
+     (ptr->omnum == PM_ASTRAL_DEVA) || \
+     (ptr->omnum == PM_PLANETAR) || \
+     (ptr->omnum == PM_SOLAR))
 
 #define resists_sickness(ptr) \
     (is_undead(ptr) || amorphous(ptr) || is_rider(ptr) \
     || is_demon(ptr) \
-    || ptr == &mons[PM_MARRASHI])
+    || ptr->omnum == PM_MARRASHI)
 
 #define is_lminion(mon) \
     (is_minion((mon)->data) && mon_aligntyp(mon) == A_LAWFUL)
@@ -87,7 +87,7 @@
 /* used to decide whether plural applies so no need for 'more than 2' */
 #define eyecount(ptr) \
     (!haseyes(ptr) ? 0                                                     \
-     : ((ptr) == &mons[PM_CYCLOPS] || (ptr) == &mons[PM_FLOATING_EYE]) ? 1 \
+     : ((ptr)->omnum == PM_CYCLOPS || (ptr)->omnum == PM_FLOATING_EYE) ? 1 \
        : 2)
 #define nohands(ptr) (((ptr)->mflags1 & M1_NOHANDS) != 0L)
 #define nolimbs(ptr) (((ptr)->mflags1 & M1_NOLIMBS) == M1_NOLIMBS)
@@ -95,32 +95,32 @@
 #define has_head(ptr) (((ptr)->mflags1 & M1_NOHEAD) == 0L)
 #define has_horns(ptr) (num_horns(ptr) > 0)
 #define has_beak(ptr) (is_bird(ptr) || \
-                        (ptr) == &mons[PM_TENGU] || \
-                        (ptr) == &mons[PM_FELL_BEAST] || \
-                        (ptr) == &mons[PM_VROCK])
-#define is_bear(ptr) ((ptr) == &mons[PM_BUGBEAR] || \
-                      (ptr) == &mons[PM_OWLBEAR] || \
-                      (ptr) == &mons[PM_WEREBEAR] || \
-                      (ptr) == &mons[PM_HELLBEAR] || \
-                      (ptr) == &mons[PM_BLACK_BEAR] || \
-                      (ptr) == &mons[PM_GRIZZLY_BEAR])
+                        (ptr)->omnum == PM_TENGU || \
+                        (ptr)->omnum == PM_FELL_BEAST || \
+                        (ptr)->omnum == PM_VROCK)
+#define is_bear(ptr) ((ptr)->omnum == PM_BUGBEAR || \
+                      (ptr)->omnum == PM_OWLBEAR || \
+                      (ptr)->omnum == PM_WEREBEAR || \
+                      (ptr)->omnum == PM_HELLBEAR || \
+                      (ptr)->omnum == PM_BLACK_BEAR || \
+                      (ptr)->omnum == PM_GRIZZLY_BEAR)
 #define is_whirly(ptr) \
-    ((ptr)->mlet == S_VORTEX || (ptr) == &mons[PM_AIR_ELEMENTAL] || \
-      (ptr) == &mons[PM_TASMANIAN_DEVIL])
+    ((ptr)->mlet == S_VORTEX || (ptr)->omnum == PM_AIR_ELEMENTAL || \
+      (ptr)->omnum == PM_TASMANIAN_DEVIL)
 #define flaming(ptr)                                                     \
-    ((ptr) == &mons[PM_FIRE_VORTEX] || (ptr) == &mons[PM_FLAMING_SPHERE] \
-     || (ptr) == &mons[PM_FIRE_ELEMENTAL] || (ptr) == &mons[PM_SALAMANDER])
+    ((ptr)->omnum == PM_FIRE_VORTEX || (ptr)->omnum == PM_FLAMING_SPHERE \
+     || (ptr)->omnum == PM_FIRE_ELEMENTAL || (ptr)->omnum == PM_SALAMANDER)
 #define is_silent(ptr) ((ptr)->msound == MS_SILENT)
 #define unsolid(ptr) (((ptr)->mflags1 & M1_UNSOLID) != 0L)
 #define mindless(ptr) (((ptr)->mflags1 & M1_MINDLESS) != 0L)
 #define humanoid(ptr) (((ptr)->mflags1 & M1_HUMANOID) != 0L)
 #define is_animal(ptr) (((ptr)->mflags1 & M1_ANIMAL) != 0L)
 #define slithy(ptr) (((ptr)->mflags1 & M1_SLITHY) != 0L)
-#define is_wooden(ptr) ((ptr) == &mons[PM_WOOD_GOLEM])
+#define is_wooden(ptr) ((ptr)->omnum == PM_WOOD_GOLEM)
 #define thick_skinned(ptr) (((ptr)->mflags1 & M1_THICK_HIDE) != 0L)
-#define hug_throttles(ptr) ((ptr) == &mons[PM_ROPE_GOLEM])
+#define hug_throttles(ptr) ((ptr)->omnum == PM_ROPE_GOLEM)
 #define slimeproof(ptr) \
-    ((ptr) == &mons[PM_GREEN_SLIME] || flaming(ptr) || noncorporeal(ptr))
+    ((ptr)->omnum == PM_GREEN_SLIME || flaming(ptr) || noncorporeal(ptr))
 #define lays_eggs(ptr) (((ptr)->mflags1 & M1_OVIPAROUS) != 0L)
 #define eggs_in_water(ptr) \
     (lays_eggs(ptr) && (ptr)->mlet == S_EEL && is_swimmer(ptr))
@@ -129,8 +129,8 @@
 #define can_teleport(ptr) (((ptr)->mflags1 & M1_TPORT) != 0L)
 #define control_teleport(ptr) (((ptr)->mflags1 & M1_TPORT_CNTRL) != 0L)
 #define telepathic(ptr)                                                \
-    ((ptr) == &mons[PM_FLOATING_EYE] || (ptr) == &mons[PM_MIND_FLAYER] \
-     || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
+    ((ptr)->omnum == PM_FLOATING_EYE || (ptr)->omnum == PM_MIND_FLAYER \
+     || (ptr)->omnum == PM_MASTER_MIND_FLAYER)
 #define is_armed(ptr) attacktype(ptr, AT_WEAP)
 #define acidic(ptr) (((ptr)->mflags1 & M1_ACID) != 0L)
 #define poisonous(ptr) (((ptr)->mflags1 & M1_POIS) != 0L)
@@ -162,25 +162,25 @@
                          !Upolyd && Race_if(PM_HUMAN)))
 #define your_race(ptr) (((ptr)->mhflags & g.urace.selfmask) != 0L)
 #define is_bat(ptr)                                         \
-    ((ptr) == &mons[PM_BAT] || (ptr) == &mons[PM_GIANT_BAT] \
-     || (ptr) == &mons[PM_VAMPIRE_BAT] \
-     || (ptr) == &mons[PM_ZOO_BAT] || (ptr) == &mons[PM_GAOL_BAT])
+    ((ptr)->omnum == PM_BAT || (ptr)->omnum == PM_GIANT_BAT \
+     || (ptr)->omnum == PM_VAMPIRE_BAT \
+     || (ptr)->omnum == PM_ZOO_BAT || (ptr)->omnum == PM_GAOL_BAT)
 #define is_bird(ptr) (((ptr)->mlet == S_BAT && !is_bat(ptr)) || \
-                        ((ptr) == &mons[PM_CHICKEN] || \
-                        (ptr) == &mons[PM_PAZUZU] || \
-                        (ptr) == &mons[PM_PHOENIX]))
-#define is_rat(ptr) ((ptr) == &mons[PM_SEWER_RAT] || \
-				 (ptr) == &mons[PM_GIANT_RAT] || \
-				 (ptr) == &mons[PM_RABID_RAT] || \
-				 (ptr) == &mons[PM_ENORMOUS_RAT] || \
-                 (ptr) == &mons[PM_PACK_RAT] || \
-                 (ptr) == &mons[PM_BLACK_RAT] || \
-                 (ptr) == &mons[PM_RAT_RULER] || \
-				 (ptr) == &mons[PM_RODENT_OF_UNUSUAL_SIZE])
+                        ((ptr)->omnum == PM_CHICKEN || \
+                        (ptr)->omnum == PM_PAZUZU || \
+                        (ptr)->omnum == PM_PHOENIX))
+#define is_rat(ptr) ((ptr)->omnum == PM_SEWER_RAT || \
+				 (ptr)->omnum == PM_GIANT_RAT || \
+				 (ptr)->omnum == PM_RABID_RAT || \
+				 (ptr)->omnum == PM_ENORMOUS_RAT || \
+                 (ptr)->omnum == PM_PACK_RAT || \
+                 (ptr)->omnum == PM_BLACK_RAT || \
+                 (ptr)->omnum == PM_RAT_RULER || \
+				 (ptr)->omnum == PM_RODENT_OF_UNUSUAL_SIZE)
 #define is_giant(ptr) (((ptr)->mhflags & MH_GIANT) != 0L)
-#define is_marsupial(ptr) ((ptr) == &mons[PM_WALLABY] || \
-                          (ptr) == &mons[PM_WALLAROO] || \
-                          (ptr) == &mons[PM_KANGAROO])
+#define is_marsupial(ptr) ((ptr)->omnum == PM_WALLABY || \
+                          (ptr)->omnum == PM_WALLAROO || \
+                          (ptr)->omnum == PM_KANGAROO)
 #define is_golem(ptr) ((ptr)->mlet == S_GOLEM)
 #define is_jumper(ptr) (((ptr)->mflags2 & M2_JUMPER) != 0L)
 #define is_domestic(ptr) (((ptr)->mflags2 & M2_DOMESTIC) != 0L)
@@ -211,8 +211,8 @@
 #define cantweararm(ptr) (breakarm(ptr) || sliparm(ptr))
 #define throws_rocks(ptr) (((ptr)->mflags2 & M2_ROCKTHROW) != 0L)
 #define type_is_pname(ptr) (((ptr)->mflags2 & M2_PNAME) != 0L)
-#define is_dragon(ptr) ((ptr) >= &mons[PM_BABY_GRAY_DRAGON] && \
-                        (ptr) <= &mons[PM_YELLOW_DRAGON])
+#define is_dragon(ptr) ((ptr)->omnum >= PM_BABY_GRAY_DRAGON && \
+                        (ptr)->omnum <= PM_YELLOW_DRAGON)
 #define is_feline(ptr) ((ptr)->mlet == S_FELINE)
 #define is_lord(ptr) (((ptr)->mflags2 & M2_LORD) != 0L)
 #define is_prince(ptr) (((ptr)->mflags2 & M2_PRINCE) != 0L)
@@ -222,45 +222,45 @@
 #define is_dprince(ptr) (is_demon(ptr) && is_prince(ptr))
 #define is_unkdemon(ptr) ((is_demon(ptr) \
         && !is_dlord(ptr) && !is_dprince(ptr) \
-        && (ptr) != &mons[PM_WATER_DEMON] \
-        && (ptr) != &mons[PM_LAVA_DEMON] \
-        || ((ptr) == &mons[PM_LEMURE] \
-            || (ptr) == &mons[PM_MANES] \
-            || (ptr) == &mons[PM_HELLCAT])))
-#define is_ghoul(ptr) ((ptr) == &mons[PM_GHOUL] \
-                       || (ptr) == &mons[PM_GHAST] \
-                       || (ptr) == &mons[PM_GHOUL_MAGE] \
-                       || (ptr) == &mons[PM_VOMITOUS_GHOUL])
+        && (ptr)->omnum != PM_WATER_DEMON \
+        && (ptr)->omnum != PM_LAVA_DEMON \
+        || ((ptr)->omnum == PM_LEMURE \
+            || (ptr)->omnum == PM_MANES \
+            || (ptr)->omnum == PM_HELLCAT)))
+#define is_ghoul(ptr) ((ptr)->omnum == PM_GHOUL \
+                       || (ptr)->omnum == PM_GHAST \
+                       || (ptr)->omnum == PM_GHOUL_MAGE \
+                       || (ptr)->omnum == PM_VOMITOUS_GHOUL)
 #define is_minion(ptr) (((ptr)->mflags2 & M2_MINION) != 0L)
 #define likes_gold(ptr) (((ptr)->mflags2 & M2_GREEDY) != 0L)
 #define likes_gems(ptr) (((ptr)->mflags2 & M2_JEWELS) != 0L)
 #define likes_objs(ptr) (((ptr)->mflags2 & M2_COLLECT) != 0L || is_armed(ptr))
 #define likes_magic(ptr) (((ptr)->mflags2 & M2_MAGIC) != 0L)
 #define webmaker(ptr) \
-    ((ptr) == &mons[PM_CAVE_SPIDER] || (ptr) == &mons[PM_GIANT_SPIDER] \
-        || (ptr) == &mons[PM_SPIBRAWULF])
+    ((ptr)->omnum == PM_CAVE_SPIDER || (ptr)->omnum == PM_GIANT_SPIDER \
+        || (ptr)->omnum == PM_SPIBRAWULF)
 #define is_unicorn(ptr) ((ptr)->mlet == S_UNICORN && likes_gems(ptr))
 #define is_longworm(ptr)                                                   \
-    (((ptr) == &mons[PM_BABY_LONG_WORM]) || ((ptr) == &mons[PM_LONG_WORM]) \
-     || ((ptr) == &mons[PM_LONG_WORM_TAIL]))
+    (((ptr)->omnum == PM_BABY_LONG_WORM) || ((ptr)->omnum == PM_LONG_WORM) \
+     || ((ptr)->omnum == PM_LONG_WORM_TAIL))
 #define is_covetous(ptr) (((ptr)->mflags3 & M3_COVETOUS))
 #define infravision(ptr) (((ptr)->mflags3 & M3_INFRAVISION))
 #define infravisible(ptr) (((ptr)->mflags3 & M3_INFRAVISIBLE))
 #define is_displacer(ptr) (((ptr)->mflags3 & M3_DISPLACES) != 0L)
-#define is_displaced(ptr) ((ptr) == &mons[PM_SHIMMERING_DRAGON] || \
-    (ptr) == &mons[PM_BABY_SHIMMERING_DRAGON] || \
-    (ptr) == &mons[PM_DISPLACER_BEAST])
+#define is_displaced(ptr) ((ptr)->omnum == PM_SHIMMERING_DRAGON || \
+    (ptr)->omnum == PM_BABY_SHIMMERING_DRAGON || \
+    (ptr)->omnum == PM_DISPLACER_BEAST)
 #define is_mplayer(ptr) \
-    (((ptr) >= &mons[PM_ARCHEOLOGIST]) && ((ptr) <= &mons[PM_WIZARD]))
+    (((ptr)->omnum >= PM_ARCHEOLOGIST) && ((ptr)->omnum <= PM_WIZARD))
 #define is_watch(ptr) \
-    ((ptr) == &mons[PM_WATCHMAN] || (ptr) == &mons[PM_WATCH_CAPTAIN])
+    ((ptr)->omnum == PM_WATCHMAN || (ptr)->omnum == PM_WATCH_CAPTAIN)
 #define is_rider(ptr)                                      \
-    ((ptr) == &mons[PM_DEATH] || (ptr) == &mons[PM_FAMINE] \
-     || (ptr) == &mons[PM_PESTILENCE])
+    ((ptr)->omnum == PM_DEATH || (ptr)->omnum == PM_FAMINE \
+     || (ptr)->omnum == PM_PESTILENCE)
 #define is_placeholder(ptr)                             \
-    ((ptr) == &mons[PM_ORC] || (ptr) == &mons[PM_GIANT] \
-     || (ptr) == &mons[PM_ELF] || (ptr) == &mons[PM_HUMAN] \
-     || (ptr) == &mons[PM_INFERNAL])
+    ((ptr)->omnum == PM_ORC || (ptr)->omnum == PM_GIANT \
+     || (ptr)->omnum == PM_ELF || (ptr)->omnum == PM_HUMAN \
+     || (ptr)->omnum == PM_INFERNAL)
 /* return TRUE if the monster tends to revive */
 #define is_reviver(ptr) (is_rider(ptr) || (ptr)->mlet == S_TROLL)
 /* monsters whose corpses and statues need special handling;
@@ -272,63 +272,63 @@
    monsters, we'll likely have to add a new light range field to mons[] */
 #define emits_light(ptr)                                         \
     (((ptr)->mlet == S_LIGHT    				 \
-      || (ptr) == &mons[PM_GOLD_DRAGON]                          \
-      || (ptr) == &mons[PM_BABY_GOLD_DRAGON]                     \
+      || (ptr)->omnum == PM_GOLD_DRAGON                          \
+      || (ptr)->omnum == PM_BABY_GOLD_DRAGON                     \
          ? 4							 \
-         : (ptr) == &mons[PM_FLAMING_SPHERE] 			 \
-        || (ptr) == &mons[PM_SHOCKING_SPHERE]                    \
-        || (ptr) == &mons[PM_FIRE_VORTEX]                        \
-        || (ptr) == &mons[PM_WAX_GOLEM])                         \
+         : (ptr)->omnum == PM_FLAMING_SPHERE 			 \
+        || (ptr)->omnum == PM_SHOCKING_SPHERE                    \
+        || (ptr)->omnum == PM_FIRE_VORTEX                        \
+        || (ptr)->omnum == PM_WAX_GOLEM)                         \
          ? 2                                                     \
-         : ((ptr) == &mons[PM_FIRE_ELEMENTAL]) ? 1 : 0)
+         : ((ptr)->omnum == PM_FIRE_ELEMENTAL) ? 1 : 0)
 /*	[note: the light ranges above were reduced to 1 for performance...]
 	...many years ago. it's fine to increase it now. Credit: NHFourk */
 #define likes_lava(ptr) \
-    (ptr == &mons[PM_FIRE_ELEMENTAL] || ptr == &mons[PM_SALAMANDER] \
-        || ptr == &mons[PM_MAGMA_ELEMENTAL])
+    (ptr->omnum == PM_FIRE_ELEMENTAL || ptr->omnum == PM_SALAMANDER \
+        || ptr->omnum == PM_MAGMA_ELEMENTAL)
 #define pm_invisible(ptr) \
-    ((ptr) == &mons[PM_STALKER] || (ptr) == &mons[PM_BLACK_LIGHT] \
-      || (ptr) == &mons[PM_HELLCAT])
+    ((ptr)->omnum == PM_STALKER || (ptr)->omnum == PM_BLACK_LIGHT \
+      || (ptr)->omnum == PM_HELLCAT)
 
 /* could probably add more */
 #define likes_fire(ptr)                                                  \
-    ((ptr) == &mons[PM_FIRE_VORTEX] || (ptr) == &mons[PM_FLAMING_SPHERE] \
+    ((ptr)->omnum == PM_FIRE_VORTEX || (ptr)->omnum == PM_FLAMING_SPHERE \
      || likes_lava(ptr))
 
 #define touch_petrifies(ptr) \
-    ((ptr) == &mons[PM_COCKATRICE] || (ptr) == &mons[PM_CHICKATRICE] \
-     || (ptr) == &mons[PM_WERECOCKATRICE] || (ptr) == &mons[PM_HUMAN_WERECOCKATRICE])
+    ((ptr)->omnum == PM_COCKATRICE || (ptr)->omnum == PM_CHICKATRICE \
+     || (ptr)->omnum == PM_WERECOCKATRICE || (ptr)->omnum == PM_HUMAN_WERECOCKATRICE)
 
 #define is_pirate(ptr) \
-    ((ptr) == &mons[PM_PIRATE] || (ptr) == &mons[PM_SKELETAL_PIRATE] \
-      || (ptr) == &mons[PM_DAMNED_PIRATE] || (ptr) == &mons[PM_PLANAR_PIRATE] \
-      || (ptr) == &mons[PM_MAYOR_CUMMERBUND] || (ptr) == &mons[PM_PIRATE_CREWMATE])
+    ((ptr)->omnum == PM_PIRATE || (ptr)->omnum == PM_SKELETAL_PIRATE \
+      || (ptr)->omnum == PM_DAMNED_PIRATE || (ptr)->omnum == PM_PLANAR_PIRATE \
+      || (ptr)->omnum == PM_MAYOR_CUMMERBUND || (ptr)->omnum == PM_PIRATE_CREWMATE)
 
 #define is_shopkeeper(ptr) \
-    ((ptr) == &mons[PM_SHOPKEEPER] || (ptr) == &mons[PM_EXTRAPLANAR_MERCHANT])
+    ((ptr)->omnum == PM_SHOPKEEPER || (ptr)->omnum == PM_EXTRAPLANAR_MERCHANT)
 
 #define is_mind_flayer(ptr) \
-    ((ptr) == &mons[PM_MIND_FLAYER] || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
+    ((ptr)->omnum == PM_MIND_FLAYER || (ptr)->omnum == PM_MASTER_MIND_FLAYER)
 
 #define is_vampire(ptr) ((ptr)->mlet == S_VAMPIRE  \
                      || ((ptr) == g.youmonst.data &&       \
                          !Upolyd && Race_if(PM_VAMPIRE)))
 
-#define hates_light(ptr) ((ptr) == &mons[PM_GREMLIN] \
-      || (ptr) == &mons[PM_NOSFERATU])
+#define hates_light(ptr) ((ptr)->omnum == PM_GREMLIN \
+      || (ptr)->omnum == PM_NOSFERATU)
 
 /* used to vary a few messages */
 #define weirdnonliving(ptr) (is_golem(ptr) || (ptr)->mlet == S_VORTEX)
 #define nonliving(ptr) \
-    (is_undead(ptr) || (ptr) == &mons[PM_MANES] || weirdnonliving(ptr))
+    (is_undead(ptr) || (ptr)->omnum == PM_MANES || weirdnonliving(ptr))
 
 /* no corpse (ie, blank scrolls) if killed by fire; special case instakill  */
 #define completelyburns(ptr) \
-    ((ptr) == &mons[PM_PAPER_GOLEM] || (ptr) == &mons[PM_STRAW_GOLEM] \
-      || (ptr) == &mons[PM_WAX_GOLEM])
+    ((ptr)->omnum == PM_PAPER_GOLEM || (ptr)->omnum == PM_STRAW_GOLEM \
+      || (ptr)->omnum == PM_WAX_GOLEM)
 #define completelyrots(ptr) \
-    ((ptr) == &mons[PM_WOOD_GOLEM] || (ptr) == &mons[PM_LEATHER_GOLEM])
-#define completelyrusts(ptr) ((ptr) == &mons[PM_IRON_GOLEM])
+    ((ptr)->omnum == PM_WOOD_GOLEM || (ptr)->omnum == PM_LEATHER_GOLEM)
+#define completelyrusts(ptr) ((ptr)->omnum == PM_IRON_GOLEM)
 
 /* Used for conduct with corpses, tins, and digestion attacks */
 /* G_NOCORPSE monsters might still be swallowed as a purple worm */
@@ -337,12 +337,12 @@
     ((ptr)->mlet == S_BLOB || (ptr)->mlet == S_JELLY               \
      || (ptr)->mlet == S_FUNGUS || (ptr)->mlet == S_VORTEX         \
      || (ptr)->mlet == S_LIGHT                                     \
-     || ((ptr)->mlet == S_ELEMENTAL && (ptr) != &mons[PM_STALKER]) \
-     || ((ptr)->mlet == S_GOLEM && (ptr) != &mons[PM_FLESH_GOLEM]  \
-         && (ptr) != &mons[PM_LEATHER_GOLEM]) || noncorporeal(ptr))
+     || ((ptr)->mlet == S_ELEMENTAL && (ptr)->omnum != PM_STALKER) \
+     || ((ptr)->mlet == S_GOLEM && (ptr)->omnum != PM_FLESH_GOLEM  \
+         && (ptr)->omnum != PM_LEATHER_GOLEM) || noncorporeal(ptr))
 #define vegetarian(ptr) \
     (vegan(ptr)         \
-     || ((ptr)->mlet == S_PUDDING && (ptr) != &mons[PM_BLACK_PUDDING]))
+     || ((ptr)->mlet == S_PUDDING && (ptr)->omnum != PM_BLACK_PUDDING))
 
 /* monkeys are tameable via bananas but not pacifiable via food,
    otherwise their theft attack could be nullified too easily;
@@ -351,7 +351,7 @@
    horses can be tamed by always-veggy food or lichen corpses but
    not tamed or pacified by other corpses or tins of veggy critters */
 #define befriend_with_obj(ptr, obj) \
-    (((ptr) == &mons[PM_MONKEY] || (ptr) == &mons[PM_APE])               \
+    (((ptr)->omnum == PM_MONKEY || (ptr)->omnum == PM_APE)               \
      ? (obj)->otyp == BANANA                                             \
      : ((is_domestic(ptr) ||                                           \
         (is_rat(ptr) && (Role_if(PM_CONVICT) || (obj)->otyp == CHEESE)) || \
@@ -368,30 +368,30 @@
 				   (!is_undead(ptr) || is_vampire(ptr)))
 
 #define is_blkmktstaff(ptr)	(Is_blackmarket(&u.uz) && \
-				  (ptr) == &mons[PM_ARMS_DEALER])
+				  (ptr)->omnum == PM_ARMS_DEALER)
 
 /* instantly eats any organic object it comes into contact with */
 #define is_bigeater(ptr) \
-    ((ptr) == &mons[PM_GELATINOUS_CUBE] \
-     || (ptr) == &mons[PM_TASMANIAN_DEVIL] \
-     || (ptr) == &mons[PM_LOCUST] \
-     || (ptr) == &mons[PM_GEHENNAN_MAW])
+    ((ptr)->omnum == PM_GELATINOUS_CUBE \
+     || (ptr)->omnum == PM_TASMANIAN_DEVIL \
+     || (ptr)->omnum == PM_LOCUST \
+     || (ptr)->omnum == PM_GEHENNAN_MAW)
 
 #define avoids_player(ptr) \
     (is_unicorn(ptr) \
-     || (ptr) == &mons[PM_ALCHEMIST] \
-     || (ptr) == &mons[PM_MAGICAL_EYE])
+     || (ptr)->omnum == PM_ALCHEMIST \
+     || (ptr)->omnum == PM_MAGICAL_EYE)
 
 #define horizontal_mover(ptr) \
-    ((ptr) == &mons[PM_GRID_BUG] \
-     || (ptr) == &mons[PM_SPARK_BUG] \
-     || (ptr) == &mons[PM_ARC_BUG] \
-     || (ptr) == &mons[PM_LIGHTNING_BUG])
+    ((ptr)->omnum == PM_GRID_BUG \
+     || (ptr)->omnum == PM_SPARK_BUG \
+     || (ptr)->omnum == PM_ARC_BUG \
+     || (ptr)->omnum == PM_LIGHTNING_BUG)
 
-#define is_bones_monster(ptr) ((ptr) == &mons[PM_GHOST] || (ptr) == &mons[PM_GHOUL]        \
-                               || (ptr) == &mons[PM_VAMPIRE] || (ptr) == &mons[PM_WRAITH]  \
-                               || (ptr) == &mons[PM_GREEN_SLIME] || (ptr)->mlet == S_MUMMY \
-                               || (ptr) == &mons[PM_BAOBHAN_SITH])
+#define is_bones_monster(ptr) ((ptr)->omnum == PM_GHOST || (ptr)->omnum == PM_GHOUL        \
+                               || (ptr)->omnum == PM_VAMPIRE || (ptr)->omnum == PM_WRAITH  \
+                               || (ptr)->omnum == PM_GREEN_SLIME || (ptr)->mlet == S_MUMMY \
+                               || (ptr)->omnum == PM_BAOBHAN_SITH)
 /* Noise that a monster makes when engaged in combat. Assume that vocalizations
  * account for some noise, so monsters capable of vocalizing make more.
  * This gets used as an argument to wake_nearto, which expects a squared value,

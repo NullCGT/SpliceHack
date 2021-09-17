@@ -2542,7 +2542,7 @@ static const char *type_names[MAX_TYPE] = {
     "IRON_BARS", "DOOR", "CORR", "ROOM", "STAIRS", "LADDER", "FOUNTAIN",
     "VENT",
     "THRONE", "SINK", "FURNACE", "GRAVE", "ALTAR", "ICE", "BRIDGE",
-    "grass", "DRAWBRIDGE_DOWN", "AIR",
+    "GRASS", "DRAWBRIDGE_DOWN", "AIR",
     "CLOUD"
 };
 

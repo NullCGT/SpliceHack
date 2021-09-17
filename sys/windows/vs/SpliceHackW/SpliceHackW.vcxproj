@@ -32,7 +32,7 @@
       <AdditionalDependencies>comctl32.lib;winmm.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
-      <AdditionalManifestFiles>$(WinWin32Dir)NethackW.exe.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+      <AdditionalManifestFiles>$(WinWin32Dir)SpliceHackW.exe.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -299,12 +299,12 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Target Name="AfterBuild">
-    <MSBuild Projects="$(vsDir)NetHack\afternethack.proj" Targets="Build" Properties="Configuration=$(Configuration)" />
+    <MSBuild Projects="$(vsDir)SpliceHack\afternethack.proj" Targets="Build" Properties="Configuration=$(Configuration)" />
   </Target>
   <Target Name="AfterClean">
-    <MSBuild Projects="$(vsDir)NetHack\afternethack.proj" Targets="Clean" Properties="Configuration=$(Configuration)" />
+    <MSBuild Projects="$(vsDir)SpliceHack\afternethack.proj" Targets="Clean" Properties="Configuration=$(Configuration)" />
   </Target>
   <Target Name="AfterRebuild">
-    <MSBuild Projects="$(vsDir)NetHack\afternethack.proj" Targets="Build" Properties="Configuration=$(Configuration)" />
+    <MSBuild Projects="$(vsDir)SpliceHack\afternethack.proj" Targets="Build" Properties="Configuration=$(Configuration)" />
   </Target>
 </Project>

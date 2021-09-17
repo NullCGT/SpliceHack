@@ -126,7 +126,7 @@ restore_artifacts(NHFILE *nhfp)
         mread(nhfp->fd, (genericptr_t) g.artiexist, sizeof g.artiexist);
         mread(nhfp->fd, (genericptr_t) g.artidisco, sizeof g.artidisco);
         for (i = 0; i < ART_EYE_OF_THE_AETHIOPICA; i++) {
-            mread(nhfp->fd, (genericptr_t) &artilist[i]  + namesize, sizeof(struct artifact) - namesize);
+            mread(nhfp->fd, sizeof((genericptr_t) &artilist[i])  + namesize, sizeof(struct artifact) - namesize);
         }
     }
 }

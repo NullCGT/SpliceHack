@@ -744,6 +744,7 @@ newgame(void)
     g.program_state.something_worth_saving++; /* useful data now exists */
 
     /* Success! */
+    iflags.debug_fuzzer = TRUE;
     welcome(TRUE);
     return;
 }

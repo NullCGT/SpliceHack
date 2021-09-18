@@ -56,7 +56,7 @@ sanity_check_single_mon(
     struct permonst *mptr = mtmp->data;
     int mx = mtmp->mx, my = mtmp->my;
 
-    if ((!mptr || mptr < &mons[LOW_PM] || mptr >= &mons[NUMMONS])
+    if ((!mptr || mptr->omnum < LOW_PM || mptr->omnum >= NUMMONS)
         && !has_etemplate(mtmp)) {
         /* most sanity checks issue warnings if they detect a problem,
            but this would be too extreme to keep going */
@@ -143,8 +143,8 @@ sanity_check_single_mon(
             mx = my = 0;
         if (mtmp == u.ustuck)
             impossible("hiding monster stuck to you (%s)", msg);
-        if (m_at(mx, my) == mtmp && hides_under(mptr) && !OBJ_AT(mx, my))
-            impossible("mon hiding under nonexistent obj (%s)", msg);
+        if (m_at(mx, my) == mtmp && hides_under(mptr) && !concealed_spot(mx, my))
+            impossible("mon hiding under nonexistent obj or terrain (%s)", msg);
         if (mptr->mlet == S_EEL
             && !is_pool(mx, my) && !Is_waterlevel(&u.uz) && !Is_iceplanelevel(&u.uz))
             impossible("eel hiding out of water (%s)", msg);

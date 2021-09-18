@@ -17,6 +17,7 @@ static void mkfurnace(struct mkroom *);
 static void mkvent(int, struct mkroom *);
 static boolean find_okay_roompos(struct mkroom *, coord *);
 static void mksink(struct mkroom *);
+static void mktree(struct mkroom *);
 static void mkaltar(struct mkroom *);
 static void mkgrave(struct mkroom *);
 static void makevtele(void);
@@ -903,6 +904,11 @@ fill_ordinary_room(struct mkroom *croom)
         /* We could make vents at any level, but generating them
            on level one could lead to cheap instadeaths. */
         mkvent(0, croom);
+    if (!rn2(10 + 4 * depth(&u.uz))) {
+        /* Trees become less common, and at some point they are
+           just dead. */
+        mktree(croom);
+    }
     if (!rn2(60))
         mksink(croom);
     if (!rn2(60))
@@ -1959,6 +1965,18 @@ mksink(struct mkroom *croom)
     levl[m.x][m.y].typ = SINK;
 
     g.level.flags.nsinks++;
+}
+
+static void
+mktree(struct mkroom *croom)
+{
+    coord m;
+
+    if (!find_okay_roompos(croom, &m))
+        return;
+
+    /* Put a tree at m.x, m.y */
+    levl[m.x][m.y].typ = depth(&u.uz) > 7 ? DEAD_TREE : TREE;
 }
 
 static void

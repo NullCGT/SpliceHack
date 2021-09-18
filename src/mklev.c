@@ -760,7 +760,7 @@ mkgrass(void)
     for (x = 0; x < COLNO; x++) {
         for (y = 0; y < ROWNO; y++) {
             if (levl[x][y].bk) {
-                if (IS_ROOM(levl[x][y].typ)) {
+                if (levl[x][y].typ == ROOM) {
                     levl[x][y].typ = GRASS;
                 }
             }

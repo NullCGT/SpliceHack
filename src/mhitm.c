@@ -338,6 +338,12 @@ mattackm(register struct monst *magr, register struct monst *mdef)
         tmp += 4;
         mdef->msleeping = 0;
     }
+    if (calculate_flankers(magr, mdef)) {
+        tmp += 4;
+        if (magr->mtame && canseemon(magr)) {
+            pline("You help %s flank %s.", magr, mdef);
+        }
+    }
 
     /* undetect monsters become un-hidden if they are attacked */
     if (mdef->mundetected) {

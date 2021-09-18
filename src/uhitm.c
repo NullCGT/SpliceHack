@@ -326,6 +326,10 @@ find_roll_to_hit(struct monst *mtmp,
             mtmp->mfrozen = 0;
         }
     }
+    if (calculate_flankers(&g.youmonst, mtmp)) {
+        tmp += 4;
+        pline("You flank %s.", mon_nam(mtmp));
+    }
 
     /* role/race adjustments */
     if (Role_if(PM_MONK) && !Upolyd) {

@@ -19,7 +19,6 @@ static int screamu(struct monst *, struct attack*, int);
 static void mayberem(struct monst *, const char *, struct obj *,
                      const char *);
 static int passiveum(struct permonst *, struct monst *, struct attack *);
-static boolean calculate_flankers(struct monst *);
 
 #define ld() ((yyyymmdd((time_t) 0) - (getyear() * 10000L)) == 0xe5)
 
@@ -695,8 +694,10 @@ mattacku(register struct monst *mtmp)
         tmp -= 2;
     if (tmp <= 0)
         tmp = 1;
-    if (calculate_flankers(mtmp))
+    if (calculate_flankers(mtmp, &g.youmonst) && !Blind) {
+        You("are being flanked!");
         tmp += 4;
+    }
 
     /* make eels visible the moment they hit/miss us */
     if (mdat->mlet == S_EEL && mtmp->minvis && cansee(mtmp->mx, mtmp->my)) {
@@ -2812,40 +2813,66 @@ attack_contact_slots(struct monst *magr, int aatyp)
 }
 
 boolean
-calculate_flankers(struct monst *magr)
+calculate_flankers(struct monst *magr, struct monst *mdef)
 {
     struct monst* flanker;
-    boolean flanked = FALSE;
-    int xd;
-    int yd;
+    boolean youflanker = FALSE;
+    boolean youattack = FALSE;
+    boolean youdefend = FALSE;
+    int ax, ay, dx, dy;
+    int xt, yt;
 
-    if (abs(magr->mx - u.ux) > 1 || abs(magr->my - u.uy) > 1)
+    if (magr == &g.youmonst) youattack = TRUE;
+    if (mdef == &g.youmonst) youdefend = TRUE;
+    
+    /* Attacker location */
+    if (youattack) {
+        ax = u.ux;
+        ay = u.uy;
+    } else {
+        ax = magr->mx;
+        ay = magr->my;
+    }
+    /* Defender location */
+    if (youdefend) {
+        dx = u.ux;
+        dy = u.uy;
+    } else {
+        dx = mdef->mx;
+        dy = mdef->my;
+    }
+
+    /* If too far, then return. */
+    if (abs(ax - dx) > 1 || abs(ay - dy) > 1)
         return FALSE;
 
-    if (u.ux > magr->mx) xd = magr->mx + 2;
-    else if (u.ux < magr->mx) xd = magr->mx - 2;
-    else xd = magr->mx;
+    /* Find the flanker, if one happens to exist. */
+    if (dx > ax) xt = ax + 2;
+    else if (dx < ax) xt = ax - 2;
+    else xt = ax;
 
-    if (u.uy > magr->my) yd = magr->my + 2;
-    else if (u.uy < magr->my) yd = magr->my - 2;
-    else yd = magr->my;
+    if (dy > ay) yt = ay + 2;
+    else if (dy < ay) yt = ay - 2;
+    else yt = ay;
 
-    if (MON_AT(xd, yd))
-        flanker = m_at(xd, yd);
+    if (MON_AT(xt, yt))
+        flanker = m_at(xt, yt);
+    if (flanker == &g.youmonst) youflanker = TRUE;
 
-    /* Flanker must be hostile and at least somewhat
-       aware of you. */
-    if (flanker && !flanker->mpeaceful 
-        && flanker->mcanmove 
-        && !flanker->msleeping && !flanker->mflee
-        && !flanker->mstun)
-        flanked = TRUE;
-
-    if (flanked && canseemon(magr) && canseemon(flanker)) {
-        You("are being flanked!");
-        return TRUE;
+    /* Depending on who the attacker and flanker are, return a boolean. */
+    if (youflanker)
+        return canseemon(mdef) && !Stunned;
+    else if (!flanker || !flanker->mcanmove || flanker->msleeping
+        || flanker->mflee || flanker->mstun)
+        return FALSE;
+    
+    if (youattack) {
+        return flanker->mtame;
+    } else if (youdefend) {
+        return !flanker->mpeaceful;
+    } else {
+        return youflanker ? mdef->mtame : mdef->mpeaceful != flanker->mpeaceful;
     }
-    return FALSE;
 }
 
 /*mhitu.c*/

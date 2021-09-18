@@ -1285,6 +1285,7 @@ extern void mdamageu(struct monst *, int);
 extern int could_seduce(struct monst *, struct monst *, struct attack *);
 extern int doseduce(struct monst *);
 extern long attack_contact_slots(struct monst *, int);
+extern boolean calculate_flankers(struct monst *, struct monst *);
 
 /* ### minion.c ### */
 

@@ -1313,7 +1313,8 @@ meatmetal(register struct monst* mtmp)
 void
 minfestcorpse(struct monst *mtmp)
 {
-register struct obj *otmp;
+    register struct obj *otmp;
+    coord cc;
     /* If a pet, eating is handled separately, in dog.c */
     if (mtmp->mtame) return;
 
@@ -1337,11 +1338,15 @@ register struct obj *otmp;
                 You("hear an unsettling writhing noise.");
             mon_givit(mtmp, &mons[otmp->corpsenm]);
             if (mtmp->data == &mons[PM_ZUGGOTOMOY]) {
-                makemon(&mons[PM_ASPECT_OF_ZUGGOTOMOY], u.ux, u.uy, NO_MINVENT);
-            } else if (mtmp->data == &mons[PM_MAGGOT]) {
-                makemon(&mons[rn2(3) ? PM_GIANT_FLY : PM_WORM_THAT_WALKS], u.ux, u.uy, NO_MINVENT);
-            } else
-                makemon(&mons[mtmp->mnum], u.ux, u.uy, NO_MINVENT);
+                if (enexto(&cc, mtmp->mx, mtmp->my, &mons[PM_ASPECT_OF_ZUGGOTOMOY]))
+                    makemon(&mons[PM_ASPECT_OF_ZUGGOTOMOY], cc.x, cc.y, NO_MINVENT);
+            } else if (mtmp->data->omnum == PM_MAGGOT) {
+                if (enexto(&cc, mtmp->mx, mtmp->my, &mons[PM_WORM_THAT_WALKS]))
+                    makemon(&mons[rn2(3) ? PM_GIANT_FLY : PM_WORM_THAT_WALKS], cc.x, cc.y, NO_MINVENT);
+            } else {
+                if (enexto(&cc, mtmp->mx, mtmp->my, &mons[mtmp->mnum]))
+                    makemon(&mons[mtmp->mnum], cc.x, cc.y, NO_MINVENT);
+            }
             delobj(otmp);
             break; /* only eat one at a time... */
         }

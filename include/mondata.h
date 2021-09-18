@@ -388,6 +388,12 @@
      || (ptr)->omnum == PM_ARC_BUG \
      || (ptr)->omnum == PM_LIGHTNING_BUG)
 
+#define is_moldier(ptr) \
+    ((ptr)->omnum == PM_RED_MOLDIER \
+    || (ptr)->omnum == PM_YELLOW_MOLDIER \
+    || (ptr)->omnum == PM_GREEN_MOLDIER \
+    || (ptr)->omnum == PM_BROWN_MOLDIER)
+
 #define is_bones_monster(ptr) ((ptr)->omnum == PM_GHOST || (ptr)->omnum == PM_GHOUL        \
                                || (ptr)->omnum == PM_VAMPIRE || (ptr)->omnum == PM_WRAITH  \
                                || (ptr)->omnum == PM_GREEN_SLIME || (ptr)->mlet == S_MUMMY \

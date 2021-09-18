@@ -1091,13 +1091,10 @@ m_move(register struct monst* mtmp, register int after)
         newsym(mtmp->mx, mtmp->my);
     }
     /* Zuggotomoy infests corpses. */
-    if (ptr == &mons[PM_ZUGGOTOMOY] ||
-        ptr == &mons[PM_ASPECT_OF_ZUGGOTOMOY] ||
-        ptr == &mons[PM_BROWN_MOLDIER] ||
-        ptr == &mons[PM_GREEN_MOLDIER] ||
-        ptr == &mons[PM_YELLOW_MOLDIER] ||
-        ptr == &mons[PM_RED_MOLDIER] ||
-        ptr == &mons[PM_MAGGOT])
+    if (ptr->omnum == PM_ZUGGOTOMOY
+        || ptr->omnum == PM_ASPECT_OF_ZUGGOTOMOY
+        || ptr->omnum == PM_MAGGOT
+        || is_moldier(ptr))
         minfestcorpse(mtmp);
 
     /* Where does 'mtmp' think you are?  Not necessary if m_move() called

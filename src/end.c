@@ -558,20 +558,14 @@ done_in_by(struct monst *mtmp, int how)
         u.ugrave_arise = zombie_form(g.youmonst.data);
     else if (mptr->mlet == S_VAMPIRE && Race_if(PM_HUMAN))
         u.ugrave_arise = PM_VAMPIRE;
-    else if (mptr == &mons[PM_WORM_THAT_WALKS])
+    else if (mptr->omnum == PM_WORM_THAT_WALKS)
         u.ugrave_arise = Role_if(PM_WIZARD) ? PM_WORM_THAT_WALKS : PM_GHOUL;
-    else if (mptr == &mons[PM_GHOUL])
+    else if (is_ghoul(mptr))
         u.ugrave_arise = PM_GHOUL;
-    else if (mptr == &mons[PM_SPECTRE] || u.ulevel > 15)
+    else if (mptr->omnum == PM_SPECTRE || u.ulevel > 15)
         u.ugrave_arise = PM_SPECTRE;
-    else if (mptr == &mons[PM_RED_MOLDIER])
-        u.ugrave_arise = PM_RED_MOLDIER;
-    else if (mptr == &mons[PM_YELLOW_MOLDIER])
-        u.ugrave_arise = PM_YELLOW_MOLDIER;
-    else if (mptr == &mons[PM_GREEN_MOLDIER])
-        u.ugrave_arise = PM_GREEN_MOLDIER;
-    else if (mptr == &mons[PM_BROWN_MOLDIER])
-        u.ugrave_arise = PM_BROWN_MOLDIER;
+    else if (is_moldier(mptr))
+        u.ugrave_arise = mptr->omnum;
     /* this could happen if a high-end vampire kills the hero
        when ordinary vampires are genocided; ditto for wraiths */
     if (u.ugrave_arise >= LOW_PM

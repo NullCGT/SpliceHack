@@ -226,7 +226,9 @@ vpline(const char *line, va_list the_args)
    	} else if(Role_if(PM_CARTOMANCER)) {
         line = cartsay(line);
     }
-    if (is_bear(g.youmonst.data)) {
+    
+    /* Since this can happen before youmonst is set up, we have to be careful. */
+    if (&g.youmonst && g.youmonst.data && is_bear(g.youmonst.data)) {
         line = replace(line,"bare","bear");
     }
 

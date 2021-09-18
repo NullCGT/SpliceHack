@@ -2397,6 +2397,8 @@ trapeffect_poly_trap(
             (void) newcham(mtmp, (struct permonst *) 0, FALSE, FALSE);
             if (in_sight)
                 seetrap(trap);
+            if (!rn2(7))
+                deltrap(trap);
         }
     }
     return 0;

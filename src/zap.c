@@ -5144,6 +5144,22 @@ zap_over_floor(xchar x, xchar y, int type, boolean *shopdamage,
             }
         }
         break; /* ZT_FIRE */
+    
+    case ZT_DEATH:
+        if (lev->typ == TREE) {
+            if (see_it) {
+                pline("The tree dies!");
+                lev->typ = DEAD_TREE;
+                newsym(x, y);
+            }
+        } else if (IS_GRASS(lev->typ)) {
+            lev->typ = ROOM;
+            if (see_it) {
+                pline("The grass dies!");
+                newsym(x, y);
+            }
+        }
+        break;
 
     case ZT_COLD:
         if (is_pool(x, y) || is_lava(x, y)) {

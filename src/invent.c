@@ -3359,6 +3359,8 @@ dfeature_at(int x, int y, char *buf)
         cmap = S_grave; /* "grave" */
     else if (ltyp == TREE)
         cmap = S_tree; /* "tree" */
+    else if (ltyp == DEAD_TREE)
+        cmap = S_dead_tree; /* "dead tree" */
     else if (ltyp == IRONBARS)
         dfeature = "set of iron bars";
 

@@ -1242,6 +1242,9 @@ watch_dig(struct monst *mtmp, xchar x, xchar y, boolean zap)
             if (zap || g.context.digging.warned) {
                 verbalize("Halt, vandal!  You're under arrest!");
                 (void) angry_guards(!!Deaf);
+            } else if (IS_TREE(lev->typ) && lev->typ == DEAD_TREE) {
+                verbalize("Thanks for taking care of that dead tree for us!");
+                return;
             } else {
                 const char *str;
 

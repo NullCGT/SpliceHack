@@ -1003,6 +1003,9 @@ cmap_to_type(int sym)
     case S_tree:
         typ = TREE;
         break;
+    case S_dead_tree:
+        typ = DEAD_TREE;
+        break;
     case S_room:
         typ = ROOM;
         break;

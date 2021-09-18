@@ -144,7 +144,7 @@ does_block(int x, int y, struct rm *lev)
     struct monst *mon;
 
     /* Features that block . . */
-    if (IS_ROCK(lev->typ) || lev->typ == TREE
+    if (IS_ROCK(lev->typ) || lev->typ == TREE || lev->typ == DEAD_TREE
         || (IS_DOOR(lev->typ)
             && (lev->doormask & (D_CLOSED | D_LOCKED | D_TRAPPED))))
         return 1;

@@ -4925,9 +4925,9 @@ int
 lspo_feature(lua_State *L)
 {
     static const char *const features[] = { "fountain", "furnace", "sink", "pool",
-                                            "vent", "throne", "tree", "grass", NULL };
+                                            "vent", "throne", "tree", "dead tree", "grass", NULL };
     static const int features2i[] = { FOUNTAIN, FURNACE, SINK, POOL, VENT,
-                                      THRONE, TREE, GRASS, STONE };
+                                      THRONE, TREE, DEAD_TREE, GRASS, STONE };
     xchar x, y;
     int typ;
     int argc = lua_gettop(L);
@@ -4987,6 +4987,9 @@ lspo_feature(lua_State *L)
     case TREE:
         l_table_getset_feature_flag(L, x, y, "looted", TREE_LOOTED);
         l_table_getset_feature_flag(L, x, y, "swarm", TREE_SWARM);
+        break;
+    case DEAD_TREE:
+        typ = DEAD_TREE;
         break;
     }
 

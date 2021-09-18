@@ -375,6 +375,7 @@ const struct symparse loadsyms[] = {
     { SYM_PCHAR, S_hcdoor, "S_hcdoor" },
     { SYM_PCHAR, S_bars, "S_bars" },
     { SYM_PCHAR, S_tree, "S_tree" },
+    { SYM_PCHAR, S_dead_tree, "S_dead_tree" },
     { SYM_PCHAR, S_room, "S_room" },
     { SYM_PCHAR, S_darkroom, "S_darkroom" },
     { SYM_PCHAR, S_corr, "S_corr" },

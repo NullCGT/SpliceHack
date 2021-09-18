@@ -150,6 +150,7 @@ const struct symdef defsyms[MAXPCHARS] = {
        { '+', "closed door", C(CLR_BROWN) },         /* hcdoor */
        { '#', "iron bars", C(HI_METAL) },            /* bars */
        { '#', "tree", C(CLR_GREEN) },                /* tree */
+       { '#', "dead tree", C(CLR_BROWN) },           /* dead tree */
        { '.', "floor of a room", C(CLR_GRAY) },      /* room */
 /*20*/ { '.', "dark part of a room", C(CLR_BLACK) }, /* dark room */
        { '#', "corridor", C(CLR_GRAY) },             /* dark corr */

@@ -719,6 +719,7 @@ struct {
 {S_hcdoor,   "horizontal closed door", "closed door"},
 {S_bars,     "iron bars", "iron bars"},
 {S_tree,     "tree", "tree"},
+{S_dead_tree, "dead tree", "dead tree"},
 {S_room,     "room", "floor of a room"},
 {S_darkroom, "darkroom", "dark part of a room"},
 {S_corr,     "corridor", "corridor"},

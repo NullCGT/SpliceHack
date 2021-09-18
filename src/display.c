@@ -1855,6 +1855,9 @@ back_to_glyph(xchar x, xchar y)
     case TREE:
         idx = S_tree;
         break;
+    case DEAD_TREE:
+        idx = S_dead_tree;
+        break;
     case POOL:
     case MOAT:
         idx = S_pool;
@@ -2537,7 +2540,7 @@ static void error4(int, int, int, int, int, int);
 static int bad_count[MAX_TYPE]; /* count of positions flagged as bad */
 static const char *type_names[MAX_TYPE] = {
     "STONE", "VWALL", "HWALL", "TLCORNER", "TRCORNER", "BLCORNER", "BRCORNER",
-    "CROSSWALL", "TUWALL", "TDWALL", "TLWALL", "TRWALL", "DBWALL", "TREE",
+    "CROSSWALL", "TUWALL", "TDWALL", "TLWALL", "TRWALL", "DBWALL", "TREE", "DEAD TREE",
     "SDOOR", "SCORR", "POOL", "MOAT", "WATER", "DRAWBRIDGE_UP", "LAVAPOOL",
     "IRON_BARS", "DOOR", "CORR", "ROOM", "STAIRS", "LADDER", "FOUNTAIN",
     "VENT",

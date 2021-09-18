@@ -3320,6 +3320,11 @@ wizterrainwish(struct _readobjnam_data *d)
             pline("Can't place a grave here.");
             badterrain = TRUE;
         }
+    } else if (!BSTRCMPI(bp, p - 9, "dead tree")) {
+        lev->typ = DEAD_TREE;
+        lev->looted = d->looted ? (TREE_LOOTED | TREE_SWARM) : 0;
+        pline("A dead tree.");
+        madeterrain = TRUE;
     } else if (!BSTRCMPI(bp, p - 4, "tree")) {
         lev->typ = TREE;
         lev->looted = d->looted ? (TREE_LOOTED | TREE_SWARM) : 0;

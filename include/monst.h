@@ -230,7 +230,8 @@ struct monst {
          && ((mon)->mappearance == S_hcdoor                \
              || (mon)->mappearance == S_vcdoor             \
              || (mon)->mappearance < S_ndoor /* = walls */ \
-             || (mon)->mappearance == S_tree)))
+             || (mon)->mappearance == S_tree \
+             || (mon)->mappearance == S_dead_tree)))
 #define is_door_mappear(mon) (M_AP_TYPE(mon) == M_AP_FURNITURE   \
                               && ((mon)->mappearance == S_hcdoor \
                                   || (mon)->mappearance == S_vcdoor))

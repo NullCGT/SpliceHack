@@ -1147,6 +1147,8 @@ dokick(void)
             struct obj *treefruit;
 
             /* nothing, fruit or trouble? 75:23.5:1.5% */
+            if (g.maploc->typ == DEAD_TREE)
+                goto ouch;
             if (rn2(3)) {
                 if (!rn2(6) && !(g.mvitals[PM_KILLER_BEE].mvflags & G_GONE))
                     You_hear("a low buzzing."); /* a warning */

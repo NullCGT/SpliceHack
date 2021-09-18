@@ -423,7 +423,7 @@ nhl_getmap(lua_State *L)
                 nhl_add_table_entry_bool(L, "looted",
                                          (levl[x][y].flags & TREE_LOOTED));
                 nhl_add_table_entry_bool(L, "swarm",
-                                         (levl[x][y].flags & TREE_SWARM));
+                                         (levl[x][y].flags & TREE_SWARM));            
             } else if (IS_FOUNTAIN(levl[x][y].typ)) {
                 nhl_add_table_entry_bool(L, "looted",
                                          (levl[x][y].flags & F_LOOTED));

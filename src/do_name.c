@@ -401,6 +401,7 @@ gather_locs_interesting(int x, int y, int gloc)
                 || !((glyph_is_cmap(glyph)
                       && (is_cmap_wall(sym)
                           || sym == S_tree
+                          || sym == S_dead_tree
                           || sym == S_bars
                           || sym == S_ice
                           || sym == S_bridge

@@ -62,6 +62,7 @@ start: NHAccess
 	S_hcdoor: \043
 	S_bars: \046
 	S_tree: \035
+	S_dead_tree: \035
 	S_room: \035
 	S_corr: \060
 	S_litcorr: \062
@@ -296,6 +297,7 @@ start: Blank
         S_trapper: \032
         S_trcorn: \032
         S_tree: \032
+		S_dead_tree: \032
         S_troll: \032
         S_trwall: \032
         S_tuwall: \032
@@ -348,6 +350,7 @@ start: IBMgraphics
 	S_hodoor: \xfe			# meta-~, small centered square
 	S_bars: \xf0			# equivalence symbol
 	S_tree: \xf1			# plus or minus symbol
+	S_dead_tree: \xf1		# plus or minus symbol
 	S_room: \xfa			# meta-z, centered dot
 	S_corr: \xb0			# meta-0, light shading
 	S_litcorr: \xb1			# meta-1, medium shading
@@ -567,6 +570,7 @@ start: curses
 	S_ndoor: \xfe			# meta-z, centered dot
 	S_bars: \xfc			# meta-|, not-equals sign (was '#')
 	S_tree: \xe7			# meta-g, plus or minus sign
+	S_dead_tree: \xe7		# meta-g, plus or minus sign
 	S_room: \xfe			# meta-z, centered dot
 	S_corr: \xe1			# meta-a, solid block
 	S_litcorr: \xe1			# meta-a, solid block
@@ -603,6 +607,7 @@ start: DECgraphics
 	S_hodoor: \xe1			# meta-a, solid block
 	S_bars: \xfc			# meta-|, not-equals (used to be pi)
 	S_tree: \xe7			# meta-g, plus-or-minus
+	S_dead_tree: \xe7		# meta-g, plus-or-minus
 	S_room: \xfe			# meta-~, centered dot
 	S_upladder: \xf9		# meta-y, less-than-or-equals
 	S_dnladder: \xfa		# meta-z, greater-than-or-equals
@@ -649,6 +654,7 @@ start: MACgraphics
 	S_hcdoor: \xef
 	S_bars: \xf0			# equivalency symbol
 	S_tree: \xf1			# plus-or-minus
+	S_dead_tree: \xf1		# plus-or-minus
 	S_corr: \xb0
 	S_grave: \xef			# same as open door
 	S_pool: \xe0

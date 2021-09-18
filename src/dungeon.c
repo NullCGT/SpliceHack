@@ -2891,6 +2891,7 @@ recalc_mapseen(void)
                 break;
 #endif
             case TREE:
+            case DEAD_TREE:
                 count = mptr->feat.ntree + 1;
                 if (count <= 3)
                     mptr->feat.ntree = count;

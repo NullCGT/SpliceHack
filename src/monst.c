@@ -968,13 +968,13 @@ NEARDATA struct permonst mons_init[] = {
           ATTK(AT_CLAW, AD_SITM, 0, 0), NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(600, 300, MS_SEDUCE, MZ_HUMAN), 0, 0, M1_HUMANOID | M1_TPORT,
         M2_HOSTILE | M2_FEMALE | M2_COLLECT, M3_INFRAVISIBLE, 12, CLR_BLACK),
-    MON("dream thief", S_NYMPH, LVL(14, 15, 4, 40, 0), (G_NOHELL | 1),
+    MON3("oneroi", "oneroi", "dream thief", S_NYMPH, LVL(14, 15, 4, 40, 0), (G_NOHELL | 1),
         A(ATTK(AT_CLAW, AD_CURS, 0, 0), ATTK(AT_MAGC, AD_PSYC, 5, 5),
           ATTK(AT_CLAW, AD_SITM, 0, 0), ATTK(AT_TUCH, AD_MEMR, 0, 0),
           ATTK(AT_CLAW, AD_SITM, 0, 0), NO_ATTK),
         SIZ(600, 300, MS_SEDUCE, MZ_HUMAN), 0, 0,
         M1_HUMANOID | M1_TPORT | M1_FLY,
-        M2_HOSTILE | M2_FEMALE | M2_COLLECT, M3_INFRAVISIBLE,
+        M2_HOSTILE | M2_MALE | M2_COLLECT, M3_INFRAVISIBLE,
         18, CLR_BRIGHT_GREEN),
     /*
      * orcs

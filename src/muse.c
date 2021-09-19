@@ -947,7 +947,7 @@ use_defensive(struct monst* mtmp)
  		int cnt = 1;
  		struct monst *mon;
  		boolean known = FALSE;
- 
+
  		if (!rn2(73)) cnt += rnd(4);
  		if (mtmp->mconf || otmp->cursed) cnt += rn2(8);
  		if (mtmp->mconf) pm = fish = &mons[PM_MANES];
@@ -1541,7 +1541,7 @@ find_offensive(struct monst* mtmp)
             g.m.has_offense = MUSE_SCR_FIRE;
         }
         nomore(MUSE_CAMERA);
-        if (obj->otyp == EXPENSIVE_CAMERA 
+        if (obj->otyp == EXPENSIVE_CAMERA
             && (!Blind || hates_light(g.youmonst.data)) && !rn2(6)
             && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 2
             && obj->spe > 0) {
@@ -1946,7 +1946,7 @@ use_offensive(struct monst* mtmp)
         else
             pline("%s takes a picture of you with %s!", Monnam(mtmp), an(xname(otmp)));
         g.m_using = TRUE;
-        if (!Blind) {
+        if (!Blind && !ublindf) {
             You("are blinded by the flash of light!");
             make_blinded(Blinded + (long) rnd(1 + 50), FALSE);
         }

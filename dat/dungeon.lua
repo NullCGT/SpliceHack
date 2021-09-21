@@ -83,7 +83,7 @@ dungeon = {
             name = "bigrm",
             bonetag = "B",
             base = 10,
-            range = 3,
+            range = 6,
             chance = 40,
             nlevels = 10
          },

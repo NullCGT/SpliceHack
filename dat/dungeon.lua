@@ -83,7 +83,7 @@ dungeon = {
             name = "bigrm",
             bonetag = "B",
             base = 10,
-            range = 3,
+            range = 6,
             chance = 40,
             nlevels = 10
          },
@@ -266,12 +266,12 @@ dungeon = {
          {
             name = "soko1",
             base = 1,
-            nlevels = 2
+            nlevels = 3
          },
          {
             name = "soko2",
             base = 2,
-            nlevels = 2
+            nlevels = 3
          },
          {
             name = "soko3",
@@ -281,7 +281,7 @@ dungeon = {
          {
             name = "soko4",
             base = 4,
-            nlevels = 2
+            nlevels = 5
          },
       }
    },

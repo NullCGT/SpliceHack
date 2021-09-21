@@ -48,7 +48,7 @@ typedef struct nhrgb_type {
 
 
 #define SPLICEHACK_SPLASH_A \
-" _____       __           __   __           __"
+" _____        _            _    _            _"
 #define SPLICEHACK_SPLASH_B \
 "/ ____|      | (_)        | |  | |          | |"
 #define SPLICEHACK_SPLASH_C \

@@ -4,7 +4,7 @@
 --
 des.level_init({ style = "solidfill", fg = " " });
 
-des.level_flags("mazelevel", "noteleport", "premapped", "solidify");
+des.level_flags("mazelevel", "noteleport", "premapped", "solidify", "noflip");
 
 des.map([[
   ------------------------
@@ -16,13 +16,13 @@ des.map([[
 |.....|..|....|        |.|
 --....|......--        |.|
  |.......|...|   ------|.|
- |....|..|...| --|.....|.|
- |....|--|...| |.+.....|.|
- |.......|..-- |-|.....|.|
- ----....|.--  |.+.....+.|
-    ---.--.|   |-|.....|--
-     |.....|   |.+.....|  
-     |..|..|   --|.....|  
+ |....|..|...|  -|.....|.|
+ |....|--|...| L.+.....|.|
+ |.......|..--  -|.....|.|
+ ----....|.-- .L.+.....+.|
+    ---.--.|    -|.....|--
+     |.....|   L.+.....|  
+     |..|..|    -|.....|  
      -------     -------  
 ]]);
 
@@ -108,3 +108,5 @@ else
 end
 des.engraving({ x = px, y = py, type = "burn", text = "Elbereth" });
 des.object({ id = "scare monster", x = px, y = py, buc = "cursed" });
+
+des.feature("furnace", 14,12) -- inspired by nDNH, jazz up soko with lava and a furnace

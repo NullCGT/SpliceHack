@@ -115,6 +115,13 @@ SpliceHack's design philosophy has evolved over time. At present, these are the 
 
 7. Hateful, edgy, and otherwise objectionable content should be avoided. SpliceHack is a game
    for everyone.
+   
+   7.1 Although the language of the external game may change, sometimes the source code will stay
+       the same. This is for the purposes of remaining semi-compatible with Vanilla's codebase, as
+       well as because of the sheer size of the codebase, and the danger of large scale replacements.
+       As an example, "race" is used over "culture" ingame, but not in the codebase, since changing
+       it in the code would involve replacing hundreds of lines, and break all compatibility with
+       vanilla NetHack. Although this is obviously not an ideal solution, it is temporarily workable.
 
 
 #                  -- Good luck, and happy Hacking --

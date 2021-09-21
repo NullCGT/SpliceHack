@@ -287,7 +287,7 @@ static NEARDATA const char *deaths[] = {
     /* the array of death */
     "died", "died", "tyranosaurus rekt", "choked", "poisoned", "starvation", "drowning", "burning",
     "dissolving under the heat and pressure", "crushed", "turned to stone",
-    "turned into slime", "genocided", "panic", "trickery", "quit",
+    "turned into slime", "annihilated", "panic", "trickery", "quit",
     "escaped", "ascended"
 };
 
@@ -298,7 +298,7 @@ static NEARDATA const char *ends[] = {
     "starved", "drowned", "burned",
     "dissolved in the lava",
     "were crushed", "turned to stone",
-    "turned into slime", "were genocided",
+    "turned into slime", "were annihilated",
     "panicked", "were tricked", "quit",
     "escaped", "ascended"
 };
@@ -1276,7 +1276,7 @@ done(int how)
             (void) adjattrib(A_CON, -1, TRUE);
             savelife(how);
             if (how == GENOCIDED) {
-                pline("Unfortunately you are still genocided...");
+                pline("Unfortunately you are still annihilated...");
             } else {
                 char killbuf[BUFSZ];
                 formatkiller(killbuf, BUFSZ, how, FALSE);

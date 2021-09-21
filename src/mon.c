@@ -98,7 +98,7 @@ sanity_check_single_mon(
             return;
         }
         if (chk_geno && (g.mvitals[mndx].mvflags & G_GENOD) != 0)
-            impossible("genocided %s in play (%s)",
+            impossible("annihilated %s in play (%s)",
                         pmname(&mons[mndx], Mgender(mtmp)), msg);
         if (mtmp->mtame && !mtmp->mpeaceful)
             impossible("tame %s is not peaceful (%s)",

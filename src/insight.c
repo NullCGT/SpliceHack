@@ -2013,9 +2013,9 @@ show_conduct(int final)
 
     ngenocided = num_genocides();
     if (ngenocided == 0) {
-        you_have_never("genocided any monsters");
+        you_have_never("annihilated any monsters");
     } else {
-        Sprintf(buf, "genocided %d type%s of monster%s", ngenocided,
+        Sprintf(buf, "annihilated %d type%s of monster%s", ngenocided,
                 plur(ngenocided), plur(ngenocided));
         you_have_X(buf);
     }
@@ -2692,7 +2692,7 @@ num_genocides(void)
         if (g.mvitals[i].mvflags & G_GENOD) {
             ++n;
             if (UniqCritterIndx(i))
-                impossible("unique creature '%d: %s' genocided?",
+                impossible("unique creature '%d: %s' annihilated?",
                            i, mons[i].pmnames[NEUTRAL]);
         }
     }
@@ -2747,7 +2747,7 @@ list_genocided(char defquery, boolean ask)
     if (ngenocided != 0 || nextinct != 0) {
         Sprintf(buf, "Do you want a list of %sspecies%s%s?",
                 (nextinct && !ngenocided) ? "extinct " : "",
-                (ngenocided) ? " genocided" : "",
+                (ngenocided) ? " annihilated" : "",
                 (nextinct && ngenocided) ? " and extinct" : "");
         c = ask ? yn_function(buf, ynqchars, defquery) : defquery;
         if (c == 'q')
@@ -2755,7 +2755,7 @@ list_genocided(char defquery, boolean ask)
         if (c == 'y') {
             klwin = create_nhwindow(NHW_MENU);
             Sprintf(buf, "%s%s species:",
-                    (ngenocided) ? "Genocided" : "Extinct",
+                    (ngenocided) ? "Annihilated" : "Extinct",
                     (nextinct && ngenocided) ? " or extinct" : "");
             putstr(klwin, ATR_SUBHEAD, buf);
             if (!dumping)

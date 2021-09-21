@@ -1772,9 +1772,9 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
         }
         break;
     }
-    case SCR_GENOCIDE:
+    case SCR_ANNIHILATION:
         if (!already_known)
-            You("have found a scroll of genocide!");
+            You("have found a scroll of annihilation!");
         g.known = TRUE;
         if (sblessed)
             do_class_genocide();
@@ -2651,7 +2651,7 @@ do_class_genocide(void)
             return;
         }
         do {
-            getlin("What class of monsters do you wish to genocide?", buf);
+            getlin("What class of monsters do you wish to annihilate?", buf);
             (void) mungspaces(buf);
         } while (!*buf);
         /* choosing "none" preserves genocideless conduct */
@@ -2678,7 +2678,7 @@ do_class_genocide(void)
             if (gonecnt)
                 pline("All such monsters are already nonexistent.");
             else if (immunecnt || class == S_invisible)
-                You("aren't permitted to genocide such monsters.");
+                You("aren't permitted to annihilate such monsters.");
             else if (wizard && buf[0] == '*') {
                 register struct monst *mtmp, *mtmp2;
 
@@ -2715,10 +2715,10 @@ do_class_genocide(void)
                     if (!ll_done++) {
                         if (!num_genocides())
                             livelog_printf(LL_CONDUCT | LL_GENOCIDE,
-                                           "performed %s first genocide (class %c)",
+                                           "performed %s first annihilation (class %c)",
                                            uhis(), def_monsyms[class].sym);
                         else
-                            livelog_printf(LL_GENOCIDE, "genocided class %c", def_monsyms[class].sym);
+                            livelog_printf(LL_GENOCIDE, "annihilated class %c", def_monsyms[class].sym);
                     }
                     g.mvitals[i].mvflags |= (G_GENOD | G_NOCORPSE);
                     kill_genocided_monsters();
@@ -2777,7 +2777,7 @@ do_class_genocide(void)
                         if (i == PM_HIGH_CLERIC)
                             uniq = FALSE;
 
-                        You("aren't permitted to genocide %s%s.",
+                        You("aren't permitted to annihilate %s%s.",
                             (uniq && !named) ? "the " : "",
                             (uniq || named) ? mons[i].pmnames[NEUTRAL] : nam);
                     }
@@ -2786,7 +2786,7 @@ do_class_genocide(void)
         }
         if (gameover || u.uhp == -1) {
             g.killer.format = KILLED_BY_AN;
-            Strcpy(g.killer.name, "scroll of genocide");
+            Strcpy(g.killer.name, "scroll of annihilation");
             if (gameover)
                 done(GENOCIDED);
         }
@@ -2826,7 +2826,7 @@ do_genocide(int how)
                 pline1(thats_enough_tries);
                 return;
             }
-            getlin("What monster do you want to genocide? [type the name]",
+            getlin("What monster do you want to annihilate? [type the name]",
                    buf);
             (void) mungspaces(buf);
             /* choosing "none" preserves genocideless conduct */
@@ -2898,9 +2898,9 @@ do_genocide(int how)
     if (how & REALLY) {
         if (!num_genocides())
             livelog_printf(LL_CONDUCT | LL_GENOCIDE,
-                           "performed %s first genocide (%s)", uhis(), makeplural(buf));
+                           "performed %s first annihilation (%s)", uhis(), makeplural(buf));
         else
-            livelog_printf(LL_GENOCIDE, "genocided %s", makeplural(buf));
+            livelog_printf(LL_GENOCIDE, "annihilated %s", makeplural(buf));
 
         /* setting no-corpse affects wishing and random tin generation */
         g.mvitals[mndx].mvflags |= (G_GENOD | G_NOCORPSE);
@@ -2921,14 +2921,14 @@ do_genocide(int how)
             u.uhp = -1;
             if (how & PLAYER) {
                 g.killer.format = KILLED_BY;
-                Strcpy(g.killer.name, "genocidal confusion");
+                Strcpy(g.killer.name, "self-destructive confusion");
             } else if (how & ONTHRONE) {
                 /* player selected while on a throne */
                 g.killer.format = KILLED_BY_AN;
                 Strcpy(g.killer.name, "imperious order");
             } else { /* selected player deliberately, not confused */
                 g.killer.format = KILLED_BY_AN;
-                Strcpy(g.killer.name, "scroll of genocide");
+                Strcpy(g.killer.name, "scroll of annihilation");
             }
 
             /* Polymorphed characters will die as soon as they're rehumanized.

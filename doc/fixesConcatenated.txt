@@ -3253,7 +3253,7 @@ wounded legs on a steed doesn't count as a prayer trouble
 wounded legs on a steed doesn't abuse dexterity
 make wounded legs gained by falling off a steed consistent (dexterity loss)
 land mines while mounted should hurt the steed
-self-genocide while sitting on a throne should not refer to scroll of genocide
+self-genocide while sitting on a throne should not refer to scroll of annihilation
 eating dogfood or fixing a squeaky board conveys experience but didn't
 	check for gaining a new level
 demon bribes are 4x larger than they should be for co-aligned players

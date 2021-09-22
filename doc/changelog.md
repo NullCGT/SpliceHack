@@ -2,6 +2,7 @@
 ##                             Version 1.0.0
 
 *note- some items and monsters were implemented in older versions of splicehack.*
+
 *information about those older versions can be found in oldChangelog.txt*
 
 ### Species Changes
@@ -166,7 +167,8 @@ in its own way.
 - The orcs in orctown have built a kitchen, complete with furnace, sink, and icebox!
 - Two Oracle levels arrived from xNetHack, and the standard level varies a bit.
 - Secret corridors no longer generate; secret doors still exist.
-- The first floor of Sokoban has 3 new variants: 1c, 1f, and 1h.
+- Sokoban levels cannot be flipped.
+- Sokoban has new levels: they are listed on nethackwiki.com as [1C](https://nethackwiki.com/wiki/Sokoban_Level_1c), [1F](https://nethackwiki.com/wiki/Sokoban_Level_1f), [1H](https://nethackwiki.com/wiki/Sokoban_Level_1h), [3E](https://nethackwiki.com/wiki/Sokoban_Level_3e), and [4D](https://nethackwiki.com/wiki/Sokoban_Level_4d)
 - The second floor of Sokoban has been upgraded to demogorgon22's Lokoban.
 - Hitting a tree with a death ray results in a dead tree.
 #### Furnaces

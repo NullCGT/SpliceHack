@@ -14,23 +14,23 @@
 
 #### Creating a PR
 * if you haven't done so yet, "Fork" this repo on github ![image](https://user-images.githubusercontent.com/62170514/134273835-297c7819-a628-43a3-96a8-04f2734a6534.png)
-* then clone *your* SpliceHack repo onto your computer. eg: `git clone https://github.com/RojjaCebolla/SpliceHack-Rewrite`
+* then clone *your* SpliceHack repo onto your computer. eg: `git clone https://github.com/RojjaCebolla/SpliceHack`
 * move to a new branch: `git checkout -b FourNewGrenades`
 * make your changes
   * if you finish up a change, like adding a new item, "commit" that, then make a separate commit when you do something different, like changing an existing item.
   * in other words, try to keep commits "atomic", here's why that will make your life easier: https://www.freshconsulting.com/insights/blog/atomic-commits/
 * include succinct commit titles like "Add four new grenades" or "Remove lichen" or "Increase damage for skilled+ weapon use"
 * push those changes to your repo: `git push --set-upstream upstream FourNewGrenades`
-* open a Pull Request here, on NullCGT/SpliceHack-Rewrite
+* open a Pull Request here, on NullCGT/SpliceHack
 * alternate set of instructions for creating a PR: https://docs.github.com/en/articles/creating-a-pull-request
 
 #### Create Bug Reports
-* https://github.com/NullCGT/SpliceHack-Rewrite/issues
+* https://github.com/NullCGT/SpliceHack/issues
 * in the future, a good Issue template would be helpful, anyone can write it!
 
 #### Take "static" level files and use Lua to make them dynamic
 * This was a good project for one of the newer SpliceHack devs. Check out dat/castle.lua and in particular look at sections of the level that have a percent chance() of being in play. this shuffles a little bit of variety into what was otherwise, previously, a classic, static "DES" file.
-* This is the documentation for the Lua format: https://github.com/NullCGT/SpliceHack-Rewrite/blob/Spl-R-1.0.0/doc/lua.adoc
+* This is the documentation for the Lua format: https://github.com/NullCGT/SpliceHack/blob/Spl-R-1.0.0/doc/lua.adoc
 * This describes the way DES files used to be done: https://nethackwiki.com/wiki/Des-file_format
 * Some of the things that can be done in Lua were also possible with DES files, and the documentation in the DES page is a bit more detailed, so it's worth checking if you get stuck!
 * Look in the dat/ folder for other Lua files that describe levels. If the map is one static thing without any variety, maybe work in a random chance for some grass, or a random chance to change the shape of a terrain feature.

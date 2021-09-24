@@ -754,23 +754,23 @@ doforging(void)
             if ((obj1->otyp == fusions[i][1] && obj2->otyp == fusions[i][2]) ||
                 (obj2->otyp == fusions[i][1] && obj1->otyp == fusions[i][2])) {
                 obj1->otyp = fusions[i][0];
+                /* Take on the secondary object's material. */
+                if ((obj1->oclass == ARMOR_CLASS || obj1->oclass == WEAPON_CLASS || is_weptool(obj1))
+                    && valid_obj_material(obj1, obj2->material)) obj1->material = obj2->material;
+                /* Use whichever enchantment is higher. */
+                if (obj2->spe > obj1->spe) obj1->spe = min(obj2->spe, 10);
+                /* Keep curses around. */
+                if (obj2->cursed) obj1->cursed = TRUE;
+                /* Transfer corpsenm */
+                if (obj2->corpsenm) obj1->corpsenm = obj2->corpsenm;
+                useup(obj2);
+                update_inventory();
+                /* Print a message. */
+                pline("You combine the items in the furnace.");
                 break;
             }
         }
     }
-    /* Take on the secondary object's material. */
-    if ((obj1->oclass == ARMOR_CLASS || obj1->oclass == WEAPON_CLASS || is_weptool(obj1))
-        && valid_obj_material(obj1, obj2->material)) obj1->material = obj2->material;
-    /* Use whichever enchantment is higher. */
-    if (obj2->spe > obj1->spe) obj1->spe = min(obj2->spe, 10);
-    /* Keep curses around. */
-    if (obj2->cursed) obj1->cursed = TRUE;
-    /* Transfer corpsenm */
-    if (obj2->corpsenm) obj1->corpsenm = obj2->corpsenm;
-    useup(obj2);
-    update_inventory();
-    /* Print a message. */
-    if (!combi_done) pline("You combine the items in the furnace.");
     /* Destroy the furnace. */
     pline("The lava in the furnace cools.");
     levl[u.ux][u.uy].typ = ROOM;

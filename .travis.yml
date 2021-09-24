@@ -109,7 +109,6 @@ matrix:
               sed -i '/^#define SYSCF/d'          include/config.h
               sed -i '/^#define USER_SOUNDS/d'    include/config.h
               sed -i '/^#define XLOGFILE/d'       include/config.h
-
               sed -i '/^#define MAIL/d'           include/unixconf.h
               sed -i '/^#define SHELL/d'          include/unixconf.h
               sed -i '/^#define SUSPEND/d'        include/unixconf.h
@@ -123,34 +122,34 @@ matrix:
       language: shell
       script:
         - ./win/win32/vs/travisci.sh
-    - name: windows-mingw
-      os: windows
+#    - name: windows-mingw
+#      os: windows
 #     install: choco install mingw
-      script:
-        - export ADD_CURSES=Y
-        - export PDCURSES_TOP=../lib/pdcurses
-        - export LUA_VERSION=5.4.3
-        - sh sys/windows/travis-gcc.sh
-        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-        - test -d "lib/pdcurses" || exit 0
-        - cd src
-        - cp ../sys/windows/Makefile.gcc ./Makefile
-        - mingw32-make LUA_VERSION=$LUA_VERSION install
-    - name: msdos-linux-focal-djgpp-crosscompile
-      os: linux
-      env: HINTS=linux.2020 LUA_VERSION=5.4.3
-      dist: focal
-      compiler: gcc
-      script:
+#      script:
+#        - export ADD_CURSES=Y
+#        - export PDCURSES_TOP=../lib/pdcurses
+#        - export LUA_VERSION=5.4.0
+#        - sh sys/winnt/travis-gcc.sh
+#        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+#        - test -d "lib/pdcurses" || exit 0
+#        - cd src
+#        - cp ../sys/winnt/Makefile.gcc ./Makefile
+#        - mingw32-make LUA_VERSION=$LUA_VERSION install
+#    - name: msdos-linux-focal-djgpp-crosscompile
+#      os: linux
+#      env: HINTS=linux.2020 LUA_VERSION=5.4.0
+#      dist: focal
+#      compiler: gcc
+#      script:
 #        - export
 #        - export GCCVER=gcc550
-        - export GCCVER=gcc1010
-        - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
-        - make fetch-lua
-        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
-        - sh sys/msdos/fetch-cross-compiler.sh
-        - make LUA_VERSION=$LUA_VERSION WANT_WIN_TTY=1 WANT_WIN_CURSES=1 CROSS_TO_MSDOS=1 all
-        - make LUA_VERSION=$LUA_VERSION WANT_WIN_TTY=1 WANT_WIN_CURSES=1 CROSS_TO_MSDOS=1 package
+#        - export GCCVER=gcc1010
+#        - cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../
+#        - make fetch-lua
+#        - test -d "lib/lua-$LUA_VERSION/src" || exit 0
+#        - sh sys/msdos/fetch-cross-compiler.sh
+#        - make LUA_VERSION=$LUA_VERSION WANT_WIN_TTY=1 WANT_WIN_CURSES=1 CROSS_TO_MSDOS=1 all
+#        - make LUA_VERSION=$LUA_VERSION WANT_WIN_TTY=1 WANT_WIN_CURSES=1 CROSS_TO_MSDOS=1 package
   exclude:
 #    - os: osx
 #      osx_image: xcode10.3
@@ -162,23 +161,17 @@ matrix:
       env: HINTS=macosx10.14
       compiler: clang
       script: "cd sys/unix/ && sh setup.sh hints/$HINTS && cd ../../ && make install"
-#
 sudo: false
-notifications:
-  email:
-    recipients:
-      - devteam@nethack.org
-#
 deploy:
   provider: releases
   api_key:
-    secure: "U0Dt2CXrcG8Yi4taUCT/6AnM+0IJtdCv6IVG/2rGooUY3pZjNWE9XDM6X9ZeAmbI79aN6FPTppjUf3KbB/upYeJt+8mrjnxEk/ZTO1xXDDW8iL/DiqnczoFsMGmPsTM+Fkeak8bu0SifI7Qkx9i1N+zOyl2VdlaxGjchPfl/OJw2jcQs7rOGRfr23/rapZKTcFq+BFlxMiIHa0dXbCJ9vagdlyAeclOCtPjw1VoH/Cb/+0/Xlx2MFPncw4/1P+bO/fPantHyehh3/WCDVCnI4M7ftONpsTVRrQ+Hml89teUH9/1xXUOpbCeVghWr1rumLcQzMqLKNj2lP/gm9co2/DKpxiUPUzBfO/9Jvl1CNoEwPYQBRNb38kggDvAT4vKX38Oi5sZvumFEO4L0y7o4cW6SA4/CYIykfxOdkrryt8ltfWwopdy3I/DothYw31vJ9GsZOCAShFRAy3hJxYUbHhT+7SDUBadVSEkb4UqxQ+7zntAVT+Lp4DXLAfvsWxZGrQoP/IrWAgNOLRKILubpzh+YpadMH3Ygha2JRAeJAEZ3DnXf3vOOAucWnk4mNXDbW35GTDTAJDWMvddZCfsrUI/uHxgaRjFs9fLX1X5tqhGnsr27sKLWyX+zrIPVV0TPl3AzYPAf6Bc8Okeu+JEGQERvvgSasCuYcmhgYznBVJI="
+    secure: b/g11ewW6d6oeulqVXmrdeaTP1PBh60EDZvB6b2pyQxT/MTfL0hrVuuXutdSUKWhams2bxeCfzUCdmC3siqSlyXLDpUHhPRnW+Y8TNVApB6Dymg+nbi/+5d/v/wUSYfBJDm6o7dUMJHS5g8xO8RKFhLXu9fbmg0OrcOc42xaa+OHAqJZF+a2oZTnf/olv57PDOsBXOS6q7A5160IpH4wFkoT/4m6xdqGRNjePWQIrzzH3Jsnqf4o9pbpbCFOKHW9ekWqc+y6QBBOxQO+grhSwbAHCs8afCTPJEQ7TMSBMN6XyvyLGYepv/1BPxd5onm6aKcCaKgDyqHrNObjEyy1tH/a9WL4LegoOFSK7RJuBPUyCjYyPQ2o9mY0/ctrh6ta/JL5zVhNmdEC/jZvU5NyBSMkZy/c4as9Lq7CSuvhsjLCic/lR8Kfr9pae6EpG8oNfrMUcUMH+dulF4eRRyIzV+9beRDhIFjXue6UIRFlaBAw0XOlD3poW6lgurPzyC/v4Kji+tcds65uoq3jVTB/8wQckqOANOziOLCvI1OrvwnHVYt7G3Oa1NSaMwN3yF0fIsWqq1hDwz8M4c4wzrLJauCYdM0a85EHHjSo2nChLDEMiYdUNSY/r5++r8QMj0GCYwB9Xx/5ew6BTfLgmz2EN1XUg+7xwAn0n0LGYR5qcBA=
   file_glob: true
-  file: 
+  file:
     - "$TRAVIS_TAG.x86.zip"
   skip_cleanup: true
   on:
     tags: true
   prerelease: true
-  name: "Pre-Release build of NetHack 3.7.0"
-  body: "This is an auto generated Pre-Release build of NetHack 3.7.0"
+  name: "Splice-R 1.0.0"
+  body: "This is an auto generated release build of Splice-R 1.0.0"

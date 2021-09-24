@@ -67,7 +67,7 @@ that it is more enjoyable and easier to maintain.
 SpliceHack's development is currently being driven by the following individuals.
 
 - AntiGulp (Admin)
-- SpicyCebollaFlump
+- Rojja Spicycat Flump-Cebolla
 
 Special thanks go out to qt, K2, aosdict for being frequent contributors to and
 influences on the code, and K2 for hosting it publicly. Credit to the vanilla dev

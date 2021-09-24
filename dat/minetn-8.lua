@@ -27,7 +27,7 @@ des.map({ halign = "center", valign = "top", map = [[
 .......--.....................----------
 ]] });
 
-des.region({ region={00,00,38,15}, lit=1, type="ordinary" })
+des.region({ region={00,00,39,15}, lit=1, type="ordinary" })
 des.levregion({ type="stair-up", region={01,03,20,19}, region_islev=1, exclude={0,0,39,15} })
 des.levregion({ type="stair-down", region={61,03,75,19}, region_islev=1, exclude={0,0,39,15} })
 des.feature("fountain" ,23,07)
@@ -89,7 +89,7 @@ des.monster({ id = "python", coord={in_zoo:rndcoord(1)}, peaceful = 0})
 if percent(85) then
     des.monster({ id = "mumak", coord={in_zoo:rndcoord(1)}, peaceful = 0})
 else
-    des.monster({ id = "bear", coord={in_zoo:rndcoord(1)}, peaceful = 0})
+    des.monster({ id = "black bear", coord={in_zoo:rndcoord(1)}, peaceful = 0})
 end
 -- and a couple token handlers
 des.monster({ id = "Mordor orc", coord={in_zoo:rndcoord(1)}, peaceful = 0,

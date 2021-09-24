@@ -772,11 +772,6 @@ doforging(void)
     update_inventory();
     /* Print a message. */
     if (!combi_done) pline("You combine the items in the furnace.");
-    /* Destroy the furnace. */
-    pline("The lava in the furnace cools.");
-    levl[u.ux][u.uy].typ = ROOM;
-    newsym(u.ux, u.uy);
-    g.level.flags.nfurnaces--;
     return 0;
 }
 

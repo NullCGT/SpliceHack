@@ -78,6 +78,10 @@ SpliceHack is largely derived from NetHack 3.7 and SLASH'EM, but pulls features
 from numerous other NetHack variants. A more comprehensive list of sources can
 be found in the [sources file](sources.txt).
 
+## Contributing
+
+Please see contributing.md.
+
 ## Disclaimer
 
 SpliceHack follows the conditions put forth in the license provided by the

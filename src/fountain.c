@@ -758,10 +758,9 @@ doforging(void)
             }
         }
     }
-    /* Take on the secondary object's material.
-    if (valid_obj_material(obj1, obj2->material)) obj1->material = obj2->material;
-     * XXX - obj material changes mess up wands, and could be confusing in
-     * other forging situations as well. commented out for now. TODO/FIXME */
+    /* Take on the secondary object's material. */
+    if ((obj1->oclass == ARMOR_CLASS || obj1->oclass == WEAPON_CLASS || is_weptool(obj1))
+        && valid_obj_material(obj1, obj2->material)) obj1->material = obj2->material;
     /* Use whichever enchantment is higher. */
     if (obj2->spe > obj1->spe) obj1->spe = min(obj2->spe, 10);
     /* Keep curses around. */

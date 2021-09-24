@@ -703,7 +703,7 @@ doforging(void)
     feel_cockatrice(obj2, TRUE);
     if (rider_corpse_revival(obj2, FALSE))
         return 1;
-    /* Artifacts can never be applied to a non-arficat base. */
+    /* Artifacts can never be applied to a non-artifact base. */
     if (obj2->oartifact && !obj1->oartifact) {
         obj1 = obj2;
     }
@@ -776,7 +776,8 @@ doforging(void)
         newsym(u.ux, u.uy);
         g.level.flags.nfurnaces--;
         return 0;
-    }
+    } else pline("These objects don't seem to be compatible for forging.");
+    return 1;
 }
 
 void

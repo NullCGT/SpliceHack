@@ -674,7 +674,7 @@ doforging(void)
 {
     struct obj* obj1;
     struct obj* obj2;
-    boolean combi_done = FALSE;
+    boolean combi_done = FALSE; /* used to transfer obj2 onto obj1, and remove furnace */
     int arti_id = 0;
     int i;
     if (!IS_FURNACE(levl[u.ux][u.uy].typ)) {
@@ -735,12 +735,12 @@ doforging(void)
         pline("You imbue %s with the %s essence.",
             yobjnam(obj1, (char *) 0),
             mons[obj2->corpsenm].pmnames[NEUTRAL]);
-        obj1->corpsenm = obj2->corpsenm;
-        useup(obj2);
-        update_inventory();
         if (!rn2(2)) {
-            combi_done = TRUE;
+            combi_done = TRUE; /* most of the steps in combi_done don't apply here, but aren't "bad" */
         } else {
+            obj1->corpsenm = obj2->corpsenm;
+            useup(obj2);
+            update_inventory();
             pline("The lava in the furnace bubbles ominously.");
             return 0;
         }
@@ -754,14 +754,6 @@ doforging(void)
                 /* Take on the secondary object's material. */
                 if ((obj1->oclass == ARMOR_CLASS || obj1->oclass == WEAPON_CLASS || is_weptool(obj1))
                     && valid_obj_material(obj1, obj2->material)) obj1->material = obj2->material;
-                /* Use whichever enchantment is higher. */
-                if (obj2->spe > obj1->spe) obj1->spe = min(obj2->spe, 10);
-                /* Keep curses around. */
-                if (obj2->cursed) obj1->cursed = TRUE;
-                /* Transfer corpsenm */
-                if (obj2->corpsenm) obj1->corpsenm = obj2->corpsenm;
-                useup(obj2);
-                update_inventory();
                 /* Print a message. */
                 pline("You combine the items in the furnace.");
                 combi_done = TRUE;
@@ -770,6 +762,14 @@ doforging(void)
         }
     }
     if (combi_done) {
+        /* Use whichever enchantment is higher. */
+        if (obj2->spe > obj1->spe) obj1->spe = min(obj2->spe, 10);
+        /* Keep curses around. */
+        if (obj2->cursed) obj1->cursed = TRUE;
+        /* Transfer corpsenm */
+        if (obj2->corpsenm) obj1->corpsenm = obj2->corpsenm;
+        useup(obj2);
+        update_inventory();
         /* Destroy the furnace. */
         pline("The lava in the furnace cools.");
         levl[u.ux][u.uy].typ = ROOM;

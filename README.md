@@ -25,6 +25,7 @@ to this variant's github page.
 - SpliceHack is hosted online at https://www.hardfought.org.
 - Advanced users can compile SpliceHack from the source using the same steps as one
   would use to compile NetHack 3.7.
+- For a detailed changelog, you can read doc/changelog.md.
 
 ## Configuration
 The first question most new players have about NetHack is how to configure the game
@@ -57,10 +58,10 @@ a basis for your own tilesets.
 
 ## Why the Rewrite?
 
-When I started writing SpliceHack, I was not as opinionated or as strong of a developer
+When I started writing SpliceHack, I wasn't as opinionated or as skilled of a developer
 as I am now, and I had much less experience in balancing a game and making it fun to play.
 This rewrite is an effort to improve both the code and the gameplay of SpliceHack, so 
-that it is more enjoyable and easier to maintain.
+that it's more enjoyable and easier to maintain.
 
 ## Collborators and Acknowledgements
 
@@ -115,7 +116,7 @@ SpliceHack's design philosophy has evolved over time. At present, these are the 
    is not.
 
 6. Any change to the "canon" of the game, such as the identity of the player, must be carefully
-   considerd, and existing lore must be taken into account.
+   considered, and existing lore must be taken into account.
 
 7. Hateful, edgy, and otherwise objectionable content should be avoided. SpliceHack is a game
    for everyone.
@@ -123,7 +124,7 @@ SpliceHack's design philosophy has evolved over time. At present, these are the 
    7.1 Although the language of the external game may change, sometimes the source code will stay
        the same. This is for the purposes of remaining semi-compatible with Vanilla's codebase, as
        well as because of the sheer size of the codebase, and the danger of large scale replacements.
-       As an example, "race" is used over "culture" ingame, but not in the codebase, since changing
+       As an example, "culture" is used over "race" ingame, but not in the codebase, since changing
        it in the code would involve replacing hundreds of lines, and break all compatibility with
        vanilla NetHack. Although this is obviously not an ideal solution, it is temporarily workable.
 

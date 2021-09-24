@@ -33,14 +33,14 @@ des.map([[
 .|.................................F.
 .-----------F------------F----------.
 .....................................
-]]);
+]])
 
 -- Don't let the player fall into their likely death; used to explicitly exclude
 -- the town, but that meant that you couldn't teleport out as well as not in.
 des.teleport_region({ region={01,01,20,19}, region_islev=1 })
 des.region(selection.area(01,01,35,17), "lit")
 des.levregion({ type="stair-up", region={01,03,20,19}, region_islev=1,
-      exclude={00,01,36,17} });
+      exclude={00,01,36,17} })
 des.levregion({ type="stair-down", region={61,03,75,19}, region_islev=1,
       exclude={00,01,36,17} })
 
@@ -72,7 +72,7 @@ des.replace_terrain({ region={28,12,28,14}, fromterrain="|", toterrain=".", chan
 
 -- One spot each in most shops...
 local place = { {05,04},{09,05},{13,04},{26,04},{31,05},{30,14},{05,14},{10,13},{26,14},{27,13} }
-shuffle(place);
+shuffle(place)
 
 -- scatter some bodies
 des.object({ id = "corpse", x=20,y=12, montype="aligned cleric" })
@@ -113,36 +113,64 @@ des.object({ id = "striking", coord = place[4], buc="uncursed", spe=0 })
 des.object({ id = "magic missile", coord = place[4], buc="uncursed", spe=0 })
 des.object({ id = "magic missile", coord = place[5], buc="uncursed", spe=0 })
 
--- resourceful orcs have set up a kitchen, and are preparing to   12,04-14,06
+-- resourceful orcs have set up a kitchen, and are preparing to
 -- "process" the former residents of minetown to feed the troops
-if percent(50) then
-   des.object({ id = "ice box", trapped = 1, locked = 0, x = 12, y = 04 });
+-- kitchen area: 12,04 to 14,06
+des.object({ id = "large box", x = 12, y = 04, -- Pantry: dry kitchen supplies
+    contents = function()
+    if percent (80) then
+    des.object('knife')
+    end
+    if percent (80) then
+    des.object("tin opener")
+    end
+    if percent (80) then
+    des.object({ class='!', id='oil' })
+    end
+    if percent (80) then
+    des.object({ class='%', id='clove of garlic', quantity = math.random(1,4) })
+    end
+    if percent (80) then
+    des.object({ class='!', id='booze', quantity = math.random(1,4) })
+    end
 end
-des.object({ id = "ice box", trapped = 1, locked = 0, x = 12, y = 05,
-             contents = function()
-               des.object({ id = "corpse", montype="gnome", quantity=math.random(1,3) });
-               des.object({ id = "corpse", montype="dwarf", quantity=math.random(1,2) });
-               des.object({ id = "corpse", montype="human", quantity=math.random(0,2) });
-               des.object({ id = "corpse", montype="goblin", quantity=math.random(0,1) });
-               des.object({ id = "corpse", montype="orc-captain", quantity=math.random(0,1) });
-             end
-});
+})
+des.object({ id = "ice box", x = 12, y = 05, -- Fridge: cold kitchen supplies
+    contents = function()
+    if percent (80) then
+    des.object({ class='%', id='egg', quantity = math.random(1,4) })
+    end
+    if percent (80) then
+    des.object({ class='!', id='fruit juice', quantity = math.random(1,4) })
+    end
+    if percent (80) then
+    des.object({ id = "corpse", montype = "gnome", quantity = math.random(1,3) })
+    end
+    if percent (80) then
+    des.object({ id = "corpse", montype = "dwarf", quantity = math.random(1,2) })
+    end
+    if percent (50) then
+    des.object({ id = "corpse", montype = "human", quantity = math.random(1,2) })
+    end
+    if percent (50) then
+    des.object({ id = "corpse", montype = "goblin" })
+    end
+    if percent (50) then
+    des.object({ id = "corpse", montype = "orc-captain" })
+    end
+end
+})
 des.feature("furnace",  13,04)
 des.feature("sink",     14,04)
 if percent (80) then
 des.object("dented pot", 13, 05)
 end
 if percent (80) then
-des.object("knife", 13, 05)
-end
-if percent (80) then
 des.object("apron", 13, 05)
 end
 if percent (80) then
-des.object("tin opener", 13, 05)
-end
-if percent (80) then
-   des.monster({ id = "orc", x=13, y=05, name = "Cookie of Glothris" });
+des.monster({ id = "goblin", x = 13, y = 05, peaceful = 1,
+        name = "Cookie of Glothris",  }) -- the chef. not a warrior.
 end
 
 -- the Orcish Army
@@ -152,7 +180,7 @@ local near_temple = selection.area(17,8, 23,14) & inside
 
 for i=1,5 + math.random(1 - 1,1*10) do
    if percent(50) then
-      des.monster({ id = "orc-captain", coord = { inside:rndcoord(1) }, peaceful=0 });
+      des.monster({ id = "orc-captain", coord = { inside:rndcoord(1) }, peaceful=0 })
    else
       if percent(80) then
          des.monster({ id = "Uruk-hai", coord = { inside:rndcoord(1) }, peaceful=0 })
@@ -163,7 +191,7 @@ for i=1,5 + math.random(1 - 1,1*10) do
 end
 -- shamans can be hanging out in/near the temple
 for i=1,math.random(2 - 1,2*3) do
-   des.monster({ id = "orc shaman", coord = { near_temple:rndcoord(0) }, peaceful=0 });
+   des.monster({ id = "orc shaman", coord = { near_temple:rndcoord(0) }, peaceful=0 })
 end
 -- these are not such a big deal
 -- to run into outside the bars

@@ -739,14 +739,11 @@ doforging(void)
         useup(obj2);
         update_inventory();
         if (!rn2(2)) {
-            pline("The lava in the furnace cools.");
-            levl[u.ux][u.uy].typ = ROOM;
-            newsym(u.ux, u.uy);
-            g.level.flags.nfurnaces--;
+            combi_done = TRUE;
         } else {
             pline("The lava in the furnace bubbles ominously.");
+            return 0;
         }
-        return 0;
     }
     /* Mundane item fusions */
     if (!combi_done) {
@@ -767,16 +764,19 @@ doforging(void)
                 update_inventory();
                 /* Print a message. */
                 pline("You combine the items in the furnace.");
+                combi_done = TRUE;
                 break;
             }
         }
     }
-    /* Destroy the furnace. */
-    pline("The lava in the furnace cools.");
-    levl[u.ux][u.uy].typ = ROOM;
-    newsym(u.ux, u.uy);
-    g.level.flags.nfurnaces--;
-    return 0;
+    if (combi_done) {
+        /* Destroy the furnace. */
+        pline("The lava in the furnace cools.");
+        levl[u.ux][u.uy].typ = ROOM;
+        newsym(u.ux, u.uy);
+        g.level.flags.nfurnaces--;
+        return 0;
+    }
 }
 
 void

@@ -5,7 +5,7 @@ additional monsters, items, special levels, and game features without changing
 too much of the core gameplay. The end goal is a "kitchen sink" variant that is 
 still intuitive and easy to pick up and play for anyone familiar with vanilla NetHack.
 
-![Screenshot](images/curses.png)
+![Screenshot](images/screenshots/curses.png)
 
 ## Features
 * Monsters riding other monsters.

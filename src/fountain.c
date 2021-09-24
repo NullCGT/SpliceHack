@@ -683,7 +683,7 @@ doforging(void)
     }
     obj1 = getobj("use as a base", any_obj_ok, GETOBJ_PROMPT);
     obj2 = getobj("combine with the base item", any_obj_ok, GETOBJ_PROMPT);
-    if (!obj1 && !obj2) {
+    if (!obj1 || !obj2) {
         pline("You need more than one object.");
         return 1;
     }
@@ -754,6 +754,7 @@ doforging(void)
             if ((obj1->otyp == fusions[i][1] && obj2->otyp == fusions[i][2]) ||
                 (obj2->otyp == fusions[i][1] && obj1->otyp == fusions[i][2])) {
                 obj1->otyp = fusions[i][0];
+                obj1->oclass = objects[fusions[i][0]].oc_class;
                 break;
             }
         }

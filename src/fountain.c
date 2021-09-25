@@ -709,7 +709,7 @@ doforging(void)
     }
     /* Artifact fusions. */
     if (obj1->oartifact && obj2->oartifact) {
-        for (int i = 0; fusions[i][0] > 0; i++) {
+        for (i = 0; fusions[i][0] > 0; i++) {
             if ((obj1->oartifact == artifusions[i][1] && obj2->oartifact == artifusions[i][2]) ||
                 (obj2->oartifact == artifusions[i][1] && obj1->oartifact == artifusions[i][2])) {
                 arti_id = artifusions[i][0];
@@ -750,7 +750,7 @@ doforging(void)
     }
     /* Mundane item fusions */
     if (!combi_done) {
-        for (int i = 0; fusions[i][0] > 0; i++) {
+        for (i = 0; fusions[i][0] > 0; i++) {
             if ((obj1->otyp == fusions[i][1] && obj2->otyp == fusions[i][2]) ||
                 (obj2->otyp == fusions[i][1] && obj1->otyp == fusions[i][2])) {
                 obj1->otyp = fusions[i][0];

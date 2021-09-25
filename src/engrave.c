@@ -792,7 +792,8 @@ doengrave(void)
                             "The bugs on the %s get washed away!", surface(u.ux, u.uy));
                     doknown = TRUE;
                 if (!oep || (oep->engr_type != BURN))
-                    break;
+                    dengr = TRUE;
+                break;
             case WAN_COLD:
                 if (!Blind)
                     Strcpy(post_engr_text,
@@ -1003,7 +1004,7 @@ doengrave(void)
         ptext = FALSE;
     }
     if (zapwand && (otmp->spe < 0
-                    || otmp->otyp == WAN_WISHING && otmp->spe == 0)) {
+                    || (otmp->otyp == WAN_WISHING && otmp->spe == 0))) {
         pline("%s %sturns to dust.", The(xname(otmp)),
               Blind ? "" : "glows violently, then ");
         if (!IS_GRAVE(levl[u.ux][u.uy].typ))

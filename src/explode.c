@@ -171,6 +171,7 @@ explode(
         case 9:
             adstr = "psiblast";
             adtyp = AD_PSYC;
+            break;
         default:
             impossible("explosion base type %d?", type);
             return;
@@ -987,6 +988,7 @@ void arm_bomb(struct obj *obj, boolean yours)
        number of the counting shall be three. */
     if (obj->oarmed)
         return;
+
 	if (obj->oartifact == ART_HAND_GRENADE_OF_ANTIOCH) {
         attach_bomb_blow_timeout(obj, 3, yours);
     } else if (is_grenade(obj)) {

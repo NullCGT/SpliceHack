@@ -1937,14 +1937,15 @@ revive_corpse(struct obj *corpse, boolean moldy)
         case OBJ_MINVENT: /* probably a nymph's */
             if (cansee(mtmp->mx, mtmp->my)) {
                 if (canseemon(mcarry)) {
-                    if (mcarry->data == &mons[PM_HEARTH_ARCHON])
+                    if (mcarry->data == &mons[PM_HEARTH_ARCHON]) {
                         if (canseemon(mtmp))
                             pline("%s gently sets %s down as it revives!",
                                 Monnam(mcarry), an(cname));
-                    else
+                    } else {
                         pline("Startled, %s drops %s as it %s!",
                           mon_nam(mcarry), (moldy ? "a corpse" : an(cname)),
                           moldy ? "goes moldy" : "revives");
+                    }
                 } else
                     pline("%s suddenly appears!",
                           chewed ? Adjmonnam(mtmp, "bite-covered")

@@ -1061,7 +1061,7 @@ m_move(register struct monst* mtmp, register int after)
     int omx = mtmp->mx, omy = mtmp->my;
 
     if (mtmp->mtrapped) {
-        int i = mintrap(mtmp);
+        i = mintrap(mtmp);
 
         if (i >= 2) {
             newsym(mtmp->mx, mtmp->my);

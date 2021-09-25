@@ -199,11 +199,12 @@ makedog(void)
             petname = "Idefix"; /* Obelix */
         if (Role_if(PM_CARTOMANCER))
             petname = "Joey"; /* Obscure SpliceHack reference (tm) */
-        if (Role_if(PM_RANGER))
+        if (Role_if(PM_RANGER)) {
             if (Race_if(PM_ELF))
                 petname = "Huan"; /* Silmarillion */
             else
                 petname = "Sirius"; /* Orion's dog */
+        }
     } else if (!*petname && pettype == PM_SEWER_RAT) {
 	    if (Role_if(PM_CONVICT)) petname = "Nicodemus"; /* Rats of NIMH */
     } else if (!*petname && pettype == PM_PARROT) {
@@ -817,6 +818,10 @@ dogfood(struct monst *mon, struct obj *obj)
     boolean carni = carnivorous(mptr), herbi = herbivorous(mptr),
             starving, mblind;
 
+    /* a starving pet will eat almost anything */
+    starving = (mon->mtame && !mon->isminion
+                && EDOG(mon)->mhpmax_penalty);
+
     if (is_quest_artifact(obj) || obj_resists(obj, 0, 95))
         return obj->cursed ? TABU : APPORT;
 
@@ -871,9 +876,6 @@ dogfood(struct monst *mon, struct obj *obj)
         if (!carni && !herbi)
             return obj->cursed ? UNDEF : APPORT;
 
-        /* a starving pet will eat almost anything */
-        starving = (mon->mtame && !mon->isminion
-                    && EDOG(mon)->mhpmax_penalty);
         /* even carnivores will eat carrots if they're temporarily blind */
         mblind = (!mon->mcansee && haseyes(mon->data));
 

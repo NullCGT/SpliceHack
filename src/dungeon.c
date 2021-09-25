@@ -3725,6 +3725,7 @@ dynamic_levname(void)
             Sprintf(buf, "The %s %s",
                 neutral_adj[rn2(SIZE(neutral_adj))],
                 standardnames[rn2(SIZE(standardnames))]);
+            break;
         case 3:
         case 4:
             Sprintf(buf, "The %s %s",

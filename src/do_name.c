@@ -2737,7 +2737,7 @@ struct monst *mtmp;
         } else if (is_orc(mtmp->data)) {
             name = rndorcname(buf);
         } else if (is_human(mtmp->data)) {
-            rndhumname(mtmp->female);
+            name = rndhumname(mtmp->female);
         } else {
             return;
         }

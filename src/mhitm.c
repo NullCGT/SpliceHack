@@ -618,9 +618,7 @@ hitmm(register struct monst *magr, register struct monst *mdef,
       struct attack *mattk, struct obj *mwep, int dieroll)
 {
     boolean weaponhit = (mattk->aatyp == AT_WEAP
-                         || (mattk->aatyp == AT_CLAW && mwep)),
-            silverhit = (weaponhit && mwep
-                         && objects[mwep->otyp].oc_material == SILVER);
+                         || (mattk->aatyp == AT_CLAW && mwep));
 
     pre_mm_attack(magr, mdef);
 

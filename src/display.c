@@ -2057,6 +2057,7 @@ get_bk_glyph(xchar x, xchar y)
             break;
         case GRASS:
            idx = S_grass;
+           break;
         case AIR:
            idx = S_air;
            break;
@@ -2230,18 +2231,18 @@ map_glyphinfo(xchar x, xchar y, int glyph,
         special |= MG_UNEXPL;
     } else if ((offset = (glyph - GLYPH_STATUE_OFF)) >= 0) { /* a statue */
         idx = mons[offset].mlet + SYM_OFF_M;
-        if (has_rogue_color)
-            color = CLR_RED;
-        else if (iflags.use_color && obj && obj->otyp == STATUE
+        obj = sobj_at(STATUE, x, y);
+        if (iflags.use_color && obj && obj->otyp == STATUE
             && obj->material != MINERAL) {
             color = materialclr[obj->material];
-        } else
+        }
+        else {
             obj_color(STATUE);
+        }
         special |= MG_STATUE;
         if (is_objpile(x,y))
             special |= MG_OBJPILE;
-        if ((obj = sobj_at(STATUE, x, y)) != 0
-            && (obj->spe & CORPSTAT_GENDER) == CORPSTAT_FEMALE)
+        if (obj && (obj->spe & CORPSTAT_GENDER) == CORPSTAT_FEMALE)
             special |= MG_FEMALE;
     } else if ((offset = (glyph - GLYPH_WARNING_OFF)) >= 0) { /* warn flash */
         idx = offset + SYM_OFF_W;

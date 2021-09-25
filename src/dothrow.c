@@ -2336,6 +2336,7 @@ breaktest(struct obj *obj)
     case EGG:
         if (obj->corpsenm != PM_PHOENIX)
             return 1;
+        /* FALLTHRU */
     default:
         return 0;
     }

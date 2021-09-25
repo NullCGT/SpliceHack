@@ -339,7 +339,6 @@ demon_talk(register struct monst *mtmp)
 
     /* Slight advantage given. */
     if (is_dprince(mtmp->data) && mtmp->minvis) {
-        boolean wasunseen = !canspotmon(mtmp);
 
         mtmp->minvis = mtmp->perminvis = 0;
         if (!boss_entrance(mtmp)) {

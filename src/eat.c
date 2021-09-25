@@ -894,21 +894,21 @@ givit(int type, register struct permonst *ptr)
     case SLEEP_RES:
         debugpline0("Trying to give sleep resistance");
         if ((HSleep_resistance & (TIMEOUT | FROMRACE | FROMEXPER)) < 100) {
-            You_feel("a bit perkier.");
+            You_feel("%s perkier.", adj);
             incr_resistance(&HSleep_resistance, percentincrease);
         }
         break;
     case COLD_RES:
         debugpline0("Trying to give cold resistance");
         if ((HCold_resistance & (TIMEOUT | FROMRACE | FROMEXPER)) < 100) {
-            You_feel("somewhat warmer.");
+            You_feel("%s warmer.", adj);
             incr_resistance(&HCold_resistance, percentincrease);
         }
         break;
     case DISINT_RES:
         debugpline0("Trying to give disintegration resistance");
         if ((HDisint_resistance & (TIMEOUT | FROMRACE | FROMEXPER)) < 100) {
-            You_feel(Hallucination ? "totally together, man." : "a bit more firm.");
+            You_feel(Hallucination ? "totally together, man." : "%s firm.", adj);
             incr_resistance(&HDisint_resistance, percentincrease);
         }
         break;
@@ -916,9 +916,9 @@ givit(int type, register struct permonst *ptr)
         debugpline0("Trying to give shock resistance");
         if ((HShock_resistance & (TIMEOUT | FROMRACE | FROMEXPER)) < 100) {
             if (Hallucination)
-                You_feel("grounded in reality.");
+                You_feel("%s grounded in reality.", adj);
             else
-                Your("health is slightly more amplified!");
+                Your("health is %s amplified!", adj);
             incr_resistance(&HShock_resistance, percentincrease);
         }
         break;

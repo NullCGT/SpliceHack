@@ -861,9 +861,8 @@ mattacku(register struct monst *mtmp)
                     if (mon_wield_item(mtmp) != 0)
                         break;
                 }
-                if (cursed_weapon_proc(mtmp, &g.youmonst) == 1) {
-                    sum[i] |= MM_AGR_DIED;
-                    break;
+                if (cursed_weapon_proc(mtmp, &g.youmonst)) {
+                    return 1;
                 }
                 if (foundyou) {
                     mon_currwep = MON_WEP(mtmp);

@@ -2454,11 +2454,9 @@ dig_corridor(
 
         crm = &levl[xx][yy];
         if (crm->typ == btyp) {
-            if (ftyp != CORR || rn2(100)) {
-                crm->typ = ftyp;
-                if (nxcor && !rn2(50))
-                    (void) mksobj_at(BOULDER, xx, yy, TRUE, FALSE);
-            }
+            crm->typ = ftyp;
+            if (nxcor && !rn2(50))
+                (void) mksobj_at(BOULDER, xx, yy, TRUE, FALSE);
         } else if (crm->typ != ftyp && crm->typ != SCORR) {
             /* strange ... */
             return FALSE;

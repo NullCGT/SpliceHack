@@ -990,13 +990,14 @@ mksobj(int otyp, boolean init, boolean artif)
                 otmp->lamplit = 0;
                 blessorcurse(otmp, 2);
                 break;
+            case COFFIN:
+                mkbox_cnts(otmp);
+                otmp->otrapped = 1;
+                break;
             case CHEST:
             case LARGE_BOX:
                 otmp->olocked = !!(rn2(5));
                 otmp->otrapped = !(rn2(10));
-                /*FALLTHRU*/
-            case COFFIN:
-                otmp->otrapped = 1;
                 /*FALLTHRU*/
             case ICE_BOX:
             case SACK:

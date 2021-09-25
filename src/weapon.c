@@ -663,15 +663,21 @@ dmgval(struct obj *otmp, struct monst *mon)
 #undef AVERAGE_ROLL
 #undef RANDOM_ROLL
 
-/* check whether blessed and/or silver damage applies for *non-weapon* hit;
-   return value is the amount of the extra damage */
+/* Find an object that magr is wearing (or even magr's body itself) that has a
+ * special damaging effect on mdef, and return the amount of bonus damage done.
+ * The most damaging source has precedence; each source that causes special
+ * damage makes its own roll for damage, and the highest roll will be applied.
+ *
+ * hated_obj is set only on objects that cause material hatred; if none of the
+ * applicable objects are of a hated material, it will not be set.
+ */
 int
 special_dmgval(struct monst *magr,
                struct monst *mdef,
-               long armask,       /* armor mask, multiple bits accepted for
-                                     W_ARMC|W_ARM|W_ARMU or
-                                     W_ARMG|W_RINGL|W_RINGR only */
-               struct obj **out_obj) /* ptr to offending object, can be NULL if not wanted */
+               long armask,  /* armor mask of all the slots that can be touching
+                              * mdef */
+               struct obj **hated_obj) /* ptr to offending object, can be NULL
+                                        * if not wanted */
 {
     boolean youattack = (magr == &g.youmonst);
     const int magr_material = monmaterial(monsndx(magr->data));
@@ -688,8 +694,8 @@ special_dmgval(struct monst *magr,
                *leftring  = (youattack ? uleft : which_armor(magr, W_RINGL)),
                *rightring = (youattack ? uright : which_armor(magr, W_RINGR));
 
-    if (out_obj) {
-        *out_obj = 0;
+    if (hated_obj) {
+        *hated_obj = 0;
     }
 
     /* Simple exclusions where we ignore a certain type of armor because it is
@@ -719,8 +725,8 @@ special_dmgval(struct monst *magr,
 
     if (try_body && mon_hates_material(mdef, magr_material)) {
         bonus = sear_damage(magr_material);
-        if (out_obj)
-            *out_obj = (struct obj *) &cg.zeroobj;
+        if (hated_obj)
+            *hated_obj = (struct obj *) &cg.zeroobj;
     }
 
     /* The order of armor slots in this array doesn't really matter because we
@@ -746,8 +752,23 @@ special_dmgval(struct monst *magr,
             tmpbonus = dmgval(array[i].obj, mdef);
             if (tmpbonus > bonus) {
                 bonus = tmpbonus;
-                if (out_obj) {
-                    *out_obj = array[i].obj;
+                if (hated_obj) {
+                    /* Select hated_obj based on the maximum possible amount of
+                     * damage that can be caused by its material, not the actual
+                     * random amount of damage.
+                     * E.g. if you manage to hit a monster that hates both
+                     * silver and iron with a silver and an iron item at the
+                     * same time, silver has a more severe effect dealing more
+                     * damage so hated_obj should always be set to the silver
+                     * one, so that searmsg will get called with the most
+                     * appropriate message.
+                     */
+                    if (mon_hates_material(mdef, array[i].obj->material)
+                        && (*hated_obj == NULL
+                            || (sear_damage(array[i].obj->material)
+                                > sear_damage((*hated_obj)->material)))) {
+                        *hated_obj = array[i].obj;
+                    }
                 }
             }
         }

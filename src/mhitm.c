@@ -341,7 +341,7 @@ mattackm(register struct monst *magr, register struct monst *mdef)
     if (calculate_flankers(magr, mdef)) {
         tmp += 4;
         if (magr->mtame && canseemon(magr)) {
-            pline("You help %s flank %s.", magr, mdef);
+            pline("You help %s flank %s.", mon_nam(magr), mon_nam(mdef));
         }
     }
 

@@ -167,9 +167,9 @@ const char *ARGV0;
 #endif
 
 const struct Role urole_init_data = {
-    { "Undefined", 0 },
-    { { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 },
-      { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },
+    { "Undefined", 0, 0 },
+    { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 },
+      { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } },
     "L", "N", "C",
     "Xxx", "home", "locate",
     NON_PM, NON_PM, NON_PM, NON_PM, NON_PM, NON_PM, NON_PM, NON_PM,
@@ -196,7 +196,7 @@ const struct Race urace_init_data = {
     "undefined",
     "something",
     "Xxx",
-    { 0, 0 },
+    { 0, 0, 0 },
     NON_PM,
     NON_PM,
     NON_PM,

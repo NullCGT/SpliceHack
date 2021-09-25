@@ -1931,7 +1931,7 @@ struct ext_func_tab extcmdlist[] = {
               dofire, 0, NULL },
     { M('f'), "force", "force a lock",
               doforce, AUTOCOMPLETE, NULL },
-    { M('F'), "forge", "combine items", doforging, AUTOCOMPLETE },
+    { M('F'), "forge", "combine items", doforging, AUTOCOMPLETE, NULL },
     { ';',    "glance", "show what type of thing a map symbol corresponds to",
               doquickwhatis, IFBURIED | GENERALCMD, NULL },
     { '?',    "help", "give a help message",

@@ -380,11 +380,12 @@ mattackm(register struct monst *magr, register struct monst *mdef)
     magr->mlstmv = g.monstermoves;
 
     /* handle multiple hydra attacks */
-    if (magr->data == &mons[PM_HYDRA]) {
+    if (magr->data->omnum == PM_HYDRA) {
         k = min(magr->m_lev - magr->data->mlevel + 1, 10);
-    }
-    if (magr->data == &mons[PM_HECATONCHEIRE]) {
+    } else if (magr->data->omnum == PM_HECATONCHEIRE) {
         k = 100;
+    } else {
+        k = 0;
     }
 
     /* controls whether a mind flayer uses all of its tentacle-for-DRIN

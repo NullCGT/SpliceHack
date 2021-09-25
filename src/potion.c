@@ -194,7 +194,7 @@ make_sick(long xtime,
 {
     struct kinfo *kptr;
     struct obj *otmp;
-    int copperarmor;
+    int copperarmor = 0;
     long old = Sick;
 
 #if 0   /* tell player even if hero is unconscious */

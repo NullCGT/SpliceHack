@@ -288,7 +288,7 @@ const struct Role roles[NUM_ROLES+1] = {
         { "Embalmer", 0, 0 },
         { "Dresser", 0, 0 },
         { "Medicus ossium", "Medica ossium", 0 },
-        { "Herbalist", 0 },
+        { "Herbalist", 0, 0 },
         { "Magister", "Magistra", "Magistrum" },
         { "Physician", 0, 0 },
         { "Chirurgeon", 0, 0 } },
@@ -371,7 +371,7 @@ const struct Role roles[NUM_ROLES+1] = {
       SPE_TURN_UNDEAD,
       -4 },
     { { "Monk", 0, 0 },
-      { { "Candidate", 0 },
+      { { "Candidate", 0, 0 },
         { "Novice", 0, 0 },
         { "Initiate", 0, 0 },
         { "Student of Stones", 0, 0 },
@@ -549,7 +549,7 @@ const struct Role roles[NUM_ROLES+1] = {
       A_INT,
       SPE_DETECT_TREASURE,
       -40 },
-    { { "Ranger", 0 },
+    { { "Ranger", 0, 0 },
       {
 #if 0 /* OBSOLETE */
         {"Edhel",   "Elleth"},

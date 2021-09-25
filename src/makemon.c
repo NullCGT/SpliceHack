@@ -509,6 +509,7 @@ m_initweap(register struct monst *mtmp)
             }
             break;
         }
+        break;
     case S_GNOLL:
         switch (mm) {
             case PM_GNOLL:
@@ -745,11 +746,11 @@ m_initweap(register struct monst *mtmp)
         switch (mm) {
         case PM_SKELETON:
             if (!rn2(4))
-            (void) mongets(mtmp, LIGHT_ARMOR);
+                (void) mongets(mtmp, LIGHT_ARMOR);
             /* Skeletons wield weird, ancient weaponry. */
             if (!rn2(4))
                 (void) mongets(mtmp, (rn2(3) ? PARAZONIUM : GLADIUS));
-                break;
+            break;
         case PM_DRAUGR:
             mongets(mtmp, (rn2(4) ? WAR_HAMMER : RUNESWORD));
             break;

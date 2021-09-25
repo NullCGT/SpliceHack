@@ -233,8 +233,7 @@ void
 losexp(const char *drainer) /* cause of death, if drain should be fatal */
 {
     register int num;
-    boolean found_drainable = FALSE;
-    int i, drained_role;
+    int i, drained_role = -1;
 
     /* override life-drain resistance when handling an explicit
        wizard mode request to reduce level; never fatal though */
@@ -265,14 +264,16 @@ losexp(const char *drainer) /* cause of death, if drain should be fatal */
                 if (u.role_levels[i] > 1) {
                     u.role_levels[i]--;
                     drained_role = i;
-                    found_drainable = TRUE;
                     break;
                 }
             }
-            if (!found_drainable && drainer) {
+            if (drained_role < 0 && drainer) {
                 g.killer.format = KILLED_BY;
                 if (g.killer.name != drainer)
                     Strcpy(g.killer.name, drainer);
+                done(DIED);
+                return;
+            } else if (drained_role < 0) {
                 done(DIED);
             }
         }

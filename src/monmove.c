@@ -1042,7 +1042,9 @@ int
 m_move(register struct monst* mtmp, register int after)
 {
     int appr, etmp;
-    xchar gx, gy, nix, niy, chcnt;
+    xchar nix, niy, chcnt;
+    xchar gx = 0;
+    xchar gy = 0;
     int i, j;
     int chi; /* could be schar except for stupid Sun-2 compiler */
     boolean likegold = 0, likegems = 0, likeobjs = 0, likemagic = 0,

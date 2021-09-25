@@ -10,6 +10,9 @@
                               * result will then be truncated to BUFSZ-1 */
 
 static void putmesg(const char *);
+static const char *replace(const char *, const char *, const char *);
+static const char *cartsay(const char *);
+static const char *piratesay(const char *);
 static char *You_buf(int);
 #if defined(MSGHANDLER) && (defined(POSIX_TYPES) || defined(__GNUC__))
 static void execplinehandler(const char *);
@@ -19,8 +22,51 @@ extern void maybe_play_sound(const char *);
 #endif
 #if defined(DUMPLOG) || defined(DUMPHTML)
 
+/* keep the most recent DUMPLOG_MSG_COUNT messages */
+void
+dumplogmsg(const char *line)
+{
+    /*
+     * TODO:
+     *  This essentially duplicates message history, which is
+     *  currently implemented in an interface-specific manner.
+     *  The core should take responsibility for that and have
+     *  this share it.
+     */
+    unsigned indx = g.saved_pline_index; /* next slot to use */
+    char *oldest = g.saved_plines[indx]; /* current content of that slot */
+
+    if (!strncmp(line, "Unknown command", 15))
+        return;
+    if (oldest && strlen(oldest) >= strlen(line)) {
+        /* this buffer will gradually shrink until the 'else' is needed;
+           there's no pressing need to track allocation size instead */
+        Strcpy(oldest, line);
+    } else {
+        if (oldest)
+            free((genericptr_t) oldest);
+        g.saved_plines[indx] = dupstr(line);
+    }
+    g.saved_pline_index = (indx + 1) % DUMPLOG_MSG_COUNT;
+}
+
+/* called during save (unlike the interface-specific message history,
+   this data isn't saved and restored); end-of-game releases saved_plines[]
+   while writing its contents to the final dump log */
+void
+dumplogfreemessages(void)
+{
+    unsigned i;
+
+    for (i = 0; i < DUMPLOG_MSG_COUNT; ++i)
+        if (g.saved_plines[i])
+            free((genericptr_t) g.saved_plines[i]), g.saved_plines[i] = 0;
+    g.saved_pline_index = 0;
+}
+#endif
+
 /*Ben Collver's fixes*/
-const char *
+static const char *
 replace(const char *st, const char *orig, const char *repl)
 {
   	static char retval[TBUFSZ];
@@ -88,49 +134,6 @@ const char *orig;
     orig = replace(orig,"scroll of annihilation","forbidden spell card");
     return orig;
 }
-
-/* keep the most recent DUMPLOG_MSG_COUNT messages */
-void
-dumplogmsg(const char *line)
-{
-    /*
-     * TODO:
-     *  This essentially duplicates message history, which is
-     *  currently implemented in an interface-specific manner.
-     *  The core should take responsibility for that and have
-     *  this share it.
-     */
-    unsigned indx = g.saved_pline_index; /* next slot to use */
-    char *oldest = g.saved_plines[indx]; /* current content of that slot */
-
-    if (!strncmp(line, "Unknown command", 15))
-        return;
-    if (oldest && strlen(oldest) >= strlen(line)) {
-        /* this buffer will gradually shrink until the 'else' is needed;
-           there's no pressing need to track allocation size instead */
-        Strcpy(oldest, line);
-    } else {
-        if (oldest)
-            free((genericptr_t) oldest);
-        g.saved_plines[indx] = dupstr(line);
-    }
-    g.saved_pline_index = (indx + 1) % DUMPLOG_MSG_COUNT;
-}
-
-/* called during save (unlike the interface-specific message history,
-   this data isn't saved and restored); end-of-game releases saved_plines[]
-   while writing its contents to the final dump log */
-void
-dumplogfreemessages(void)
-{
-    unsigned i;
-
-    for (i = 0; i < DUMPLOG_MSG_COUNT; ++i)
-        if (g.saved_plines[i])
-            free((genericptr_t) g.saved_plines[i]), g.saved_plines[i] = 0;
-    g.saved_pline_index = 0;
-}
-#endif
 
 /* keeps windowprocs usage out of pline() */
 static void

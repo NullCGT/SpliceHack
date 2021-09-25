@@ -221,7 +221,7 @@ attack_checks(struct monst *mtmp,
             else if (Blind || (is_pool(mtmp->mx, mtmp->my) && !Underwater))
                 pline("Wait!  There's a hidden monster there!");
             else if (concealed_spot(mtmp->mx, mtmp->my)) {
-                struct obj *obj = g.level.objects[mtmp->mx][mtmp->my];
+                obj = g.level.objects[mtmp->mx][mtmp->my];
                 pline("Wait!  There's %s hiding under %s%s!", an(l_monnam(mtmp)),
                       obj ? "" : "the ",
                       obj ? doname(obj) : explain_terrain(mtmp->mx, mtmp->my));
@@ -5764,6 +5764,7 @@ hmonas(struct monst *mon)
                  mon->data == &mons[PM_GREEN_SLIME] ||
                  touch_petrifies(mon->data)))
                 break;
+            /* FALLTHRU */
         case AT_KICK:
         case AT_STNG:
         case AT_BUTT:

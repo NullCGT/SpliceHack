@@ -664,7 +664,7 @@ makevtele(void)
 void
 cellular(int chance, int maxpasses)
 {
-    int x, y, x2, y2, x3, y3;
+    int x, y, x2, y2;
     boolean cells[COLNO][ROWNO];
     int passes, wallcnt;
 
@@ -860,7 +860,6 @@ fill_ordinary_room(struct mkroom *croom)
     int trycnt = 0;
     coord pos;
     struct monst *tmonst; /* always put a web with a spider */
-    struct obj *otmp; /* sconces need to begin burning */
     int x, y;
 
     if (croom->rtype != OROOM && croom->rtype != THEMEROOM)

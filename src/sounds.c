@@ -1439,7 +1439,7 @@ dochat(void)
         return 0;
     }
 
-    if ((Role_if(PM_DRAGON_RIDER) || P_SKILL(P_DRAGON_TAMER > P_UNSKILLED)) 
+    if ((Role_if(PM_DRAGON_RIDER) || P_SKILL(P_DRAGON_TAMER) > P_UNSKILLED) 
         && is_dragon(mtmp->data) && !mtmp->mpeaceful && !mtmp->mtame) {
         You("attempt to commune with %s.", l_monnam(mtmp));
         if (rnl(10) - (P_SKILL(P_DRAGON_TAMER) * 3) + mtmp->m_lev < 2) {

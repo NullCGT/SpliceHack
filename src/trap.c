@@ -53,7 +53,6 @@ static void move_into_trap(struct trap *);
 static int try_disarm(struct trap *, boolean);
 static void reward_untrap(struct trap *, struct monst *);
 static int disarm_holdingtrap(struct trap *);
-static int disarm_whirlwindtrap(struct trap *);
 static int disarm_landmine(struct trap *);
 static int unsqueak_ok(struct obj *);
 static int disarm_squeaky_board(struct trap *);

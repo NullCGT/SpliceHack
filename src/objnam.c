@@ -4786,6 +4786,7 @@ readobjnam(char *bp, struct obj *no_wish)
             } else {
                 set_corpsenm(d.otmp, d.mntmp);
             }
+            break;
         case CORPSE:
             if ((!(mons[d.mntmp].geno & G_UNIQ) || wizard)
                 && !(g.mvitals[d.mntmp].mvflags & G_NOCORPSE)) {

@@ -1308,7 +1308,7 @@ drain_item(struct obj *obj, boolean by_you)
     /* Orichalcum is a supremely good conductor of magical
        energy. Draining it will instantly remove any enchantment
        it has. */
-    if (obj->material = ORICHALCUM) obj->spe = 0;
+    if (obj->material == ORICHALCUM) obj->spe = 0;
 
     u_ring = (obj == uleft) || (obj == uright);
     switch (obj->otyp) {
@@ -4084,7 +4084,6 @@ static const short elem_pairings[][3] = {
 static boolean
 elemental_shift(struct monst *mtmp, int zt)
 {
-    boolean shifted;
     int i, pm = 0;
     int orig_pm = monsndx(mtmp->data);
     short zt_s = (short) zt;

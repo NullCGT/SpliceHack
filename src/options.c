@@ -783,7 +783,8 @@ optfn_birdname(int optidx, int req, boolean negated UNUSED, char *opts, char *op
         return optn_ok;
     }
     if (req == do_set) {
-        if (op != empty_optstr) {
+        if ((op = string_for_env_opt(allopt[optidx].name, opts, FALSE))
+            != empty_optstr) {
             nmcpy(g.birdname, op, PL_PSIZ);
         } else {
             return optn_err;
@@ -807,7 +808,8 @@ optfn_dragonname(int optidx, int req, boolean negated UNUSED, char *opts, char *
         return optn_ok;
     }
     if (req == do_set) {
-        if (op != empty_optstr) {
+        if ((op = string_for_env_opt(allopt[optidx].name, opts, FALSE))
+            != empty_optstr) {
             nmcpy(g.dragonname, op, PL_PSIZ);
         } else {
             return optn_err;
@@ -831,7 +833,8 @@ optfn_ratname(int optidx, int req, boolean negated UNUSED, char *opts, char *op)
         return optn_ok;
     }
     if (req == do_set) {
-        if (op != empty_optstr) {
+        if ((op = string_for_env_opt(allopt[optidx].name, opts, FALSE))
+            != empty_optstr) {
             nmcpy(g.ratname, op, PL_PSIZ);
         } else {
             return optn_err;
@@ -855,7 +858,8 @@ optfn_monkeyname(int optidx, int req, boolean negated UNUSED, char *opts, char *
         return optn_ok;
     }
     if (req == do_set) {
-        if (op != empty_optstr) {
+        if ((op = string_for_env_opt(allopt[optidx].name, opts, FALSE))
+            != empty_optstr) {
             nmcpy(g.monkeyname, op, PL_PSIZ);
         } else {
             return optn_err;

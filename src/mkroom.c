@@ -1050,6 +1050,7 @@ cmap_to_type(int sym)
         break;
     case S_bridge:
         typ = BRIDGE;
+        break;
     case S_grass:
         typ = GRASS;
         break;

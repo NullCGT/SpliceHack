@@ -711,10 +711,10 @@ shkinit(const struct shclass* shp, struct mkroom* sroom)
         if (sroom->rtype == BLACKSHOP) {
             shk = makemon(&mons[PM_ARMS_DEALER], sx, sy, MM_ESHK);
           }
-    } else if (!shk && !In_endgame(&u.uz)) {
+    } else if ( !In_endgame(&u.uz)) {
           if(!(shk = makemon(&mons[PM_SHOPKEEPER], sx, sy, MM_ESHK)))
               return(-1);
-    } else if (!shk) {
+    } else {
           if(!(shk = makemon(&mons[PM_EXTRAPLANAR_MERCHANT], sx, sy, MM_ESHK)))
               return(-1);
     }

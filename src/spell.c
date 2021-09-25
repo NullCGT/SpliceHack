@@ -979,7 +979,8 @@ int
 spelleffects(int spell, boolean atme)
 {
     int energy, damage, chance, n, intell;
-    int otyp, skill, role_skill, res = 0;
+    int otyp, skill, res = 0;
+    int role_skill = 0;
     boolean confused = (Confusion != 0);
     boolean physical_damage = FALSE;
     struct obj *pseudo;
@@ -1150,7 +1151,7 @@ spelleffects(int spell, boolean atme)
      */
     otyp = pseudo->otyp;
     skill = spell_skilltype(otyp);
-    role_skill = P_SKILL(skill);
+    role_skill += P_SKILL(skill);
     if (u.uen <= 0 && P_SKILL(P_BLOOD_MAGIC) > P_UNSKILLED) 
         role_skill += P_SKILL(P_BLOOD_MAGIC) - 1;
 

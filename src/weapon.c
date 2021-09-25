@@ -271,7 +271,7 @@ role_powregen()
 int
 botl_hitbonus()
 {
-    int tmp, tmp2, role_mul;
+    int tmp, tmp2;
     uchar aatyp = g.youmonst.data->mattk[0].aatyp;
     struct obj *weapon = uwep;
 
@@ -405,7 +405,6 @@ static int
 weapon_distribution_bonus(int otyp, boolean bigmonst, int distribution) {
     int num_dice = 0;
     int sides = 0;
-    int ret;
     if (bigmonst) {
         switch (otyp) {
         case IRON_CHAIN:
@@ -500,7 +499,7 @@ weapon_distribution_bonus(int otyp, boolean bigmonst, int distribution) {
         break;
     }
 
-    return ret;
+    return 0;
 }
 
 static int

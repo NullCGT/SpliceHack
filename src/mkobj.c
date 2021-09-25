@@ -1360,7 +1360,6 @@ start_corpse_timeout(struct obj* body)
     if (action == ROT_CORPSE && !acidic(&mons[body->corpsenm])) {
         /* Corpses get moldy.
          * TODO: allow green molds to grow on acidic corpses. */
-        long age;
         for (age = TAINT_AGE + 1; age <= ROT_AGE; age++) {
             if (!rn2(MOLDY_CHANCE)) {    /* "revives" as a random s_fungus */
                 action = MOLDY_CORPSE;
@@ -1978,8 +1977,6 @@ is_flammable(struct obj* otmp)
 boolean
 is_rottable(struct obj* otmp)
 {
-    int otyp = otmp->otyp;
-
     return (boolean) (otmp->material <= WOOD && otmp->material != LIQUID);
 }
 

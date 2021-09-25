@@ -2183,24 +2183,24 @@ mm_2way_aggression(struct monst *magr, struct monst *mdef)
     /* Since the quest guardians are under siege, it makes sense to have
        them fight hostiles.  (But we don't want the quest leader to be in
        danger.) */
-    if(magr->data->msound==MS_GUARDIAN && mdef->mpeaceful==FALSE)
-        return ALLOW_M|ALLOW_TM;
+    if (magr->data->msound == MS_GUARDIAN && !mdef->mpeaceful)
+        return (ALLOW_M | ALLOW_TM);
   	/* elves vs. orcs */
-  	if(is_elf(magr->data) && is_orc(mdef->data) 
+    if (is_elf(magr->data) && is_orc(mdef->data)
         && !is_mercenary(magr->data) && !is_mercenary(mdef->data))
-  		  return ALLOW_M|ALLOW_TM;
+  		return (ALLOW_M | ALLOW_TM);
   	/* angels vs. demons */
-  	if(magr->data->mlet==S_ANGEL && is_demon(mdef->data))
-  		  return ALLOW_M|ALLOW_TM;
+  	if (magr->data->mlet==S_ANGEL && is_demon(mdef->data))
+  		return (ALLOW_M | ALLOW_TM);
     /* Nazgul vs. hobbits */
     if(magr->data == &mons[PM_NAZGUL] && mdef->data == &mons[PM_HOBBIT])
-        return ALLOW_M | ALLOW_TM;
+        return (ALLOW_M | ALLOW_TM);
     /* Asmodeus and Mephisto dislike one another. */
     if(magr->data == &mons[PM_MEPHISTOPHOLES] && mdef->data == &mons[PM_ASMODEUS])
-        return ALLOW_M|ALLOW_TM;
+        return (ALLOW_M | ALLOW_TM);
     /* Yeenoghu and Baphomet have an ancient rivalry. */
     if(magr->data == &mons[PM_YEENOGHU] && mdef->data == &mons[PM_BAPHOMET])
-        return ALLOW_M|ALLOW_TM;
+        return (ALLOW_M | ALLOW_TM);
 
     return 0;
 }
@@ -2667,7 +2667,7 @@ mondead(register struct monst* mtmp)
 {
     struct permonst *mptr;
     boolean be_sad;
-    int tmp, i, j;
+    int tmp, i;
     coord cc;
     struct obj *otmp;
 
@@ -3842,7 +3842,6 @@ m_respond(struct monst* mtmp)
         aggravate();
     }
     if (mtmp->data == &mons[PM_MEDUSA]) {
-        register int i;
 
         for (i = 0; i < NATTK; i++)
             if (mtmp->data->mattk[i].aatyp == AT_GAZE) {
@@ -4472,6 +4471,7 @@ pickvampshape(struct monst* mon)
         if (!uppercase_only) {
             mndx = PM_BARGHEST;
         }
+        break;
     case PM_VAMPIRE_MAGE:
     case PM_VAMPIRE_LEADER: /* vampire lord or Vlad can become wolf */
         if (!rn2(wolfchance) && !uppercase_only) {
@@ -4610,6 +4610,7 @@ select_newcham_form(struct monst* mon)
             if (!tryct)
                 mndx = NON_PM;
         }
+        /* FALLTHRU */
     case PM_CHAMELEON:
         if (!rn2(3))
             mndx = pick_animal();

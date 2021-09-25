@@ -866,9 +866,6 @@ destroy_rope_bridge(xchar x, xchar y)
 {
     register struct rm *lev1;
     struct trap *trtmp;
-    struct trap *t;
-    xchar x2, y2;
-    long time_left, where;
 
     lev1 = &levl[x][y];
     if (!is_bridge(x, y))

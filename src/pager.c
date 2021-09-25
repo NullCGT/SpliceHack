@@ -1026,8 +1026,8 @@ add_obj_info(winid datawin, short otyp)
 
     Sprintf(buf, "%s (%c) - %s",
         safe_typename(otyp),
-        def_oc_syms[objects[otyp].oc_class].sym,
-        def_oc_syms[objects[otyp].oc_class].name);
+        def_oc_syms[(int) objects[otyp].oc_class].sym,
+        def_oc_syms[(int) objects[otyp].oc_class].name);
     upstart(buf);
     putstr(datawin, ATR_INVERSE, buf);
     OBJPUTSTR("");
@@ -1648,7 +1648,7 @@ checkfile(char *inp, struct permonst *pm, boolean user_typed_name,
                     if (!existing_win)
                         datawin = create_nhwindow(NHW_MENU);
                     
-                    int otyp = name_to_otyp(dbase_str);
+                    otyp = name_to_otyp(dbase_str);
                     if (otyp != STRANGE_OBJECT)
                         add_obj_info(datawin, otyp);
                     for (i = 0; i < entry_count; i++) {

@@ -728,7 +728,7 @@ touch_artifact(struct obj *obj, struct monst *mon)
 
     if (((badclass || badalign) && self_willed)
         || (badalign && (!yours || !rn2(4)))) {
-        int dmg, tmp;
+        int dmg;
         char buf[BUFSZ];
 
         if (!yours)

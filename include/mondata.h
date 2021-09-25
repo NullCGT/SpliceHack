@@ -224,10 +224,10 @@
 #define is_unkdemon(ptr) ((is_demon(ptr) \
         && !is_dlord(ptr) && !is_dprince(ptr) \
         && (ptr)->omnum != PM_WATER_DEMON \
-        && (ptr)->omnum != PM_LAVA_DEMON \
-        || ((ptr)->omnum == PM_LEMURE \
+        && ((ptr)->omnum != PM_LAVA_DEMON \
+            || ((ptr)->omnum == PM_LEMURE \
             || (ptr)->omnum == PM_MANES \
-            || (ptr)->omnum == PM_HELLCAT)))
+            || (ptr)->omnum == PM_HELLCAT))))
 #define is_ghoul(ptr) ((ptr)->omnum == PM_GHOUL \
                        || (ptr)->omnum == PM_GHAST \
                        || (ptr)->omnum == PM_GHOUL_MAGE \

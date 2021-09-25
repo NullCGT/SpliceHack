@@ -1620,7 +1620,6 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
         break;
     case SCR_ELEMENTALISM: {
  	    struct permonst *critter = (struct permonst *) 0;
-        struct monst *mtmp;
         int i = 0;
  	    int n = 1;
  	    int state = MAKE_EM_HOSTILE;
@@ -2159,9 +2158,8 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
         punish(sobj);
         break;
     case SCR_CLONING: {
-        register struct monst *mtmp;
         register struct obj *otmp2;
-        int otyp;
+        int otyp2;
         g.known = TRUE;
         if (confused) {
             if (!Hallucination) {
@@ -2177,21 +2175,21 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
             otmp = getobj("clone", any_obj_ok, GETOBJ_NOFLAGS);
             /* Unique items */
             if (otmp->otyp == BELL_OF_OPENING) {
-                otyp = BELL;
+                otyp2 = BELL;
                 break;
             } else if (otmp->otyp == CANDELABRUM_OF_INVOCATION) {
-                otyp = WAX_CANDLE;
+                otyp2 = WAX_CANDLE;
                 break;
             } else if (otmp->otyp == AMULET_OF_YENDOR) {
-                otyp = FAKE_AMULET_OF_YENDOR;
+                otyp2 = FAKE_AMULET_OF_YENDOR;
                 break;
             } else if (otmp->otyp == SPE_BOOK_OF_THE_DEAD) {
-                otyp = SPE_BLANK_PAPER;
+                otyp2 = SPE_BLANK_PAPER;
                 break;
             } else {
-                otyp = otmp->otyp;
+                otyp2 = otmp->otyp;
             }
-            otmp2 = mksobj_at(otyp, u.ux, u.uy, FALSE, FALSE);
+            otmp2 = mksobj_at(otyp2, u.ux, u.uy, FALSE, FALSE);
             if (otmp2 == &cg.zeroobj) impossible("Invalid cloned object?");
             /* beatitude */
             if (scursed) curse(otmp2);

@@ -555,7 +555,6 @@ restgamestate(NHFILE* nhfp, unsigned int* stuckid, unsigned int* steedid, unsign
     struct context_info newgamecontext; /* all 0, but has some pointers */
     struct obj *otmp;
     struct obj *bc_obj;
-    struct monst *mtmp;
     char timebuf[15];
     unsigned long uid = 0;
     boolean defer_perm_invent;

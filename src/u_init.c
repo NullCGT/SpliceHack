@@ -1541,7 +1541,7 @@ ini_inv(struct trobj *trop)
             /* Don't allow weapons to roll high enchantment and get an oname
              * when they'll then have their enchantment set after this */
             if ((Hate_material(SILVER) && obj->material == SILVER)
-                || Hate_material(COLD_IRON) && obj->material == COLD_IRON)
+                || (Hate_material(COLD_IRON) && obj->material == COLD_IRON))
                 obj->material = IRON;
             free_oname(obj);
         } else { /* UNDEF_TYP */

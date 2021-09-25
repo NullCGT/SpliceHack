@@ -1862,7 +1862,7 @@ mon_allowflags(struct monst* mtmp)
     boolean can_open = !(nohands(mtmp->data) || verysmall(mtmp->data));
     boolean can_unlock = ((can_open && monhaskey(mtmp, TRUE))
                           || mtmp->iswiz || is_rider(mtmp->data));
-    boolean doorbuster = is_giant(mtmp->data);
+    boolean doorbuster = is_giant(mtmp->data) || is_marsupial(mtmp->data);
     /* don't tunnel if on rogue level or if hostile and close enough
        to prefer a weapon; same criteria as in m_move() */
     boolean can_tunnel = (tunnels(mtmp->data) && !Is_rogue_level(&u.uz));

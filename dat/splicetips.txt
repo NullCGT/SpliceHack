@@ -88,7 +88,7 @@ Zouthern monsters are slightly less tough than in the land of Slash'Em.
 Anubites are excellent jumpers.
 Transmuters can change the materials of your items.
 Rings of blood magic allow you to convert hit points to power.
-Merfolk have poor abilities, but begin the game with one of the most powerful techniques.
+Merfolk have poor abilities, but can't be drowned.
 You can encounter the big room up to three times.
 Vlad's castle has a large courtyard.
 Vlad is accompanied by his son Alucard, a powerful vampire in his own right.
@@ -98,7 +98,6 @@ One-Eyed Sam does not take kindly to attempts to steal from her.
 SpliceHack incorporates features from a variety of variants, most notably XNetHack and SLASH'EM.
 Packrats will pick up just about anything.
 A helm of opaque thoughts will make your head flayer-proof!
-Use #technique to use special role and race-specific powers.
 Giants loathe dwarves and gnomes.
 Ghouls can paralyze opponents by way of touch.
 The touch of a drow can put even the hardiest of monsters to sleep.
@@ -112,14 +111,13 @@ Steel golems can disenchant your items, so keep your distance.
 You will level up more quickly at high levels in SpliceHack than in vanilla NetHack.
 Nazgul will often shriek, and are known to ride fell beasts.
 Some monsters, such as giants, can knock you backwards.
-You can cook food using a furnace.
 Spiked chains can be used to strike enemies both near and far.
-Eating a penguin? I wouldn't try it.
 With the right stimulus, you can hatch a phenix egg very quickly.
 Use your config file to define your character's sexuality.
 Gleipnir can reel in monsters from very long distances.
 Eating a werecockatrice can be hazardous to your health.
 The mere glance of a barghest can steal your luck away.
 Monsters can wear rings.
-The higher your cooking skill, the less likely you are to burn your food.
-Overcooked food is not very satisfying.
+Glue your axes together at a forge.
+Wouldn't it make more sense for Frost Brand and Fire Brand to be friends?
+Don't even think about imbuing a cockatrice into a weapon!

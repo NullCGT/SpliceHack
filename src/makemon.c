@@ -2422,7 +2422,7 @@ grow_up(struct monst *mtmp, struct monst *victim)
     else if (lev_limit > 49)
         lev_limit = (ptr->mlevel > 49 ? 50 : 49);
 
-    if ((int) ((++mtmp->m_lev >= mons[newtype].mlevel) || !mtmp->mtame) 
+    if ((int) ((++mtmp->m_lev >= mons[newtype].mlevel) || !mtmp->mtame)
         && newtype != oldtype) {
         ptr = &mons[newtype];
         /* new form might force gender change */
@@ -2898,8 +2898,8 @@ int *seencount;  /* secondary output */
         else if (!rn2(23))
             creatcnt += rnd(7);
         do {
-            mtmp = makemon(bag->otyp == BAG_OF_TRICKS ? 
-                            (struct permonst *) 0 : &mons[PM_SEWER_RAT + rn2(2)], 
+            mtmp = makemon(bag->otyp == BAG_OF_TRICKS ?
+                            (struct permonst *) 0 : &mons[PM_SEWER_RAT + rn2(2)],
                             u.ux, u.uy, NO_MM_FLAGS);
             if (mtmp) {
                 ++moncount;
@@ -3078,7 +3078,7 @@ apply_template(struct permonst basemon, int tindex)
     basemon.mflags2 |= template.mflags2;
     basemon.mflags3 |= template.mflags3;
     basemon.difficulty += template.difficulty;
-    
+
     if (basemon.mr > 100) basemon.mr = 100;
 
     /* Attacks */
@@ -3102,7 +3102,7 @@ apply_template(struct permonst basemon, int tindex)
     if (tindex == MT_ELVEN || tindex == MT_DWARVISH || tindex == MT_GNOMISH
         || tindex == MT_ORCISH)
         basemon.mhflags = template.mhflags;
-    
+
     /* vampirism changes what you eat */
     if (tindex == MT_VAMPIRIC) {
         basemon.mflags1 &= ~M1_HERBIVORE;

@@ -5,6 +5,8 @@
 /* Code for drinking from fountains. */
 
 #include "hack.h"
+#include "artifact.h"
+#include "artilist.h"
 
 static void dowatersnakes(void);
 static void dowaterdemon(void);
@@ -622,9 +624,6 @@ drinkfurnace(void)
     }
 }
 
-/* RECENTLY REFACTORED: the first item in the array is the target item *
- *   the items after that first item are the objects to be used up.    *
- *   In other words, to get fusions[0], put in fusions[1] and [2]      */
 static const short fusions[][3] = {
     /* weapons */
     { BASEBALL_BAT,  CLUB, RUBBER_HOSE },
@@ -674,105 +673,166 @@ doforging(void)
 {
     struct obj* obj1;
     struct obj* obj2;
-    boolean combi_done = FALSE;
+    struct obj* output;
+
+    int objtype = 0;
     int arti_id = 0;
+    const struct artifact *a;
+
     int i;
+
     if (!IS_FURNACE(levl[u.ux][u.uy].typ)) {
-        pline("You need a forge in order to forge items.");
-        return 1;
+        You("need a forge in order to forge items.");
+        return 0;
     }
+
     obj1 = getobj("use as a base", any_obj_ok, GETOBJ_PROMPT);
+    if (!obj1) {
+        You("need a base object to forge with.");
+        return 0;
+    }
+
     obj2 = getobj("combine with the base item", any_obj_ok, GETOBJ_PROMPT);
-    if (!obj1 || !obj2) {
-        pline("You need more than one object.");
-        return 1;
+    if (!obj2) {
+        You("need more than one object.");
+        return 0;
     }
+
     if (obj1 == obj2) {
-        pline("You cannot combine an item with itself!");
-        return 1;
+        You_cant("combine an item with itself!");
+        return 0;
     }
+
     if (is_worn(obj1) || is_worn(obj2)) {
-        pline("You must remove the items you wish to forge.");
-        return 1;
+        You("must remove the items you wish to forge.");
+        return 0;
     }
+
     /* No, you cannot imbue weapons with cockatrice or Rider essence. Sorry.
        Literally anything else is fair game though! */
     feel_cockatrice(obj1, TRUE);
+    feel_cockatrice(obj2, TRUE);
+
     if (rider_corpse_revival(obj1, FALSE))
         return 1;
-    feel_cockatrice(obj2, TRUE);
     if (rider_corpse_revival(obj2, FALSE))
         return 1;
+
     /* Artifacts can never be applied to a non-arficat base. */
     if (obj2->oartifact && !obj1->oartifact) {
-        obj1 = obj2;
+        pline_The("artifact seems to resist the attempt!");
+        return 1;
     }
+
     /* Artifact fusions. */
     if (obj1->oartifact && obj2->oartifact) {
         for (i = 0; fusions[i][0] > 0; i++) {
             if ((obj1->oartifact == artifusions[i][1] && obj2->oartifact == artifusions[i][2]) ||
                 (obj2->oartifact == artifusions[i][1] && obj1->oartifact == artifusions[i][2])) {
                 arti_id = artifusions[i][0];
-                combi_done = TRUE;
+                a = &artilist[arti_id];
                 break;
             }
         }
-        if (combi_done) {
-            obj1->oartifact = 0;
-            obj1 = oname(obj1, artiname(arti_id));
-            pline("You create %s!", an(xname(obj1)));
-            livelog_printf(LL_DIVINEGIFT,
-                        "used a forge to create %s", an(xname(obj1)));
-            update_inventory();
+        if (arti_id) {
+            if (arti_id == ART_FROSTBURN) objtype = obj1->otyp;
+            else objtype = (int)a->otyp;
+            output = mksobj(objtype, TRUE, FALSE);
+            output = oname(output, a->name);
+            output->oartifact = arti_id;
+            g.artiexist[arti_id] = TRUE;
+
+            You("create %s!", an(xname(output)));
+            livelog_printf(LL_DIVINEGIFT, "used a forge to create %s", an(xname(obj1)));
+
+            goto fixup_object;
         } else {
-            pline("The artifact refuses to be combined.");
+            pline_The("artifacts refuse to be combined!");
             return 1;
         }
     }
     /* Imbuing items */
-    if ((obj2->otyp == CORPSE || obj2->otyp == TIN || obj2->otyp == FIGURINE || obj2->otyp == MASK)
+    else if ((obj2->otyp == CORPSE || obj2->otyp == TIN || obj2->otyp == FIGURINE || obj2->otyp == MASK) 
         && obj2->corpsenm != NON_PM) {
-        pline("You imbue %s with the %s essence.",
-            yobjnam(obj1, (char *) 0),
-            mons[obj2->corpsenm].pmnames[NEUTRAL]);
+
+        You("imbue %s with the %s essence.", yobjnam(obj1, (char *) 0), mons[obj2->corpsenm].pmnames[NEUTRAL]);
         obj1->corpsenm = obj2->corpsenm;
         useup(obj2);
         update_inventory();
-        if (!rn2(2)) {
-            pline("The lava in the furnace cools.");
-            levl[u.ux][u.uy].typ = ROOM;
-            newsym(u.ux, u.uy);
-            g.level.flags.nfurnaces--;
-        } else {
-            pline("The lava in the furnace bubbles ominously.");
-        }
-        return 0;
+
+        goto furnace_dead;
     }
     /* Mundane item fusions */
-    if (!combi_done) {
+    else {
         for (i = 0; fusions[i][0] > 0; i++) {
             if ((obj1->otyp == fusions[i][1] && obj2->otyp == fusions[i][2]) ||
                 (obj2->otyp == fusions[i][1] && obj1->otyp == fusions[i][2])) {
-                obj1->otyp = fusions[i][0];
-                obj1->oclass = objects[fusions[i][0]].oc_class;
+                objtype = fusions[i][0];
                 break;
             }
         }
+        if (objtype){
+            output = mksobj(objtype, TRUE, FALSE);
+
+            /* Take on the secondary object's material. */
+            if (valid_obj_material(output, obj2->material)) output->material = obj2->material;
+            else if (valid_obj_material(output, obj1->material)) output->material = obj1->material;
+
+            You("combine the items in the furnace.");
+
+            goto fixup_object;
+        } else {
+            You("fail to combine those two items.");
+            return 1;
+        }
     }
-    /* Take on the secondary object's material. */
-    if ((obj1->oclass == ARMOR_CLASS || obj1->oclass == WEAPON_CLASS || is_weptool(obj1))
-        && valid_obj_material(obj1, obj2->material)) obj1->material = obj2->material;
-    /* Use whichever enchantment is higher. */
-    if (obj2->spe > obj1->spe) obj1->spe = min(obj2->spe, 10);
-    /* Keep curses around. */
-    if (obj2->cursed) obj1->cursed = TRUE;
-    /* Transfer corpsenm */
-    if (obj2->corpsenm) obj1->corpsenm = obj2->corpsenm;
+
+fixup_object:
+    /* Copy enchantment over when applicable.
+     * IMPORTANT: Please make sure that any combinations of things that use ->spe are either matching 
+     * in object class with the output or just in general won't result in something stupid, like a magic
+     * marker ending up with a +3 charges from a magic flute or a crystal ball with 45 charges from a magic 
+     * marker. This should be done by ensuring that fusions[] doesn't have stuff like that, and if it does,
+     * it's special-cased. As-is, will occasionally result in stuff like a wooden flute with 5 charges,
+     * but that should be OK.
+    */
+
+    if (output->oclass == obj2->oclass) {
+        output->spe = obj2->spe;
+
+        if (output->oclass == obj1->oclass)
+            output->spe = max(output->spe, obj1->spe);
+
+    } else if (output->oclass == obj1->oclass){
+        output->spe = obj1->spe;
+    }
+
+    /* Transfer curses and blessings */
+    output->cursed = obj2->cursed;
+    output->blessed = obj2->blessed;
+
+    /* Keep corpsenm if set */
+    if (obj2->corpsenm != -1) output->corpsenm = obj2->corpsenm;
+    else if (obj1->corpsenm != -1) output->corpsenm = obj1->corpsenm;
+
+    /* Toss out old objs, add new one */
+    useup(obj1);
     useup(obj2);
+    output = addinv(output);
     update_inventory();
-    /* Print a message. */
-    if (!combi_done) pline("You combine the items in the furnace.");
-    return 0;
+    return 1; // forging artifacts or items never poofs the furnace
+
+furnace_dead:
+    /* Destroy the furnace. */
+    if (!rn2(2)) {
+        pline_The("lava in the furnace cools.");
+        levl[u.ux][u.uy].typ = ROOM;
+        newsym(u.ux, u.uy);
+        g.level.flags.nfurnaces--;
+    } else {
+        pline_The("lava in the furnace bubbles ominously.");
+    }
+    return 1;
 }
 
 void

@@ -251,10 +251,8 @@ opt_##a,
 #endif
     NHOPTB(implicit_uncursed, 0, opt_out, set_in_game, On, Yes, No, No,
                 NoAlias, &flags.implicit_uncursed)
-#if 0   /* obsolete - pre-OSX Mac */
-    NHOPTB(large_font, 0, opt_in, set_in_config, Off, Yes, No, No, NoAlias,
-                &iflags.obsolete)
-#endif
+    NHOPTB(invweight, 0, opt_out, set_in_game, On, Yes, No, No,
+                NoAlias, &flags.invweight)
     NHOPTB(legacy, 0, opt_out, set_in_config, On, Yes, No, No, NoAlias,
                 &flags.legacy)
     NHOPTB(lit_corridor, 0, opt_in, set_in_game, Off, Yes, No, No, NoAlias,
@@ -576,8 +574,6 @@ opt_##a,
                 NoAlias, "windowing system to use (should be specified first)")
     NHOPTB(wizmgender, 0, opt_in, set_wizonly, Off, Yes, No, No, NoAlias,
                 &iflags.wizmgender)
-    NHOPTB(wizweight, 0, opt_in, set_wizonly, Off, Yes, No, No, NoAlias,
-                &iflags.wizweight)
     NHOPTB(wraptext, 0, opt_in, set_in_game, Off, Yes, No, No, NoAlias,
                 &iflags.wc2_wraptext)
 

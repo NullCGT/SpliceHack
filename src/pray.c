@@ -1870,7 +1870,7 @@ dosacrifice(void)
                     livelog_printf (LL_DIVINEGIFT,
                                     "was sent %s by %s",
                                     an(m_monnam(mon)),
-                                    uhim(), align_gname(u.ualign.type));
+                                    align_gname(u.ualign.type));
                     newedog(mon);
                     initedog(mon);
                     mon->isminion = 1;

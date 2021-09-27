@@ -506,7 +506,7 @@ make_corpse(struct monst *mtmp, unsigned int corpseflags)
     int mndx = monsndx(mdat);
     unsigned corpstatflags = corpseflags;
     boolean burythem = ((corpstatflags & CORPSTAT_BURIED) != 0);
-    int aged;
+    int aged = 0;
 
     /* TODO: Handle undead templated monsters. */
     if (has_etemplate(mtmp)) {

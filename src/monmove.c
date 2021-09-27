@@ -366,10 +366,12 @@ monflee(
                           Monnam(mtmp), bare_artifactname(uwep));
                 else
                     verbalize("Bright light!");
-            } else
+            } else {
                 pline("%s turns to flee.", Monnam(mtmp));
+                if (mtmp->data->mlet != S_NYMPH)
+                    mtmp->movement += SLOW_SPEED;
+            }
         }
-        mtmp->movement += SLOW_SPEED;
         mtmp->mflee = 1;
     }
     /* ignore recently-stepped spaces when made to flee */

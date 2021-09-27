@@ -138,7 +138,7 @@ Boolean options available when running in debug mode (aka wizard mode):
 menu_tab_sep   menu formatting--do not touch
 monpolycontrol have player choose shape-changing monsters' new shapes
 travel_debug   not implemented?
-wizweight      include item weights in inventory display
+invweight      include item weights in inventory display
 
 Any Boolean option can be set to True by including it among options being
 set, or negated (set to False) by prefixing its name with a '!' or 'no'.

@@ -4354,9 +4354,8 @@ For a comma-separated list in NETHACKOPTIONS or an OPTIONS line in a
 configuration file,
 that would
 be the \fIrightmost\fP option in the list.
-.lp wizweight
-Augment object descriptions with their objects' weight (default off).
-Debug mode only.
+.lp invweight
+Augment object descriptions with their objects' weight (default on).
 .lp zerocomp
 When writing out a save file, perform zero-comp compression of the
 contents. Not all ports support zero-comp compression. It has no effect

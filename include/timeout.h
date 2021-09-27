@@ -34,7 +34,6 @@ enum timeout_types {
     HATCH_EGG,
     FIG_TRANSFORM,
     MELT_ICE_AWAY,
-    MOLDY_CORPSE,
     BOMB_BLOW,
     FIXTURE_ACTIVATE,
     COLLAPSE_ROPE_BRIDGE,

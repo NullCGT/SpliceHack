@@ -2566,7 +2566,7 @@ use_misc(struct monst* mtmp)
         if (canspotmon(mtmp) && !Blind) {
             pline("%s sets %s down and breathes life back into its corpse.", Monnam(mtmp),
                 the(corpse_xname(otmp, (const char *) 0, CXN_SINGULAR)));
-            (void) revive_corpse(otmp, FALSE);
+            (void) revive_corpse(otmp);
         }
         if (!Deaf) {
             verbalize("Thy home beckons thee, young one. Thou art needed in this final hour.");

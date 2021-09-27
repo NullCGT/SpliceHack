@@ -1328,7 +1328,7 @@ minfestcorpse(struct monst *mtmp)
                 if (cansee(mtmp->mx, mtmp->my) && flags.verbose)
                     pline("%s attempts to infest %s!", Monnam(mtmp),
                       distant_name(otmp,doname));
-                (void) revive_corpse(otmp, FALSE);
+                (void) revive_corpse(otmp);
                 return;
             }
             if (cansee(mtmp->mx,mtmp->my) && flags.verbose)
@@ -1381,7 +1381,7 @@ meatobj(struct monst* mtmp) /* for gelatinous cubes and other hungry monsters */
         /* touch sensitive items */
         if (otmp->otyp == CORPSE && is_rider(&mons[otmp->corpsenm])) {
             int ox = otmp->ox, oy = otmp->oy;
-            boolean revived_it = revive_corpse(otmp, FALSE);
+            boolean revived_it = revive_corpse(otmp);
 
             newsym(ox, oy);
             /* Rider corpse isn't just inedible; can't engulf it either */
@@ -1540,7 +1540,7 @@ meatcorpse(struct monst* mtmp) /* for purple worms and other voracious monsters 
             || (touch_petrifies(corpsepm) && !resists_ston(mtmp)))
             continue;
         if (is_rider(corpsepm)) {
-            boolean revived_it = revive_corpse(otmp, FALSE);
+            boolean revived_it = revive_corpse(otmp);
 
             newsym(x, y); /* corpse is gone; mtmp might be too so do this now
                              since we're bypassing the bottom of the loop */

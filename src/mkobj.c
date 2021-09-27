@@ -302,7 +302,6 @@ mkbox_cnts(struct obj* box)
             otmp->age = 0L;
             if (otmp->timed) {
                 (void) stop_timer(ROT_CORPSE, obj_to_any(otmp));
-                (void) stop_timer(MOLDY_CORPSE, obj_to_any(otmp));
                 (void) stop_timer(REVIVE_MON, obj_to_any(otmp));
             }
         } else {
@@ -1358,17 +1357,6 @@ start_corpse_timeout(struct obj* body)
         when = rn1(15, 5); /* 5..19 */
     }
 
-    if (action == ROT_CORPSE && !acidic(&mons[body->corpsenm])) {
-        /* Corpses get moldy.
-         * TODO: allow green molds to grow on acidic corpses. */
-        for (age = TAINT_AGE + 1; age <= ROT_AGE; age++) {
-            if (!rn2(MOLDY_CHANCE)) {    /* "revives" as a random s_fungus */
-                action = MOLDY_CORPSE;
-                when = age;
-                break;
-            }
-        }
-    }
 
     (void) start_timer(when, TIMER_OBJECT, action, obj_to_any(body));
 }
@@ -2104,10 +2092,6 @@ obj_timer_checks(
     if (otmp->otyp == CORPSE && (on_floor || buried) && is_ice(x, y)) {
         tleft = stop_timer(action, obj_to_any(otmp));
         if (tleft == 0L) {
-            action = MOLDY_CORPSE;
-            tleft = stop_timer(action, obj_to_any(otmp));
-        }
-        if (tleft == 0L) {
             action = REVIVE_MON;
             tleft = stop_timer(action, obj_to_any(otmp));
         }
@@ -2134,10 +2118,6 @@ obj_timer_checks(
     } else if (force < 0 || (otmp->otyp == CORPSE && otmp->on_ice
                              && !((on_floor || buried) && is_ice(x, y)))) {
         tleft = stop_timer(action, obj_to_any(otmp));
-        if (tleft == 0L) {
-            action = MOLDY_CORPSE;
-            tleft = stop_timer(action, obj_to_any(otmp));
-        }
         if (tleft == 0L) {
             action = REVIVE_MON;
             tleft = stop_timer(action, obj_to_any(otmp));

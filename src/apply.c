@@ -2215,7 +2215,7 @@ use_tinning_kit(struct obj *obj)
         instapetrify(kbuf);
     }
     if (is_rider(mptr)) {
-        if (revive_corpse(corpse, FALSE))
+        if (revive_corpse(corpse))
             verbalize("Yes...  But War does not preserve its enemies...");
         else
             pline_The("corpse evades your grasp.");

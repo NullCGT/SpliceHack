@@ -1856,10 +1856,10 @@ deferred_goto(void)
  * corpse is gone.
  */
 boolean
-revive_corpse(struct obj *corpse, boolean moldy)
+revive_corpse(struct obj *corpse)
 {
     struct monst *mtmp, *mcarry;
-    boolean is_uwep, chewed, cooked;
+    boolean is_uwep, chewed;
     xchar where;
     char cname[BUFSZ];
     struct obj *container = (struct obj *) 0;
@@ -1868,12 +1868,8 @@ revive_corpse(struct obj *corpse, boolean moldy)
     where = corpse->where;
     is_uwep = (corpse == uwep);
     chewed = (corpse->oeaten != 0);
-    cooked = (corpse->oeroded != 0);
     Strcpy(cname, corpse_xname(corpse,
                                chewed ? "bite-covered" : (const char *) 0,
-                               CXN_SINGULAR));
-    Strcpy(cname, corpse_xname(corpse,
-                               cooked ? "cooked" : (const char *) 0,
                                CXN_SINGULAR));
     mcarry = (where == OBJ_MINVENT) ? corpse->ocarry : 0;
 
@@ -1890,24 +1886,10 @@ revive_corpse(struct obj *corpse, boolean moldy)
     mtmp = revive(corpse, FALSE); /* corpse is gone if successful */
 
     if (mtmp) {
-         /* [ALI] Override revive's HP calculation. The HP that a mold starts with do
-        * not depend on the HP of the monster whose corpse it grew on.
-        */
-        if (moldy) {
-            mtmp->mhp = mtmp->mhpmax;
-            chewed = FALSE;
-        }
         switch (where) {
         case OBJ_INVENT:
-            if (is_uwep) {
-                if (moldy) {
-                    pline_The("moldy corpse in your %s grows into %s!",
-                        body_part(HAND), canspotmon(mtmp) ? a_monnam(mtmp)
-                                                          : "a monster");
-                }
-                else
-                    pline_The("%s writhes out of your grasp!", cname);
-            }
+            if (is_uwep)
+                pline_The("%s writhes out of your grasp!", cname);
             else
                 You_feel("squirming in your backpack!");
             break;
@@ -1915,10 +1897,8 @@ revive_corpse(struct obj *corpse, boolean moldy)
         case OBJ_FLOOR:
             if (cansee(mtmp->mx, mtmp->my)) {
                 int pm = monsndx(mtmp->data);
-                if (moldy)
-                    pline("%s grows on a moldy corpse!", Amonnam(mtmp));
-                else if (pm == PM_DEATH) {
-                    pline("%s rises from the dead in a whirl of spectral skulls!",
+                if (pm == PM_DEATH) {
+                    pline("%s revives in a whirl of spectral skulls!",
                         Monnam(mtmp));
                 } else if (pm == PM_PESTILENCE) {
                     pline("%s rises from the dead in a churning pillar of flies!",
@@ -1937,15 +1917,12 @@ revive_corpse(struct obj *corpse, boolean moldy)
         case OBJ_MINVENT: /* probably a nymph's */
             if (cansee(mtmp->mx, mtmp->my)) {
                 if (canseemon(mcarry)) {
-                    if (mcarry->data == &mons[PM_HEARTH_ARCHON]) {
-                        if (canseemon(mtmp))
+                    if (mcarry->data == &mons[PM_HEARTH_ARCHON])
                             pline("%s gently sets %s down as it revives!",
                                 Monnam(mcarry), an(cname));
-                    } else {
-                        pline("Startled, %s drops %s as it %s!",
-                          mon_nam(mcarry), (moldy ? "a corpse" : an(cname)),
-                          moldy ? "goes moldy" : "revives");
-                    }
+                    else
+                        pline("Startled, %s drops %s as it revives!",
+                          mon_nam(mcarry), an(cname));
                 } else
                     pline("%s suddenly appears!",
                           chewed ? Adjmonnam(mtmp, "bite-covered")
@@ -2009,7 +1986,7 @@ revive_mon(anything *arg, long timeout UNUSED)
     }
 
     /* if we succeed, the corpse is gone */
-    if (!revive_corpse(body, FALSE)) {
+    if (!revive_corpse(body)) {
         long when;
         int action;
 
@@ -2024,97 +2001,6 @@ revive_mon(anything *arg, long timeout UNUSED)
                 when = 1L;
         }
         (void) start_timer(when, TIMER_OBJECT, action, arg);
-    }
-}
-
-/* A corpse grows mold on it, creating a new fungoid monster. */
-void
-moldy_corpse(arg, timeout)
-anything* arg;
-long timeout UNUSED;
-{
-    struct obj* body = arg->a_obj;
-    char* old_oname = (has_oname(body) ? ONAME(body) : NULL);
-    int oldtyp = body->corpsenm;
-    int oldquan = body->quan;
-    struct permonst* newpm = mkclass(S_FUNGUS, 0);
-    int count = 0;
-    
-    
-    /* Don't allow arbitrarily long chains of mold growing on mold. */
-    boolean already_fungus = (mons[oldtyp].mlet == S_FUNGUS);
-
-
-    /* [ALI] Molds don't grow in adverse conditions.  If it ever
-     * becomes possible for molds to grow in containers we should
-     * check for iceboxes here as well.
-     * [AOS] Further, the mold has to grow *on* the corpse, not enexto'd a bunch
-     * of spaces away (or behind the hero blocking their escape route) if
-     * there's a crowd.
-     */
-     
-    boolean bad_spot = ((body->where == OBJ_FLOOR || body->where==OBJ_BURIED)
-                        && (is_pool(body->ox, body->oy) ||
-                            is_lava(body->ox, body->oy) ||
-                            is_ice(body->ox, body->oy)  ||
-                            MON_AT(body->ox, body->oy)));
-    /* maybe F are genocided? */
-    boolean no_eligible = (newpm == NULL);
-
-    /* Don't grow mold on the corpse the player is eating. */
-    boolean munching = (body == g.context.victual.piece);
-
-    if (already_fungus || bad_spot || no_eligible || munching) {
-        /* set to rot away normally */
-        start_timer(250L - (g.monstermoves - peek_at_iced_corpse_age(body)),
-                    TIMER_OBJECT, ROT_CORPSE, arg);
-        return;
-    }
-
-    /* Weight towards non-motile fungi. */
-    if (newpm->mmove)
-        newpm = mkclass(S_FUNGUS, 0);
-    /* Powerful are exceedingly rare at low levels. */
-    while (newpm->mlevel >= 5 && count < 7 && u.uz.dnum < 15 && !u.uhave.amulet) {
-        newpm = mkclass(S_FUNGUS, 0);
-        count++;
-    }
-
-    /* We want to piggyback on the actual revive_corpse routine, but we don't
-     * have a real appropriate fungus corpse. The workaround is to temporarily
-     * set the corpsenm of the (stack of) corpses to the fungus, then revive it,
-     * then set the corpsenm back to what it initially was. */
-    body->corpsenm = monsndx(newpm);
-
-    /* Also, don't let the mold become named. */
-    if (has_oname(body)) {
-        ONAME(body) = NULL;
-    }
-
-    /* oeaten isn't used for hp calc here, and zeroing it
-     * prevents eaten_stat() from worrying when you've eaten more
-     * from the corpse than the newly grown mold's nutrition
-     * value.
-     */
-    body->oeaten = 0;
-
-    /* Corpse is growing mold and any dead monster associated with it will be
-     * gone for good - free its associated omid and omonst, if any, so that
-     * revive() won't catch them and revive it as what it was */
-    if (has_omid(body))
-        free_omid(body);
-    if (has_omonst(body))
-        free_omonst(body);
-
-    if(!revive_corpse(body, TRUE) || oldquan > 1) {
-        /* revive failed, or there were multiple corpses. Reset everything,
-         * and set the new corpses to rot away normally. */
-        body->corpsenm = oldtyp;
-        if (old_oname)
-            ONAME(body) = old_oname;
-        body->owt = weight(body);
-        start_timer(250L - (g.monstermoves - peek_at_iced_corpse_age(body)),
-                    TIMER_OBJECT, ROT_CORPSE, arg);
     }
 }
 

@@ -94,7 +94,7 @@ formatkiller(
 {
     static NEARDATA const char *const killed_by_prefix[] = {
         /* DIED, MURDERED, TREX, CHOKING, POISONING, STARVING, */
-        "killed by ", "killed by " "choked on ", "tyranosaurus rekt by", "poisoned by ", "died of ",
+        "killed by ", "killed by ", "tyrannosaurus rekt by", "choked on ", "poisoned by ", "died of ",
         /* DROWNING, BURNING, DISSOLVED, CRUSHING, */
         "drowned in ", "burned by ", "dissolved in ", "crushed to death by ",
         /* STONING, TURNED_SLIME, GENOCIDED, */
@@ -124,12 +124,10 @@ formatkiller(
         kname = an(kname);
         /*FALLTHRU*/
     case KILLED_BY:
-        #ifdef UNIQDEATHS
-        if (how == MURDERED)
+        if (how == MURDERED && !is_june() && !(iflags.killedby))
             (void) strncat(buf,
                 murdered_by_msg[g.moves % SIZE(murdered_by_msg)], siz - 1);
         else
-        #endif
             (void) strncat(buf, killed_by_prefix[how], siz - 1);
         l = strlen(buf);
         buf += l, siz -= l;

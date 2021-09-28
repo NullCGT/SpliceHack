@@ -253,6 +253,12 @@ opt_##a,
                 NoAlias, &flags.implicit_uncursed)
     NHOPTB(invweight, 0, opt_out, set_in_game, On, Yes, No, No,
                 NoAlias, &flags.invweight)
+#if 0   /* obsolete - pre-OSX Mac */
+    NHOPTB(large_font, 0, opt_in, set_in_config, Off, Yes, No, No, NoAlias,
+                &iflags.obsolete)
+#endif
+    NHOPTB(killedby, 0, opt_in, set_in_game, Off, Yes, No, No, NoAlias,
+                &iflags.killedby)
     NHOPTB(legacy, 0, opt_out, set_in_config, On, Yes, No, No, NoAlias,
                 &flags.legacy)
     NHOPTB(lit_corridor, 0, opt_in, set_in_game, Off, Yes, No, No, NoAlias,

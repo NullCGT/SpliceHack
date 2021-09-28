@@ -2382,7 +2382,7 @@ map_glyphinfo(xchar x, xchar y, int glyph,
         }
 
         /* blood overrides other colors */
-        if (levl[x][y].splatpm && cansee(x, y)) {
+        if (levl[x][y].splatpm && cansee(x, y) && !(glyph_to_cmap(glyph) == S_cloud || glyph_to_cmap(glyph) == S_poisoncloud)) {
             color = blood_color(levl[x][y].splatpm);
         }
     } else if ((offset = (glyph - GLYPH_OBJ_OFF)) >= 0) { /* object */

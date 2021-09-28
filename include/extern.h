@@ -992,6 +992,7 @@ extern long hhmmss(time_t);
 extern char *yyyymmddhhmmss(time_t);
 extern time_t time_from_yyyymmddhhmmss(char *);
 extern int phase_of_the_moon(void);
+extern boolean is_june(void);
 extern boolean friday_13th(void);
 extern boolean pi_day(void);
 extern boolean mayfourth(void);

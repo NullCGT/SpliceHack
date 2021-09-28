@@ -124,12 +124,10 @@ formatkiller(
         kname = an(kname);
         /*FALLTHRU*/
     case KILLED_BY:
-        #ifdef UNIQDEATHS
-        if (how == MURDERED)
+        if (how == MURDERED && !is_june() && !(iflags.killedby))
             (void) strncat(buf,
                 murdered_by_msg[g.moves % SIZE(murdered_by_msg)], siz - 1);
         else
-        #endif
             (void) strncat(buf, killed_by_prefix[how], siz - 1);
         l = strlen(buf);
         buf += l, siz -= l;

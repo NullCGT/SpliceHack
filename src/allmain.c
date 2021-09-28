@@ -794,6 +794,12 @@ welcome(boolean new_game) /* false => restoring an old game */
           Hello((struct monst *) 0), g.plname, buf, g.urace.adj,
                 rolename_gender(currentgend));
 
+    if (new_game && is_june()) {
+		pline("It is currently June, and that means that Junethack is ongoing! ");
+		pline("Junethack is a month long cross-variant NetHack Tournament held in June every year, open to players of all skill levels. "); 
+		pline("Check out junethack.net or join ##junethack on libera.chat for more information, including how to participate.");
+	}
+
     l_nhcore_call(new_game ? NHCORE_START_NEW_GAME : NHCORE_RESTORE_OLD_GAME);
 }
 

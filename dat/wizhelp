@@ -32,4 +32,3 @@ Debug-Mode Quick Reference:
 Options:
 monpolycontrol  == prompt for new form whenever any monster changes shape
 sanity_check    == evaluate monsters, objects, and map prior to each turn
-wizweight       == augment object descriptions with their objects' weight

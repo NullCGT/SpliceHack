@@ -1466,7 +1466,7 @@ doname_base(struct obj* obj, unsigned int doname_flags)
 
     /* show weight for items (debug tourist info);
        "aum" is stolen from Crawl's "Arbitrary Unit of Measure" */
-    if (wizard && iflags.wizweight) {
+    if (flags.invweight && (obj->where == OBJ_INVENT || wizard)) {
         /* wizard mode user has asked to see object weights */
         if (with_price && (*(eos(bp)-1) == ')'))
             Sprintf(eos(bp)-1, ", %u aum)", obj->owt);

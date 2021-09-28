@@ -1,4 +1,10 @@
 #                             Splicehack-Rewrite
+
+##                             Version 1.1.0
+
+# Forging
+- Added a number of new recipes, courtesy of Riker.
+
 ##                             Version 1.0.0
 
 *note- some items and monsters were implemented in older versions of splicehack.*

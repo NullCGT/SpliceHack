@@ -146,8 +146,7 @@ static NEARDATA struct artifact artilist[] = {
       NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 1700L, NO_COLOR),
 
     /*
-    *      Gugnir also returns to the hand of the wielder when thrown if
-    *      the wielder is a Valkyrie, but there is no strength requirement.
+    *      Gugnir has an incredible to-hit.
     */
     A("Gungnir", DWARVISH_SPEAR, (SPFX_RESTR), 0, 0, PHYS(100, 4),
       NO_DFNS, NO_CARY, LIGHTNING_BOLT, A_NEUTRAL, PM_VALKYRIE, NON_PM, 4000L, NO_COLOR),

@@ -94,7 +94,7 @@ static NEARDATA const char *const odd_skill_names[] = {
     "freezing fists",
     "shocking fists",
     "stunning fist",
-    "backstap",
+    "backstab",
     "careful attack",
     "rat tamer",
     "dragon tamer",

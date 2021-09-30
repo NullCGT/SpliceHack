@@ -105,6 +105,7 @@ static int timed_occupation(void);
 static int doextcmd(void);
 static int dotravel(void);
 static int doterrain(void);
+static int wiz_clear(void);
 static int wiz_wish(void);
 static int wiz_identify(void);
 static int wiz_map(void);
@@ -834,6 +835,26 @@ enter_explore_mode(void)
             clear_nhwindow(WIN_MESSAGE);
             pline("Continuing with %s.", oldmode);
         }
+    }
+    return 0;
+}
+
+/* ^C command - clear all monsters */
+static int
+wiz_clear(void)
+{
+    if (wizard) {
+        register struct monst *mtmp, *mtmp2;
+
+        int gonecnt = 0;
+        for (mtmp = fmon; mtmp; mtmp = mtmp2) {
+            mtmp2 = mtmp->nmon;
+            if (DEADMONSTER(mtmp))
+                continue;
+            mongone(mtmp);
+            gonecnt++;
+        }
+        pline("Eliminated %d monster%s.", gonecnt, plur(gonecnt));
     }
     return 0;
 }
@@ -2147,6 +2168,8 @@ struct ext_func_tab extcmdlist[] = {
               wiz_where, IFBURIED | AUTOCOMPLETE | WIZMODECMD, NULL },
     { C('w'), "wizwish", "wish for something",
               wiz_wish, IFBURIED | WIZMODECMD, NULL },
+    { C('c'), "wizclear", "clear all monsters on the level",
+              wiz_clear, IFBURIED | WIZMODECMD, NULL },
     { '\0',   "wmode", "show wall modes",
               wiz_show_wmodes, IFBURIED | AUTOCOMPLETE | WIZMODECMD, NULL },
     { 'z',    "zap", "zap a wand",

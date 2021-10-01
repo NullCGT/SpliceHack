@@ -1,7 +1,7 @@
 
 des.level_flags("noflip");
 
-des.room({ type = "ordinary", lit=1, x=3,y=3, xalign="center",yalign="center", w=11,h=9, contents = function()
+des.room({ type = "delphi", lit=1, x=3,y=3, xalign="center",yalign="center", w=11,h=9, contents = function()
 -- 16 centaurs, 8 other possibilities. 1/3 chance of non-centaur.
 local monster = { "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C",
                   "manticore", "manticore", "chimera", "chimera", "q", "q", "woodchuck", "archeologist" }

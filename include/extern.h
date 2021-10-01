@@ -2498,6 +2498,7 @@ extern void whimper(struct monst *);
 extern void beg(struct monst *);
 extern const char *maybe_gasp(struct monst *);
 extern int dotalk(void);
+extern int getroomtype(xchar, xchar);
 extern int tiphat(void);
 #ifdef USER_SOUNDS
 extern int add_sound_mapping(const char *);

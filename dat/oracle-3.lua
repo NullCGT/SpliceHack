@@ -24,7 +24,11 @@ des.room({ type ="delphi", lit = 1, x=3, y=3, xalign="center", yalign="center", 
                end
 
                -- now actually make the ring
-               des.terrain({ selection=ring, typ="}", lit=1 })
+               if percent(99) then
+                  des.terrain({ selection=ring, typ="}", lit=1 })
+               else
+                  des.terrain({ selection=ring, typ="L", lit=1 })
+               end
 
                -- four trees
                des.feature("tree", 3,2)

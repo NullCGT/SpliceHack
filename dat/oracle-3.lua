@@ -1,6 +1,6 @@
 des.level_flags("noflip");
 
-des.room({ type ="delphi", lit = 1, x=39, y=10, xalign="center", yalign="center", w=11, h=9,
+des.room({ type ="delphi", lit = 1, x=3, y=3, xalign="center", yalign="center", w=11, h=9,
            contents = function()
                -- Make a squarish ring of pools around the Oracle, 3 spaces out
                local ring = selection.rect(2,1,8,7)

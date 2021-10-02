@@ -1922,6 +1922,12 @@ fprefx(struct obj *otmp)
                 }
         }
         break;
+    case FRUITCAKE:
+        if (otmp->cursed) {
+            pline("Ouch! It's like eating rocks!");
+            losehp(d(1, 6), "biting into a particularly tough fruitcake", KILLED_BY);
+        }
+        break;
     case LEMBAS_WAFER:
         if (maybe_polyd(is_orc(g.youmonst.data), Race_if(PM_ORC))) {
             pline("%s", "!#?&* elf kibble!");
@@ -1995,7 +2001,7 @@ fprefx(struct obj *otmp)
         } else {
  give_feedback:
             pline("This %s is %s", singular(otmp, xname),
-                  otmp->cursed
+                  (otmp->cursed || otmp->otyp == FRUITCAKE)
                      ? (Hallucination ? "grody!" : "terrible!")
                      : (otmp->otyp == CRAM_RATION
                         || otmp->otyp == K_RATION
@@ -2841,6 +2847,9 @@ doeat(void)
             if (otmp->otyp == PANCAKE || otmp->otyp == FORTUNE_COOKIE /*eggs*/
                 || otmp->otyp == CREAM_PIE || otmp->otyp == CANDY_BAR /*milk*/
                 || otmp->otyp == SLICE_OF_CAKE /*eggs AND milk*/
+                || otmp->otyp == FRUITCAKE
+                || otmp->otyp == APPLE_PIE
+                || otmp->otyp == PUMPKIN_PIE
                 || otmp->otyp == LUMP_OF_ROYAL_JELLY
                 || otmp->otyp == CHEESE)
                 if (!u.uconduct.unvegan++ && !ll_conduct)

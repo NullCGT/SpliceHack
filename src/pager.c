@@ -1169,8 +1169,11 @@ add_obj_info(winid datawin, short otyp)
                 case FORTUNE_COOKIE:
                 case EGG:
                 case CREAM_PIE:
+                case APPLE_PIE:
+                case PUMPKIN_PIE:
                 case CANDY_BAR:
                 case SLICE_OF_CAKE:
+                case FRUITCAKE:
                 case LUMP_OF_ROYAL_JELLY:
                     OBJPUTSTR("Is vegetarian but not vegan.");
                     break;

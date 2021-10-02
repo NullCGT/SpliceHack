@@ -5,6 +5,12 @@
 # Forging
 - Added a number of new recipes, courtesy of Riker.
 
+# Object Changes
+- New Object: Fruitcake
+  - Created by combining cake and a slime mold at a forge.
+  - Deals massive damage when thrown, and comedically heavy.
+  - Eating a cursed fruitcake can cause hp loss.
+
 ##                             Version 1.0.0
 
 *note- some items and monsters were implemented in older versions of splicehack.*

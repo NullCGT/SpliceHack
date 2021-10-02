@@ -1203,6 +1203,8 @@ toss_up(struct obj *obj, boolean hitsroof)
                 dmg = 6;
             if (obj->otyp == PINEAPPLE)
                 dmg = dmg + 2;
+            if (obj->otyp == FRUITCAKE)
+                dmg = 18;
             if (g.youmonst.data == &mons[PM_SHADE] && obj->material != SILVER)
                 dmg = 0;
         }
@@ -1675,6 +1677,7 @@ omon_adj(struct monst *mon, struct obj *obj, boolean mon_notices)
     /* some objects are more likely to hit than others */
     switch (obj->otyp) {
     case PINEAPPLE:
+    case FRUITCAKE:
         tmp += 4;
         break;
     case HEAVY_IRON_BALL:
@@ -1981,7 +1984,8 @@ thitmonst(register struct monst *mon,
         }
 
     } else if ((otyp == EGG || otyp == CREAM_PIE || otyp == BLINDING_VENOM
-                || otyp == ACIDIC_LIQUID || otyp == PINEAPPLE)
+                || otyp == ACIDIC_LIQUID || otyp == PINEAPPLE
+                || otyp == FRUITCAKE)
                && (guaranteed_hit || ACURR(A_DEX) > rnd(25))) {
         (void) hmon(mon, obj, hmode, dieroll);
         return 1; /* hmon used it up */
@@ -2325,6 +2329,8 @@ breaktest(struct obj *obj)
     case EXPENSIVE_CAMERA:
     case POT_WATER: /* really, all potions */
     case CREAM_PIE:
+    case APPLE_PIE:
+    case PUMPKIN_PIE:
     case MELON:
     case ACIDIC_LIQUID:
     case BLINDING_VENOM:
@@ -2380,10 +2386,13 @@ breakmsg(struct obj *obj, boolean in_view)
         pline("Splat!");
         break;
     case CREAM_PIE:
+    case APPLE_PIE:
+    case PUMPKIN_PIE:
         if (in_view)
             pline("What a mess!");
         break;
     case SLICE_OF_CAKE:
+    case FRUITCAKE:
         if (in_view)
             pline("Dirt cake!");
         break;

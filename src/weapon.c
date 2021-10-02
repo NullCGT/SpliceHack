@@ -573,7 +573,7 @@ dmgval(struct obj *otmp, struct monst *mon)
     struct permonst *ptr = mon->data;
     boolean Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
 
-    if (otyp == CREAM_PIE)
+    if (otyp == CREAM_PIE || otyp == APPLE_PIE || otyp == PUMPKIN_PIE)
         return 0;
 
     if (bigmonst(ptr) && objects[otyp].oc_wldam) {
@@ -956,7 +956,7 @@ static NEARDATA const int rwep[] = {
     SHURIKEN, LIGHT_ARROW, YA, ELVEN_ARROW, DARK_ELVEN_ARROW,
     ARROW, ORCISH_ARROW,
     CROSSBOW_BOLT, ELVEN_DAGGER, DARK_ELVEN_DAGGER, DAGGER, ORCISH_DAGGER, KNIFE,
-    FLINT, ROCK, LOADSTONE, LUCKSTONE, DART, PINEAPPLE,
+    FLINT, ROCK, LOADSTONE, LUCKSTONE, DART, FRUITCAKE, PINEAPPLE,
     /* CHAKRAM, BOOMERANG, */ CREAM_PIE
 };
 

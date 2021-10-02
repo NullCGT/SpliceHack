@@ -1,6 +1,6 @@
 des.level_flags("noflip");
 
-des.room({ type ="delphi", lit = 1, x=39, y=10, xalign="center", yalign="center", w=11, h=9,
+des.room({ type ="delphi", lit = 1, x=3, y=3, xalign="center", yalign="center", w=11, h=9,
            contents = function()
 
                -- Make a square ring of pools around the Oracle, 2 spaces out
@@ -10,7 +10,11 @@ des.room({ type ="delphi", lit = 1, x=39, y=10, xalign="center", yalign="center"
                notpool = { {5,2},{3,4},{7,4},{5,6} }
                shuffle(notpool)
                ring:set(notpool[1][1], notpool[1][2], 0)
-               des.terrain({ selection=ring, typ="}", lit=1 })
+               if percent(99) then
+                  des.terrain({ selection=ring, typ="}", lit=1 })
+               else
+                  des.terrain({ selection=ring, typ="L", lit=1 })
+               end
 
                -- The 4 fountains are on the outside corners
                des.feature("fountain", 2,1)

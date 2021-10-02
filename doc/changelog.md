@@ -175,7 +175,7 @@ in its own way.
   - Replaces the banquet hall.
 - Juiblex's lair has a 50% chance of containing Juiblex and a 50% chance of containing
   Zuggotomoy.
-- Levels have dynamically generated names.
+- Levels have dynamically generated names. These names are only for flavor, but can indicate the presence of features such as fountains.
 - While there are no variant castle levels, several minor features of the castle level are
   randomly generated. For example, the moat may take a slightly different shape, or there may
   be iron bars from which the soldiers can attack.

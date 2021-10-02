@@ -2295,29 +2295,71 @@ map_glyphinfo(xchar x, xchar y, int glyph,
                        || g.showsyms[idx] == g.showsyms[S_dnstair + SYM_OFF_P])) {
             color = CLR_YELLOW;
         } else if (iflags.use_color && offset >= S_vwall && offset <= S_trwall) {
-            if (*in_rooms(x,y,BEEHIVE) && !On_W_tower_level(&u.uz))
-        		    color = CLR_YELLOW;
+            /* special room walls */
+            if (getroomtype(x, y) == BEEHIVE && !On_W_tower_level(&u.uz))
+        		color = CLR_YELLOW;
+            else if (getroomtype(x, y) == COURT && !Is_stronghold(&u.uz))
+                color = CLR_MAGENTA;
+            else if (getroomtype(x, y) == VAULT)
+                color = HI_METAL;
+            else if (getroomtype(x, y) == TEMPLE)
+                color = CLR_WHITE;
+            else if (getroomtype(x, y) == LEPREHALL)
+                color = CLR_BRIGHT_GREEN;
+            else if (getroomtype(x, y) == ANTHOLE)
+                color = CLR_BROWN;
+            else if (getroomtype(x, y) == SWAMP)
+                color = CLR_GREEN;
+            else if (getroomtype(x, y) == DELPHI)
+                color = CLR_BRIGHT_BLUE;
+            else if (getroomtype(x, y) == ANTHOLE
+                  || getroomtype(x, y) == LEMUREPIT)
+                color = CLR_RED;
+            else if (getroomtype(x, y) == SWAMP)
+                color = CLR_GREEN;
+            /* special level walls */
             else if (In_sokoban(&u.uz))
                 color = CLR_BLUE;
             else if (Is_blackmarket(&u.uz))
                 color = CLR_ORANGE;
-        		else if (In_W_tower(x, y, &u.uz))
-        		    color = CLR_MAGENTA;
-        		else if (In_mines(&u.uz))
-        		    color = CLR_BROWN;
-        		else if (In_hell(&u.uz) && !Is_valley(&u.uz))
-        		    color =  CLR_RED;
-                else if (Is_firelevel(&u.uz))
-                    color = CLR_YELLOW;
-        		else if (Is_astralevel(&u.uz))
-        		    color = CLR_WHITE;
+            else if (In_W_tower(x, y, &u.uz))
+                color = CLR_MAGENTA;
+            else if (In_mines(&u.uz))
+                color = CLR_BROWN;
+            else if (In_hell(&u.uz) && !Is_valley(&u.uz))
+                color =  CLR_RED;
+            else if (Is_firelevel(&u.uz))
+                color = CLR_YELLOW;
+            else if (Is_astralevel(&u.uz))
+                color = CLR_WHITE;
+            /* special room floors */
       	} else if (iflags.use_color && offset == S_room) {
-        		if (*in_rooms(x,y,BEEHIVE))
-        		    color = CLR_YELLOW;
-                else if (In_mines(&u.uz))
-        		    color = CLR_BROWN;
-        		else if (Is_juiblex_level(&u.uz))
+            if (getroomtype(x, y) == BEEHIVE || getroomtype(x, y) == COCKNEST)
+                color = CLR_YELLOW;
+            if (getroomtype(x, y) == DEN || getroomtype(x, y) == ANTHOLE)
+                color = CLR_BROWN;
+            else if (getroomtype(x, y) == DELPHI && rn2(5))
+                color = CLR_WHITE;
+            else if (getroomtype(x, y) == MORGUE) {
+                if (!rn2(2))
+                    color = CLR_BLACK;
+                else if (!rn2(3))
+                    color = CLR_BROWN;
+            } else if (getroomtype(x, y) == SWAMP) {
+                if (!rn2(3))
+                    color = CLR_BROWN;
+                else if (!rn2(3))
                     color = CLR_GREEN;
+            }
+            /* special level floors */
+            else if (In_mines(&u.uz))
+                color = CLR_BROWN;
+            else if (Is_juiblex_level(&u.uz))
+                color = CLR_GREEN;
+            else if (Is_blackmarket(&u.uz) && !rn2(5))
+                color = CLR_ORANGE;
+            else if (In_V_tower(&u.uz))
+                color = CLR_BLACK;
 #endif
         /* try to provide a visible difference between water and lava
            if they use the same symbol and color is disabled */

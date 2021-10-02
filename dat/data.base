@@ -33,10 +33,10 @@ skill: blood magic
 	than standard magic.
 skill: blood rage
 	Blood rage provides a bonus to melee weapon damage as long as you have less than
-	one quarter of your health remaining. This bonus doubles if you have less than
-	half your health remaining. Enhancing this skill will increase the damage bonus
+	one half of your health remaining. This bonus doubles if you have less than
+	quarter of your health remaining. Enhancing this skill will increase the damage bonus
 	of your blood rage.
-skill: cautious strike
+skill: careful strike
     Increase the to-hit bonus of the user by a flat amount at the cost of a
     damage penalty of the same amount.
 skill: code of honor

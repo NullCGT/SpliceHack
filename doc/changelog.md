@@ -10,6 +10,10 @@
   - Created by combining cake and a slime mold at a forge.
   - Deals massive damage when thrown, and comedically heavy.
   - Eating a cursed fruitcake can cause hp loss.
+- New Object: Pumpkin Pie
+- New Object: Apple Pie
+  - Created by combining a cream pie with a pumpkin or an apple
+    respectively.
 
 ##                             Version 1.0.0
 

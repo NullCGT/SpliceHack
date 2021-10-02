@@ -3574,7 +3574,7 @@ static const char *const neutral_adj[] = {
 };
 
 static const char *const fountnames[] = {
-    "Font",     "Pool", "Haven",    "Oasis",
+    "Fountain", "Font", "Haven",    "Oasis",
     "Respite",  "Rest", "Tears",    "Spring",
 };
 

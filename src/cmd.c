@@ -839,7 +839,7 @@ enter_explore_mode(void)
     return 0;
 }
 
-/* ^C command - clear all monsters */
+/* M-z command - clear all monsters */
 static int
 wiz_clear(void)
 {
@@ -2168,7 +2168,7 @@ struct ext_func_tab extcmdlist[] = {
               wiz_where, IFBURIED | AUTOCOMPLETE | WIZMODECMD, NULL },
     { C('w'), "wizwish", "wish for something",
               wiz_wish, IFBURIED | WIZMODECMD, NULL },
-    { C('c'), "wizclear", "clear all monsters on the level",
+    { M('z'), "wizclear", "clear all monsters on the level",
               wiz_clear, IFBURIED | WIZMODECMD, NULL },
     { '\0',   "wmode", "show wall modes",
               wiz_show_wmodes, IFBURIED | AUTOCOMPLETE | WIZMODECMD, NULL },

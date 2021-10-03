@@ -139,63 +139,62 @@ des.object({ id = "boulder", coord = demise[5] })
 
 -- resourceful orcs have set up a kitchen, and are preparing to
 -- "process" the former residents of minetown to feed the troops
--- kitchen area: 12,04 to 14,06
-des.object({ id = "large box", x = 12, y = 04, -- Pantry: dry kitchen supplies
+-- kitchen internal area: 12,04 to 14,06
+des.object({ id = "large box", x = 12, y = 04, -- Pantry: dry kitchen storage
     contents = function()
-    if percent (80) then
+    if percent (75) then
     des.object('knife')
     end
-    if percent (80) then
+    if percent (75) then
     des.object("tin opener")
     end
-    if percent (80) then
+    for i = 1, d(4)-1 do
+    des.object({ class='%', id='clove of garlic' })
+    end
+    if percent (75) then
     des.object({ class='!', id='oil' })
     end
-    if percent (80) then
-    des.object({ class='%', id='clove of garlic', quantity = math.random(1,4) })
+    for i = 1, d(4)-1 do
+    des.object({ class='!', id='fruit juice' })
     end
-    if percent (80) then
-    des.object({ class='!', id='booze', quantity = math.random(1,4) })
+    for i = 1, d(4)-1 do
+    des.object({ class='!', id='booze' })
     end
+    des.object({ class = "(" }) -- one surprise
 end
 })
-des.object({ id = "ice box", x = 12, y = 05, -- Fridge: cold kitchen supplies
+des.object({ id = "ice box", x = 12, y = 05, -- Fridge: cold kitchen storage
     contents = function()
-    if percent (80) then
-    des.object({ class='%', id='egg', quantity = math.random(1,4) })
+    for i = 1, d(4)-1 do
+    des.object({ class='%', id='egg' })
     end
-    if percent (80) then
-    des.object({ class='!', id='fruit juice', quantity = math.random(1,4) })
+    for i = 1, d(4)-1 do
+    des.object({ id = "corpse", montype = "gnome" })
     end
-    if percent (80) then
-    des.object({ id = "corpse", montype = "gnome", quantity = math.random(1,3) })
+    for i = 1, d(3)-1 do
+    des.object({ id = "corpse", montype = "dwarf" })
     end
-    if percent (80) then
-    des.object({ id = "corpse", montype = "dwarf", quantity = math.random(1,2) })
+    for i = 1, d(3)-1 do
+    des.object({ id = "corpse", montype = "human" })
     end
-    if percent (50) then
-    des.object({ id = "corpse", montype = "human", quantity = math.random(1,2) })
-    end
-    if percent (50) then
+    for i = 1, d(2)-1 do
     des.object({ id = "corpse", montype = "goblin" })
     end
-    if percent (50) then
+    for i = 1, d(2)-1 do
     des.object({ id = "corpse", montype = "orc-captain" })
     end
+    des.object({ id = "corpse" }) -- one surprise
+    des.object({ class = "%" })   -- and another!
 end
 })
 des.feature("furnace",  13,04)
 des.feature("sink",     14,04)
-if percent (80) then
 des.object("dented pot", 13, 05)
-end
-if percent (80) then
+if percent (75) then
 des.object("apron", 13, 05)
 end
-if percent (80) then
 des.monster({ id = "goblin", x = 13, y = 05, peaceful = 1,
         name = "Cookie of Glothris",  }) -- the chef. not a warrior.
-end
 
 -- the Orcish Army
 

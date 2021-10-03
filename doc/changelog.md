@@ -80,6 +80,12 @@
 - Tourists are unique in that they have no special skills of their own, but can attain basic
   levels in numerous skills from other roles.
 - A full list of skills and what they do can be found in an attached text document.
+- Item destruction happens less often for monks' elemental fist skills.
+Flaming fist in particular only damages scrolls, not potions, and now only
+triggers as frequently as freezing fist.
+- Detailed skill descriptions pop up in the #enhance menu before you commit to
+training a skill, and can also be viewed at the top of the file data.base
+inside the dat/ folder.
 
 ### Combat System
 - Luck no longer gives a to-hit bonus.

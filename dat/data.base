@@ -52,7 +52,7 @@ skill: flaming fists
     Flaming fists allows the user to set enemies on fire using their unarmed
     strikes. This increases damage dealt by 1d6 and may destroy potions in the
     defender's inventory.
-    The chance of this effect activating on a given attack is skill_level / 20.
+    The chance of this effect activating on a given attack is skill_level / 25.
 skill: freezing fists
     Flaming fists allows the user to  deal cold damage to enemies using their 
     unarmed strikes. This increases damage dealt by 1d6 and may destroy potions

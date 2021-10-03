@@ -171,6 +171,8 @@ in its own way.
 - Sokoban has new levels: they are listed on nethackwiki.com as [1C](https://nethackwiki.com/wiki/Sokoban_Level_1c), [1F](https://nethackwiki.com/wiki/Sokoban_Level_1f), [1H](https://nethackwiki.com/wiki/Sokoban_Level_1h), [3E](https://nethackwiki.com/wiki/Sokoban_Level_3e), and [4D](https://nethackwiki.com/wiki/Sokoban_Level_4d)
 - The second floor of Sokoban has been upgraded to demogorgon22's Lokoban.
 - Hitting a tree with a death ray results in a dead tree.
+- The dead minetown residents and new orctown residents have better loot.
+
 #### Furnaces
 - Furnaces can be used to combine items. While at a furnace, the player can use the #forge command
   to combine two items into one more powerful item.

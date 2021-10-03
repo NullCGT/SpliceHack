@@ -9,7 +9,7 @@
 -- Orcish Town - a variant of Frontier Town that has been
 -- overrun by orcs.  Note the barricades (iron bars).
 
-des.level_flags("mazelevel")
+des.level_flags("inaccessibles")
 
 des.level_init({ style="mines", fg=".", bg=" ", smoothed=true ,joined=true, lit="random", walled=true })
 

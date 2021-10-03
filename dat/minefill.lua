@@ -14,7 +14,7 @@ des.level_init({ style = "solidfill", fg = " " });
 
 des.level_flags("mazelevel", "noflip");
 
-des.level_init({ style="mines", fg=".", bg=" ", smoothed=true ,joined=true, lit="random", walled=true })
+des.level_init({ style="mines", fg=".", bg=" ", smoothed=true ,joined=true, walled=true })
 
 -- Sometimes the mines have trees in them. - Kes.
 if percent(10) then 

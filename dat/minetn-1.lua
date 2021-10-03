@@ -15,12 +15,12 @@ des.level_init({ style="mines", fg=".", bg=" ", smoothed=true ,joined=true, lit=
 
 des.map([[
 .....................................
-.----------------F------------------.
+.----------------.------------------.
 .|.................................|.
 .|.-------------......------------.|.
 .|.|...|...|...|......|..|...|...|.|.
-.F.|...|...|...|......|..|...|...|.|.
-.|.|...|...|...|......|..|...|...|.F.
+...|...|...|...|......|..|...|...|.|.
+.|.|...|...|...|......|..|...|...|...
 .|.|...|...|----......------------.|.
 .|.---------.......................|.
 .|.................................|.
@@ -29,9 +29,9 @@ des.map([[
 .|.|...|...|...|.|.....|.|..|....|.|.
 .|.|...|...|...|.|.....|.|..|....|.|.
 .|.|...|...|...|.|.....|.|..|....|.|.
-.|.-------------.-------.---------.|.
-.|.................................F.
-.-----------F------------F----------.
+.|.-------------.-------.---------...
+.|.................................|.
+.-----------.------------.----------.
 .....................................
 ]])
 
@@ -70,48 +70,72 @@ des.replace_terrain({ region={25,04,29,06}, fromterrain="|", toterrain=".", chan
 des.replace_terrain({ region={07,12,11,14}, fromterrain="|", toterrain=".", chance=18 })
 des.replace_terrain({ region={28,12,28,14}, fromterrain="|", toterrain=".", chance=33 })
 
--- One spot each in most shops...
-local place = { {05,04},{09,05},{13,04},{26,04},{31,05},{30,14},{05,14},{10,13},{26,14},{27,13} }
-shuffle(place)
-
--- scatter some bodies
-des.object({ id = "corpse", x=20,y=12, montype="aligned cleric" })
-des.object({ id = "corpse", coord = place[1], montype="shopkeeper" })
-des.object({ id = "corpse", coord = place[2], montype="shopkeeper" })
-des.object({ id = "corpse", coord = place[3], montype="shopkeeper" })
-des.object({ id = "corpse", coord = place[4], montype="shopkeeper" })
-des.object({ id = "corpse", coord = place[5], montype="shopkeeper" })
-des.object({ id = "corpse", montype="watchman" })
-des.object({ id = "corpse", montype="watchman" })
-des.object({ id = "corpse", montype="watchman" })
-des.object({ id = "corpse", montype="watchman" })
-des.object({ id = "corpse", montype="watch captain" })
-
 -- Rubble!
-for i=1,9 + math.random(2 - 1,2*5) do
+for i=1,6 + math.random(2 - 1,2*5) do
   if percent(90) then
     des.object("boulder")
   end
   des.object("rock")
 end
 
+-- one set of bars is replaced with a boulder
+local bars = { {17,1}, {1,5}, {35,6}, {35,15}, {12,17}, {25,17} }
+shuffle(bars)
+des.object({ id = "boulder", coord = bars[1] })
+for pos=2,6 do
+   des.terrain(bars[pos], "F")
+end
+
+-- scatter a lot of bodies
+des.object({ id = "corpse", montype="watchman" })
+des.object({ id = "corpse", montype="watchman" })
+des.object({ id = "corpse", montype="watchman" })
+des.object({ id = "corpse", montype="watchman" })
+des.object({ id = "corpse", montype="watch captain" })
+des.object({ id = "corpse", montype="gnome" })
+des.object({ id = "corpse", montype="gnome" })
+des.object({ id = "corpse", montype="gnome" })
+des.object({ id = "corpse", montype="gnomish wizard" })
+des.object({ id = "corpse", montype="gnome leader" })
+des.object({ id = "corpse", montype="dwarf" })
+des.object({ id = "corpse", montype="dwarf" })
+des.object({ id = "corpse", montype="Uruk-hai" })
+des.object({ id = "corpse", montype="hill orc" })
+des.object({ id = "corpse", montype="hill orc" })
+des.object({ id = "corpse", montype="hill orc" })
+des.object({ id = "corpse", montype="hill orc" })
+des.object({ id = "corpse", montype="goblin" })
+des.object({ id = "corpse", montype="goblin" })
+des.object({ id = "corpse", montype="goblin" })
+des.object({ id = "corpse", montype="goblin" })
+-- One murder each in most shops...
+local demise = { {05,04},{09,05},{13,04},{26,04},{31,05},{30,14},{05,14},{10,13},{26,14},{27,13} }
+shuffle(demise)
+des.object({ id = "corpse", coord = demise[1], montype="shopkeeper" })
+des.object({ id = "corpse", coord = demise[2], montype="shopkeeper" })
+des.object({ id = "corpse", coord = demise[3], montype="shopkeeper" })
+des.object({ id = "corpse", coord = demise[4], montype="shopkeeper" })
+des.object({ id = "corpse", coord = demise[5], montype="shopkeeper" })
+
 -- Guarantee 7 candles since we won't have Izchak available
-des.object({ id = "wax candle", coord = place[4], quantity = math.random(1,2) })
+des.object({ id = "wax candle", coord = demise[4], quantity = math.random(1,2) })
+des.object({ id = "wax candle", coord = demise[1], quantity = math.random(2,4) })
+des.object({ id = "wax candle", coord = demise[2], quantity = math.random(1,2) })
+des.object({ id = "tallow candle", coord = demise[3], quantity = math.random(1,3) })
+des.object({ id = "tallow candle", coord = demise[2], quantity = math.random(1,2) })
+des.object({ id = "tallow candle", coord = demise[4], quantity = math.random(1,2) })
 
-des.object({ id = "wax candle", coord = place[1], quantity = math.random(2,4) })
-des.object({ id = "wax candle", coord = place[2], quantity = math.random(1,2) })
-des.object({ id = "tallow candle", coord = place[3], quantity = math.random(1,3) })
-des.object({ id = "tallow candle", coord = place[2], quantity = math.random(1,2) })
-des.object({ id = "tallow candle", coord = place[4], quantity = math.random(1,2) })
+-- some shopkeepers were cut down before their wands ran out
+des.object({ id = "striking", coord = demise[1], buc="uncursed", spe=d(8) })
+des.object({ id = "striking", coord = demise[4], buc="uncursed", spe=d(6) })
+des.object({ id = "striking", coord = demise[5], buc="uncursed", spe=d(4) })
+des.object({ id = "magic missile", coord = demise[4], buc="uncursed", spe=d(6) })
+des.object({ id = "magic missile", coord = demise[5], buc="uncursed", spe=d(4) })
 
--- go ahead and leave a lamp next to one corpse to be suggestive
--- and some empty wands...
-des.object("oil lamp",place[2])
-des.object({ id = "striking", coord = place[1], buc="uncursed", spe=0 })
-des.object({ id = "striking", coord = place[3], buc="uncursed", spe=0 })
-des.object({ id = "striking", coord = place[4], buc="uncursed", spe=0 })
-des.object({ id = "magic missile", coord = place[4], buc="uncursed", spe=0 })
-des.object({ id = "magic missile", coord = place[5], buc="uncursed", spe=0 })
+-- put safety boulders atop the shopkeepers who died with remaining wand charges
+des.object({ id = "boulder", coord = demise[1] })
+des.object({ id = "boulder", coord = demise[4] })
+des.object({ id = "boulder", coord = demise[5] })
 
 -- resourceful orcs have set up a kitchen, and are preparing to
 -- "process" the former residents of minetown to feed the troops

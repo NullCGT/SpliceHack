@@ -775,7 +775,7 @@ make_corpse(struct monst *mtmp, unsigned int corpseflags)
 
     if (!obj)
         return (struct obj *) 0;
-    
+
     /* Handle tainted template corpses */
     if (aged)
         obj->age -= aged;
@@ -956,7 +956,8 @@ minliquid_core(struct monst* mtmp)
         }
     } else {
         /* but eels have a difficult time outside */
-        if (mtmp->data->mlet == S_EEL && !Is_waterlevel(&u.uz)) {
+        if (mtmp->data->mlet == S_EEL && !Is_waterlevel(&u.uz)
+                && mtmp->data != &mons[PM_MERFOLK]) {
             /* as mhp gets lower, the rate of further loss slows down */
             if (mtmp->mhp > 1 && rn2(mtmp->mhp) > rn2(8))
                 mtmp->mhp--;
@@ -1374,7 +1375,7 @@ meatobj(struct monst* mtmp) /* for gelatinous cubes and other hungry monsters */
         otmp2 = otmp->nexthere;
 
         /* Locusts only eat organic matter */
-        if (mtmp->data == &mons[PM_LOCUST] 
+        if (mtmp->data == &mons[PM_LOCUST]
             && (!is_organic(otmp) || (otmp->otyp == CORPSE) )) {
             continue;
         }
@@ -1506,7 +1507,7 @@ meatobj(struct monst* mtmp) /* for gelatinous cubes and other hungry monsters */
             pline1(buf);
         else if (mtmp->data == &mons[PM_LOCUST])
            You_hear("%s buzzing sound%s.",
-                     (ecount == 1) ? "a" : "several", plur(ecount)); 
+                     (ecount == 1) ? "a" : "several", plur(ecount));
         else if (flags.verbose)
             You_hear("%s slurping sound%s.",
                      (ecount == 1) ? "a" : "several", plur(ecount));
@@ -2679,7 +2680,7 @@ mondead(register struct monst* mtmp)
     lifesaved_monster(mtmp);
     if (!DEADMONSTER(mtmp))
         return;
-    
+
     if (mtmp->data == &mons[PM_WORM_THAT_WALKS]) {
         if (cansee(mtmp->mx, mtmp->my)) {
             pline_The("body of %s dissolves into maggots!", mon_nam(mtmp));
@@ -2795,7 +2796,7 @@ mondead(register struct monst* mtmp)
     if (mtmp == u.fearedmon)
         remove_fearedmon();
     /* extinguish monster's armor */
-	if ((otmp = which_armor(mtmp, W_ARM)) && 
+	if ((otmp = which_armor(mtmp, W_ARM)) &&
 		(otmp->otyp==GOLD_DRAGON_SCALE_MAIL || otmp->otyp == GOLD_DRAGON_SCALES) )
 		end_burn(otmp,FALSE);
 
@@ -2946,8 +2947,8 @@ corpse_chance(
 
     if (mon->msummoned) {
         if (cansee(mon->mx, mon->my) && !was_swallowed) {
-            pline(Hallucination ? 
-                "%s explodes into multicolored polygons!" : 
+            pline(Hallucination ?
+                "%s explodes into multicolored polygons!" :
                 "%s vanishes in a puff of smoke.", Monnam(mon));
         }
         return FALSE;
@@ -3763,7 +3764,7 @@ maybe_mnexto(struct monst* mtmp)
 int
 mnearto(
     register struct monst *mtmp,
-    xchar x, 
+    xchar x,
     xchar y,
     boolean move_other) /* make sure mtmp gets to x, y! so move m_at(x, y) */
 {

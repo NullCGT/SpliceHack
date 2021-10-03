@@ -226,6 +226,30 @@ for i=1,9 + math.random(2 - 1,2*5) do
    end
 end
 
+-- go ahead and leave a lamp somewhere, with the normal probability of magic
+if percent (75) then
+   des.object({ id = "oil lamp", lit = 1 })
+else
+   des.object({ id = "magic lamp", lit = 1 })
+end
+
+-- and an ex-priest
+local excommunicated = { 18+d(3), 11+d(3) }
+des.object({ id = "corpse", coord = excommunicated, montype="aligned cleric" })
+des.object({ id = "mace", coord = excommunicated })
+des.object({ id = "small shield", coord = excommunicated })
+des.gold()
+if percent(85) then
+   des.object({ id = "robe", coord = excommunicated })
+elseif percent(67) then
+   des.object({ id = "cloak of protection", coord = excommunicated })
+else
+   des.object({ id = "cloak of magic resistance", coord = excommunicated })
+end
+for i = 1, 1 + math.random(1,2) do
+  des.object({ class = "+", coord = excommunicated })
+end
+
 -- Hack to force full-level wallification
 
 des.wallify()

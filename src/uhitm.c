@@ -1521,7 +1521,7 @@ hmon_hitmon(struct monst *mon,
         && (uwep->oclass == WEAPON_CLASS || is_weptool(uwep)) && !uwep->known) {
         uwep->wep_kills++;
         if (uwep->wep_kills > KILL_FAMILIARITY && !rn2(max(2, uwep->spe) && !uwep->known)) {
-            You("have developed a bond of familiarity with your %s.", 
+            You("have become quite familiar with %s.", 
                 yobjnam(uwep, (char *) 0));
             uwep->known = TRUE;
             update_inventory();

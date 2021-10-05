@@ -1017,6 +1017,12 @@ dog_move(register struct monst *mtmp,
              */
             int balk = mtmp->m_lev + ((5 * mtmp->mhp) / mtmp->mhpmax) - 2;
 
+            /* these rules are in the following huge block of operators:
+             * only attack floating eyes and gelcubes 10% of the time
+             * don't attack hedgehogs, nor passive damage greater than pet's HP
+             * don't attack peaceful quest guardians or quest leaders
+             * supporters don't attack peacefuls (they end up healing those back up)
+             * don't attack petrifiers */
             if ((int) mtmp2->m_lev >= balk
                 || (mtmp2->data == &mons[PM_FLOATING_EYE] && rn2(10)
                     && mtmp->mcansee && haseyes(mtmp->data) && mtmp2->mcansee
@@ -1028,6 +1034,7 @@ dog_move(register struct monst *mtmp,
                      || mtmp2->data->msound == MS_GUARDIAN
                      || mtmp2->data->msound == MS_LEADER) && mtmp2->mpeaceful
                     && !Conflict)
+                || (is_supporter(mtmp->data) && mtmp2->mpeaceful)
                 || (touch_petrifies(mtmp2->data) && !resists_ston(mtmp)))
                 continue;
 

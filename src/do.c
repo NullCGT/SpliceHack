@@ -1859,7 +1859,7 @@ boolean
 revive_corpse(struct obj *corpse, boolean moldy)
 {
     struct monst *mtmp, *mcarry;
-    boolean is_uwep, chewed, cooked;
+    boolean is_uwep, chewed;
     xchar where;
     char cname[BUFSZ];
     struct obj *container = (struct obj *) 0;
@@ -1868,12 +1868,8 @@ revive_corpse(struct obj *corpse, boolean moldy)
     where = corpse->where;
     is_uwep = (corpse == uwep);
     chewed = (corpse->oeaten != 0);
-    cooked = (corpse->oeroded != 0);
     Strcpy(cname, corpse_xname(corpse,
                                chewed ? "bite-covered" : (const char *) 0,
-                               CXN_SINGULAR));
-    Strcpy(cname, corpse_xname(corpse,
-                               cooked ? "cooked" : (const char *) 0,
                                CXN_SINGULAR));
     mcarry = (where == OBJ_MINVENT) ? corpse->ocarry : 0;
 

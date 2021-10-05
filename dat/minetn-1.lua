@@ -137,6 +137,10 @@ des.object({ id = "boulder", coord = demise[1] })
 des.object({ id = "boulder", coord = demise[4] })
 des.object({ id = "boulder", coord = demise[5] })
 
+-- and don't shopkeepers carry keys?
+des.object({ id = "skeleton key", coord = demise[2] })
+des.gold({ coord = demise[3] })
+
 -- resourceful orcs have set up a kitchen, and are preparing to
 -- "process" the former residents of minetown to feed the troops
 -- kitchen internal area: 12,04 to 14,06

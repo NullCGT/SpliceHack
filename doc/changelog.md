@@ -136,6 +136,8 @@
 - Dexterity of 18 or higher improves hit chance with wand zaps.
 - Dropped the quest entry requirement to level 10.
 - Ported paranoid trap and swim confirmation from xnethack.
+- Dropping a container onto an altar will show colored flashes corresponding
+to its contents and identify their beatitude.(from NH4)
 
 ### Dungeon Changes
 

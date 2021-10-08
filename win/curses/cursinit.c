@@ -50,19 +50,19 @@ typedef struct nhrgb_type {
 #define SPLICEHACK_SPLASH_A \
 " _____        _            _    _            _"
 #define SPLICEHACK_SPLASH_B \
-"/ ____|      | (_)        | |  | |          | |"
+"/  ___|      | (_)        | |  | |          | |"
 #define SPLICEHACK_SPLASH_C \
-"| (___  _ __ | |_  ___ ___| |__| | __ _  ___| | __"
+"| (___  _ __ | |_  ___ ___| |__| | __ _  ___| | __         _"
 #define SPLICEHACK_SPLASH_D \
-" \\___ \\| `_ \\| | |/ __/ _ \\  __  |/ _` |/ __| |/ /"
+"\\____ \\| `_ \\| | |/ __/ _ \\  __  |/ _` |/ __| |/ /    |\\__/,\\   (`\\"
 #define SPLICEHACK_SPLASH_E \
-" ____) | |_) | | | (_|  __/ |  | | (_| | (__|   <"
+" ____) | |_) | | | (_|  __/ |  | | (_| | (__|   <     |o O  /__ _) )"
 #define SPLICEHACK_SPLASH_F \
-"|_____/| .__/|_|_|\\___\\___|_|  |_|\\__,_|\\___|_|\\_\\"
+"|_____/| .__/|_|_|\\___\\___|_|  |_|\\__,_|\\___|_|\\_\\  _,( T   )  `  /"
 #define SPLICEHACK_SPLASH_G \
-"       | |"
+"       | |                                         ((_ `^--' /_\\  \\"
 #define SPLICEHACK_SPLASH_H \
-"       |_|"
+"       |_|                                         `` `-' ((/   ((/"
 
 
 /* win* is size and placement of window to change, x/y/w/h is baseline

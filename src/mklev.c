@@ -2209,7 +2209,7 @@ mkinvpos(xchar x, xchar y, int dist)
  * The portal to Ludios is special.  The entrance can only occur within a
  * vault in the main dungeon at a depth greater than 10.  The Ludios branch
  * structure reflects this by having a bogus "source" dungeon:  the value
- * of n_dgns (thus, Is_branchlev() will never find it).
+ * of g.n_dgns (thus, Is_branchlev() will never find it).
  *
  * Ludios will remain isolated until the branch is corrected by this function.
  */
@@ -2231,7 +2231,7 @@ mk_knox_portal(xchar x, xchar y)
     }
 
     /* Already set. */
-    if (source->dnum < n_dgns)
+    if (source->dnum < g.n_dgns)
         return;
 
     if (!(u.uz.dnum == oracle_level.dnum      /* in main dungeon */

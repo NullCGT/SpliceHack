@@ -3904,7 +3904,7 @@ struct mhitm_data *mhm;
         if (!mdef->iswiz && mdef->data != &mons[PM_MEDUSA] &&
             !(mdef->data->mflags3 & M3_COVETOUS) &&
             !(mdef->data->geno & G_UNIQ) &&
-              mdef->mtame) {
+            !(mdef->mtame)) {
               if (canseemon(mdef)) pline("%s looks calmer.", Monnam(mdef));
               mdef->mpeaceful = 1;
               mdef->mtame = 0;

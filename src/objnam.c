@@ -3251,7 +3251,8 @@ wizterrainwish(struct _readobjnam_data *d)
         lev->typ = GRASS;
         pline("Some grass.");
         madeterrain = TRUE;
-    } else if (!BSTRCMPI(bp, p - 7, "furnace")) {
+    } else if ((!BSTRCMPI(bp, p - 7, "furnace"))
+            || (!BSTRCMPI(bp, p - 5, "forge"))) {
         lev->typ = FURNACE;
         g.level.flags.nfurnaces++;
         lev->looted = 0; /* overlays 'flags' */

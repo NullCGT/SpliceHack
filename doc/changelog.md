@@ -22,6 +22,7 @@
 
 ### QoL
 - Colored flashes BUC-identify contents when when container hits altar
+- Removed the Mysterious Force.
 
 ### Small Tweaks / Bugfixes
 - Decks of Fate are less common in barracks relative to normal decks of cards.

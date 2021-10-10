@@ -24,17 +24,19 @@ des.room({ type ="delphi", lit = 1, x=3, y=3, xalign="center", yalign="center", 
                end
 
                -- now actually make the ring
-               if percent(99) then
+               if percent(98) then
                   des.terrain({ selection=ring, typ="}", lit=1 })
+                  des.feature("tree", 3,2)
+                  des.feature("tree", 3,6)
+                  des.feature("tree", 7,2)
+                  des.feature("tree", 7,6)
                else
                   des.terrain({ selection=ring, typ="L", lit=1 })
+                  des.feature("dead tree", 3,2)
+                  des.feature("dead tree", 3,6)
+                  des.feature("dead tree", 7,2)
+                  des.feature("dead tree", 7,6)
                end
-
-               -- four trees
-               des.feature("tree", 3,2)
-               des.feature("tree", 3,6)
-               des.feature("tree", 7,2)
-               des.feature("tree", 7,6)
 
                statuelocs = { {0,0},{10,0},{0,8},{10,8} }
                shuffle(statuelocs)

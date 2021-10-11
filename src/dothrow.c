@@ -1991,7 +1991,9 @@ thitmonst(register struct monst *mon,
         return 1; /* hmon used it up */
 
     } else if (obj->oclass == POTION_CLASS
-               && (guaranteed_hit || ACURR(A_DEX) > rnd(25))) {
+               && (guaranteed_hit
+                   || (Race_if(PM_GNOME) && ACURR(A_INT) > rnd(25))
+                   || ACURR(A_DEX) > rnd(25))) {
         potionhit(mon, obj, POTHIT_HERO_THROW);
         return 1;
 

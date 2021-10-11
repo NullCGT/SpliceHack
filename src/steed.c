@@ -402,9 +402,9 @@ mount_steed(
         return (FALSE);
     }
 
-    /* Is this a valid monster? */
+    /* Is this a valid monster? If player is not an elf, is there a saddle? */
     otmp = which_armor(mtmp, W_SADDLE);
-    if (!otmp) {
+    if (!otmp && !maybe_polyd(is_elf(g.youmonst.data), Race_if(PM_ELF))) {
         pline("%s is not saddled.", Monnam(mtmp));
         return (FALSE);
     }
@@ -461,7 +461,7 @@ mount_steed(
         return (FALSE);
     }
     if (!force
-        && (Confusion || Fumbling || Glib || Wounded_legs || otmp->cursed
+        && (Confusion || Fumbling || Glib || Wounded_legs || (otmp && otmp->cursed)
             || (u.ulevel + mtmp->mtame < rnd(MAXULEV / 2 + 5)))) {
         if (Levitation) {
             pline("%s slips away from you.", Monnam(mtmp));

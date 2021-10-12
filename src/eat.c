@@ -887,7 +887,7 @@ givit(int type, register struct permonst *ptr)
     case FIRE_RES:
         debugpline0("Trying to give fire resistance");
         if ((HFire_resistance & (TIMEOUT | FROMRACE | FROMEXPER)) < 100) {
-            You(Hallucination ? "be chillin'." : "feel slightly more chill.");
+            You(Hallucination ? "be chillin'." : "feel %s more chill.", adj);
             incr_resistance(&HFire_resistance, percentincrease);
         }
         break;

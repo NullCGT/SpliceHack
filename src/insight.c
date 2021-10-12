@@ -2782,7 +2782,7 @@ list_genocided(char defquery, boolean ask)
             if (!dumping)
                 putstr(klwin, 0, "");
             if (ngenocided > 0) {
-                Sprintf(buf, "%d species genocided.", ngenocided);
+                Sprintf(buf, "%d species annihilated.", ngenocided);
                 putstr(klwin, ATR_PREFORM, buf);
             }
             if (nextinct > 0) {
@@ -2799,7 +2799,7 @@ list_genocided(char defquery, boolean ask)
         }
 #if defined (DUMPLOG) || defined (DUMPHTML)
     } else if (dumping) {
-        putstr(0, 0, "No species were genocided or became extinct.");
+        putstr(0, 0, "No species were annihilated or became extinct.");
 #endif
     }
 }

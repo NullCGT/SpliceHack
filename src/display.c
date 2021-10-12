@@ -2424,7 +2424,9 @@ map_glyphinfo(xchar x, xchar y, int glyph,
         }
 
         /* blood overrides other colors */
-        if (levl[x][y].splatpm && cansee(x, y) && !(glyph_to_cmap(glyph) == S_cloud || glyph_to_cmap(glyph) == S_poisoncloud)) {
+        if (levl[x][y].splatpm && cansee(x, y)
+                && !(glyph_to_cmap(glyph) == S_cloud
+                || glyph_to_cmap(glyph) == S_poisoncloud)) {
             color = blood_color(levl[x][y].splatpm);
         }
     } else if ((offset = (glyph - GLYPH_OBJ_OFF)) >= 0) { /* object */
@@ -3255,8 +3257,10 @@ wall_angle(struct rm *lev)
 
 void
 add_blood(int x, int y, int pm) {
-    levl[x][y].splatpm = pm;
-    newsym(x, y);
+    if (!(iflags.bloodless)) {
+        levl[x][y].splatpm = pm;
+        newsym(x, y);
+    }
 }
 
 int

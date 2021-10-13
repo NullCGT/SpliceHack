@@ -217,6 +217,8 @@ static struct trobj Wizard[] = {
  *      Optional extra inventory items.
  */
 
+static struct trobj Swimsack[] = { { OILSKIN_SACK, 0, TOOL_CLASS, 1, 0 },
+                                   { 0, 0, 0, 0, 0 } };
 static struct trobj Tinopener[] = { { TIN_OPENER, 0, TOOL_CLASS, 1, 0 },
                                     { 0, 0, 0, 0, 0 } };
 static struct trobj Magicmarker[] = { { MAGIC_MARKER, UNDEF_SPE, TOOL_CLASS,
@@ -253,7 +255,6 @@ static struct inv_sub {
     /* { PM_ELF, SMALL_SHIELD, ELVEN_SHIELD }, */
     { PM_ELF, CLOAK_OF_DISPLACEMENT, ELVEN_CLOAK },
     { PM_ELF, CRAM_RATION, LEMBAS_WAFER },
-    { PM_MERFOLK, SACK, OILSKIN_SACK },
     { PM_MERFOLK, SPEAR, TRIDENT },
     { PM_MERFOLK, MACE, TRIDENT },
     { PM_MERFOLK, LONG_SWORD, TRIDENT },
@@ -1314,6 +1315,10 @@ u_init(void)
 	    adjalign(-5);
 	    change_luck(-1);
 	    break;
+
+    case PM_MERFOLK:
+        if (!Role_if(PM_PIRATE))
+            ini_inv(Swimsack);
 
     default: /* impossible */
         break;

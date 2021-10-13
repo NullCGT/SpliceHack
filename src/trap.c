@@ -4566,9 +4566,6 @@ drown(void)
             You("sink like %s.", Hallucination ? "the Titanic" : "a rock");
     }
 
-    if (!maybe_polyd(is_merfolk(g.youmonst.data), Race_if(PM_MERFOLK)))
-        water_damage_chain(g.invent, FALSE);
-
     uwatereffects();
     if (inpool_ok)
         return FALSE;

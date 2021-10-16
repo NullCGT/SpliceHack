@@ -2,6 +2,9 @@
 
 ##                             Version 1.1.0
 
+### Monster Changes
+- Angels and gold dragons emit radius 4 light.
+
 ### Dungeon Changes
 - Ludios spawns as soon as it is able to, reducing chance that it never spawns.
 - New "kitchen" themed room with food, cooking implements, sinks and furnaces.

@@ -1449,6 +1449,41 @@ monmaterial(int mndx)
     }
 }
 
+/* Return the radius at which a monster is supposed to emit light, or 0 if it
+ * does not emit any light. (The return value is also commonly used as a boolean
+ * expression.)
+ * This was moved out of mondata.h because it was becoming a rather complex
+ * macro.
+ */
+int
+emits_light(struct permonst *ptr)
+{
+    if (!ptr) {
+        impossible("emits_light: null permonst!");
+        return 0;
+    }
+    if (ptr->mlet == S_LIGHT || ptr->mlet == S_ANGEL) {
+        if (ptr == &mons[PM_YELLOW_LIGHT]) {
+            return 4;
+        }
+        return 2;
+    }
+    /* fallthrough party */
+    switch(monsndx(ptr)) {
+    case PM_GOLD_DRAGON:
+    case PM_BABY_GOLD_DRAGON:
+        return 4;
+    case PM_FLAMING_SPHERE:
+    case PM_SHOCKING_SPHERE:
+    case PM_FIRE_VORTEX:
+        return 2;
+    case PM_WAX_GOLEM:
+    case PM_FIRE_ELEMENTAL:
+        return 1;
+    }
+    return 0;
+}
+
 /* Convert attack damage type AD_foo to M_SEEN_bar */
 unsigned long
 cvt_adtyp_to_mseenres(uchar adtyp)

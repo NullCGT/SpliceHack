@@ -1586,6 +1586,7 @@ extern int monmaterial(int);
 unsigned long cvt_adtyp_to_mseenres(uchar);
 extern void monstseesu(unsigned long);
 extern boolean resist_conflict(struct monst *);
+extern int emits_light(struct permonst *);
 
 /* ### monmove.c ### */
 

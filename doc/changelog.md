@@ -2,6 +2,11 @@
 
 ##                             Version 1.1.0
 
+### Role Changes
+- Multishot: Samurai using a Yumi have a multishot bonus even when not using Ya.
+- Multishot: Rogues now have a multishot bonus to knives in addition to daggers.
+- Multishot: Rangers don't have an artificial penalty for multishotting daggers.
+
 ### Dungeon Changes
 - Ludios spawns as soon as it is able to, reducing chance that it never spawns.
 - New "kitchen" themed room with food, cooking implements, sinks and furnaces.
@@ -24,6 +29,7 @@
 - Colored flashes BUC-identify contents when when container hits altar
 
 ### Small Tweaks / Bugfixes
+- More elemental magic types can be used to change elementals to other forms.
 - Decks of Fate are less common in barracks relative to normal decks of cards.
 - Healer pets don't attack peacefuls. They still *heal* peacefuls.
 - Learning your weapon's enchantment has more emotionless messaging

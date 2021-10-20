@@ -94,7 +94,7 @@ formatkiller(
 {
     static NEARDATA const char *const killed_by_prefix[] = {
         /* DIED, MURDERED, TREX, CHOKING, POISONING, STARVING, */
-        "killed by ", "killed by ", "tyrannosaurus rekt by", "choked on ", "poisoned by ", "died of ",
+        "killed by ", "killed by ", "tyrannosaurus rekt by ", "choked on ", "poisoned by ", "died of ",
         /* DROWNING, BURNING, DISSOLVED, CRUSHING, */
         "drowned in ", "burned by ", "dissolved in ", "crushed to death by ",
         /* STONING, TURNED_SLIME, GENOCIDED, */

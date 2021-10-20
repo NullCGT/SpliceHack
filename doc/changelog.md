@@ -2,6 +2,12 @@
 
 ##                             Version 1.1.0
 
+### Species Changes
+- Gnome
+  - Gnomes have an additional Intelligence/25 chance for a potion to successfully hit a monster.
+- Elf
+  - Elves can mount steeds without the use of a saddle.
+
 ### Dungeon Changes
 - Ludios spawns as soon as it is able to, reducing chance that it never spawns.
 - New "kitchen" themed room with food, cooking implements, sinks and furnaces.

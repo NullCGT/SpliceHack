@@ -257,6 +257,8 @@ opt_##a,
     NHOPTB(large_font, 0, opt_in, set_in_config, Off, Yes, No, No, NoAlias,
                 &iflags.obsolete)
 #endif
+    NHOPTB(bloodless, 0, opt_in, set_in_game, Off, Yes, No, No, NoAlias,
+                &iflags.bloodless)
     NHOPTB(killedby, 0, opt_in, set_in_game, Off, Yes, No, No, NoAlias,
                 &iflags.killedby)
     NHOPTB(legacy, 0, opt_out, set_in_config, On, Yes, No, No, NoAlias,

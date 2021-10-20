@@ -1724,7 +1724,7 @@ gazemu(struct monst *mtmp, struct attack *mattk)
         }
         break;
     case AD_PLYS:
-        if (!mtmp->mcan && canseemon(mtmp)
+        if (!mtmp->mcan && canseemon(mtmp) && !cancelled
             && couldsee(mtmp->mx, mtmp->my) && !is_fainted()
             && !mtmp->mspec_used && rn2(4)
             && g.multi>=0 && !((is_undead(g.youmonst.data)
@@ -1754,9 +1754,9 @@ gazemu(struct monst *mtmp, struct attack *mattk)
         }
         break;
     case AD_HNGY:
-        if(!mtmp->mcan && canseemon(mtmp) &&
-            couldsee(mtmp->mx, mtmp->my) && !is_fainted() &&
-            mtmp->mcansee && !mtmp->mspec_used && rn2(5)) {
+        if(!mtmp->mcan && canseemon(mtmp) && !cancelled
+            && couldsee(mtmp->mx, mtmp->my) && !is_fainted()
+            && mtmp->mcansee && !mtmp->mspec_used && rn2(5)) {
             int hunger = 20 + d(3,4);
 
             mtmp->mspec_used = mtmp->mspec_used + (hunger + rn2(6));
@@ -1892,8 +1892,8 @@ gazemu(struct monst *mtmp, struct attack *mattk)
         }
         break;
     case AD_TLPT:
-        if(!mtmp->mcan && canseemon(mtmp) && mtmp->mcansee && !
-            mtmp->mspec_used && rn2(5)) {
+        if(!mtmp->mcan && canseemon(mtmp) && mtmp->mcansee && !cancelled
+                && !mtmp->mspec_used && rn2(5)) {
                 pline("%s stares blinkingly at you!", Monnam(mtmp));
                 if (flags.verbose)
                         Your("position suddenly seems very uncertain!");

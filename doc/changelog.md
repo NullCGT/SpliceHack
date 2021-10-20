@@ -4,8 +4,8 @@
 
 ### Role Changes
 - Multishot: Samurai using a Yumi have a multishot bonus even when not using Ya.
-- Multishot: Rogues now have a multishot bonus to knives in addition to daggers.
-- Multishot: Rangers don't have an artificial penalty for multishotting daggers.
+- Multishot: Rogues now have a multishot bonus with knives as well as daggers.
+- Multishot: Rangers don't get an artificial penalty when multishotting daggers.
 
 ### Dungeon Changes
 - Ludios spawns as soon as it is able to, reducing chance that it never spawns.
@@ -20,6 +20,8 @@
 - Added a number of new recipes, courtesy of Riker.
 
 ### Object Changes
+- Many polearms have been removed.
+  - Kept halberds cuz they're good, lances cuz they're a classic, ranseurs cuz lots of monsters spawn with them, and "partisans" cuz we need to have a crummy weapon in the category. Some monsters can also spawn with scythes, because that's cool.
 - New Object: Fruitcake
   - Created by combining cake and a slime mold at a forge.
   - Deals massive damage when thrown, and comedically heavy.

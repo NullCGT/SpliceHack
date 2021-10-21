@@ -5,10 +5,16 @@
 ## Monster Changes
 - Monsters can zap wands of opening, digging, or windstorm in order to escape death via being
   engulfed.
+- Quadrupeds, unicorns, and dragons are saddled, rarely.
 
 ## Object Changes
 - Lockpicks stack.
 - Unlocking tools can degrade and break.
+
+## Role Changes
+- Multishot: Samurai using a Yumi have a multishot bonus even when not using Ya.
+- Multishot: Rogues now have a multishot bonus with knives as well as daggers.
+- Multishot: Rangers don't get an artificial penalty when multishotting daggers.
 
 ### Small Tweaks / Bugfixes
 - Fixed manticore spikes causing an error when initializing objects.

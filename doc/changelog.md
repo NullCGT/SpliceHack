@@ -2,6 +2,9 @@
 
 ##                             Version 1.1.0
 
+### Monster Changes
+- Quadrupeds, unicorns, and dragons are saddled, rarely.
+
 ### Role Changes
 - Multishot: Samurai using a Yumi have a multishot bonus even when not using Ya.
 - Multishot: Rogues now have a multishot bonus with knives as well as daggers.

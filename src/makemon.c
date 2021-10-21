@@ -1903,7 +1903,7 @@ makemon(register struct permonst *ptr,
         m_initinv(mtmp); /* add on a few special items incl. more armor */
         m_dowear(mtmp, TRUE);
 
-        if (!rn2(100) && is_domestic(ptr)
+        if (!rn2(100) && (ptr->mlet != S_CENTAUR)
             && can_saddle(mtmp) && !which_armor(mtmp, W_SADDLE)) {
             struct obj *otmp = mksobj(SADDLE, TRUE, FALSE);
 

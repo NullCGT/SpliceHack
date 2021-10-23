@@ -4231,6 +4231,7 @@ optfn_boolean(int optidx, int req, boolean negated, char *opts, char *op)
         case opt_showrace:
         case opt_use_inverse:
         case opt_hilite_pile:
+        case opt_bloodless:
         case opt_perm_invent:
         case opt_ascii_map:
         case opt_tiled_map:

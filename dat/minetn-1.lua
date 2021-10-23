@@ -9,18 +9,18 @@
 -- Orcish Town - a variant of Frontier Town that has been
 -- overrun by orcs.  Note the barricades (iron bars).
 
-des.level_flags("mazelevel")
+des.level_flags("inaccessibles")
 
 des.level_init({ style="mines", fg=".", bg=" ", smoothed=true ,joined=true, lit="random", walled=true })
 
 des.map([[
 .....................................
-.----------------F------------------.
+.----------------.------------------.
 .|.................................|.
 .|.-------------......------------.|.
 .|.|...|...|...|......|..|...|...|.|.
-.F.|...|...|...|......|..|...|...|.|.
-.|.|...|...|...|......|..|...|...|.F.
+...|...|...|...|......|..|...|...|.|.
+.|.|...|...|...|......|..|...|...|...
 .|.|...|...|----......------------.|.
 .|.---------.......................|.
 .|.................................|.
@@ -29,9 +29,9 @@ des.map([[
 .|.|...|...|...|.|.....|.|..|....|.|.
 .|.|...|...|...|.|.....|.|..|....|.|.
 .|.|...|...|...|.|.....|.|..|....|.|.
-.|.-------------.-------.---------.|.
-.|.................................F.
-.-----------F------------F----------.
+.|.-------------.-------.---------...
+.|.................................|.
+.-----------.------------.----------.
 .....................................
 ]])
 
@@ -70,108 +70,135 @@ des.replace_terrain({ region={25,04,29,06}, fromterrain="|", toterrain=".", chan
 des.replace_terrain({ region={07,12,11,14}, fromterrain="|", toterrain=".", chance=18 })
 des.replace_terrain({ region={28,12,28,14}, fromterrain="|", toterrain=".", chance=33 })
 
--- One spot each in most shops...
-local place = { {05,04},{09,05},{13,04},{26,04},{31,05},{30,14},{05,14},{10,13},{26,14},{27,13} }
-shuffle(place)
-
--- scatter some bodies
-des.object({ id = "corpse", x=20,y=12, montype="aligned cleric" })
-des.object({ id = "corpse", coord = place[1], montype="shopkeeper" })
-des.object({ id = "corpse", coord = place[2], montype="shopkeeper" })
-des.object({ id = "corpse", coord = place[3], montype="shopkeeper" })
-des.object({ id = "corpse", coord = place[4], montype="shopkeeper" })
-des.object({ id = "corpse", coord = place[5], montype="shopkeeper" })
-des.object({ id = "corpse", montype="watchman" })
-des.object({ id = "corpse", montype="watchman" })
-des.object({ id = "corpse", montype="watchman" })
-des.object({ id = "corpse", montype="watchman" })
-des.object({ id = "corpse", montype="watch captain" })
-
 -- Rubble!
-for i=1,9 + math.random(2 - 1,2*5) do
+for i=1,6 + math.random(2 - 1,2*5) do
   if percent(90) then
     des.object("boulder")
   end
   des.object("rock")
 end
 
+-- one set of bars is replaced with a boulder
+local bars = { {17,1}, {1,5}, {35,6}, {35,15}, {12,17}, {25,17} }
+shuffle(bars)
+des.object({ id = "boulder", coord = bars[1] })
+for pos=2,6 do
+   des.terrain(bars[pos], "F")
+end
+
+-- scatter a lot of bodies
+des.object({ id = "corpse", montype="watchman" })
+des.object({ id = "corpse", montype="watchman" })
+des.object({ id = "corpse", montype="watchman" })
+des.object({ id = "corpse", montype="watchman" })
+des.object({ id = "corpse", montype="watch captain" })
+des.object({ id = "corpse", montype="gnome" })
+des.object({ id = "corpse", montype="gnome" })
+des.object({ id = "corpse", montype="gnome" })
+des.object({ id = "corpse", montype="gnomish wizard" })
+des.object({ id = "corpse", montype="gnome leader" })
+des.object({ id = "corpse", montype="dwarf" })
+des.object({ id = "corpse", montype="dwarf" })
+des.object({ id = "corpse", montype="Uruk-hai" })
+des.object({ id = "corpse", montype="hill orc" })
+des.object({ id = "corpse", montype="hill orc" })
+des.object({ id = "corpse", montype="hill orc" })
+des.object({ id = "corpse", montype="hill orc" })
+des.object({ id = "corpse", montype="goblin" })
+des.object({ id = "corpse", montype="goblin" })
+des.object({ id = "corpse", montype="goblin" })
+des.object({ id = "corpse", montype="goblin" })
+-- One murder each in most shops...
+local demise = { {05,04},{09,05},{13,04},{26,04},{31,05},{30,14},{05,14},{10,13},{26,14},{27,13} }
+shuffle(demise)
+des.object({ id = "corpse", coord = demise[1], montype="shopkeeper" })
+des.object({ id = "corpse", coord = demise[2], montype="shopkeeper" })
+des.object({ id = "corpse", coord = demise[3], montype="shopkeeper" })
+des.object({ id = "corpse", coord = demise[4], montype="shopkeeper" })
+des.object({ id = "corpse", coord = demise[5], montype="shopkeeper" })
+
 -- Guarantee 7 candles since we won't have Izchak available
-des.object({ id = "wax candle", coord = place[4], quantity = math.random(1,2) })
+des.object({ id = "wax candle", coord = demise[4], quantity = math.random(1,2) })
+des.object({ id = "wax candle", coord = demise[1], quantity = math.random(2,4) })
+des.object({ id = "wax candle", coord = demise[2], quantity = math.random(1,2) })
+des.object({ id = "tallow candle", coord = demise[3], quantity = math.random(1,3) })
+des.object({ id = "tallow candle", coord = demise[2], quantity = math.random(1,2) })
+des.object({ id = "tallow candle", coord = demise[4], quantity = math.random(1,2) })
 
-des.object({ id = "wax candle", coord = place[1], quantity = math.random(2,4) })
-des.object({ id = "wax candle", coord = place[2], quantity = math.random(1,2) })
-des.object({ id = "tallow candle", coord = place[3], quantity = math.random(1,3) })
-des.object({ id = "tallow candle", coord = place[2], quantity = math.random(1,2) })
-des.object({ id = "tallow candle", coord = place[4], quantity = math.random(1,2) })
+-- some shopkeepers were cut down before their wands ran out
+des.object({ id = "striking", coord = demise[1], buc="uncursed", spe=d(8) })
+des.object({ id = "striking", coord = demise[4], buc="uncursed", spe=d(6) })
+des.object({ id = "striking", coord = demise[5], buc="uncursed", spe=d(4) })
+des.object({ id = "magic missile", coord = demise[4], buc="uncursed", spe=d(6) })
+des.object({ id = "magic missile", coord = demise[5], buc="uncursed", spe=d(4) })
 
--- go ahead and leave a lamp next to one corpse to be suggestive
--- and some empty wands...
-des.object("oil lamp",place[2])
-des.object({ id = "striking", coord = place[1], buc="uncursed", spe=0 })
-des.object({ id = "striking", coord = place[3], buc="uncursed", spe=0 })
-des.object({ id = "striking", coord = place[4], buc="uncursed", spe=0 })
-des.object({ id = "magic missile", coord = place[4], buc="uncursed", spe=0 })
-des.object({ id = "magic missile", coord = place[5], buc="uncursed", spe=0 })
+-- put safety boulders atop the shopkeepers who died with remaining wand charges
+des.object({ id = "boulder", coord = demise[1] })
+des.object({ id = "boulder", coord = demise[4] })
+des.object({ id = "boulder", coord = demise[5] })
+
+-- and don't shopkeepers carry keys?
+des.object({ id = "skeleton key", coord = demise[2] })
+des.gold({ coord = demise[3] })
 
 -- resourceful orcs have set up a kitchen, and are preparing to
 -- "process" the former residents of minetown to feed the troops
--- kitchen area: 12,04 to 14,06
-des.object({ id = "large box", x = 12, y = 04, -- Pantry: dry kitchen supplies
+-- kitchen internal area: 12,04 to 14,06
+des.object({ id = "large box", x = 12, y = 04, -- Pantry: dry kitchen storage
     contents = function()
-    if percent (80) then
+    if percent (75) then
     des.object('knife')
     end
-    if percent (80) then
+    if percent (75) then
     des.object("tin opener")
     end
-    if percent (80) then
+    for i = 1, d(4)-1 do
+    des.object({ class='%', id='clove of garlic' })
+    end
+    if percent (75) then
     des.object({ class='!', id='oil' })
     end
-    if percent (80) then
-    des.object({ class='%', id='clove of garlic', quantity = math.random(1,4) })
+    for i = 1, d(4)-1 do
+    des.object({ class='!', id='fruit juice' })
     end
-    if percent (80) then
-    des.object({ class='!', id='booze', quantity = math.random(1,4) })
+    for i = 1, d(4)-1 do
+    des.object({ class='!', id='booze' })
     end
+    des.object({ class = "(" }) -- one surprise
 end
 })
-des.object({ id = "ice box", x = 12, y = 05, -- Fridge: cold kitchen supplies
+des.object({ id = "ice box", x = 12, y = 05, -- Fridge: cold kitchen storage
     contents = function()
-    if percent (80) then
-    des.object({ class='%', id='egg', quantity = math.random(1,4) })
+    for i = 1, d(4)-1 do
+    des.object({ class='%', id='egg' })
     end
-    if percent (80) then
-    des.object({ class='!', id='fruit juice', quantity = math.random(1,4) })
+    for i = 1, d(4)-1 do
+    des.object({ id = "corpse", montype = "gnome" })
     end
-    if percent (80) then
-    des.object({ id = "corpse", montype = "gnome", quantity = math.random(1,3) })
+    for i = 1, d(3)-1 do
+    des.object({ id = "corpse", montype = "dwarf" })
     end
-    if percent (80) then
-    des.object({ id = "corpse", montype = "dwarf", quantity = math.random(1,2) })
+    for i = 1, d(3)-1 do
+    des.object({ id = "corpse", montype = "human" })
     end
-    if percent (50) then
-    des.object({ id = "corpse", montype = "human", quantity = math.random(1,2) })
-    end
-    if percent (50) then
+    for i = 1, d(2)-1 do
     des.object({ id = "corpse", montype = "goblin" })
     end
-    if percent (50) then
+    for i = 1, d(2)-1 do
     des.object({ id = "corpse", montype = "orc-captain" })
     end
+    des.object({ id = "corpse" }) -- one surprise
+    des.object({ class = "%" })   -- and another!
 end
 })
 des.feature("furnace",  13,04)
 des.feature("sink",     14,04)
-if percent (80) then
 des.object("dented pot", 13, 05)
-end
-if percent (80) then
+if percent (75) then
 des.object("apron", 13, 05)
 end
-if percent (80) then
 des.monster({ id = "goblin", x = 13, y = 05, peaceful = 1,
         name = "Cookie of Glothris",  }) -- the chef. not a warrior.
-end
 
 -- the Orcish Army
 
@@ -201,6 +228,30 @@ for i=1,9 + math.random(2 - 1,2*5) do
    else
       des.monster({ id = "goblin", peaceful = 0 })
    end
+end
+
+-- go ahead and leave a lamp somewhere, with the normal probability of magic
+if percent (75) then
+   des.object({ id = "oil lamp", lit = 1 })
+else
+   des.object({ id = "magic lamp", lit = 1 })
+end
+
+-- and an ex-priest
+local excommunicated = { 18+d(3), 11+d(3) }
+des.object({ id = "corpse", coord = excommunicated, montype="aligned cleric" })
+des.object({ id = "mace", coord = excommunicated })
+des.object({ id = "small shield", coord = excommunicated })
+des.gold()
+if percent(85) then
+   des.object({ id = "robe", coord = excommunicated })
+elseif percent(67) then
+   des.object({ id = "cloak of protection", coord = excommunicated })
+else
+   des.object({ id = "cloak of magic resistance", coord = excommunicated })
+end
+for i = 1, 1 + math.random(1,2) do
+  des.object({ class = "+", coord = excommunicated })
 end
 
 -- Hack to force full-level wallification

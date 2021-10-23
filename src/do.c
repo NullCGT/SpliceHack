@@ -291,6 +291,50 @@ doaltarobj(struct obj *obj)
         if (obj->oclass != COIN_CLASS)
             obj->bknown = 1; /* ok to bypass set_bknown() */
     }
+
+    /* From NetHack4: colored flashes one level deep inside containers. */
+    if (Has_contents(obj) && !obj->olocked && obj->cknown) {
+        int blessed = 0;
+        int cursed = 0;
+        struct obj * otmp;
+        for (otmp = obj->cobj; otmp; otmp = otmp->nobj) {
+            if (otmp->blessed)
+                blessed++;
+            if (otmp->cursed)
+                cursed++;
+            if (!Hallucination) {
+                otmp->bknown = 1;
+            }
+        }
+        /* even when hallucinating, if you get no flashes at all, you know
+         * everything's uncursed, so save the player the trouble of manually
+         * naming them all */
+        if (Hallucination && blessed + cursed == 0) {
+            for (otmp = obj->cobj; otmp; otmp = otmp->nobj) {
+                otmp->bknown = 1;
+            }
+        }
+        if (blessed + cursed > 0) {
+            const char* color;
+            if (Hallucination) {
+                color = "pretty multichromatic";
+            }
+            else if (blessed == 0) {
+                color = hcolor(NH_BLACK);
+            }
+            else if (cursed == 0) {
+                color = hcolor(NH_AMBER);
+            }
+            else {
+                color = "colored";
+            }
+
+            pline("From inside %s, you see %s flash%s.",
+                  the(xname(obj)),
+                  (blessed + cursed == 1 ? an(color) : color),
+                  (blessed + cursed == 1 ? "" : "es"));
+        }
+    }
 }
 
 static void
@@ -1284,60 +1328,6 @@ goto_level(d_level *newlevel, boolean at_stairs, boolean falling, boolean portal
     if (new_ledger <= 0)
         done(ESCAPED); /* in fact < 0 is impossible */
 
-    /* If you have the amulet and are trying to get out of Gehennom,
-     * going up a set of stairs sometimes does some very strange things!
-     * Biased against law and towards chaos.  (The chance to be sent
-     * down multiple levels when attempting to go up are significantly
-     * less than the corresponding comment in older versions indicated
-     * due to overlooking the effect of the call to assign_rnd_lvl().)
-     *
-     * Odds for making it to the next level up, or of being sent down:
-     *  "up"    L      N      C
-     *   +1   75.0   75.0   75.0
-     *    0    6.25   8.33  12.5
-     *   -1   11.46  12.50  12.5
-     *   -2    5.21   4.17   0.0
-     *   -3    2.08   0.0    0.0
-     *
-     * 3.7.0: the chance for the "mysterious force" to kick in goes down
-     * as it kicks in, starting at 25% per climb attempt and dropping off
-     * gradually but substantially.  The drop off is greater when hero is
-     * sent down farther so benefits lawfuls more than chaotics this time.
-     */
-    if (Inhell && up && u.uhave.amulet && !newdungeon && !portal
-        && (dunlev(&u.uz) < dunlevs_in_dungeon(&u.uz) - 3)) {
-        if (!rn2(4 + g.context.mysteryforce)) {
-            int odds = 3 + (int) u.ualign.type,   /* 2..4 */
-                diff = (odds <= 1) ? 0 : rn2(odds); /* paranoia */
-
-            if (diff != 0) {
-                assign_rnd_level(newlevel, &u.uz, diff);
-                /* assign_rnd_level() may have used a value less than diff */
-                diff = newlevel->dlevel - u.uz.dlevel; /* actual descent */
-                /* if inside the tower, stay inside */
-                if (was_in_W_tower && !On_W_tower_level(newlevel))
-                    diff = 0;
-            }
-            if (diff == 0)
-                assign_level(newlevel, &u.uz);
-
-            pline("A mysterious force momentarily surrounds you...");
-            /* each time it kicks in, the chance of doing so again may drop;
-               that drops faster, on average, when being sent down farther so
-               while the impact is reduced for everybody compared to earlier
-               versions, it is reduced least for chaotics, most for lawfuls */
-            g.context.mysteryforce += rn2(diff + 2); /* L:0-4, N:0-3, C:0-2 */
-
-            if (on_level(newlevel, &u.uz)) {
-                (void) safe_teleds(FALSE);
-                (void) next_to_u();
-                return;
-            }
-            new_ledger = ledger_no(newlevel);
-            at_stairs = g.at_ladder = FALSE;
-        }
-    }
-
     /* Prevent the player from going past the first quest level unless
      * (s)he has been given the go-ahead by the leader.
      */
@@ -1859,7 +1849,7 @@ boolean
 revive_corpse(struct obj *corpse, boolean moldy)
 {
     struct monst *mtmp, *mcarry;
-    boolean is_uwep, chewed, cooked;
+    boolean is_uwep, chewed;
     xchar where;
     char cname[BUFSZ];
     struct obj *container = (struct obj *) 0;
@@ -1868,12 +1858,8 @@ revive_corpse(struct obj *corpse, boolean moldy)
     where = corpse->where;
     is_uwep = (corpse == uwep);
     chewed = (corpse->oeaten != 0);
-    cooked = (corpse->oeroded != 0);
     Strcpy(cname, corpse_xname(corpse,
                                chewed ? "bite-covered" : (const char *) 0,
-                               CXN_SINGULAR));
-    Strcpy(cname, corpse_xname(corpse,
-                               cooked ? "cooked" : (const char *) 0,
                                CXN_SINGULAR));
     mcarry = (where == OBJ_MINVENT) ? corpse->ocarry : 0;
 

@@ -1660,12 +1660,17 @@ gazemu(struct monst *mtmp, struct attack *mattk)
     /* assumes that hero has to see monster's gaze in order to be
        affected, rather than monster just having to look at hero;
        when hallucinating, hero's brain doesn't register what
-       it's seeing correctly so the gaze is usually ineffective
-       [this could be taken a lot farther and select a gaze effect
+       it's seeing correctly so the gaze is fully ineffective.
+
+       [This could be taken a lot farther and select a gaze effect
        appropriate to what's currently being displayed, giving
        ordinary monsters a gaze attack when hero thinks he or she
-       is facing a gazing creature, but let's not go that far...] */
-    if (Hallucination && rn2(4))
+       is facing a gazing creature, but let's not go that far...]
+
+       Eyes of the Overworld block gazes, in part to make them
+       cooler and in part because they can't be worn with a towel. */
+    if (Hallucination
+        || (ublindf && ublindf->oartifact == ART_EYES_OF_THE_OVERWORLD))
         cancelled = TRUE;
 
     switch (mattk->adtyp) {
@@ -1720,7 +1725,7 @@ gazemu(struct monst *mtmp, struct attack *mattk)
         }
         break;
     case AD_PLYS:
-        if (!mtmp->mcan && canseemon(mtmp)
+        if (!mtmp->mcan && canseemon(mtmp) && !cancelled
             && couldsee(mtmp->mx, mtmp->my) && !is_fainted()
             && !mtmp->mspec_used && rn2(4)
             && g.multi>=0 && !((is_undead(g.youmonst.data)
@@ -1750,9 +1755,9 @@ gazemu(struct monst *mtmp, struct attack *mattk)
         }
         break;
     case AD_HNGY:
-        if(!mtmp->mcan && canseemon(mtmp) &&
-            couldsee(mtmp->mx, mtmp->my) && !is_fainted() &&
-            mtmp->mcansee && !mtmp->mspec_used && rn2(5)) {
+        if(!mtmp->mcan && canseemon(mtmp) && !cancelled
+            && couldsee(mtmp->mx, mtmp->my) && !is_fainted()
+            && mtmp->mcansee && !mtmp->mspec_used && rn2(5)) {
             int hunger = 20 + d(3,4);
 
             mtmp->mspec_used = mtmp->mspec_used + (hunger + rn2(6));
@@ -1888,8 +1893,8 @@ gazemu(struct monst *mtmp, struct attack *mattk)
         }
         break;
     case AD_TLPT:
-        if(!mtmp->mcan && canseemon(mtmp) && mtmp->mcansee && !
-            mtmp->mspec_used && rn2(5)) {
+        if(!mtmp->mcan && canseemon(mtmp) && mtmp->mcansee && !cancelled
+                && !mtmp->mspec_used && rn2(5)) {
                 pline("%s stares blinkingly at you!", Monnam(mtmp));
                 if (flags.verbose)
                         Your("position suddenly seems very uncertain!");

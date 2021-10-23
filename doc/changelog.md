@@ -18,6 +18,8 @@
 - Added a number of new recipes, courtesy of Riker.
 
 ### Object Changes
+- Hallucination protects against all gaze attacks.
+- Eyes of the Overworld protect against all gaze attacks.
 - New Object: Fruitcake
   - Created by combining cake and a slime mold at a forge.
   - Deals massive damage when thrown, and comedically heavy.
@@ -32,6 +34,7 @@
 - Removed the Mysterious Force.
 
 ### Small Tweaks / Bugfixes
+- Most SLASH'EM gaze attacks that didn't check for cancellation (and EotO) now do so.
 - Decks of Fate are less common in barracks relative to normal decks of cards.
 - Healer pets don't attack peacefuls. They still *heal* peacefuls.
 - Learning your weapon's enchantment has more emotionless messaging

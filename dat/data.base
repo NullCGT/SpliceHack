@@ -41,7 +41,7 @@ skill: careful strike
     damage penalty of the same amount.
 skill: code of honor
     Increases the to-hit bonus of the user by a flat amount. The alignment penalty
-    for being a caitiff increases sharply.
+    for breaking one's code of honor.
 skill: disarm
     Disarm allows the user to use your weapon to attempt to disarm opponents.
     Use the #disarm command to disarm.

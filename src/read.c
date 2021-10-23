@@ -2168,7 +2168,7 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
                 You("realize that you have been a clone all along!");
             }
             mtmp = cloneu();
-            mtmp->mpeaceful = 0;
+            if (mtmp) mtmp->mpeaceful = 0;
         } else {
             if (!already_known)
                 You("have found a scroll of cloning!");

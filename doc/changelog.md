@@ -39,6 +39,7 @@
 - Healer pets don't attack peacefuls. They still *heal* peacefuls.
 - Learning your weapon's enchantment has more emotionless messaging
 - Tone down amount of item destruction for players with Flaming/Freezing Fist skills
+- Fixed some materials having improper or undefined weights.
 
 
 ##                             Version 1.0.0

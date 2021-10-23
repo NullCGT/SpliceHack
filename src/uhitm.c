@@ -539,7 +539,7 @@ known_hitum(struct monst *mon, struct obj *weapon, int *mhit, int rollneeded,
     }
 
     /* cursed weapons proc */
-    curseproc = cursed_weapon_proc(&g.youmonst, mon);
+    curseproc = cursed_weapon_proc(&g.youmonst);
     if (curseproc == 2) return malive;
     else if (curseproc) return FALSE;
 

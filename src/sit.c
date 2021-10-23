@@ -516,27 +516,30 @@ attrcurse(void)
             You_feel("less attractive.");
             break;
         }
+        /*FALLTHRU*/
     case 12:
         if (HSleep_resistance) {
-	    HSleep_resistance = HSleep_resistance & (TIMEOUT | FROMOUTSIDE | HAVEPARTIAL);
-	    decr_resistance(&HSleep_resistance, rnd(50) + 50);
-	    You_feel("a little tired.");
-	    break;
-	}
+            HSleep_resistance = HSleep_resistance & (TIMEOUT | FROMOUTSIDE | HAVEPARTIAL);
+            decr_resistance(&HSleep_resistance, rnd(50) + 50);
+            You_feel("a little tired.");
+            break;
+        }
+        /*FALLTHRU*/
     case 13:
         if (HDisint_resistance) {
-	    HDisint_resistance = HDisint_resistance & (TIMEOUT | FROMOUTSIDE | HAVEPARTIAL);
-	    decr_resistance(&HDisint_resistance, rnd(50) + 50);
-	    You_feel("less firm.");
-	    break;
-	}
+            HDisint_resistance = HDisint_resistance & (TIMEOUT | FROMOUTSIDE | HAVEPARTIAL);
+            decr_resistance(&HDisint_resistance, rnd(50) + 50);
+            You_feel("less firm.");
+            break;
+        }
+        /*FALLTHRU*/
     case 14:
         if (HShock_resistance) {
-	    HShock_resistance = HShock_resistance & (TIMEOUT | FROMOUTSIDE | HAVEPARTIAL);
-	    decr_resistance(&HShock_resistance, rnd(50) + 50);
-	    You_feel("more conductive.");
-	    break;
-	}
+            HShock_resistance = HShock_resistance & (TIMEOUT | FROMOUTSIDE | HAVEPARTIAL);
+            decr_resistance(&HShock_resistance, rnd(50) + 50);
+            You_feel("more conductive.");
+            break;
+        }
         /*FALLTHRU*/
     default:
         break;

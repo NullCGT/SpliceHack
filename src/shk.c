@@ -3605,7 +3605,10 @@ shk_identify(const char *slang, struct monst *shkp)
 	} else if (ESHK(shkp)->services & SHK_ID_PREMIUM) {
 		verbalize("I only make complete identifications.");
 		ident_type = 'p';
-	}
+	} else {
+        verbalize("Apparently, I only offer basic identification.");
+        ident_type = 'b';
+    }
 
 	/*
 	** Shopkeeper is ripping you off if:
@@ -3613,16 +3616,14 @@ shk_identify(const char *slang, struct monst *shkp)
 	** Premier service, object known, + know blessed/cursed and
 	**      rustproof, etc.
 	*/
-	if (obj->dknown && objects[obj->otyp].oc_name_known)
-	{
+	if (obj->dknown && objects[obj->otyp].oc_name_known) {
 		if (ident_type=='b') ripoff=TRUE;
 		if (ident_type=='p' && obj->bknown && obj->rknown && obj->known) ripoff=TRUE;
 	}
 
 	/* Compute the charge */
 	
-	if (ripoff)
-	{
+	if (ripoff) {
 		if (NO_CHEAT) {
 			verbalize("That item's already identified!");
 			return;
@@ -3630,11 +3631,11 @@ shk_identify(const char *slang, struct monst *shkp)
 		/* Object already identified: Try and cheat the customer. */
 		pline("%s chuckles greedily...", mon_nam(shkp));
 		mult = 1;
-
-	/* basic */        
-	} else if (ident_type=='b') mult = 1;
-	/* premier */
-	else mult = 2;
+	    /* basic */        
+	} else if (ident_type=='b') {
+        mult = 1;
+	    /* premier */
+    } else mult = 2;
 	
 	switch (obj->oclass) {        
 		case AMULET_CLASS:      charge = 375 * mult;

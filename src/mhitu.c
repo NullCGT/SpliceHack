@@ -458,7 +458,8 @@ int
 mattacku(register struct monst *mtmp)
 {
     struct attack *mattk, alt_attk;
-    int i, j, k = 0, tmp, sum[NATTK];
+    int i, k = 0, tmp, sum[NATTK];
+    int j = 0;
     struct permonst *mdat = mtmp->data;
     struct obj * marmf = which_armor(mtmp, W_ARMF);
     /*
@@ -861,7 +862,7 @@ mattacku(register struct monst *mtmp)
                     if (mon_wield_item(mtmp) != 0)
                         break;
                 }
-                if (cursed_weapon_proc(mtmp, &g.youmonst)) {
+                if (cursed_weapon_proc(mtmp)) {
                     return 1;
                 }
                 if (foundyou) {

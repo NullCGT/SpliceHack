@@ -1263,7 +1263,7 @@ extern void slept_monst(struct monst *);
 extern void xdrainenergym(struct monst *, boolean);
 extern long attk_protection(int);
 extern void rustm(struct monst *, struct obj *);
-extern int cursed_weapon_proc(struct monst *, struct monst *);
+extern int cursed_weapon_proc(struct monst *);
 
 /* ### mhitu.c ### */
 

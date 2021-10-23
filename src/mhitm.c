@@ -420,7 +420,7 @@ mattackm(register struct monst *magr, register struct monst *mdef)
                     res[i] |= MM_AGR_DIED;
                 break;
             }
-            if (cursed_weapon_proc(magr, mdef) == 1)
+            if (cursed_weapon_proc(magr) == 1)
                 return MM_AGR_DIED;
             if (magr->weapon_check == NEED_WEAPON || !MON_WEP(magr)) {
                 magr->weapon_check = NEED_HTH_WEAPON;
@@ -1458,7 +1458,7 @@ attk_protection(int aatyp)
    1 = Mon died
    2 = Attack over */
 int
-cursed_weapon_proc(struct monst *magr, struct monst *mdef) {
+cursed_weapon_proc(struct monst *magr) {
     int curse_id;
     int dmg;
     boolean youattack = (magr == &g.youmonst);

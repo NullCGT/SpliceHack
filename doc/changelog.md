@@ -40,6 +40,8 @@
 - Learning your weapon's enchantment has more emotionless messaging
 - Tone down amount of item destruction for players with Flaming/Freezing Fist skills
 - Fixed some materials having improper or undefined weights.
+- Reduced message spam when gaining a number of class skills at once.
+- The option to show object weight defaults to off.
 
 
 ##                             Version 1.0.0

@@ -982,7 +982,7 @@ break_armor(void)
                 Your("shirt expands to fit you.");
             } else {
                 Your("shirt rips to shreds!");
-                useup(uarmu);
+                useup(otmp);
             }
         }
     } else if (sliparm(g.youmonst.data)) {

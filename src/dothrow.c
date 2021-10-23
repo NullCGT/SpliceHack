@@ -179,6 +179,10 @@ throw_obj(struct obj *obj, int shotlimit)
         /* ...or is using a special weapon for their role... */
         multishot += multishot_class_bonus(Role_switch, obj, uwep);
 
+        /* ...or is using a legendary artifact... */
+        if (skill == -P_BOW && uwep->oartifact
+            && uwep->oartifact == ART_LONGBOW_OF_DIANA)
+            multishot++;
         /* ...or using their race's special bow; no bonus for spears */
         if (!weakmultishot)
             switch (Race_switch) {
@@ -200,9 +204,6 @@ throw_obj(struct obj *obj, int shotlimit)
             case PM_HUMAN:
             case PM_DWARF:
             default:
-                if (skill == -P_BOW &&
-                    uwep->oartifact && uwep->oartifact == ART_LONGBOW_OF_DIANA)
-                    multishot++;
                 break; /* No bonus */
             }
 

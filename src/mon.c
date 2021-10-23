@@ -3442,7 +3442,7 @@ xkilled(
     } else if (mdat->msound == MS_NEMESIS) { /* Real good! */
         if (!g.quest_status.killed_leader)
             adjalign((int) (ALIGNLIM / 4));
-    } else if (mdat->msound == MS_GUARDIAN) { /* Bad */
+    } else if (mdat->msound == MS_GUARDIAN && !Is_bar(&u.uz)) { /* Bad */
         adjalign(-(int) (ALIGNLIM / 8));
         u.ugangr++;
         change_luck(-4);

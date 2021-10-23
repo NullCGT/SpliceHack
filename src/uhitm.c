@@ -1521,7 +1521,7 @@ hmon_hitmon(struct monst *mon,
         && (uwep->oclass == WEAPON_CLASS || is_weptool(uwep)) && !uwep->known) {
         uwep->wep_kills++;
         if (uwep->wep_kills > KILL_FAMILIARITY && !rn2(max(2, uwep->spe) && !uwep->known)) {
-            You("have developed a bond of familiarity with your %s.", 
+            You("have become quite familiar with %s.", 
                 yobjnam(uwep, (char *) 0));
             uwep->known = TRUE;
             update_inventory();
@@ -3904,7 +3904,7 @@ struct mhitm_data *mhm;
         if (!mdef->iswiz && mdef->data != &mons[PM_MEDUSA] &&
             !(mdef->data->mflags3 & M3_COVETOUS) &&
             !(mdef->data->geno & G_UNIQ) &&
-              mdef->mtame) {
+            !(mdef->mtame)) {
               if (canseemon(mdef)) pline("%s looks calmer.", Monnam(mdef));
               mdef->mpeaceful = 1;
               mdef->mtame = 0;
@@ -6634,7 +6634,7 @@ skill_hit_effects(struct monst *mon) {
     int damage_bonus = 0;
     /* Martial arts skills */
     if (!uwep && !uarm && !uarms) {
-        if (P_SKILL(P_FLAMING_FISTS) > P_UNSKILLED && rn2(20) < P_SKILL(P_FLAMING_FISTS)) {
+        if (P_SKILL(P_FLAMING_FISTS) > P_UNSKILLED && rn2(25) < P_SKILL(P_FLAMING_FISTS)) {
             if (resists_fire(mon)) {
                 shieldeff(mon->mx, mon->my);
             } else {
@@ -6642,8 +6642,8 @@ skill_hit_effects(struct monst *mon) {
                 damage_bonus += d(1,6);
                 golemeffects(mon, AD_FIRE, damage_bonus);
             }
-            damage_bonus += destroy_mitem(mon, POTION_CLASS, AD_FIRE);
-            ignite_items(mon->minvent);
+	    if (damage_bonus > 4)
+            	damage_bonus += destroy_mitem(mon, SCROLL_CLASS, AD_FIRE);
         }
         if (P_SKILL(P_FREEZING_FISTS) > P_UNSKILLED && rn2(25) < P_SKILL(P_FREEZING_FISTS)) {
             if (resists_cold(mon)) {
@@ -6653,7 +6653,8 @@ skill_hit_effects(struct monst *mon) {
                 damage_bonus += d(1,6);
                 golemeffects(mon, AD_COLD, damage_bonus);
             }
-            damage_bonus += destroy_mitem(mon, POTION_CLASS, AD_COLD);
+	    if (damage_bonus > 4)
+            	damage_bonus += destroy_mitem(mon, POTION_CLASS, AD_COLD);
         }
         if (P_SKILL(P_SHOCKING_FISTS) > P_UNSKILLED && rn2(100) < P_SKILL(P_SHOCKING_FISTS)) {
             if (resists_cold(mon)) {
@@ -6663,7 +6664,8 @@ skill_hit_effects(struct monst *mon) {
                 damage_bonus += d(1,20);
                 golemeffects(mon, AD_ELEC, damage_bonus);
             }
-            damage_bonus += destroy_mitem(mon, WAND_CLASS, AD_ELEC);
+	    if (damage_bonus > 4)
+            	damage_bonus += destroy_mitem(mon, WAND_CLASS, AD_ELEC);
         }
         if (P_SKILL(P_BLOOD_RAGE) > P_UNSKILLED && (u.uhp < (u.uhp / 2))) {
             pline("Your rage strengthens your attack!");

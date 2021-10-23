@@ -80,6 +80,12 @@
 - Tourists are unique in that they have no special skills of their own, but can attain basic
   levels in numerous skills from other roles.
 - A full list of skills and what they do can be found in an attached text document.
+- Item destruction happens less often for monks' elemental fist skills.
+Flaming fist in particular only damages scrolls, not potions, and now only
+triggers as frequently as freezing fist.
+- Detailed skill descriptions pop up in the #enhance menu before you commit to
+training a skill, and can also be viewed at the top of the file data.base
+inside the dat/ folder.
 
 ### Combat System
 - Luck no longer gives a to-hit bonus.
@@ -122,6 +128,10 @@
   with a message.
 - Dexterity improves hit chance starting at 12 dex, instead of 16 dex.
 - Dexterity of 18 or higher improves hit chance with wand zaps.
+- Dropped the quest entry requirement to level 10.
+- Ported paranoid trap and swim confirmation from xnethack.
+- Dropping a container onto an altar will show colored flashes corresponding
+to its contents and identify their beatitude.(from NH4)
 
 ### Dungeon Changes
 
@@ -159,7 +169,6 @@ in its own way.
   - Replaces the banquet hall.
 - Juiblex's lair has a 50% chance of containing Juiblex and a 50% chance of containing
   Zuggotomoy.
-- Levels have dynamically generated names. These names are only for flavor, but can indicate the presence of features such as fountains.
 - While there are no variant castle levels, several minor features of the castle level are
   randomly generated. For example, the moat may take a slightly different shape, or there may
   be iron bars from which the soldiers can attack.
@@ -334,6 +343,8 @@ that Excalibur doesn't crowd out all the other artifact weapons as much.
 - Removing a mask no longer causes you to instantly rehumanize.
 - Vampire blood has been renamed to vampire essence.
 - Potions of blood are now associated with a monster.
+- Sometimes a creature's blood will spatter onto adjacent tiles when hit in combat. This is flavor/atmosphere only, no gameplay effects.
+- Levels have dynamically generated names. These names are only for flavor, but can indicate the presence of features such as fountains.
 
 ### Removed Content
 Since this release is a rewrite, several pieces of existing content have been heavily altered

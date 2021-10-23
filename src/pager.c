@@ -1181,7 +1181,7 @@ add_obj_info(winid datawin, short otyp)
         }
     }
     if (olet == SPBOOK_CLASS && otyp != SPE_NOVEL && otyp != SPE_ENCYCLOPEDIA
-        && otyp != SPE_BOOK_OF_THE_DEAD) {
+        && otyp != SPE_BOOK_OF_THE_DEAD && otyp != SPE_BLANK_PAPER) {
         Sprintf(buf, "Level %d spellbook, in the %s school. %s spell.",
                 oc.oc_level, spelltypemnemonic(oc.oc_skill), dir);
         OBJPUTSTR(buf);
@@ -1280,7 +1280,7 @@ add_obj_info(winid datawin, short otyp)
     /* Scrolls or spellbooks: ink cost */
     if (otyp == SCR_BLANK_PAPER || otyp == SCR_KNOWLEDGE
         || otyp == SPE_NOVEL || otyp == SPE_ENCYCLOPEDIA
-        || otyp == SPE_BOOK_OF_THE_DEAD) {
+        || otyp == SPE_BOOK_OF_THE_DEAD || otyp == SPE_BLANK_PAPER) {
         Sprintf(buf, "No associated ink cost.");
         OBJPUTSTR(buf);
     } else if (olet == SCROLL_CLASS || olet == SPBOOK_CLASS) {

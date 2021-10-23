@@ -262,6 +262,11 @@ moveloop(boolean resuming)
                         }
                     }
 
+                    /* Flip enhance flap */
+                    if (g.context.skip_enhance_msg) {
+                        g.context.skip_enhance_msg = FALSE;
+                    }
+
                     /* One possible result of prayer is healing.  Whether or
                      * not you get healed depends on your current hit points.
                      * If you are allowed to regenerate during the prayer,
@@ -673,6 +678,7 @@ newgame(void)
     g.context.next_attrib_check = 600L; /* arbitrary first setting */
     g.context.tribute.enabled = TRUE;   /* turn on 3.6 tributes    */
     g.context.tribute.tributesz = sizeof(struct tribute_info);
+    g.context.skip_enhance_msg = FALSE;
 
     for (i = LOW_PM; i < NUMMONS; i++) {
         g.mvitals[i].mvflags = mons[i].geno & G_NOCORPSE;

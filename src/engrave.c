@@ -689,17 +689,20 @@ doengrave(void)
             case WAN_STRIKING:
                 Strcpy(post_engr_text,
                     "The wand unsuccessfully fights your attempt to write!");
+                doknown = TRUE;
                 break;
             case WAN_SLOW_MONSTER:
                 if (!Blind) {
                     Sprintf(post_engr_text, "The bugs on the %s slow down!",
                             surface(u.ux, u.uy));
+                    doknown = TRUE;
                 }
                 break;
             case WAN_SPEED_MONSTER:
                 if (!Blind) {
                     Sprintf(post_engr_text, "The bugs on the %s speed up!",
                             surface(u.ux, u.uy));
+                    doknown = TRUE;
                 }
                 break;
             case WAN_SONICS:
@@ -715,6 +718,7 @@ doengrave(void)
                     if (!Blind) {
                         type = (xchar) 0; /* random */
                         (void) random_engraving(buf);
+                        doknown = TRUE;
                     } else {
                         /* keep the same type so that feels don't
                            change and only the text is altered,
@@ -753,6 +757,7 @@ doengrave(void)
                     Sprintf(post_engr_text,
                             "The %s is riddled by bullet holes!",
                             surface(u.ux, u.uy));
+                    doknown = TRUE;
                 }
                 break;
             case WAN_WINDSTORM:
@@ -777,7 +782,6 @@ doengrave(void)
                     if (Hallucination) {
                         Sprintf(post_engr_text,
                         "The bugs on the %s cough!", surface(u.ux, u.uy));
-                        doknown = TRUE;
                     } else {
                         Sprintf(post_engr_text,
                         "The bugs on the %s stop moving!", surface(u.ux, u.uy));
@@ -795,9 +799,11 @@ doengrave(void)
                     dengr = TRUE;
                 break;
             case WAN_COLD:
-                if (!Blind)
+                if (!Blind) {
                     Strcpy(post_engr_text,
                            "A few ice cubes drop from the wand.");
+                    doknown = TRUE;
+                }
                 if (!oep || (oep->engr_type != BURN))
                     break;
                 /*FALLTHRU*/

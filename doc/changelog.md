@@ -45,6 +45,7 @@
     respectively.
 
 ### QoL
+- Wands that produce an unambiguous message are identified when used.
 - Colored flashes BUC-identify contents when when container hits altar
 - Removed the Mysterious Force.
 

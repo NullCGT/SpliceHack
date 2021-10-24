@@ -1319,7 +1319,7 @@ peffects(struct obj *otmp)
         break;
     }
     case POT_OIL: { /* P. Winner */
-        boolean good_for_you = FALSE, vulnerable;
+        boolean good_for_you = FALSE;
 
         if (otmp->lamplit) {
             if (likes_fire(g.youmonst.data)) {
@@ -1333,7 +1333,6 @@ peffects(struct obj *otmp)
                  */
                 You("burn your %s.", body_part(FACE));
                 /* fire damage */
-                vulnerable = !Fire_resistance || Cold_resistance;
                 losehp(resist_reduce(d(2, 4), FIRE_RES) + d(1, 4), "burning potion of oil",
                        KILLED_BY_AN);
             }

@@ -453,7 +453,7 @@ levelup_menu(void) {
     win = create_nhwindow(NHW_MENU);
     start_menu(win, MENU_BEHAVE_STANDARD);
     any = cg.zeroany; /* zero out all bits */
-    for (i = 0; roles[i].name.m; i++) {
+    for (i = 0; i < NUM_ROLES; i++) {
         role_ok = ((ok_role(i, flags.initrace, flags.female, u.ualign.type)
                     && ok_race(i, flags.initrace, flags.female, u.ualign.type)
                     && ok_gend(i, flags.initrace, flags.female, u.ualign.type)

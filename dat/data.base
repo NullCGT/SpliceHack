@@ -41,7 +41,7 @@ skill: careful strike
     damage penalty of the same amount.
 skill: code of honor
     Increases the to-hit bonus of the user by a flat amount. The alignment penalty
-    for being a caitiff increases sharply.
+    for breaking one's code of honor.
 skill: disarm
     Disarm allows the user to use your weapon to attempt to disarm opponents.
     Use the #disarm command to disarm.
@@ -150,6 +150,12 @@ air dash
 
 	This technique is considered a finisher for the chained blitz
 	techique. Motion: L,L / R,R
+alchemist
+	Humankind cannot gain anything without first giving something in
+	return. To obtain, something of equal value must be lost. That is
+	Alchemy's first law of Equivalent Exchange. In those days, we really
+	believed that to be the world's one and only truth.
+		[ Fullmetal Alchemist, by Hiromu Arakawa ]
 aleax
 	Said to be a doppelganger sent to inflict divine punishment
 	for alignment violations.
@@ -672,6 +678,7 @@ blind io
 	    [ The Colour of Magic, by Terry Pratchett ]
 boar
 pig
+sow
 	My memory...hehe. King Robert Baratheon...murdered by a pig.
 	Give me something for the pain, and let me die.
 		[ A Game of Thrones, by George R.R. Martin ]
@@ -685,6 +692,7 @@ ooze
 * ooze
 *pudding
 * slime
+gel
 	These giant amoeboid creatures look like nothing more than
 	puddles of slime, but they both live and move, feeding on
 	metal or wood as well as the occasional dungeon explorer to
@@ -1052,11 +1060,13 @@ centipede
 		[ Travels and Researches in South Africa,
 			by Dr. David Livingstone ]
 cerastes
-	A creature of Greek legend, a serpent that is incredibly
-	flexible--so much so that it is said to have no spine. Cerastae
-	can have either two large ram-like horns or four pairs of smaller
-	horns.
-		[ Wikipedia, the free encyclopedia ]
+	This has four movable little horns; so, when it wants to feed,
+	it hides under leaves all of its body except these little horns
+	which, as they move, seem to the birds to be some small worms at play.
+	Then they immediately swoop down to pick them and the Cerastes
+	suddenly twines round them and encircles and devours them.
+		[ Humorous Writings (taken from The Notebooks of Leonardo da Vinci),
+			by Jean Paul Richter (ed.).]
 cerberus
 kerberos
 	Cerberus, (or Kerberos in Greek), was the three-headed dog
@@ -1142,6 +1152,7 @@ chicken
 	K - That's the name of the hen
 	E - Now you're nearing the N
 	N - And that's the end
+	
 	C - H - I - C - K - E - N, that's the way you spell chicken!
 		[Unknown]
 chih*sung*tzu
@@ -1795,6 +1806,7 @@ dread pirate roberts
  	Pirate Roberts either. His name was Cummerbund. The real
  	Roberts has been retired 15 years and living like a king in
  	Patagonia.'
+oneroi
 dream thief
 	She had locked something away,
 	something deep inside.
@@ -2459,7 +2471,9 @@ girtab
 	spiders think this is funny, and they don't want you ever to forget them.
 		[ Anansi Boys, by Neil Gaiman ]
 glowing eye
-	The soul shines with a light that can pierce any darkness.
+	With all your science can you tell me how it is, and when it is, that
+	light comes into the soul?
+		[ Henry David Thoreau ]
 gnoll*
 	These bipedal hyenas serve Yeenoghu, and are almost unmatched
 	in combat.
@@ -4130,6 +4144,7 @@ gnomish mines
 	  [ The Tough Guide to Fantasyland, by Diana Wynne Jones ]
 minotaur
 baphomet
+goristro
 	The Minotaur was a monster, half bull, half human, the
 	offspring of Minos' wife Pasiphae and a wonderfully beautiful
 	bull. ...  When the Minotaur was born Minos did not kill him.
@@ -4474,6 +4489,9 @@ nurse
 *nymph
 naiad
 lampad
+oread
+nereid
+naiad
 	A female creature from Roman and Greek mythology, the nymph
 	occupied rivers, forests, ponds, etc.  A nymph's beauty is
 	beyond words:  an ever-young woman with sleek figure and
@@ -4813,6 +4831,7 @@ spiked pit
 	shuddering reason.  Oh! for a voice to speak! -- oh! horror! --
 	oh! any horror but this!
 		[ The Pit and the Pendulum, by Edgar Allan Poe ]
+planar pirate
 pirate
 	Yo ho, yo ho, a pirate's life for me.
 	We pillage plunder, we rifle and loot.
@@ -5254,7 +5273,6 @@ ranger
 rat
 packrat
 * rat
-Rat *
 	Rats are long-tailed rodents.  They are aggressive,
 	omnivorous, and adaptable, often carrying diseases.
 		[]
@@ -5274,6 +5292,20 @@ ratman
 nezumi
 	A rat might walk among humans, but it would never be mistaken
 	for one.
+rat king
+rat queen
+rat leader
+	A rat armorer set the war helmet upon Cluny's head. He snapped
+	the visor down and kicked aside the rat who had fixed the poison
+	barb on his tail.
+
+	Striding out into the churchyard, Cluny climbed on the wrecked
+	gatepost. His fierce eye gazed out across the mighty army: black
+	rats, brown rats, grey rats, piebald rats, skulking weasels,
+	furtive stoats and sinuous ferrets, all gathered round, their
+	weapons glistening and dripping with the rain. As Cluny exhorted
+	them, they roared back with their frenzied replies.
+		[ Redwall, by Brian Jacques ]
 raven
 	But the raven, sitting lonely on the placid bust, spoke only
 	That one word, as if his soul in that one word he did outpour.
@@ -5282,9 +5314,14 @@ raven
 	On the morrow *he* will leave me, as my hopes have flown before.'
 		Then the bird said, 'Nevermore.'
 				[ The Raven, by Edgar Allan Poe ]
+redcap
 red cap
-	Some say the cap is stained with blood. Others claim that he
-	simply loves the color red.
+	The redcap (or powrie) is a type of malevolent, murderous goblin
+	found in Border folklore. He is said to inhabit ruined castles along
+	the Anglo-Scottish border, especially those that were the scenes of
+	tyranny or wicked deeds and is known for soaking his cap in the blood
+	of his victims.
+		[ Wikipedia, the free encyclopedia ]
 reinforce memory
 	When straining to recall a spell, you can use a series of simple
 	mnemonics to bolster your memory of it.
@@ -5726,6 +5763,10 @@ screamer
 	its fetid bulk looming overhead... The monster was some kind of
 	great dark worm, but that was about all they were sure of.
 		[ The Adventurers, Epic IV, by Thomas A. Miller ]
+skeletal pirate
+	You best start believing in ghost stories, Miss Turner... you're in one!
+		[ Hector Barbossa,
+			Pirates of the Caribbean, the Curse of the Black Pearl ]
 spibrawulf
 	Fiction is like a spider's web, attached ever so slightly perhaps,
 	but still attached to life at all four corners. Often the attachment
@@ -6328,6 +6369,16 @@ moist towel
 	You will have to go to a Tower and then break into it at some
 	point towards the end of your Tour.
 	  [ The Tough Guide to Fantasyland, by Diana Wynne Jones ]
+transmuter
+	For the alchemist the one primarily in need of redemption is not
+	man, but the deity who is lost and sleeping in matter. Only as a
+	secondary consideration does he hope that some benefit may accrue
+	to himself from the transformed substance as the panacea, the
+	medicina catholica, just as it may to the imperfect bodies, the
+	base or "sick" metals, etc. His attention is not directed to his
+	own salvation through God's grace, but to the liberation of God
+	from the darkness of matter.
+		[ C.G. Jung ]
 trap*door
 	I knew my Erik too well to feel at all comfortable on jumping
 	into his house.  I knew what he had made of a certain palace at

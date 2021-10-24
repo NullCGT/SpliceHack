@@ -929,6 +929,7 @@ m_digweapon_check(struct monst* mtmp, xchar nix, xchar niy)
 static boolean
 m_balks_at_approaching(struct monst* mtmp)
 {
+    struct attack *mattk;
     /* peaceful, far away, or can't see you */
     if (mtmp->mpeaceful
         || (dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) >= 5*5)
@@ -947,7 +948,8 @@ m_balks_at_approaching(struct monst* mtmp)
         return TRUE;
 
     /* breath attack, and hp loss or breath not used */
-    if (attacktype(mtmp->data, AT_BREA)
+    mattk = attacktype_fordmg(mtmp->data, AT_BREA, AD_ANY);
+    if (mattk && !m_seenres(mtmp, cvt_adtyp_to_mseenres(mattk->adtyp))
         && ((mtmp->mhp < (mtmp->mhpmax+1) / 3)
             || !mtmp->mspec_used))
         return TRUE;

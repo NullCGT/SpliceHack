@@ -986,8 +986,9 @@ void arm_bomb(struct obj *obj, boolean yours)
 {
     /* Three shall be the number of the counting and the
        number of the counting shall be three. */
-    if (obj->oarmed)
+    if (obj->oarmed) {
         return;
+    }
 
 	if (obj->oartifact == ART_HAND_GRENADE_OF_ANTIOCH) {
         attach_bomb_blow_timeout(obj, 3, yours);

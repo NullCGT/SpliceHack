@@ -5,6 +5,7 @@
 ### Monster Changes
 - Hedgehogs can be tamed by zapping them with a wand of speed monster.
 - Quadrupeds, unicorns, and dragons are saddled, rarely. (just like horses are)
+- Angels and gold dragons emit radius 4 light.
 
 ### Role Changes
 - Multishot: Samurai using a Yumi have a multishot bonus even when not using Ya.
@@ -26,20 +27,31 @@
 ### Object Changes
 - Many polearms have been removed.
   - Kept halberds cuz they're good, lances cuz they're a classic, ranseurs cuz lots of monsters spawn with them, and "partisans" cuz we need to have a crummy weapon in the category. Some monsters can also spawn with scythes, because that's cool.
+- Hallucination protects against all gaze attacks.
+- Eyes of the Overworld protect against all gaze attacks.
 - New Object: Fruitcake
   - Created by combining cake and a slime mold at a forge.
   - Deals massive damage when thrown, and comedically heavy.
   - Eating a cursed fruitcake can cause hp loss.
+- New Object: Pumpkin Pie
+- New Object: Apple Pie
+  - Created by combining a cream pie with a pumpkin or an apple
+    respectively.
 
 ### QoL
 - Colored flashes BUC-identify contents when when container hits altar
+- Removed the Mysterious Force.
 
 ### Small Tweaks / Bugfixes
 - More elemental magic types can be used to change elementals to other forms.
+- Most SLASH'EM gaze attacks that didn't check for cancellation (and EotO) now do so.
 - Decks of Fate are less common in barracks relative to normal decks of cards.
 - Healer pets don't attack peacefuls. They still *heal* peacefuls.
 - Learning your weapon's enchantment has more emotionless messaging
 - Tone down amount of item destruction for players with Flaming/Freezing Fist skills
+- Fixed some materials having improper or undefined weights.
+- Reduced message spam when gaining a number of class skills at once.
+- The option to show object weight defaults to off.
 
 
 ##                             Version 1.0.0

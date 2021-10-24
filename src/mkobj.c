@@ -1558,6 +1558,7 @@ const int matdensities[] = {
     50, /* MITHRIL */
     90, /* ORICHALCUM */
     20,  // PLASTIC
+    50,  // SLIME
     60,  // GLASS
     55,  // GEMSTONE
      1,  // SHADOW

@@ -1367,8 +1367,7 @@ weapon_oname(struct obj *wpn)
     if (strstri(name, "%s")) {
         Sprintf(buf, name, upstart(basename));
         return oname(wpn, buf);
-    }
-    else {
+    } else {
         return oname(wpn, name);
     }
 }

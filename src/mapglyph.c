@@ -262,7 +262,7 @@ unsigned mgflags;
         }
 
         /* blood overrides other colors */
-        if (levl[x][y].splatpm && cansee(x, y)) {
+        if (levl[x][y].splatpm && cansee(x, y) && !(iflags.bloodless)) {
             color = blood_color(levl[x][y].splatpm);
         }
     } else if ((offset = (glyph - GLYPH_OBJ_OFF)) >= 0) { /* object */

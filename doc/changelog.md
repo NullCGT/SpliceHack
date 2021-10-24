@@ -44,6 +44,7 @@
 - Removed the Mysterious Force.
 
 ### Small Tweaks / Bugfixes
+- A few more wands can now produce helpful messages if the player is engraving while Hallu or Blind.
 - More elemental magic types can be used to change elementals to other forms.
 - Most SLASH'EM gaze attacks that didn't check for cancellation (and EotO) now do so.
 - Decks of Fate are less common in barracks relative to normal decks of cards.

@@ -732,6 +732,11 @@ doengrave(void)
                 }
                 break;
             case WAN_NOTHING:
+                if (Hallucination) {
+                    Strcpy(post_engr_text,
+                           "This wand is ever so much fun!");
+                    doknown = TRUE;
+                }
             case WAN_UNDEAD_TURNING:
             case WAN_OPENING:
             case WAN_LOCKING:
@@ -746,55 +751,71 @@ doengrave(void)
                 break;
             /* RAY wands */
             case WAN_PSIONICS:
-                if (!Blind)
+                if (Hallucination)
+                    Strcpy(post_engr_text,
+                           "Tiny, confused minds run around inside your own!");
+                else if (!Blind)
                     Sprintf(post_engr_text, "The bugs on the %s run around in circles!",
                                 surface(u.ux, u.uy));
+                if (!Blind || Hallucination)
                     doknown = TRUE;
                 break;
             case WAN_MAGIC_MISSILE:
                 ptext = TRUE;
-                if (!Blind) {
+                if (Hallucination) {
+                    Sprintf(post_engr_text,
+                            "Oh no! You've got magic measles!");
+                } else if (!Blind) {
                     Sprintf(post_engr_text,
                             "The %s is riddled by bullet holes!",
                             surface(u.ux, u.uy));
-                    doknown = TRUE;
+                } else if (!Deaf) {
+                    Sprintf(post_engr_text,
+                            "You think you can hear magic narrowly missing you!");
                 }
+                if (!Blind || Hallucination || !Deaf) doknown = TRUE;
                 break;
             case WAN_WINDSTORM:
-                if (!Blind) {
+                if (!Blind)
                     Sprintf(post_engr_text, "The bugs on the %s are blown away!",
                             surface(u.ux, u.uy));
-                    doknown = TRUE;
-                }
+                else
+                    You_feel("a sudden, tremendous breeze!");
+                if (Hallucination)
+                    You_feel("like a Student of Winds!");
                 scatter(u.ux, u.uy, 4, MAY_DESTROY | MAY_HIT | VIS_EFFECTS,
                     (struct obj *) 0);
+                doknown = TRUE;
                 break;
             /* can't tell sleep from death - Eric Backus */
             case WAN_SLEEP:
             case WAN_DEATH:
-                if (!Blind) {
-                    Sprintf(post_engr_text, "The bugs on the %s stop moving!",
-                            surface(u.ux, u.uy));
-                }
+                if (!Blind)
+                    Sprintf(post_engr_text, "%sThe bugs on the %s stop moving!",
+                            Hallucination ? "Oh no! " : "", surface(u.ux, u.uy));
                 break;
             case WAN_POISON_GAS:
-                if (!Blind) {
-                    if (Hallucination) {
-                        Sprintf(post_engr_text,
-                        "The bugs on the %s cough!", surface(u.ux, u.uy));
-                    } else {
-                        Sprintf(post_engr_text,
-                        "The bugs on the %s stop moving!", surface(u.ux, u.uy));
-                    }
-                }
+                if (Hallucination)
+                    Sprintf(post_engr_text,
+                            "The bugs on the %s cough!", surface(u.ux, u.uy));
+                else if (!Blind)
+                    Sprintf(post_engr_text,
+                            "The bugs on the %s stop moving!", surface(u.ux, u.uy));
+                else if (!Deaf)
+                    Strcpy(post_engr_text,
+                           "Something sprays from the wand.");
                 create_gas_cloud(u.ux, u.uy, 1, 4);
                 doknown = TRUE;
                 break;
             case WAN_WATER:
-                if (!Blind)
+                if (!Blind) {
                     Sprintf(post_engr_text,
                             "The bugs on the %s get washed away!", surface(u.ux, u.uy));
                     doknown = TRUE;
+                } else if (!Deaf) {
+                    Strcpy(post_engr_text,
+                           "Something sprays from the wand.");
+                }
                 if (!oep || (oep->engr_type != BURN))
                     dengr = TRUE;
                 break;
@@ -866,10 +887,8 @@ doengrave(void)
                     if (flags.verbose)
                         pline("This %s is a wand of acid!", xname(otmp));
                     doknown = TRUE;
-                }
-                if (!Blind) {
-                    Strcpy(post_engr_text,
-                            "Acid sprays from the wand.");
+                } else if (!Deaf) {
+                    Sprintf(post_engr_text, "Something sprays from the wand.");
                 }
                 break;
             case WAN_LIGHTNING:
@@ -988,12 +1007,9 @@ doengrave(void)
         otmp->otyp = WAN_WONDER;
         doknown = TRUE;
     }
-    /* Identify stylus */
-    if (doknown) {
+    /* wands that perma-engrave need to be ID'd now. However... */
+    if (doknown && (type == BURN || type == ENGRAVE))
         learnwand(otmp);
-        if (objects[otmp->otyp].oc_name_known)
-            more_experienced(0, 10);
-    }
     if (teleengr) {
         rloc_engr(oep);
         oep = (struct engr *) 0;
@@ -1125,6 +1141,13 @@ doengrave(void)
     getlin(qbuf, ebuf);
     /* convert tabs to spaces and condense consecutive spaces to one */
     mungspaces(ebuf);
+
+    /* ...however, if we identify other styluses here, messages look better */
+    if (doknown) {
+        learnwand(otmp);
+        if (objects[otmp->otyp].oc_name_known)
+            more_experienced(0, 10);
+    }
 
     /* Count the actual # of chars engraved not including spaces */
     len = strlen(ebuf);

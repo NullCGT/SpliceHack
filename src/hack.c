@@ -1501,7 +1501,7 @@ domove_core(void)
                 x = u.ux + u.dx;
                 y = u.uy + u.dy;
             } while (!isok(x, y) || bad_rock(g.youmonst.data, x, y)
-                || (Afraid && x == u.fearedmon->mx && y == u.fearedmon->my));
+                || (Afraid && u.fearedmon && x == u.fearedmon->mx && y == u.fearedmon->my));
         }
         /* turbulence might alter your actual destination */
         if (u.uinwater) {

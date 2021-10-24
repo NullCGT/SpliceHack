@@ -3,7 +3,8 @@
 ##                             Version 1.1.0
 
 ### Monster Changes
-- Quadrupeds, unicorns, and dragons are saddled, rarely.
+- Hedgehogs can be tamed by zapping them with a wand of speed monster.
+- Quadrupeds, unicorns, and dragons are saddled, rarely. (just like horses are)
 
 ### Role Changes
 - Multishot: Samurai using a Yumi have a multishot bonus even when not using Ya.

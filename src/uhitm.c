@@ -342,6 +342,9 @@ find_roll_to_hit(struct monst *mtmp,
         && maybe_polyd(is_elf(g.youmonst.data), Race_if(PM_ELF)))
         tmp++;
 
+    if (levl[u.ux][u.uy].lit && Race_if(PM_DROW))
+        tmp -= 2; /* Dazzled when standing in light */
+
     /* Adding iron ball as a weapon skill gives a -4 penalty for
     unskilled vs no penalty for non-weapon objects.  Add 4 to
     compensate. */

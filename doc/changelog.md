@@ -11,6 +11,9 @@
   - Drow can see fine out to radius 3, obviating any need for lamps.
   - Drow suffer a -2 attack penalty when standing in a lit square.
 
+### Monster Changes
+- Angels and gold dragons emit radius 4 light.
+
 ### Dungeon Changes
 - Ludios spawns as soon as it is able to, reducing chance that it never spawns.
 - New "kitchen" themed room with food, cooking implements, sinks and furnaces.
@@ -24,19 +27,30 @@
 - Added a number of new recipes, courtesy of Riker.
 
 ### Object Changes
+- Hallucination protects against all gaze attacks.
+- Eyes of the Overworld protect against all gaze attacks.
 - New Object: Fruitcake
   - Created by combining cake and a slime mold at a forge.
   - Deals massive damage when thrown, and comedically heavy.
   - Eating a cursed fruitcake can cause hp loss.
+- New Object: Pumpkin Pie
+- New Object: Apple Pie
+  - Created by combining a cream pie with a pumpkin or an apple
+    respectively.
 
 ### QoL
 - Colored flashes BUC-identify contents when when container hits altar
+- Removed the Mysterious Force.
 
 ### Small Tweaks / Bugfixes
+- Most SLASH'EM gaze attacks that didn't check for cancellation (and EotO) now do so.
 - Decks of Fate are less common in barracks relative to normal decks of cards.
 - Healer pets don't attack peacefuls. They still *heal* peacefuls.
 - Learning your weapon's enchantment has more emotionless messaging
 - Tone down amount of item destruction for players with Flaming/Freezing Fist skills
+- Fixed some materials having improper or undefined weights.
+- Reduced message spam when gaining a number of class skills at once.
+- The option to show object weight defaults to off.
 
 
 ##                             Version 1.0.0

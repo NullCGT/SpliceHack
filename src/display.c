@@ -2185,6 +2185,7 @@ map_glyphinfo(xchar x, xchar y, int glyph,
     register int offset, idx;
     int color = NO_COLOR;
     unsigned special = 0;
+    boolean drawblood = TRUE;
     struct obj *obj;        /* only used for STATUE */
 
     /* condense multiple tests in macro version down to single */
@@ -2424,7 +2425,22 @@ map_glyphinfo(xchar x, xchar y, int glyph,
         }
 
         /* blood overrides other colors */
-        if (levl[x][y].splatpm && cansee(x, y) && !(glyph_to_cmap(glyph) == S_cloud || glyph_to_cmap(glyph) == S_poisoncloud)) {
+        switch (glyph_to_cmap(glyph)){
+            case S_cloud:
+            case S_poisoncloud:
+            case S_fountain:
+            case S_water:
+            case S_pool:
+                drawblood = FALSE;
+            break;
+            default:
+            break;
+        }
+
+        if (glyph_is_trap(glyph))
+            drawblood = FALSE;
+
+        if (levl[x][y].splatpm && cansee(x, y) && drawblood && !(iflags.bloodless)) {
             color = blood_color(levl[x][y].splatpm);
         }
     } else if ((offset = (glyph - GLYPH_OBJ_OFF)) >= 0) { /* object */
@@ -3260,7 +3276,7 @@ add_blood(int x, int y, int pm) {
 }
 
 int
-blood_color(int pm) {
+blood_color(int pm UNUSED) {
     return CLR_RED;
 }
 

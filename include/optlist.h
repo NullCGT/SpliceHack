@@ -124,6 +124,8 @@ opt_##a,
                 "the name of your starting pet if it is a bird")
     NHOPTB(blind, 0, opt_in, set_in_config, Off, Yes, No, No, NoAlias,
                 &u.uroleplay.blind)
+    NHOPTB(bloodless, 0, opt_in, set_in_game, Off, Yes, No, No, NoAlias,
+                &iflags.bloodless)
     NHOPTB(bones, 0, opt_out, set_in_config, On, Yes, No, No, NoAlias,
                 &flags.bones)
 #ifdef BACKWARD_COMPAT
@@ -251,7 +253,7 @@ opt_##a,
 #endif
     NHOPTB(implicit_uncursed, 0, opt_out, set_in_game, On, Yes, No, No,
                 NoAlias, &flags.implicit_uncursed)
-    NHOPTB(invweight, 0, opt_out, set_in_game, On, Yes, No, No,
+    NHOPTB(invweight, 0, opt_out, set_in_game, Off, Yes, No, No,
                 NoAlias, &flags.invweight)
 #if 0   /* obsolete - pre-OSX Mac */
     NHOPTB(large_font, 0, opt_in, set_in_config, Off, Yes, No, No, NoAlias,

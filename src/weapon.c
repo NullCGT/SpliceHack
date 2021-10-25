@@ -128,6 +128,11 @@ static NEARDATA const char kebabable[] = { S_XORN, S_DRAGON, S_JABBERWOCK,
 static void
 give_may_advance_msg(int skill)
 {
+    if (!g.context.skip_enhance_msg) {
+        g.context.skip_enhance_msg = TRUE;
+    } else {
+        return;
+    }
     You_feel("more confident in your %sskills.",
              (skill == P_NONE) ? ""
                  : (skill <= P_LAST_WEAPON) ? "weapon "

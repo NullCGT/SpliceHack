@@ -2719,7 +2719,7 @@ num_encountered(void)
     int i, n = 0;
 
     for (i = LOW_PM; i < NUMMONS; ++i) {
-        if ((g.mvitals[i].mvflags & G_KNOWN) == G_EXTINCT)
+        if (g.mvitals[i].mvflags & G_KNOWN)
             ++n;
     }
     return n;

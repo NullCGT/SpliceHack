@@ -506,7 +506,7 @@ polyself(int psflags)
                        0 and trigger thats_enough_tries message */
                     ++tryct;
                 }
-                pm_name = pmname(&mons[mntmp], flags.female ? FEMALE : MALE);
+                pm_name = pmname(&mons[mntmp], flags.female);
                 if (the_unique_pm(&mons[mntmp]))
                     pm_name = the(pm_name);
                 else if (!type_is_pname(&mons[mntmp]))
@@ -977,12 +977,13 @@ break_armor(void)
                 useup(otmp);
             }
         }
-        if (uarmu) {
+        if ((otmp = uarmu) != 0) {
             if (otmp->material == SLIME) {
                 Your("shirt expands to fit you.");
             } else {
                 Your("shirt rips to shreds!");
-                useup(uarmu);
+                (void) Shirt_off();
+                useup(otmp);
             }
         }
     } else if (sliparm(g.youmonst.data)) {

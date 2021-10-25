@@ -583,7 +583,7 @@ lookat(int x, int y, char *buf, char *monbuf)
             break;
         case S_pool:
             Sprintf(eos(buf), (levl[x][y].splatpm) ? "bloody " : "");
-            Sprintf(eos(buf), waterbody_name(x, y));
+            Sprintf(eos(buf), "%s", waterbody_name(x, y));
             printed_blood = TRUE;
             break;
         case S_stone:

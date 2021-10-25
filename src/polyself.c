@@ -651,7 +651,7 @@ polymon(int mntmp)
 
     if (g.mvitals[mntmp].mvflags & G_GENOD) { /* allow G_EXTINCT */
         You_feel("rather %s-ish.",
-                 pmname(&mons[mntmp], flags.female ? FEMALE : MALE));
+                 pmname(&mons[mntmp], flags.female));
         exercise(A_WIS, TRUE);
         return 0;
     }
@@ -660,7 +660,7 @@ polymon(int mntmp)
     if (!u.uconduct.polyselfs++)
         livelog_printf(LL_CONDUCT,
                        "changed form for the first time, becoming %s",
-                       an(pmname(&mons[mntmp], flags.female ? FEMALE : MALE)));
+                       an(pmname(&mons[mntmp], flags.female)));
 
     /* exercise used to be at the very end but only Wis was affected
        there since the polymorph was always in effect by then */
@@ -708,7 +708,7 @@ polymon(int mntmp)
         Strcat(buf, (is_male(&mons[mntmp]) || is_female(&mons[mntmp]))
                        ? "" : flags.female ? "female " : "male ");
     }
-    Strcat(buf, pmname(&mons[mntmp], flags.female ? FEMALE : MALE));
+    Strcat(buf, pmname(&mons[mntmp], flags.female));
     You("%s %s!", (u.umonnum != mntmp) ? "turn into" : "feel like", an(buf));
 
     if (Stoned && poly_when_stoned(&mons[mntmp])) {

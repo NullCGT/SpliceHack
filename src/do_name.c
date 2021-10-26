@@ -1624,7 +1624,8 @@ docall_xname(struct obj *obj)
         otemp.spe = 0; /* not wet or historic */
     else if (otemp.otyp == TIN)
         otemp.known = 0; /* suppress tin type (homemade, &c) and mon type */
-    else if (otemp.otyp == FIGURINE || otemp.otyp == MASK)
+    else if (otemp.otyp == FIGURINE || otemp.otyp == MASK
+            || otemp.oclass == SCROLL_CLASS)
         otemp.corpsenm = NON_PM; /* suppress mon type */
     else if (otemp.otyp == HEAVY_IRON_BALL)
         otemp.owt = objects[HEAVY_IRON_BALL].oc_weight; /* not "very heavy" */

@@ -34,6 +34,7 @@
 - Removed the Mysterious Force.
 
 ### Small Tweaks / Bugfixes
+- Scrolls in the Discovery menu were associated with the first monster from monst.c. Seen when renaming a "scroll - giant fly". Suppressed otemp.corpsenm.
 - Most SLASH'EM gaze attacks that didn't check for cancellation (and EotO) now do so.
 - Decks of Fate are less common in barracks relative to normal decks of cards.
 - Healer pets don't attack peacefuls. They still *heal* peacefuls.

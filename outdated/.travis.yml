@@ -173,5 +173,5 @@ deploy:
   on:
     tags: true
   prerelease: true
-  name: "Splice-R 1.0.0"
-  body: "This is an auto generated release build of Splice-R 1.0.0"
+  name: "Splice-R 1.1.0"
+  body: "This is an auto generated release build of Splice-R 1.1.0"

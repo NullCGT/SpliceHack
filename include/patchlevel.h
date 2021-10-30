@@ -6,9 +6,9 @@
 #ifndef PATCHLEVEL_H
 #define PATCHLEVEL_H
 
-/* SpliceHack 1.0.x */
+/* SpliceHack 1.1.x */
 #define VERSION_MAJOR 1
-#define VERSION_MINOR 0
+#define VERSION_MINOR 1
 /*
  * PATCHLEVEL is updated for each release.
  */
@@ -52,7 +52,7 @@
  * PP = patch level, ee = edit level, L = literal suffix "L",
  * with all four numbers specified as two hexadecimal digits.
  */
-#define VERSION_COMPATIBILITY 0x01000000L
+#define VERSION_COMPATIBILITY 0x01010000L
 
 /****************************************************************************/
 /* Version 3.7.x */

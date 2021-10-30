@@ -13,13 +13,13 @@ NAO_CHROOT="/opt/splicehack/chroot"
 DGL_CONFIG="/opt/splicehack/dgamelaunch.conf"
 # already compiled versions of dgl and nethack
 DGL_GIT="/home/build/dgamelaunch"
-NETHACK_GIT="/home/build/Spl-R-1.0.0"
+NETHACK_GIT="/home/build/Spl-R-1.1.0"
 # the user & group from dgamelaunch config file.
 USRGRP="games:games"
 # COMPRESS from include/config.h; the compression binary to copy. leave blank to skip.
 COMPRESSBIN="/bin/gzip"
 # fixed data to copy (leave blank to skip)
-NH_GIT="/home/build/Spl-R-1.0.0"
+NH_GIT="/home/build/Spl-R-1.1.0"
 NH_BRANCH="3.7-hdf" # will probably need to make another hdf branch for this one
 # HACKDIR from include/config.h; aka nethack subdir inside chroot
 NHSUBDIR="nh370.35-hdf"

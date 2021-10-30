@@ -3634,7 +3634,7 @@ mhitm_ad_ench(struct monst *magr, struct attack *mattk, struct monst *mdef,
                     break;
                 }
             }
-            if (drain_item(obj, FALSE)) {
+            if (obj && drain_item(obj, FALSE)) {
                 pline("%s less effective.", Yobjnam2(obj, "seem"));
             }
         }

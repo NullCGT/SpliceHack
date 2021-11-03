@@ -970,7 +970,7 @@ add_erosion_words(struct obj* obj, char* prefix)
             Strcat(prefix, "thoroughly ");
             break;
         }
-        Strcat(prefix, is_rustprone(obj) ? "rusty " : "burnt ");
+        Strcat(prefix, is_rustprone(obj) ? "rusty " : is_brittlable(obj) ? "brittle " : "burnt ");
     }
     if (obj->oeroded2 && !iscrys) {
         switch (obj->oeroded2) {
@@ -994,6 +994,8 @@ add_erosion_words(struct obj* obj, char* prefix)
             Strcat(prefix, "corrodeproof ");
         else if (is_flammable(obj))
             Strcat(prefix, "fireproof ");
+        else if (is_brittlable(obj))
+            Strcat(prefix, "unbreakable ");
     }
 }
 
@@ -1009,7 +1011,7 @@ erosion_matters(struct obj* obj)
            non-iron tool, in which case rust also implicitly goes away,
            so there's no particular reason to try to handle the first
            instance differently [this comment belongs in poly_obj()...] */
-        return is_weptool(obj) ? TRUE : FALSE;
+        return (is_weptool(obj) || obj->otyp == SKELETON_KEY) ? TRUE : FALSE;
     case WEAPON_CLASS:
     case ARMOR_CLASS:
     case BALL_CLASS:
@@ -1238,6 +1240,9 @@ doname_base(struct obj* obj, unsigned int doname_flags)
                         noit_mon_nam(mlsh));
             }
             break;
+        }
+        if (obj->otyp == SKELETON_KEY) {
+            add_erosion_words(obj, prefix);
         }
         if (obj->otyp == CANDELABRUM_OF_INVOCATION) {
             Sprintf(eos(bp), " (%d of 7 candle%s%s)",
@@ -3686,7 +3691,8 @@ readobjnam_preparse(struct _readobjnam_data *d)
                    || !strncmpi(d->bp, "fireproof ", l = 10)
                    || !strncmpi(d->bp, "rotproof ", l = 9)
                    || !strncmpi(d->bp, "unbreakable ", l = 12)
-                   || !strncmpi(d->bp, "shatterproof ", l = 13)) {
+                   || !strncmpi(d->bp, "shatterproof ", l = 13)
+                   || !strncmpi(d->bp, "unbreakable ", l = 12)) {
             d->erodeproof = 1;
         } else if (!strncmpi(d->bp, "lit ", l = 4)
                    || !strncmpi(d->bp, "burning ", l = 8)) {
@@ -3755,7 +3761,8 @@ readobjnam_preparse(struct _readobjnam_data *d)
         } else if (!strncmpi(d->bp, "rusty ", l = 6)
                    || !strncmpi(d->bp, "rusted ", l = 7)
                    || !strncmpi(d->bp, "burnt ", l = 6)
-                   || !strncmpi(d->bp, "burned ", l = 7)) {
+                   || !strncmpi(d->bp, "burned ", l = 7)
+                   || !strncmpi(d->bp, "brittle ", l = 8)) {
             d->eroded = 1 + d->very;
             d->very = 0;
         } else if (!strncmpi(d->bp, "corroded ", l = 9)

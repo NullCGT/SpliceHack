@@ -97,6 +97,21 @@ picklock(void)
     if (rn2(100) >= g.xlock.chance)
         return 1; /* still busy */
 
+    /* Lockpicks have a chance of breaking. */
+    if (g.xlock.pick && g.xlock.picktyp == LOCK_PICK && rn2(100) >= 70) {
+        if (g.xlock.pick->quan > 1) {
+            pline("One of your picks breaks!");
+            g.xlock.pick->quan -= 1;
+            update_inventory();
+        } else {
+            pline("%s!", Yobjnam2(g.xlock.pick, "break"));
+            useup(g.xlock.pick);
+        }
+        You("stop %s.", lock_action());
+        g.xlock.pick = (struct obj *) 0;
+        return ((g.xlock.usedtime = 0));
+    }
+
     /* using the Master Key of Thievery finds traps if its bless/curse
        state is adequate (non-cursed for rogues, blessed for others;
        checked when setting up 'xlock') */
@@ -151,6 +166,25 @@ picklock(void)
             (void) chest_trap(g.xlock.box, FINGER, FALSE);
     }
     exercise(A_DEX, TRUE);
+
+    /* Degrade the picking tool. */
+    if (g.xlock.pick && g.xlock.picktyp == CREDIT_CARD
+        && !g.xlock.pick->oartifact && !rn2(3)) {
+        pline("%s!", Yobjnam2(g.xlock.pick, "snap"));
+        useup(g.xlock.pick);
+    } else if (g.xlock.pick && g.xlock.picktyp == SKELETON_KEY 
+                && !g.xlock.pick->oartifact && !rn2(3)) {
+        if (g.xlock.pick->oeroded < 3) {
+            g.xlock.pick->oeroded++;
+            update_inventory();
+        } else {
+            pline("%s!", Yobjnam2(g.xlock.pick, "break"));
+            useup(g.xlock.pick);
+            g.xlock.pick = (struct obj *) 0;
+            update_inventory();
+        }
+    }
+
     return ((g.xlock.usedtime = 0));
 }
 
@@ -257,6 +291,7 @@ reset_pick(void)
     g.xlock.magic_key = FALSE;
     g.xlock.door = (struct rm *) 0;
     g.xlock.box = (struct obj *) 0;
+    g.xlock.pick = (struct obj *) 0;
 }
 
 /* level change or object deletion; context may no longer be valid */
@@ -594,6 +629,7 @@ pick_lock(struct obj *pick,
     g.context.move = 0;
     g.xlock.chance = ch;
     g.xlock.picktyp = picktyp;
+    g.xlock.pick = pick;
     g.xlock.magic_key = is_magic_key(&g.youmonst, pick);
     g.xlock.usedtime = 0;
     set_occupation(picklock, lock_action(), 0);
@@ -668,6 +704,7 @@ doforce(void)
                 You("start bashing it with %s.", yname(uwep));
             g.xlock.box = otmp;
             g.xlock.chance = objects[uwep->otyp].oc_wldam * 2;
+            g.xlock.pick = (struct obj *) 0;
             g.xlock.picktyp = picktyp;
             g.xlock.magic_key = FALSE;
             g.xlock.usedtime = 0;

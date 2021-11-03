@@ -163,6 +163,7 @@ static struct trobj Ranger[] = {
 };
 static struct trobj Rogue[] = {
 #define R_DAGGERS 1
+#define R_PICKS 4
     { SHORT_SWORD, 0, WEAPON_CLASS, 1, UNDEF_BLESS },
     { DAGGER, 0, WEAPON_CLASS, 10, 0 }, /* quan is variable */
     { LIGHT_ARMOR, 1, ARMOR_CLASS, 1, UNDEF_BLESS },
@@ -1165,6 +1166,7 @@ u_init(void)
         break;
     case PM_ROGUE:
         Rogue[R_DAGGERS].trquan = rn1(10, 6);
+        Rogue[R_PICKS].trquan = rn1(15, 15);
         u.umoney0 = 0;
         ini_inv(Rogue);
         if (!rn2(5))

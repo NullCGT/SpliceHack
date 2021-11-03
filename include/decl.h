@@ -556,6 +556,7 @@ struct val_list {
 struct xlock_s {
     struct rm *door;
     struct obj *box;
+    struct obj *pick;
     int picktyp, /* key|pick|card for unlock, sharp vs blunt for #force */
         chance, usedtime;
     boolean magic_key;

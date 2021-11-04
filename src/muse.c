@@ -3201,6 +3201,31 @@ munslime(struct monst* mon, boolean by_you)
     return FALSE;
 }
 
+boolean
+munengulf(struct monst * mon)
+{
+    struct obj *obj;
+    struct permonst *mptr = mon->data;
+
+    if (is_animal(mptr) || mindless(mptr)) {
+        return FALSE;
+    }
+
+    for (obj = mon->minvent; obj; obj = obj->nobj)
+        if ((obj->otyp == WAN_DIGGING || obj->otyp == WAN_OPENING || obj->otyp == WAN_WINDSTORM)
+            && obj->spe > 0) {
+            if (canseemon(mon)) {
+                pline("%s zaps %s.", Monnam(mon), an(xname(obj)));
+                makeknown(obj->otyp);
+            }
+            obj->spe -= 1;
+            mon->movement -= NORMAL_SPEED;
+            mon->mlstmv = g.monstermoves;
+            return TRUE;
+        }
+    return FALSE;
+}
+
 /* mon uses an item--selected by caller--to burn away incipient slime */
 static boolean
 muse_unslime(

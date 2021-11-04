@@ -1,5 +1,15 @@
 #                             Splicehack-Rewrite
 
+##                             Version 1.2.0
+
+## Monster Changes
+- Monsters can zap wands of opening, digging, or windstorm in order to escape death via being
+  engulfed.
+
+## Object Changes
+- Lockpicks stack.
+- Unlocking tools can degrade and break.
+
 ##                             Version 1.1.0
 
 ### Monster Changes

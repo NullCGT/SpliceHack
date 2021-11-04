@@ -4900,6 +4900,8 @@ mhitm_ad_dgst(struct monst *magr, struct attack *mattk UNUSED,
             mhm->done = TRUE;
             return;
         }
+        if (munengulf(mdef))
+            return;
         if (flags.verbose && !Deaf)
             verbalize("Burrrrp!");
         mhm->damage = mdef->mhp;

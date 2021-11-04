@@ -1718,6 +1718,7 @@ extern boolean ureflects(const char *, const char *);
 extern void mcureblindness(struct monst *, boolean);
 extern boolean munstone(struct monst *, boolean);
 extern boolean munslime(struct monst *, boolean);
+extern boolean munengulf(struct monst *);
 
 /* ### music.c ### */
 

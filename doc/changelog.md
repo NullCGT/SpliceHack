@@ -10,6 +10,11 @@
 - Lockpicks stack.
 - Unlocking tools can degrade and break.
 
+### Small Tweaks / Bugfixes
+- Fixed manticore spikes causing an error when initializing objects.
+- Moved manticore spikes out of the venoms class.
+- Fixed manticore spikes producing error messages when thrown.
+
 ##                             Version 1.1.0
 
 ### Monster Changes

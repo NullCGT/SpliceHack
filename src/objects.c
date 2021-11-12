@@ -831,6 +831,10 @@ WEPTOOL("grappling hook", None,
 WEPTOOL("unicorn horn", None,
         1, 1, 1,  0,  20, 100, 12, 12, PIERCE,  0, P_UNICORN_HORN,
                                                            BONE, CLR_WHITE),
+/* manticore spikes */
+OBJECT(OBJ("spike", None),
+      BITS(1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, BONE), 0,
+      TOOL_CLASS, 0, 0, 1, 0, 6, 6, 0, 0, 0, HI_ORGANIC),
         /* 3.4.1: unicorn horn left classified as "magic" */
 /* two unique tools;
  * not artifacts, despite the comment which used to be here
@@ -1335,11 +1339,6 @@ OBJECT(OBJ("splash of acidic liquid", "splash of acid"),
        BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, LIQUID), 0,
        VENOM_CLASS, 500, 0, 1, 0, 6, 6, 0, 0, 0, HI_ORGANIC),
         /* +d6 small or large */
-
-/* manticore quills */
-OBJECT(OBJ("spike", None),
-      BITS(0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, P_NONE, BONE), 0,
-      VENOM_CLASS, 0, 0, 1, 0, 6, 6, 0, 0, 0, HI_ORGANIC),
 
 /* fencepost, the deadly Array Terminator -- name [1st arg] *must* be NULL */
 OBJECT(OBJ(None, None),

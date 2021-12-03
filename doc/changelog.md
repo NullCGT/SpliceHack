@@ -6,6 +6,12 @@
 - Monsters can zap wands of opening, digging, or windstorm in order to escape death
   via being engulfed.
 
+## Monster Templates
+- Attacks added by monster templates are no longer added as the very last attacks
+  of the monster.
+- Half-illithid monsters can have up to three tentacle attacks.
+- Renamed "fiery drakken" and "icy drakken" templates.
+
 ## Object Changes
 - Lockpicks stack.
 - Unlocking tools can degrade and break.

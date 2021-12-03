@@ -3007,8 +3007,8 @@ is_valid_template(struct monst *mtmp, int tindex) {
         return !is_mind_flayer(mtmp->data);
     case MT_OOZING:
         return !amorphous(mtmp->data);
-    case MT_ICY_DRAKKEN:
-    case MT_FIERY_DRAKKEN:
+    case MT_DRACONIC:
+    case MT_ICY_DRACONIC:
         return !is_dragon(mtmp->data);
     case MT_EXPLOSIVE:
         return !(mtmp->data->mlet == S_EYE);
@@ -3064,7 +3064,7 @@ template_chance(struct monst *mtmp, int modifier) {
 struct permonst
 apply_template(struct permonst basemon, int tindex)
 {
-    int i;
+    int i, j = 0;
     struct permonst template = montemplates[tindex];
 
     /* Additive Properties */
@@ -3085,8 +3085,9 @@ apply_template(struct permonst basemon, int tindex)
 
     /* Attacks */
     for (i = 0; i < 6; i++) {
-        if (template.mattk[i].damd)
-            basemon.mattk[i] = template.mattk[i];
+        if (!basemon.mattk[i].aatyp && !basemon.mattk[i].adtyp) {
+            basemon.mattk[i] = template.mattk[j++];
+        }
     }
 
     /* Replacement Properties */

@@ -1283,6 +1283,10 @@ seffects(struct obj *sobj) /* sobj - scroll or fake spellbook for spell */
             otmp->oerodeproof = new_erodeproof ? 1 : 0;
             break;
         }
+        if (otmp == GRAY_DRAGON_SCALE_MAIL) {
+            pline("%s thoroughly resists the enchantment!", Yname2(otmp));
+            break;
+        }
         /* elven armor vibrates warningly when enchanted beyond a limit */
         special_armor = is_elven_armor(otmp)
                         || (Role_if(PM_WIZARD) && otmp->otyp == CORNUTHAUM);

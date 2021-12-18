@@ -21,6 +21,7 @@
 - Moved manticore spikes out of the venoms class.
 - Fixed manticore spikes producing error messages when thrown.
 - Fixed garbled text in the serval database entry.
+- Fixed the calculation for sunder resulting in constant failure.
 
 ##                             Version 1.1.0
 

@@ -397,7 +397,8 @@ rndcurse(void)
             if (!otmp || otmp->cursed)
                 continue; /* next target */
 
-            if (otmp->oartifact && spec_ability(otmp, SPFX_INTEL)
+            if ((otmp->oartifact && spec_ability(otmp, SPFX_INTEL)
+                || (uarm && uarm->otyp == GRAY_DRAGON_SCALE_MAIL))
                 && rn2(10) < 8) {
                 pline("%s!", Tobjnam(otmp, "resist"));
                 continue;

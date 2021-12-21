@@ -51,13 +51,12 @@ multishot_class_bonus(int pm, struct obj *ammo,
             multishot++;
         break;
     case PM_RANGER:
-        /* arbitrary; encourage use of other missiles beside daggers */
-        if (skill != P_DAGGER)
-            multishot++;
+        /* good at ranged combat */
+        multishot++;
         break;
     case PM_ROGUE:
-        /* possibly should add knives... */
-        if (skill == P_DAGGER)
+        /* knife-thrower! */
+        if (skill == P_DAGGER || skill == P_KNIFE)
             multishot++;
         break;
     case PM_NINJA:
@@ -65,8 +64,8 @@ multishot_class_bonus(int pm, struct obj *ammo,
             multishot++;
         /*FALLTHRU*/
     case PM_SAMURAI:
-        /* role-specific launcher and its ammo */
-        if (ammo->otyp == YA && launcher && launcher->otyp == YUMI)
+        /* role-specific launcher */
+        if (launcher && launcher->otyp == YUMI)
             multishot++;
         break;
     default:

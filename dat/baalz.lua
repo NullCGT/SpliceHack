@@ -123,3 +123,5 @@ des.monster("P")
 if math.random(0, 99) < 50 then
   des.monster("P")
 end
+-- Portal back to the nexus
+des.levregion({ region = {16,15,75,19}, exclude = {00,00,00,00}, type="portal", name="nexus" })

@@ -93,3 +93,5 @@ des.trap()
 des.trap()
 des.trap()
 des.trap()
+
+des.levregion({ region = {0,0,75,19}, type="portal", name="nexus" })

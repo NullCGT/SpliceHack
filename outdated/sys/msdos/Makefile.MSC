@@ -806,6 +806,7 @@ nhdat:	$(U)dlb_main.exe $(DAT)\data $(DAT)\oracles $(DAT)\options \
 	@echo Mon-goal.lua >>dlb.lst
 	@echo Mon-loca.lua >>dlb.lst
 	@echo Mon-strt.lua >>dlb.lst
+	@echo nexus.lua >>dlb.lst
 	@echo nhlib.lua >>dlb.lst
 	@echo oracle.lua >>dlb.lst
 	@echo orcus.lua >>dlb.lst

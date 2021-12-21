@@ -506,7 +506,7 @@ NEARDATA struct permonst mons_init[] = {
         SIZ(10, 10, MS_SILENT, MZ_SMALL), MR_ELEC, MR_ELEC,
         M1_FLY | M1_BREATHLESS | M1_NOLIMBS | M1_NOHEAD | M1_MINDLESS
             | M1_NOTAKE,
-        M2_HOSTILE | M2_NEUTER, M3_INFRAVISIBLE, 8, CLR_BRIGHT_GREEN),
+        M2_HOSTILE | M2_NEUTER, M3_INFRAVISIBLE, 8, CLR_GREEN),
     MON("concussive sphere", S_EYE, LVL(6, 13, 4, 0, 0),
         (G_NOCORPSE | G_GENO | 2), A(ATTK(AT_EXPL, AD_LOUD, 4, 6), NO_ATTK,
                                      NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
@@ -542,6 +542,13 @@ NEARDATA struct permonst mons_init[] = {
         M1_FLY | M1_BREATHLESS | M1_NOLIMBS | M1_NOHEAD | M1_MINDLESS,
         M2_NOPOLY | M2_HOSTILE | M2_NEUTER, M3_INFRAVISIBLE, 13, CLR_BROWN),
 #endif
+    MON("gorgon head", S_EYE, LVL(6, 13, 4, 0, 0),
+        (G_NOCORPSE | G_NOGEN), A(ATTK(AT_BITE, AD_STON, 1, 6), NO_ATTK,
+                                     NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
+        SIZ(10, 10, MS_HISS, MZ_SMALL), MR_STONE, MR_STONE,
+        M1_FLY | M1_NOLIMBS | M1_NOTAKE,
+        M2_HOSTILE | M2_FEMALE | M2_WANDER,
+        M3_INFRAVISIBLE, 5, CLR_BRIGHT_GREEN),
     MON("magical eye", S_EYE, LVL(9, 6, 4, 90, -10), (G_GENO | 2),
           A(ATTK(AT_GAZE, AD_SLOW, 0, 0), ATTK(AT_GAZE, AD_SLEE, 2, 6),
             ATTK(AT_GAZE, AD_STUN, 0, 0), ATTK(AT_GAZE, AD_FIRE, 4, 6),

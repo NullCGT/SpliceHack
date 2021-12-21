@@ -5,6 +5,20 @@
 ## Monster Changes
 - Monsters can zap wands of opening, digging, or windstorm in order to escape death via being
   engulfed.
+- New Monster: Gorgon Head.
+  - Only appear in Vlad's Tower. Can petrify with a bite.
+
+## Dungeon Changes
+- Vlad's Tower is now a branch off the Gnomish Mines, similar to how it is in dNetHack.
+- The lowest level of Vlad's Tower has been significantly altered, so that it is more consistent
+  with the geography of the upper levels.
+- The various demon lord levels are now branches.
+- Corpses in Juiblex's Swamps become moldy almost instantly.
+
+## Gehennom Rewrite
+- New Level: The Nexus
+  - The Nexus is a centralized hub of portals to every demon lord
+    branch. It is located just below the Valley.
 
 ## Object Changes
 - Lockpicks stack.

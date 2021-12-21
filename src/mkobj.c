@@ -1361,8 +1361,9 @@ start_corpse_timeout(struct obj* body)
     if (action == ROT_CORPSE && !acidic(&mons[body->corpsenm])) {
         /* Corpses get moldy.
          * TODO: allow green molds to grow on acidic corpses. */
-        for (age = TAINT_AGE + 1; age <= ROT_AGE; age++) {
-            if (!rn2(MOLDY_CHANCE)) {    /* "revives" as a random s_fungus */
+        for (age = Is_juiblex_level(&u.uz) ? 3 : TAINT_AGE + 1; 
+             age <= ROT_AGE; age++) {
+            if (Is_juiblex_level(&u.uz) ? TRUE : !rn2(MOLDY_CHANCE)) {    /* "revives" as a random s_fungus */
                 action = MOLDY_CORPSE;
                 when = age;
                 break;

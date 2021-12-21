@@ -124,10 +124,34 @@ dungeon = {
       alignment = "noalign",
       branches = {
          {
-            name = "Vlad's Tower",
-            base = 9,
-            range = 5,
-            direction = "up"
+            name = "Juiblex's Swamp",
+            base = 3,
+            range = 15
+         },
+         {
+            name = "Baalzebub's Fen",
+            base = 3,
+            range = 15
+         },
+         {
+            name = "Asmodeus's Fortress",
+            base = 3,
+            range = 15
+         },
+         {
+            name = "Orcus Town",
+            base = 3,
+            range = 15
+         },
+         {
+            name = "Mephisto's Library",
+            base = 3,
+            range = 15
+         },
+         {
+            name = "Malcanthet's Retreat",
+            base = 3,
+            range = 15
          }
       },
       levels = {
@@ -137,38 +161,13 @@ dungeon = {
             base = 1
          },
          {
+            name = "nexus",
+            bonetag = "n",
+            base = 2
+         },
+         {
             name = "sanctum",
             base = -1
-         },
-         {
-            name = "juiblex",
-            bonetag = "J",
-            base = 4,
-            range = 4
-         },
-         {
-            name = "foogardens",
-            bonetag = "L",
-            base = 2,
-            range = 5
-         },
-         {
-            name = "mephisto",
-            bonetag = "M",
-            base = 2,
-            range = 6
-         },
-         {
-            name = "baalz",
-            bonetag = "B",
-            base = 6,
-            range = 4
-         },
-         {
-            name = "asmodeus",
-            bonetag = "A",
-            base = 2,
-            range = 6
          },
          {
             name = "wizard1",
@@ -186,12 +185,6 @@ dungeon = {
             bonetag = "Y",
             chainlevel = "wizard1",
             base = 2
-         },
-         {
-            name = "orcus",
-            bonetag = "O",
-            base = 10,
-            range = 6
          },
          {
             name = "fakewiz1",
@@ -215,6 +208,13 @@ dungeon = {
       alignment = "lawful",
       flags = { "mazelike" },
       lvlfill = "minefill",
+      branches = {
+         {
+            name = "Vlad's Tower",
+            base = 4,
+            direction = "up"
+         }
+      },
       levels = {
          {
             name = "minetn",
@@ -362,6 +362,78 @@ dungeon = {
             name = "tower3",
             base = 3
          },
+      }
+   },
+   {
+      name = "Juiblex's Swamp",
+      base = 1,
+      bonetag = "J",
+      flags = { "mazelike", "hellish" },
+      levels = {
+         {
+            name = "juiblex",
+            base = 1
+         }
+      }
+   },
+   {
+      name = "Baalzebub's Fen",
+      base = 1,
+      bonetag = "B",
+      flags = { "mazelike", "hellish" },
+      levels = {
+         {
+            name = "baalz",
+            base = 1
+         }
+      }
+   },
+   {
+      name = "Asmodeus's Fortress",
+      base = 1,
+      bonetag = "A",
+      flags = { "mazelike", "hellish" },
+      levels = {
+         {
+            name = "asmodeus",
+            base = 1
+         }
+      }
+   },
+   {
+      name = "Orcus Town",
+      base = 1,
+      bonetag = "O",
+      flags = { "mazelike", "hellish" },
+      levels = {
+         {
+            name = "orcus",
+            base = 1
+         }
+      }
+   },
+   {
+      name = "Mephisto's Library",
+      base = 1,
+      bonetag = "M",
+      flags = { "mazelike", "hellish" },
+      levels = {
+         {
+            name = "mephisto",
+            base = 1
+         }
+      }
+   },
+   {
+      name = "Malcanthet's Retreat",
+      base = 1,
+      bonetag = "L",
+      flags = { "mazelike", "hellish" },
+      levels = {
+         {
+            name = "foogardens",
+            base = 1
+         }
       }
    },
    {

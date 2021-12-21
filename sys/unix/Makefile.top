@@ -92,7 +92,7 @@ SPEC_LEVS = asmodeus.lua baalz.lua bigrm-*.lua castle.lua fakewiz?.lua \
 	tower?.lua valley.lua wizard?.lua nhcore.lua nhlib.lua themerms.lua \
 	astral.lua air.lua earth.lua fire.lua water.lua blkmar.lua \
 	rats.lua tomb.lua bar.lua foogardens.lua mephisto.lua ice.lua \
-	gemarray.lua brass.lua
+	gemarray.lua brass.lua nexus.lua
 QUEST_LEVS = ???-goal.lua ???-fil?.lua ???-loca.lua ???-strt.lua
 
 DATNODLB = $(VARDATND) license symbols $(CSS)

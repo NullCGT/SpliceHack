@@ -181,3 +181,5 @@ des.monster({id="imp", 69, 17})
 des.object({id="helm of opposite alignment", x=65, y=17,buc="cursed",spe=-2})
 des.object({id="loadstone", x=65, y=18,buc="cursed"})
 des.object({id="amulet of strangulation", x=65, y=18,buc="cursed",spe=-2})
+
+des.levregion({ region = {0,0,75,19}, type="portal", name="nexus" })

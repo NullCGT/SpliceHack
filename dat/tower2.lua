@@ -5,7 +5,7 @@
 des.level_init({ style = "solidfill", fg = " " });
 
 des.level_flags("mazelevel", "noteleport", "hardfloor", "solidify")
-des.map({ halign = "half-left", valign = "center", map = [[
+des.map({ halign = "half-right", valign = "center", map = [[
   --- --- ---  
   |.| |.| |.|  
 ---S---S---S---
@@ -32,6 +32,7 @@ des.monster("&",place[1])
 des.monster("hell hound pup",place[2])
 des.monster("hell hound pup",place[3])
 des.monster("winter wolf",place[4])
+des.monster('gorgon head')
 des.object({ id = "chest", coord = place[5],
              contents = function()
                 des.object("amulet of life saving")

@@ -22,6 +22,7 @@
 - Fixed manticore spikes producing error messages when thrown.
 - Fixed garbled text in the serval database entry.
 - Fixed the calculation for sunder resulting in constant failure.
+- Fixed tin opener welding (msearle).
 
 ##                             Version 1.1.0
 

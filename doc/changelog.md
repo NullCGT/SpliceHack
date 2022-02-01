@@ -3,8 +3,14 @@
 ##                             Version 1.2.0
 
 ## Monster Changes
-- Monsters can zap wands of opening, digging, or windstorm in order to escape death via being
-  engulfed.
+- Monsters can zap wands of opening, digging, or windstorm in order to escape death
+  via being engulfed.
+
+## Monster Templates
+- Attacks added by monster templates are no longer added as the very last attacks
+  of the monster.
+- Half-illithid monsters can have up to three tentacle attacks.
+- Renamed "fiery drakken" and "icy drakken" templates.
 
 ## Object Changes
 - Lockpicks stack.
@@ -14,6 +20,8 @@
 - Fixed manticore spikes causing an error when initializing objects.
 - Moved manticore spikes out of the venoms class.
 - Fixed manticore spikes producing error messages when thrown.
+- Fixed garbled text in the serval database entry.
+- Fixed the calculation for sunder resulting in constant failure.
 
 ##                             Version 1.1.0
 

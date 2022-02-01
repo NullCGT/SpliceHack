@@ -2358,7 +2358,7 @@ dosunder(void)
     }
     roll = rn2(6);
     otmp = MON_WEP(mtmp);
-    if (roll >= (P_SKILL(P_SUNDER) - (otmp->oartifact ? 0 : 2))) {
+    if (roll >= (P_SKILL(P_SUNDER) - (otmp->oartifact ? 2 : 0))) {
         pline("%d %d", roll, P_SKILL(P_SUNDER));
         You("fail to sunder %s's weapon.", mon_nam(mtmp));
         return 1;

@@ -238,13 +238,20 @@ bhitm(struct monst *mtmp, struct obj *otmp)
         break;
     case WAN_SPEED_MONSTER:
         if (!resist(mtmp, otmp->oclass, 0, NOTELL)) {
+            if (mtmp->data == &mons[PM_HEDGEHOG]) {
+                pline("Gotta go fast!");
+                if (!mtmp->mtame) {
+                    (void) tamedog(mtmp, (struct obj *) 0);
+                    mtmp->movement += VERY_FAST;
+                    if (Hallucination) mtmp = christen_monst(mtmp, "Sanic");
+                }
+            }
             if (disguised_mimic)
                 seemimic(mtmp);
             mon_adjust_speed(mtmp, 1, otmp);
             m_dowear(mtmp, FALSE); /* might want speed boots */
         }
-        if (mtmp->mtame)
-            helpful_gesture = TRUE;
+        helpful_gesture = TRUE;
         break;
     case WAN_UNDEAD_TURNING:
     case SPE_TURN_UNDEAD:

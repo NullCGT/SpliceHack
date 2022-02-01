@@ -1047,7 +1047,7 @@ makelevel(void)
                 g.level.flags.celltyp = CORR;
             }
             mkchasms();
-        } else if (!rn2(3)) {
+        } else if (depth(&u.uz) > 3 && !rn2(4)) {
             mklakes();
         }
 

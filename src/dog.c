@@ -73,6 +73,7 @@ pet_type(void)
         if (prop == REFLECTING || prop == ANTIMAGIC)
             prop = COLD_RES;
         u.uprops[prop].intrinsic |= FROMOUTSIDE;
+        incr_resistance(&u.uprops[prop].intrinsic, 100);
         return dragon_type;
     } else if (g.preferred_pet == 'c')
         return  PM_KITTEN;

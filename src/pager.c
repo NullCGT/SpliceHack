@@ -1013,7 +1013,7 @@ struct permonst * pm;
 
 /* Add some information to an encyclopedia window which is printing information
  * about an object. */
-static void
+void
 add_obj_info(winid datawin, short otyp)
 {
     struct objclass oc = objects[otyp];
@@ -1407,7 +1407,6 @@ add_obj_info(winid datawin, short otyp)
         OBJPUTSTR("Unique item.");
     }
     OBJPUTSTR("");
-    putstr(datawin, ATR_BOLD, "Encyclopedia Entry:\n");
 }
 
 /*

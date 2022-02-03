@@ -1962,6 +1962,7 @@ extern int dowhatdoes(void);
 extern char *dowhatdoes_core(char, char *);
 extern int dohelp(void);
 extern int dohistory(void);
+extern void add_obj_info(winid, short);
 
 /* ### xxmain.c ### */
 

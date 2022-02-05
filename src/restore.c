@@ -768,7 +768,7 @@ restmonsteeds(boolean ghostly)
             }
             if (!mtmp) {
                 /* steed probably died but was not cleaned up due to other issues */
-                impossible("Cannot find monster steed.");
+                /* impossible("Cannot find monster steed."); */
                 free_erid(mon);
             } else 
                 ERID(mon)->m1 = mtmp;

@@ -76,6 +76,7 @@ travel         enables travelling via mouse click if supported;    [True]
 use_darkgray   use bold black instead of blue for black glyphs.    [True]
 use_inverse    display detected monsters in highlighted manner    [False]
 verbose        print more commentary during the game               [True]
+simplelevels   skip the levelup menu                              [False]
 whatis_menu    show menu when getting a map location              [False]
 whatis_moveskip skip same glyphs when getting a map location      [False]
 

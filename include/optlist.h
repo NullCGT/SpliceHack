@@ -530,6 +530,8 @@ opt_##a,
                 "show more old messages at a time")
     NHOPTB(verbose, 0, opt_out, set_in_game, On, Yes, No, No, NoAlias,
                 &flags.verbose)
+    NHOPTB(simplelevels, 0, opt_in, set_in_game, Off, Yes, No, No, NoAlias,
+                &flags.simplelevels)
 #ifdef MSDOS
     NHOPTC(video, 20, opt_in, set_in_config, No, Yes, No, No, NoAlias,
                 "method of video updating")

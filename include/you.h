@@ -242,7 +242,7 @@ struct Role {
 };
 
 extern const struct Role roles[]; /* table of available roles */
-#define Role_if(X) (g.urole.malenum == (X))
+#define Role_if(X) (u.role_levels[X - PM_ARCHEOLOGIST] > 0)
 #define Role_switch (g.urole.malenum)
 
 /* used during initialization for race, gender, and alignment

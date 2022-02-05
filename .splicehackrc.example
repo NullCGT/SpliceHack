@@ -42,6 +42,7 @@ OPTIONS=pushweapon
 OPTIONS=autodig
 OPTIONS=autoopen
 AUTOCOMPLETE=travel
+#OPTIONS=simplelevels
 
 ######## Autopickup #######
 OPTIONS=autopickup

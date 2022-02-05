@@ -12,6 +12,13 @@
 - Half-illithid monsters can have up to three tentacle attacks.
 - Renamed "fiery drakken" and "icy drakken" templates.
 
+## Multiclass System
+- Added a level up menu to reduce confusion with the multiclass system.
+- Players are treated as all of their roles simultaneously, rather than
+  solely their currently active role.
+- Added a new options flag, simplelevels, for players that wish to skip the levelup
+  menu screen entirely.
+
 ## Object Changes
 - Lockpicks stack.
 - Unlocking tools can degrade and break.

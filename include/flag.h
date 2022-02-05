@@ -63,6 +63,7 @@ struct flag {
     boolean time;            /* display elapsed 'time' */
     boolean tombstone;       /* print tombstone */
     boolean verbose;         /* max battle info */
+    boolean simplelevels;    /* skip levelup screen */
     int end_top, end_around; /* describe desired score list */
     unsigned moonphase;
     unsigned long suppress_alert;

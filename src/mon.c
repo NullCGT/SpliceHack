@@ -566,7 +566,6 @@ make_corpse(struct monst *mtmp, unsigned int corpseflags)
     case PM_VAMPIRE_LEADER:
     case PM_VAMPIRE_MAGE:
     case PM_NOSFERATU:
-    case PM_BAOBHAN_SITH:
         /* include mtmp in the mkcorpstat() call */
         num = undead_to_corpse(mndx);
         corpstatflags |= CORPSTAT_INIT;
@@ -4620,7 +4619,6 @@ select_newcham_form(struct monst* mon)
     case PM_VAMPIRE_MAGE:
     case PM_VAMPIRE_LEADER:
     case PM_VAMPIRE:
-    case PM_BAOBHAN_SITH:
     case PM_ALUCARD:
         mndx = pickvampshape(mon);
         break;

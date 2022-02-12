@@ -696,8 +696,6 @@ m_initweap(register struct monst *mtmp)
     case S_VAMPIRE:
         if (ptr == &mons[PM_ALUCARD])
             (void) mongets(mtmp, KATANA);
-        else if (ptr == &mons[PM_BAOBHAN_SITH] && !rn2(20))
-            (void) mongets(mtmp, GOWN);
         break;
     case S_OGRE:
         if (!rn2(mm == PM_OGRE_TYRANT ? 3 : mm == PM_OGRE_LEADER ? 6 : 12))

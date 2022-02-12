@@ -3046,15 +3046,6 @@ struct permonst _mons2[] = {
     /*
      * Vampires
      */
-    MON2("baobhan-sith", S_VAMPIRE, LVL(10, 12, 1, 25, -8),
-         (G_GENO | G_HELL | G_NOCORPSE | 1),
-         A(ATTK(AT_CLAW, AD_PHYS, 1, 8), ATTK(AT_CLAW, AD_DRLI, 1, 8), NO_ATTK,
-           NO_ATTK, NO_ATTK, NO_ATTK),
-         SIZ(WT_HUMAN, 400, MS_SEDUCE, MZ_HUMAN), MR_SLEEP | MR_POISON, 0,
-         M1_HUMANOID | M1_POIS | M1_REGEN,
-         M2_STALK | M2_HOSTILE | M2_STRONG | M2_NASTY | M2_SHAPESHIFTER |
-         M2_FEMALE,
-         M3_INFRAVISIBLE, MH_UNDEAD, 10, CLR_GREEN),
     MON2("vampire", S_VAMPIRE, LVL(10, 12, 1, 25, -8),
         (G_GENO | G_NOCORPSE | 1),
         A(ATTK(AT_CLAW, AD_PHYS, 1, 6), ATTK(AT_BITE, AD_DRLI, 1, 6), NO_ATTK,

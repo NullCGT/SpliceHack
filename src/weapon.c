@@ -239,22 +239,31 @@ base_hitbonus(struct obj *otmp) {
 float
 role_bab()
 {
-    switch(Role_switch) {
-    case PM_WIZARD:
-    case PM_TOURIST:
-    case PM_CONVICT:
-    case PM_HEALER:
-    case PM_CARTOMANCER:
-        return 0.5;
-    case PM_MONK:
-    case PM_ARCHEOLOGIST:
-    case PM_CLERIC:
-    case PM_ROGUE:
-    case PM_DRAGON_RIDER:
-        return 0.75;
-    default:
-        return 1;
+    int i;
+    int total = 0;
+    for (i = 0; i < NUM_ROLES; i++) {
+        if (!u.role_levels[i]) continue;
+        switch(i) {
+        case PM_WIZARD:
+        case PM_TOURIST:
+        case PM_CONVICT:
+        case PM_HEALER:
+        case PM_CARTOMANCER:
+            total += u.role_levels[i] * 0.5;
+            break;
+        case PM_MONK:
+        case PM_ARCHEOLOGIST:
+        case PM_CLERIC:
+        case PM_ROGUE:
+        case PM_DRAGON_RIDER:
+            total += u.role_levels[i] * 0.75;
+            break;
+        default:
+            total += u.role_levels[i];
+            break;
+        }
     }
+    return total;
 }
 
 int
@@ -281,7 +290,7 @@ botl_hitbonus()
     struct obj *weapon = uwep;
 
     /* tmp = abon() + u.uhitinc + maybe_polyd(g.youmonst.data->mlevel, u.ulevel); */
-    tmp = abon() + u.uhitinc + (int) (maybe_polyd(g.youmonst.data->mlevel, u.ulevel) * role_bab());
+    tmp = abon() + u.uhitinc + (int) (maybe_polyd(g.youmonst.data->mlevel, u.ubab));
 
     /* role/race adjustments */
     if (Role_if(PM_MONK) && !Upolyd) {

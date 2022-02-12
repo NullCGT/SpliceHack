@@ -2288,7 +2288,7 @@ dodisarm(void)
         return 0;
     }
     if (P_SKILL(P_DISARM) <= P_UNSKILLED) {
-        You("are not technically skilled enough to attempt to disarm others.");
+        You("are not skilled enough to attempt to disarm others.");
         return 0;
     }
     if (u.uswallow) {
@@ -2335,7 +2335,7 @@ dosunder(void)
     int roll;
 
     if (P_SKILL(P_SUNDER) <= P_UNSKILLED) {
-        You("are not technically skilled enough to attempt to sunder objects.");
+        You("are not skilled enough to attempt to sunder objects.");
         return 0;
     }
     if (u.uswallow) {

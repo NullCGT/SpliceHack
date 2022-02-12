@@ -429,6 +429,7 @@ struct you {
     int ulycn;                  /* lycanthrope type */
     int mfemale;               /* saved human value of flags.female */
     int hungerprayers;          /* how many times have we prayed away hunger? */
+    int ubab;                   /* your base attack bonus from all roles */
 
     unsigned ucreamed;
     unsigned uswldtim;          /* time you have been swallowed */

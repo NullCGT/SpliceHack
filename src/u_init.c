@@ -532,7 +532,6 @@ static const struct def_skill Skill_Mon[] = {
 
     { P_FLAMING_FISTS, P_GRAND_MASTER },
     { P_SHOCKING_FISTS, P_GRAND_MASTER },
-    { P_FREEZING_FISTS, P_GRAND_MASTER },
     { P_STUNNING_FIST, P_GRAND_MASTER },
     { P_DISARM, P_EXPERT },
     { P_SUNDER, P_EXPERT },
@@ -761,7 +760,7 @@ static const struct def_skill Skill_V[] = {
     { P_POWER_ATTACK, P_SKILLED },
     { P_DISARM, P_BASIC },
     { P_SUNDER, P_EXPERT },
-    { P_FREEZING_FISTS, P_EXPERT },
+    { P_FREEZING_FISTS, P_GRAND_MASTER },
     { P_NONE, 0 }
 };
 static const struct def_skill Skill_W[] = {
@@ -983,6 +982,7 @@ u_init(void)
     u.uspellprot = 0;
     adjabil(0, 1, flags.initrole, 0, 1);
     u.ulevel = u.ulevelmax = u.role_levels[flags.initrole] = 1;
+    u.ubab = role_bab();
 
     /* Init heaven or hell. */
     if (u.uroleplay.heaven_or_hell) {

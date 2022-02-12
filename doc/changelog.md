@@ -12,12 +12,20 @@
 - Half-illithid monsters can have up to three tentacle attacks.
 - Renamed "fiery drakken" and "icy drakken" templates.
 
+## Role Changes
+- Remove freezing fists from the monk skill list.
+- Allow valkyrie to become grand masters in freezing fists.
+
 ## Multiclass System
 - Added a level up menu to reduce confusion with the multiclass system.
 - Players are treated as all of their roles simultaneously, rather than
   solely their currently active role.
 - Added a new options flag, simplelevels, for players that wish to skip the levelup
   menu screen entirely.
+- Base attack bonus is determined via a sum of the base attack bonus for all roles,
+  rather than solely the active role.
+- Leveling up now grants 3-6 points in advancement in all class and
+  cultural skills, rather than a flat +5.
 
 ## Object Changes
 - Lockpicks stack.

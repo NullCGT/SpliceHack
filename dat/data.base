@@ -20,8 +20,8 @@
 
 # Skill Database Entries
 skill: animal friendship
-    Animal friendship makes animals spawn peaceful. This effect is influenced by
-    skill level.
+    Animal friendship makes animals peaceful to you.
+	This effect is influenced by skill level.
 skill: backstab
     Backstab increases the damage the user deals when attacking from behind,
     or, if the user is not a rogue, gives them the ability to backstab. Maximum
@@ -41,7 +41,7 @@ skill: careful strike
     damage penalty of the same amount.
 skill: code of honor
     Increases the to-hit bonus of the user by a flat amount. The alignment penalty
-    for breaking one's code of honor.
+    for breaking one's code of honor also increases.
 skill: disarm
     Disarm allows the user to use your weapon to attempt to disarm opponents.
     Use the #disarm command to disarm.
@@ -75,11 +75,10 @@ skill: stunning fist
     Stunning fist increases the chances of stunning a monster with unarmed
     attacks, provided the user already had the ability to do so.
 skill: sunder
-    Sunder allows the user to attempt to destroy the weapons or equipment of an
-    enemy character. To use this ability, use the #sunder extended command.
+    Sunder allows the user to attempt to destroy the weapons or equipment of a foe.
     Use the #sunder command to sunder.
-skill: tumble
-    Tumble allows the user to switch places with an opponent, and is useful for
+skill: tumbling
+    Tumbling allows the user to switch places with an opponent, and is useful for
     getting out of dangerous situations. Note that tumbling costs at least one
     turn, however.
     Use the #tumble command to tumble.

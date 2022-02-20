@@ -1786,7 +1786,7 @@ seffect_gold_detection(struct obj **sobjp)
     boolean confused = (Confusion != 0);
 
     if ((confused || scursed) ? trap_detect(sobj) : gold_detect(sobj))
-        sobjp = 0; /* failure: strange_feeling() -> useup() */
+        *sobjp = 0; /* failure: strange_feeling() -> useup() */
 }
 
 static void
@@ -1795,7 +1795,7 @@ seffect_food_detection(struct obj **sobjp)
     struct obj *sobj = *sobjp;
 
     if (food_detect(sobj))
-        sobjp = 0; /* nothing detected: strange_feeling -> useup */
+        *sobjp = 0; /* nothing detected: strange_feeling -> useup */
 }
 
 static void
@@ -2216,7 +2216,7 @@ seffect_fire(struct obj **sobjp)
     cval = bcsign(sobj);
     dam = (2 * (rn1(3, 3) + 2 * cval) + 1) / 3;
     useup(sobj);
-    sobjp = 0; /* it's gone */
+    *sobjp = 0; /* it's gone */
     if (!already_known)
         (void) learnscrolltyp(SCR_FIRE);
     if (confused) {

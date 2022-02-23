@@ -2615,6 +2615,13 @@ zapyourself(struct obj *obj, boolean ordinary)
         wonder = TRUE;
         learn_it = TRUE;
     }
+    
+    // A Healer's self-targeted zaps also hit their visible pets
+    struct monst *mtmp;
+    if (Role_if(PM_HEALER))
+        for (mtmp = fmon; mtmp; mtmp = mtmp->nmon)
+            if (mtmp->mtame && canspotmon(mtmp))
+                bhitm(mtmp, obj);
 
     switch (obj->otyp) {
     case WAN_STRIKING:

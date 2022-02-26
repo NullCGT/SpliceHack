@@ -1008,6 +1008,10 @@ summonmu(struct monst *mtmp, boolean youseeit)
 boolean
 diseasemu(struct permonst *mdat)
 {
+    if (LarvaCarrier) {
+        You("feel as if your body is your own again.");
+        make_carrier(0L, FALSE);
+    }
     if (Sick_resistance) {
         You_feel("a slight illness.");
         return FALSE;

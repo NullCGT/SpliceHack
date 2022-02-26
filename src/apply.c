@@ -4232,6 +4232,7 @@ doapply(void)
             pseudo->blessed = obj->blessed;
             pseudo->cursed = obj->cursed;
             u.uconduct.alcohol++;
+            makeknown(POT_BOOZE);
             You("chug some booze from %s.",
                     yname(obj));
             (void) peffects(pseudo);

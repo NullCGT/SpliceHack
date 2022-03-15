@@ -2109,7 +2109,7 @@ seffect_knowledge(struct obj **sobjp)
                              || objects[otyp].oc_name_known);
 
     useup(sobj);
-    sobj = 0;
+    *sobjp = 0;
     if (confused)
         You("know this to be a knowledge scroll.");
     else {

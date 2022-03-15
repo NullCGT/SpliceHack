@@ -3027,6 +3027,7 @@ template_chance(struct monst *mtmp, int modifier) {
     /* Unique monsters do not receive random templates. */
     if (mtmp->data->msound == MS_LEADER
         || mtmp->data->msound == MS_NEMESIS
+        || mtmp->data == &mons[PM_LONG_WORM_TAIL]
         || unique_corpstat(mtmp->data)
         || has_etemplate(mtmp))
         return template;

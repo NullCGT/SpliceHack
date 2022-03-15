@@ -696,8 +696,8 @@ monsndx(struct permonst* ptr)
     if (ptr->omnum)
         i = ptr->omnum;
     if (i < LOW_PM || i >= NUMMONS) {
-        panic("monsndx - could not index monster (%s)",
-              fmt_ptr((genericptr_t) ptr));
+        panic("monsndx - could not index monster (%s) at (%d)%s",
+              fmt_ptr((genericptr_t) ptr), i, ptr->omnum ? ", omnum mode" : "");
         return NON_PM; /* will not get here */
     }
     return i;

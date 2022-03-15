@@ -65,7 +65,8 @@ sanity_check_single_mon(
     } else {
         int mndx = monsndx(mptr);
 
-        if (mtmp->mnum != mndx) {
+        /* TODO: Implement actual sanity checks for templated mons. */
+        if (mtmp->mnum != mndx && !(has_etemplate(mtmp) && is_were(mtmp->data))) {
             impossible("monster mnum=%d, monsndx=%d (%s)",
                        mtmp->mnum, mndx, msg);
             mtmp->mnum = mndx;

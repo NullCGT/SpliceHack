@@ -3854,7 +3854,7 @@ getdir(const char *s)
         You_cant("orient yourself that direction.");
         return 0;
     }
-    if (!u.dz && Afraid)
+    if (!u.dz && Afraid && rn2(3))
         feardir();
     if (!u.dz && (Stunned || (Confusion && !rn2(5))))
         confdir();

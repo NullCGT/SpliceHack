@@ -39,6 +39,8 @@
 - Fixed the calculation for sunder resulting in constant failure.
 - Fixed tin opener welding (msearle).
 - Spawn lake-filled levels later in the dungeon.
+- Fear only causes movement away from a monster 2/3 of the time, rather
+  than every move.
 
 ##                             Version 1.1.0
 

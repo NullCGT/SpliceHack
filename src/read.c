@@ -1305,7 +1305,7 @@ seffect_enchant_armor(struct obj **sobjp)
         strange_feeling(sobj, !Blind
                                     ? "Your skin glows then fades."
                                     : "Your skin feels warm for a moment.");
-        sobj = 0; /* useup() in strange_feeling() */
+        *sobjp = 0; /* useup() in strange_feeling() */
         exercise(A_CON, !scursed);
         exercise(A_STR, !scursed);
         return;
@@ -1454,7 +1454,7 @@ seffect_destroy_armor(struct obj **sobjp)
     if (confused) {
         if (!otmp) {
             strange_feeling(sobj, "Your bones itch.");
-            sobj = 0; /* useup() in strange_feeling() */
+            *sobjp = 0; /* useup() in strange_feeling() */
             exercise(A_STR, FALSE);
             exercise(A_CON, FALSE);
             return;
@@ -1474,7 +1474,7 @@ seffect_destroy_armor(struct obj **sobjp)
     if (!scursed || !otmp || !otmp->cursed) {
         if (!destroy_arm(otmp)) {
             strange_feeling(sobj, "Your skin itches.");
-            sobj = 0; /* useup() in strange_feeling() */
+            *sobjp = 0; /* useup() in strange_feeling() */
             exercise(A_STR, FALSE);
             exercise(A_CON, FALSE);
             return;
@@ -1924,7 +1924,7 @@ seffect_enchant_weapon(struct obj **sobjp)
                             : (uwep->spe >= 9) ? !rn2(uwep->spe)
                                 : sblessed ? rnd(3 - uwep->spe / 3)
                                 : 1))
-        sobj = 0; /* nothing enchanted: strange_feeling -> useup */
+        *sobjp = 0; /* nothing enchanted: strange_feeling -> useup */
     if (uwep)
         cap_spe(uwep);
 
@@ -2077,7 +2077,7 @@ seffect_air(struct obj **sobjp)
             losehp(d(3, 4), "asphyxiation", KILLED_BY);
         } else {
             strange_feeling(sobj, "You feel oddly breathless.");
-            sobj = 0;
+            *sobjp = 0;
         }
         return;
     } else if (sblessed)
@@ -2406,7 +2406,7 @@ seffect_change_material(struct obj **sobjp)
         otmp = some_armor(&g.youmonst);
     if (!otmp) {
         strange_feeling(sobj, "Your skin crawls for a moment.");
-        sobj = 0; /* useup() in strange_feeling() */
+        *sobjp = 0; /* useup() in strange_feeling() */
         exercise(A_CON, !scursed);
         exercise(A_STR, !scursed);
         return;

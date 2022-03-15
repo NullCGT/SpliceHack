@@ -449,47 +449,56 @@ levelup_menu(void) {
     while(1) {
         win = create_nhwindow(NHW_MENU);
         start_menu(win, MENU_BEHAVE_STANDARD);
+        any = cg.zeroany;
         Sprintf(buf, "You are leveling up as a %s.",
                 roles[g.urole.malenum - PM_ARCHEOLOGIST].name.m);
-        putstr(win, ATR_NONE, buf);
-        putstr(win, ATR_NONE, "You may choose to invest your experience in multiple roles, but doing so will result in a permanent experience penalty.");
-        putstr(win, ATR_NONE, "");
+        add_menu(win, &nul_glyphinfo, &any, 0, 0, ATR_NONE, buf,
+                    MENU_ITEMFLAGS_NONE);
+        add_menu(win, &nul_glyphinfo, &any, 0, 0, ATR_NONE, "You may choose to invest your experience in multiple roles.",
+                    MENU_ITEMFLAGS_NONE);
+        add_menu(win, &nul_glyphinfo, &any, 0, 0, ATR_NONE, "Doing so will result in a permanent experience penalty.",
+                    MENU_ITEMFLAGS_NONE);
         buf[0] = '\0';
         /* Display skills one stands to gain. */
         Sprintf(buf, "If you level up as a %s, you will gain experience in the following skills:",
                 roles[g.urole.malenum - PM_ARCHEOLOGIST].name.m);
-        putstr(win, ATR_NONE, buf);
+        add_menu(win, &nul_glyphinfo, &any, 0, 0, ATR_NONE, buf,
+                    MENU_ITEMFLAGS_NONE);
         for (skill = P_FIRST_ROLE; skill <= P_LAST_ROLE; skill++) {
             if (!P_RESTRICTED(skill)) {
                 buf[0] = '\0';
                 Sprintf(buf, "  * %s", skill_name(skill));
-                putstr(win, ATR_NONE, buf);
+                add_menu(win, &nul_glyphinfo, &any, 0, 0, ATR_NONE, buf,
+                    MENU_ITEMFLAGS_NONE);
             }
         }
         /* Display HP and PW gain. */
-        putstr(win, ATR_NONE, "");
         buf[0] = '\0';
         Sprintf(buf, "You will gain (1d%d) + (1d%d) hit points, modified by constitution.",
             u.ulevel < g.urole.xlev ? g.urole.hpadv.lornd : g.urole.hpadv.hirnd,
             u.ulevel < g.urole.xlev ? g.urace.hpadv.lornd : g.urole.hpadv.hirnd);
-        putstr(win, ATR_NONE, buf);
+        add_menu(win, &nul_glyphinfo, &any, 0, 0, ATR_NONE, buf,
+                    MENU_ITEMFLAGS_NONE);
         buf[0] = '\0';
         Sprintf(buf, "You will gain (1d%d) + (1d%d) power, modified by wisdom.",
             u.ulevel < g.urole.xlev ? g.urole.enadv.lornd : g.urole.enadv.hirnd,
             u.ulevel < g.urole.xlev ? g.urace.enadv.lornd : g.urole.enadv.hirnd);
-        putstr(win, ATR_NONE, buf);
+        add_menu(win, &nul_glyphinfo, &any, 0, 0, ATR_NONE, buf,
+                    MENU_ITEMFLAGS_NONE);
         /* Display special warnings. */
-        putstr(win, ATR_NONE, "");
         if (g.urole.malenum == PM_MONK)
-            putstr(win, ATR_NONE, "You will be constricted by body armor.");
+            add_menu(win, &nul_glyphinfo, &any, 0, 0, ATR_NONE, "You will be constricted by body armor.",
+                    MENU_ITEMFLAGS_NONE);
         if (g.urole.malenum == PM_DRAGON_RIDER)
-            putstr(win, ATR_NONE, "You will be unable to wear dragon-based armor.");
+            add_menu(win, &nul_glyphinfo, &any, 0, 0, ATR_NONE, "You will be unable to wear dragon-based armor.",
+                    MENU_ITEMFLAGS_NONE);
         if (g.urole.malenum == PM_CONVICT)
-            putstr(win, ATR_NONE, "You will be unable to switch roles again.");
+            add_menu(win, &nul_glyphinfo, &any, 0, 0, ATR_NONE, "You will be unable to switch roles again.",
+                    MENU_ITEMFLAGS_NONE);
         if (g.urole.malenum == PM_KNIGHT || g.urole.malenum == PM_SAMURAI)
-            putstr(win, ATR_NONE, "You will be bound by a code of honor.");
+            add_menu(win, &nul_glyphinfo, &any, 0, 0, ATR_NONE, "You will be bound by a code of honor.",
+                    MENU_ITEMFLAGS_NONE);
         /* Display options */
-        putstr(win, ATR_NONE, "");
         any.a_int = 1;
         add_menu(win, &nul_glyphinfo, &any, 0, 0, ATR_INVERSE, "Finish Leveling Up",
                     MENU_ITEMFLAGS_NONE);

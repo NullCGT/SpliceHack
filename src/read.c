@@ -2457,6 +2457,10 @@ seffect_cloning(struct obj **sobjp)
         if (!already_known)
             You("have found a scroll of cloning!");
         otmp = getobj("clone", any_obj_ok, GETOBJ_NOFLAGS);
+        if (!otmp) {
+            pline("Never mind.");
+            return;
+        }
         /* Unique items */
         if (otmp->otyp == BELL_OF_OPENING) {
             otyp2 = BELL;

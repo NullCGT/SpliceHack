@@ -1948,7 +1948,7 @@ thitmonst(register struct monst *mon,
                     if (*u.ushops || obj->unpaid)
                         check_shop_obj(obj, g.bhitpos.x, g.bhitpos.y, TRUE);
                     if ((wasthrown || g.thrownobj) && is_grenade(obj)) {
-                        grenade_explode(obj, g.bhitpos.x, g.bhitpos.y, TRUE);
+                        grenade_explode(obj, g.bhitpos.x, g.bhitpos.y, obj->yours);
                     }
                     obfree(obj, (struct obj *) 0);
                     return 1;

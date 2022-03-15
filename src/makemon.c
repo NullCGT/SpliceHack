@@ -2981,7 +2981,6 @@ initetemplate(struct monst *mtmp, int tindex)
     /* Set the data (probably move to the newetemplate func) */
     mtmp->data = &(ETEMPLATE(mtmp)->data);
     /* mtmp->data = (ETEMPLATE(mtmp)->data_p); */
-    newsym(mtmp->mx, mtmp->my);
 }
 
 static boolean

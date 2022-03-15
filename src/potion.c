@@ -666,6 +666,7 @@ dodrink(void)
         if (otmp->spe) {
             int quan = 0;
             while (otmp->spe) {
+                makeknown(POT_BOOZE);
                 u.uconduct.alcohol++;
                 consume_obj_charge(otmp, TRUE);
                 check_unpaid(otmp);

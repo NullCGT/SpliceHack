@@ -1,4 +1,4 @@
-#                  SpliceHack 1.1.0 -- General information
+#                  SpliceHack 1.2.0 -- General information
 
 SpliceHack is an in-progress fork of NetHack 3.7 (and in part, SLASH'EM), made with the goal of adding
 additional monsters, items, special levels, and game features without changing

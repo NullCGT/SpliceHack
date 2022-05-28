@@ -816,7 +816,7 @@ doengrave(void)
                     Strcpy(post_engr_text,
                            "Something sprays from the wand.");
                 }
-                if (!oep || (oep->engr_type != BURN))
+                if (oep && oep->engr_type != BURN)
                     dengr = TRUE;
                 break;
             case WAN_COLD:
@@ -1006,7 +1006,7 @@ doengrave(void)
     /* Cleanup wand of wonder */
     if (wonder) {
         otmp->otyp = WAN_WONDER;
-        doknown = TRUE;
+        learnwand(otmp);
     }
     /* wands that perma-engrave need to be ID'd now. However... */
     if (doknown && (type == BURN || type == ENGRAVE))

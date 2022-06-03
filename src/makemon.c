@@ -2987,7 +2987,7 @@ static boolean
 is_valid_template(struct monst *mtmp, int tindex) {
     /* For now, we forbid vampshifters with templates, because they
        seem to cause crashes. */
-    if (!mtmp->mpeaceful && mons[tindex].difficulty > &u.uz)
+    if (!mtmp->mpeaceful && mons[tindex].difficulty > u.uz.dlevel)
         return FALSE;
     if (is_vampshifter(mtmp))
         return FALSE;

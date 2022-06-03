@@ -285,7 +285,6 @@ static struct inv_sub {
     { PM_DROW, BOW, DARK_ELVEN_BOW },
     { PM_DROW, ARROW, DARK_ELVEN_ARROW },
     { PM_DROW, POT_SICKNESS, POT_SLEEPING },
-    { PM_VAMPIRE, POT_FRUIT_JUICE, POT_BLOOD },
     { PM_INFERNAL, KNIFE, SACRIFICIAL_KNIFE },
     { NON_PM, STRANGE_OBJECT, STRANGE_OBJECT }
 };
@@ -1673,6 +1672,8 @@ ini_inv(struct trobj *trop)
                 trop++;
             }
             continue;
+        } else if (obj->otyp == POT_FRUIT_JUICE) {
+            obj = mksobj(POT_BLOOD, TRUE, FALSE);
         }
 
         /* nudist gets no armor */

@@ -700,9 +700,11 @@ xname_flags(
                     Strcat(buf, obj->blessed ? "holy " : "unholy ");
                 }
                 if (typ == POT_BLOOD && known) {
-                    const char *pm_name = mons[obj->corpsenm].pmnames[NEUTRAL];
-                    Strcat(buf, pm_name);
-                    Strcat(buf, " ");
+                    if(obj->corpsenm != NON_PM) {
+                        const char *pm_name = mons[obj->corpsenm].pmnames[NEUTRAL];
+                        Strcat(buf, pm_name);
+                        Strcat(buf, " ");
+                    }
                 }
                 Strcat(buf, actualn);
             } else {

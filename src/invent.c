@@ -2494,16 +2494,7 @@ RESTORE_WARNING_FORMAT_NONLITERAL
 int
 ddoinv(void)
 {
-    struct obj *obj;
-    winid datawin = WIN_ERR;
-
-    obj = getobj("examine", any_obj_ok, GETOBJ_PROMPT);
-    if (!obj) return 0;
-    
-    datawin = create_nhwindow(NHW_MENU);
-    add_obj_info(datawin, obj->otyp);
-    display_nhwindow(datawin, TRUE);
-    destroy_nhwindow(datawin);
+    (void) display_inventory((char *) 0, FALSE);
     return 0;
 }
 

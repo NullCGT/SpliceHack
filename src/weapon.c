@@ -291,6 +291,9 @@ botl_hitbonus()
             tmp += (u.ulevel / 3) + 2;
     }
 
+    if (levl[u.ux][u.uy].lit && Race_if(PM_DROW))
+        tmp -= 2; /* Dazzled when standing in light */
+
     /* Power attack penalty */
     if (P_SKILL(P_POWER_ATTACK) > P_UNSKILLED
         || P_SKILL(P_CAREFUL_ATTACK) > P_UNSKILLED) {

@@ -2,6 +2,15 @@
 
 ##                             Version 1.1.0
 
+### Species Changes
+- Gnome
+  - Gnomes have an additional Intelligence/25 chance for a potion to successfully hit a monster.
+- Elf
+  - Elves can mount steeds without the use of a saddle.
+- Drow
+  - Drow can see fine out to radius 3, obviating any need for lamps.
+  - Drow suffer a -2 attack penalty when standing in a lit square.
+
 ### Monster Changes
 - Angels and gold dragons emit radius 4 light.
 

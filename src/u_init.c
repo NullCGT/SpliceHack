@@ -1015,8 +1015,10 @@ u_init(void)
      *  For now, everyone starts out with their xray range disabled.
      */
     switch (Race_switch) {
-    case PM_ELF:
     case PM_DROW:
+        u.nv_range = 3;
+        break;
+    case PM_ELF:
     case PM_VAMPIRE:
         u.nv_range = 2;
         break;

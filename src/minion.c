@@ -5,14 +5,6 @@
 
 #include "hack.h"
 
-/* used to pick among the four basic elementals without worrying whether
-   they've been reordered (difficulty reassessment?) or any new ones have
-   been introduced (hybrid types added to 'E'-class?) */
-static const int elementals[4] = {
-    PM_AIR_ELEMENTAL, PM_FIRE_ELEMENTAL,
-    PM_EARTH_ELEMENTAL, PM_WATER_ELEMENTAL
-};
-
 void
 newemin(struct monst *mtmp)
 {

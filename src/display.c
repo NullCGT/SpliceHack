@@ -2190,7 +2190,6 @@ void
 map_glyphinfo(xchar x, xchar y, int glyph,
               unsigned mgflags, glyph_info *glyphinfo)
 {
-    struct stairway *sway = stairway_at(x, y);
     register int offset, idx;
     int color = NO_COLOR;
     unsigned special = 0;

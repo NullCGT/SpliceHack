@@ -3474,7 +3474,7 @@ weffects(struct obj *obj)
 
     if (otyp == WAN_WONDER) {
         wondertemp = WAN_LIGHT + rn2(WAN_PSIONICS - WAN_LIGHT);
-        if (wondertemp == WAN_WISHING && !rn2(100))
+        if (wondertemp == WAN_WISHING && rn2(100))
             wondertemp = WAN_POISON_GAS;
         if (wondertemp == WAN_WONDER)
             wondertemp = WAN_POLYMORPH;

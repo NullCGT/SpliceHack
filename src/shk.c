@@ -403,9 +403,12 @@ call_kops(register struct monst* shkp, register boolean nearshop)
                 }
                 trap = trap->ntrap;
             }
-        } else {
+        } else if (stway) {
             mm.x = stway->sx;
             mm.y = stway->sy;
+        } else {
+            mm.x = 0;
+            mm.y = 0;
         }
         makekops(&mm);
         /* Create swarm near shopkeeper (hinders return to shop) */

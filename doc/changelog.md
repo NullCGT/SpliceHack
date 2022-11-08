@@ -30,6 +30,8 @@
 ## Object Changes
 - Lockpicks stack.
 - Unlocking tools can degrade and break.
+- Many polearms have been removed.
+  - Kept halberds cuz they're good, lances cuz they're a classic, ranseurs cuz lots of monsters spawn with them, and "partisans" cuz we need to have a crummy weapon in the category. Some monsters can also spawn with scythes, because that's cool.
 
 ### Small Tweaks / Bugfixes
 - Fixed manticore spikes causing an error when initializing objects.

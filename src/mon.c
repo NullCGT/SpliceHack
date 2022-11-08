@@ -3882,10 +3882,11 @@ m_respond(struct monst* mtmp)
     /* Supporter monsters. */
     if (is_supporter(mtmp->data)) {
         if (canseemon(mtmp)) {
-            if (mtmp->data == &mons[PM_HEARTH_ARCHON]) {
+            if (mtmp->data == &mons[PM_HEARTH_ARCHON] && rn2(2)) {
                 verbalize("It's going to be OK.");
             } else {
-                pline("%s utters a complex chant.", Monnam(mtmp));
+                pline("%s utters a %s chant.", Monnam(mtmp),
+                      (!rn2(3)?"complex":!rn2(2)?"soothing":"healing"));
             }
         }
         for (mon = fmon; mon; mon = mon->nmon) {

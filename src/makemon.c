@@ -262,7 +262,7 @@ m_initweap(register struct monst *mtmp)
             case PM_WATCHMAN:
             case PM_SOLDIER:
                 if (!rn2(3)) {
-                    w1 = rn1(BEC_DE_CORBIN - NASTY_PIKE + 1, NASTY_PIKE);
+                    w1 = rn2(2) ? HALBERD : NASTY_PIKE;
                     w2 = rn2(2) ? DAGGER : KNIFE;
                 } else
                     w1 = rn2(2) ? SPEAR : SHORT_SWORD;
@@ -705,18 +705,12 @@ m_initweap(register struct monst *mtmp)
         break;
     case S_TROLL:
         if (!rn2(2))
-            switch (rn2(4)) {
+            switch (rn2(2)) {
             case 0:
                 (void) mongets(mtmp, RANSEUR);
                 break;
             case 1:
                 (void) mongets(mtmp, NASTY_PIKE);
-                break;
-            case 2:
-                (void) mongets(mtmp, GLAIVE);
-                break;
-            case 3:
-                (void) mongets(mtmp, SPETUM);
                 break;
             }
         break;
@@ -883,7 +877,7 @@ m_initweap(register struct monst *mtmp)
             break;
         case 5:
             if (strongmonst(ptr))
-                (void) mongets(mtmp, LUCERN_HAMMER);
+                (void) mongets(mtmp, HALBERD);
             else
                 (void) mongets(mtmp, AKLYS);
             break;
